@@ -1,14 +1,14 @@
 clearListener()
 
 
-filein( getFilenamePath(getSourceFileName()) + "/../../../Rolloutor.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/../../../Rollout.ms" )
 
 try( destroyDialog ROLLOUT_test )catch()
 
-Rolloutor 	= Rolloutor_v title:"Test"
+Rollout 	= Rollout_v title:"Test"
 
 
-_Controls = Rolloutor.Controls
+_Controls = Rollout.Controls
 
 --_Button = _Controls.button "Button Test" id:#button_1
 
@@ -16,6 +16,6 @@ _Controls = Rolloutor.Controls
 
 --_Button.Events.add #pressed "print @Pressed Event@"
 
---CreateDialog (Rolloutor.getDefinition())
+--CreateDialog (Rollout.getDefinition())
 
-Rolloutor.createRolloout()
+Rollout.createRolloout()

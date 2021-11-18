@@ -1,10 +1,10 @@
 clearListener()
 
-filein( getFilenamePath(getSourceFileName()) + "/../../../../Rolloutor.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/../../../../Rollout.ms" )
 
 try( destroyDialog ROLLOUT_test )catch()
 
-Rolloutor 	= Rolloutor_v title:"Test"
+Rollout 	= Rollout_v title:"Test"
 
 
 
@@ -17,7 +17,7 @@ function createControls groups_count:1 controls_count:4 =
 	for g = 1 to groups_count do
 	(
 		
-		_Controls = Rolloutor.Controls.new ("Group "+g as string )
+		_Controls = Rollout.Controls.new ("Group "+g as string )
 	
 	
 		for c = 1 to 2 do
@@ -34,4 +34,4 @@ function createControls groups_count:1 controls_count:4 =
 createControls()
 
 
-Rolloutor.createRollout()
+Rollout.createRollout()

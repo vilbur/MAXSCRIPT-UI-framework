@@ -1,9 +1,9 @@
 filein( getFilenamePath(getSourceFileName()) + "/Controls/Controls.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/Controls/ControlsBox/ControlsBox.ms" )
 
-/** Rolloutor
+/** Rollout
  */
-struct Rolloutor_v
+struct Rollout_v
 (
 	/* required */
 	title,
@@ -21,7 +21,7 @@ struct Rolloutor_v
 	 */
 	function createRollout width:512 height:512 =
 	(
-		print ("Rolloutor_v.createDialog() " + id)
+		print ("Rollout_v.createDialog() " + id)
 		
 		
 		for ControlsBox in Controls._Controls do
@@ -40,7 +40,7 @@ struct Rolloutor_v
 	 */
 	function addControlsOrSubrolloutes ControlsBox_or_Subrollouts =
 	(
-		print "Rolloutor_v.addControlsOrSubrolloutes()"
+		print "Rollout_v.addControlsOrSubrolloutes()"
 		format "ControlsBox_or_Subrollouts	= % \n" ControlsBox_or_Subrollouts
 		format "this._isControlsBox(ControlsBox_or_Subrollouts)	= % \n" this._isControlsBox(ControlsBox_or_Subrollouts)
 		
@@ -57,7 +57,7 @@ struct Rolloutor_v
 	function addControlsBoxToUi ControlsBox =
 	(
 		format "\n"
-		print "Rolloutor_v.addControlsBoxToUi()"
+		print "Rollout_v.addControlsBoxToUi()"
 		format "ControlsBox	= % \n" ControlsBox.caption
 		_RolloutCreator.addText ("group \"" + ControlsBox.caption + "\" (") 
 					
@@ -71,14 +71,14 @@ struct Rolloutor_v
 	 */
 	function addControlToUI _Control =
 	(
-		print "Rolloutor_v.addControlToUI()"
+		print "Rollout_v.addControlToUI()"
 		format "_Control	= % \n" _Control.id
 		
 		--/** Test
 		-- */
 		--(function addHandlers _Control =
 		--(
-		--	print "Rolloutor_v.addHandlers()"
+		--	print "Rollout_v.addHandlers()"
 		--	
 		--	for _Event in _Control.Events.list do
 		--		_RolloutCreator.addHandler _Control.id _Event.type codeStr:_Event.code paramStr:_Event.params filter:on 
@@ -92,7 +92,7 @@ struct Rolloutor_v
 	 */
 	function addSubrolloutsSlot Subrollouts =
 	(
-		print "Rolloutor_v.addSubrolloutsSlot()"
+		print "Rollout_v.addSubrolloutsSlot()"
 		format "Subrollouts	= % \n" Subrollouts.slot
 		
 		_RolloutCreator.addText ("subRollout slot_"+Subrollouts.slot as string +" \"slot_name\" height:128") 
@@ -120,7 +120,7 @@ struct Rolloutor_v
 	 */
 	function getDefinition =
 	(
-		--print "Rolloutor_v.getDefinition()"
+		--print "Rollout_v.getDefinition()"
 		--format "_RolloutCreator.def	= % \n" _RolloutCreator
 		_RolloutCreator.def
 	),
@@ -129,7 +129,7 @@ struct Rolloutor_v
 	 */
 	function _getId =
 	(
-		print "Rolloutor_v._getId()"
+		print "Rollout_v._getId()"
 		if ( id == undefined or id == unsupplied ) then
 			id = "ROLLOUT_" + (( dotNetObject "System.Text.RegularExpressions.Regex" @"[^A-Za-z0-9_]+" ).Replace ( (substituteString title " " "_") ) "")
 		

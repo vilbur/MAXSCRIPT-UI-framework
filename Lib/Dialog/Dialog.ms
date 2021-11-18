@@ -1,4 +1,4 @@
-filein( getFilenamePath(getSourceFileName()) + "/Rolloutor/Rolloutor.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/Rollout/Rollout.ms" )
 
 
 
@@ -41,7 +41,7 @@ struct Dialog_v
 	function _setMainRollout =
 	(
 		--RolloutMain	= Rollout_v title:title id:id _Ini:_Ini
-		RolloutMain	= Rolloutor_v title:title id:id --_Ini:_Ini
+		RolloutMain	= Rollout_v title:title id:id --_Ini:_Ini
 		
 		--Events = RolloutMain.Events
 	),

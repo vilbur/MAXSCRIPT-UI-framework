@@ -15,7 +15,7 @@ struct Subrollouts_v
 	function new title  =
 	(
 		--print "Subrollouts_v.test()"
-		Rolloutor_v title:title --return
+		Rollout_v title:title --return
 	),
 	
 	private
