@@ -48,6 +48,13 @@ struct Rollout_v
 			--this.addControlsOrSubrolloutes Subrollouts
 	),
 	
+	/** rollouts
+     */
+    function rollouts =
+    (
+        Controls.subrollouts() --return
+    ),
+	
 	private
 	
 	/** Add controls or subrolloutes

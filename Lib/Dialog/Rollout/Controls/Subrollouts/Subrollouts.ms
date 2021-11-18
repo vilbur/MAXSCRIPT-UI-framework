@@ -47,6 +47,9 @@ struct Subrollouts_v
 		--print "Subrollouts_v.addSubrollout()"
 		
 		execute ( "\n AddSubRollout "+parent_roll_id+".slot_" + slot as string + " "+ _Rollout.id )
+		
+		_Rollout.addSubRollouts()
+
 	),
 	
 	private

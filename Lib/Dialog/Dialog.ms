@@ -33,20 +33,14 @@ struct Dialog_v
 
 		RolloutMain.addSubRollouts()
 
-		--try
-		--(
-		--	AddSubRollout ROLLOUT_Test.slot_1 ROLLOUT_Subrollout_A
-		--
-		--)
-		--catch()
-		
 	),
 	
 	/** rollouts
      */
     function rollouts =
     (
-        RolloutMain.Controls.subrollouts() --return
+        --RolloutMain.Controls.subrollouts() --return
+        RolloutMain.rollouts() --return
     ),
 	
 	private
