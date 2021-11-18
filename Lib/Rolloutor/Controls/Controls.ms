@@ -1,4 +1,5 @@
 filein( getFilenamePath(getSourceFileName()) + "/ControlsBox/ControlsBox.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/Subrollouts/Subrollouts.ms" )
 
 /** Controls
  */
@@ -15,6 +16,7 @@ struct Controls_v
 	_Controls = #(),
 
 	ControlsBox,
+	_Subrollouts,
 	
 	/** Controls
 	 */
@@ -32,10 +34,17 @@ struct Controls_v
 	
 	/** Subrollouts
 	 */
-	function subrollouts caption =
+	function subrollouts slot: =
 	(
 		print "Controls_v.subrollouts()"
 		
+		
+		_Subrollouts = Subrollouts_v()
+		
+		append _Controls _Subrollouts
+		
+		--ControlsBox --return
+		this --return
 	),
 	
 	

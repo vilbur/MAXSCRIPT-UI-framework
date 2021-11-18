@@ -25,7 +25,7 @@ struct Rolloutor_v
 		
 		
 		for ControlsBox in Controls._Controls do
-			this.addControlsBoxToUi ControlsBox
+			this.addControlsOrSubrolloutes ControlsBox
 		
 		--format "this.getDefinition()	= % \n" (this.getDefinition())
 		CreateDialog (this.getDefinition()) width:512 style:#(#style_titlebar, #style_border, #style_sysmenu, #style_resizing) 
@@ -33,6 +33,22 @@ struct Rolloutor_v
 	),
 	
 	private
+	
+	/** Add controls or subrolloutes
+	 */
+	function addControlsOrSubrolloutes ControlsBox_or_Subrollouts =
+	(
+		print "Rolloutor_v.addControlsOrSubrolloutes()"
+		format "ControlsBox_or_Subrollouts	= % \n" ControlsBox_or_Subrollouts
+		format "this._isControlsBox(ControlsBox_or_Subrollouts)	= % \n" this._isControlsBox(ControlsBox_or_Subrollouts)
+		
+		if( this._isControlsBox(ControlsBox_or_Subrollouts) ) then
+			this.addControlsBoxToUi ControlsBox_or_Subrollouts
+		
+		else
+			this.addSubrolloutsSlot ControlsBox_or_Subrollouts
+	),
+	
 	
 	/** Add controls box to ui
 	 */
@@ -70,13 +86,42 @@ struct Rolloutor_v
 		_RolloutCreator.addControl _Control.type ( _Control.id as string ) _Control.caption paramStr:_Control.params
 	),
 	
+	/** Add subrollouts slot
+	 */
+	function addSubrolloutsSlot Subrollouts =
+	(
+		print "Rolloutor_v.addSubrolloutsSlot()"
+		format "Subrollouts	= % \n" Subrollouts.slot
+		
+		_RolloutCreator.addText ("subRollout "+Subrollouts.slot+" \"slot_name\"") 
+
+		
+	),
+	
+	/** _is control box
+	 */
+	function _isControlsBox _Struct =
+	(
+		this._getType _Struct == "controlsbox"
+	),
+	
+	/** Get name given struct
+	  * @property	struct	_Struct
+	  *
+	  * @return	string lower case	name of given struc stripped of "_v" suffix E.G.: "FooStruct_v" returm "foostruct"
+	 */
+	function _getType _Struct =
+	(
+		toLower (( filterString( classof _Struct as string ) "_*(:" )[2])  --return
+	),
+	
 	/** Get definition
 	 */
 	function getDefinition =
 	(
 		--print "Rolloutor_v.getDefinition()"
 		_RolloutCreator.end() --return
-		format "_RolloutCreator.def	= % \n" _RolloutCreator
+		--format "_RolloutCreator.def	= % \n" _RolloutCreator
 		_RolloutCreator.def
 	),
 

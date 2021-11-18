@@ -32,7 +32,7 @@ function createControls groups_count:1 controls_count:4 =
 Rolloutor 	= Rolloutor_v title:"Test"
 
 
-_Subrolllouts = Rolloutor.Controls.subrollouts ("Subrolllouts" )
+_Subrolllouts = Rolloutor.Controls.subrollouts()
 
 
 
