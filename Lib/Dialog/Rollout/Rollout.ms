@@ -12,20 +12,20 @@ struct Rollout_v
 	title,
 	
 	/* dependency */
+	Controls = Controls_v(),
+
 	_RolloutCreator, -- https://help.autodesk.com/view/3DSMAX/2016/ENU/?guid=__files_GUID_5FC5036F_E2D7_46C9_9AFA_7B3550B9F254_htm
 
 	/* reference */
 	/* properties */
 	id,
 	
-	Controls = Controls_v(),
-	include "Library/UI/Lib/Dialog/Rollout/RolloutSubrollouts.ms"
 
 	/** Create dialog
 	 */
 	function createRollout =
 	(
-		print ("Rollout_v.createDialog() " + id)
+		print ("Rollout_v.createRollout() " + id)
 		
 		
 		for ControlsBox in Controls._Controls do
@@ -36,8 +36,6 @@ struct Rollout_v
 		_RolloutCreator.end() --return
 	),
 	
-	
-	
 	private
 	
 	/** Add controls or subrolloutes
@@ -45,10 +43,11 @@ struct Rollout_v
 	function addControlsOrSubrolloutes ControlsBox_or_Subrollouts =
 	(
 		print "Rollout_v.addControlsOrSubrolloutes()"
-		format "ControlsBox_or_Subrollouts	= % \n" ControlsBox_or_Subrollouts
-		format "this._isControlsBox(ControlsBox_or_Subrollouts)	= % \n" this._isControlsBox(ControlsBox_or_Subrollouts)
+		--format "ControlsBox_or_Subrollouts	= % \n" ControlsBox_or_Subrollouts
+		--format "this._isControlsBox(ControlsBox_or_Subrollouts)	= % \n" this._isControlsBox(ControlsBox_or_Subrollouts)
 		
 		if( this._isControlsBox(ControlsBox_or_Subrollouts) ) then
+		
 			this.addControlsBoxToUi ControlsBox_or_Subrollouts
 		
 		else
@@ -60,9 +59,9 @@ struct Rollout_v
 	 */
 	function addControlsBoxToUi ControlsBox =
 	(
-		format "\n"
-		print "Rollout_v.addControlsBoxToUi()"
-		format "ControlsBox	= % \n" ControlsBox.caption
+		--format "\n"
+		--print "Rollout_v.addControlsBoxToUi()"
+		--format "ControlsBox	= % \n" ControlsBox.caption
 		_RolloutCreator.addText ("group \"" + ControlsBox.caption + "\" (") 
 					
 		for i = 1 to ControlsBox.controls.count do
@@ -97,10 +96,13 @@ struct Rollout_v
 	function addSubrolloutsSlot Subrollouts =
 	(
 		print "Rollout_v.addSubrolloutsSlot()"
-		format "Subrollouts	= % \n" Subrollouts.slot
+		format "Subrollouts	= % \n" Subrollouts
+		
+		Subrollouts.createRollouts()
+		
+		
 		
 		_RolloutCreator.addText ("subRollout slot_"+Subrollouts.slot as string +" \"slot_name\" height:128") 
-
 	),
 	
 	/** _is control box
@@ -131,9 +133,9 @@ struct Rollout_v
 
 	/** Set id by title if not defined
 	 */
-	function _getId =
+	function _setId =
 	(
-		print "Rollout_v._getId()"
+		print "Rollout_v._setId()"
 		if ( id == undefined or id == unsupplied ) then
 			id = "ROLLOUT_" + (( dotNetObject "System.Text.RegularExpressions.Regex" @"[^A-Za-z0-9_]+" ).Replace ( (substituteString title " " "_") ) "")
 		
@@ -144,9 +146,9 @@ struct Rollout_v
 	 */
 	on create do
 	(
-		this._getId()
+		this._setId()
 		
-		_RolloutCreator = rolloutCreator (this._getId()) title
+		_RolloutCreator = rolloutCreator id title
 
 		_RolloutCreator.begin() 
 	)

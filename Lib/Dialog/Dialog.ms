@@ -35,7 +35,7 @@ struct Dialog_v
      */
     function rollouts =
     (
-        RolloutMain.subrollouts() --return
+        RolloutMain.Controls.subrollouts() --return
     ),
 	
 	private
