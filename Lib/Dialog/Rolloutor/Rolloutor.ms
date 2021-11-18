@@ -30,7 +30,6 @@ struct Rolloutor_v
 		--format "this.getDefinition()	= % \n" (this.getDefinition())
 		--CreateDialog (this.getDefinition()) width:width height:height style:#(#style_titlebar, #style_border, #style_sysmenu, #style_resizing) 
 		_RolloutCreator.end() --return
-	
 	),
 	
 	
@@ -98,7 +97,6 @@ struct Rolloutor_v
 		
 		_RolloutCreator.addText ("subRollout slot_"+Subrollouts.slot as string +" \"slot_name\" height:128") 
 
-		
 	),
 	
 	/** _is control box

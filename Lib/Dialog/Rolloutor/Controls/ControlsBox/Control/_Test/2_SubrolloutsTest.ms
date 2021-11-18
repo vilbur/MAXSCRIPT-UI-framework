@@ -10,6 +10,7 @@ Rolloutor 	= Rolloutor_v title:"Test"
 _Subrolllouts = Rolloutor.Controls.subrollouts()
 
 _Subrolllout = _Subrolllouts.new "Subrollout A"
+_SubrollloutB = _Subrolllouts.new "Subrollout B"
 
 
 
