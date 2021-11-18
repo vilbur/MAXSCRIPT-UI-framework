@@ -1,5 +1,5 @@
-filein( getFilenamePath(getSourceFileName()) + "/Controls/Controls.ms" )
-
+--filein( getFilenamePath(getSourceFileName()) + "/Controls/Controls.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/Controls/ControlsBox/ControlsBox.ms" )
 
 /** Rolloutor
  */
@@ -15,7 +15,8 @@ struct Rolloutor_v
 	/* properties */
 	id,
 	
-	Controls = Controls_v(),
+	--_Controls = Controls_v(),
+	_Controls = #(),
 	
 	
 	
@@ -24,16 +25,43 @@ struct Rolloutor_v
 	function createRolloout =
 	(
 		print "Rolloutor_v.createDialog()"
-		for _Control in Controls.list do
-			this.addControlToUI _Control
+		for ControlsBox in _Controls do
+			this.addControlsBoxToUi ControlsBox
 		
 		--format "this.getDefinition()	= % \n" (this.getDefinition())
 		CreateDialog (this.getDefinition()) width:512 style:#(#style_titlebar, #style_border, #style_sysmenu, #style_resizing) 
 
 	),
 	
+	/** Controls
+	 */
+	function Controls caption =
+	(
+		print "Rolloutor_v.Controls()"
+		
+		ControlsBox = ControlsBox_v caption:caption
+		
+		append _Controls ControlsBox
+		
+		ControlsBox --return
+	),
+	
+	
 	
 	private
+	
+	/** Add controls box to ui
+	 */
+	function addControlsBoxToUi ControlsBox =
+	(
+		print "Rolloutor_v.addControlsBoxToUi()"
+		format "ControlsBox	= % \n" ControlsBox
+		for _Control in ControlsBox.controls do
+			this.addControlToUI _Control
+		
+		
+	),
+	
 	
 	/** Add control to UI
 	 */
@@ -42,21 +70,17 @@ struct Rolloutor_v
 		print "Rolloutor_v.addControlToUI()"
 		format "_Control	= % \n" _Control
 		
-		/** Test
-		 */
-		(function addHandlers _Control =
-		(
-			print "Rolloutor_v.addHandlers()"
-			
-			for _Event in _Control.Events.list do
-				_RolloutCreator.addHandler _Control.id _Event.type codeStr:_Event.code paramStr:_Event.params filter:on 
+		--/** Test
+		-- */
+		--(function addHandlers _Control =
+		--(
+		--	print "Rolloutor_v.addHandlers()"
+		--	
+		--	for _Event in _Control.Events.list do
+		--		_RolloutCreator.addHandler _Control.id _Event.type codeStr:_Event.code paramStr:_Event.params filter:on 
+		--
+		--))(_Control)
 
-		))(_Control)
-		
-		
-		
-		
-		
 		_RolloutCreator.addControl _Control.type ( _Control.id as string ) _Control.caption paramStr:_Control.params
 	),
 	
