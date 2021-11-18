@@ -54,12 +54,15 @@ struct Rolloutor_v
 	 */
 	function addControlsBoxToUi ControlsBox =
 	(
+		format "\n"
 		print "Rolloutor_v.addControlsBoxToUi()"
-		format "ControlsBox	= % \n" ControlsBox
+		format "ControlsBox	= % \n" ControlsBox.caption
+		_RolloutCreator.addText ("group \"" + ControlsBox.caption + "\" (") 
+		
 		for _Control in ControlsBox.controls do
-			this.addControlToUI _Control
+			this.addControlToUI (_Control)
 		
-		
+		_RolloutCreator.addText (")")
 	),
 	
 	
@@ -68,7 +71,7 @@ struct Rolloutor_v
 	function addControlToUI _Control =
 	(
 		print "Rolloutor_v.addControlToUI()"
-		format "_Control	= % \n" _Control
+		format "_Control	= % \n" _Control.id
 		
 		--/** Test
 		-- */
@@ -92,7 +95,7 @@ struct Rolloutor_v
 	(
 		--print "Rolloutor_v.getDefinition()"
 		_RolloutCreator.end() --return
-		
+		format "_RolloutCreator.def	= % \n" _RolloutCreator
 		_RolloutCreator.def
 	),
 
