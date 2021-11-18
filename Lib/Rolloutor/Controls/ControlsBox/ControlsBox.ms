@@ -14,17 +14,7 @@ struct ControlsBox_v
 	
 	Controls	= #(),
 	
-	/** Button
-	 */
-	function button caption id: params:"" =
-	(
-		print "ControlsBox_v.button()"
-		_Control 	= Control_v caption:caption id:id params:params
-		format "_Control	= % \n" _Control
-		append Controls _Control
-		
-		_Control --return
-	), 
+
 	
 	
 	

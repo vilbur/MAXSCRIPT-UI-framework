@@ -1,4 +1,4 @@
---filein( getFilenamePath(getSourceFileName()) + "/Controls/Controls.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/Controls/Controls.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/Controls/ControlsBox/ControlsBox.ms" )
 
 /** Rolloutor
@@ -15,17 +15,17 @@ struct Rolloutor_v
 	/* properties */
 	id,
 	
-	--_Controls = Controls_v(),
-	_Controls = #(),
+	Controls = Controls_v(),
+	
 	
 	
 	
 	/** Create dialog
 	 */
-	function createRolloout =
+	function createRollout =
 	(
 		print "Rolloutor_v.createDialog()"
-		for ControlsBox in _Controls do
+		for ControlsBox in _Controls._Controls do
 			this.addControlsBoxToUi ControlsBox
 		
 		--format "this.getDefinition()	= % \n" (this.getDefinition())
@@ -33,18 +33,18 @@ struct Rolloutor_v
 
 	),
 	
-	/** Controls
-	 */
-	function Controls caption =
-	(
-		print "Rolloutor_v.Controls()"
-		
-		ControlsBox = ControlsBox_v caption:caption
-		
-		append _Controls ControlsBox
-		
-		ControlsBox --return
-	),
+	--/** Controls
+	-- */
+	--function Controls caption =
+	--(
+	--	print "Rolloutor_v.Controls()"
+	--	
+	--	ControlsBox = ControlsBox_v caption:caption
+	--	
+	--	append _Controls ControlsBox
+	--	
+	--	--ControlsBox --return
+	--),
 	
 	
 	
