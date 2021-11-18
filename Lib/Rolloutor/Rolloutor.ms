@@ -17,36 +17,20 @@ struct Rolloutor_v
 	
 	Controls = Controls_v(),
 	
-	
-	
-	
 	/** Create dialog
 	 */
 	function createRollout =
 	(
 		print "Rolloutor_v.createDialog()"
-		for ControlsBox in _Controls._Controls do
+		
+		
+		for ControlsBox in Controls._Controls do
 			this.addControlsBoxToUi ControlsBox
 		
 		--format "this.getDefinition()	= % \n" (this.getDefinition())
 		CreateDialog (this.getDefinition()) width:512 style:#(#style_titlebar, #style_border, #style_sysmenu, #style_resizing) 
 
 	),
-	
-	--/** Controls
-	-- */
-	--function Controls caption =
-	--(
-	--	print "Rolloutor_v.Controls()"
-	--	
-	--	ControlsBox = ControlsBox_v caption:caption
-	--	
-	--	append _Controls ControlsBox
-	--	
-	--	--ControlsBox --return
-	--),
-	
-	
 	
 	private
 	
@@ -58,13 +42,12 @@ struct Rolloutor_v
 		print "Rolloutor_v.addControlsBoxToUi()"
 		format "ControlsBox	= % \n" ControlsBox.caption
 		_RolloutCreator.addText ("group \"" + ControlsBox.caption + "\" (") 
-		
-		for _Control in ControlsBox.controls do
-			this.addControlToUI (_Control)
+					
+		for i = 1 to ControlsBox.controls.count do
+				this.addControlToUI (ControlsBox.controls[i])
 		
 		_RolloutCreator.addText (")")
 	),
-	
 	
 	/** Add control to UI
 	 */
@@ -86,8 +69,6 @@ struct Rolloutor_v
 
 		_RolloutCreator.addControl _Control.type ( _Control.id as string ) _Control.caption paramStr:_Control.params
 	),
-	
-	
 	
 	/** Get definition
 	 */

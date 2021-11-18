@@ -11,24 +11,31 @@ struct Controls_v
 	--/* reference */
 	--/* properties */
 	--list	= #(),
-	--
-	
+		
 	_Controls = #(),
 
 	ControlsBox,
 	
 	/** Controls
 	 */
-	function new caption =
+	function new caption across:4 =
 	(
 		print "Controls_v.new()"
 		
-		ControlsBox = ControlsBox_v caption:caption
+		ControlsBox = ControlsBox_v caption:caption across:across
 		
 		append _Controls ControlsBox
 		
 		--ControlsBox --return
 		this --return
+	),
+	
+	/** Subrollouts
+	 */
+	function subrollouts caption =
+	(
+		print "Controls_v.subrollouts()"
+		
 	),
 	
 	

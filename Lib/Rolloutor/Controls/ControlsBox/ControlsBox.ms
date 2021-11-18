@@ -11,6 +11,7 @@ struct ControlsBox_v
 	/* reference */
 	/* properties */
 	caption,
+	across, -- count of controls per line
 	
 	Controls	= #(),
 	
