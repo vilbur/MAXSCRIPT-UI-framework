@@ -34,6 +34,18 @@ struct Rollout_v
 		--format "this.getDefinition()	= % \n" (this.getDefinition())
 		--CreateDialog (this.getDefinition()) width:width height:height style:#(#style_titlebar, #style_border, #style_sysmenu, #style_resizing) 
 		_RolloutCreator.end() --return
+		
+
+	),
+	
+	/** Add sub rollouts
+	 */
+	function addSubRollouts =
+	(
+		for Subrollouts in Controls._Controls where this._isSubrollouts(Subrollouts) do
+			Subrollouts.addSubRollouts (id)
+			--format "Subrollouts	= % \n" Subrollouts
+			--this.addControlsOrSubrolloutes Subrollouts
 	),
 	
 	private
@@ -100,8 +112,6 @@ struct Rollout_v
 		
 		Subrollouts.createRollouts()
 		
-		
-		
 		_RolloutCreator.addText ("subRollout slot_"+Subrollouts.slot as string +" \"slot_name\" height:128") 
 	),
 	
@@ -110,6 +120,13 @@ struct Rollout_v
 	function _isControlsBox _Struct =
 	(
 		this._getType _Struct == "controlsbox"
+	),
+	
+	/** _is subrollouts
+	 */
+	function _isSubrollouts _Struct =
+	(
+		this._getType _Struct == "subrollouts"
 	),
 	
 	/** Get name given struct

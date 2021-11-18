@@ -29,6 +29,17 @@ struct Dialog_v
 		RolloutMain.createRollout()
 		
 		CreateDialog (RolloutMain._RolloutCreator.def) width:width height:height style:style
+		
+
+		RolloutMain.addSubRollouts()
+
+		--try
+		--(
+		--	AddSubRollout ROLLOUT_Test.slot_1 ROLLOUT_Subrollout_A
+		--
+		--)
+		--catch()
+		
 	),
 	
 	/** rollouts
