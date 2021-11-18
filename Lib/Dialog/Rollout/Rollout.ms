@@ -20,22 +20,18 @@ struct Rollout_v
 	/* properties */
 	id,
 	
-
+	/* inherit */	
+	Ini = Ini_v(),
+	
 	/** Create dialog
 	 */
 	function createRollout =
 	(
-		print ("Rollout_v.createRollout() " + id)
-		
-		
+		--print ("Rollout_v.createRollout() " + id)
 		for ControlsBox in Controls._Controls do
 			this.addControlsOrSubrolloutes ControlsBox
 		
-		--format "this.getDefinition()	= % \n" (this.getDefinition())
-		--CreateDialog (this.getDefinition()) width:width height:height style:#(#style_titlebar, #style_border, #style_sysmenu, #style_resizing) 
 		_RolloutCreator.end() --return
-		
-
 	),
 	
 	/** Add sub rollouts
@@ -61,10 +57,7 @@ struct Rollout_v
 	 */
 	function addControlsOrSubrolloutes ControlsBox_or_Subrollouts =
 	(
-		print "Rollout_v.addControlsOrSubrolloutes()"
-		--format "ControlsBox_or_Subrollouts	= % \n" ControlsBox_or_Subrollouts
-		--format "this._isControlsBox(ControlsBox_or_Subrollouts)	= % \n" this._isControlsBox(ControlsBox_or_Subrollouts)
-		
+		--print "Rollout_v.addControlsOrSubrolloutes()"
 		if( this._isControlsBox(ControlsBox_or_Subrollouts) ) then
 		
 			this.addControlsBoxToUi ControlsBox_or_Subrollouts
@@ -78,9 +71,7 @@ struct Rollout_v
 	 */
 	function addControlsBoxToUi ControlsBox =
 	(
-		--format "\n"
 		--print "Rollout_v.addControlsBoxToUi()"
-		--format "ControlsBox	= % \n" ControlsBox.caption
 		_RolloutCreator.addText ("group \"" + ControlsBox.caption + "\" (") 
 					
 		for i = 1 to ControlsBox.controls.count do
@@ -93,19 +84,18 @@ struct Rollout_v
 	 */
 	function addControlToUI _Control =
 	(
-		print "Rollout_v.addControlToUI()"
-		format "_Control	= % \n" _Control.id
+		print ("Rollout_v.addControlToUI() " + _Control.id)
 		
-		--/** Test
-		-- */
-		--(function addHandlers _Control =
-		--(
-		--	print "Rollout_v.addHandlers()"
-		--	
-		--	for _Event in _Control.Events.list do
-		--		_RolloutCreator.addHandler _Control.id _Event.type codeStr:_Event.code paramStr:_Event.params filter:on 
-		--
-		--))(_Control)
+		/** Test
+		 */
+		(function addHandlers _Control =
+		(
+			print "Rollout_v.addHandlers()"
+			
+			for _Event in _Control.Events.list do
+				_RolloutCreator.addHandler _Control.id _Event.type codeStr:_Event.code paramStr:_Event.params filter:on 
+		
+		))(_Control)
 
 		_RolloutCreator.addControl _Control.type ( _Control.id as string ) _Control.caption paramStr:_Control.params
 	),

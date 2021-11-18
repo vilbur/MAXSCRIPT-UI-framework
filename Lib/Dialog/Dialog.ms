@@ -1,5 +1,5 @@
 filein( getFilenamePath(getSourceFileName()) + "/Rollout/Rollout.ms" )
-
+filein( getFilenamePath(getSourceFileName()) + "/../Ini/Ini.ms" )
 
 
 /** Dialog
@@ -10,12 +10,17 @@ struct Dialog_v
 
 	/* required */
 	title,
+	
+	/* optionable */
 	id,
+	ini,
 	
 	/* dependency */
+	--Menu	= DialogMenu_v Dialog:this,
 	RolloutMain,
 	Controls,
-
+	
+	
 	/* properties */
 	style = #(#style_titlebar, #style_border, #style_sysmenu, #style_resizing),
 	
@@ -30,7 +35,6 @@ struct Dialog_v
 		
 		CreateDialog (RolloutMain._RolloutCreator.def) width:width height:height style:style
 		
-
 		RolloutMain.addSubRollouts()
 
 	),
@@ -43,18 +47,37 @@ struct Dialog_v
         RolloutMain.rollouts() --return
     ),
 	
+	--/** Ini set\get ini path
+	--  *
+	--  * @property	string|#get	_path	set or get path t ini file
+	--  * @property	boolean	load	load values from ini on init
+	--  *
+	--  * @return	string path	to ini file
+	-- */
+	--function ini _path load:true =
+	--(
+	--	--print "Dialog_v.ini()"
+	--	RolloutMain.ini _path load:load --return
+	--),
+	
 	private
 	
 	/** Set main rollout
 	 */
 	function _setMainRollout =
 	(
+		--print "Dialog_v._setMainRollout()"
+		format "ini	= % \n" ini
+		
+		--RolloutMain	= Rollout_v title:title id:id 
 		--RolloutMain	= Rollout_v title:title id:id _Ini:_Ini
-		RolloutMain	= Rollout_v title:title id:id --_Ini:_Ini
+		RolloutMain	= Rollout_v title:title id:id
+		
+		if( ini != undefined ) then
+			RolloutMain.Ini.setIni (ini)
 		
 		Controls = RolloutMain.Controls
 
-		--format "RolloutMain	= % \n" RolloutMain
 		--Events = RolloutMain.Events
 	),
 	/**  
@@ -64,5 +87,4 @@ struct Dialog_v
 		--print("Dialog_v.onCreate()")
 		this._setMainRollout()
 	)
-	
 )
