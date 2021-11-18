@@ -1,20 +1,20 @@
 clearListener()
 
-filein( getFilenamePath(getSourceFileName()) + "/../../Rollout.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/../../_Rollout.ms" )
 
 try( destroyDialog ROLLOUT_test )catch()
 
-Rollout 	= Rollout_v title:"Test"
+_Rollout 	= Rollout_v title:"Test"
 
 
-_Controls = Rollout.Controls
+_Controls = _Rollout.Controls
 
 _Button = _Controls.button "Button Test" id:#button_1
 
-format "_Button	= % \n" _Button
+--format "_Button	= % \n" _Button
 
-_Button.Events.add #pressed "print @Pressed Event@"
+--_Button.Events.add #pressed "print @Pressed Event@"
 
---CreateDialog (Rollout.getDefinition())
+--CreateDialog (_Rollout.getDefinition())
 
-Rollout.createRolloout()
+_Rollout.createRolloout()

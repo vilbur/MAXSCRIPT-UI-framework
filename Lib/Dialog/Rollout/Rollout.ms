@@ -1,10 +1,13 @@
 filein( getFilenamePath(getSourceFileName()) + "/Controls/Controls.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/Controls/ControlsBox/ControlsBox.ms" )
 
+
+
 /** Rollout
  */
 struct Rollout_v
 (
+
 	/* required */
 	title,
 	
@@ -16,10 +19,11 @@ struct Rollout_v
 	id,
 	
 	Controls = Controls_v(),
-	
+	include "Library/UI/Lib/Dialog/Rollout/RolloutSubrollouts.ms"
+
 	/** Create dialog
 	 */
-	function createRollout width:512 height:512 =
+	function createRollout =
 	(
 		print ("Rollout_v.createDialog() " + id)
 		

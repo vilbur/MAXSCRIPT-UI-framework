@@ -2,8 +2,10 @@ clearListener()
 
 filein( getFilenamePath(getSourceFileName()) + "/../Rollout.ms" )
 
-Rollout 	= Rollout_v title:"Test"
+try( destroyDialog ROLLOUT_test )catch()
 
-Rollout.createRollout()
+_Rollout 	= Rollout_v title:"Test"
 
-CreateDialog (Rollout._RolloutCreator.def)
+_Rollout.createRollout()
+
+CreateDialog (_Rollout._RolloutCreator.def)
