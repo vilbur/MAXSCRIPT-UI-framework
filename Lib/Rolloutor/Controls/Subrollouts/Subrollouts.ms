@@ -8,8 +8,16 @@ struct Subrollouts_v
 	/* dependency */
 	/* reference */
 	/* properties */
-	slot = "slot_1",
-
+	slot,
+	
+	/** Create new rollout
+	 */
+	function new title  =
+	(
+		--print "Subrollouts_v.test()"
+		Rolloutor_v title:title --return
+	),
+	
 	private
 	
 	/** Get\set value of property 

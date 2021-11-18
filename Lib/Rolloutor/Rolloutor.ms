@@ -19,18 +19,21 @@ struct Rolloutor_v
 	
 	/** Create dialog
 	 */
-	function createRollout =
+	function createRollout width:512 height:512 =
 	(
-		print "Rolloutor_v.createDialog()"
+		print ("Rolloutor_v.createDialog() " + id)
 		
 		
 		for ControlsBox in Controls._Controls do
 			this.addControlsOrSubrolloutes ControlsBox
 		
 		--format "this.getDefinition()	= % \n" (this.getDefinition())
-		CreateDialog (this.getDefinition()) width:512 style:#(#style_titlebar, #style_border, #style_sysmenu, #style_resizing) 
-
+		--CreateDialog (this.getDefinition()) width:width height:height style:#(#style_titlebar, #style_border, #style_sysmenu, #style_resizing) 
+		_RolloutCreator.end() --return
+	
 	),
+	
+	
 	
 	private
 	
@@ -93,7 +96,7 @@ struct Rolloutor_v
 		print "Rolloutor_v.addSubrolloutsSlot()"
 		format "Subrollouts	= % \n" Subrollouts.slot
 		
-		_RolloutCreator.addText ("subRollout "+Subrollouts.slot+" \"slot_name\"") 
+		_RolloutCreator.addText ("subRollout slot_"+Subrollouts.slot as string +" \"slot_name\" height:128") 
 
 		
 	),
@@ -120,7 +123,6 @@ struct Rolloutor_v
 	function getDefinition =
 	(
 		--print "Rolloutor_v.getDefinition()"
-		_RolloutCreator.end() --return
 		--format "_RolloutCreator.def	= % \n" _RolloutCreator
 		_RolloutCreator.def
 	),

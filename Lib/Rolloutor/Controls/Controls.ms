@@ -39,12 +39,12 @@ struct Controls_v
 		print "Controls_v.subrollouts()"
 		
 		
-		_Subrollouts = Subrollouts_v()
+		_Subrollouts = Subrollouts_v slot:1
 		
 		append _Controls _Subrollouts
 		
-		--ControlsBox --return
-		this --return
+		--this --return
+		_Subrollouts --return
 	),
 	
 	

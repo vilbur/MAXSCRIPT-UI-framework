@@ -4,4 +4,6 @@ filein( getFilenamePath(getSourceFileName()) + "/../Rolloutor.ms" )
 
 Rolloutor 	= Rolloutor_v title:"Test"
 
-CreateDialog (Rolloutor.getDefinition())
+Rolloutor.createRollout()
+
+CreateDialog (Rolloutor._RolloutCreator.def)
