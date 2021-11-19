@@ -12,7 +12,8 @@ struct Rollout_v
 	_Controls = #(),
 	Events	 = #(),
 	
-	
+	_RolloutCreator, -- https://help.autodesk.com/view/3DSMAX/2016/ENU/?guid=__files_GUID_5FC5036F_E2D7_46C9_9AFA_7B3550B9F254_htm
+
 	/** Controls
 	 */
 	function Controls =
@@ -42,7 +43,7 @@ struct Rollout_v
 	 */
 	on create do
 	(
-
+		_RolloutCreator = rolloutCreator id title
 	)
 	
 )

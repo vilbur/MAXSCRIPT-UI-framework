@@ -9,24 +9,22 @@ try( destroyDialog ROLLOUT_test )catch()
  *	
  */
 
-_RolloutCreator 	= RolloutCreator_v()
+_RolloutCreator = RolloutCreator_v()
+_Rollout        = _RolloutCreator.new "Test" id:#ROLLOUT_test
 
-_Rollout = _RolloutCreator.new "Test" id:#ROLLOUT_test
+_Controls = _Rollout.Controls()
+_Button_1 = _Controls.control #button "Button 1" id:#button_1
+
 
 Subrollouts = _Rollout.Subrollouts()
 
 Subrollout_1 = Subrollouts.new "Subrollout1" id:#subrollout_1
-Subrollout_2 = Subrollouts.new "Subrollout2" id:#subrollout_2
-
---format "_Rollout     = % \n" _Rollout
---format "Subrollouts  = % \n" Subrollouts
---format "Subrollout_1 = % \n" Subrollout_1
+--Subrollout_2 = Subrollouts.new "Subrollout2" id:#subrollout_2
 
 /** CREATE UI 
  *	
  */
-
-_RolloutCreator.createRollout _Rollout
+_RolloutCreator.createRollouts()
 
 CreateDialog (_RolloutCreator.getDefinition _Rollout)
 
