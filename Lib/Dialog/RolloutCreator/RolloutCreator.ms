@@ -5,18 +5,18 @@ filein( getFilenamePath(getSourceFileName()) + "/Rollout/Subrollouts/Subrollouts
  */
 struct RolloutCreator_v
 (
-	_Rollouts = #(),
+	Rollout_main,
 
 	/** New
 	 */
 	function new title id: =
 	(
-		_Rollout = Rollout_v title:title id:id --return
+		Rollout_main = Rollout_v title:title id:id --return
 		
 		--_RolloutCreator = rolloutCreator ( title as string ) title
-		append _Rollouts _Rollout
+		--append _Rollouts _Rollout
 		--_RolloutCreator.begin()
-		_Rollout --return
+		Rollout_main --return
 	),
 	
 	/** Get definition
@@ -24,14 +24,6 @@ struct RolloutCreator_v
 	function getDefinition _Rollout =
 	(
 		_Rollout._RolloutCreator.def
-	),
-
-	/** Create rollouts
-	 */
-	function createRollouts =
-	(
-		for _Rollout in _Rollouts do
-			this.createRollout _Rollout
 	),
 
 	/** Create dialog

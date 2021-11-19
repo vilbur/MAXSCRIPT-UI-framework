@@ -21,6 +21,6 @@ _Button_1 = _Controls.control #button "Button 1" id:#button_1
 /** CREATE UI 
  *	
  */
-_RolloutCreator.createRollouts()
+_RolloutCreator.createRollout _Rollout
 
 CreateDialog (_RolloutCreator.getDefinition _Rollout)

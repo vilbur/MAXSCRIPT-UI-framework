@@ -30,4 +30,4 @@ _RolloutCreator.createRollout _Rollout
 
 CreateDialog (_RolloutCreator.getDefinition _Rollout)
 
-_RolloutCreator.addSubRollouts()
+_RolloutCreator.addSubRollouts _Rollout

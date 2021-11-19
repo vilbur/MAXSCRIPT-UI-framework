@@ -30,8 +30,8 @@ format "_Controls_Subrollout	= % \n" _Controls_Subrollout
 /** CREATE UI 
  *	
  */
-_RolloutCreator.createRollouts()
+_RolloutCreator.createRollout _Rollout
 
 CreateDialog (_RolloutCreator.getDefinition _Rollout)
 
-_RolloutCreator.addSubRollouts()
+_RolloutCreator.addSubRollouts _Rollout
