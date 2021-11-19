@@ -13,17 +13,19 @@ struct RolloutCreator_v
 	/* dependency */
 	_RolloutCreator, -- https://help.autodesk.com/view/3DSMAX/2016/ENU/?guid=__files_GUID_5FC5036F_E2D7_46C9_9AFA_7B3550B9F254_htm
 
-	_Rollout,
+	
+	_Rollouts = #(),
 
 	/** New
 	 */
 	function new title id: =
 	(
-		this._Rollout = Rollout_v title:title id:id --return
+		_Rollout = Rollout_v title:title id:id --return
 		
 		--_RolloutCreator = rolloutCreator ( title as string ) title
-		
+		append _Rollouts _Rollout
 		--_RolloutCreator.begin()
+		_Rollout --return
 	),
 
 	/** Get definition
@@ -33,23 +35,30 @@ struct RolloutCreator_v
 		_RolloutCreator.def
 	),
 
+	/** Create rollouts
+	 */
+	function createRollouts =
+	(
+		for _Rollout in _Rollouts do
+			this.createRollout _Rollout
+	),
 
 	/** Create dialog
 	 */
-	function createRollout =
+	function createRollout _Rollout =
 	(
 		_RolloutCreator = rolloutCreator (_Rollout.id) (_Rollout.title)
 		
 		_RolloutCreator.begin()
 		
-		this.addSubrolloutsSlots()
+		this.addSubrolloutsSlots _Rollout
 		
 		_RolloutCreator.end()
 	),
 	
 	/** Add subrollouts slot
 	 */
-	function addSubrolloutsSlots  =
+	function addSubrolloutsSlots _Rollout =
 	(
 		print "RolloutCreator_v.addSubrolloutsSlot()"
 		--format "Subrollouts	= % \n" Subrollouts
@@ -60,17 +69,24 @@ struct RolloutCreator_v
 			_RolloutCreator.addText ("subRollout "+Subrollouts.slot as string +" \"slot_name\" height:128")
 
 	),
-	
-	
-	
+
 	/** Add sub rollouts
 	 */
 	function addSubRollouts =
 	(
-		for Subrollouts in Controls._Controls where this._isSubrollouts(Subrollouts) do
-			Subrollouts.addSubRollouts (id)
-			--format "Subrollouts	= % \n" Subrollouts
-			--this.addControlsOrSubrolloutes Subrollouts
+		for _Rollout in _Rollouts do
+			for _Subrollouts in _Rollout._Controls do
+			(	
+				for _Subrollout in _Subrollouts.Rollouts do
+				(
+					--format "_Subrollout	= % \n" _Subrollout
+					_SubRolloutCreator = rolloutCreator (_Subrollout.id) (_Subrollout.title)
+					_SubRolloutCreator.begin()
+					_SubRolloutCreator.end()
+					
+					execute ( "\n AddSubRollout "+_Rollout.id+"." + _Subrollouts.slot as string + " "+ _Subrollout.id )
+				)	
+			)
 	),
 	
 	/** rollouts

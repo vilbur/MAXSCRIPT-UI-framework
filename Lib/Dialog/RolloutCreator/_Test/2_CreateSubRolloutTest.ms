@@ -26,7 +26,7 @@ format "_Rollout     = % \n" _Rollout
  *	
  */
 
-_RolloutCreator.createRollout()
+_RolloutCreator.createRollouts()
 
 CreateDialog (_RolloutCreator.getDefinition())
 
@@ -35,21 +35,21 @@ CreateDialog (_RolloutCreator.getDefinition())
 --CreateDialog (_RolloutCreator.getDefinition())
 
 
+_RolloutCreator.addSubRollouts()
 
 
-
-/** Create Subrollouts
- *	
- */
-for _Subrollouts in _Rollout._Controls do
-(	
-	for _Subrollout in _Subrollouts.Rollouts do
-	(
-		--format "_Subrollout	= % \n" _Subrollout
-		_SubRolloutCreator = rolloutCreator (_Subrollout.id) (_Subrollout.title)
-		_SubRolloutCreator.begin()
-		_SubRolloutCreator.end()
-		
-		execute ( "\n AddSubRollout "+_Rollout.id+"." + _Subrollouts.slot as string + " "+ _Subrollout.id )
-	)	
-)
+--/** Create Subrollouts
+-- *	
+-- */
+--for _Subrollouts in _Rollout._Controls do
+--(	
+--	for _Subrollout in _Subrollouts.Rollouts do
+--	(
+--		--format "_Subrollout	= % \n" _Subrollout
+--		_SubRolloutCreator = rolloutCreator (_Subrollout.id) (_Subrollout.title)
+--		_SubRolloutCreator.begin()
+--		_SubRolloutCreator.end()
+--		
+--		execute ( "\n AddSubRollout "+_Rollout.id+"." + _Subrollouts.slot as string + " "+ _Subrollout.id )
+--	)	
+--)
