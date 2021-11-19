@@ -38,6 +38,9 @@ struct RolloutCreator_v
 	 */
 	function createRollout _Rollout =
 	(
+		format "\n"
+		print ("RolloutCreator_v.createRollout() " + _Rollout.id)
+		format "_Rollout	= % \n" _Rollout
 		_Rollout._RolloutCreator.begin()
 		
 		for ControlsBox_or_Subrollouts in _Rollout._Controls do
@@ -72,7 +75,8 @@ struct RolloutCreator_v
 	 */
 	function addSubrolloutsSlots _Rollout _Subrollouts =
 	(
-		--print "RolloutCreator_v.addSubrolloutsSlot()"
+		print ("RolloutCreator_v.addSubrolloutsSlot()" + Subrollouts.slot)
+		
 		_Rollout._RolloutCreator.addText ("subRollout "+Subrollouts.slot as string +" \"slot_name\" height:128")
 		
 		for _Subrollout in _Subrollouts.Rollouts do
@@ -82,15 +86,20 @@ struct RolloutCreator_v
 
 	/** Add sub rollouts
 	 */
-	function addSubRollouts =
+	function addSubRollouts _Rollout =
 	(
-		for _Rollout in _Rollouts do
+		print "RolloutCreator_v.addSubRollouts()"
+		--format "_Rollout	= % \n" _Rollout
+		
+		--for _Rollout in _Rollouts do
 			for _Subrollouts in _Rollout._Controls where this._isSubrollouts(_Subrollouts) do
 				for _Subrollout in _Subrollouts.Rollouts do
 				(
-					this.createRollout _Subrollout
-					
-					execute ( "\n AddSubRollout "+_Rollout.id+"." + _Subrollouts.slot as string + " "+ _Subrollout.id )
+					--format "_Subrollouts	= % \n" _Subrollouts
+					--this.createRollout _Subrollout
+					add_subrollout = ( "AddSubRollout "+_Rollout.id+"." + _Subrollouts.slot as string + " "+ _Subrollout.id )
+					--format "add_subrollout	= % \n" add_subrollout
+					execute add_subrollout
 				)	
 	),
 
