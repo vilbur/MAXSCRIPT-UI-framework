@@ -1,10 +1,17 @@
 clearListener()
 
-filein( getFilenamePath(getSourceFileName()) + "/../../../../../Rollout.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/../../../../../RolloutCreator.ms" )
 
 try( destroyDialog ROLLOUT_test )catch()
 
-_Rollout 	= Rollout_v title:"Test"
+
+/** DEFINE UI 
+ *	
+ */
+_RolloutCreator 	= RolloutCreator_v()
+
+_Rollout = _RolloutCreator.new "Test"
+
 
 
 /** Create controls
@@ -13,18 +20,24 @@ function createControls groups_count:1 controls_count:4 =
 (
 	for g = 1 to groups_count do
 	(
-		_Controls = _Rollout.Controls.new ("Group "+g as string )
-	
-		for c = 1 to 2 do
+		_Controls = _Rollout.Controls()
+
+		for c = 1 to controls_count do
 		(
-			_Button = _Controls.button ("Button "+c as string ) id:("button_"+ g as string +"_"+ c as string )
+			_Button = _Controls.control #button ("Button "+c as string ) id:("button_"+ g as string +"_"+ c as string )
 			_Button.Events.add #pressed "print @Pressed Event@"
 			
 		)
 	)
 )
 
+
 createControls()
 
 
-_Rollout.createRollout()
+/** CREATE UI 
+ *	
+ */
+_RolloutCreator.createRollout _Rollout
+
+CreateDialog (_RolloutCreator.getDefinition _Rollout)

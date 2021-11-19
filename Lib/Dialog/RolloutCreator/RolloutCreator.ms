@@ -30,8 +30,8 @@ struct RolloutCreator_v
 	 */
 	function createRollout _Rollout =
 	(
-		--format "\n"
-		--print ("RolloutCreator_v.createRollout() " + _Rollout.id)
+		format "\n"
+		print ("RolloutCreator_v.createRollout() " + _Rollout.id)
 		_Rollout._RolloutCreator.begin()
 		
 		for ControlsBox_or_Subrollouts in _Rollout._Controls do
@@ -45,7 +45,7 @@ struct RolloutCreator_v
 	function addControlsOrSubrolloutes _Rollout ControlsBox_or_Subrollouts =
 	(
 		--print "RolloutCreator_v.addControlsOrSubrolloutes()"
-		if( this._isControlsBox(ControlsBox_or_Subrollouts) ) then
+		if( this._isControls(ControlsBox_or_Subrollouts) ) then
 		
 			this.addControls (_Rollout)(ControlsBox_or_Subrollouts)
 		
@@ -59,7 +59,20 @@ struct RolloutCreator_v
 	(
 		--print "RolloutCreator_v.addControls()"
 		for _Control in _Controls.list do
-			_Rollout._RolloutCreator.addControl _Control.type _Control.id _Control.caption
+		(
+			this.addControlHandlers _Rollout _Control
+
+			_Rollout._RolloutCreator.addControl (_Control.type) (_Control.id) (_Control.caption)
+		)
+	),
+
+	/** Test
+	 */
+	function addControlHandlers _Rollout _Control =
+	(
+		--print "RolloutCreator_v.addControlHandlers()"
+		for _Event in _Control.Events.list do
+			_Rollout._RolloutCreator.addHandler _Control.id _Event.type codeStr:_Event.code paramStr:_Event.params filter:on 
 	),
 	
 	/** Add subrollouts slot
@@ -95,7 +108,7 @@ struct RolloutCreator_v
 
 	/** _is control box
 	 */
-	function _isControlsBox _Struct =
+	function _isControls _Struct =
 	(
 		this._getType _Struct == "controls"
 	),
@@ -142,9 +155,9 @@ struct RolloutCreator_v
 	--	
 	--	/** Test
 	--	 */
-	--	(function addHandlers _Control =
+	--	(function addControlHandlers _Control =
 	--	(
-	--		print "RolloutCreator_v.addHandlers()"
+	--		print "RolloutCreator_v.addControlHandlers()"
 	--		
 	--		for _Event in _Control.Events.list do
 	--			_RolloutCreator.addHandler _Control.id _Event.type codeStr:_Event.code paramStr:_Event.params filter:on 

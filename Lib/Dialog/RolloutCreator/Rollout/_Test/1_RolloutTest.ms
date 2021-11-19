@@ -7,7 +7,7 @@ try( destroyDialog ROLLOUT_test )catch()
 /** DEFINE UI 
  *	
  */
-_Rollout = Rollout_v title:"Test" id:"ROLLOUT_test"
+_Rollout = Rollout_v title:"Test" 
 
 format "_Rollout	= % \n" _Rollout
 
