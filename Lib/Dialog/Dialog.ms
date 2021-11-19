@@ -1,5 +1,6 @@
-filein( getFilenamePath(getSourceFileName()) + "/Rollout/Rollout.ms" )
-filein( getFilenamePath(getSourceFileName()) + "/../Ini/Ini.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/RolloutCreator/RolloutCreator.ms" )
+
+--filein( getFilenamePath(getSourceFileName()) + "/../Ini/Ini.ms" )
 
 
 /** Dialog
@@ -13,30 +14,33 @@ struct Dialog_v
 	
 	/* optionable */
 	id,
-	ini,
+	--ini,
 	
 	/* dependency */
+	_RolloutCreator = RolloutCreator_v(),
 	--Menu	= DialogMenu_v Dialog:this,
-	RolloutMain,
-	Controls,
-	
 	
 	/* properties */
+	RolloutMain,
 	style = #(#style_titlebar, #style_border, #style_sysmenu, #style_resizing),
+	
+	/* inherit */
+	Controls,
 	
 	/** Create
 	  *
 	  * TODO add params for max 2022
 	 */
-	function create pos: width: height: bgcolor: fgcolor: bitmap: style: modal: escapeEnable: lockHeight:false lockWidth:true parent: =
+	function create pos: width:256 height:256 bgcolor: fgcolor: bitmap: style: modal: escapeEnable: lockHeight:false lockWidth:true parent: =
 	(
-		--print "Dialog_v.create()"
-		RolloutMain.createRollout()
+		print "Dialog_v.create()"
+		format "RolloutMain.id	= % \n" RolloutMain.id
 		
-		CreateDialog (RolloutMain._RolloutCreator.def) width:width height:height style:style
+		_RolloutCreator.createRollout RolloutMain
 		
-		RolloutMain.addSubRollouts()
-
+		CreateDialog (_RolloutCreator.getDefinition(RolloutMain)) width:width height:height style:style
+		
+		_RolloutCreator.addSubRollouts RolloutMain
 	),
 	
 	/** rollouts
@@ -44,7 +48,7 @@ struct Dialog_v
     function rollouts =
     (
         --RolloutMain.Controls.subrollouts() --return
-        RolloutMain.rollouts() --return
+        RolloutMain.Subrollouts() --return
     ),
 	
 	--/** Ini set\get ini path

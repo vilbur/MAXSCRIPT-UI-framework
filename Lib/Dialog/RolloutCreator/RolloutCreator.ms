@@ -5,18 +5,18 @@ filein( getFilenamePath(getSourceFileName()) + "/Rollout/Subrollouts/Subrollouts
  */
 struct RolloutCreator_v
 (
-	Rollout_main,
+	--Rollout_main,
 
 	/** New
 	 */
 	function new title id: =
 	(
-		Rollout_main = Rollout_v title:title id:id --return
+		 Rollout_v title:title id:id --return
 		
 		--_RolloutCreator = rolloutCreator ( title as string ) title
 		--append _Rollouts _Rollout
 		--_RolloutCreator.begin()
-		Rollout_main --return
+		--Rollout_main --return
 	),
 	
 	/** Get definition
@@ -65,13 +65,13 @@ struct RolloutCreator_v
 	
 	/** Add subrollouts slot
 	 */
-	function addSubrolloutsSlots _Rollout _Subrollouts =
+	function addSubrolloutsSlots _Rollout Subrollouts =
 	(
 		print ("RolloutCreator_v.addSubrolloutsSlot()" + Subrollouts.slot)
 		
 		_Rollout._RolloutCreator.addText ("subRollout "+Subrollouts.slot as string +" \"slot_name\" height:128")
 		
-		for _Subrollout in _Subrollouts.Rollouts do
+		for _Subrollout in Subrollouts.Rollouts do
 			this.createRollout (_Subrollout)
 
 	),

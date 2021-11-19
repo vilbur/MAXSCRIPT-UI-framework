@@ -45,7 +45,7 @@ struct Rollout_v
 	(
 		--print "Rollout_v._getSlot()"
 		local subrollouts = for _struct in _Controls where matchPattern (classof _struct as string ) pattern:@"*Subrollouts_v*" collect _struct 
-
+		format "subrollouts.count	= % \n" subrollouts.count
 		("slot_"+id+"_"+(subrollouts.count+1) as string ) --return
 	),
 	
