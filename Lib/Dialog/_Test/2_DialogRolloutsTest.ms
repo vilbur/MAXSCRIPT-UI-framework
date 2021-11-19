@@ -13,5 +13,4 @@ _Rollouts_2	  = Dialog.Rollouts()
 _Subrolllout = _Rollouts_1.new "Subrollout A"
 _Subrolllout = _Rollouts_2.new "Subrollout B"
 
-
 Dialog.create()

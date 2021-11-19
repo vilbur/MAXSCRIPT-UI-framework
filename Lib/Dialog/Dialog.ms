@@ -33,9 +33,7 @@ struct Dialog_v
 	 */
 	function create pos: width:256 height:256 bgcolor: fgcolor: bitmap: style: modal: escapeEnable: lockHeight:false lockWidth:true parent: =
 	(
-		print "Dialog_v.create()"
-		format "RolloutMain.id	= % \n" RolloutMain.id
-		
+		print ("Dialog_v.create() " + RolloutMain.id)
 		_RolloutCreator.createRollout RolloutMain
 		
 		CreateDialog (_RolloutCreator.getDefinition(RolloutMain)) width:width height:height style:style
@@ -47,9 +45,9 @@ struct Dialog_v
      */
     function rollouts =
     (
-        --RolloutMain.Controls.subrollouts() --return
-        RolloutMain.Subrollouts() --return
+        RolloutMain.rollouts() --return
     ),
+	
 	
 	--/** Ini set\get ini path
 	--  *
@@ -64,8 +62,10 @@ struct Dialog_v
 	--	RolloutMain.ini _path load:load --return
 	--),
 	
+	
 	private
 	
+
 	/** Set main rollout
 	 */
 	function _setMainRollout =
@@ -73,7 +73,6 @@ struct Dialog_v
 		--print "Dialog_v._setMainRollout()"
 		format "ini	= % \n" ini
 		
-		--RolloutMain	= Rollout_v title:title id:id 
 		--RolloutMain	= Rollout_v title:title id:id _Ini:_Ini
 		RolloutMain	= Rollout_v title:title id:id
 		
