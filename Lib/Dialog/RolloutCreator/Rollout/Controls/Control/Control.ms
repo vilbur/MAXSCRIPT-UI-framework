@@ -1,4 +1,3 @@
-filein( getFilenamePath(getSourceFileName()) + "/ControlEvent/ControlEvents.ms" )
 
 /** Control
  */
@@ -16,7 +15,7 @@ struct Control_v
 	/* reference */
 	
 	/* dependency */
-	Events = ControlEvents_v(),
+	Events = Events_v(),
 
 	private
 	

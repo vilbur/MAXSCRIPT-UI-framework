@@ -1,15 +1,7 @@
-
-/** Control event
+/** Event
  */
-struct ControlEvents_v
+struct Events_v
 (
-	--__construct = #(  ),
-	
-	/* required */
-	/* dependency */
-	/* reference */
-	/* properties */
-	
 	list	= #(),
 	
 	/** Set
@@ -17,7 +9,6 @@ struct ControlEvents_v
 	function add type callback params:"" tooltip:"" =
 	(
 		--print "ControlEvent_v.add()"
-		
 		append list (Event_v type:type code:callback tooltip:tooltip params:params)
 	),
 	
@@ -30,6 +21,5 @@ struct ControlEvents_v
 	on create do
 	(
 		--print("ControlEvent_v.onCreate()")
-		
 	)
 )
