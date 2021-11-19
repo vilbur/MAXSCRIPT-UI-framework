@@ -18,7 +18,7 @@ Subrollouts_1 = _Rollout.Subrollouts()
 Subrollout_1 = Subrollouts_1.new "Subrollout1"
 
 
-Subrollout_1.Events.add #rolledUp "print @Pressed Event@"
+Subrollout_1.Events.add #rolledUp "print @rolledUp val@"
 
 
 --/** Create controls

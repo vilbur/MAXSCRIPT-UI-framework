@@ -2,12 +2,14 @@ filein( getFilenamePath(getSourceFileName()) + "/../../Events/Events.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/Rollout/Subrollouts/Subrollouts.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/Rollout/Rollout.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/ControlCreator/ControlCreator.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/RolloutEvent/RolloutEvent.ms" )
 
 /** RolloutCreator_v
  */
 struct RolloutCreator_v
 (
 	ControlCreator = ControlCreator_v(),
+	RolloutEvents  = RolloutEvents_v(),
 
 	/** New
 	 */
@@ -29,39 +31,49 @@ struct RolloutCreator_v
 	(
 		format "\n"
 		print ("RolloutCreator_v.createRollout() " + _Rollout.id)
-		format "_Rollout	= % \n" _Rollout
+		--format "_Rollout	= % \n" _Rollout
 		_Rollout._RolloutCreator.begin()
 		
-		for ControlsBox_or_Subrollouts in _Rollout._Controls do
-			this.addControlsOrSubrolloutes (_Rollout) (ControlsBox_or_Subrollouts)
+		
+		this.addControlsAndSubrolloutes (_Rollout)
+		
+		RolloutEvents.bindEvents (_Rollout)
 		
 		_Rollout._RolloutCreator.end()
 	),
 
 	/** Add controls or subrolloutes
 	 */
-	function addControlsOrSubrolloutes _Rollout ControlsBox_or_Subrollouts =
+	function addControlsAndSubrolloutes _Rollout =
 	(
-		--print "RolloutCreator_v.addControlsOrSubrolloutes()"
-		if( this._isControls(ControlsBox_or_Subrollouts) ) then
-		
-			ControlCreator.addControls (_Rollout)(ControlsBox_or_Subrollouts)
-		
-		else
-			this.addSubrolloutsSlots (_Rollout)(ControlsBox_or_Subrollouts)
+		--print "RolloutCreator_v.addControlsAndSubrolloutes()"
+		for ControlsBox_or_Subrollouts in _Rollout._Controls do
+			if( this._isControls(ControlsBox_or_Subrollouts) ) then
+			
+				ControlCreator.addControls (_Rollout)(ControlsBox_or_Subrollouts)
+			
+			else
+			
+				this._createSubrollouts (_Rollout)(ControlsBox_or_Subrollouts)
 	),
+	 
+	 /** _create subrollouts
+	  */
+	 function _createSubrollouts  _Rollout Subrollouts =
+	 (
+		--print "RolloutCreator_v._createSubrollouts()"
+		this.addSubrolloutsSlots (_Rollout) (Subrollouts)
+		
+		for _Subrollout in Subrollouts.Rollouts do
+			this.createRollout (_Subrollout)
+	 ),
 	 
 	/** Add subrollouts slot
 	 */
 	function addSubrolloutsSlots _Rollout Subrollouts =
 	(
 		--print ("RolloutCreator_v.addSubrolloutsSlot()" + Subrollouts.slot)
-		
 		_Rollout._RolloutCreator.addText ("subRollout "+Subrollouts.slot as string +" \"slot_name\" height:128")
-		
-		for _Subrollout in Subrollouts.Rollouts do
-			this.createRollout (_Subrollout)
-
 	),
 
 	/** Add sub rollouts
@@ -77,7 +89,6 @@ struct RolloutCreator_v
 				this.addSubRollouts _Subrollout
 			)	
 	),
-
 	
 	private
 	
@@ -105,48 +116,6 @@ struct RolloutCreator_v
 	(
 		toLower (( filterString( classof _Struct as string ) "_*(:" )[2])  --return
 	),
-	
-	
-	
-
-	--
-	--/** Add controls box to ui
-	-- */
-	--function addControlsBoxToUi ControlsBox =
-	--(
-	--	--print "RolloutCreator_v.addControlsBoxToUi()"
-	--	_RolloutCreator.addText ("group \"" + ControlsBox.caption + "\" (") 
-	--				
-	--	for i = 1 to ControlsBox.controls.count do
-	--			this.addControlToUI (ControlsBox.controls[i])
-	--	
-	--	_RolloutCreator.addText (")")
-	--),
-	--
-	--/** Add control to UI
-	-- */
-	--function addControlToUI _Control =
-	--(
-	--	print ("RolloutCreator_v.addControlToUI() " + _Control.id)
-	--	
-	--	/** Test
-	--	 */
-	--	(function addControlHandlers _Control =
-	--	(
-	--		print "RolloutCreator_v.addControlHandlers()"
-	--		
-	--		for _Event in _Control.Events.list do
-	--			_RolloutCreator.addHandler _Control.id _Event.type codeStr:_Event.code paramStr:_Event.params filter:on 
-	--	
-	--	))(_Control)
-	--
-	--	_RolloutCreator.addControl _Control.type ( _Control.id as string ) _Control.caption paramStr:_Control.params
-	--),
-	--
-
-
-
-
 	
 	/**  
 	 */
