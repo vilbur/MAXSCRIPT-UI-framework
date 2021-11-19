@@ -10,6 +10,7 @@ struct Controls_v
 	--/* dependency */
 	--/* reference */
 	--/* properties */
+	group,
 	--list	= #(),
 		
 	list = #(),
@@ -70,7 +71,8 @@ struct Controls_v
 	 */
 	on create do
 	(
-		
+		print "Controls_v.create()"
+		format "group	= % \n" group
 		
 	)
 	

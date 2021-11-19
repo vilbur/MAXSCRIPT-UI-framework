@@ -11,12 +11,7 @@ struct RolloutCreator_v
 	 */
 	function new title id: =
 	(
-		 Rollout_v title:title id:id --return
-		
-		--_RolloutCreator = rolloutCreator ( title as string ) title
-		--append _Rollouts _Rollout
-		--_RolloutCreator.begin()
-		--Rollout_main --return
+		Rollout_v title:title id:id --return
 	),
 	
 	/** Get definition
@@ -57,15 +52,38 @@ struct RolloutCreator_v
 	 */
 	function addControls _Rollout _Controls =
 	(
-		--print "RolloutCreator_v.addControls()"
+		print "RolloutCreator_v.addControls()"
+		this.addControlsGroup (_Rollout) (_Controls) #start 
+		
 		for _Control in _Controls.list do
-		(
-			this.addControlHandlers _Rollout _Control
+			this.addControl _Rollout _Control
+		
+		this.addControlsGroup (_Rollout) (_Controls) #end 
+	),
+	
+	/** Add controls group
+	 */
+	function addControlsGroup _Rollout _Controls mode =
+	(
+		print "RolloutCreator_v.addControlsGroup()"
+		if( _Controls.group == undefined ) do
+			return false
 
-			_Rollout._RolloutCreator.addControl (_Control.type) (_Control.id) (_Control.caption)
-		)
+		start_or_end	= if( mode == #start ) then "group @"+_Controls.group+"@ (" else ")" 
+
+		_Rollout._RolloutCreator.addText start_or_end filter:on
 	),
 
+	/** Add control
+	 */
+	function addControl _Rollout _Control =
+	(
+		--print "RolloutCreator_v.addControl()"
+		this.addControlHandlers _Rollout _Control
+
+		_Rollout._RolloutCreator.addControl (_Control.type) (_Control.id) (_Control.caption)
+	),
+	
 	/** Test
 	 */
 	function addControlHandlers _Rollout _Control =

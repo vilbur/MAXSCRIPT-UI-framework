@@ -16,10 +16,10 @@ struct Rollout_v
 
 	/** Controls
 	 */
-	function Controls =
+	function Controls group:undefined =
 	(
 		--print "Rollout_v.controls()"
-		local Controls = Controls_v()
+		local Controls = Controls_v group:group
 		
 		append _Controls Controls
 		
