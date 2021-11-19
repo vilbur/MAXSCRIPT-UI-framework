@@ -8,7 +8,7 @@ try( destroyDialog ROLLOUT_test )catch()
 
 /* ROLLOUT */ 
 _RolloutCreator = RolloutCreator_v()
-_Rollout        = _RolloutCreator.new "Test" id:#ROLLOUT_test
+_Rollout        = _RolloutCreator.new "Test"
 
 _Controls = _Rollout.Controls()
 _Button_1 = _Controls.control #button "Button 1" id:#button_1

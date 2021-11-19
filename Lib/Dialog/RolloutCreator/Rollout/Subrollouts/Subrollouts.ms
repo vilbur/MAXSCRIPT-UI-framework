@@ -5,7 +5,7 @@ struct Subrollouts_v
 	/* required */
 	
 	/* properties */
-	slot = #slot_1,
+	slot,
 	
 	Rollouts	= #(),
 	
@@ -59,7 +59,8 @@ struct Subrollouts_v
 	 */
 	on create do
 	(
-		--print("Subrollouts_v.onCreate()")
+		print("Subrollouts_v.onCreate()")
+		format "slot	= % \n" slot
 	)
 	
 )

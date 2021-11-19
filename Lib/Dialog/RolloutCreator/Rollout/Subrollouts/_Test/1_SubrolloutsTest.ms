@@ -8,15 +8,16 @@ try( destroyDialog ROLLOUT_test )catch()
 /** DEFINE UI 
  *	
  */
-_Rollout = Rollout_v title:"Test" id:"ROLLOUT_test"
+_Rollout = Rollout_v title:"Test"
 
-Subrollouts = _Rollout.Subrollouts()
+Subrollouts_1 = _Rollout.Subrollouts()
+Subrollouts_2 = _Rollout.Subrollouts()
 
-Subrollout_1 = Subrollouts.new "Subrollout1" id:#subrollout_1
-Subrollout_2 = Subrollouts.new "Subrollout2" id:#subrollout_2
+Subrollout_1 = Subrollouts_1.new "Subrollout1" id:#subrollout_1
+Subrollout_2 = Subrollouts_2.new "Subrollout2" id:#subrollout_2
 
 format "_Rollout     = % \n" _Rollout
-format "Subrollouts  = % \n" Subrollouts
+format "Subrollouts_1  = % \n" Subrollouts_1
 format "Subrollout_1 = % \n" Subrollout_1
 
 
@@ -30,7 +31,7 @@ _RolloutCreator.begin()
  *	
  */
 for _Subrollouts in _Rollout._Controls do
-	_RolloutCreator.addText ("subRollout "+Subrollouts.slot as string +" \"slot_name\" height:128")
+	_RolloutCreator.addText ("subRollout "+_Subrollouts.slot as string +" \"slot_name\" height:128")
 
 
 _RolloutCreator.end()
@@ -38,7 +39,7 @@ CreateDialog (_RolloutCreator.def)
 
 
 
-/** Create Subrollouts
+/** Create Subrollouts_1
  *	
  */
 for _Subrollouts in _Rollout._Controls do

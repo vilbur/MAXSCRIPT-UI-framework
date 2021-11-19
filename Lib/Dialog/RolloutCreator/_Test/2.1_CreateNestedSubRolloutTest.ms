@@ -35,8 +35,6 @@ _RolloutCreator.createRollout _Rollout
 
 CreateDialog (_RolloutCreator.getDefinition _Rollout) height:256 width:256 
 
---_RolloutCreator.addSubRollouts()
 _RolloutCreator.addSubRollouts _Rollout
-
 
 _RolloutCreator.addSubRollouts _Subrollout_1

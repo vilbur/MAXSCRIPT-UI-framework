@@ -11,7 +11,7 @@ try( destroyDialog ROLLOUT_test )catch()
 
 _RolloutCreator 	= RolloutCreator_v()
 
-_Rollout = _RolloutCreator.new "Test" id:#ROLLOUT_test
+_Rollout = _RolloutCreator.new "Test"
 
 Subrollouts = _Rollout.Subrollouts()
 

@@ -31,8 +31,8 @@ struct RolloutCreator_v
 	function createRollout _Rollout =
 	(
 		format "\n"
-		print ("RolloutCreator_v.createRollout() " + _Rollout.id)
-		format "_Rollout	= % \n" _Rollout
+		--print ("RolloutCreator_v.createRollout() " + _Rollout.id)
+		--format "_Rollout	= % \n" _Rollout
 		_Rollout._RolloutCreator.begin()
 		
 		for ControlsBox_or_Subrollouts in _Rollout._Controls do
@@ -83,16 +83,15 @@ struct RolloutCreator_v
 		print "RolloutCreator_v.addSubRollouts()"
 		--format "_Rollout	= % \n" _Rollout
 		
-		--for _Rollout in _Rollouts do
-			for _Subrollouts in _Rollout._Controls where this._isSubrollouts(_Subrollouts) do
-				for _Subrollout in _Subrollouts.Rollouts do
-				(
-					--format "_Subrollouts	= % \n" _Subrollouts
-					--this.createRollout _Subrollout
-					add_subrollout = ( "AddSubRollout "+_Rollout.id+"." + _Subrollouts.slot as string + " "+ _Subrollout.id )
-					--format "add_subrollout	= % \n" add_subrollout
-					execute add_subrollout
-				)	
+		for _Subrollouts in _Rollout._Controls where this._isSubrollouts(_Subrollouts) do
+			for _Subrollout in _Subrollouts.Rollouts do
+			(
+				format "_Subrollouts.slot	= % \n" _Subrollouts.slot
+				--this.createRollout _Subrollout
+				add_subrollout = ( "AddSubRollout "+_Rollout.id+"." + _Subrollouts.slot + " "+ _Subrollout.id )
+				--format "add_subrollout	= % \n" add_subrollout
+				execute add_subrollout
+			)	
 	),
 
 	
@@ -163,16 +162,7 @@ struct RolloutCreator_v
 
 
 
-	/** Set id by title if not defined
-	 */
-	function _setId =
-	(
-		print "RolloutCreator_v._setId()"
-		if ( id == undefined or id == unsupplied ) then
-			id = "ROLLOUT_" + (( dotNetObject "System.Text.RegularExpressions.Regex" @"[^A-Za-z0-9_]+" ).Replace ( (substituteString title " " "_") ) "")
-		
-		id --return
-	),
+
 	
 	/**  
 	 */
