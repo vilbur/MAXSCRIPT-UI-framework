@@ -1,0 +1,24 @@
+clearListener()
+filein( getFilenamePath(getSourceFileName()) + "/../Rollout.ms" )
+
+
+try( destroyDialog ROLLOUT_test )catch()
+
+/** DEFINE UI 
+ *	
+ */
+_Rollout = Rollout_v title:"Test" id:"ROLLOUT_test"
+
+format "_Rollout	= % \n" _Rollout
+
+
+/** CREATE UI 
+ *	
+ */
+_RolloutCreator = rolloutCreator (_Rollout.id) (_Rollout.title)
+
+_RolloutCreator.begin()
+
+_RolloutCreator.end()
+
+CreateDialog (_RolloutCreator.def)

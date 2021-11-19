@@ -10,11 +10,11 @@ format "ini_path	= % \n" ini_path
 
 Dialog 	    = Dialog_v title:"Test" ini:(getSourceFileName())
 
---_Rollouts	  = Dialog.Rollouts()
---
---_Subrolllout = _Rollouts.new "Subrollout A"
---
---Dialog.create()
+_Rollouts	  = Dialog.Rollouts()
+
+_Subrolllout = _Rollouts.new "Subrollout A"
+
+Dialog.create()
 
 
 --/** CREATE ROLLOUTS 

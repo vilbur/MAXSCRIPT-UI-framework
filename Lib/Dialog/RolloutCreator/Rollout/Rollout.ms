@@ -1,0 +1,48 @@
+filein( getFilenamePath(getSourceFileName()) + "/Controls/Controls.ms" )
+--filein( getFilenamePath(getSourceFileName()) + "/Subrollouts/Subrollouts.ms" )
+
+/** Rollout
+ */
+struct Rollout_v
+(
+	/* required */
+	title,
+	id,
+	
+	_Controls = #(),
+	Events	 = #(),
+	
+	
+	/** Controls
+	 */
+	function Controls =
+	(
+		--print "Rollout_v.controls()"
+		
+		_Controls_new = Controls_v()
+		
+		append _Controls _Controls_new
+		
+		_Controls_new --return
+	),
+	
+	/** Subrollouts
+	 */
+	function Subrollouts =
+	(
+		print "Rollout_v.subrollouts()"
+		_Subrollouts = Subrollouts_v()
+		
+		append _Controls _Subrollouts
+		
+		_Subrollouts --return
+	),
+	
+	/**  
+	 */
+	on create do
+	(
+
+	)
+	
+)
