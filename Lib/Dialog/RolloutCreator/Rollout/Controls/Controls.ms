@@ -1,6 +1,3 @@
---filein( getFilenamePath(getSourceFileName()) + "/ControlsBox/ControlsBox.ms" )
---filein( getFilenamePath(getSourceFileName()) + "/Subrollouts/Subrollouts.ms" )
-
 filein( getFilenamePath(getSourceFileName()) + "/Control/Control.ms" )
 
 /** Controls
