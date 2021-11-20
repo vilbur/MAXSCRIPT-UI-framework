@@ -2,7 +2,7 @@ global DIALOG_PREVIOUS_STATE = undefined -- this should be in struct
 
 global ENABLE_DOCKED_EVENT = true -- prevent crash on destroying  of dialog
 
-/** RolloutEvent https://help.autodesk.com/view/3DSMAX/2015/ENU/?guid=__files_GUID_DC435555_362D_4A03_BCF2_21179C5442F2_htm
+/** RolloutEvent
   * 
   *		1) Available events for dialog|rollout are #open, #close, #resized, #moved, #docked 
   *	
@@ -73,11 +73,9 @@ struct RolloutEvents_v
 	(
 		print ("RolloutEvents_v.bindEvent()")
 		format "Event	= % \n" Event
-		
 		callback = this._getCallback Event.type
 
 		handler = "on "+(_Rollout.id)+" "+ Event.type as string +" "+this._getParams(Event.type)+" do  (" +callback+ ")" 
-		
 		format "handler	= % \n" handler
 		
 		_Rollout._RolloutCreator.addText(handler)
@@ -119,7 +117,6 @@ struct RolloutEvents_v
 	function _bindToRolledUpHandler =
 	(
 		print ("RolloutEvents_v._bindToRolledUpHandler()")
-
 		callback_rolledown	= this._getEventCode #rolledDown
 		callback_rolledup	= this._getEventCode #rolledUp
 

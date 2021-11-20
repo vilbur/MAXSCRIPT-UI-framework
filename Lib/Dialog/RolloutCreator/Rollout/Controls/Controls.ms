@@ -20,9 +20,10 @@ struct Controls_v
 	--
 	/** Controls
 	 */
-	function Control type caption id: params: =
+	function Control type caption id:undefined params: =
 	(
-		--print "Controls_v.control()"
+		print "Controls_v.control()"
+		format "type	= % \ncaption	= % \nid	= % \nparams	= % \n\n" type caption id params
 		
 		_Control = Control_v type:type caption:caption id:id params:params
 		

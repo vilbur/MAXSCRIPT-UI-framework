@@ -1,4 +1,3 @@
-filein( getFilenamePath(getSourceFileName()) + "/../../Events/Events.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/Rollout/Rollout.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/Rollout/Subrollouts/Subrollouts.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/ControlCreator/ControlCreator.ms" )
@@ -30,7 +29,7 @@ struct RolloutCreator_v
 	function createRollout _Rollout =
 	(
 		format "\n"
-		print ("RolloutCreator_v.createRollout() " + _Rollout.id)
+		print ("RolloutCreator_v.createRollout() " + _Rollout.id as string )
 		--format "_Rollout	= % \n" _Rollout
 		_Rollout._RolloutCreator.begin()
 		
