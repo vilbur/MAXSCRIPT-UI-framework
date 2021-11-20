@@ -34,7 +34,8 @@ struct Dialog_v
 	function create pos: width:256 height:256 bgcolor: fgcolor: bitmap: style: modal: escapeEnable: lockHeight:false lockWidth:true parent: =
 	(
 		print ("Dialog_v.create() " + RolloutMain.id)
-		_RolloutCreator.createRollout RolloutMain
+		
+		_RolloutCreator.createRollout (RolloutMain) dialog_rollout:true
 		
 		CreateDialog (_RolloutCreator.getDefinition(RolloutMain)) width:width height:height style:style
 		
