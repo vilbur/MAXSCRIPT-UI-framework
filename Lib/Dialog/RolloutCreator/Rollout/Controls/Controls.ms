@@ -1,5 +1,5 @@
 filein( getFilenamePath(getSourceFileName()) + "/Control/Control.ms" )
-
+filein( getFilenamePath(getSourceFileName()) + "/ControlDefaults/ControlDefaults.ms" )
 /** Controls
  */
 struct Controls_v
@@ -7,23 +7,25 @@ struct Controls_v
 	--__construct = #(  ),
 	--
 	--/* required */
-	--/* dependency */
+	
 	--/* reference */
 	--/* properties */
 	group,
 	--list	= #(),
 		
 	list = #(),
+
+	/* dependency */
+	Defaults = ControlDefaults_v(),
+
 	
-	--ControlsBox,
-	--_Subrollouts,
 	--
 	/** Controls
 	 */
-	function Control type caption id:undefined params: =
+	function Control type caption id:undefined params:undefined =
 	(
-		print "Controls_v.control()"
-		format "type	= % \ncaption	= % \nid	= % \nparams	= % \n\n" type caption id params
+		--print "Controls_v.control()"
+		--format "type	= % \ncaption	= % \nid	= % \nparams	= % \n\n" type caption id params
 		
 		_Control = Control_v type:type caption:caption id:id params:params
 		
@@ -32,7 +34,20 @@ struct Controls_v
 		_Control --return 
 	),
 	
-	
+	/** Default
+	 */
+	function Default width: height: across: =
+	(
+		Defaults.setValues #( #width, #height, #across ) #( width, height, across ) filter:true
+		
+		format "Defaults.keys	= % \n" Defaults.keys
+		format "Defaults.values	= % \n" Defaults.values		
+		--print "Controls_v.default()"
+		--if( appendIfUnique Defaults.params param ) then 
+			--append Defaults.params val
+		
+		--format "Defaults.params= % \n" (Defaults.params)
+	),
 	--
 	--/** Subrollouts
 	-- */

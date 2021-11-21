@@ -1,5 +1,5 @@
 filein( getFilenamePath(getSourceFileName()) + "/RolloutCreator/RolloutCreator.ms" )
-
+filein( getFilenamePath(getSourceFileName()) + "/Layout/Layout.ms" )
 --filein( getFilenamePath(getSourceFileName()) + "/../Ini/Ini.ms" )
 
 
@@ -18,6 +18,7 @@ struct Dialog_v
 	
 	/* dependency */
 	_RolloutCreator = RolloutCreator_v(),
+	Layout 	= Layout_v(),
 	--Menu	= DialogMenu_v Dialog:this,
 	
 	/* properties */
@@ -75,7 +76,7 @@ struct Dialog_v
 		format "ini	= % \n" ini
 		
 		--RolloutMain	= Rollout_v title:title id:id _Ini:_Ini
-		RolloutMain	= Rollout_v title:title id:id
+		RolloutMain	= Rollout_v title:title id:id Layout:Layout
 		
 		if( ini != undefined ) then
 			RolloutMain.Ini.setIni (ini)

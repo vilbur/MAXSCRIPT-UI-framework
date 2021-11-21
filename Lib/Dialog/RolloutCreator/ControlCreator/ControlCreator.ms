@@ -1,3 +1,4 @@
+filein( getFilenamePath(getSourceFileName()) + "/../Rollout/Controls/ControlParams/ControlParams.ms" ) 
 
 /** ControlCreator_v
  */
@@ -6,13 +7,18 @@ struct ControlCreator_v
 	_Rollout,
 	_Controls,
 	
+	ControlParams	= ControlParams_v(),
+	
 	/** Add controls
 	 */
 	function addControls _Rollout _Controls =
 	(
-		--print "ControlCreator_v.addControls()"
+		print "ControlCreator_v.addControls()"
+		format "_Controls.Defaults	= % \n" _Controls.Defaults
 		this._Rollout  = _Rollout
 		this._Controls = _Controls
+		
+		ControlParams.setDefaults (_Controls.Defaults)
 		
 		this.addControlsGroup #start 
 		
@@ -27,6 +33,7 @@ struct ControlCreator_v
 	function addControlsGroup mode =
 	(
 		--print "ControlCreator_v.addControlsGroup()"
+
 		if( _Controls.group == undefined ) do
 			return false
 
@@ -39,11 +46,15 @@ struct ControlCreator_v
 	 */
 	function addControl _Control =
 	(
-		--print ("ControlCreator_v.addControl()	" +_Control.id)
+		format "\n"
+		print ("ControlCreator_v.addControl()	" +_Control.id)
+		
 		this.addControlHandlers (_Control)
 
-		_Rollout._RolloutCreator.addControl (_Control.type) (_Control.id) (_Control.caption)
+		_Rollout._RolloutCreator.addControl (_Control.type) (_Control.id) (_Control.caption) paramStr:(ControlParams.getParams(_Control.params))
 	),
+	
+
 	
 	/** Test
 	 */

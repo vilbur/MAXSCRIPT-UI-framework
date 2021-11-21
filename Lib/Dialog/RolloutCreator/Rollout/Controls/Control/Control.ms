@@ -44,11 +44,7 @@ struct Control_v
 	 */
 	on create do
 	(
-		format "this	= % \n" this
 		if( id == undefined ) then
 			this._setIdByCaption()
-		format "this	= % \n" this
-	
 	)
-	
 )
