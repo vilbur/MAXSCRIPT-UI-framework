@@ -15,6 +15,7 @@ List.setVal #fourth     "Fourth"
 List.setVal #fifth      "Fifth"
 List.setVal #undefined  undefined
 List.setVal #unsupplied unsupplied
+List.setVal #delete     "Delete"
 
 
 /* copy a list */ 
@@ -26,8 +27,7 @@ format "List             = % \n\n" List
 
 
 /* Delete value */
---List.delete #fifth
---format "delete fifth     = % \n" List;
+format "Delete #delete     = % \n" (List.delete #delete);
 
 
 /* Filter value */
@@ -35,6 +35,10 @@ format "Left	only unsupplied = % \n"	(List_copy.filter	unsupplied test:false)
 format "Remove	undefined       = % \n"	(List.filter	undefined  test:true) 
 format "Left	'*Item*'        = % \n"	(List.filter	"*Item*"   test:true )
 format "Removed	'*Remove'       = % \n"	(List.filter	"*Remove"  test:false )
+
+
+format "join   \":\" \"|\" = \"%\" \n"	(List.join  ":"	delimeter:"|" ) -- default delimeter:" "
+format "joinValues \"|\" = \"%\" \n"	(List.joinValues	delimeter:"|" ) -- default delimeter:" "
 
 
 

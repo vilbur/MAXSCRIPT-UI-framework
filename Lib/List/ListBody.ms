@@ -46,18 +46,41 @@
 	 */
 	function getValues =
 	(
-		print "!!! listBody.ms FIX THIS METHOD"
-		--if( this.count() > 1 ) then
-			--values --return
-		--else if( this.count() == 1 ) then 
-			values[1] --return
+		values --return
 	),
+	
+	/** Join
+	 */
+	function join key_value_delimeter delimeter:" "  =
+	(
+		--print ".join()"
+		_string = ""
+		
+		for i=1 to keys.count do
+			_string += keys[i] as string +key_value_delimeter+ values[i] as string + delimeter
+
+		trimRight _string delimeter --return
+	),
+	
+	/** Join values
+	 */
+	function joinValues delimeter:" " =
+	(
+		--print ".joinValues()"
+		this._join values delimeter
+	),
+	
 	
 	/** Join array
 	 */
-	function join =
+	function _join arr delimeter =
 	(
-		this._arrayToString values
+		_string = ""
+		
+		for i=1 to arr.count do
+			_string += arr[i] + delimeter
+
+		trimRight _string delimeter --return
 	),
 	
 	/** Add array
@@ -151,24 +174,6 @@
 		deleteItem values	i
 	),
 	
-	/** Workoraund for "as string"
-	  * "as string" works only for array with max 20 items
-	  * https://help.autodesk.com/view/3DSMAX/2015/ENU/?guid=__files_GUID_92B98D11_60FF_4742_A1BA_692EE135E085_htm
-	  *
-	  * @return	string	
-	  */
-	function _arrayToString arr =
-	(
-		if( arr.count > 20 ) then
-		(
-			items_string = ""
-			
-			for item in arr do items_string += "\"" + item + "\","
-			
-			"#("+( trimRight items_string ",")+")" --return
-		)
-		else
-			arr as string --return
-	),
+
 	
 	
