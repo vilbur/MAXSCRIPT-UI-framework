@@ -1,7 +1,8 @@
 filein( getFilenamePath(getSourceFileName()) + "/Rollout/Rollout.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/Rollout/Subrollouts/Subrollouts.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/ControlCreator/ControlCreator.ms" )
-filein( getFilenamePath(getSourceFileName()) + "/RolloutEvent/RolloutEvent.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/../../Ini/Ini.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/Rollout/RolloutEvent/RolloutEvent.ms" )
 
 /** RolloutCreator_v
  */
@@ -10,6 +11,9 @@ struct RolloutCreator_v
 	ControlCreator = ControlCreator_v(),
 	RolloutEvents  = RolloutEvents_v(),
 
+	--/* optionable */
+	--Ini = Ini_v(),
+	
 	/** New
 	 */
 	function new title id: =
@@ -32,7 +36,6 @@ struct RolloutCreator_v
 		print ("RolloutCreator_v.createRollout() " + _Rollout.id as string )
 		--format "_Rollout	= % \n" _Rollout
 		_Rollout._RolloutCreator.begin()
-		
 		
 		this.addControlsAndSubrolloutes (_Rollout)
 		

@@ -1,3 +1,5 @@
+--filein( getFilenamePath(getSourceFileName()) + "/DefaultEvents/DefaultEvents.ms" )
+
 global DIALOG_PREVIOUS_STATE = undefined -- this should be in struct
 
 global ENABLE_DOCKED_EVENT = true -- prevent crash on destroying  of dialog
@@ -19,7 +21,10 @@ global ENABLE_DOCKED_EVENT = true -- prevent crash on destroying  of dialog
 struct RolloutEvents_v 
 (
 	_Rollout,
-	Events,
+	--Events,
+	
+	Ini	= Ini_v(),
+	--DefaultEvents	= DefaultEvents_v(),
 	
 	/* Events #rolledDown|#docked ARE NOT NATIVE maxscript events
 	*/ 
@@ -58,10 +63,12 @@ struct RolloutEvents_v
 		print ("RolloutEvents_v.bindEvents() " + _Rollout.id)
 		--format "_Rollout.Events = % \n" _Rollout.Events
 		this._Rollout = _Rollout
-		this.Events   = _Rollout.Events.list
+		--this.Events   = _Rollout.Events.list
 		
-		for Event in Events do 
-			this._bindEvent Event
+		--this.DefaultEvents.setSaveToIniEvents()
+		
+		--for Event in Events do 
+			--this._bindEvent Event
 	),
 	
 	private
@@ -170,5 +177,7 @@ struct RolloutEvents_v
 	
 	on create do
 	(
+		print("RolloutEvents_v.onCreate()")
+		format "Ini._path	= % \n" Ini._path
 	)
 )

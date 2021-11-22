@@ -1,4 +1,4 @@
-filein( getFilenamePath(getSourceFileName()) + "/../../../Events/Events.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/../../../EventsList/EventsList.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/Controls/Controls.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/Subrollouts/Subrollouts.ms" )
 
@@ -11,7 +11,7 @@ struct Rollout_v
 	id,
 	
 	_Controls = #(),
-	Events    = Events_v(),
+	Events    = EventsList_v(),
 	
 	_RolloutCreator, -- https://help.autodesk.com/view/3DSMAX/2016/ENU/?guid=__files_GUID_5FC5036F_E2D7_46C9_9AFA_7B3550B9F254_htm
 

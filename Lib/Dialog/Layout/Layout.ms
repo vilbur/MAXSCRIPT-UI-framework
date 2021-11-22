@@ -8,7 +8,7 @@ struct Layout_v
 	/* dependency */
 	/* reference */
 	/* properties */
-	width
+	width,
 
 	private
 	

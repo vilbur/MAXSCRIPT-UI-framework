@@ -1,20 +1,19 @@
 filein( getFilenamePath(getSourceFileName()) + "/RolloutCreator/RolloutCreator.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/Layout/Layout.ms" )
---filein( getFilenamePath(getSourceFileName()) + "/../Ini/Ini.ms" )
 
 
 /** Dialog
  */
 struct Dialog_v
 (
-	--__construct = #(  ),
-
 	/* required */
 	title,
 	
+	/* construct */
+	ini, -- path to ini file
+
 	/* optionable */
 	id,
-	--ini,
 	
 	/* dependency */
 	_RolloutCreator = RolloutCreator_v(),
@@ -22,11 +21,12 @@ struct Dialog_v
 	--Menu	= DialogMenu_v Dialog:this,
 	
 	/* properties */
-	RolloutMain,
 	style = #(#style_titlebar, #style_border, #style_sysmenu, #style_resizing),
+	RolloutMain,
 	
 	/* inherit */
 	Controls,
+	Events,
 	
 	/** Create
 	  *
@@ -77,13 +77,10 @@ struct Dialog_v
 		
 		--RolloutMain	= Rollout_v title:title id:id _Ini:_Ini
 		RolloutMain	= Rollout_v title:title id:id Layout:Layout
-		
-		if( ini != undefined ) then
-			RolloutMain.Ini.setIni (ini)
-		
+
 		Controls = RolloutMain.Controls
 
-		--Events = RolloutMain.Events
+		Events = RolloutMain.Events
 	),
 	/**  
 	 */
@@ -91,5 +88,8 @@ struct Dialog_v
 	(
 		--print("Dialog_v.onCreate()")
 		this._setMainRollout()
+		
+		if( ini != undefined ) then
+			_RolloutCreator.RolloutEvents.Ini.setIni (ini)
 	)
 )
