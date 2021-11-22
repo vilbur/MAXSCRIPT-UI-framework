@@ -60,6 +60,8 @@ struct RolloutEvents_v
 	
 	events_no_param	= #( #open, #close, #docked, #oktoclose ),
 	
+	not_native_events	= #( #rolledDown, #docked ),
+	
 	/** Bind events
 	 */
 	function bindEvents _Rollout =
@@ -76,8 +78,7 @@ struct RolloutEvents_v
 		
 		EventsCombiner.custom = _Rollout.Events.list
 		
-		--format "this._getEventTypes()	= % \n" (this._getEventTypes())
-		for event_type in (this._getEventTypes()) do
+		for event_type in (event_types = this._getEventTypes()) where this._eventNameIsValid (event_types) (event_type) do
 			this._bindEvent event_type
 	),
 	
@@ -87,7 +88,12 @@ struct RolloutEvents_v
 	 */
 	function _getEventTypes =
 	(
-		if( _Rollout.is_subrollout ) then events_rollout else events_dialog 
+		event_types = if( _Rollout.is_subrollout ) then events_rollout else events_dialog
+		
+		for not_native_event in not_native_events where ((index = findItem event_types not_native_event) > 0 ) do 
+			event_types = deleteItem event_types index
+		
+		event_types --return
 	),
 
 	/** Bind events
@@ -96,20 +102,22 @@ struct RolloutEvents_v
 	(
 		--print ("RolloutEvents_v.bindEvent()")
 		--format "event_type	= % \n" event_type
-		--callback = this._getCallback Event.type
-		Event = EventsCombiner.combine event_type
+		--format "this._getEventTypes()	= % \n" (this._getEventTypes())
 		
-		if( Event == undefined ) then
+		callback = this._getCallback event_type
+		--Event = EventsCombiner.combine event_type
+		
+		if( callback == undefined ) then
 			return false
-		
-		--format "callback	= % \n" Event.code
-		--format "this._getParams(event_type)	= % \n" this._getParams(event_type)
-		handler = "on "+(_Rollout.id)+" "+ event_type as string +" "+this._getParams(event_type)+" do  (" +Event.code+ ")" 
+
+		handler = "on "+(_Rollout.id)+" "+ event_type as string +" "+this._getParams(event_type)+" do  (" +callback+ ")"
+		--format "\nRolloutEvents_v.bindEvent()	= % \n" event_type
+		--format "callback	= % \n" callback
+		--format "Event.code	= % \n" Event.code
 		--format "handler	= % \n" handler
-		
 		_Rollout._RolloutCreator.addText(handler)
 	),
-	
+		
 	/** _get params
 	 */
 	function _getParams event_type =
@@ -132,8 +140,8 @@ struct RolloutEvents_v
 		--format "event_type	= % \n" event_type
 		case event_type of
 		(
-			#moved:    this._bindToMovedHandler()
-			#rolledUp: this._bindToRolledUpHandler()
+			#rolledUp: this._getEventsForRolledUpHandler()
+			#moved:    this._getEventsForMovedHandler()
 			default:	 this._getEventCode (event_type)
 		)
 	),
@@ -143,9 +151,12 @@ struct RolloutEvents_v
 	  * Events #open, #close are bind to #rolledUp handler
 	  *
 	 */
-	function _bindToRolledUpHandler =
+	function _getEventsForRolledUpHandler =
 	(
-		--print ("RolloutEvents_v._bindToRolledUpHandler()")
+		--print ("RolloutEvents_v._getEventsForRolledUpHandler()")
+		
+		--Event = EventsCombiner.combine event_type
+		
 		callback_rolledown	= this._getEventCode #rolledDown
 		callback_rolledup	= this._getEventCode #rolledUp
 
@@ -154,8 +165,7 @@ struct RolloutEvents_v
 		
 		callback --return
 	),
-	
-	
+		
 	/** Bind #docked to #moved handler
 	  *
 	  *	Event #docked is bind to #moved handler
@@ -164,9 +174,9 @@ struct RolloutEvents_v
 	  * #docked is not native maxscript event, it is simulated by checking dock state on #moved event
 	  *
 	 */
-	function _bindToMovedHandler =
+	function _getEventsForMovedHandler =
 	(
-		--print ("RolloutEvent_v._bindToMovedHandler()")
+		--print ("RolloutEvent_v._getEventsForMovedHandler()")
 		callback_moved	= this._getEventCode #moved
 		callback_docked	= this._getEventCode #docked
 		
@@ -189,13 +199,35 @@ struct RolloutEvents_v
 	 */
 	function _getEventCode event_type =
 	(
-		event_code = ""
-		
-		for Event in Events where Event.type == event_type do event_code = Event.code
-				
-		event_code --return
+		--print ("RolloutEvent_v._getEventCode()")
+		Event = EventsCombiner.combine event_type
+
+		if( Event != undefined ) then
+			Event.code --return
+		else
+			undefined --return
 	),
 	
+	/** _is event exists
+	 */
+	function _eventNameIsValid event_types event_type =
+	(
+		--print "Events_v._eventNameIsValid()"
+		--format "event_types	= % \n" event_types
+		event_exists = findItem event_types event_type > 0
+		
+		if not( event_exists ) then 
+			this._exception (event_type)
+		
+		event_exists --return
+	),
+	
+	/** Exception
+	 */
+	function _exception event_type =
+	(
+		messageBox ("WARNING\n\nUnknown Event Type: #" +event_type+ "\n\nControl: " + _Rollout.id )
+	),
 	
 	on create do
 	(
