@@ -1,4 +1,4 @@
-filein( getFilenamePath(getSourceFileName()) + "/../Rollout/Controls/ControlParams/ControlParams.ms" ) 
+filein( getFilenamePath(getSourceFileName()) + "/../../Rollout/Controls/ControlParams/ControlParams.ms" )
 
 /** ControlCreator_v
  */

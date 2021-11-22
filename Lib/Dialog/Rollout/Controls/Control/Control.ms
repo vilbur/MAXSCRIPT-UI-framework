@@ -15,7 +15,7 @@ struct Control_v
 	/* reference */
 	
 	/* dependency */
-	Events = Events_v(),
+	Events = EventsList_v(),
 
 	private
 	
