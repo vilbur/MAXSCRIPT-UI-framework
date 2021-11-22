@@ -16,7 +16,7 @@ struct Ini_v
 	 */
 	function setIni ini_path =
 	(
-		print "Ini_v.setIni()"
+		--print "Ini_v.setIni()"
 		--format "ini_path	= % \n" ini_path	
 		if( matchPattern ini_path pattern:@"*.ini" ) then
 			_path = ini_path
@@ -26,8 +26,6 @@ struct Ini_v
 		
 		else
 			messageBox ("Path to ini file is not valid\n\n"+ini_path) title:"Ini file error"
-		
-		format "_path	= % \n" _path	
 	),
 	
 	/** Ini save control state
@@ -66,7 +64,12 @@ struct Ini_v
 			substituteString val "\\" "\\\\" -- escape string
 	),
 	
-	
+	/** Get path
+	 */
+	function getPath =
+	(
+		_path --return
+	),
 	
 	
 	

@@ -1,4 +1,4 @@
---filein( getFilenamePath(getSourceFileName()) + "/DefaultEvents/DefaultEvents.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/EventsDefault/EventsDefault.ms" )
 
 global DIALOG_PREVIOUS_STATE = undefined -- this should be in struct
 
@@ -22,24 +22,26 @@ struct RolloutEvents_v
 (
 	_Rollout,
 	--Events,
+	--EventsDefault	= EventsDefault_v(),
+	EventsCombiner	= EventsCombiner_v(),
 	
-	Ini	= Ini_v(),
-	--DefaultEvents	= DefaultEvents_v(),
+	/* inhered */ 
+	ini_path,
 	
-	/* Events #rolledDown|#docked ARE NOT NATIVE maxscript events
-	*/ 
-	event_types = #(
+	/* ROLLOUT Events -- https://help.autodesk.com/view/MAXDEV/2021/ENU/?guid=GUID-DC435555-362D-4A03-BCF2-21179C5442F2
+	 * 
+	 * Event #rolledDown IS NOT NATIVE maxscript event
+	*/
+	events_rollout = #( #rolledUp, #rolledDown ),
+	
+	/* DIALOG Events -- https://help.autodesk.com/view/MAXDEV/2021/ENU/?guid=GUID-816D257C-CD2D-4753-A792-6E7AEFAFA6A7
+	 * 
+	 * Event #docled IS NOT NATIVE maxscript event, it is binded to #moved event
+	*/	
+	events_dialog = #(
+		#open, #close, #resized, #moved, #oktoclose, #help,
 		
-		/* ROLLOUT */ -- https://help.autodesk.com/view/MAXDEV/2021/ENU/?guid=GUID-DC435555-362D-4A03-BCF2-21179C5442F2
-		#rolledUp, #rolledDown,
-		
-		/* ROLLOUT AND DIALOG */ 
-		#open, #close, #resized, #moved,
-		
-		/* DIALOG */ -- https://help.autodesk.com/view/MAXDEV/2021/ENU/?guid=GUID-816D257C-CD2D-4753-A792-6E7AEFAFA6A7
-		#oktoclose, #help, #docked,
-		
-		/* DIALOG Mouse button events */ 
+		/* Mouse button events */ 
 		#lbuttondown,	
 		#lbuttonup,	
 		#lbuttondblclk,	
@@ -50,7 +52,10 @@ struct RolloutEvents_v
 		
 		#rbuttondown,	
 		#rbuttonup,	
-		#rbuttondblclk
+		#rbuttondblclk,
+		
+		/* NOT maxscript NATVIVE */ 
+		#docked
 	),
 	
 	events_no_param	= #( #open, #close, #docked, #oktoclose ),
@@ -59,31 +64,48 @@ struct RolloutEvents_v
 	 */
 	function bindEvents _Rollout =
 	(
-		format "\n"
-		print ("RolloutEvents_v.bindEvents() " + _Rollout.id)
-		--format "_Rollout.Events = % \n" _Rollout.Events
+		--format "\n"
+		--print ("RolloutEvents_v.bindEvents() " + _Rollout.id)
+		--format "_Rollout.is_subrollout = % \n" _Rollout.is_subrollout
 		this._Rollout = _Rollout
 		--this.Events   = _Rollout.Events.list
+		--format "ini_path	= % \n" ini_path
 		
-		--this.DefaultEvents.setSaveToIniEvents()
+		if( ini_path != undefined ) then
+			EventsCombiner.defaults = ((EventsDefault_v rollout_id:_Rollout.id ini_path:ini_path ).getDefaultEvents(_Rollout.is_subrollout)) 
 		
-		--for Event in Events do 
-			--this._bindEvent Event
+		EventsCombiner.custom = _Rollout.Events.list
+		
+		--format "this._getEventTypes()	= % \n" (this._getEventTypes())
+		for event_type in (this._getEventTypes()) do
+			this._bindEvent event_type
 	),
 	
 	private
-
 	
+	/** Get events for dialog rollout or subrollout
+	 */
+	function _getEventTypes =
+	(
+		if( _Rollout.is_subrollout ) then events_rollout else events_dialog 
+	),
+
 	/** Bind events
 	 */
-	function _bindEvent Event =
+	function _bindEvent event_type =
 	(
-		print ("RolloutEvents_v.bindEvent()")
-		format "Event	= % \n" Event
-		callback = this._getCallback Event.type
-
-		handler = "on "+(_Rollout.id)+" "+ Event.type as string +" "+this._getParams(Event.type)+" do  (" +callback+ ")" 
-		format "handler	= % \n" handler
+		--print ("RolloutEvents_v.bindEvent()")
+		--format "event_type	= % \n" event_type
+		--callback = this._getCallback Event.type
+		Event = EventsCombiner.combine event_type
+		
+		if( Event == undefined ) then
+			return false
+		
+		--format "callback	= % \n" Event.code
+		--format "this._getParams(event_type)	= % \n" this._getParams(event_type)
+		handler = "on "+(_Rollout.id)+" "+ event_type as string +" "+this._getParams(event_type)+" do  (" +Event.code+ ")" 
+		--format "handler	= % \n" handler
 		
 		_Rollout._RolloutCreator.addText(handler)
 	),
@@ -123,7 +145,7 @@ struct RolloutEvents_v
 	 */
 	function _bindToRolledUpHandler =
 	(
-		print ("RolloutEvents_v._bindToRolledUpHandler()")
+		--print ("RolloutEvents_v._bindToRolledUpHandler()")
 		callback_rolledown	= this._getEventCode #rolledDown
 		callback_rolledup	= this._getEventCode #rolledUp
 
@@ -177,7 +199,6 @@ struct RolloutEvents_v
 	
 	on create do
 	(
-		print("RolloutEvents_v.onCreate()")
-		format "Ini._path	= % \n" Ini._path
+		--print("RolloutEvents_v.onCreate()")
 	)
 )

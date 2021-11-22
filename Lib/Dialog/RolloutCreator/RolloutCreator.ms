@@ -1,20 +1,23 @@
 filein( getFilenamePath(getSourceFileName()) + "/../../Ini/Ini.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/../Rollout/EventsList/EventsList.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/../EventsCombiner/EventsCombiner.ms" )
 
 filein( getFilenamePath(getSourceFileName()) + "/../Rollout/Rollout.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/../Rollout/Subrollouts/Subrollouts.ms" )
-filein( getFilenamePath(getSourceFileName()) + "/../Rollout/RolloutEvent/RolloutEvent.ms" )
 
+
+filein( getFilenamePath(getSourceFileName()) + "/RolloutEvent/RolloutEvent.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/ControlCreator/ControlCreator.ms" )
 
 /** RolloutCreator_v
  */
 struct RolloutCreator_v
 (
-	ControlCreator = ControlCreator_v(),
-	RolloutEvents  = RolloutEvents_v(),
+	Ini	= Ini_v(),
+	ControlCreator	= ControlCreator_v(),
+	RolloutEvents	= RolloutEvents_v(),
 
-	--/* optionable */
-	--Ini = Ini_v(),
+	/* optionable */
 	
 	/** New
 	 */
@@ -40,6 +43,8 @@ struct RolloutCreator_v
 		_Rollout._RolloutCreator.begin()
 		
 		this.addControlsAndSubrolloutes (_Rollout)
+		
+		RolloutEvents.ini_path = Ini.getPath()
 		
 		RolloutEvents.bindEvents (_Rollout)
 		

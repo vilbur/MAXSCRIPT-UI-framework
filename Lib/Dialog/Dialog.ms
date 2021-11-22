@@ -22,7 +22,7 @@ struct Dialog_v
 	
 	/* properties */
 	style = #(#style_titlebar, #style_border, #style_sysmenu, #style_resizing),
-	RolloutMain,
+	RolloutMain, --RENAME TO dialogRollout,
 	
 	/* inherit */
 	Controls,
@@ -90,6 +90,6 @@ struct Dialog_v
 		this._setMainRollout()
 		
 		if( ini != undefined ) then
-			_RolloutCreator.RolloutEvents.Ini.setIni (ini)
+			_RolloutCreator.Ini.setIni (ini)
 	)
 )

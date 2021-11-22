@@ -14,8 +14,8 @@ struct Subrollouts_v
 	 */
 	function new title id: =
 	(
-		--print "Subrollouts_v.test()"
-		local _Rollout = Rollout_v title:title id:id --return
+		--print "Subrollouts_v.new()"
+		local _Rollout = Rollout_v title:title id:id  is_subrollout:true
 		
 		append Rollouts _Rollout
 		
