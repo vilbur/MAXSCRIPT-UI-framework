@@ -16,15 +16,15 @@ ControlEvents = ControlEvents_v()
 */ 
 control_types_for_test = #(
 	
-	--#Label,
-	--#Button,
-	--#Checkbox,
-	--#Checkbutton,
-	--#Spinner,
-	--#Edittext,
-	--#Listbox,
-	--#multilistbox,
-	--#Dropdownlist,
+	#Label,
+	#Button,
+	#Checkbox,
+	#Checkbutton,
+	#Spinner,
+	#Edittext,
+	#Listbox,
+	#multilistbox,
+	#Dropdownlist
 	----#Combobox,
 	----#GroupBox,
 	----#Angle,
@@ -41,9 +41,6 @@ control_types_for_test = #(
 	----#popupMenu,-- DOES NOT WORK YET
 	----#Radiobuttons,-- DOES NOT WORK YET
 	--#Timer
-	
-	#Checkbox
-	--#Button 
 )
 
 
@@ -60,21 +57,28 @@ _Rollout = _RolloutCreator.new "Test"
 _Controls = _Rollout.Controls()
 
 
-/** Create controls
+/** ADD CONTROLS WITH EVENTS
  */
-_Controls = _Rollout.Controls()
-
---_Button = _Controls.control #button ("Button "+c as string ) id:("button_"+ g as string +"_"+ c as string )
---_Button.Events.add #pressed "print @Pressed Event@"
 
 
 for control_type in ControlEvents.control_types where findItem control_types_for_test control_type > 0 do
 (
-	_Control = _Controls.control control_type ( "Test " + control_type as string ) 
-	--_Control.Events.add #changed "print \"Pressed\""
-
+	event_types = ControlEvents._getEventsOfControl(control_type)
 	
+	if( event_types.count > 0 ) then
+	(
+		_Control = _Controls.control control_type ( "Test " + control_type as string ) 
+		format "\ncontrol_type = % \nevent_types  = % \n\n" control_type event_types
+		
+		/** ADD EVENTS
+		 */
+		for event_type in event_types do
+			_Control.Events.add event_type "print \"Pressed\""
+
+	)
 )
+
+
 
 
 

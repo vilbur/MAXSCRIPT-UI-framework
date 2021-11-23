@@ -90,7 +90,7 @@ struct ControlEvents_v
 		--format "_Control	= % \n" _Control
 		this._Control = _Control
 		
-		events_of_control = this._gsetEventsOfControl _Control.type
+		events_of_control = this._getEventsOfControl _Control.type
 		params_of_control = this._getParamsOfControl  _Control.type
 		
 		this._addSaveToIniEvents(rollout_id) --return
@@ -98,9 +98,9 @@ struct ControlEvents_v
 
 	/**  get events for control type from event_types array
 	 */
-	function _gsetEventsOfControl control_type =
+	function _getEventsOfControl control_type =
 	(
-		--print "ControlEvents_v._gsetEventsOfControl()"
+		--print "ControlEvents_v._getEventsOfControl()"
 		for event_type in event_types[findItem control_types control_type] collect
 			if( classOf event_type == Array ) then event_type[1] else event_type
 		
