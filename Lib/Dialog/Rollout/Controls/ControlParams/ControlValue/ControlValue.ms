@@ -2,66 +2,48 @@
  */
 struct ControlValue_v
 (
-	/* dependency */
+	/* properties */
 	ini_path,
 	
-	/* properties */
-	--_value,
-		
 	/** Each control has different property where value is stored
 	  * E.G.: EditText.text|Checkbox.checked|Spinner.range 
 	  *	
 	  */
-	name_of_value_param = #(
+	names_of_value_param = #(
 		#( #selection,	#listbox,	#multilistbox,	#dropdownlist ),
 		#( #checked,	#checkbox,	#checkbutton,	#dropdownlist ),
 		#( #range,  	#spinner ),
 		#( #text,  	#edittext )
 	),
 	
-	/** _get value from ini
+	/** Get value from ini
+	  *
+	  * @return	#( #parma_name, "value" )|undefined 
 	 */
 	function getValueFromIni _Control rollout_id =
 	(
-		print "CotrolValue_v.getValueFromIni()"
+		--print "CotrolValue_v.getValueFromIni()"
 		if( ini_path == undefined ) then
 			return undefined
-		
-		format "ini_path	= % \n" ini_path
-		
-		
-		val = getINISetting ini_path rollout_id _Control.id
-		--if( this.loadIniValuesOnInit() and Parent_Control.name_of_value_param != undefined ) then 
-		--	if( (val = this._loadValueFromFile()) != undefined ) then
-		--		Parent_Control._Parameters.setVal Parent_Control.name_of_value_param (this._convertValueForControlType val)
-		"checked:" + val
-	),
 
-	/** _load value from file
-	 */
-	function _loadValueFromFile =
-	(
-		Parent_Control.ControlBox.Parent_roll._Ini.load (Parent_Control.ControlBox.Parent_roll.id) (Parent_Control.id.get()) -- return
+		if( (name_of_param = this._getNameOfValueParameter(_Control.type)) == undefined ) then
+			return undefined
+		
+		if( (val_ini = getINISetting ini_path rollout_id _Control.id) != "" ) then
+			#(name_of_param, this._convertDatatype(val_ini))
 	),
 	
-	
-	/** _if ini is defined
+	/** _get name of value parameter
 	 */
-	function loadIniValuesOnInit =
+	function _getNameOfValueParameter control_type =
 	(
-		Parent_Control.ControlBox.Parent_roll._Ini.loadValuesOnInit() --return
+		--print "ControlValue_v._getNameOfValueParameter()"
+		name_of_param = for param_name_array in names_of_value_param where findItem param_name_array control_type > 0 collect param_name_array[1]
+		
+		if( name_of_param.count > 0 ) then
+			name_of_param[1] --return
 	),
-
 	
-	/** _convert value for control type
-	 */
-	function _convertValueForControlType val =
-	(
-		if( Parent_Control.type == #spinner ) then
-			val   = this._convertDatatype val
-	
-		val --return
-	),
 	/** Format string value to valid datatype
 	 */
 	function _convertDatatype val =
@@ -76,24 +58,10 @@ struct ControlValue_v
 			val --return
 	),
 	
-	/** _set _value
-	 */
-	function _setValue =
-	(
-		--if( _value==undefined ) then
-			this._getValueFromIni()
-		--
-		--if( _value!=undefined and _value!=""  ) then
-		--	this._setValueParameter _value
-		----else
-			----this._getValueFromIni()
-	),
-	
 	/**  
 	 */
 	on create do
 	(
 		--print("CotrolValue_v.onCreate()")
 	)
-	
 )

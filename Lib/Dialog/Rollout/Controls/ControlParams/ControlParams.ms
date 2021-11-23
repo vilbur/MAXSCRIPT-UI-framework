@@ -7,7 +7,7 @@ filein( getFilenamePath(getSourceFileName()) + "/ControlValue/ControlValue.ms" )
 struct ControlParams_v
 (
 	/* properties */
-	defaults = "", -- defaults params for controls
+	defaults = "", -- defaults parameters for controls
 	
 	/* dependency */
 	ControlValue 	= ControlValue_v(),
@@ -16,20 +16,46 @@ struct ControlParams_v
 	 */
 	function getParams _Control rollout_id =
 	(
-		params = _Control.params
-		--format "\n"
 		--print "ControlCreator_v._getParams()"
-		--format "defaults	= % \n" defaults
+		params = _Control.params
+
 		if( params == undefined ) then
 			params = ""
 		
 		if ( classOf params == Array ) then
 			params = this._joinParamsInArray params
-		format "ControlParams_v.getParams() % \n" (params + " " + defaults)
 		
-		val	= if( (val_ini = ControlValue.getValueFromIni(_Control)(rollout_id)) != undefined ) then val_ini else "" 
+		val_ini = ControlValue.getValueFromIni(_Control)(rollout_id)
+
+		(this._getValueParam(_Control)(val_ini)) +" "+  params +" "+ defaults -- first occurrence of parameter is used
+	),
+	
+	/** Convert value for control type
+	  *
+	  * @return	string E.G.: "checked:true"	
+	 */
+	function _getValueParam _Control val_array =
+	(
+		if( val_array == undefined ) then
+			return ""
 		
-		val +" "+  params +" "+ defaults -- first occurrence of parameter is used
+		if( _Control.type == #spinner ) then
+			val_array[2] = this._getSpinnerRange (_Control.params)(val_array[2])
+
+		val_array[1] as string +":"+ this._formatToString(val_array[2])
+	),
+	
+	/** Get spinner value
+	  *
+	  * @return	point3 as string	
+	 */
+	function _getSpinnerRange params val =
+	(
+		range = if( (index = findItem params #range ) > 0 ) then params[index+1] else [0,100,0] -- get defined range or default
+		
+		range[3] = val -- assign value from array E.G.: #(#range, "3")
+		
+		range
 	),
 	
 	/** Set defaults params used for each controlfilein( getFilenamePath(getSourceFileName()) + "/ControlValue/ControlValue.ms" )
@@ -82,7 +108,7 @@ struct ControlParams_v
 		_params = ""
 		
 		for k=1 to keys.count do
-			_params += keys[k] as string +":"+ this._getFormat values[k] + " "
+			_params += keys[k] as string +":"+ this._formatToString values[k] + " "
 			
 		trimRight _params  --return
 	),
@@ -91,9 +117,9 @@ struct ControlParams_v
 	  *
 	  * @return	string	
 	 */
-	function _getFormat val =
+	function _formatToString val =
 	(
-		--print ("Params_v._getFormat() " + val as string)
+		--print ("Params_v._formatToString() " + val as string)
 		if( classOf val == name ) then
 			val = "#" + val as string -- Add "#" prefix to name
 		
@@ -102,7 +128,7 @@ struct ControlParams_v
 			
 		else if( classOf val == Array ) then
 			val = this._stringifyArray val -- Wrap string to escaped qoutes \"\"
-			
+		
 		val as string --return
 	),
 	
@@ -150,18 +176,7 @@ struct ControlParams_v
 		keys_values --return
     ),
 
-	/** Check if required properties are defined
-	  * Names of construct props are defined in __construct array E.g.: __construct = #( #prop_name ) 
-	  * @param	construct_properties this.properties required for initialization of struct
-	 */
-	function _checkConstctructProperties =
-	(
-		for prop in __construct where getProperty this prop == undefined do
-			messageBox ("Undefined construct property !\n\n"+ ((filterString( classof this as string )"(:")[2]) +"."+ prop )
-	),
 	on create do
 	(
-		--this._checkConstctructProperties()
-		--format "Params_v.onCreate()"
 	)
 )
