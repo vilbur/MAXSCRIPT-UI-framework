@@ -1,20 +1,22 @@
 filein( getFilenamePath(getSourceFileName()) + "/../../Rollout/Controls/ControlParams/ControlParams.ms" )
-
+filein( getFilenamePath(getSourceFileName()) + "/ControlEvents/ControlEvents.ms" )
 /** ControlCreator_v
  */
 struct ControlCreator_v
 (
+	
 	_Rollout,
 	_Controls,
 	
 	ControlParams	= ControlParams_v(),
-	
+	ControlEvents	= ControlEvents_v(),
+
 	/** Add controls
 	 */
 	function addControls _Rollout _Controls =
 	(
-		print "ControlCreator_v.addControls()"
-		format "_Controls.Defaults	= % \n" _Controls.Defaults
+		--print "ControlCreator_v.addControls()"
+		--format "_Controls.Defaults	= % \n" _Controls.Defaults
 		this._Rollout  = _Rollout
 		this._Controls = _Controls
 		
@@ -46,23 +48,24 @@ struct ControlCreator_v
 	 */
 	function addControl _Control =
 	(
-		format "\n"
-		print ("ControlCreator_v.addControl()	" +_Control.id)
+		--format "\n"
+		--print ("ControlCreator_v.addControl()	" +_Control.id)
 		
-		this.addControlHandlers (_Control)
+		events_list = ControlEvents.getEvents(_Control)(_Rollout.id)
+		
+		this.addControlHandlers (_Control)(events_list)
 
 		_Rollout._RolloutCreator.addControl (_Control.type) (_Control.id) (_Control.caption) paramStr:(ControlParams.getParams(_Control.params))
 	),
 	
-
-	
 	/** Test
 	 */
-	function addControlHandlers _Control =
+	function addControlHandlers _Control events_list =
 	(
 		--print "ControlCreator_v.addControlHandlers()"
-		for _Event in _Control.Events.list do
-			_Rollout._RolloutCreator.addHandler _Control.id _Event.type codeStr:_Event.code paramStr:_Event.params filter:on 
+		for Event in events_list do
+			--format "Event	= % \n" Event
+			_Rollout._RolloutCreator.addHandler _Control.id Event.type codeStr:Event.code paramStr:Event.params filter:on
 	),
 
 

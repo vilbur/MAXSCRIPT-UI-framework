@@ -40,11 +40,13 @@ struct RolloutCreator_v
 		format "\n"
 		print ("RolloutCreator_v.createRollout() " + _Rollout.id as string )
 		--format "_Rollout	= % \n" _Rollout
+		
+		this._setIniToEventCreators()
+		
 		_Rollout._RolloutCreator.begin()
 		
 		this.addControlsAndSubrolloutes (_Rollout)
-		
-		RolloutEvents.ini_path = Ini.getPath()
+
 		
 		RolloutEvents.bindEvents (_Rollout)
 		
@@ -65,31 +67,12 @@ struct RolloutCreator_v
 			
 				this._createSubrollouts (_Rollout)(ControlsBox_or_Subrollouts)
 	),
-	 
-	 /** _create subrollouts
-	  */
-	 function _createSubrollouts  _Rollout Subrollouts =
-	 (
-		--print "RolloutCreator_v._createSubrollouts()"
-		this.addSubrolloutsSlots (_Rollout) (Subrollouts)
-		
-		for _Subrollout in Subrollouts.Rollouts do
-			this.createRollout (_Subrollout)
-	 ),
-	 
-	/** Add subrollouts slot
-	 */
-	function addSubrolloutsSlots _Rollout Subrollouts =
-	(
-		--print ("RolloutCreator_v.addSubrolloutsSlot()" + Subrollouts.slot)
-		_Rollout._RolloutCreator.addText ("subRollout "+Subrollouts.slot as string +" \"slot_name\" height:128")
-	),
-
+	
 	/** Add sub rollouts
 	 */
 	function addSubRollouts _Rollout =
 	(
-		--print "RolloutCreator_v.addSubRollouts()"
+		--print "RolloutCreator_v._addSubRollouts()"
 		for _Subrollouts in _Rollout._Controls where this._isSubrollouts(_Subrollouts) do
 			for _Subrollout in _Subrollouts.Rollouts do
 			(
@@ -99,6 +82,38 @@ struct RolloutCreator_v
 			)	
 	),
 	
+	
+	 /** _set ini to event creators
+	  */
+	 function _setIniToEventCreators =
+	 (
+		ini_path = Ini.getPath()
+
+		RolloutEvents.ini_path	= ini_path
+
+		ControlCreator.ControlEvents.ini_path	= ini_path
+	 ),
+	 
+	 /** _create subrollouts
+	  */
+	 function _createSubrollouts  _Rollout Subrollouts =
+	 (
+		--print "RolloutCreator_v._createSubrollouts()"
+		this._addSubrolloutsSlots (_Rollout) (Subrollouts)
+		
+		for _Subrollout in Subrollouts.Rollouts do
+			this.createRollout (_Subrollout)
+	 ),
+	 
+	/** Add subrollouts slot
+	 */
+	function _addSubrolloutsSlots _Rollout Subrollouts =
+	(
+		--print ("RolloutCreator_v.addSubrolloutsSlot()" + Subrollouts.slot)
+		_Rollout._RolloutCreator.addText ("subRollout "+Subrollouts.slot as string +" \"slot_name\" height:128")
+	),
+
+
 	private
 	
 

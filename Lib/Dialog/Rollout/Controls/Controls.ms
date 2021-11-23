@@ -40,8 +40,8 @@ struct Controls_v
 	(
 		Defaults.setValues #( #width, #height, #across ) #( width, height, across ) filter:true
 		
-		format "Defaults.keys	= % \n" Defaults.keys
-		format "Defaults.values	= % \n" Defaults.values		
+		--format "Defaults.keys	= % \n" Defaults.keys
+		--format "Defaults.values	= % \n" Defaults.values		
 		--print "Controls_v.default()"
 		--if( appendIfUnique Defaults.params param ) then 
 			--append Defaults.params val
@@ -87,9 +87,8 @@ struct Controls_v
 	 */
 	on create do
 	(
-		print "Controls_v.create()"
-		format "group	= % \n" group
-		
+		--print "Controls_v.create()"
+		--format "group	= % \n" group
 	)
 	
 )

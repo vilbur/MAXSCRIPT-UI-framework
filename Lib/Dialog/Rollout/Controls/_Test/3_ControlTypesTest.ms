@@ -7,28 +7,28 @@ try( destroyDialog ROLLOUT_test )catch()
 /* [Control types](https://help.autodesk.com/view/MAXDEV/2021/ENU/?guid=GUID-E421933F-958E-42FD-80A1-D66F2A2C0A06)
 */ 
 control_types = #(
+	#Label,
 	#Button,
-	#Checkbutton,
-	#Edittext,
 	#Checkbox,
+	#Checkbutton,
 	#Spinner,
-	#Dropdownlist,
-	#Combobox,
+	#Edittext,
 	#Listbox,
 	#multilistbox,
-	#GroupBox,
-	#Angle,
-	#Bitmap,
-	#Colorpicker,
-	#hyperlink,
-	#imgTag,
-	#Mapbutton,
-	#Materialbutton,
-	#Pickbutton,
-	#ProgressBar,
-	#Slider,
+	#Dropdownlist,
+	--#Combobox,
+	--#GroupBox,
+	--#Angle,
+	--#Bitmap,
+	--#Colorpicker,
+	--#hyperlink,
+	--#imgTag,
+	--#Mapbutton,
+	--#Materialbutton,
+	--#Pickbutton,
+	--#ProgressBar,
+	--#Slider,
 	--#Curve,-- DOES NOT WORK YET
-	--#Label,-- DOES NOT WORK YET
 	--#popupMenu,-- DOES NOT WORK YET
 	--#Radiobuttons,-- DOES NOT WORK YET
 	#Timer

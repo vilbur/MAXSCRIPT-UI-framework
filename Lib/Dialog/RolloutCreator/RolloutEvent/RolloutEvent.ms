@@ -107,7 +107,7 @@ struct RolloutEvents_v
 		callback = this._getCallback event_type
 		--Event = EventsCombiner.combine event_type
 		
-		if( callback == undefined ) then
+		if( callback == "" ) then
 			return false
 
 		handler = "on "+(_Rollout.id)+" "+ event_type as string +" "+this._getParams(event_type)+" do  (" +callback+ ")"
@@ -205,7 +205,7 @@ struct RolloutEvents_v
 		if( Event != undefined ) then
 			Event.code --return
 		else
-			undefined --return
+			"" --return
 	),
 	
 	/** _is event exists
