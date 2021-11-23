@@ -46,7 +46,6 @@ struct RolloutCreator_v
 		_Rollout._RolloutCreator.begin()
 		
 		this.addControlsAndSubrolloutes (_Rollout)
-
 		
 		RolloutEvents.bindEvents (_Rollout)
 		
@@ -76,12 +75,24 @@ struct RolloutCreator_v
 		for _Subrollouts in _Rollout._Controls where this._isSubrollouts(_Subrollouts) do
 			for _Subrollout in _Subrollouts.Rollouts do
 			(
-				execute  ( "AddSubRollout "+_Rollout.id+"." + _Subrollouts.slot + " "+ _Subrollout.id )
+				execute  ( "AddSubRollout "+_Rollout.id+"." + _Subrollouts.slot +" "+ _Subrollout.id + " rolledUp:"+(this._getRolledStateFromIni(_Subrollout.id)) )
 				
 				this.addSubRollouts _Subrollout
 			)	
 	),
 	
+	/** Get rolled state from ini
+	 */
+	function _getRolledStateFromIni subrollout_id =
+	(
+		--print "RolloutCreator_v._getRolledStateFromIni()"
+		rolledup_state = "false"
+
+		if( Ini.getPath() != undefined and (rolledup_state_ini = getINISetting (Ini.getPath())subrollout_id "rolledUp") != "" ) then
+			rolledup_state = rolledup_state_ini
+
+		rolledup_state --return
+	),
 	
 	 /** _set ini to event creators
 	  */
