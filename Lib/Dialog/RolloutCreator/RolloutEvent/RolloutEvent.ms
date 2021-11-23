@@ -107,11 +107,12 @@ struct RolloutEvents_v
 		callback = this._getCallback event_type
 		--Event = EventsCombiner.combine event_type
 		
-		if( callback == "" ) then
+		if( callback == undefined ) then
 			return false
 
 		handler = "on "+(_Rollout.id)+" "+ event_type as string +" "+this._getParams(event_type)+" do  (" +callback+ ")"
-		--format "\nRolloutEvents_v.bindEvent()	= % \n" event_type
+		--format "_Rollout.id	= % \n" _Rollout.id
+		--format "event_type	= % \n" event_type
 		--format "callback	= % \n" callback
 		--format "Event.code	= % \n" Event.code
 		--format "handler	= % \n" handler
@@ -136,13 +137,14 @@ struct RolloutEvents_v
 	 */
 	function _getCallback event_type =
 	(
+		--format "\n"
 		--print ("RolloutEvent_v._getCallback()")
 		--format "event_type	= % \n" event_type
 		case event_type of
 		(
 			#rolledUp: this._getEventsForRolledUpHandler()
 			#moved:    this._getEventsForMovedHandler()
-			default:	 this._getEventCode (event_type)
+			default:	 this._getEventCodeCombined (event_type)
 		)
 	),
 	
@@ -154,11 +156,8 @@ struct RolloutEvents_v
 	function _getEventsForRolledUpHandler =
 	(
 		--print ("RolloutEvents_v._getEventsForRolledUpHandler()")
-		
-		--Event = EventsCombiner.combine event_type
-		
-		callback_rolledown	= this._getEventCode #rolledDown
-		callback_rolledup	= this._getEventCode #rolledUp
+		callback_rolledown	= this._getEventCodeCombined #rolledDown
+		callback_rolledup	= this._getEventCodeCombined #rolledUp
 
 		if( callback_rolledup.count > 0 or callback_rolledown.count > 0 ) then
 			callback = "if( val == true ) then (" +callback_rolledown+ ")else(" +callback_rolledup+ ")" --return
@@ -177,8 +176,8 @@ struct RolloutEvents_v
 	function _getEventsForMovedHandler =
 	(
 		--print ("RolloutEvent_v._getEventsForMovedHandler()")
-		callback_moved	= this._getEventCode #moved
-		callback_docked	= this._getEventCode #docked
+		callback_moved	= this._getEventCodeCombined #moved
+		callback_docked	= this._getEventCodeCombined #docked
 		
 		--if_resizing_enabled     =	""
 		--if_resizing_enabled     =	" if(ENABLE_RESIZING != false) then\n" -- this is MUST WRAP ALL STRINGS BELOW IN ()
@@ -195,11 +194,13 @@ struct RolloutEvents_v
 		callback_moved --return
 	),
 	
-	/** _get event code
+	/** Get event code of custom and default event
+	  *
+	  * @return	string	
 	 */
-	function _getEventCode event_type =
+	function _getEventCodeCombined event_type =
 	(
-		--print ("RolloutEvent_v._getEventCode()")
+		--print ("RolloutEvent_v._getEventCodeCombined()")
 		Event = EventsCombiner.combine event_type
 
 		if( Event != undefined ) then

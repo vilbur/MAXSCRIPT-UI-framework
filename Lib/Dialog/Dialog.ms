@@ -25,7 +25,6 @@ struct Dialog_v
 	RolloutMain, --RENAME TO dialogRollout,
 	
 	/* inherit */
-	Controls,
 	Events,
 	
 	/** Create
@@ -49,22 +48,16 @@ struct Dialog_v
     (
         RolloutMain.rollouts() --return
     ),
+
+	/** Controls
+	 */
+	function Controls group:undefined =
+	(
+		--print "Dialog_v.Controls()"
+		RolloutMain.Controls group:group
+	),
 	
-	
-	--/** Ini set\get ini path
-	--  *
-	--  * @property	string|#get	_path	set or get path t ini file
-	--  * @property	boolean	load	load values from ini on init
-	--  *
-	--  * @return	string path	to ini file
-	-- */
-	--function ini _path load:true =
-	--(
-	--	--print "Dialog_v.ini()"
-	--	RolloutMain.ini _path load:load --return
-	--),
-	
-	
+
 	private
 	
 
@@ -73,12 +66,7 @@ struct Dialog_v
 	function _setMainRollout =
 	(
 		--print "Dialog_v._setMainRollout()"
-		format "ini	= % \n" ini
-		
-		--RolloutMain	= Rollout_v title:title id:id _Ini:_Ini
 		RolloutMain	= Rollout_v title:title id:id Layout:Layout
-
-		Controls = RolloutMain.Controls
 
 		Events = RolloutMain.Events
 	),
