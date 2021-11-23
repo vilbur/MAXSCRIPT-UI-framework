@@ -48,6 +48,12 @@ control_types_for_test = #(
 	--#Timer
 )
 
+controls_with_items = #(
+	#Listbox,
+	#multilistbox,
+	#Dropdownlist,
+	#Combobox
+)
 
 /** DEFINE UI 
  *	
@@ -70,14 +76,16 @@ for control_type in ControlEvents.control_types where findItem control_types_for
 	
 	if( event_types.count > 0 ) then
 	(
-		_Control = _Controls.control control_type ( "Test " + control_type as string ) params:#( #items, #("Item 1","Item 2","Item 3") )
+		params	= if( findItem controls_with_items control_type > 0 ) then #( #items, #("Item 1","Item 2","Item 3") ) else #()
+
+		_Control = _Controls.control control_type ( "Test " + control_type as string ) params:params
 		
 		format "\ncontrol_type = % \nevent_types  = % \n\n" control_type event_types
 		
 		/** ADD EVENTS
 		 */
 		for event_type in event_types do
-			_Control.Events.add event_type "print \"Pressed\""
+			_Control.Events.add event_type ("print \""+ control_type as string + " " + event_type as string + "\"")
 	)
 )
 

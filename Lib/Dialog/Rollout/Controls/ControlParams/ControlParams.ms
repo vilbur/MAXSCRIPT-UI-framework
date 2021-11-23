@@ -1,3 +1,4 @@
+filein( getFilenamePath(getSourceFileName()) + "/ControlValue/ControlValue.ms" )
 /** Control Params http://help.autodesk.com/view/3DSMAX/2016/ENU/?guid=__files_GUID_EA37E7DB_1E74_4377_B3D8_EDAE19CE27E7_htm
   * 
   * Params_v is for store, get and set parameters of control
@@ -5,12 +6,17 @@
  */
 struct ControlParams_v
 (
-	defaults = "",
+	/* properties */
+	defaults = "", -- defaults params for controls
 	
-	/** _get params
+	/* dependency */
+	ControlValue 	= ControlValue_v(),
+	
+	/** Get params for control
 	 */
-	function getParams params =
+	function getParams _Control rollout_id =
 	(
+		params = _Control.params
 		--format "\n"
 		--print "ControlCreator_v._getParams()"
 		--format "defaults	= % \n" defaults
@@ -19,11 +25,14 @@ struct ControlParams_v
 		
 		if ( classOf params == Array ) then
 			params = this._joinParamsInArray params
-		--format "getParams return % \n" (params + " " + defaults)
-		params + " " + defaults
+		format "ControlParams_v.getParams() % \n" (params + " " + defaults)
+		
+		val	= if( (val_ini = ControlValue.getValueFromIni(_Control)(rollout_id)) != undefined ) then val_ini else "" 
+		
+		val +" "+  params +" "+ defaults -- first occurrence of parameter is used
 	),
 	
-	/** Set defaults
+	/** Set defaults params used for each controlfilein( getFilenamePath(getSourceFileName()) + "/ControlValue/ControlValue.ms" )
 	 */
 	function setDefaults ControlDefaults =
 	(

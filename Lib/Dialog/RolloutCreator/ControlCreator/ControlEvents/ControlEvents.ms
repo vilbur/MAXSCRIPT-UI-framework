@@ -86,13 +86,15 @@ struct ControlEvents_v
 	 */
 	function getEvents _Control rollout_id =
 	(
+		if( ini_path == undefined ) then
+			return _Control.Events.list
 		--print ( "ControlEvent_v.getEvents()" )
 		--format "_Control	= % \n" _Control
 		this._Control = _Control
 		
 		events_of_control = this._getEventsOfControl _Control.type
-		params_of_control = this._getParamsOfControl  _Control.type
-		
+		params_of_control = this._getParamsOfControl _Control.type
+			
 		this._addSaveToIniEvents(rollout_id) --return
 	),
 
@@ -120,6 +122,7 @@ struct ControlEvents_v
 	(
 		Events_list	= #()
 		--print "ControlEvents_v._addSaveToIniEvents()"
+		
 		for event_type in events_of_control where findItem dynamic_event_types event_type > 0 do
 		(
 			Event = this._getEvent(event_type)

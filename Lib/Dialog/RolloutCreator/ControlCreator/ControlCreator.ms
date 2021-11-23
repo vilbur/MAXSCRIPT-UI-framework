@@ -55,7 +55,7 @@ struct ControlCreator_v
 		
 		this.addControlHandlers (_Control)(events_list)
 
-		_Rollout._RolloutCreator.addControl (_Control.type) (_Control.id) (_Control.caption) paramStr:(ControlParams.getParams(_Control.params))
+		_Rollout._RolloutCreator.addControl (_Control.type) (_Control.id) (_Control.caption) paramStr:(ControlParams.getParams(_Control)(_Rollout.id))
 	),
 	
 	/** Test
