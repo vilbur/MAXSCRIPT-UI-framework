@@ -1,6 +1,9 @@
 filein( getFilenamePath(getSourceFileName()) + "/RolloutCreator/RolloutCreator.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/Layout/Layout.ms" )
 
+global DIALOG_PREVIOUS_STATE = undefined -- this should be in struct
+
+global ENABLE_DOCKED_EVENT = true -- prevent crash on destroying  of dialog // RENAME THIS TO DIALOG_ENABLE_DOCKED_EVENT
 
 /** Dialog
  */
@@ -21,7 +24,8 @@ struct Dialog_v
 	--Menu	= DialogMenu_v Dialog:this,
 	
 	/* properties */
-	style = #(#style_titlebar, #style_border, #style_sysmenu, #style_resizing),
+	style = #(#cui_floatable, #style_titlebar, #style_border, #style_sysmenu, #style_resizing),
+	
 	RolloutMain, --RENAME TO dialogRollout,
 	
 	/* inherit */
@@ -35,12 +39,68 @@ struct Dialog_v
 	(
 		print ("Dialog_v.create() " + RolloutMain.id)
 		
+		if( style == unsupplied ) then style = this.style
+		
+		format "style	= % \n" style
 		_RolloutCreator.createRollout (RolloutMain) dialog_rollout:true
 		
-		CreateDialog (_RolloutCreator.getDefinition(RolloutMain)) width:width height:height style:style
+		CreateDialog (_RolloutCreator.getDefinition(RolloutMain)) pos:(this._getPosition(pos)) width:width height:height bgcolor:bgcolor fgcolor:fgcolor bitmap:bitmap style:style modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
 		
 		_RolloutCreator.addSubRollouts RolloutMain
 	),
+	
+	/** Register dialog bar
+	 */
+	function register =
+	(
+		ENABLE_DOCKED_EVENT = false
+		
+		execute ("cui.RegisterDialogBar "+ RolloutMain.id +" style:"+style as string )
+		
+		ENABLE_DOCKED_EVENT = true
+	),
+	
+	/** Unregister dialog bar
+	 */
+	function unregister =
+	(
+		execute ("try(cui.UnRegisterDialogBar "+ RolloutMain.id +")catch()")
+	),
+	
+	/** Dock\Undock dialog
+	  * 
+	  * Subrollouts and dialog are resized BEFORE docking
+	  *
+	  * @param	name	state #left|#top|#right|#bottom|#float
+	 */
+	function dock state =
+	(
+		this.register()
+		--format "state	= % \n" state
+		if ( state != #float ) then
+			execute ("cui.DockDialogBar "+ RolloutMain.id +" #cui_dock_"+ state as string )
+		else
+			execute ("cui.floatDialogBar "+ RolloutMain.id )
+	),
+	
+	/** Destroy dialog
+	 */
+	function destroy =
+	(
+		print "DialogRemote.destroy()"
+		--format "RolloutMain.id	= % \n" RolloutMain.id
+		ENABLE_DOCKED_EVENT = false
+		
+		this.unregister()
+		
+		execute ( "try( destroyDialog "+ RolloutMain.id +" )catch()" )
+		
+		ENABLE_DOCKED_EVENT = true
+	),
+	
+	/*------------------------------------------------------------------------------
+		INHERED
+	--------------------------------------------------------------------------------*/
 	
 	/** rollouts
      */
@@ -60,7 +120,20 @@ struct Dialog_v
 
 	private
 	
+	
+	/** Get position relative to Max window
+	 */
+	function _getPosition pos =
+	(
+		--print "Dialog_v.getPosition()"
+		if( pos == unsupplied ) then 
+			return pos
+		
+		win_pos = windows.getWindowPos (windows.getMAXHWND())
 
+		[ win_pos.x+pos.x, win_pos.y+pos.y ]  --return
+	),
+	
 	/** Set main rollout
 	 */
 	function _setMainRollout =
@@ -70,12 +143,16 @@ struct Dialog_v
 
 		Events = RolloutMain.Events
 	),
+	
+
 	/**  
 	 */
 	on create do
 	(
 		--print("Dialog_v.onCreate()")
 		this._setMainRollout()
+		
+		this.destroy()
 		
 		if( ini != undefined ) then
 			_RolloutCreator.Ini.setIni (ini)
