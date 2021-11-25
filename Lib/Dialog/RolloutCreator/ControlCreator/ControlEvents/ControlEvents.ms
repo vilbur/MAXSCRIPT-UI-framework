@@ -23,7 +23,7 @@ struct ControlEvents_v
 	dynamic_event_types = #( #changed, #selected ), -- this events fires default save to ini callback
 
 	/* dependency */
-	EventsCombiner	= EventsCombiner_v(),
+	--EventsCombiner	= EventsCombiner_v(),
 
 	/* Keys for event_types array
 	 *
@@ -79,23 +79,23 @@ struct ControlEvents_v
 	),
 	
 	events_of_control,	-- get events from event_types array
-	params_of_control,	-- get params from event_types array
+	params_of_events,	-- get params from event_types array
 	
 	/** Add handlers
 	  * http://help.autodesk.com/view/3DSMAX/2015/ENU/?guid=__files_GUID_5FC5036F_E2D7_46C9_9AFA_7B3550B9F254_htm
 	 */
 	function getEvents _Control rollout_id =
 	(
-		if( ini_path == undefined ) then
-			return _Control.Events.list
-		--print ( "ControlEvent_v.getEvents()" )
-		--format "_Control	= % \n" _Control
 		this._Control = _Control
 		
-		events_of_control = this._getEventsOfControl _Control.type
-		params_of_control = this._getParamsOfControl _Control.type
-			
-		this._addSaveToIniEvents(rollout_id) --return
+		events_of_control = this._getEventsOfControl (_Control.type)
+		params_of_events  = this._getParamsOfEvents  (_Control.type)
+		format "events_of_control	= % \n" events_of_control
+		format "params_of_events	= % \n" params_of_events
+
+		this._setCallbackParamters()
+		
+		if( ini_path == undefined ) then _Control.Events.list else this._addDefaultEvents(rollout_id) --return 
 	),
 
 	/**  get events for control type from event_types array
@@ -109,7 +109,7 @@ struct ControlEvents_v
 	),
 	/** get params for control type from event_types array
 	 */
-	function _getParamsOfControl control_type =
+	function _getParamsOfEvents control_type =
 	(
 		for event_type in event_types[findItem control_types control_type] collect
 			if( classOf event_type == Array ) then event_type[2] else undefined
@@ -118,10 +118,10 @@ struct ControlEvents_v
 	
 	/** _add save to ini events
 	 */
-	function _addSaveToIniEvents rollout_id =
+	function _addDefaultEvents rollout_id =
 	(
-		Events_list	= #()
-		--print "ControlEvents_v._addSaveToIniEvents()"
+		events_list	= #()
+		print "ControlEvents_v._addDefaultEvents()"
 		
 		for event_type in events_of_control where findItem dynamic_event_types event_type > 0 do
 		(
@@ -129,12 +129,12 @@ struct ControlEvents_v
 			
 			Event.code	= "( setINISetting \""+ini_path+"\" \""+rollout_id+"\" \""+_Control.id+"\" (val as string) );" + Event.code
 
-			Event.params	= params_of_control[findItem events_of_control event_type]
+			Event.params	= params_of_events[findItem events_of_control event_type]
 
-			append Events_list Event
+			append events_list Event
 		)
 
-		Events_list --return
+		events_list --return
 	),
 	
 	/** Get event from control, if dos not exists then create new
@@ -152,28 +152,20 @@ struct ControlEvents_v
 		--print "ControlEvents_v._getControlEvent()"
 		(for Event in _Control.Events.list where Event.type == event_type collect Event)[1] --return 
 	),
-	
-	--/** Set save to ini callback
-	--  *
-	--  * If control has callback which is changing value of control
-	-- */
-	--function setSaveToIniCallback &Event =
-	--(
-	--	--format "ControlEvents.setSaveToIniCallback() % %\n" Parent_Control.id.id Parent_Control.type
-	--	--if( Parent_Control.ControlBox.Parent_roll._Ini.isDefined() ) then
-	--
-	--	rollout_id = "ROLLOUT_test"
-	--	
-	--	
-	--	Event
-	--),
-	--
-	--/** Get saveini event type
-	-- */
-	--function _getSaveiniEventType =
-	--(
-	--	for event_type in event_types where findItem dynamic_event_types event_type > 0 collect event_type 
-	--),
+
+	/** Get parameters of callback defined in event_types
+	 */
+	--function _setCallbackParamters &params type =
+	function _setCallbackParamters =
+	(
+		--print "ControlEvents._setCallbackParamters()"
+		for i = 1 to events_of_control.count where params_of_events[i] != undefined  do
+		(
+			Event = this._getEvent(events_of_control[i])
+
+			Event.params = params_of_events[i]
+		)
+	),
 	
 	--/** Add function brackets E.g.: "fooCallback" return "fooCallback()|fooCallback(val)"
 	-- */
@@ -189,34 +181,6 @@ struct ControlEvents_v
 	--			callback += " " + params
 	--			--callback += "("+params+")"
 	--),
-	--
-	--/** Get parameters of callback defined in event_types
-	-- */
-	--function _setCallbackParamters &params type =
-	--(
-	--	print "ControlEvents._setCallbackParamters()"
-	--	--format "params	= % \n" params
-	--	
-	--	if( ( event_types = this._getEventParameters type ) != undefined and params == "" ) then
-	--		params = event_types
-	--	
-	--	params --return
-	--),
-	--
-	--/** If event in Events.event_types is Array, then it has parameter
-	-- */
-	--function _getEventParameters type =
-	--(
-	--	--format "ControlEvents_v._getEventParameters	= % \n" type
-	--
-	--	param = ""
-	--	
-	--	for event_param in Events.event_types where event_param[1] == type do
-	--		param = event_param[2]
-	--		
-	--	param --return
-	--),
-
 	
 	/** If checkbox has value true, then fire up checkbox`s callback when UI starts
 	 */
@@ -230,15 +194,10 @@ struct ControlEvents_v
 		)
 	),
 	
+	
 	private
 
-	--/** _is event exists
-	-- */
-	--function _isEventExists type =
-	--(
-	--	findItem Events.event_types type > 0 --return
-	--),
-	--
+	
 	/** Exception
 	 */
 	function _exception type =
