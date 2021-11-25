@@ -1,5 +1,7 @@
 filein( getFilenamePath(getSourceFileName()) + "/../../Rollout/Controls/ControlParams/ControlParams.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/ControlEvents/ControlEvents.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/ControlCustomType/ControlCustomType.ms" )
+
 /** ControlCreator_v
  */
 struct ControlCreator_v
@@ -10,6 +12,7 @@ struct ControlCreator_v
 	
 	ControlParams	= ControlParams_v(),
 	ControlEvents	= ControlEvents_v(),
+	ControlCustomType	= ControlCustomType_v(),
 
 	/** Add controls
 	 */
@@ -35,7 +38,6 @@ struct ControlCreator_v
 	function addControlsGroup mode =
 	(
 		--print "ControlCreator_v.addControlsGroup()"
-
 		if( _Controls.group == undefined ) do
 			return false
 
@@ -44,31 +46,60 @@ struct ControlCreator_v
 		_Rollout._RolloutCreator.addText start_or_end filter:on
 	),
 
-	/** Add control
+	
+	/* Add control to RolloutCreator
 	 */
 	function addControl _Control =
 	(
-		--format "\n"
 		--print ("ControlCreator_v.addControl()	" +_Control.id)
+		if( _Control.type == #browsePath ) then
+			_Control = ControlCustomType.getCustomControlType(_Control)
 		
-		events_list = ControlEvents.getEvents(_Control)(_Rollout.id)
-		
-		this.addControlHandlers (_Control)(events_list)
+		/* add CONTROL */ 
+		_Rollout._RolloutCreator.addControl (_Control.type) (_Control.id) (_Control.caption) paramStr:(ControlParams.getParams(_Control)(_Rollout.id)) -- add control first before variables, functions and events
 
-		_Rollout._RolloutCreator.addControl (_Control.type) (_Control.id) (_Control.caption) paramStr:(ControlParams.getParams(_Control)(_Rollout.id))
+		/* add LOCAL VARIABLES */ 
+		this._addLocalVariablesToRollout (_Control)
+
+		/* add FUNCTIONS */ 
+		this._addFunctionsToRollout (_Control)
+
+		/* add EVENTS */
+		events_list = ControlEvents.getEvents(_Control)(_Rollout.id)
+
+		this.addControlHandlersToRollout (_Control)(events_list)
 	),
 	
 	/** Test
 	 */
-	function addControlHandlers _Control events_list =
+	function addControlHandlersToRollout _Control events_list =
 	(
-		--print "ControlCreator_v.addControlHandlers()"
+		--print "ControlCreator_v.addControlHandlersToRollout()"
 		for Event in events_list do
-			--format "Event	= % \n" Event
 			_Rollout._RolloutCreator.addHandler _Control.id Event.type codeStr:Event.code paramStr:Event.params filter:on
 	),
-
-
+	
+	/** Add local variables from Control_v to rollout
+	  *
+	  * 	Control_v.rollout_locals =  #(#variable_name1, init_value1, #variable_name2, init_value2)
+	 */
+	function _addLocalVariablesToRollout _Control =
+	(
+		if( _Control.rollout_locals != unsupplied ) then
+			for i = 1 to _Control.rollout_locals.count by 2 do
+				_Rollout._RolloutCreator.addLocal ( _Control.rollout_locals[i] as string )  init:_Control.rollout_locals[i+1]
+	),
+	
+	/** Add functions variables to rollout
+	 */
+	function _addFunctionsToRollout _Control =
+	(
+		--print "ControlCreator_v._addFunctionsToRollout()"
+		if( _Control.rollout_function != unsupplied ) then
+				_Rollout._RolloutCreator.addText  _Control.rollout_function filter:true
+	),
+	
+	
 	private
 	
 	

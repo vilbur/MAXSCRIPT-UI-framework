@@ -21,15 +21,15 @@ ControlEvents = ControlEvents_v()
 */ 
 control_types_for_test = #(
 	
-	#Label,
-	#Button,
-	#Checkbox,
+	--#Label,
+	--#Button,
+	--#Checkbox,
 	#Checkbutton,
-	#Spinner,
-	#Edittext,
-	#Listbox,
-	#multilistbox,
-	#Dropdownlist
+	--#Spinner,
+	--#Edittext,
+	--#Listbox,
+	--#multilistbox,
+	--#Dropdownlist,
 	----#Combobox,
 	----#GroupBox,
 	----#Angle,
@@ -46,6 +46,10 @@ control_types_for_test = #(
 	----#popupMenu,-- DOES NOT WORK YET
 	----#Radiobuttons,-- DOES NOT WORK YET
 	--#Timer
+	
+	/* TEMP FOR DEV */ 
+	#Edittext
+
 )
 
 controls_with_items = #(

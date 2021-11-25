@@ -90,8 +90,8 @@ struct ControlEvents_v
 		
 		events_of_control = this._getEventsOfControl (_Control.type)
 		params_of_events  = this._getParamsOfEvents  (_Control.type)
-		format "events_of_control	= % \n" events_of_control
-		format "params_of_events	= % \n" params_of_events
+		--format "events_of_control	= % \n" events_of_control
+		--format "params_of_events	= % \n" params_of_events
 
 		this._setCallbackParamters()
 		
@@ -120,8 +120,8 @@ struct ControlEvents_v
 	 */
 	function _addDefaultEvents rollout_id =
 	(
+		--print "ControlEvents_v._addDefaultEvents()"
 		events_list	= #()
-		print "ControlEvents_v._addDefaultEvents()"
 		
 		for event_type in events_of_control where findItem dynamic_event_types event_type > 0 do
 		(
