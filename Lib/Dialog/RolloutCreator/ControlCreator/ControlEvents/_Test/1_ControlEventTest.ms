@@ -24,7 +24,7 @@ control_types_for_test = #(
 	--#Label,
 	--#Button,
 	--#Checkbox,
-	#Checkbutton,
+	--#Checkbutton,
 	--#Spinner,
 	--#Edittext,
 	--#Listbox,
@@ -48,6 +48,7 @@ control_types_for_test = #(
 	--#Timer
 	
 	/* TEMP FOR DEV */ 
+	--#Checkbox
 	#Edittext
 
 )

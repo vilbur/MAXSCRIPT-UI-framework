@@ -51,7 +51,7 @@ struct ControlCreator_v
 	 */
 	function addControl _Control =
 	(
-		--print ("ControlCreator_v.addControl()	" +_Control.id)
+		print ("ControlCreator_v.addControl()	" +_Control.id)
 		if( _Control.type == #browsePath ) then
 			_Control = ControlCustomType.getCustomControlType(_Control)
 		
@@ -76,7 +76,7 @@ struct ControlCreator_v
 	(
 		--print "ControlCreator_v.addControlHandlersToRollout()"
 		for Event in events_list do
-			_Rollout._RolloutCreator.addHandler _Control.id Event.type codeStr:Event.code paramStr:Event.params filter:on
+			_Rollout._RolloutCreator.addHandler _Control.id Event.type codeStr:("("+Event.code+")") paramStr:Event.params filter:on
 	),
 	
 	/** Add local variables from Control_v to rollout
@@ -85,6 +85,8 @@ struct ControlCreator_v
 	 */
 	function _addLocalVariablesToRollout _Control =
 	(
+		--print "ControlCreator_v._addLocalVariablesToRollout()"
+		--format "_Control.rollout_locals	= % \n" _Control.rollout_locals
 		if( _Control.rollout_locals != unsupplied ) then
 			for i = 1 to _Control.rollout_locals.count by 2 do
 				_Rollout._RolloutCreator.addLocal ( _Control.rollout_locals[i] as string )  init:_Control.rollout_locals[i+1]
@@ -95,7 +97,8 @@ struct ControlCreator_v
 	function _addFunctionsToRollout _Control =
 	(
 		--print "ControlCreator_v._addFunctionsToRollout()"
-		if( _Control.rollout_function != unsupplied ) then
+		--format "_Control.rollout_function	= % \n" _Control.rollout_function
+		if( _Control.rollout_function != undefined ) then
 				_Rollout._RolloutCreator.addText  _Control.rollout_function filter:true
 	),
 	

@@ -10,16 +10,12 @@ filein( getFilenamePath(getSourceFileName()) + "/../../../RolloutCreator/Rollout
   */
 include "Library/MAXSCRIPT-UI-framework/Lib/Dialog/RolloutCreator/_Test/includes/CreateTestRollout.ms"
 
---_RolloutCreator.Ini.setIni (getSourceFileName())
-
 
 
 _BrowsePath = _Controls.control #browsePath ( "Test" ) 
 
---_BrowsePath.Events.add #changed "CallbackNoParam()" params:"val"
---_BrowsePath.Events.add #changed "print \"Yes\"" params:"val"
-_BrowsePath.Events.add #changed "print \"User Event\""
---_BrowsePath.Events.add #changed "print val"
+_BrowsePath.Events.add #changed "print (\"User Event #changed \" + val )"
+_BrowsePath.Events.add #entered "print (\"User Event #entered \" + val )"
 
 
 /** Create dialog ROLLOUT_test from _Rollout

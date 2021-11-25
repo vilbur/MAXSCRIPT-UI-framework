@@ -29,27 +29,27 @@ struct ControlCustomType_v
 		
 		_Control.rollout_locals = #( #edit_text_prev_state, "\"\"" )
 
-		_Control.rollout_function = "function browsePath val =
-			(
-				function rxMatch _string =
-				(
-					(( dotNetClass @System.Text.RegularExpressions.RegEx@).matches _string @^\s+$|^$@ ).count == 1
-				)
-				
-				if( rxMatch val and rxMatch edit_text_prev_state ) then
-					if( (browsed_path = getSavePath caption:@browse path@ initialDir:@$scripts@) != undefined ) do
-						"+_Control.id+".text = browsed_path
-				
-				else
-					edit_text_prev_state = "+_Control.id+".text
-			)"
-
 		/* Get existing event or create new */
 		for event_type in #( #changed, #entered ) do 
 		(
 			Event = if( (Event = _Control.Events.get event_type) != undefined ) then Event else (Event_v type:event_type )
 			
-			Event.code = "browsePath(val);" + Event.code
+			Event.code = "(
+					
+				function valueIsEmpty _string =
+				(
+					(( dotNetClass @System.Text.RegularExpressions.RegEx@).matches _string @^\s+$|^$@ ).count == 1
+				)
+				
+				if( valueIsEmpty(val) and valueIsEmpty(edit_text_prev_state) ) then
+					if( (val = getSavePath caption:@browse path@ initialDir:@$scripts@) != undefined ) do
+					(
+						"+_Control.id+".text = val
+						"+ Event.code +" -- fire custom event with browsed variable
+					)
+				else
+					edit_text_prev_state = "+_Control.id+".text
+			)"
 			
 			_Control.Events.replace Event
 		)
@@ -62,8 +62,5 @@ struct ControlCustomType_v
 	 */
 	on create do
 	(
-		--print("ControlCustom_v.onCreate()")
-		--this._checkConstctructProperties()
 	)
-	
 )

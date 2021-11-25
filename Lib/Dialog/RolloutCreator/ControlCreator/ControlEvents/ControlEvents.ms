@@ -74,8 +74,8 @@ struct ControlEvents_v
 		#( #(#selected, "val"),	#rightClick ),			-- #dropdownlist	
 		
 		/* Custom compounded controls */
-		--#( #(#changed,  "val"),	#(#entered, "val") )	-- #browsePath
 		#( #tick )
+		--#( #(#changed,  "val"),	#(#entered, "val") )	-- #browsePath
 	),
 	
 	events_of_control,	-- get events from event_types array
