@@ -14,13 +14,26 @@ struct Subrollouts_v
 	 */
 	function new title id: =
 	(
-		--print "Subrollouts_v.new()"
+		--print "Subrollouts_v.roll()"
 		local _Rollout = Rollout_v title:title id:id  is_subrollout:true
 		
 		append Rollouts _Rollout
 		
 		_Rollout --return
 	),
+	
+	/** Create new rollout
+	 */
+	function roll title id: =
+	(
+		--print "Subrollouts_v.roll()"
+		local _Rollout = Rollout_v title:title id:id  is_subrollout:true
+		
+		append Rollouts _Rollout
+		
+		_Rollout --return
+	),
+	
 	--
 	--/** Create rollouts
 	-- */

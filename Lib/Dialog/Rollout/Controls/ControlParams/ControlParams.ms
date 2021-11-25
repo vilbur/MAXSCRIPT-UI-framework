@@ -1,7 +1,7 @@
 filein( getFilenamePath(getSourceFileName()) + "/ControlValue/ControlValue.ms" )
 /** Control Params http://help.autodesk.com/view/3DSMAX/2016/ENU/?guid=__files_GUID_EA37E7DB_1E74_4377_B3D8_EDAE19CE27E7_htm
   * 
-  * Params_v is for store, get and set parameters of control
+  * ControlParams_v set parameters of control
   * 
  */
 struct ControlParams_v

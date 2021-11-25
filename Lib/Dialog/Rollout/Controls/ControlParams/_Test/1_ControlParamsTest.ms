@@ -1,22 +1,28 @@
 clearListener()
 
-filein( getFilenamePath(getSourceFileName()) + "/../ControlParams.ms" )
-filein( getFilenamePath(getSourceFileName()) + "/../../ControlDefaults/ControlDefaults.ms" )
 
-ControlParams 	= ControlParams_v()
-ControlDefaults 	= ControlDefaults_v()
+filein( getFilenamePath(getSourceFileName()) + "/../../../../RolloutCreator/RolloutCreator.ms" )
 
---ControlDefaults.setValues #( #itenger, #float, #string, #array ) #( 256, 512.0, "_string", #( 1, 2.0, #name, "string" ) ) filter:true
-
-ControlDefaults.setValues #( #width, #height ) #( 256, 512 ) filter:true
-
-ControlParams.setDefaults (ControlDefaults)
-format "ControlParams.defaults	= % \n" ControlParams.defaults
+/** Create variables:
+  *		_RolloutCreator
+  *		_Rollout
+  *		_Controls
+  */
+include "Library/MAXSCRIPT-UI-framework/Lib/Dialog/RolloutCreator/_Test/includes/CreateTestRollout.ms"
 
 
-params_string = "width:256"
-params_array  = #(#width, 64, #height, 32 )
+
+--_Controls   = _Rollout.Controls()
+_Button1    = _Controls.control #button "Params in string" params:"width:256"
 
 
-format "getParams params_string	= \"%\" \n" (ControlParams.getParams (params_string))
-format "getParams params_array	= \"%\" \n" (ControlParams.getParams (params_array))
+Subrollouts = _Rollout.Subrollouts()
+Subrollout1 = Subrollouts.roll "Subrollout"
+_Controls   = Subrollout1.Controls()
+_Button2    = _Controls.control #button  "Params in array" params:#(#width, 128, #height, 32 )
+
+
+
+/** Create dialog from _Rollout
+  */
+include "Library/MAXSCRIPT-UI-framework/Lib/Dialog/RolloutCreator/_Test/includes/CreateTestDialog.ms"
