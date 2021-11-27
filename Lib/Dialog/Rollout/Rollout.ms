@@ -9,14 +9,19 @@ struct Rollout_v
 	title,
 	id,
 	
+	/* properties */
+	/* extended control params */ 
+	add_locals	= #(),	-- #(#variable_name1, init_value1, #variable_name2, init_value2)	// used in ControlCreator_v._addLocalVariablesToRollout 	"../../../RolloutCreator/ControlCreator/ControlCreator.ms"
+	add_text,		-- string added to rollout	// used in ControlCreator_v._addFunctionsVariablesToRollout	"../../../RolloutCreator/ControlCreator/ControlCreator.ms"
+
+	is_subrollout = false,
+	
 	/* dependency */
 	_Controls = #(),
 	Events    = EventsList_v(),
 	
 	_RolloutCreator, -- Maxscript native RolloutCreator  https://help.autodesk.com/view/3DSMAX/2016/ENU/?guid=__files_GUID_5FC5036F_E2D7_46C9_9AFA_7B3550B9F254_htm
 
-	/* properties */
-	is_subrollout = false,
 	
 	/* inhered */ 
 	Layout,
@@ -46,6 +51,25 @@ struct Rollout_v
 		Subrollouts --return
 	),
 	
+
+	
+	/** Addlocal
+	 */
+	function addlocal ke val =
+	(
+		--print "Rollout_v.addlocal()"
+		append add_locals key
+		append add_locals val
+	),
+	
+	/** Add text
+	 */
+	function addText text =
+	(
+		--print "Rollout_v.addText()"
+		add_text += text
+		
+	),
 	/** Subrollouts
 	  *
 	  * wrapper for user friedly coding
@@ -56,6 +80,7 @@ struct Rollout_v
 	),
 	
 	private
+	
 	
 	/** _get slot
 	 */

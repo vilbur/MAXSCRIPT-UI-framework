@@ -14,13 +14,32 @@ struct Control_v
 	params,
 	
 	/* extended control params */ 
-	rollout_locals,	-- #(#variable_name1, init_value1, #variable_name2, init_value2)	// used in ControlCreator_v._addLocalVariablesToRollout 	"../../../RolloutCreator/ControlCreator/ControlCreator.ms"
-	rollout_function,	-- string added to rollout	// used in ControlCreator_v._addFunctionsVariablesToRollout	"../../../RolloutCreator/ControlCreator/ControlCreator.ms"
+	add_locals	= #(),	-- #(#variable_name1, init_value1, #variable_name2, init_value2)	// used in ControlCreator_v._addLocalVariablesToRollout 	"../../../RolloutCreator/ControlCreator/ControlCreator.ms"
+	add_text,		-- string added to rollout	// used in ControlCreator_v._addFunctionsVariablesToRollout	"../../../RolloutCreator/ControlCreator/ControlCreator.ms"
 
 	
 	/* dependency */
 	Events = EventsList_v(),
 
+	
+	/** Addlocal
+	 */
+	function addlocal key val =
+	(
+		--print "Rollout_v.addlocal()"
+		append add_locals key
+		append add_locals val
+	),
+	
+	/** Add text
+	 */
+	function addText text =
+	(
+		--print "Rollout_v.addText()"
+		add_text += text
+		
+	),
+	
 	private
 	
 	/** Set id by control caption
@@ -34,7 +53,7 @@ struct Control_v
 		
 		id = toUpper ( type as string ) + "_" + id -- add prefix by control type E.G.: "test" >>> "BUTTON_test"
 	),
-    
+	
 	/** _repleace string
 	 */
 	function _repleaceCharacters search replace =

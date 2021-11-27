@@ -24,10 +24,10 @@ struct ControlCustomType_v
 	 */
 	function _browsePath _Control =
 	(
-		--print "ControlCustomType_v.browsePath()"
+		print "ControlCustomType_v.browsePath()"
 		_Control.type = #editText
 		
-		_Control.rollout_locals = #( #edit_text_prev_state, "\"\"" )
+		_Control.addlocal #edit_text_prev_state "\"\""
 
 		/* Get existing event or create new */
 		for event_type in #( #changed, #entered ) do 

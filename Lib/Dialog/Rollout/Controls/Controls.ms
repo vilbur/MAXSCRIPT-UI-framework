@@ -21,13 +21,13 @@ struct Controls_v
 	  *
 	  * @return Object _Control	"./Control/Control.ms"
 	 */
-	function Control type caption id:undefined params:undefined locals: =
+	function Control type caption id:undefined params:undefined locals:#() =
 	(
 		--if( type == #browsePath ) then 
 			--return this.browsePath caption id:id params:params
 		
 		--print "Controls_v.control()"
-		_Control = Control_v type:type caption:caption id:id params:params rollout_locals:locals
+		_Control = Control_v type:type caption:caption id:id params:params add_locals:locals
 		
 		append list _Control
 		

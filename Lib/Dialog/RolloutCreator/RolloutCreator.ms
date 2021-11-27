@@ -43,12 +43,27 @@ struct RolloutCreator_v
 		
 		this._setIniToEventCreators()
 		
+		/* EDIT start */ 
 		_Rollout._RolloutCreator.begin()
 		
+
+		
+		/* add LOCAL VARIABLES */ 
+		this._addLocalVariablesToRollout (_Rollout)
+
+		/* add TEXT */ 
+		this._addTextToRollout (_Rollout)
+		
+		
+		/* add CONTROLS */ 
 		this.addControlsAndSubrolloutes (_Rollout)
 		
+		/* add EVENTS */ 
 		RolloutEvents.bindEvents (_Rollout)
 		
+		
+		
+		/* EDIT end */ 
 		_Rollout._RolloutCreator.end()
 	),
 
@@ -130,6 +145,30 @@ struct RolloutCreator_v
 	private
 	
 
+		
+	/** Add local variables from Control_v to rollout
+	  *
+	  * 	Control_v.rollout_locals =  #(#variable_name1, init_value1, #variable_name2, init_value2)
+	 */
+	function _addLocalVariablesToRollout _Rollout =
+	(
+		--print "ControlCreator_v._addLocalVariablesToRollout()"
+		--format "_Rollout.add_locals	= % \n" _Rollout.add_locals
+		if( _Rollout.add_locals != unsupplied ) then
+			for i = 1 to _Rollout.add_locals.count by 2 do
+				_Rollout._RolloutCreator.addLocal ( _Rollout.add_locals[i] as string )  init:_Rollout.add_locals[i+1]
+	),
+	
+	/** Add functions variables to rollout
+	 */
+	function _addTextToRollout _Rollout =
+	(
+		print "ControlCreator_v._addTextToRollout()"
+		format "_Rollout.add_text	= % \n" _Rollout.add_text
+		--if( _Rollout.add_text != undefined ) then
+				--_Rollout._RolloutCreator.addText  _Rollout.add_text filter:true
+	),
+	
 	/** _is control box
 	 */
 	function _isControls _Struct =
