@@ -60,7 +60,7 @@ struct BrowsePath_v
 				case param of
 				(
 					#mode:	#getSavePath
-					#caption:	_Control.caption
+					--#caption:	_Control.caption
 					#historyCategory:	this._param #mode
 					#initialDir:	"C:/"
 					#types:	"All files|*.*|"

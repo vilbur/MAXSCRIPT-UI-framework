@@ -21,15 +21,30 @@ struct Controls_v
 	  *
 	  * @return Object _Control	"./Control/Control.ms"
 	 */
-	function Control type caption id:undefined params:#() locals:#() =
+	function Control type caption id:undefined params:#() locals:#() add_to_controls:false =
 	(
 		_Control = Control_v type:type caption:caption id:id add_locals:locals
 		
 		this._setParamsToControl(_Control)(params)
 
-		append list _Control
+		if( add_to_controls ) then 
+			this.add _Control
 		
 		_Control --return 
+	),
+	
+	/** Add
+	 */
+	function add _Control =
+	(
+		append list _Control
+	),
+	
+	/** Get
+	 */
+	function get control_id =
+	(
+		(for _Control in list where _Control.id == control_id collect _Control)[1]
 	),
 	
 	

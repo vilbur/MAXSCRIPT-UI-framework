@@ -41,7 +41,7 @@ struct Dialog_v
 		
 		if( style == unsupplied ) then style = this.style
 		
-		format "style	= % \n" style
+		--format "style	= % \n" style
 		_RolloutCreator.createRollout (RolloutMain) dialog_rollout:true
 		
 		CreateDialog (_RolloutCreator.getDefinition(RolloutMain)) pos:(this._getPosition(pos)) width:width height:height bgcolor:bgcolor fgcolor:fgcolor bitmap:bitmap style:style modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent

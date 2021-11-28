@@ -163,10 +163,10 @@ struct RolloutCreator_v
 	 */
 	function _addTextToRollout _Rollout =
 	(
-		print "ControlCreator_v._addTextToRollout()"
-		format "_Rollout.add_text	= % \n" _Rollout.add_text
-		--if( _Rollout.add_text != undefined ) then
-				--_Rollout._RolloutCreator.addText  _Rollout.add_text filter:true
+		--print "ControlCreator_v._addTextToRollout()"
+		--format "_Rollout.add_text	= % \n" _Rollout.add_text
+		if( _Rollout.add_text != undefined ) then
+				_Rollout._RolloutCreator.addText  _Rollout.add_text filter:true
 	),
 	
 	/** _is control box

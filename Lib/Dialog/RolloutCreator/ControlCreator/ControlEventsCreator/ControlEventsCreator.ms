@@ -99,6 +99,8 @@ struct ControlEventsCreator_v
 	),
 
 	/**  get events for control type from event_types array
+	  *
+	  * @return	array of event types for control E.G.: return #( #pressed,	#rightclick) if control_type == #button 
 	 */
 	function _getEventsOfControl control_type =
 	(
