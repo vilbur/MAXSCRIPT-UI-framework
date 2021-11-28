@@ -51,8 +51,6 @@ struct Rollout_v
 		Subrollouts --return
 	),
 	
-
-	
 	/** Addlocal
 	 */
 	function addlocal ke val =
@@ -70,6 +68,7 @@ struct Rollout_v
 		add_text += text
 		
 	),
+	
 	/** Subrollouts
 	  *
 	  * wrapper for user friedly coding

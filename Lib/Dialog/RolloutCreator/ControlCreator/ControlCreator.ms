@@ -1,4 +1,4 @@
-filein( getFilenamePath(getSourceFileName()) + "/../../Rollout/Controls/ControlParamsCreator/ControlParamsCreator.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/ControlParamsCreator/ControlParamsCreator.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/ControlEventsCreator/ControlEventsCreator.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/BrowsePath/BrowsePath.ms" )
 

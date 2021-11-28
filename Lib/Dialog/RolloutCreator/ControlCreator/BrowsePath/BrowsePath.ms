@@ -22,7 +22,7 @@ struct BrowsePath_v
 		
 		_Control.addlocal #edit_text_prev_state "\"\""
 		
-		format "_Control._params	= % \n" _Control._params
+		--format "_Control._params	= % \n" _Control._params
 		
 		
 		

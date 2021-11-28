@@ -23,34 +23,31 @@ struct Controls_v
 	 */
 	function Control type caption id:undefined params:#() locals:#() =
 	(
-		--if( type == #browsePath ) then 
-			--return this.browsePath caption id:id params:params
+		_Control = Control_v type:type caption:caption id:id add_locals:locals
 		
-		--print "Controls_v.control()"
-		_Control = Control_v type:type caption:caption id:id _params:params add_locals:locals
-		
+		this._setParamsToControl(_Control)(params)
+
 		append list _Control
 		
 		_Control --return 
 	),
 	
-	--/** Browse path
-	-- */
-	--function browsePath caption id: params: =
-	--(
-	--	print "Controls_v.browsePath()"
-	--	
-	--	--this.Control #Button   caption 	 params:#(#across, 2, #align, #left ) --id:id
-	--	--this.Control #Edittext "Test "	 params:#(#fieldwidth, 256, #align, #right) --id:id
-	--	--this.Control #Edittext "Test "	 params:#(#fieldwidth, 256, #align, #center) --id:id
-	--	this.Control #Edittext caption	 params:#( #align, #right) --id:id
-	--	--this.Control #Edittext caption	
-	--
-	--	--this.Control #Button   caption 	 params:#(#across, 2 ) --id:id
-	--
-	--	--this.Control #Edittext ""	 params:#(#fieldwidth, 256) --id:id
-	--),
 	
+	private
+	
+	
+	/** Set params to control
+	 * @property	Array	keys_values	#( #key1, "value1", #key2, "value2" )
+	 *  
+	 * 
+	 */
+	function _setParamsToControl &_Control keys_values =
+	(
+		for i = 1 to keys_values.count  by 2  do
+			_Control.Param keys_values[i] keys_values[i+1]
+
+		_Control --return
+	),
 	
 	/** Default
 	  

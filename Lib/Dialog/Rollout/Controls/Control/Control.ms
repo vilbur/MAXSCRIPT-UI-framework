@@ -1,3 +1,5 @@
+filein( getFilenamePath(getSourceFileName()) + "/ParamsList/ParamsList.ms" )
+
 
 /** Control
  */
@@ -11,11 +13,11 @@ struct Control_v
 	
 	/* properties */
 	id,
-	_params,
 	
 	/* dependency */
 	Events = EventsList_v(),
-
+	Params = ParamsList_v(),
+	--_params,
 	
 	/* ControlCreator_v */ 
 	add_locals	= #(),	-- #(#variable_name1, init_value1, #variable_name2, init_value2)	// used in ControlCreator_v._addLocalVariablesToRollout 	"../../../RolloutCreator/ControlCreator/ControlCreator.ms"
@@ -33,18 +35,7 @@ struct Control_v
 	function param param val =
 	(
 		--print "Control_v.params()"
-		append _params param
-		append _params val
-	),
-	
-	/** Add params array at once
-	  *
-	  * @property	#(#param, "value1")	params	of control
-	 */
-	function params params =
-	(
-		--print "Control_v.params()"
-		_params = params
+		Params.setVal param val
 	),
 	
 	/** Add Event to control

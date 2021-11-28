@@ -17,24 +17,24 @@ struct ControlParamsCreator_v
 	function getParams _Control rollout_id =
 	(
 		--print "ControlCreator_v._getParams()"
-		params = _Control._params
+		--params = _Control._params
 
-		if( params == undefined ) then
-			params = ""
+		--if( params == undefined ) then
+			--params = ""
 		
-		if ( classOf params == Array ) then
-			params = this._joinParamsInArray params
+		--if ( classOf params == Array ) then
+			params = this.join (_Control.Params)
 		
 		val_ini = ControlValue.getValueFromIni(_Control)(rollout_id)
 
-		(this._getValueParam(_Control)(val_ini)) +" "+  params +" "+ defaults -- first occurrence of parameter is used
+		(this._getParamOfValue(_Control)(val_ini)) +" "+  params +" "+ defaults -- first occurrence of parameter is used
 	),
 	
 	/** Convert value for control type
 	  *
 	  * @return	string E.G.: "checked:true"	
 	 */
-	function _getValueParam _Control val_array =
+	function _getParamOfValue _Control val_array =
 	(
 		if( val_array == undefined ) then
 			return ""
@@ -62,53 +62,53 @@ struct ControlParamsCreator_v
 	 */
 	function setDefaults ControlDefaults =
 	(
-		defaults = this.join ControlDefaults.keys ControlDefaults.values
+		defaults = this.join (ControlDefaults)
 	),
-	
-	/** _join params in array
-	  *
-	  * @property	Array	key_value_array	#( #key1, "value1", #key2, "value2" )
-	  *
-	  * @return	string	E.G.: '#key1:"value1" #key2:"value2"'
-	 */
-	function _joinParamsInArray key_value_array =
-	(
-		--print "ControlParams_v._joinParamsInArray()"
-		keys_values = this._convertArrayToMatrix key_value_array
-
-		this.join keys_values[1] keys_values[2] --return 
-	),
-	
-	/** 
-	 * @property	Array	key_value_array	#( #key1, "value1", #key2, "value2" )
-	 *  
-	 *  @return	matrix	#( keys, values )
-	 */
-	function _convertArrayToMatrix key_value_array =
-	(
-		--print "ControlCreator_v._convertArrayToMatrix()"
-		--format "params	= % \n" params
-		keys_values = #(#(),#())
-		
-		for i = 1 to key_value_array.count  by 2  do
-		(
-			append keys_values[1] key_value_array[i]
-			append keys_values[2] key_value_array[i+1]
-		)
-		
-		--format "params_string	= % \n" params_string
-		keys_values --return
-	),
+	--
+	--/** _join params in array
+	--  *
+	--  * @property	Array	key_value_array	#( #key1, "value1", #key2, "value2" )
+	--  *
+	--  * @return	string	E.G.: '#key1:"value1" #key2:"value2"'
+	-- */
+	--function _joinParamsInArray key_value_array =
+	--(
+	--	--print "ControlParams_v._joinParamsInArray()"
+	--	keys_values = this._convertArrayToMatrix key_value_array
+	--
+	--	this.join keys_values[1] keys_values[2] --return 
+	--),
+	--
+	--/** 
+	-- * @property	Array	key_value_array	#( #key1, "value1", #key2, "value2" )
+	-- *  
+	-- *  @return	matrix	#( keys, values )
+	-- */
+	--function _convertArrayToMatrix key_value_array =
+	--(
+	--	--print "ControlCreator_v._convertArrayToMatrix()"
+	--	--format "params	= % \n" params
+	--	keys_values = #(#(),#())
+	--	
+	--	for i = 1 to key_value_array.count  by 2  do
+	--	(
+	--		append keys_values[1] key_value_array[i]
+	--		append keys_values[2] key_value_array[i+1]
+	--	)
+	--	
+	--	--format "params_string	= % \n" params_string
+	--	keys_values --return
+	--),
 	
 	/** Join array
 	 */
-	function join keys values =
+	function join List =
 	(
 		--print "\nHOTFIX Params_v.join()"
 		_params = ""
 		
-		for k=1 to keys.count do
-			_params += keys[k] as string +":"+ this._formatToString values[k] + " "
+		for k=1 to List.keys.count do
+			_params += List.keys[k] as string +":"+ this._formatToString(List.values[k]) + " "
 			
 		trimRight _params  --return
 	),

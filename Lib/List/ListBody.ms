@@ -19,7 +19,7 @@
 	  *
 	  * @property	true	filter	undefined & unsupplied values are not added to list
 	 */
-	function setValues keys values filter: =
+	function setValues keys values filter:false =
 	(
 		if( filter != true ) then 
 			for i = 1 to keys.count do
@@ -50,14 +50,19 @@
 	),
 	
 	/** Join
+	  *
+	  * @property	string	pair_delimeter	delimeter of key and value pair	E.G.: pair_delimeter	= ":" >>> "key1:value1"
+	  * @property	string	delimeter	delimeter of pairs 	E.G.: delemiter	= "|" >>> "key1:value1|key2:value2"
+	  *
+	  * @return	string	
 	 */
-	function join key_value_delimeter delimeter:" "  =
+	function join pair_delimeter delimeter:" "  =
 	(
 		--print ".join()"
 		_string = ""
 		
 		for i=1 to keys.count do
-			_string += keys[i] as string +key_value_delimeter+ values[i] as string + delimeter
+			_string += keys[i] as string +pair_delimeter+ values[i] as string + delimeter
 
 		trimRight _string delimeter --return
 	),
