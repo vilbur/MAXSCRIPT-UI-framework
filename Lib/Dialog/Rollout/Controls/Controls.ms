@@ -17,17 +17,17 @@ struct Controls_v
 	  * @property	#name	type	Type of control
 	  * @property	string	caption	Caption of control
 	  * @property	#name	id	Id of control
-	  * @property	string	params	Params for control
+	  * @property	array	params	Params for control
 	  *
 	  * @return Object _Control	"./Control/Control.ms"
 	 */
-	function Control type caption id:undefined params:undefined locals:#() =
+	function Control type caption id:undefined params:#() locals:#() =
 	(
 		--if( type == #browsePath ) then 
 			--return this.browsePath caption id:id params:params
 		
 		--print "Controls_v.control()"
-		_Control = Control_v type:type caption:caption id:id params:params add_locals:locals
+		_Control = Control_v type:type caption:caption id:id _params:params add_locals:locals
 		
 		append list _Control
 		

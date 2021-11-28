@@ -3,7 +3,7 @@
  */
 struct Control_v
 (
-	__construct = #(  ),
+	--__construct = #(  ),
 	
 	/* required */
 	type,
@@ -11,16 +11,49 @@ struct Control_v
 	
 	/* properties */
 	id,
-	params,
-	
-	/* extended control params */ 
-	add_locals	= #(),	-- #(#variable_name1, init_value1, #variable_name2, init_value2)	// used in ControlCreator_v._addLocalVariablesToRollout 	"../../../RolloutCreator/ControlCreator/ControlCreator.ms"
-	add_text,		-- string added to rollout	// used in ControlCreator_v._addFunctionsVariablesToRollout	"../../../RolloutCreator/ControlCreator/ControlCreator.ms"
-
+	_params,
 	
 	/* dependency */
 	Events = EventsList_v(),
 
+	
+	/* ControlCreator_v */ 
+	add_locals	= #(),	-- #(#variable_name1, init_value1, #variable_name2, init_value2)	// used in ControlCreator_v._addLocalVariablesToRollout 	"../../../RolloutCreator/ControlCreator/ControlCreator.ms"
+	add_text,		-- string added to rollout	// used in ControlCreator_v._addFunctionsVariablesToRollout	"../../../RolloutCreator/ControlCreator/ControlCreator.ms"
+
+	
+	public
+	
+	
+	/** Add param
+	  *
+	  * @property	#name	param	name of param
+	  * @property	mixin	val	value of parameter 
+	 */
+	function param param val =
+	(
+		--print "Control_v.params()"
+		append _params param
+		append _params val
+	),
+	
+	/** Add params array at once
+	  *
+	  * @property	#(#param, "value1")	params	of control
+	 */
+	function params params =
+	(
+		--print "Control_v.params()"
+		_params = params
+	),
+	
+	/** Add Event to control
+	 */
+	function event type callback params:"" tooltip:"" =
+	(
+		--print "Control_v.event()"
+		Events.add type callback params:params tooltip:tooltip
+	),
 	
 	/** Addlocal
 	 */
@@ -37,10 +70,11 @@ struct Control_v
 	(
 		--print "Rollout_v.addText()"
 		add_text += text
-		
 	),
+
 	
 	private
+
 	
 	/** Set id by control caption
 	 */

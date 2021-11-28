@@ -12,10 +12,13 @@ include "Library/MAXSCRIPT-UI-framework/Lib/Dialog/RolloutCreator/_Test/includes
 
 
 
-_BrowsePath = _Controls.control #browsePath ( "Test" ) 
+_BrowsePath = _Controls.control #browsePath ( "Test" ) params:#( #fieldwidth, 64 )
 
-_BrowsePath.Events.add #changed "print (\"User Event #changed \" + val )"
-_BrowsePath.Events.add #entered "print (\"User Event #entered \" + val )"
+
+
+
+_BrowsePath.event #changed "print (\"User Event #changed \" + val )"
+_BrowsePath.event #entered "print (\"User Event #entered \" + val )"
 
 
 /** Create dialog ROLLOUT_test from _Rollout

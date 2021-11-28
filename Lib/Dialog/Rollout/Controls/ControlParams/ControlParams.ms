@@ -17,7 +17,7 @@ struct ControlParams_v
 	function getParams _Control rollout_id =
 	(
 		--print "ControlCreator_v._getParams()"
-		params = _Control.params
+		params = _Control._params
 
 		if( params == undefined ) then
 			params = ""
