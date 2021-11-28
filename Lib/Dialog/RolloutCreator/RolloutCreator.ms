@@ -117,9 +117,9 @@ struct RolloutCreator_v
 
 		RolloutEvents.ini_path	= ini_path
 
-		ControlCreator.ControlEvents.ini_path	= ini_path
+		ControlCreator.EventsCreator.ini_path	= ini_path
 
-		ControlCreator.ControlParams.ControlValue.ini_path	= ini_path
+		ControlCreator.ParamsCreator.ControlValue.ini_path	= ini_path
 	 ),
 	 
 	 /** _create subrollouts

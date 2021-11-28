@@ -48,8 +48,8 @@ control_types_for_test = #(
 	--#Timer
 	
 	/* TEMP FOR DEV */ 
-	--#Checkbox
-	#Edittext
+	#Checkbox
+	--#Edittext
 
 )
 
@@ -90,7 +90,7 @@ for control_type in ControlEvents.control_types where findItem control_types_for
 		/** ADD EVENTS
 		 */
 		for event_type in event_types do
-			_Control.Events.add event_type ("print \""+ control_type as string + " " + event_type as string + "\"")
+			_Control.Event event_type ("print \""+ control_type as string + " " + event_type as string + "\"")
 	)
 )
 

@@ -1,6 +1,6 @@
-filein( getFilenamePath(getSourceFileName()) + "/../../Rollout/Controls/ControlParams/ControlParams.ms" )
-filein( getFilenamePath(getSourceFileName()) + "/ControlEvents/ControlEvents.ms" )
-filein( getFilenamePath(getSourceFileName()) + "/ControlCustomType/ControlCustomType.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/../../Rollout/Controls/ControlParamsCreator/ControlParamsCreator.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/ControlEventsCreator/ControlEventsCreator.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/BrowsePath/BrowsePath.ms" )
 
 /** ControlCreator_v
  */
@@ -10,9 +10,8 @@ struct ControlCreator_v
 	_Rollout,
 	_Controls,
 	
-	ControlParams	= ControlParams_v(),
-	ControlEvents	= ControlEvents_v(),
-	ControlCustomType	= ControlCustomType_v(),
+	ParamsCreator	= ControlParamsCreator_v(),
+	EventsCreator	= ControlEventsCreator_v(),
 
 	/** Add controls
 	 */
@@ -23,7 +22,7 @@ struct ControlCreator_v
 		this._Rollout  = _Rollout
 		this._Controls = _Controls
 		
-		ControlParams.setDefaults (_Controls.Defaults)
+		ParamsCreator.setDefaults (_Controls.Defaults)
 		
 		this.addControlsGroup #start 
 		
@@ -53,10 +52,10 @@ struct ControlCreator_v
 	(
 		print ("ControlCreator_v.addControl()	" +_Control.id)
 		if( _Control.type == #browsePath ) then
-			_Control = ControlCustomType.getCustomControlType(_Control)
+			_Control = (BrowsePath_v _Control:_Control).getControl()
 		
 		/* add CONTROL */ 
-		_Rollout._RolloutCreator.addControl (_Control.type) (_Control.id) (_Control.caption) paramStr:(ControlParams.getParams(_Control)(_Rollout.id)) -- add control first before variables, functions and events
+		_Rollout._RolloutCreator.addControl (_Control.type) (_Control.id) (_Control.caption) paramStr:(ParamsCreator.getParams(_Control)(_Rollout.id)) -- add control first before variables, functions and events
 
 		/* add LOCAL VARIABLES */ 
 		this._addLocalVariablesToRollout (_Control)
@@ -65,7 +64,7 @@ struct ControlCreator_v
 		this._addTextToRollout (_Control)
 
 		/* add EVENTS */
-		events_list = ControlEvents.getEvents(_Control)(_Rollout.id)
+		events_list = EventsCreator.getEvents(_Control)(_Rollout.id)
 
 		this.addControlHandlersToRollout (_Control)(events_list)
 	),

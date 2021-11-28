@@ -1,34 +1,32 @@
 /** Control custom type
  */
-struct ControlCustomType_v
+struct BrowsePath_v
 (	
 	/* required */
+	_Control,
+	/* properties */
+	mode = #getSavePath,
+	
 	/* dependency */
 	/* reference */
-	/* properties */
-	
-	/** Get custom control type
-	 */
-	function getCustomControlType _Control =
-	(
-		--print "ControlCustomType_v.getCustomControlType()"
-		if( _Control.type == #browsePath ) then 
-			this._browsePath(_Control) --return
-	),
 
-	private
 	
 	/** Browse path
 	  *
 	  * Add browse path event before users defined event
 	 */
-	function _browsePath _Control =
+	function getControl =
 	(
 		print "ControlCustomType_v.browsePath()"
 		_Control.type = #editText
 		
 		_Control.addlocal #edit_text_prev_state "\"\""
-
+		
+		format "_Control._params	= % \n" _Control._params
+		
+		
+		
+		
 		/* Get existing event or create new */
 		for event_type in #( #changed, #entered ) do 
 		(
@@ -42,7 +40,7 @@ struct ControlCustomType_v
 				)
 				
 				if( valueIsEmpty(val) and valueIsEmpty(edit_text_prev_state) ) then
-					if( (val = getSavePath caption:@browse path@ initialDir:@$scripts@) != undefined ) do
+					if( (val = "+ this.mode as string +" caption:@browse path@ initialDir:@$scripts@) != undefined ) do
 					(
 						"+_Control.id+".text = val
 						"+ Event.code +" -- fire custom event with browsed variable

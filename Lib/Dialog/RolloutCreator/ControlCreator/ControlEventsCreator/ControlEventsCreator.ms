@@ -14,7 +14,7 @@ global STARTUP_EVENTS = #() -- run callbacks of controls like checkbox, checkbut
  * 		
  *		Edit arrays: control_types, event_types
  */
-struct ControlEvents_v 
+struct ControlEventsCreator_v 
 (
 	/* properties */
 	_Control,

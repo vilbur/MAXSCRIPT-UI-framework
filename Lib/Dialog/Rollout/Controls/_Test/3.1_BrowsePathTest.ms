@@ -12,7 +12,7 @@ include "Library/MAXSCRIPT-UI-framework/Lib/Dialog/RolloutCreator/_Test/includes
 
 
 
-_BrowsePath = _Controls.control #browsePath ( "Test" ) params:#( #fieldwidth, 64 )
+_BrowsePath = _Controls.control #browsePath ( "Test" ) params:#( #mode, #getSavePath )
 
 
 

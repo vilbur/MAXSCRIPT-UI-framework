@@ -4,7 +4,7 @@ filein( getFilenamePath(getSourceFileName()) + "/ControlValue/ControlValue.ms" )
   * ControlParams_v set parameters of control
   * 
  */
-struct ControlParams_v
+struct ControlParamsCreator_v
 (
 	/* properties */
 	defaults = "", -- defaults parameters for controls
