@@ -12,8 +12,13 @@ include "Library/MAXSCRIPT-UI-framework/Lib/Dialog/RolloutCreator/_Test/includes
 
 
 
-_BrowsePath = _Controls.control #browsePath ( "Test" ) params:#( #mode, #getSavePath )
+_BrowsePath = _Controls.control #browsePath ( "Test Browse" )
 
+_BrowsePath.param #mode	#getOpenFileName 
+_BrowsePath.param #caption	"Browse dialog caption"
+_BrowsePath.param #initialDir	"c:/Users/%USERNAME%"
+_BrowsePath.param #types	"Macroscript(*.mcr)|*.mcr|All files|*.*|"
+_BrowsePath.param #filename	"Test_file.ms"
 
 
 

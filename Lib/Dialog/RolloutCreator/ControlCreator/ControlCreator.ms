@@ -54,15 +54,19 @@ struct ControlCreator_v
 		if( _Control.type == #browsePath ) then
 			_Control = (BrowsePath_v _Control:_Control).getControl()
 		
+		
 		/* add CONTROL */ 
 		_Rollout._RolloutCreator.addControl (_Control.type) (_Control.id) (_Control.caption) paramStr:(ParamsCreator.getParams(_Control)(_Rollout.id)) -- add control first before variables, functions and events
-
+		
+		
 		/* add LOCAL VARIABLES */ 
 		this._addLocalVariablesToRollout (_Control)
-
+		
+		
 		/* add TEXT */ 
 		this._addTextToRollout (_Control)
-
+		
+		
 		/* add EVENTS */
 		events_list = EventsCreator.getEvents(_Control)(_Rollout.id)
 

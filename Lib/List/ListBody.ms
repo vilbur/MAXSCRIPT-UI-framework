@@ -2,13 +2,19 @@
 	values	= #(),
 	
 	/**  Set Value
+	  *
+	  * @property	mixin	key	key of value
+	  * @property	mixin	value
+	  * @property	boolean	replace	if value exist then will be replaced, if false then old value will not be replaced
+	  *
 	 */
-	function setVal key val =
+	function setVal key val replace:true =
 	(
-		if (i = findItem keys key ) > 0 then
+		if (i = findItem keys key ) > 0 and replace == true then
 			this._replaceValue   i key val
-		else
-			this._appendNewValue i key val
+			
+		else if (i == 0) then
+			this._appendNewValue key val
 			
 		val --return 
 	),
@@ -164,7 +170,7 @@
 	
 	/** _append new value
 	 */
-	function _appendNewValue i key val  =
+	function _appendNewValue key val  =
 	(
 		append keys key
 		append values val

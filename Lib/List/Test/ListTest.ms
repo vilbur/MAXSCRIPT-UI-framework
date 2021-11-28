@@ -18,6 +18,18 @@ List.setVal #unsupplied unsupplied
 List.setVal #delete     "Delete"
 
 
+
+List.setVal #last      "New value"
+format "Add new value Test:% \n" (List.values[List.values.count]== "New value") as string
+
+List.setVal #last      "Replaced"
+format "Replace value Test:% \n" (List.values[List.values.count]== "Replaced") as string
+
+List.setVal #last      "Don`t replace this" replace:false
+format "Replace false Test:% \n" (List.values[List.values.count] == "Replaced") as string
+
+
+
 /* copy a list */ 
 List_copy        = List_v()
 List_copy.keys   = deepCopy List.keys
@@ -42,6 +54,6 @@ format "joinValues \"|\" = \"%\" \n"	(List.joinValues	delimeter:"|" ) -- default
 
 
 
---/* Get value */
---second = List.getVal #second                   
-----format "get second item  = % \n" second
+/* Get value */
+second = List.getVal #second                   
+--format "get second item  = % \n" second
