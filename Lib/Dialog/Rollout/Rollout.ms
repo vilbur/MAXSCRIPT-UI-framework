@@ -1,5 +1,6 @@
 filein( getFilenamePath(getSourceFileName()) + "/Controls/Controls.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/Subrollouts/Subrollouts.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/EventsList/EventsList.ms" )
 
 /** Rollout
  */

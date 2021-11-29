@@ -1,14 +1,14 @@
 clearListener()
 
 
-filein( getFilenamePath(getSourceFileName()) + "/../../../../RolloutCreator/RolloutCreator.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/../../../../../RolloutCreator/RolloutCreator.ms" )
 
 /** Create variables:
   *		_RolloutCreator
   *		_Rollout
   *		_Controls
   */
-include "Library/MAXSCRIPT-UI-framework/Lib/Dialog/RolloutCreator/_Test/includes/CreateTestRollout.ms"
+include "Library/MAXSCRIPT-UI-framework/Lib/RolloutCreator/_Test/includes/CreateTestRollout.ms"
 
 
 
@@ -26,4 +26,4 @@ for i = 1 to 10 do
 
 /** Create dialog from _Rollout
   */
-include "Library/MAXSCRIPT-UI-framework/Lib/Dialog/RolloutCreator/_Test/includes/CreateTestDialog.ms"
+include "Library/MAXSCRIPT-UI-framework/Lib/RolloutCreator/_Test/includes/CreateTestDialog.ms"

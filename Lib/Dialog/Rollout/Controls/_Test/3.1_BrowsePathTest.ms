@@ -1,6 +1,6 @@
 clearListener()
 
-filein( getFilenamePath(getSourceFileName()) + "/../../../RolloutCreator/RolloutCreator.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/../../../../RolloutCreator/RolloutCreator.ms" )
 
 
 /** Create variables:
@@ -8,7 +8,7 @@ filein( getFilenamePath(getSourceFileName()) + "/../../../RolloutCreator/Rollout
   *		_Rollout
   *		_Controls
   */
-include "Library/MAXSCRIPT-UI-framework/Lib/Dialog/RolloutCreator/_Test/includes/CreateTestRollout.ms"
+include "Library/MAXSCRIPT-UI-framework/Lib/RolloutCreator/_Test/includes/CreateTestRollout.ms"
 
 
 
@@ -33,4 +33,4 @@ dialog_width  = 512
 --dialog_width  = unsupplied
 dialog_height = unsupplied
 
-include "Library/MAXSCRIPT-UI-framework/Lib/Dialog/RolloutCreator/_Test/includes/CreateTestDialog.ms"
+include "Library/MAXSCRIPT-UI-framework/Lib/RolloutCreator/_Test/includes/CreateTestDialog.ms"

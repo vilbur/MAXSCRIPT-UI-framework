@@ -1,4 +1,4 @@
-filein( getFilenamePath(getSourceFileName()) + "/RolloutCreator/RolloutCreator.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/../RolloutCreator/RolloutCreator.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/Layout/Layout.ms" )
 
 global DIALOG_PREVIOUS_STATE = undefined -- this should be in struct

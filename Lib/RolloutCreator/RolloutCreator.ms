@@ -1,9 +1,7 @@
-filein( getFilenamePath(getSourceFileName()) + "/../../Ini/Ini.ms" )
-filein( getFilenamePath(getSourceFileName()) + "/../Rollout/EventsList/EventsList.ms" )
-filein( getFilenamePath(getSourceFileName()) + "/../EventsCombiner/EventsCombiner.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/../Ini/Ini.ms" )
 
-filein( getFilenamePath(getSourceFileName()) + "/../Rollout/Rollout.ms" )
-filein( getFilenamePath(getSourceFileName()) + "/../Rollout/Subrollouts/Subrollouts.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/../Dialog/Rollout/Rollout.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/../Dialog/Rollout/Subrollouts/Subrollouts.ms" )
 
 
 filein( getFilenamePath(getSourceFileName()) + "/RolloutEvent/RolloutEvent.ms" )

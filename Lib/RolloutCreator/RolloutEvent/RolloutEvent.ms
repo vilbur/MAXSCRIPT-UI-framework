@@ -1,4 +1,5 @@
 filein( getFilenamePath(getSourceFileName()) + "/EventsDefault/EventsDefault.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/EventsCombiner/EventsCombiner.ms" )
 
 global DIALOG_PREVIOUS_STATE = undefined -- this should be in struct
 

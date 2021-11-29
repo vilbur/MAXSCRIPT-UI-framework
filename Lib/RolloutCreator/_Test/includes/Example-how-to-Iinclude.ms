@@ -17,7 +17,7 @@ filein( getFilenamePath(getSourceFileName()) + "/../../RolloutCreator.ms" )
   *		_Rollout
   *		_Controls
   */
-include "Library/MAXSCRIPT-UI-framework/Lib/Dialog/RolloutCreator/_Test/includes/CreateTestRollout.ms"
+include "Library/MAXSCRIPT-UI-framework/Lib/RolloutCreator/_Test/includes/CreateTestRollout.ms"
 
 
 
@@ -50,4 +50,4 @@ height = 512
 dialog_width  = unsupplied
 dialog_height = unsupplied
 
-include "Library/MAXSCRIPT-UI-framework/Lib/Dialog/RolloutCreator/_Test/includes/CreateTestDialog.ms"
+include "Library/MAXSCRIPT-UI-framework/Lib/RolloutCreator/_Test/includes/CreateTestDialog.ms"

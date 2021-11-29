@@ -1,6 +1,6 @@
 clearListener()
 
-filein( getFilenamePath(getSourceFileName()) + "/../../Dialog/RolloutCreator/RolloutCreator.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/../../../../RolloutCreator/RolloutCreator.ms" )
 
 try(cui.UnRegisterDialogBar ROLLOUT_test)catch() 
 try( destroyDialog          ROLLOUT_test )catch()

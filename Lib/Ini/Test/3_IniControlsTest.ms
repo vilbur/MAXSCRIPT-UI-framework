@@ -1,6 +1,6 @@
 clearListener()
 
-filein( getFilenamePath(getSourceFileName()) + "/../../Dialog/RolloutCreator/RolloutCreator.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/../../Dialog/../RolloutCreator/RolloutCreator.ms" )
 
 ControlEvents = ControlEvents_v()
 

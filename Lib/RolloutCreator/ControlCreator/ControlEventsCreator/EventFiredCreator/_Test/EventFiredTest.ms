@@ -63,7 +63,7 @@ controls_with_items = #(
   *		_Rollout
   *		_Controls
   */
-include "Library/MAXSCRIPT-UI-framework/Lib/Dialog/RolloutCreator/_Test/includes/CreateTestRollout.ms"
+include "Library/MAXSCRIPT-UI-framework/Lib/RolloutCreator/_Test/includes/CreateTestRollout.ms"
 
 
 
@@ -104,4 +104,4 @@ for control_type in ControlEvents.control_types where findItem these_controls_wi
 dialog_width  = unsupplied
 dialog_height = unsupplied
 
-include "Library/MAXSCRIPT-UI-framework/Lib/Dialog/RolloutCreator/_Test/includes/CreateTestDialog.ms"
+include "Library/MAXSCRIPT-UI-framework/Lib/RolloutCreator/_Test/includes/CreateTestDialog.ms"
