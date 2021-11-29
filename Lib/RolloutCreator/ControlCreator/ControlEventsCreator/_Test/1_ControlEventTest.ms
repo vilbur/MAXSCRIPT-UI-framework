@@ -18,15 +18,15 @@ ControlEvents = ControlEventsCreator_v()
   *
 */ 
 these_controls_will_be_tested = #(
-	--#Label,
-	--#Button,
-	--#Checkbox,
-	--#Checkbutton,
-	--#Spinner,
-	--#Edittext,
-	--#Listbox,
-	--#multilistbox,
-	--#Dropdownlist,
+	#Label,
+	#Button,
+	#Checkbox,
+	#Checkbutton,
+	#Spinner,
+	#Edittext,
+	#Listbox,
+	#multilistbox,
+	#Dropdownlist,
 	----#Combobox,
 	----#GroupBox,
 	----#Angle,
@@ -45,8 +45,8 @@ these_controls_will_be_tested = #(
 	--#Timer
 	
 	/* TEMP FOR DEV */ 
-	#Checkbox
-	--#Edittext
+	--#Checkbox
+	#browsePath
 
 )
 
@@ -79,7 +79,8 @@ for control_type in ControlEvents.control_types where findItem these_controls_wi
 	if( event_types.count > 0 ) then
 	(
 		params	= if( findItem controls_with_items control_type > 0 ) then #( #items, #("Item 1","Item 2","Item 3") ) else #()
-
+		--format "control_type	= % \n" control_type
+		--format "params	= % \n" params
 		_Control = _Controls.control control_type ( "Test " + control_type as string ) params:params
 
 		/** ADD EVENTS

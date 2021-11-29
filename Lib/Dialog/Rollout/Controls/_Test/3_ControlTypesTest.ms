@@ -19,9 +19,9 @@ control_types = #(
 	--#Checkbutton,
 	--#Spinner,
 	--#Edittext,
-	--#Listbox,
-	--#multilistbox,
-	--#Dropdownlist,
+	#Listbox,
+	#multilistbox,
+	#Dropdownlist,
 	----#Combobox,
 	----#GroupBox,
 	----#Angle,
@@ -46,8 +46,21 @@ control_types = #(
 )
 
 
+controls_with_items = #(
+	#Listbox,
+	#multilistbox,
+	#Dropdownlist,
+	#Combobox
+)
+
+
+
 for control_type in control_types do
-	_Control = _Controls.control control_type ( "Test " + control_type as string ) 
+(
+	params	= if( findItem controls_with_items control_type > 0 ) then #( #items, #("Item 1","Item 2","Item 3") ) else #()
+
+	_Control = _Controls.control control_type ( "Test " + control_type as string ) params:params
+)
 
 
 --for i = 1 to 10 do

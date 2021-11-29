@@ -59,11 +59,9 @@ struct RolloutCreator_v
 		RolloutEvents.bindEvents (_Rollout)
 		
 		
-		
 		/* EDIT end */ 
 		_Rollout._RolloutCreator.end()
-		
-		format "_Rollout._RolloutCreator	= % \n" _Rollout._RolloutCreator
+		--format "_Rollout._RolloutCreator	= % \n" _Rollout._RolloutCreator
 	),
 
 	/** Add controls or subrolloutes

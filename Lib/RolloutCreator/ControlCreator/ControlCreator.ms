@@ -90,18 +90,16 @@ struct ControlCreator_v
 	 */
 	function _addControl _Control =
 	(
-		_Rollout._RolloutCreator.addControl (_Control.type) (_Control.id) (_Control.caption) --paramStr:(ParamsCreator.getParams(_Control)(_Rollout.id)) -- add control first before variables, functions and events
+		_Rollout._RolloutCreator.addControl (_Control.type) (_Control.id) (_Control.caption) paramStr:(ParamsCreator.getParams(_Control)(_Rollout.id)) -- add control first before variables, functions and events
 	),
 	
 	/** Test
 	 */
 	function _addControlHandlersToRollout _Control =
 	(
-		print "ControlCreator_v._addControlHandlersToRollout()"
+		--print "ControlCreator_v._addControlHandlersToRollout()"
 		events_list = EventsCreator.getEvents(_Control)(_Rollout.id)
-		for Event in events_list do format "Event	= % \n" Event
-
-		
+		--for Event in events_list do format "Event	= % \n" Event
 		
 		for Event in events_list do
 			_Rollout._RolloutCreator.addHandler _Control.id Event.type codeStr:(Event.code) paramStr:Event.params filter:on
