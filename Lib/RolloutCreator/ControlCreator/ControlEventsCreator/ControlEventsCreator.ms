@@ -193,7 +193,6 @@ struct ControlEventsCreator_v
 			_EventFired    = EventFiredCreator.getEventFired(events_of_control[i])(Event.params)
 			
 			Event.code = _EventFired+ ";"+ Event.code
-			--format "Event	= % \n" Event
 		)
 		
 	),

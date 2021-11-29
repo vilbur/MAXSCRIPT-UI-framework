@@ -41,7 +41,8 @@ control_types = #(
 	
 	/* DEV */  
 	--#Button
-	#browsePath
+	--#browsePath
+	#Checkbox
 )
 
 

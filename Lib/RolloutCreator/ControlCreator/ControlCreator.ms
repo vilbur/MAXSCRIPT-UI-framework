@@ -63,7 +63,11 @@ struct ControlCreator_v
 		this._addControlsGroup #start 
 		
 		for _Control in _Controls.list do
+		(
 			this._addControl (_Control)
+			
+			this._addControlHandlersToRollout(_Control)
+		)
 		
 		this._addControlsGroup #end 
 	),
@@ -86,23 +90,21 @@ struct ControlCreator_v
 	 */
 	function _addControl _Control =
 	(
-		/* add CONTROL */ 
 		_Rollout._RolloutCreator.addControl (_Control.type) (_Control.id) (_Control.caption) --paramStr:(ParamsCreator.getParams(_Control)(_Rollout.id)) -- add control first before variables, functions and events
-		
-		
-		/* add EVENTS */
-		this._addControlHandlersToRollout (_Control)
 	),
 	
 	/** Test
 	 */
 	function _addControlHandlersToRollout _Control =
 	(
+		print "ControlCreator_v._addControlHandlersToRollout()"
 		events_list = EventsCreator.getEvents(_Control)(_Rollout.id)
+		for Event in events_list do format "Event	= % \n" Event
+
 		
-		--print "ControlCreator_v._addControlHandlersToRollout()"
+		
 		for Event in events_list do
-			_Rollout._RolloutCreator.addHandler _Control.id Event.type codeStr:("("+Event.code+")") paramStr:Event.params filter:on
+			_Rollout._RolloutCreator.addHandler _Control.id Event.type codeStr:(Event.code) paramStr:Event.params filter:on
 	),
 	
 	/** Add local variables from Control_v to rollout
