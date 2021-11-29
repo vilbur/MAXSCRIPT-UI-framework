@@ -41,7 +41,7 @@ control_types = #(
 	--#Timer
 	
 	/* DEV */  
-	--#Button,
+	--#Button
 	#browsePath
 )
 

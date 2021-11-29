@@ -22,93 +22,112 @@ struct ControlCreator_v
 		this._Rollout  = _Rollout
 		this._Controls = _Controls
 		
+		/* set DEFAULT PARAMETERS */ 
 		ParamsCreator.setDefaults (_Controls.Defaults)
-		
-		this.addControlsGroup #start 
-		
-		for _Control in _Controls.list do
-			this.addControl (_Control)
-		
-		this.addControlsGroup #end 
-	),
 	
-	/** Add controls group
-	 */
-	function addControlsGroup mode =
-	(
-		--print "ControlCreator_v.addControlsGroup()"
-		if( _Controls.group == undefined ) do
-			return false
-
-		start_or_end	= if( mode == #start ) then "group @"+_Controls.group+"@ (" else ")" 
-
-		_Rollout._RolloutCreator.addText start_or_end filter:on
-	),
-
-	
-	/* Add control to RolloutCreator
-	 */
-	function addControl _Control =
-	(
-		print ("ControlCreator_v.addControl()	" +_Control.id)
-		if( _Control.type == #browsePath ) then
-			_Control = (BrowsePath_v _Control:_Control).getControl()
 		
-		
-		/* add CONTROL */ 
-		_Rollout._RolloutCreator.addControl (_Control.type) (_Control.id) (_Control.caption) paramStr:(ParamsCreator.getParams(_Control)(_Rollout.id)) -- add control first before variables, functions and events
+		/* prepare CONTROL TYPES */ 
+		this._convertCustomControls()
 		
 		
 		/* add LOCAL VARIABLES */ 
-		this._addLocalVariablesToRollout (_Control)
+		this._addLocalVariablesToRollout()
 		
 		
 		/* add TEXT */ 
-		this._addTextToRollout (_Control)
+		this._addTextToRollout()
 		
 		
-		/* add EVENTS */
-		events_list = EventsCreator.getEvents(_Control)(_Rollout.id)
-
-		this.addControlHandlersToRollout (_Control)(events_list)
-	),
-	
-	/** Test
-	 */
-	function addControlHandlersToRollout _Control events_list =
-	(
-		--print "ControlCreator_v.addControlHandlersToRollout()"
-		for Event in events_list do
-			_Rollout._RolloutCreator.addHandler _Control.id Event.type codeStr:("("+Event.code+")") paramStr:Event.params filter:on
-	),
-	
-	/** Add local variables from Control_v to rollout
-	  *
-	  * 	Control_v.rollout_locals =  #(#variable_name1, init_value1, #variable_name2, init_value2)
-	 */
-	function _addLocalVariablesToRollout _Control =
-	(
-		--print "ControlCreator_v._addLocalVariablesToRollout()"
-		--format "_Control.rollout_locals	= % \n" _Control.rollout_locals
-		if( _Control.add_locals != unsupplied ) then
-			for i = 1 to _Control.add_locals.count by 2 do
-				_Rollout._RolloutCreator.addLocal ( _Control.add_locals[i] as string )  init:_Control.add_locals[i+1]
-	),
-	
-	/** Add functions variables to rollout
-	 */
-	function _addTextToRollout _Control =
-	(
-		--print "ControlCreator_v._addTextToRollout()"
-		--format "_Control.add_text	= % \n" _Control.add_text
-		if( _Control.add_text != undefined ) then
-				_Rollout._RolloutCreator.addText  _Control.add_text filter:true
+		/* add CONTROLS */ 
+		this._addControlsToRollout()
 	),
 	
 	
 	private
 	
 	
+
+	/** Convert custom controls to native maxscript controls
+	 */
+	function _convertCustomControls =
+	(
+		for _Control in _Controls.list do
+			if( _Control.type == #browsePath ) then
+				_Control = (BrowsePath_v _Control:_Control).getControl()
+	),
+	
+	/** _add controls
+	 */
+	function _addControlsToRollout =
+	(
+		this._addControlsGroup #start 
+		
+		for _Control in _Controls.list do
+			this._addControl (_Control)
+		
+		this._addControlsGroup #end 
+	),
+
+	/** Add controls group
+	  * 
+	  * https://help.autodesk.com/view/3DSMAX/2016/ENU/?guid=__files_GUID_1361B847_7878_4C52_98DE_5BC5CA830B40_htm
+	 */
+	function _addControlsGroup start_or_end =
+	(
+		--print ("ControlCreator_v._addControlsGroup() " + start_or_end as string )
+		if( _Controls.group == undefined ) do
+			return false
+
+		_Rollout._RolloutCreator.addText (if( start_or_end == #start ) then "group @"+_Controls.group+"@ (" else ")" ) filter:on
+	),
+
+	
+	/* Add control to RolloutCreator
+	 */
+	function _addControl _Control =
+	(
+		/* add CONTROL */ 
+		_Rollout._RolloutCreator.addControl (_Control.type) (_Control.id) (_Control.caption) --paramStr:(ParamsCreator.getParams(_Control)(_Rollout.id)) -- add control first before variables, functions and events
+		
+		
+		/* add EVENTS */
+		this._addControlHandlersToRollout (_Control)
+	),
+	
+	/** Test
+	 */
+	function _addControlHandlersToRollout _Control =
+	(
+		events_list = EventsCreator.getEvents(_Control)(_Rollout.id)
+		
+		--print "ControlCreator_v._addControlHandlersToRollout()"
+		for Event in events_list do
+			_Rollout._RolloutCreator.addHandler _Control.id Event.type codeStr:("("+Event.code+")") paramStr:Event.params filter:on
+	),
+	
+	/** Add local variables from Control_v to rollout
+	  * IMPORTANT: local variables must be defined outside group 
+	  *
+	  * 	Control_v.rollout_locals =  #(#variable_name1, init_value1, #variable_name2, init_value2)
+	 */
+	function _addLocalVariablesToRollout =
+	(
+		--print "ControlCreator_v._addLocalVariablesToRollout()"
+		for _Control in _Controls.list where _Control.add_locals != unsupplied do
+			for i = 1 to _Control.add_locals.count by 2 do
+				_Rollout._RolloutCreator.addLocal ( _Control.add_locals[i] as string )  init:_Control.add_locals[i+1]
+				
+	),
+	
+	/** Add functions to rollout
+	  * IMPORTANT: functions must be defined outside group 
+	 */
+	function _addTextToRollout =
+	(
+		--print "ControlCreator_v._addTextToRollout()"
+		for _Control in _Controls.list where _Control.add_text != undefined do
+			_Rollout._RolloutCreator.addText  _Control.add_text filter:true
+	),
 	/**  
 	 */
 	on create do

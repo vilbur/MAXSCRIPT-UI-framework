@@ -14,11 +14,12 @@ struct BrowsePath_v
 	 */
 	function getControl =
 	(
-		--print "ControlCustomType_v.browsePath()"
+		--print "BrowsePath_v.getControl()"
+		local_variable_name = (_Control.id + "_prev_state")
+
 		_Control.type = #editText
 		
-		_Control.addlocal #edit_text_prev_state "\"\""
-		--format "_Control.Params	= % \n" _Control.Params
+		_Control.addlocal ( local_variable_name as name ) "\"\"" -- E.G.:  #BROWSEPATH_id_prev_state = ""
 
 		--history_path = getINISetting (GetMAXIniFile()) (this._param #historyCategory) "History_00"
 		
@@ -27,22 +28,19 @@ struct BrowsePath_v
 		(
 			Event = if( (Event = _Control.Events.get event_type) != undefined ) then Event else (Event_v type:event_type )
 			
-			Event.code = "(
-					
-				function valueIsEmpty _string =
+			Event.code = "\n\tfunction valueIsEmpty _string =
 				(
 					(( dotNetClass @System.Text.RegularExpressions.RegEx@).matches _string @^\s+$|^$@ ).count == 1
 				)
 				
-				if( valueIsEmpty(val) and valueIsEmpty(edit_text_prev_state) ) then
+				if( valueIsEmpty(val) and valueIsEmpty("+local_variable_name+") ) then
 					if( (val = "+ this._getPathDialog() +") != undefined ) do
 					(
 						"+_Control.id+".text = val
 						"+ Event.code +" -- fire custom event with browsed variable
 					)
 				else
-					edit_text_prev_state = "+_Control.id+".text
-			)"
+					"+local_variable_name+" = "+_Control.id+".text"
 			
 			_Control.Events.replace Event
 		)
@@ -85,7 +83,7 @@ struct BrowsePath_v
 	function _getPathDialog =
 	(
 		--print "BrowsePath_v._getPathDialog()"
-		path_dialog = this._param #mode --
+		path_dialog = this._param #mode 
 			
 		for param in browse_params where (val = this._param param ) != "" and param != #mode do
 			path_dialog += " " + param as string +":@"+ val +"@"

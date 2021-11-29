@@ -31,8 +31,8 @@ struct ContentLoader_v
 	(
 		print("ContentLoader_v.create()")
 
-		if( ini != undefined ) then
-			Dialog.RolloutMain.ini ini
+		--if( ini != undefined ) then
+			--Dialog.RolloutMain.ini ini
 		
 		for Subrollouts_or_Controls in ContentRollout.Subrollouts_and_Controls do
 			Subrollouts_or_Controls.addToUi Dialog.RolloutMain

@@ -15,12 +15,12 @@ struct ContentControlCreator_v
 	function createControl =
 	(
 		--format "\n"
-		--print "ControlCreator_v.createControl()"
+		--print "ContentControlCreator_v.createControl()"
 		
 		params = substituteString (Macro.getParams())  "'" "\""
 		
 		_Control = ControlBox.control (Macro.getType()) Macro.buttontext  id:(Macro.getControlId()) add_to_controls:false
-		
+		--format "_Control	= % \n" _Control
 		if( (_Control_Exist = ControlBox.get(_Control.id)) != undefined ) then
 			_Control = _Control_Exist -- update existing control
 		
@@ -38,10 +38,10 @@ struct ContentControlCreator_v
 	 */
 	function _setControlEvent _Control _Control_Exist =
 	(
-		--print "ControlCreator_v._setControlEvent()"
+		--print "ContentControlCreator_v._setControlEvent()"
 		event_type = this._getEventType (_Control)
 		
-		this._setOnClickEvent (event_type) (_Control)
+		this._setOnClickEvent (event_type) (_Control) 
 		
 		_Control --return
 	),
@@ -55,9 +55,16 @@ struct ContentControlCreator_v
 	function _getEventType _Control =
 	(
 		--print "ContentControlCreator_v._getEventType()"
-		if( (event_type = Macro.getParam "event") == undefined ) then
-			event_type = (ControlEventsCreator._getEventsOfControl (_Control.type))[ _Control.Events.list.count+1]
+		--format "_Control.type	= % \n" _Control.type
+		control_type_for_events = case _Control.type of
+		(
+			#browsePath:	#edittext
+			default:	_Control.type
+		)
 		
+		if( (event_type = Macro.getParam "event") == undefined ) then
+			event_type = (ControlEventsCreator._getEventsOfControl (control_type_for_events))[ _Control.Events.list.count+1]
+
 		event_type as name
 	),
 	
@@ -65,7 +72,7 @@ struct ContentControlCreator_v
 	 */
 	function _setOnClickEvent event_type _Control =
 	(
-		--format "ControlCreator_v._setOnClickEvent event_type	= % \n" event_type
+		--format "ContentControlCreator_v._setOnClickEvent event_type	= % \n" event_type
 		callback = "macros.run \""+Macro.category+"\" \""+Macro.macro_name+"\""
 
 		_Control.Event event_type callback tooltip:Macro.toolTip

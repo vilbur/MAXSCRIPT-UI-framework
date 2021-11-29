@@ -21,7 +21,7 @@ struct Controls_v
 	  *
 	  * @return Object _Control	"./Control/Control.ms"
 	 */
-	function Control type caption id:undefined params:#() locals:#() add_to_controls:false =
+	function Control type caption id:undefined params:#() locals:#() add_to_controls:true =
 	(
 		_Control = Control_v type:type caption:caption id:id add_locals:locals
 		
