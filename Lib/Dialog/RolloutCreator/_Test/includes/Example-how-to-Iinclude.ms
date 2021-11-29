@@ -1,14 +1,16 @@
 clearListener()
 
-/** IMPORTANT: Import RolloutCreator.ms in test file
-  *
-  *	Beacause of fileIn relative path
-  */
+
+
+/*------------------------------------------------------------------------------
+	1) IMPORTANT: RolloutCreator.ms in test file
+--------------------------------------------------------------------------------*/
+
 filein( getFilenamePath(getSourceFileName()) + "/../../RolloutCreator.ms" )
 
 
 
-/*----------- COPY CODE BELLOW TO TEST FILE ---------------------------------------------------------------------*/
+/*----------- 2) COPY CODE BELLOW TO TEST FILE ---------------------------------------------------------------------*/
 
 /** Create variables:
   *		_RolloutCreator
@@ -39,7 +41,7 @@ height = 512
 
 
 
-/*----------- COPY CODE BELLOW TO TEST FILE ---------------------------------------------------------------------*/
+/*----------- 3) COPY CODE BELLOW TO TEST FILE ---------------------------------------------------------------------*/
 
 
 /** Create dialog ROLLOUT_test from _Rollout

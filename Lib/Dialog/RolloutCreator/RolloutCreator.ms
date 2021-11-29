@@ -46,7 +46,6 @@ struct RolloutCreator_v
 		/* EDIT start */ 
 		_Rollout._RolloutCreator.begin()
 		
-
 		
 		/* add LOCAL VARIABLES */ 
 		this._addLocalVariablesToRollout (_Rollout)

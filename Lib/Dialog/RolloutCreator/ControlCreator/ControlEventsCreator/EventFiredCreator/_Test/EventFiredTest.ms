@@ -1,12 +1,13 @@
 clearListener()
 
-filein( getFilenamePath(getSourceFileName()) + "/../../../RolloutCreator.ms" )
 
-filein( getFilenamePath(getSourceFileName()) + "/../ControlEventsCreator.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/../../../../RolloutCreator.ms" )
+
+filein( getFilenamePath(getSourceFileName()) + "/../../ControlEventsCreator.ms" )
 
 ControlEvents = ControlEventsCreator_v()
 
-( getFilenamePath(getSourceFileName()) + "/inlcude_test_callbacks.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/inlcude_test_callbacks.ms" )
 
 /* ONLY THIS TYPES OF CONTROLS WILL BE TESTED
   * 
@@ -15,7 +16,8 @@ ControlEvents = ControlEventsCreator_v()
   *  [HELP Control types](https://help.autodesk.com/view/MAXDEV/2021/ENU/?guid=GUID-E421933F-958E-42FD-80A1-D66F2A2C0A06)
   *
 */ 
-control_types_for_test = #(
+these_controls_will_be_tested = #(
+	
 	--#Label,
 	--#Button,
 	--#Checkbox,
@@ -43,8 +45,9 @@ control_types_for_test = #(
 	--#Timer
 	
 	/* TEMP FOR DEV */ 
-	#Checkbox
+	--#Checkbox
 	--#Edittext
+	#Spinner
 
 )
 
@@ -54,8 +57,6 @@ controls_with_items = #(
 	#Dropdownlist,
 	#Combobox
 )
-
-
 
 /** Create variables:
   *		_RolloutCreator
@@ -68,22 +69,30 @@ include "Library/MAXSCRIPT-UI-framework/Lib/Dialog/RolloutCreator/_Test/includes
 
 /** ADD CONTROLS WITH EVENTS
  */
-for control_type in ControlEvents.control_types where findItem control_types_for_test control_type > 0 do
+for control_type in ControlEvents.control_types where findItem these_controls_will_be_tested control_type > 0 do
 (
-	event_types = ControlEvents._getEventsOfControl(control_type)
+	event_types  = ControlEvents._getEventsOfControl(control_type)
+	event_params = ControlEvents._getParamsOfEvents(control_type)
 	
 	if( event_types.count > 0 ) then
 	(
 		params	= if( findItem controls_with_items control_type > 0 ) then #( #items, #("Item 1","Item 2","Item 3") ) else #()
 
 		_Control = _Controls.control control_type ( "Test " + control_type as string ) params:params
-		
-		format "\ncontrol_type = % \nevent_types  = % \n\n" control_type event_types
-		
+
 		/** ADD EVENTS
 		 */
-		--for event_type in event_types do
-			--_Control.Event event_type ("print \""+ control_type as string + " " + event_type as string + "\"")
+		for i = 1 to event_types.count do
+			_Control.Event event_types[i]  (
+				case try((filterString event_params[i] " ").count)catch() of
+				(
+					1:"CallbackWithValue"
+					2:"CallbackWith2Params"
+					default:"CallbackNoParam"
+				)
+			)	
+			
+		
 	)
 )
 

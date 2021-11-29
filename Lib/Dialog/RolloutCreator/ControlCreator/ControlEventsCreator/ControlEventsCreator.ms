@@ -1,4 +1,4 @@
-filein( getFilenamePath(getSourceFileName()) + "/EventFired/EventFired.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/EventFiredCreator/EventFiredCreator.ms" )
 
 global STARTUP_EVENTS = #() -- run callbacks of controls like checkbox, checkbutton on UI start
 
@@ -86,16 +86,24 @@ struct ControlEventsCreator_v
 	 */
 	function getEvents _Control rollout_id =
 	(
-		this._Control = _Control
-		
-		events_of_control = this._getEventsOfControl (_Control.type)
-		params_of_events  = this._getParamsOfEvents  (_Control.type)
-		--format "events_of_control	= % \n" events_of_control
-		--format "params_of_events	= % \n" params_of_events
+		this._Control	= _Control
+		events_of_control	= this._getEventsOfControl (_Control.type)
+		params_of_events	= this._getParamsOfEvents  (_Control.type)
 
+		/* PARAMETER */ 
 		this._setCallbackParamters()
 		
-		if( ini_path == undefined ) then _Control.Events.list else this._addDefaultEvents(rollout_id) --return 
+		
+		/* EVENT FIRED */ 
+		this._addEventFired()
+		
+		
+		/* DEFAULT EVENTS */ 
+		if( ini_path != undefined ) then
+			_Control.Events.list = this._addDefaultEvents(rollout_id) 
+		
+		
+		 _Control.Events.list --return
 	),
 
 	/**  get events for control type from event_types array
@@ -157,17 +165,39 @@ struct ControlEventsCreator_v
 
 	/** Get parameters of callback defined in event_types
 	 */
-	--function _setCallbackParamters &params type =
 	function _setCallbackParamters =
 	(
 		--print "ControlEvents._setCallbackParamters()"
 		for i = 1 to events_of_control.count where params_of_events[i] != undefined  do
 		(
 			Event = this._getEvent(events_of_control[i])
-
+			
 			Event.params = params_of_events[i]
+			
+			if not( matchPattern Event.code pattern:("* "+Event.params) ) then -- add prameters behind callback E.G.: "callbackFn" >>>  "callbackFn inSpin inCancel"
+				Event.code  += " "+ Event.params
 		)
 	),
+	
+	/** _add event fired
+	 */
+	function _addEventFired =
+	(
+		--print "ControlEventsCreator_v._addEventFired()"
+		EventFiredCreator = EventFiredCreator_v control_id:_Control.id
+		
+		for i = 1 to events_of_control.count  do
+		(
+			Event = this._getEvent(events_of_control[i])
+
+			_EventFired    = EventFiredCreator.getEventFired(events_of_control[i])(Event.params)
+			
+			Event.code = _EventFired+ ";"+ Event.code
+			--format "Event	= % \n" Event
+		)
+		
+	),
+	
 	
 	--/** Add function brackets E.g.: "fooCallback" return "fooCallback()|fooCallback(val)"
 	-- */

@@ -9,7 +9,7 @@
 struct Event_v 
 (
 	type     = #pressed,
-	code     = "",
 	tooltip	= "", -- tooltip for event
-	params	= ""
+	params	= "",
+	code     = ""
 )
