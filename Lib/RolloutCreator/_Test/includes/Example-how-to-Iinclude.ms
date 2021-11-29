@@ -49,5 +49,4 @@ height = 512
   */
 dialog_width  = unsupplied
 dialog_height = unsupplied
-
 include "Library/MAXSCRIPT-UI-framework/Lib/RolloutCreator/_Test/includes/CreateTestDialog.ms"

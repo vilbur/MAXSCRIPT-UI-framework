@@ -1,3 +1,5 @@
+filein( getFilenamePath(getSourceFileName()) + "/../List/List.ms" )
+
 filein( getFilenamePath(getSourceFileName()) + "/../Ini/Ini.ms" )
 
 filein( getFilenamePath(getSourceFileName()) + "/../Dialog/Rollout/Rollout.ms" )

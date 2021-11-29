@@ -1,7 +1,7 @@
 clearListener()
 
 
-filein( getFilenamePath(getSourceFileName()) + "/../../../../../RolloutCreator/RolloutCreator.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/../../../RolloutCreator.ms" )
 
 /** Create variables:
   *		_RolloutCreator
@@ -10,11 +10,25 @@ filein( getFilenamePath(getSourceFileName()) + "/../../../../../RolloutCreator/R
   */
 include "Library/MAXSCRIPT-UI-framework/Lib/RolloutCreator/_Test/includes/CreateTestRollout.ms"
 
+/**  
+
+	1) Global defaults for all controls
+	2) Global default per control type
+	3) User Defined param
+
+*/
+
+
+
+across = 4
+
+_Controls.Default #across across;
+
+_Controls.Default #border false type:#button 
 
 
 for i = 1 to 10 do
 (
-	across = 4
 	
 	if( i > 4  ) then across = 3
 	if( i > 7  ) then across = 2
@@ -24,6 +38,11 @@ for i = 1 to 10 do
 )
 
 
+_Controls.Default #across 1 type:#multilistbox 
+
+_Controls.control #multilistbox "multilistbox"
+
 /** Create dialog from _Rollout
   */
+dialog_width = 320
 include "Library/MAXSCRIPT-UI-framework/Lib/RolloutCreator/_Test/includes/CreateTestDialog.ms"

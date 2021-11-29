@@ -1,7 +1,7 @@
 clearListener()
 
+filein( getFilenamePath(getSourceFileName()) + "/../../../RolloutCreator.ms" )
 
-filein( getFilenamePath(getSourceFileName()) + "/../../../../../RolloutCreator/RolloutCreator.ms" )
 
 /** Create variables:
   *		_RolloutCreator
@@ -11,14 +11,6 @@ filein( getFilenamePath(getSourceFileName()) + "/../../../../../RolloutCreator/R
 include "Library/MAXSCRIPT-UI-framework/Lib/RolloutCreator/_Test/includes/CreateTestRollout.ms"
 
 
-
---_Controls   = _Rollout.Controls()
---_Button1    = _Controls.control #button "Params in string" params:"width:256"
-
-
---Subrollouts = _Rollout.Subrollouts()
---Subrollout1 = Subrollouts.roll "Subrollout"
---_Controls   = Subrollout1.Controls()
 _Button2    = _Controls.control #button  "Params on creation" params:#(#width, 128, #height, 64 )
 _Button2.param #enabled false
 
@@ -32,7 +24,4 @@ _Button3.param #height  48
   *
   */
 dialog_width  = 512
---dialog_width  = unsupplied
-dialog_height = unsupplied
-
 include "Library/MAXSCRIPT-UI-framework/Lib/RolloutCreator/_Test/includes/CreateTestDialog.ms"

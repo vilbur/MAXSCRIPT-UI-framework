@@ -17,7 +17,7 @@ struct Control_v
 	/* dependency */
 	Events = EventsList_v(),
 	Params = ParamsList_v(),
-	--_params,
+
 	
 	/* ControlCreator_v */ 
 	add_locals	= #(),	-- #(#variable_name1, init_value1, #variable_name2, init_value2)	// used in ControlCreator_v._addLocalVariablesToRollout 	"../../../RolloutCreator/ControlCreator/ControlCreator.ms"
@@ -74,9 +74,10 @@ struct Control_v
 		id = substituteString caption " " "_" -- replace whitespace with underscore
 
 		this._repleaceCharacters "[^A-Za-z0-9_]+"	""	-- remove characters	E.G.: "Butt@n_&_1" >>> "Button_1"
-		this._repleaceCharacters "[_]+"	"_"	-- remove underscores	E.G.: "button___1" >>> "button_1"
 		
 		id = toUpper ( type as string ) + "_" + id -- add prefix by control type E.G.: "test" >>> "BUTTON_test"
+		
+		this._repleaceCharacters "[_]+"	"_"	-- remove underscores	E.G.: "button___1" >>> "button_1"
 	),
 	
 	/** _repleace string

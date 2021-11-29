@@ -23,7 +23,7 @@ struct ControlCreator_v
 		this._Controls = _Controls
 		
 		/* set DEFAULT PARAMETERS */ 
-		ParamsCreator.setDefaults (_Controls.Defaults)
+		ParamsCreator.ControlDefaults = _Controls.Defaults
 	
 		
 		/* prepare CONTROL TYPES */ 
@@ -64,7 +64,7 @@ struct ControlCreator_v
 		
 		for _Control in _Controls.list do
 		(
-			this._addControl (_Control)
+			this._addControl (_Control) -- add control first before variables, functions and events
 			
 			this._addControlHandlersToRollout(_Control)
 		)
@@ -90,7 +90,11 @@ struct ControlCreator_v
 	 */
 	function _addControl _Control =
 	(
-		_Rollout._RolloutCreator.addControl (_Control.type) (_Control.id) (_Control.caption) paramStr:(ParamsCreator.getParams(_Control)(_Rollout.id)) -- add control first before variables, functions and events
+		format "\n"
+		print ("ControlCreator_v._addControl() " +_Control.id )
+		params = (ParamsCreator.getParams(_Control)(_Rollout.id))
+		format "params	= % \n" params
+		_Rollout._RolloutCreator.addControl (_Control.type) (_Control.id) (_Control.caption) paramStr:params
 	),
 	
 	/** Test

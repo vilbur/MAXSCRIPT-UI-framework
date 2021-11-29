@@ -27,6 +27,8 @@ struct Controls_v
 		
 		this._setParamsToControl(_Control)(params)
 
+		--this._setDefaultParamsPerControlType(_Control)
+
 		if( add_to_controls ) then 
 			this.add _Control
 		
@@ -47,6 +49,14 @@ struct Controls_v
 		(for _Control in list where _Control.id == control_id collect _Control)[1]
 	),
 	
+	/** Set controls Default params
+	 */
+	function Default key val type:#global =
+	(
+		--Defaults.setValues #( #width, #height, #across ) #( width, height, across ) filter:true
+		Defaults.setDefaultParam key val type:type
+	),
+
 	
 	private
 	
@@ -64,20 +74,30 @@ struct Controls_v
 		_Control --return
 	),
 	
-	/** Default
-	  
-	   TODO: ADD OTHER PARAMETERS
-	   
-	 */
-	function Default width: height: across: =
-	(
-		Defaults.setValues #( #width, #height, #across ) #( width, height, across ) filter:true
-	),
+	--/** _set default params per control type
+	-- */
+	--function _setDefaultParamsPerControlType _Control =
+	--(
+	--	print "Controls_v._setDefaultParamsPerControlType()"
+	--	across = case _Control.type of
+	--	(
+	--		(#Listbox): 1	
+	--		(#Multilistbox): 1	
+	--		(#Edittext): 1	
+	--		(#multilistbox): 1	
+	--		default: 4
+	--	)		
+	--	format "across	= % \n" across
+	--	_Control.param #across across
+	--
+	--),
 
 	/**  
 	 */
 	on create do
 	(
 		--print "Controls_v.create()"
+		
+		
 	)
 )
