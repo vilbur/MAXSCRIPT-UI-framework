@@ -94,8 +94,8 @@ struct ControlCreator_v
 	 */
 	function _addControl _Control =
 	(
-		format "\n"
-		print ("ControlCreator_v._addControl() " +_Control.id )
+		--format "\n"
+		--print ("ControlCreator_v._addControl() " +_Control.id )
 		--params = (ParamsCreator.getParams(_Control)(_Rollout.id))
 		params = ParamsCreator.join(_Control.params)
 		format "params	= % \n" params
@@ -122,25 +122,46 @@ struct ControlCreator_v
 	),
 	
 	
-	
 	/** _set controls parameters
 	 */
 	function _acrossParameterModify =
 	(
 		print "ControlCreator_v._acrossParameterModify()"
-		local last_across
+		last_across   = undefined 
+		control_count = 0
+		next_start_new_row = true
 		
-		
-		for _Control in _Controls.list do
+		for i = 1 to _Controls.list.count do
 		(
+			_Control = _Controls.list[i]
+			control_count += 1
 			format "\n"
-			format "_Control.Params	= % \n" _Control.Params
-			
+			format "%	= % \n" _Control.id _Control.Params
+			format "control_count	= % \n" control_count
+		
 
 			across =  _Control.Params.getVal #across
-			
+			format "across      = % \n" across
+			format "last_across = % \n" last_across 
+
 			if( across != last_across ) then 
 				last_across = across
+			else
+				_Control.Params.delete #across
+			
+			
+			if( next_start_new_row ) then 
+				_Control.Params.setVal #across last_across
+			
+			
+			
+			row_position = control_count / last_across as float
+			format "row_position	= % \n" row_position
+			last_in_row = (floor row_position == row_position ) -- test if first control in row
+			format "last_in_row	= % \n" last_in_row
+			
+			next_start_new_row = if ( last_in_row ) then true else false
+			format "next_start_new_row	= % \n" next_start_new_row
 			
 
 		)
