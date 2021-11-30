@@ -17,6 +17,9 @@ struct RolloutCreator_v
 	ControlCreator	= ControlCreator_v(),
 	RolloutEvents	= RolloutEvents_v(),
 
+	padding_bottom = 16,
+	subrollouts_slot_height,
+
 	/* optionable */
 	
 	/** New
@@ -35,12 +38,12 @@ struct RolloutCreator_v
 
 	/** Create dialog
 	 */
-	function createRollout _Rollout =
+	function createRollout _Rollout height: =
 	(
 		format "\n"
 		print ("RolloutCreator_v.createRollout() " + _Rollout.id as string )
-		--format "_Rollout	= % \n" _Rollout
 		
+			
 		this._setIniToEventCreators()
 		
 		/* EDIT start */ 
@@ -54,8 +57,9 @@ struct RolloutCreator_v
 		this._addTextToRollout (_Rollout)
 		
 		
-		/* add CONTROLS */ 
-		this.addControlsAndSubrolloutes (_Rollout)
+		/* add CONTROLS and SUBROLLOUTS */ 
+		this.addControlsAndSubrolloutes (_Rollout)(height)
+		
 		
 		/* add EVENTS */ 
 		RolloutEvents.bindEvents (_Rollout)
@@ -68,9 +72,12 @@ struct RolloutCreator_v
 
 	/** Add controls or subrolloutes
 	 */
-	function addControlsAndSubrolloutes _Rollout =
+	function addControlsAndSubrolloutes _Rollout height =
 	(
-		--print "RolloutCreator_v.addControlsAndSubrolloutes()"
+		print "RolloutCreator_v.addControlsAndSubrolloutes()"
+		
+		this._setSubrolloutsHeight(_Rollout)(height)		
+		
 		for ControlsBox_or_Subrollouts in _Rollout._Controls do
 			if( this._isControls(ControlsBox_or_Subrollouts) ) then
 			
@@ -123,9 +130,9 @@ struct RolloutCreator_v
 	 
 	 /** _create subrollouts
 	  */
-	 function _createSubrollouts  _Rollout Subrollouts =
+	 function _createSubrollouts _Rollout Subrollouts =
 	 (
-		--print "RolloutCreator_v._createSubrollouts()"
+		print "RolloutCreator_v._createSubrollouts()"
 		this._addSubrolloutsSlots (_Rollout) (Subrollouts)
 		
 		for _Subrollout in Subrollouts.Rollouts do
@@ -137,13 +144,22 @@ struct RolloutCreator_v
 	function _addSubrolloutsSlots _Rollout Subrollouts =
 	(
 		--print ("RolloutCreator_v.addSubrolloutsSlot()" + Subrollouts.slot)
-		_Rollout._RolloutCreator.addText ("subRollout "+Subrollouts.slot as string +" \"slot_name\" height:128")
+		_Rollout._RolloutCreator.addText ("subRollout "+Subrollouts.slot as string +" \"slot_name\" height:"+subrollouts_slot_height as string )
 	),
 
 
 	private
 	
 
+	/** _set subrollouts height
+	 */
+	function _setSubrolloutsHeight _Rollout height =
+	(
+		--print "RolloutCreator_v._setSubrolloutsHeight()"
+		
+		if( height != undefined and height != unsupplied ) then
+			subrollouts_slot_height = (height-padding_bottom) / this._getSubrolloutsCount(_Rollout)
+	),
 		
 	/** Add local variables from Control_v to rollout
 	  *
@@ -168,6 +184,14 @@ struct RolloutCreator_v
 				_Rollout._RolloutCreator.addText  _Rollout.add_text filter:true
 	),
 	
+	/** _get subrollouts count
+	 */
+	function _getSubrolloutsCount _Rollout =
+	(
+		--print "RolloutCreator_v._getSubrolloutsCount()"
+		(for _Subrollouts in _Rollout._Controls where this._isSubrollouts(_Subrollouts) collect _Subrollouts).count --return
+	),
+	
 	/** _is control box
 	 */
 	function _isControls _Struct =
@@ -179,6 +203,7 @@ struct RolloutCreator_v
 	 */
 	function _isSubrollouts _Struct =
 	(
+		--print "RolloutCreator_v._getSubrolloutsCount()"
 		this._getType _Struct == "subrollouts"
 	),
 	

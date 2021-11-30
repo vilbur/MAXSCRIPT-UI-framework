@@ -35,21 +35,24 @@ struct Dialog_v
 	  *
 	  * TODO add params for max 2022
 	 */
-	function create pos: width:256 height:256 bgcolor: fgcolor: bitmap: style: modal: escapeEnable: lockHeight:false lockWidth:true parent: =
+	function create pos: width:512 height: bgcolor: fgcolor: bitmap: style: modal: escapeEnable: lockHeight:false lockWidth:true parent: =
 	(
 		print ("Dialog_v.create() " + RolloutMain.id)
 		
 		if( style == unsupplied ) then style = this.style
 		
+		height = this._getDialogHeight(height)
+		
 		--format "style	= % \n" style
-		_RolloutCreator.createRollout (RolloutMain) dialog_rollout:true
+		--_RolloutCreator.createRollout (RolloutMain) dialog_rollout:true
+		_RolloutCreator.createRollout (RolloutMain) height:height
 		--format "RolloutMain._RolloutCreator	= % \n" RolloutMain._RolloutCreator
 		
-		CreateDialog (_RolloutCreator.getDefinition(RolloutMain)) pos:(this._getPosition(pos)) width:width height:height bgcolor:bgcolor fgcolor:fgcolor bitmap:bitmap style:style modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
+		CreateDialog (_RolloutCreator.getDefinition(RolloutMain)) pos:(this._getPositionRelativeToWindow(pos)) width:width height:height bgcolor:bgcolor fgcolor:fgcolor bitmap:bitmap style:style modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
 		
 		_RolloutCreator.addSubRollouts RolloutMain
 	),
-	
+    
 	/** Register dialog bar
 	 */
 	function register =
@@ -121,18 +124,60 @@ struct Dialog_v
 
 	private
 	
+		
+	/** _get dialog height
+	 */
+	function _getDialogHeight height =
+	(
+		--print "Dialog_v._getDialogHeight()"
+		--format "height	= % \n" height
+		if( height != unsupplied ) then
+			return height
+		
+		this._getViewportHeight() --return
+	),
+	
+	/** Get height of maximized viewport to find out height of docked dialog
+	 */
+	function _getViewportHeight =
+	(
+		--print "Dialog_v._getViewportHeight()"
+		is_maximized	= viewport.numViews == 1
+		
+		height_of_ui	= 0 -- Add heigh
+		dialog_title_height	= 30
+		
+		--if( trackbar.visible ) then 
+		--	height_of_ui	+= 27
+		--
+		--if( timeSlider.isVisible() ) then 
+		--	height_of_ui	+= 18
+		
+		if not( is_maximized ) then 
+			actionMan.executeAction 0 "50026"  -- Tools: Maximize Viewport Toggle
+		
+		viewport_area_size = getViewSize()
+		
+		if not( is_maximized ) then 
+			actionMan.executeAction 0 "50026"  -- Tools: Maximize Viewport Toggle
+		
+		(viewport_area_size[2] as integer) + height_of_ui - dialog_title_height --return
+	),
 	
 	/** Get position relative to Max window
 	 */
-	function _getPosition pos =
+	function _getPositionRelativeToWindow pos =
 	(
 		--print "Dialog_v.getPosition()"
+		
+		toolbar_height = 92
+		
 		if( pos == unsupplied ) then 
 			return pos
 		
 		win_pos = windows.getWindowPos (windows.getMAXHWND())
 
-		[ win_pos.x+pos.x, win_pos.y+pos.y ]  --return
+		[ win_pos.x+pos.x, win_pos.y+pos.y + toolbar_height]  --return
 	),
 	
 	/** Set main rollout
