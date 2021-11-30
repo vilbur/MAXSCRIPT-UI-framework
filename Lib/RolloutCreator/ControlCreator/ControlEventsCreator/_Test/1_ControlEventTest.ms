@@ -45,8 +45,8 @@ these_controls_will_be_tested = #(
 	--#Timer
 	
 	/* TEMP FOR DEV */ 
-	--#Checkbox
-	#browsePath
+	#Checkbox
+	--#browsePath
 
 )
 

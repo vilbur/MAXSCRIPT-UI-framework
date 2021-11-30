@@ -2,6 +2,9 @@
  */
 struct AcrossParameterModifier_v
 (
+	
+	--fake_control_caption = "",     -- PRODUCTION
+	fake_control_caption = "FAKE", -- SHOW FAKE CONTROL IN UI FOR DEBUG
 
 	/** 
 	 */
@@ -80,7 +83,7 @@ struct AcrossParameterModifier_v
 	 */
 	function _createFakeControl _Controls =
 	(
-		_Controls.control #label "FAKE" id:("label"+ (random 1 99999 ) as string ) add_to_controls:false --return	
+		_Controls.control #label fake_control_caption id:("label"+ (random 1 99999 ) as string ) add_to_controls:false --return	
 	),
 	
 	

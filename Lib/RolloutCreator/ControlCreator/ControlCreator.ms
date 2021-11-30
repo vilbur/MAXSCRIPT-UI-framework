@@ -125,7 +125,7 @@ struct ControlCreator_v
 		
 		val_ini	= ControlValue.getValueFromIni(_Control)(rollout_id)
 		value_param	= this._getValueParameterArray(_Control)(val_ini)
-	)
+	),
 	
 	/** Add event handlers
 	 */

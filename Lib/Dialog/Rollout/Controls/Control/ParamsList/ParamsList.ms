@@ -1,4 +1,10 @@
 /** Control params
+  
+  
+  REMOVE THIS AND USE ONLY List_v
+  
+  
+  
  */
 struct ParamsList_v
 (
