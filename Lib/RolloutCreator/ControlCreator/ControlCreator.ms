@@ -104,7 +104,7 @@ struct ControlCreator_v
 		--print ("ControlCreator_v._addControl() " +_Control.id )
 		--params = (ParamsCreator.getParams(_Control)(_Rollout.id))
 		params = ParamsCreator.join(_Control.params)
-		format "params	= % \n" params
+		format "%	= % \n" _Control.id params
 		_Rollout._RolloutCreator.addControl (_Control.type) (_Control.id) (_Control.caption) paramStr:params
 		--_Rollout._RolloutCreator.addControl (_Control.type) (_Control.id) (_Control.caption) paramStr:""1
 	),

@@ -3,39 +3,50 @@
 struct AcrossParameterModifier_v
 (
 	
-	--fake_control_caption = "",     -- PRODUCTION
-	fake_control_caption = "FAKE", -- SHOW FAKE CONTROL IN UI FOR DEBUG
+	fake_control_caption = "",     -- PRODUCTION
+	--fake_control_caption = "FAKE", -- SHOW FAKE CONTROL IN UI FOR DEBUG
 
 	/** 
 	 */
 	function _acrossParameterModify &_Controls =
 	(
 		--print "ControlCreator_v._acrossParameterModify()"
-		_Controls_list_copy	= deepCopy  _Controls.list
+		_Controls_list_copy	= #()
 		next_control_start_new_row	= true
-
+		across_previous	= undefined 
+		controls_in_row	= 0
+		
 		for control_count = 1 to _Controls.list.count do
 		(
-			across_current	=  _Controls.list[control_count].Params.getVal #across
-			across_previous	= this._modifyAcrossParameter (_Controls.list[control_count]) (across_current) (across_previous)
+			_Control =  _Controls.list[control_count]
 			
-			position_in_row	= this._getControlPositionInRow(control_count)(across_previous)
-			control_is_last_in_row	= this. _isControlLastInRow (position_in_row) (across_previous)
+			controls_in_row += 1
 			
+			across_current	=  _Control.Params.getVal #across
+			across_previous	= this._modifyAcrossParameter (_Control) (across_current) (across_previous)
+
+			
+			position_in_row	= this._getControlPositionInRow(controls_in_row)(across_previous)
+			control_is_last_in_row	= this._isControlLastInRow (position_in_row) (across_previous)
+
 			if( next_control_start_new_row ) then
-				_Controls.list[control_count].Params.setVal #across across_previous
+				_Control.Params.setVal #across across_previous
 			
+			append _Controls_list_copy _Control
 
 			if(	(next_control_exists	= _Controls.list[control_count+1]) != undefined and
 				(next_control_across_changed	= (across_current != next_control_exists.Params.getVal #across)) and
-				(fake_controls_count	= this._getFakeControlsCount(position_in_row)(across_previous))	> 0 ) then
-		
-						for i = 1 to fake_controls_count do
-							insertItem (this._createFakeControl _Controls) _Controls_list_copy (control_count+i)
-
+				(fake_controls_count	= this._getFakeControlsCount(position_in_row)(across_previous))	> 0 )
+			then
+				for i = 1 to fake_controls_count do
+					append _Controls_list_copy (this._createFakeControl _Controls)
+					
+					
 			next_control_start_new_row = if ( control_is_last_in_row ) then true else false
+			
+			if( next_control_start_new_row ) then 
+				controls_in_row = 0
 		)
-
 		_Controls.list = _Controls_list_copy
 
 		_Controls --return 
