@@ -32,7 +32,7 @@ struct ControlCreator_v
 		
 		this._mergeControlsParameters()
 		
-		this._acrossParameterModify()
+		_Controls.list = this._acrossParameterModify()
 		
 		/* add LOCAL VARIABLES */ 
 		this._addLocalVariablesToRollout()
@@ -131,6 +131,9 @@ struct ControlCreator_v
 		control_count = 0
 		next_start_new_row = true
 		
+		_Controls_list_copy = deepCopy  _Controls.list
+		
+		
 		for i = 1 to _Controls.list.count do
 		(
 			_Control = _Controls.list[i]
@@ -150,21 +153,61 @@ struct ControlCreator_v
 				_Control.Params.delete #across
 			
 			
-			if( next_start_new_row ) then 
+			row_position = control_count / last_across as float
+			--format "row_position	= % \n" row_position
+			last_in_row = (floor row_position == row_position ) -- test if first control in row
+			--format "last_in_row	= % \n" last_in_row
+			
+			if( next_start_new_row ) then
 				_Control.Params.setVal #across last_across
 			
 			
+	
+			_Control_NEXT = _Controls.list[i+1]
 			
-			row_position = control_count / last_across as float
-			format "row_position	= % \n" row_position
-			last_in_row = (floor row_position == row_position ) -- test if first control in row
-			format "last_in_row	= % \n" last_in_row
+			if( _Control_NEXT != undefined ) then
+			(
+				across_next = _Control_NEXT.Params.getVal #across
+				
+				if( across_next != across ) then 
+				(
+					fake_controls_count = ((ceil row_position - row_position) * last_across) as integer
+					format "fake_controls_count	= % \n" fake_controls_count
+					
+					print "ADD FAKE CONTROLS"
+					format "_Control_NEXT	= % \n" _Control_NEXT
+					
+					if( fake_controls_count > 0 ) then
+					(
+						
+						for x = 1 to fake_controls_count do
+						(
+							Control_fake = _Controls.control #label "FAKE" id:("label"+x as string) add_to_controls:false
+							format "(i+x)	= % \n" (i+x)
+							insertItem Control_fake _Controls_list_copy (i+x)
+
+						)
+							
+						
+					)
+
+				)
+				
+				
+			)
+			
+
 			
 			next_start_new_row = if ( last_in_row ) then true else false
-			format "next_start_new_row	= % \n" next_start_new_row
+			--format "next_start_new_row	= % \n" next_start_new_row
 			
 
 		)
+		format "_Controls.list.count	= % \n" _Controls.list.count
+		format "_Controls_list_copy.count	= % \n" _Controls_list_copy.count
+
+		
+		_Controls_list_copy
 	),
 	
 	
