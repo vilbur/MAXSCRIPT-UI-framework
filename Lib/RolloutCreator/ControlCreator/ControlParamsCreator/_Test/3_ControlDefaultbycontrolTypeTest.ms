@@ -24,9 +24,9 @@ control_types = #(
 	#Checkbutton,
 	--#Spinner,
 	--#Edittext,
-	--#Listbox,
-	--#multilistbox,
-	--#Dropdownlist,
+	#Listbox,
+	#multilistbox,
+	#Dropdownlist,
 	----#Combobox,
 	----#GroupBox,
 	----#Angle,
@@ -52,6 +52,7 @@ control_types = #(
 
 --_Controls.Default #across 4 type:#button 
 --_Controls.Default #across 2 type:#checkbox 
+_Controls.Default #across 2 type:#Listbox
 
 
 
@@ -69,5 +70,5 @@ for control_type in control_types do
 
 /** Create dialog from _Rollout
   */
-dialog_width = 320
+dialog_width = 512
 include "Library/MAXSCRIPT-UI-framework/Lib/RolloutCreator/_Test/includes/CreateTestDialog.ms"

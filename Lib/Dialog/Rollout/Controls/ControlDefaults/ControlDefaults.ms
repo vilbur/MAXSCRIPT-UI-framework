@@ -31,7 +31,10 @@ struct ControlDefaults_v
 	 */
 	function _setDefaultsForAllTypes =
 	(
-		for control_type in #(#global, #button, #checkbox  ) do
+		control_types = include "Library/MAXSCRIPT-UI-framework/Lib/Dialog/Rollout/Controls/control_types.ms"
+
+		--for control_type in #(#global, #button, #list  ) do
+		for control_type in control_types do
 			this._setDefaultsForType(control_type)
 	),
 	
@@ -50,19 +53,38 @@ struct ControlDefaults_v
 	function _getDefaultParams control_type =
 	(
 		--print "ControlDefaults_v._getDefaultParams()"
+		--format "control_type	= % \n" control_type
 		ParamsList = List_v()
-
-		keys_values = case control_type of
+		
+		keys_values = case this._getControlTypeClass(control_type)("button|list") of
 		(
-			#global:	#( #across, 4)
-			#button:	#( #across, 4)
-			#checkbox:	#( #across, 2)
+			#button:	#( #across, 4,	#width, 96 )
+			#list:	#( #across, 1 )
+			default:	#( #across, 2) -- #global
 		)
 		
 		for i = 1 to keys_values.count  by 2  do
 			ParamsList.setVal keys_values[i] keys_values[i+1]
 		
 		ParamsList --return 
+	),
+	
+	/** Get control class
+	  *
+	  * @return	#name|undefined	E.G.: return #button if control_type == #Checkbutton || #list if control_type == #multilistbox
+	 */
+	function _getControlTypeClass control_type type_classes =
+	(
+		--print "ControlDefaults_v.getControlClass()"
+		rx         = dotNetClass "System.Text.RegularExpressions.RegEx"
+		rx_options = dotNetClass "System.Text.RegularExpressions.RegexOptions"
+	
+		matches = rx.matches control_type type_classes rx_options.IgnoreCase
+		
+		match_groups = (for matchIdx = 0 to matches.count-1 collect for groupIdx = 0 to matches.item[matchIdx].groups.count-1 collect ( matches.item[matchIdx].groups.item[groupIdx].value )) --return
+		
+		if( match_groups.count > 0 ) then
+			match_groups[1][1] as name --return 
 	),
 	
 	

@@ -3,19 +3,30 @@
 	
 	/**  Set Value
 	  *
+	  * UNIQUE rules:
+	  *
+	  *		1) ADD new if NOT exist 
+	  *		2) REPLACE if exist	- unique	== unsupplied
+	  *		3) ADD new if exist	- unique 	== false
+	  *		4) NOT add if exist	- unique 	== true
+	  *
+	  *
 	  * @property	mixin	key	key of value
 	  * @property	mixin	value
-	  * @property	boolean	replace	if value exist then will be replaced, if false then old value will not be replaced
+	  * @property	boolean	unique	Explained above in UNIQUE rules
 	  *
 	 */
-	function setVal key val replace:true =
+	function setVal key val unique: =
 	(
-		if (i = findItem keys key ) > 0 and replace == true then
-			this._replaceValue   i key val
-			
-		else if (i == 0) then
+		i	= findItem keys key
+		exist	= i > 0
+		--format "exist	= % \n" exist
+		if ( exist == false or (exist and unique == false) ) then 
 			this._appendNewValue key val
-			
+	
+		else if( exist and unique == unsupplied ) then 
+			this._replaceValue   i key val
+
 		val --return 
 	),
 	/**  Set multiple values at once
@@ -131,6 +142,38 @@
 		this --return
 	),
 	
+	/** Make list Unique - first occurrence is king
+	 */
+	function unique =
+	(
+		looped_keys	= #()
+		duplicated	= #()
+		 
+	
+		for i = 1 to keys.count do
+			if( (found = findItem looped_keys keys[i] ) == 0 ) then 
+				append looped_keys keys[i]
+			else
+				append duplicated i
+		
+	
+		for i in duplicated.count to 1 by -1 do
+			this._removeKeyAndValue duplicated[i]
+		--print ".unique()"
+	),
+	
+	
+	/** Copy
+	 */
+	function copy =
+	(
+		List_copy        = List_v()
+		List_copy.keys   = deepCopy keys
+		List_copy.values = deepCopy values
+				
+		List_copy --return
+	),
+	
 	/** Format keys to #name dattype
 	  *
 	  *
@@ -147,7 +190,7 @@
 	 */
 	function count =
 	(
-		values.count --return
+		keys.count --return
 	),
 	
 	private
