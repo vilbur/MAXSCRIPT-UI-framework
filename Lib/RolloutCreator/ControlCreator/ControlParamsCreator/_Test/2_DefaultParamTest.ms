@@ -20,7 +20,7 @@ include "Library/MAXSCRIPT-UI-framework/Lib/RolloutCreator/_Test/includes/Create
 
 
 
-across = 4
+across = 5
 
 _Controls.Default #across across;
 
@@ -30,9 +30,9 @@ _Controls.Default #border false type:#button
 for i = 1 to 10 do
 (
 	
-	if( i > 4  ) then across = 3
-	if( i > 7  ) then across = 2
-	if( i > 9  ) then across = 1
+	if( i > 4  ) then across = 4
+	if( i > 7  ) then across = 3
+	if( i > 9  ) then across = 2
 	
 	_Button1    = _Controls.control #button ( "Button"+ i as string ) params:#(#across, across)
 )

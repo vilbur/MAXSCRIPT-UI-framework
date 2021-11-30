@@ -11,9 +11,9 @@
 	  *		4) NOT add if exist	- unique 	== true
 	  *
 	  *
-	  * @property	mixin	key	key of value
-	  * @property	mixin	value
-	  * @property	boolean	unique	Explained above in UNIQUE rules
+	  * @param	mixin	key	key of value
+	  * @param	mixin	value
+	  * @param	boolean|void	unique	Explained above in UNIQUE rules
 	  *
 	 */
 	function setVal key val unique: =
@@ -31,10 +31,10 @@
 	),
 	/**  Set multiple values at once
 	  *
-	  * @property	Array	keys
-	  * @property	Array	values
+	  * @param	Array	keys
+	  * @param	Array	values
 	  *
-	  * @property	true	filter	undefined & unsupplied values are not added to list
+	  * @param	true	filter	undefined & unsupplied values are not added to list
 	 */
 	function setValues keys values filter:false =
 	(
@@ -68,8 +68,8 @@
 	
 	/** Join
 	  *
-	  * @property	string	pair_delimeter	delimeter of key and value pair	E.G.: pair_delimeter	= ":" >>> "key1:value1"
-	  * @property	string	delimeter	delimeter of pairs 	E.G.: delemiter	= "|" >>> "key1:value1|key2:value2"
+	  * @param	string	pair_delimeter	delimeter of key and value pair	E.G.: pair_delimeter	= ":" >>> "key1:value1"
+	  * @param	string	delimeter	delimeter of pairs 	E.G.: delemiter	= "|" >>> "key1:value1|key2:value2"
 	  *
 	  * @return	string	
 	 */
@@ -142,6 +142,27 @@
 		this --return
 	),
 	
+	/** Merge Lsits
+	  *
+	  * UNIQUE rules:
+	  *
+	  *		1) unique 	== true	>>> Keep unique, values are not overrided
+	  *		2) unique 	== false	>>> Add all values, simply merge Lists
+	  *		3) unique	== unsupplied	>>> Keep unique, BUT OVERRIDE first List by List_to_merge
+	  *
+	  * @param	List_v	List_to_merge	
+	  * @param	boolean	unique	Explained above in UNIQUE rules
+	  *
+	  * @return	this	
+	 */
+	function merge List_to_merge unique:true =
+	(
+		for i = 1 to List_to_merge.keys.count do
+			this.setVal (List_to_merge.keys[i]) (List_to_merge.values[i]) unique:unique
+		
+		this --return 
+	),
+	
 	/** Make list Unique - first occurrence is king
 	 */
 	function unique =
@@ -193,7 +214,9 @@
 		keys.count --return
 	),
 	
+	
 	private
+	
 	
 	/** _remove undefined
 	 */

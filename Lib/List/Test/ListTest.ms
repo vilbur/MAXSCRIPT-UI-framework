@@ -7,14 +7,33 @@ List           = List_v()
 
 /* Add value */ 
 List.setVal #first  "First Item"
-
 List.setVal #second     "Second Item"
 List.setVal #third      "Third Item Remove"
 List.setVal #fourth     "Fourth"
-List.setVal #fifth      "Fifth"
-List.setVal #undefined  undefined
-List.setVal #unsupplied unsupplied
-List.setVal #delete     "Delete"
+
+
+/* copy a list */  
+List_copy        = List.copy()
+
+List_copy.setVal #first  "First Item Copy"
+List_copy.setVal #fifth      "Fifth"
+List_copy.setVal #undefined  undefined
+List_copy.setVal #unsupplied unsupplied
+List_copy.setVal #delete     "Delete"
+
+
+/* MERGE */ 
+List.merge (List_copy)	                     -- Keep unique, values are not overrided
+--List.merge (List_copy) unique:false        -- Add all values, simply merge Lists
+--List.merge (List_copy) unique:unsupplied   -- Keep unique, BUT OVERRIDE first List by List_to_merge
+format "List merged	= % \n" List
+
+
+/* MAKE LIST UNIQUE */ 
+
+List.unique()
+format "List unique = % \n" List
+
 
 
 /* UNIQUE ADD Test */ 
@@ -29,21 +48,6 @@ format "Unique true   Test:% \n" (List.values[List.values.count] == "Replaced") 
 
 List.setVal #last      "Added anyway" unique:false 
 format "Unique false  Test:% \n" (List.values[List.values.count] == "Added anyway") as string
-
-
-
-/* MAKE LIST UNIQUE */ 
-List.setVal #fifth      "Duplicated key" unique:false	-- prepare test
-count_before_unique = List.count()	-- prepare test
-
-List.unique()
-format "Unique()      Test:% \n" (count_before_unique != List.count() ) as string
-
-
-
-/* copy a list */  
-List_copy        = List.copy()
-format "List copy     Test:% \n" (List.keys[1] == List_copy.keys[1])
 
 
 

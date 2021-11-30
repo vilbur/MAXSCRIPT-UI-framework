@@ -12,48 +12,88 @@ struct ControlParamsCreator_v
 	
 	/* dependency */
 	ControlValue 	= ControlValue_v(),
+	--
+	--/** Get params for control
+	-- */
+	--function getParams _Control rollout_id =
+	--(
+	--	val_ini	= ControlValue.getValueFromIni(_Control)(rollout_id)
+	--	value_param	= this._getValueParameter(_Control)(val_ini)
+	--	
+	--	control_params	= this.join (_Control.Params)
+	--	params_type	= this.join (ControlDefaults.getVal _Control.type)		
+	--	params_global	= this.join (ControlDefaults.getVal #global)
+	--	
+	--	
+	--	
+	--	value_param +" "+  control_params +" "+ params_type +" "+ params_global -- first occurrence of parameter is used
+	--),
+	--
 	
 	/** Get params for control
 	 */
-	function getParams _Control rollout_id =
+	function mergeParams &_Control =
 	(
-		val_ini	= ControlValue.getValueFromIni(_Control)(rollout_id)
-		value_param	= this._getValueParameter(_Control)(val_ini)
-		
-		control_params	= this.join (_Control.Params)
-		params_type	= this.join (ControlDefaults.getVal _Control.type)		
-		params_global	= this.join (ControlDefaults.getVal #global)
-		
-		value_param +" "+  control_params +" "+ params_type +" "+ params_global -- first occurrence of parameter is used
-	),
-	
-	/** Convert value for control type
-	  *
-	  * @return	string E.G.: "checked:true"	
-	 */
-	function _getValueParameter _Control val_array =
-	(
-		if( val_array == undefined ) then
-			return ""
-		
-		if( _Control.type == #spinner ) then
-			val_array[2] = this._getSpinnerRange (_Control.params)(val_array[2])
+		print "ControlParamsCreator_v.mergeParams()"
+		MergeParamsList 	= List_v()
 
-		val_array[1] as string +":"+ this._formatToString(val_array[2])
+		if( value_param != undefined ) then
+			MergeParamsList.setVal value_param[1] value_param[2]
+		
+		MergeParamsList.merge (_Control.Params)
+		MergeParamsList.merge (ControlDefaults.getVal(_Control.type))
+		MergeParamsList.merge (ControlDefaults.getVal(#global))
+
+		_Control.params = MergeParamsList
+		--value_param +" "+  control_params +" "+ params_type +" "+ params_global -- first occurrence of parameter is used
+		
+		_Control --return
 	),
 	
-	/** Get spinner value
-	  *
-	  * @return	point3 as string	
-	 */
-	function _getSpinnerRange params val =
-	(
-		range = if( (index = findItem params #range ) > 0 ) then params[index+1] else [0,100,0] -- get defined range or default
-		
-		range[3] = val -- assign value from array E.G.: #(#range, "3")
-		
-		range
-	),
+	--/** Convert value for control type
+	--  *
+	--  * @return	string E.G.: "checked:true"	
+	-- */
+	--function _getValueParameterArray _Control val_array =
+	--(
+	--	if( val_array == undefined ) then
+	--		return undefined
+	--	
+	--	if( _Control.type == #spinner ) then
+	--		val_array[2] = this._getSpinnerRange (_Control.params)(val_array[2])
+	--
+	--	val_array --return
+	--),
+	--
+	--
+	--
+	--/** Convert value for control type
+	--  *
+	--  * @return	string E.G.: "checked:true"	
+	-- */
+	--function _getValueParameter _Control val_array =
+	--(
+	--	if( val_array == undefined ) then
+	--		return ""
+	--	
+	--	if( _Control.type == #spinner ) then
+	--		val_array[2] = this._getSpinnerRange (_Control.params)(val_array[2])
+	--
+	--	val_array[1] as string +":"+ this._formatToString(val_array[2])
+	--),
+	--
+	--/** Get spinner value
+	--  *
+	--  * @return	point3 as string	
+	-- */
+	--function _getSpinnerRange params val =
+	--(
+	--	range = if( (index = findItem params #range ) > 0 ) then params[index+1] else [0,100,0] -- get defined range or default
+	--	
+	--	range[3] = val -- assign value from array E.G.: #(#range, "3")
+	--	
+	--	range
+	--),
 
 	/** Join array
 	 */

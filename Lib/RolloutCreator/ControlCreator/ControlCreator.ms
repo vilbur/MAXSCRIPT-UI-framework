@@ -30,6 +30,10 @@ struct ControlCreator_v
 		this._convertCustomControls()
 		
 		
+		this._mergeControlsParameters()
+		
+		this._acrossParameterModify()
+		
 		/* add LOCAL VARIABLES */ 
 		this._addLocalVariablesToRollout()
 		
@@ -92,12 +96,58 @@ struct ControlCreator_v
 	(
 		format "\n"
 		print ("ControlCreator_v._addControl() " +_Control.id )
-		params = (ParamsCreator.getParams(_Control)(_Rollout.id))
+		--params = (ParamsCreator.getParams(_Control)(_Rollout.id))
+		params = ParamsCreator.join(_Control.params)
 		format "params	= % \n" params
 		_Rollout._RolloutCreator.addControl (_Control.type) (_Control.id) (_Control.caption) paramStr:params
+		--_Rollout._RolloutCreator.addControl (_Control.type) (_Control.id) (_Control.caption) paramStr:""1
 	),
 	
-	/** Test
+	/** _set controls parameters
+	 */
+	function _mergeControlsParameters =
+	(
+		for _Control in _Controls.list do
+			ParamsCreator.mergeParams(_Control)
+	),
+	
+	/** _add value parameter
+	 */
+	function _addValueParameter =
+	(
+		print "ControlCreator_v._addValueParameter()"
+		
+		val_ini	= ControlValue.getValueFromIni(_Control)(rollout_id)
+		value_param	= this._getValueParameterArray(_Control)(val_ini)
+	),
+	
+	
+	
+	/** _set controls parameters
+	 */
+	function _acrossParameterModify =
+	(
+		print "ControlCreator_v._acrossParameterModify()"
+		local last_across
+		
+		
+		for _Control in _Controls.list do
+		(
+			format "\n"
+			format "_Control.Params	= % \n" _Control.Params
+			
+
+			across =  _Control.Params.getVal #across
+			
+			if( across != last_across ) then 
+				last_across = across
+			
+
+		)
+	),
+	
+	
+	/** Add event handlers
 	 */
 	function _addControlHandlersToRollout _Control =
 	(

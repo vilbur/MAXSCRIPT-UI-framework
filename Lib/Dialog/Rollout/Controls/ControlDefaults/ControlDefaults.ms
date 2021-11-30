@@ -1,5 +1,12 @@
 
-/** Defaults RENAME THIS TO ControlDefaultsList_v
+/** Defaults RENAME THIS TO ControlsDefaults_v
+  *
+  *	Priority of default parameters 
+  *
+  *		1) User defined for control type
+  *		2) Global default per control type
+  *		3) Global defaults for all controls
+  *
  */
 struct ControlDefaults_v
 (
@@ -16,8 +23,8 @@ struct ControlDefaults_v
 	 */
 	function setDefaultParam key val type: =
 	(
-		print "ControlDefaults_v.setDefaultParam()"
-		if( type == undefined ) then
+		--print "ControlDefaults_v.setDefaultParam()"
+		if( type == unsupplied ) then
 			type = #global
 		
 		ParamsList = this._getParamsList(type)
@@ -32,7 +39,9 @@ struct ControlDefaults_v
 	function _setDefaultsForAllTypes =
 	(
 		control_types = include "Library/MAXSCRIPT-UI-framework/Lib/Dialog/Rollout/Controls/control_types.ms"
-
+		
+		append control_types #global
+		
 		--for control_type in #(#global, #button, #list  ) do
 		for control_type in control_types do
 			this._setDefaultsForType(control_type)
@@ -56,16 +65,18 @@ struct ControlDefaults_v
 		--format "control_type	= % \n" control_type
 		ParamsList = List_v()
 		
-		keys_values = case this._getControlTypeClass(control_type)("button|list") of
+		keys_values = case this._getControlTypeClass(control_type)("button|list|edittext") of
 		(
 			#button:	#( #across, 4,	#width, 96 )
 			#list:	#( #across, 1 )
+			#edittext:	#( #across, 1 )
 			default:	#( #across, 2) -- #global
 		)
 		
 		for i = 1 to keys_values.count  by 2  do
 			ParamsList.setVal keys_values[i] keys_values[i+1]
 		
+		--format "ParamsList	= % \n" ParamsList
 		ParamsList --return 
 	),
 	
@@ -76,13 +87,14 @@ struct ControlDefaults_v
 	function _getControlTypeClass control_type type_classes =
 	(
 		--print "ControlDefaults_v.getControlClass()"
+		--format "control_type	= % \n" control_type
 		rx         = dotNetClass "System.Text.RegularExpressions.RegEx"
 		rx_options = dotNetClass "System.Text.RegularExpressions.RegexOptions"
 	
 		matches = rx.matches control_type type_classes rx_options.IgnoreCase
 		
 		match_groups = (for matchIdx = 0 to matches.count-1 collect for groupIdx = 0 to matches.item[matchIdx].groups.count-1 collect ( matches.item[matchIdx].groups.item[groupIdx].value )) --return
-		
+		--format "match_groups	= % \n" match_groups
 		if( match_groups.count > 0 ) then
 			match_groups[1][1] as name --return 
 	),

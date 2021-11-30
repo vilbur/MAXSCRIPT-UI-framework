@@ -25,38 +25,7 @@ struct ControlEventsCreator_v
 	/* dependency */
 	--EventsCombiner	= EventsCombiner_v(),
 
-	/* Keys for event_types array
-	 *
-	 * NOTE: COMMENTED types are not supported yet
-	 *
-	*/ 
-	control_types = #(
-		#Label,
-		#Button,
-		#Checkbox,
-		#Checkbutton,
-		#Spinner,
-		#Edittext,
-		#Listbox,
-		#multilistbox,
-		#Dropdownlist,
-		--#Combobox,
-		--#GroupBox,
-		--#Angle,
-		--#Bitmap,
-		--#Colorpicker,
-		--#hyperlink,
-		--#imgTag,
-		--#Mapbutton,
-		--#Materialbutton,
-		--#Pickbutton,
-		--#ProgressBar,
-		--#Slider,
-		--#Curve,-- DOES NOT WORK YET
-		--#popupMenu,-- DOES NOT WORK YET
-		--#Radiobuttons,-- DOES NOT WORK YET
-		#Timer
-	),
+	control_types = include "Library/MAXSCRIPT-UI-framework/Lib/Dialog/Rollout/Controls/control_types.ms",
 	
 	/* If event is array then it has "val" param
 	*
