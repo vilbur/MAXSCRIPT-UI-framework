@@ -5,16 +5,24 @@ struct AcrossParameterModifier_v
 	
 	fake_control_caption = "",     -- PRODUCTION
 	--fake_control_caption = "FAKE", -- SHOW FAKE CONTROL IN UI FOR DEBUG
+		position_in_row	= 0,
+		across_previous	= undefined,
 
 	/** 
 	 */
 	function _acrossParameterModify &_Controls =
 	(
-		--print "ControlCreator_v._acrossParameterModify()"
+		format "\n"
+		print ("ControlCreator_v._acrossParameterModify() "+_Controls.group as string )
 		_Controls_list_copy	= #()
 		next_control_start_new_row	= true
-		across_previous	= undefined 
 		controls_in_row	= 0
+		--position_in_row	= 0
+		--format "position_in_row	= % \n" position_in_row
+		--format "controls_in_row	= % \n" controls_in_row
+		--format "across_previous	= % \n" across_previous
+		
+		this._addFakeControls  (_Controls) (_Controls_list_copy) (position_in_row) (controls_in_row) (across_previous)
 		
 		for control_count = 1 to _Controls.list.count do
 		(
@@ -28,7 +36,7 @@ struct AcrossParameterModifier_v
 			
 			position_in_row	= this._getControlPositionInRow(controls_in_row)(across_previous)
 			control_is_last_in_row	= this._isControlLastInRow (position_in_row) (across_previous)
-
+			format "position_in_row	= % \n" position_in_row
 			if( next_control_start_new_row ) then
 				_Control.Params.setVal #across across_previous
 			
@@ -55,12 +63,25 @@ struct AcrossParameterModifier_v
 	
 	private
 	
+	/** _add fake controls
+	 */
+	function _addFakeControls _Controls &_Controls_list_copy position_in_row controls_in_row across_previous =
+	(
+		--print "AcrossParameterModifier_v._addFakeControls()"
+		
+		if( position_in_row != controls_in_row and across_previous != undefined  ) then
+			for i = 1 to (this._getFakeControlsCount(position_in_row)(across_previous)) do
+				append _Controls_list_copy (this._createFakeControl _Controls)
+	),
+	
 	
 	/** Delete across_current parameter if Control has same as previous
 	  * or set new across_current value if control has new value
 	 */
 	function _modifyAcrossParameter _Control across_current across_previous =
 	(
+		print "AcrossParameterModifier_v._getControlPositionInRow()"
+		format "across_current	= % \n" across_current
 		if( across_current != across_previous ) then 
 			across_previous = across_current
 		else
@@ -73,6 +94,8 @@ struct AcrossParameterModifier_v
 	 */
 	function _getControlPositionInRow control_count across_previous =
 	(
+		print "AcrossParameterModifier_v._getControlPositionInRow()"
+		format "control_count	= % \nacross_previous	= % \n" control_count across_previous
 		control_count / across_previous as float
 	),
 	
