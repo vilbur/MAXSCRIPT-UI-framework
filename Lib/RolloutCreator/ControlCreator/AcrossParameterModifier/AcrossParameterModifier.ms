@@ -7,8 +7,8 @@
 struct AcrossParameterModifier_v
 (
 	
-	--fake_control_caption = "",     -- PRODUCTION
-	fake_control_caption = "--------", -- SHOW FAKE CONTROL IN UI FOR DEBUG
+	fake_control_caption = "",     -- PRODUCTION
+	--fake_control_caption = "--------", -- SHOW FAKE CONTROL IN UI FOR DEBUG
 		position_in_row	= 0,
 		across_previous	= undefined,
 
@@ -26,8 +26,8 @@ struct AcrossParameterModifier_v
 		--format "across_previous	= % \n" across_previous
 		
 		/* ADD FAKE CONTROLS TO OF PREVIOUS GROUP TO FILL ROW */
-		print "ADD FAKE CONTROLS TO OF PREVIOUS GROUP TO FILL ROW"
-		this._addFakeControls  (_Controls) (_Controls_list_copy) (position_in_row) (controls_in_row) (across_previous)
+		
+		this._addFakeControls  (_Controls) (_Controls_list_copy) (position_in_row) (controls_in_row) (across_previous)  --print "ADD FAKE CONTROLS TO OF PREVIOUS GROUP TO FILL ROW"
 		
 		
 		for control_count = 1 to _Controls.list.count do
@@ -49,9 +49,9 @@ struct AcrossParameterModifier_v
 			/* ADD MODIFICATED CONTROL */ 
 			append _Controls_list_copy _Control
 			
-			/**  BREAK If nEXT CONTROL HAS DIFFERENT ACROSS */
-			if((next_control_exists			 = _Controls.list[control_count+1]) != undefined and
-			(next_control_across_changed = (across_current != next_control_exists.Params.getVal #across)) ) then
+			/**  USE FAKE LABELS TO COMPLETE ROW */
+			if((next_control_exists         = _Controls.list[control_count+1]) != undefined ) == false or
+			(  next_control_across_changed = (across_current != next_control_exists.Params.getVal #across)) then
 				this._addFakeControls  (_Controls) (_Controls_list_copy) (position_in_row) (controls_in_row) (across_previous)
 					
 			next_control_start_new_row = if ( control_is_last_in_row ) then true else false
@@ -121,7 +121,7 @@ struct AcrossParameterModifier_v
 	 */
 	function _createFakeControl _Controls =
 	(
-		print "AcrossParameterModifier_v._createFakeControl()"
+		--print "AcrossParameterModifier_v._createFakeControl()"
 		_Controls.control #label fake_control_caption id:("label"+ (random 1 99999 ) as string ) add_to_controls:false --return	
 	),
 	

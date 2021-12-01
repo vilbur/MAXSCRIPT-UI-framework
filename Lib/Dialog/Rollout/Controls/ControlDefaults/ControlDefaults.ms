@@ -24,6 +24,7 @@ struct ControlDefaults_v
 	function setDefaultParam key val type: =
 	(
 		--print "ControlDefaults_v.setDefaultParam()"
+		--format "type	= % \n" type
 		if( type == unsupplied ) then
 			type = #global
 		
@@ -62,10 +63,13 @@ struct ControlDefaults_v
 	function _getDefaultParams control_type =
 	(
 		--print "ControlDefaults_v._getDefaultParams()"
-		--format "control_type	= % \n" control_type
+		--format "!!! control_type	= % \n" control_type
 		ParamsList = List_v()
 		
-		keys_values = case this._getControlTypeClass(control_type)("button|list|edittext") of
+		--format "this.keys	= % \n" this.keys
+		
+		--keys_values = case this._getControlTypeClass(control_type)("button|list|edittext") of
+		keys_values = case this.keys of
 		(
 			#button:	#( #across, 4,	#width, 96 )
 			#list:	#( #across, 1 )

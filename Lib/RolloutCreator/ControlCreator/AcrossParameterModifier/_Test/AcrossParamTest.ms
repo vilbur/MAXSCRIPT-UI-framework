@@ -14,10 +14,14 @@ include "Library/MAXSCRIPT-UI-framework/Lib/RolloutCreator/_Test/includes/Create
  */
 function Cratemultilistbox prefix =
 (
+	_Controls.Default #height 2 type:#list -- type is mask and must match control type E.G.: match #listbox|#multilistbox|#dropdownlist if type==#list
+
 	_Controls.Default #across 1 type:#multilistbox 
-	_Controls.Default #height 3 type:#multilistbox 
-	
-	_Controls.control #multilistbox ("multilistbox" + prefix as string  )
+	_Controls.control #multilistbox ("THIS iS FULL WIDTH " + prefix as string  )
+--	
+	_Controls.Default #across 2 type:#listbox 
+	_Controls.control #listbox ("THIS iS LEFT HALF " + prefix as string  )
+	_Controls.control #listbox ("THIS iS RIGHT HALF " + prefix as string  )
 )
 
 
@@ -32,8 +36,9 @@ function eachRowDifferenCountOfControls count =
 		if( i > 4  ) then across = 3
 		if( i > 7  ) then across = 2
 		if( i > 9  ) then across = 1
-		
-		_Button1    = _Controls.control #button ( "Button "+ count as string + i as string ) params:#(#across, across)
+	_Controls.Default #width 96 type:#button
+	_Controls.Default #width 96 type:#label
+		_Button1    = _Controls.control #button ( i as string +" of  "+ count as string) params:#(#across, across)
 	)
 )
 
@@ -58,7 +63,9 @@ function testBreakAcross count =
 function testFakeControlsOnEndOfGroup _Controls count across =
 (
 	for i = 1 to count do
-		_Control = _Controls.control #button ( count as string  + " " + i as string ) params:#(#across, across)
+		_Control    = _Controls.control #button ( i as string + " of "+ count as string +" across "+ across as string ) params:#(#across, across)
+
+		--_Control = _Controls.control #button ( count as string  + " " + i as string ) params:#(#across, across)
 )
 
 
@@ -71,19 +78,22 @@ function testFakeControlsOnEndOfGroup _Controls count across =
 eachRowDifferenCountOfControls 10
 
 
-for i = 1 to 7 do
+/* Across works as columns
+
+*/ 
+for i = 1 to 8 do
 	testBreakAcross(i)
 
-
-
-
-testFakeControlsOnEndOfGroup(_Rollout.Controls group:"A") 6 4
+/** TEST END OF OF GROUUP 
+  *	
+  */
+testFakeControlsOnEndOfGroup(_Rollout.Controls group:"A") 2 4
 testFakeControlsOnEndOfGroup(_Rollout.Controls group:"B") 3 5
-testFakeControlsOnEndOfGroup(_Rollout.Controls group:"B") 7 5
+testFakeControlsOnEndOfGroup(_Rollout.Controls group:"C") 7 5
 
 
 /** Create dialog from _Rollout
   */
-dialog_width = 384
+dialog_width = 420
 dialog_height = 1920
 include "Library/MAXSCRIPT-UI-framework/Lib/RolloutCreator/_Test/includes/CreateTestDialog.ms"

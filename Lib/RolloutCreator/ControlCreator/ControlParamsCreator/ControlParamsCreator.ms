@@ -42,10 +42,14 @@ struct ControlParamsCreator_v
 		
 		MergeParamsList.merge (_Control.Params)
 		MergeParamsList.merge (ControlDefaults.getVal(_Control.type))
+		
+		/* -- type is mask and must match control type E.G.: match #listbox|#multilistbox|#dropdownlist if type==#list */ 
+		for default_class in ControlDefaults.keys where  matchPattern (_Control.type as string ) pattern:( "*" + (default_class as string ) + "*") do 
+			MergeParamsList.merge (ControlDefaults.getVal(default_class as name ))
+			
 		MergeParamsList.merge (ControlDefaults.getVal(#global))
 
 		_Control.params = MergeParamsList
-		--value_param +" "+  control_params +" "+ params_type +" "+ params_global -- first occurrence of parameter is used
 		
 		_Control --return
 	),

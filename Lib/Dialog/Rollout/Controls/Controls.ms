@@ -48,6 +48,11 @@ struct Controls_v
 	),
 	
 	/** Set controls Default params
+	  * 
+	  * if type match control type, then be applied as default
+	  * 
+	  * @param	#name	type is mask and must match control type E.G.: match #listbox|#multilistbox|#dropdownlist if type==#list
+	  * 
 	 */
 	function Default key val type: =
 	(

@@ -43,6 +43,10 @@ struct RolloutCreator_v
 		format "\n"
 		print ("RolloutCreator_v.createRollout() " + _Rollout.id as string )
 		
+		 this._testRolloutTitle(_Rollout.title) 
+			
+		--format "_Rollout.title	= % \n" _Rollout.title
+		
 			
 		this._setIniToEventCreators()
 		
@@ -150,6 +154,15 @@ struct RolloutCreator_v
 
 	private
 	
+	
+	/** Test rollout title
+	 */
+	function _testRolloutTitle rollout_title =
+	(
+		--print "RolloutCreator_v._testRolloutTitle()"
+		if( rollout_title_is_defined = execute ("((class_of_title = classOf "+rollout_title+") != UndefinedClass and class_of_title != RolloutClass) ")  ) then
+			throw ("\n\nERROR INVALID ROLLOUT TITLE\n\nRollout.title == \""+rollout_title+"\"")	
+	),
 
 	/** _set subrollouts height
 	 */
