@@ -25,6 +25,7 @@ struct ControlDefaults_v
 	(
 		--print "ControlDefaults_v.setDefaultParam()"
 		--format "type	= % \n" type
+		
 		if( type == unsupplied ) then
 			type = #global
 		
@@ -39,13 +40,24 @@ struct ControlDefaults_v
 	 */
 	function _setDefaultsForAllTypes =
 	(
+		--print "ControlDefaults_v._setDefaultsForAllTypes()"
+
+		--format "this.keys	= % \n" this.keys
+		
+		
+		
+		
 		control_types = include "Library/MAXSCRIPT-UI-framework/Lib/Dialog/Rollout/Controls/control_types.ms"
 		
-		append control_types #global
-		
+		control_types = append control_types #global
+		--format "control_types	= % \n" control_types
 		--for control_type in #(#global, #button, #list  ) do
 		for control_type in control_types do
 			this._setDefaultsForType(control_type)
+			
+		--for control_type in control_types do
+			--format "control_type	= % \n" control_type
+			
 	),
 	
 	/** _set defaults for type
@@ -53,6 +65,7 @@ struct ControlDefaults_v
 	function _setDefaultsForType control_type =
 	(
 		--print "ControlDefaults_v._setDefaultsForType()"
+		--format "control_type	= % \n" control_type
 		ParamsList = this._getDefaultParams(control_type)
 		
 		this.setVal control_type (ParamsList)
@@ -62,23 +75,27 @@ struct ControlDefaults_v
 	 */
 	function _getDefaultParams control_type =
 	(
-		--print "ControlDefaults_v._getDefaultParams()"
-		--format "!!! control_type	= % \n" control_type
+		format "\n"
+		print "ControlDefaults_v._getDefaultParams()"
+		--format "-control_type	= % \n" control_type
 		ParamsList = List_v()
 		
 		--format "this.keys	= % \n" this.keys
 		
-		--keys_values = case this._getControlTypeClass(control_type)("button|list|edittext") of
-		keys_values = case this.keys of
+		keys_values = case this._getControlTypeClass(control_type)("button|list|edittext") of
+		--keys_values = case this.keys of
 		(
 			#button:	#( #across, 4,	#width, 96 )
-			#list:	#( #across, 1 )
-			#edittext:	#( #across, 1 )
-			default:	#( #across, 2) -- #global
+			--#list:	#( #across, 1 )
+			--#edittext:	#( #across, 1 )
+			#multilistbox:	#( #across, 1 )
+			#global:	#( #across, 4) -- #global
+			default:	#( #across, 1)
+			--default:	#( ) -- #global
 		)
-		
-		for i = 1 to keys_values.count  by 2  do
-			ParamsList.setVal keys_values[i] keys_values[i+1]
+		--format "keys_values	= % \n" keys_values
+		--for i = 1 to keys_values.count  by 2  do
+			--ParamsList.setVal keys_values[i] keys_values[i+1]
 		
 		--format "ParamsList	= % \n" ParamsList
 		ParamsList --return 
@@ -125,7 +142,6 @@ struct ControlDefaults_v
 	 */
 	on create do
 	(
-		this._setDefaultsForAllTypes()
 	)
 	
 )

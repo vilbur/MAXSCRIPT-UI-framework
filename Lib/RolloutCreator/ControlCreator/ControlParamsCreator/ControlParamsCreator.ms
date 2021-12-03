@@ -31,29 +31,52 @@ struct ControlParamsCreator_v
 	--
 	
 	/** Get params for control
+	  
+	  * 1) user defined
+	  * 20
+	  * 
+	  * 
+	  
+	  
 	 */
 	function mergeParams &_Control =
 	(
+		format "\n"
 		--print "ControlParamsCreator_v.mergeParams()"
+		format "_Control.type	= % \n" _Control.type
 		MergeParamsList 	= List_v()
 
 		if( value_param != undefined ) then
 			MergeParamsList.setVal value_param[1] value_param[2]
 		
 		MergeParamsList.merge (_Control.Params)
-		MergeParamsList.merge (ControlDefaults.getVal(_Control.type))
-		
-		/* -- type is mask and must match control type E.G.: match #listbox|#multilistbox|#dropdownlist if type==#list */ 
-		for default_class in ControlDefaults.keys where  matchPattern (_Control.type as string ) pattern:( "*" + (default_class as string ) + "*") do 
-			MergeParamsList.merge (ControlDefaults.getVal(default_class as name ))
+		--format "MergeParamsList	= % \n" MergeParamsList
+		--MergeParamsList.merge (ControlDefaults.getVal(_Control.type))
+		--format "MergeParamsList	= % \n" MergeParamsList
+		--format "ControlDefaults.keys	= % \n" ControlDefaults.keys
+		--MergeParamsList.merge (ControlDefaults.getVal(#global))
+		--/* -- type is mask and must match control type E.G.: match #listbox|#multilistbox|#dropdownlist if type==#list */ 
+		for defaultKey in this._reverseArray(ControlDefaults.keys) where  matchPattern (_Control.type as string ) pattern:( "*" + (defaultKey as string ) + "*") do
+		(
+			--format "defaultKey	= % \n" defaultKey
+			MergeParamsList.merge (ControlDefaults.getVal(defaultKey as name ));
+			--format "MergeParamsList	= % \n" MergeParamsList
 			
-		MergeParamsList.merge (ControlDefaults.getVal(#global))
-
+		)
+			
+			
+		
 		_Control.params = MergeParamsList
 		
 		_Control --return
 	),
 	
+	function _reverseArray arr =
+	(
+		arr = sort arr
+		
+		for i=arr.count to 1 by -1 collect arr[i]
+	),
 	--/** Convert value for control type
 	--  *
 	--  * @return	string E.G.: "checked:true"	

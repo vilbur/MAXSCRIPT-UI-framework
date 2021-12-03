@@ -11,7 +11,8 @@ struct ControlCreator_v
 	_Rollout,
 	_Controls,
 	
-	AcrossModifier,
+	--AcrossModifier,
+	AcrossModifier	= AcrossParameterModifier_v(),
 	ParamsCreator	= ControlParamsCreator_v(),
 	EventsCreator	= ControlEventsCreator_v(),
 
@@ -19,12 +20,17 @@ struct ControlCreator_v
 	 */
 	function addControls _Rollout _Controls =
 	(
-		--print "ControlCreator_v.addControls()"
-		AcrossModifier	= AcrossParameterModifier_v()
+		print "ControlCreator_v.addControls()"
 
 		this._Rollout  = _Rollout
 		this._Controls = _Controls
 		
+		--this._Controls.Defaults._setDefaultsForAllTypes()
+
+		--format "_Controls.Defaults	= % \n" _Controls.Defaults
+		--for DEFAULT in _Controls.Defaults do 
+			--format "DEFAULT	= % \n" DEFAULT
+		 
 		
 		/* set DEFAULT PARAMETERS */ 
 		ParamsCreator.ControlDefaults = _Controls.Defaults
@@ -55,7 +61,7 @@ struct ControlCreator_v
 	),
 	
 	
-	private
+	private 
 	
 	
 

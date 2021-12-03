@@ -79,7 +79,8 @@ struct RolloutCreator_v
 	function addControlsAndSubrolloutes _Rollout height =
 	(
 		print "RolloutCreator_v.addControlsAndSubrolloutes()"
-		
+
+
 		this._setSubrolloutsHeight(_Rollout)(height)		
 		
 		for ControlsBox_or_Subrollouts in _Rollout._Controls do
