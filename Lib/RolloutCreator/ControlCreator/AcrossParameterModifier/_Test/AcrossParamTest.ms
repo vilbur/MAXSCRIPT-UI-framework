@@ -22,16 +22,12 @@ function Cratemultilistbox prefix =
 	
 	_Controls.control #dropdownlist ("FULL WIDTH " + prefix as string  ) params:#(#across, 1)
 
---	
 	_Controls.control #listbox ("THIS iS HALF " + prefix as string  )
-	--_Controls.Default #across 2 type:#listbox 
 
 	_Controls.control #multilistbox ("THIS iS FULL WIDTH " + prefix as string  )
-
 	
 	_Controls.control #dropdownlist ("QUATER " + prefix as string  )
 	_Controls.control #listbox ("THIS iS HALF TOO " + prefix as string  )
-
 )
 
 
@@ -85,21 +81,15 @@ function testFakeControlsOnEndOfGroup _Controls count across =
 --------------------------------------------------------------------------------*/
 /** make upside down pyramid of controls 
   */	
---eachRowDifferenCountOfControls 10
+eachRowDifferenCountOfControls 10
 
 
 /* Across works as columns
 
 */
-
-	testBreakAcross( 1 )
-
-
-
-
-
---for i = 1 to 1 do
---	--testBreakAcross(i)
+for i =  3 to 5 do
+	testBreakAcross(i)
+	--testBreakAcross(5)
 
 /** TEST END OF OF GROUUP 
   *	
