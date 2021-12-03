@@ -7,8 +7,8 @@
 struct AcrossParameterModifier_v
 (
 
-	--fake_control_caption = "",     -- PRODUCTION
-	fake_control_caption = "--------", -- SHOW FAKE CONTROL IN UI FOR DEBUG
+	fake_control_caption = "",     -- PRODUCTION
+	--fake_control_caption = "--------", -- SHOW FAKE CONTROL IN UI FOR DEBUG
 
 	_across_last,
 	_across_left,
@@ -32,23 +32,24 @@ struct AcrossParameterModifier_v
 		for control_count = 1 to _Controls.list.count do
 		(
 			--format "\n"
-			--print ("_Control.id = " + _Control.id)
 			_Control =  _Controls.list[control_count]
+			--print ("_Control.id = " + _Control.id)
 			across_current	=  _Control.Params.getVal #across
 			--format "across_current = % \n" across_current
 			
-			if( _across_left == undefined or _across_left <= 0 ) then
+			if( _across_left == undefined  ) then
 				_across_left = across_current
 			
 			if( _across_last == undefined ) then
 				_across_last = across_current
 			
+			
 			if( across_has_changed = (across_current != _across_last) ) then
 			(
 
 				if( (control_is_first      = _across_left   == across_current) and
-				   (control_is_full_width = across_current == 1) )
-				then 
+				   (control_is_full_width = across_current == 1)  )
+				then
 					this._addFakeControls (_Controls) (_Controls_list_copy) (_across_left)
 					
 				else
@@ -56,11 +57,12 @@ struct AcrossParameterModifier_v
 				
 				if( (preious_control_is_not_full_width = ( _across_last > 1)) and
 				   (control_is_not_first              = (_across_left != across_current)) )
-				then 
+				then
 					this._addFakeControls (_Controls) (_Controls_list_copy) (_across_left)
 					
 					
 				_across_last = _across_left = across_current
+				
 			)
 			else if ( control_is_not_first = (_across_left != across_current)  ) then 
 				 _Control.Params.delete #across
@@ -82,7 +84,7 @@ struct AcrossParameterModifier_v
 	 */
 	function _addFakeControls _Controls &_Controls_list_copy fake_count =
 	(
-		print ("AcrossParameterModifier_v._addFakeControls("+fake_count as string +")") 
+		--print ("AcrossParameterModifier_v._addFakeControls("+fake_count as string +")") 
 		for i = 1 to fake_count do
 			append _Controls_list_copy (this._createFakeControl _Controls)
 	),
