@@ -12,7 +12,10 @@ struct ControlParamsCreator_v
 	
 	/* dependency */
 	ControlValue 	= ControlValue_v(),
-	--
+
+	/* properties */ 
+	MergeParamsList,
+	
 	--/** Get params for control
 	-- */
 	--function getParams _Control rollout_id =
@@ -41,39 +44,94 @@ struct ControlParamsCreator_v
 	 */
 	function mergeParams &_Control =
 	(
-		format "\n"
+		--format "\n"
 		--print "ControlParamsCreator_v.mergeParams()"
-		format "_Control.type	= % \n" _Control.type
+		--format "_Control.type	= % \n" _Control.type
 		MergeParamsList 	= List_v()
 
+		
+		/* VALUE PARAM */ 
 		if( value_param != undefined ) then
 			MergeParamsList.setVal value_param[1] value_param[2]
 		
+		format "MergeParamsList	= % \n" MergeParamsList
+		
+		/* CONTROLS PARMAS */ 
 		MergeParamsList.merge (_Control.Params)
-		--format "MergeParamsList	= % \n" MergeParamsList
-		--MergeParamsList.merge (ControlDefaults.getVal(_Control.type))
-		--format "MergeParamsList	= % \n" MergeParamsList
-		--format "ControlDefaults.keys	= % \n" ControlDefaults.keys
-		--MergeParamsList.merge (ControlDefaults.getVal(#global))
-		--/* -- type is mask and must match control type E.G.: match #listbox|#multilistbox|#dropdownlist if type==#list */ 
-		for defaultKey in this._reverseArray(ControlDefaults.keys) where  matchPattern (_Control.type as string ) pattern:( "*" + (defaultKey as string ) + "*") do
-		(
-			--format "defaultKey	= % \n" defaultKey
-			MergeParamsList.merge (ControlDefaults.getVal(defaultKey as name ));
-			--format "MergeParamsList	= % \n" MergeParamsList
-			
-		)
-			
-			
+		format "MergeParamsList	= % \n" MergeParamsList
+		
+		/* DEFAULTS PARMAS */ 
+		this._mergeDefaults (_Control.type)
+		format "MergeParamsList	= % \n" MergeParamsList
+
+
+		/* MERGE Defaults.keys.#global */ 
+		MergeParamsList.merge ( ControlDefaults.getVal(#global) )
+		format "MergeParamsList	= % \n" MergeParamsList
+
 		
 		_Control.params = MergeParamsList
 		
 		_Control --return
 	),
 	
-	function _reverseArray arr =
+	/** Set control defaults
+	 */
+	function setControlDefaults ControlDefaults =
 	(
-		arr = sort arr
+		--print "ControlParamsCreator_v.setControlDefaults()"
+		this.ControlDefaults = ControlDefaults
+		
+		this.ControlDefaults.setDefaultsForAllTypes()
+	),
+	
+	/** Join array
+	 */
+	function join List =
+	(
+		if( List == undefined ) then
+			return ""
+		
+		--print "\nHOTFIX Params_v.join()"
+		_params = ""
+		
+		for k=1 to List.keys.count do
+			_params += List.keys[k] as string +":"+ this._formatToString(List.values[k]) + " "
+			
+		trimRight _params  --return
+	),
+	
+	
+	private
+	
+	
+	/** merge all default types matchi
+	  *
+	  *
+	  *
+	  
+	  * e.g: match #list|#listbox|#multilistbox   if control_type == "multilistbox"
+	 */
+	function _mergeDefaults control_type =
+	(
+		--print "ControlParamsCreator_v.mergeDefaults()"
+		
+		/*  */ 
+		for defautls_key in this._flipKeysByLenght(ControlDefaults.keys) where  matchPattern (control_type as string ) pattern:( "*" + (defautls_key as string ) + "*") do
+			(
+				format "defautls_key	= % \n" defautls_key
+				MergeParamsList.merge (ControlDefaults.getVal(defautls_key as name ))
+				--format "MergeParamsList	= % \n" MergeParamsList
+			)
+		
+	),	
+	
+	/**  
+	  *	
+	  */
+	function _flipKeysByLenght arr =
+	(
+		arr = sort (deepCopy arr)
 		
 		for i=arr.count to 1 by -1 collect arr[i]
 	),
@@ -122,22 +180,6 @@ struct ControlParamsCreator_v
 	--	range
 	--),
 
-	/** Join array
-	 */
-	function join List =
-	(
-		if( List == undefined ) then
-			return ""
-		
-		--print "\nHOTFIX Params_v.join()"
-		_params = ""
-		
-		for k=1 to List.keys.count do
-			_params += List.keys[k] as string +":"+ this._formatToString(List.values[k]) + " "
-			
-		trimRight _params  --return
-	),
-	
 	/** Format value to string
 	  *
 	  * @return	string	

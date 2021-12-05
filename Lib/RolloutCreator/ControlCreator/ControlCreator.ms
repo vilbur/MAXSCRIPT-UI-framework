@@ -18,30 +18,24 @@ struct ControlCreator_v
 
 	/** Add controls
 	 */
-	function addControls _Rollout _Controls =
+	function addControls _Controls =
 	(
-		print "ControlCreator_v.addControls()"
-
+		--print "ControlCreator_v.addControls()"
 		this._Rollout  = _Rollout
 		this._Controls = _Controls
-		
-		--this._Controls.Defaults._setDefaultsForAllTypes()
+		--AcrossModifier	= AcrossParameterModifier_v()
 
-		--format "_Controls.Defaults	= % \n" _Controls.Defaults
-		--for DEFAULT in _Controls.Defaults do 
-			--format "DEFAULT	= % \n" DEFAULT
-		 
 		
 		/* set DEFAULT PARAMETERS */ 
-		ParamsCreator.ControlDefaults = _Controls.Defaults
+		ParamsCreator.setControlDefaults (_Controls.Defaults)
 	
-		
-		/* prepare CONTROL TYPES */ 
-		this._convertCustomControls()
-		
 		
 		/* merge PARAMTERS */ 
 		this._mergeControlsParameters()
+		
+		
+		/* prepare CONTROL TYPES */ 
+		this._convertCustomControls()
 		
 		
 		/* modify ACROSS PARAMETER */ 
@@ -109,7 +103,7 @@ struct ControlCreator_v
 	function _addControl _Control =
 	(
 		--format "\n"
-		--print ("ControlCreator_v._addControl() " +_Control.id )
+		print ("ControlCreator_v._addControl() " +_Control.id )
 		--params = (ParamsCreator.getParams(_Control)(_Rollout.id))
 		params = ParamsCreator.join(_Control.params)
 		format "%	= % \n" _Control.id params
@@ -173,5 +167,6 @@ struct ControlCreator_v
 	 */
 	on create do
 	(
+		print "ControlCreator_v.onCreate()"
 	)	
 )

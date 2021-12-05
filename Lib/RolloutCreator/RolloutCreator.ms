@@ -13,8 +13,8 @@ filein( getFilenamePath(getSourceFileName()) + "/ControlCreator/ControlCreator.m
  */
 struct RolloutCreator_v
 (
+	ControlCreator,
 	Ini	= Ini_v(),
-	ControlCreator	= ControlCreator_v(),
 	RolloutEvents	= RolloutEvents_v(),
 
 	padding_bottom = 16,
@@ -46,7 +46,8 @@ struct RolloutCreator_v
 		 this._testRolloutTitle(_Rollout.title) 
 			
 		--format "_Rollout.title	= % \n" _Rollout.title
-		
+		ControlCreator	= ControlCreator_v _Rollout:_Rollout
+
 			
 		this._setIniToEventCreators()
 		
@@ -60,9 +61,10 @@ struct RolloutCreator_v
 		/* add TEXT */ 
 		this._addTextToRollout (_Rollout)
 		
-		
+		this._setSubrolloutsHeight(_Rollout)(height)		
+
 		/* add CONTROLS and SUBROLLOUTS */ 
-		this.addControlsAndSubrolloutes (_Rollout)(height)
+		this.addControlsAndSubrolloutes (_Rollout)
 		
 		
 		/* add EVENTS */ 
@@ -76,17 +78,14 @@ struct RolloutCreator_v
 
 	/** Add controls or subrolloutes
 	 */
-	function addControlsAndSubrolloutes _Rollout height =
+	function addControlsAndSubrolloutes _Rollout =
 	(
 		print "RolloutCreator_v.addControlsAndSubrolloutes()"
 
-
-		this._setSubrolloutsHeight(_Rollout)(height)		
-		
 		for ControlsBox_or_Subrollouts in _Rollout._Controls do
 			if( this._isControls(ControlsBox_or_Subrollouts) ) then
 			
-				ControlCreator.addControls (_Rollout)(ControlsBox_or_Subrollouts)
+				ControlCreator.addControls(ControlsBox_or_Subrollouts)
 			
 			else
 			
@@ -137,8 +136,9 @@ struct RolloutCreator_v
 	  */
 	 function _createSubrollouts _Rollout Subrollouts =
 	 (
-		print "RolloutCreator_v._createSubrollouts()"
+		--print "RolloutCreator_v._createSubrollouts()"		
 		this._addSubrolloutsSlots (_Rollout) (Subrollouts)
+		
 		
 		for _Subrollout in Subrollouts.Rollouts do
 			this.createRollout (_Subrollout)
@@ -149,6 +149,9 @@ struct RolloutCreator_v
 	function _addSubrolloutsSlots _Rollout Subrollouts =
 	(
 		--print ("RolloutCreator_v.addSubrolloutsSlot()" + Subrollouts.slot)
+		--format "subrollouts_slot_height	= % \n" subrollouts_slot_height
+		ControlCreator.AcrossModifier.startNewRollout(_Rollout._RolloutCreator) fake_control_caption:"SUBROLLOUTS"
+
 		_Rollout._RolloutCreator.addText ("subRollout "+Subrollouts.slot as string +" \"slot_name\" height:"+subrollouts_slot_height as string )
 	),
 
@@ -170,9 +173,13 @@ struct RolloutCreator_v
 	function _setSubrolloutsHeight _Rollout height =
 	(
 		--print "RolloutCreator_v._setSubrolloutsHeight()"
-		
-		if( height != undefined and height != unsupplied ) then
-			subrollouts_slot_height = (height-padding_bottom) / this._getSubrolloutsCount(_Rollout)
+		--format "this._getSubrolloutsCount(_Rollout)	= % \n" (this._getSubrolloutsCount(_Rollout))
+		--format "height	= % \n" height
+		if( ( subrollouts_count = this._getSubrolloutsCount(_Rollout)) > 0 ) then 
+			if( height != undefined and height != unsupplied ) then
+				subrollouts_slot_height = (height - padding_bottom) / subrollouts_count
+				
+		 --subrollouts_slot_height--return
 	),
 		
 	/** Add local variables from Control_v to rollout
