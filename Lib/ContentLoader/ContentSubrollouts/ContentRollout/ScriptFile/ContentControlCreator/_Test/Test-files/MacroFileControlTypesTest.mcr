@@ -61,7 +61,7 @@ macroscript macroFileTest_cotrol_button_right
 */ 
 macroscript macroFileTest_checkbox
 	category:	"MacroFileTest"
-	buttontext:	"Checkbox"
+	buttontext:	"Checkbox HERE IS BUG"
 	toolTip:	"Changed event tooltip"
 	icon:	"type:checkbox|checked:true|border:false|columns:12"
 (
@@ -72,8 +72,10 @@ macroscript macroFileTest_checkbox
 */
 macroscript macroFileTest_checkbox_right
 	category:	"MacroFileTest"
-	buttontext:	"Checkbox"
+	buttontext:	"Checkbox HERE IS BUG"
 	toolTip:	"Right click tooltip"
+	icon:	"type:checkbox" 
+
 (
 	print "checkbox #rightclick"
 )

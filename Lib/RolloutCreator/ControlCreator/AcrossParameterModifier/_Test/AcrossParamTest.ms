@@ -74,13 +74,6 @@ function createOnlyButtons count prefix:"" =
 	eachRowDifferenCountOfControls count prefix:prefix
 )
 
---/** Create only list controls
--- */
---function createOnlyListControls =
---(
---	Cratemultilistbox(1)
---)
-
 
 /** Test break across if next control has different across
   *
@@ -93,7 +86,6 @@ function myltipleListboxes count =
 (
 	for i = 2 to count+1 do
 		Cratemultilistbox(i)
-	
 )
 
 /** Create controls goups
@@ -102,7 +94,6 @@ function createControlsGoups =
 (
 	for i = 1 to 2 do
 		testFakeControlsOnEndOfGroup(_Rollout.Controls group:("Group of "+(i+1) as string )  ) (i+2) (i+1)
-
 )
 
 /** Createsubrollouts
@@ -118,8 +109,6 @@ function createsubrolloutsControls =
 	
 	for i = 1 to 1 do 
 		_Button1    = _Controls.control #button ( "Subrollouts "+ i as string) --params:#(#across, across)
-	
-
 )
 
 

@@ -6,6 +6,6 @@ current_dir	= getFilenamePath(getSourceFileName())
 
 ContentLoader	= ContentLoader_v path:(current_dir+"/Test-files")
 
-ContentLoader.create()
+ContentLoader.create width:512
 
 

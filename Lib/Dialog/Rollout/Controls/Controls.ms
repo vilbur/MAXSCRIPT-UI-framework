@@ -54,9 +54,9 @@ struct Controls_v
 	  * @param	#name	type is mask and must match control type E.G.: match #listbox|#multilistbox|#dropdownlist if type==#list
 	  * 
 	 */
-	function Default key val type: =
+	function Default key val type:#global =
 	(
-		--Defaults.setValues #( #width, #height, #across ) #( width, height, across ) filter:true
+		--print ("Controls_v.Default("+Key as string +", "+val as string +", type:#"+type as string+")")
 		Defaults.setDefaultParam key val type:type
 	),
 

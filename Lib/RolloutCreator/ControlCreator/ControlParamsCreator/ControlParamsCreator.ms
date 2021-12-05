@@ -16,31 +16,9 @@ struct ControlParamsCreator_v
 	/* properties */ 
 	MergeParamsList,
 	
-	--/** Get params for control
-	-- */
-	--function getParams _Control rollout_id =
-	--(
-	--	val_ini	= ControlValue.getValueFromIni(_Control)(rollout_id)
-	--	value_param	= this._getValueParameter(_Control)(val_ini)
-	--	
-	--	control_params	= this.join (_Control.Params)
-	--	params_type	= this.join (ControlDefaults.getVal _Control.type)		
-	--	params_global	= this.join (ControlDefaults.getVal #global)
-	--	
-	--	
-	--	
-	--	value_param +" "+  control_params +" "+ params_type +" "+ params_global -- first occurrence of parameter is used
-	--),
-	--
-	
 	/** Get params for control
-	  
-	  * 1) user defined
-	  * 20
 	  * 
 	  * 
-	  
-	  
 	 */
 	function mergeParams &_Control =
 	(
@@ -54,21 +32,18 @@ struct ControlParamsCreator_v
 		if( value_param != undefined ) then
 			MergeParamsList.setVal value_param[1] value_param[2]
 		
-		format "MergeParamsList	= % \n" MergeParamsList
 		
 		/* CONTROLS PARMAS */ 
 		MergeParamsList.merge (_Control.Params)
-		format "MergeParamsList	= % \n" MergeParamsList
+
 		
 		/* DEFAULTS PARMAS */ 
 		this._mergeDefaults (_Control.type)
-		format "MergeParamsList	= % \n" MergeParamsList
 
 
 		/* MERGE Defaults.keys.#global */ 
 		MergeParamsList.merge ( ControlDefaults.getVal(#global) )
-		format "MergeParamsList	= % \n" MergeParamsList
-
+		
 		
 		_Control.params = MergeParamsList
 		
@@ -116,13 +91,8 @@ struct ControlParamsCreator_v
 	(
 		--print "ControlParamsCreator_v.mergeDefaults()"
 		
-		/*  */ 
 		for defautls_key in this._flipKeysByLenght(ControlDefaults.keys) where  matchPattern (control_type as string ) pattern:( "*" + (defautls_key as string ) + "*") do
-			(
-				format "defautls_key	= % \n" defautls_key
-				MergeParamsList.merge (ControlDefaults.getVal(defautls_key as name ))
-				--format "MergeParamsList	= % \n" MergeParamsList
-			)
+			MergeParamsList.merge (ControlDefaults.getVal(defautls_key as name ))
 		
 	),	
 	
@@ -135,50 +105,6 @@ struct ControlParamsCreator_v
 		
 		for i=arr.count to 1 by -1 collect arr[i]
 	),
-	--/** Convert value for control type
-	--  *
-	--  * @return	string E.G.: "checked:true"	
-	-- */
-	--function _getValueParameterArray _Control val_array =
-	--(
-	--	if( val_array == undefined ) then
-	--		return undefined
-	--	
-	--	if( _Control.type == #spinner ) then
-	--		val_array[2] = this._getSpinnerRange (_Control.params)(val_array[2])
-	--
-	--	val_array --return
-	--),
-	--
-	--
-	--
-	--/** Convert value for control type
-	--  *
-	--  * @return	string E.G.: "checked:true"	
-	-- */
-	--function _getValueParameter _Control val_array =
-	--(
-	--	if( val_array == undefined ) then
-	--		return ""
-	--	
-	--	if( _Control.type == #spinner ) then
-	--		val_array[2] = this._getSpinnerRange (_Control.params)(val_array[2])
-	--
-	--	val_array[1] as string +":"+ this._formatToString(val_array[2])
-	--),
-	--
-	--/** Get spinner value
-	--  *
-	--  * @return	point3 as string	
-	-- */
-	--function _getSpinnerRange params val =
-	--(
-	--	range = if( (index = findItem params #range ) > 0 ) then params[index+1] else [0,100,0] -- get defined range or default
-	--	
-	--	range[3] = val -- assign value from array E.G.: #(#range, "3")
-	--	
-	--	range
-	--),
 
 	/** Format value to string
 	  *
@@ -220,28 +146,6 @@ struct ControlParamsCreator_v
 		else
 			arr as string --return
 	),
-	
-	/** Filter unsupplied parameters
-	  * Return only supplied parameters
-	  *
-	  * @param	array keys array of keys
-	  * @param	array keys array of values
-	  *
-	  * @return	matrix #( #(parameter_names), #(parameter_values ))		
-	  *
-	  * @example
-	  *		param_name_and_value = this._filterUnsuppliedParameters #(#param_1, #param_2) #(unsupplied, "value_2") 
-	  *		-- return #( #(#param_2), #("value_2") )
-     */
---    function _filterUnsuppliedParameters keys values =
---    (
---		keys_values = List_v()
---		
---		for i = 1 to values.count  where not ( values[i] == unsupplied ) do
---			keys_values.setVal keys[i] values[i]
---
---		keys_values --return
---    ),
 
 	on create do
 	(

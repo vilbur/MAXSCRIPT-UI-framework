@@ -13,135 +13,117 @@ struct ControlDefaults_v
 	/*
 		this.keys   = #( #global,	#button )		
 		this.values = #( List,	List )		
-	*/ 
-	
+	*/
+
 	include "Library/MAXSCRIPT-UI-framework/Lib/List/ListBody.ms"
-	
+
 	public
-	
+
 	/** Set default param
 	 */
 	function setDefaultParam key val type: =
 	(
-		--print "ControlDefaults_v.setDefaultParam()"
-		--format "type	= % \n" type
-		
-		if( type == unsupplied ) then
-			type = #global
-		
+		--print ("ControlDefaults_v.setDefaultParam("+Key as string +", "+val as string +", type:#"+type as string+")")
 		ParamsList = this._getParamsList(type)
-		
+
 		ParamsList.setVal key val
-		--format "ParamsList	= % \n" (ParamsList)
-		--format "this	= % \n" this
 	),
 
 	/** _set default params per control type
 	 */
-	function _setDefaultsForAllTypes =
+	function setDefaultsForAllTypes =
 	(
 		--print "ControlDefaults_v._setDefaultsForAllTypes()"
-
-		--format "this.keys	= % \n" this.keys
-		
-		
-		
 		
 		control_types = include "Library/MAXSCRIPT-UI-framework/Lib/Dialog/Rollout/Controls/control_types.ms"
+		append control_types #global 
 		
-		control_types = append control_types #global
-		--format "control_types	= % \n" control_types
-		--for control_type in #(#global, #button, #list  ) do
-		for control_type in control_types do
-			this._setDefaultsForType(control_type)
-			
-		--for control_type in control_types do
-			--format "control_type	= % \n" control_type
-			
+		control_types = control_types + this.keys
+		--if( this.getval(#global) == undefined ) then
+			--this._setParamsList(#global)
+		
+		for default_key in control_types do
+			this.setVal (default_key) (this._getDefaultParamsList(default_key))
 	),
+
 	
-	/** _set defaults for type
-	 */
-	function _setDefaultsForType control_type =
-	(
-		--print "ControlDefaults_v._setDefaultsForType()"
-		--format "control_type	= % \n" control_type
-		ParamsList = this._getDefaultParams(control_type)
-		
-		this.setVal control_type (ParamsList)
-	),
+	private
+	
 	
 	/** _get params by control type
 	 */
-	function _getDefaultParams control_type =
+	function _getDefaultParamsList default_key =
 	(
-		format "\n"
-		print "ControlDefaults_v._getDefaultParams()"
-		--format "-control_type	= % \n" control_type
-		ParamsList = List_v()
+		--print "ControlDefaults_v._getDefaultParamsList()"
+		ParamsList = this._getParamsList(default_key)
 		
-		--format "this.keys	= % \n" this.keys
-		
-		keys_values = case this._getControlTypeClass(control_type)("button|list|edittext") of
-		--keys_values = case this.keys of
+		keys_values = case default_key of
 		(
 			#button:	#( #across, 4,	#width, 96 )
-			--#list:	#( #across, 1 )
-			--#edittext:	#( #across, 1 )
-			#multilistbox:	#( #across, 1 )
-			#global:	#( #across, 4) -- #global
-			default:	#( #across, 1)
+			#list:	#( #across, 1 )
+			#checkbox:	#( #across, 1 )
+			#edittext:	#( #across, 1 )
+			--#global:	#( #across, 4 )
+			--#global:	#( #border, false )
 			--default:	#( ) -- #global
 		)
-		--format "keys_values	= % \n" keys_values
-		--for i = 1 to keys_values.count  by 2  do
-			--ParamsList.setVal keys_values[i] keys_values[i+1]
 		
+		if( keys_values != undefined ) then
+			for i = 1 to keys_values.count  by 2  do
+				ParamsList.setVal keys_values[i] keys_values[i+1]
+		
+		--format "default_key	= % \n" default_key 
+		--format "keys_values	= % \n" keys_values
 		--format "ParamsList	= % \n" ParamsList
 		ParamsList --return 
 	),
-	
+
 	/** Get control class
 	  *
-	  * @return	#name|undefined	E.G.: return #button if control_type == #Checkbutton || #list if control_type == #multilistbox
+	  * @return	#name|undefined	E.G.: return #button if default_key == #Checkbutton || #list if default_key == #multilistbox
 	 */
-	function _getControlTypeClass control_type type_classes =
+	function _getControlTypeClass default_key type_classes =
 	(
 		--print "ControlDefaults_v.getControlClass()"
-		--format "control_type	= % \n" control_type
+		--format "default_key	= % \n" default_key
 		rx         = dotNetClass "System.Text.RegularExpressions.RegEx"
 		rx_options = dotNetClass "System.Text.RegularExpressions.RegexOptions"
-	
-		matches = rx.matches control_type type_classes rx_options.IgnoreCase
-		
+
+		matches = rx.matches default_key type_classes rx_options.IgnoreCase
+
 		match_groups = (for matchIdx = 0 to matches.count-1 collect for groupIdx = 0 to matches.item[matchIdx].groups.count-1 collect ( matches.item[matchIdx].groups.item[groupIdx].value )) --return
 		--format "match_groups	= % \n" match_groups
 		if( match_groups.count > 0 ) then
 			match_groups[1][1] as name --return 
 	),
-	
-	
+
 	/** Get params list
 	 */
-	function _getParamsList control_type =
+	function _getParamsList default_key =
 	(
 		--print "ControlDefaults_v._getParamsList()"
-		if( (ParamsList = this.getval control_type) == undefined ) then 
-			ParamsList = List_v()
-		
-		--format "ParamsList	= % \n" ParamsList
-		
-		this.setVal control_type ParamsList
-		
+		if( (ParamsList = this.getval default_key) == undefined ) then 
+			ParamsList = this._setParamsList (default_key)
+
 		ParamsList --return
 	),
 	
-	
-	
+	/** _set params list
+	 */
+	function _setParamsList default_key =
+	(
+		--print "ControlDefaults_v._setParamsList()"
+		ParamsList = List_v()
+
+		this.setVal default_key (ParamsList)
+		
+		ParamsList --return	
+	),
+
 	/**  
 	 */
 	on create do
 	(
 	)
-	
+
 )

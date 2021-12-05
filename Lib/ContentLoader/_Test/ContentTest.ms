@@ -31,5 +31,5 @@ function loadContentTest dir_name =
 /*---------------------------------------
 	RUN TESTR
 -----------------------------------------*/
-Dialog = loadContentTest("Dialog-level")
---Dialog = loadContentTest("Nested-Rollouts")
+--Dialog = loadContentTest("Dialog-level")
+Dialog = loadContentTest("Nested-Rollouts")

@@ -80,8 +80,7 @@ struct RolloutCreator_v
 	 */
 	function addControlsAndSubrolloutes _Rollout =
 	(
-		print "RolloutCreator_v.addControlsAndSubrolloutes()"
-
+		--print "RolloutCreator_v.addControlsAndSubrolloutes()"
 		for ControlsBox_or_Subrollouts in _Rollout._Controls do
 			if( this._isControls(ControlsBox_or_Subrollouts) ) then
 			
@@ -148,9 +147,10 @@ struct RolloutCreator_v
 	 */
 	function _addSubrolloutsSlots _Rollout Subrollouts =
 	(
-		--print ("RolloutCreator_v.addSubrolloutsSlot()" + Subrollouts.slot)
-		--format "subrollouts_slot_height	= % \n" subrollouts_slot_height
-		ControlCreator.AcrossModifier.startNewRollout(_Rollout._RolloutCreator) fake_control_caption:"SUBROLLOUTS"
+		
+		/**  DIASBLE ADDING SUBROLLOUTS SLOT INTO ACROSS LAYOUT
+		  */
+		ControlCreator.AcrossModifier.fakeControlsOnEndofGroup(_Rollout._RolloutCreator) --fake_control_caption:"SUBROLLOUTS"
 
 		_Rollout._RolloutCreator.addText ("subRollout "+Subrollouts.slot as string +" \"slot_name\" height:"+subrollouts_slot_height as string )
 	),

@@ -35,7 +35,7 @@ struct Dialog_v
 	  *
 	  * TODO add params for max 2022
 	 */
-	function create pos: width:512 height: bgcolor: fgcolor: bitmap: style: modal: escapeEnable: lockHeight:false lockWidth:true parent: =
+	function create pos: width:512 height:1024 bgcolor: fgcolor: bitmap: style: modal: escapeEnable: lockHeight:false lockWidth:true parent: =
 	(
 		print ("Dialog_v.create() " + RolloutMain.id)
 		

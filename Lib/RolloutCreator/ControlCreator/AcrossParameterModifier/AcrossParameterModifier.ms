@@ -18,60 +18,38 @@ struct AcrossParameterModifier_v
 	 */
 	function _acrossParameterModify &_Controls =
 	(
-		print ("ControlCreator_v._acrossParameterModify() "+_Controls.group as string )
+		--print ("ControlCreator_v._acrossParameterModify() "+_Controls.group as string )
+		
 		_Controls_list_copy	= #()
-
-		/* ADD FAKE CONTROLS TO OF PREVIOUS GROUP TO FILL ROW */
-		--if( new_group_start = _across_last == undefined ) then
-		--(
-		--	print "------------- NEW GROUP -------------"
-		--	format "_across_left	= % \n" _across_left
-		--	
-		--	if( _across_left != undefined ) then
-		--		--this._addFakeControls  (_Controls) (_Controls_list_copy) (_across_left) fake_control_caption:"new group"  --print "ADD FAKE CONTROLS TO OF PREVIOUS GROUP TO FILL ROW"
-		--		this._addFakeControls  (_Controls) (_Controls_list_copy) (_across_left) fake_control_caption:("new group "+new_group_start as string )
-		--	
-		--	--_across_last	= undefined
-		--	_across_left	= undefined -- allow set for new group
-		--)
-		
-		--this._Controls = _Controls
-		
 		
 		for control_count = 1 to _Controls.list.count do
 		(
-			format "\n"
+			--format "\n"
 			_Control =  _Controls.list[control_count]
-			print ("_Control.id = " + _Control.id)
+			--print ("_Control.id = " + _Control.id)
 			across_current	=  _Control.Params.getVal #across
-			format "across_current = % \n" across_current
+			--format "across_current = % \n" across_current
 			--format "_across_last	= % \n" _across_last
-			format "_across_left	= % \n" _across_left
+			--format "_across_left	= % \n" _across_left
 
 			if( new_row_start = (_across_left == 0) ) then 
 				_across_left = across_current
 			
 			if( _across_left == undefined ) then -- buttons works
-			--if( _across_left == undefined  or _across_left < 0 ) then -- buttons works
-			--if( _across_left == undefined  or _across_left <= 0 ) then -- new group works
 				_across_left = across_current
-			
-			
 			
 			if( _across_last == undefined ) then
 				_across_last = across_current
 			
-			format "_across_last	= % \n" _across_last
-			
 			if( across_has_changed = (across_current != _across_last) ) then
 			(
-				format "across_has_changed	= % \n" across_has_changed
-				format "new_row_start	= % \n" new_row_start
-				format "_across_left	= % \n" _across_left
+				--format "new_row_start	= % \n" new_row_start
+				--format "across_has_changed	= % \n" across_has_changed
+				--format "_across_left	= % \n" _across_left
 
 				if( new_row_start == false ) then
 			
-					this._addFakeControls (_Controls) (_Controls_list_copy) (_across_left) fake_control_caption:("next: "+_Control.caption)
+					this._addFakeControls (_Controls) (_Controls_list_copy) (_across_left) --fake_control_caption:("next: "+_Control.caption)
 									
 					
 					
@@ -88,8 +66,12 @@ struct AcrossParameterModifier_v
 			append _Controls_list_copy _Control
 
 		)
-		--_across_last	= undefined -- find that new group start
 		
+		/* ADD FAKE CONTROLS TO OF PREVIOUS GROUP TO FILL ROW */
+		if( _across_left != undefined ) then
+			this._addFakeControls  (_Controls) (_Controls_list_copy) (_across_left) --fake_control_caption:("group end" )
+		
+		_across_left	= undefined -- allow set for new group
 		
 		
 		_Controls.list = _Controls_list_copy
@@ -99,9 +81,9 @@ struct AcrossParameterModifier_v
 	
 	/** Starts new rollout
 	 */
-	function startNewRollout _RolloutCreator fake_control_caption:"" =
+	function fakeControlsOnEndofGroup _RolloutCreator fake_control_caption:"" =
 	(
-		print "AcrossParameterModifier_v.startNewRollout()"
+		--print "AcrossParameterModifier_v.fakeControlsOnEndofGroup()"
 		if( _across_left != undefined ) then
 			for i = 1 to _across_left do
 				_RolloutCreator.addControl "label" ("label"+ (random 1 99999 ) as string ) fake_control_caption

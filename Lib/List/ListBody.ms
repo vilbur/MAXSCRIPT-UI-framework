@@ -157,8 +157,12 @@
 	 */
 	function merge List_to_merge unique:true =
 	(
-		for i = 1 to List_to_merge.keys.count do
-			this.setVal (List_to_merge.keys[i]) (List_to_merge.values[i]) unique:unique
+		if( List_to_merge != undefined ) then
+			for i = 1 to List_to_merge.keys.count do
+				this.setVal (List_to_merge.keys[i]) (List_to_merge.values[i]) unique:unique
+		
+		else
+			print "ListBody.ms.merge(List_to_merge==undefined)"
 		
 		this --return 
 	),

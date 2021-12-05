@@ -110,6 +110,7 @@ struct Rollout_v
 		this._setId()
 		
 		_RolloutCreator = rolloutCreator id title
+		--_RolloutCreator = rolloutCreator id ("                                                     " + title)
 	)
 	
 )
