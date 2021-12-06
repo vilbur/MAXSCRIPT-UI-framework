@@ -14,10 +14,14 @@
 	  * @param	mixin	key	key of value
 	  * @param	mixin	value
 	  * @param	boolean|void	unique	Explained above in UNIQUE rules
+	  * @param	boolean	rewrite alias switch for unique parameter, user friendly then unique
 	  *
 	 */
-	function setVal key val unique: =
+	function setVal key val unique: rewrite: =
 	(
+		--if( classof rewrite == BooleanClass ) then 
+			--unique = if( rewite ) then unsupplied else true
+		
 		i	= findItem keys key
 		exist	= i > 0
 		--format "exist	= % \n" exist

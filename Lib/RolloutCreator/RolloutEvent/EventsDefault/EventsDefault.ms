@@ -19,14 +19,35 @@ struct EventsDefault_v
 		--format "ini_path	= % \n" ini_path	
 		if( rollout_is_subrollout ) then 
 			
-			this._rolloutSaveIni()
+			this._rolloutEvents()
 		
 		else
-			this._dialogSaveIni()
+			this._dialogEvents()
 			
 		list --return
 	),
 	
+	/** _dialog events
+	 */
+	function _dialogEvents =
+	(
+		print "EventsDefault_v._dialogEvents()"
+		
+		append list ( Event_v type:#open	code:("GroupBoxCreator.test(\""+rollout_id+"\")") )
+		
+		if( ini_path != undefined ) then
+			this._dialogSaveIni()
+	),
+	
+	/** Rollout events
+	 */
+	function _rolloutEvents =
+	(
+		--print "EventsDefault_v.rolloutEvents()"
+		
+		if( ini_path != undefined ) then
+			this._rolloutSaveIni()
+	),
 	/** Dialog save ini
 	 */
 	function _dialogSaveIni =

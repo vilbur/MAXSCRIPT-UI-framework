@@ -67,31 +67,61 @@ struct Control_v
 	private
 
 	
+	/** _set id
+	 */
+	function _setId =
+	(
+		if( id == undefined ) then
+			this._setIdByCaption()
+		
+		else
+			id = toUpper ( type as string ) + "_" + id
+	),	
+	
 	/** Set id by control caption
 	 */
 	function _setIdByCaption =
 	(
-		id = substituteString caption " " "_" -- replace whitespace with underscore
+			
+		
+		id  = caption
+		
+		id	= trimRight ( trimLeft id )
+		
+		id = substituteString id " " "_" -- replace whitespace with underscore
 
-		this._repleaceCharacters "[^A-Za-z0-9_]+"	""	-- remove characters	E.G.: "Butt@n_&_1" >>> "Button_1"
+		id = this._repleaceCharacters "[^A-Za-z0-9_]+"	""	-- remove characters	E.G.: "Butt@n_&_1" >>> "Button_1"
 		
 		id = toUpper ( type as string ) + "_" + id -- add prefix by control type E.G.: "test" >>> "BUTTON_test"
 		
-		this._repleaceCharacters "[_]+"	"_"	-- remove underscores	E.G.: "button___1" >>> "button_1"
+		id = this._repleaceCharacters "[_]+"	"_"	-- remove underscores	E.G.: "button___1" >>> "button_1"
 	),
 	
 	/** _repleace string
 	 */
 	function _repleaceCharacters search replace =
 	(
-		id = ( dotNetObject "System.Text.RegularExpressions.Regex" search ).Replace ( id ) replace  --return 
+		( dotNetObject "System.Text.RegularExpressions.Regex" search ).Replace ( id ) replace  --return 
+	),
+
+	/** Empty caption if caption is in brackets E.G.: "[Groupboxname]"
+	  *
+	  * used for generated groupbox
+	 */
+	function _emptyCaptionIfInBrackets =
+	(
+		if( matchPattern caption pattern:("[*]")  ) then
+			caption	= ""
 	),
 	
 	/**  
 	 */
 	on create do
 	(
-		if( id == undefined ) then
-			this._setIdByCaption()
+		this._setId()
+			
+			
+			
+		this._emptyCaptionIfInBrackets()
 	)
 )

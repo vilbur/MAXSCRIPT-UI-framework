@@ -41,6 +41,7 @@ struct ControlEventsCreator_v
 		#( #(#selected, "val"),	#(#doubleClicked, "val"),	#(#rightClick, "val")),		-- #listbox	https://help.autodesk.com/view/3DSMAX/2017/ENU/?guid=__files_GUID_7C37748B_C682_4834_B5A6_74185C8C661A_htm
 		#( #(#selected, "val"),	#(#doubleClicked, "val"),	#rightClick,	#selectionEnd ),	-- #multilistbox	
 		#( #(#selected, "val"),	#rightClick ),			-- #dropdownlist	
+		#( ),				-- #GroupBox	
 		
 		/* Custom compounded controls */
 		#( #tick )

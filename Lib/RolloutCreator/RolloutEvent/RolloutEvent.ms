@@ -74,8 +74,7 @@ struct RolloutEvents_v
 		--this.Events   = _Rollout.Events.list
 		--format "ini_path	= % \n" ini_path
 		
-		if( ini_path != undefined ) then
-			EventsCombiner.defaults = ((EventsDefault_v rollout_id:_Rollout.id ini_path:ini_path ).getDefaultEvents(_Rollout.is_subrollout)) 
+		EventsCombiner.defaults = ((EventsDefault_v rollout_id:_Rollout.id ini_path:ini_path ).getDefaultEvents(_Rollout.is_subrollout)) 
 		
 		EventsCombiner.custom = _Rollout.Events.list
 		

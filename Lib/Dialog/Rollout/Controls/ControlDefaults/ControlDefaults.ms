@@ -29,7 +29,11 @@ struct ControlDefaults_v
 		ParamsList.setVal key val
 	),
 
-	/** _set default params per control type
+	/** Set this.keys & this.values
+	  *
+	  * this.keys   = #( #global,	#button )		
+	  * this.values = #( #(#width, 96),	#(#across, 4) )
+	  *
 	 */
 	function setDefaultsForAllTypes =
 	(
@@ -56,7 +60,7 @@ struct ControlDefaults_v
 	(
 		--print "ControlDefaults_v._getDefaultParamsList()"
 		ParamsList = this._getParamsList(default_key)
-		
+		--format "ParamsList	= % \n" ParamsList
 		keys_values = case default_key of
 		(
 			#button:	#( #across, 4,	#width, 96 )
@@ -70,7 +74,7 @@ struct ControlDefaults_v
 		
 		if( keys_values != undefined ) then
 			for i = 1 to keys_values.count  by 2  do
-				ParamsList.setVal keys_values[i] keys_values[i+1]
+				ParamsList.setVal keys_values[i] keys_values[i+1] unique:true
 		
 		--format "default_key	= % \n" default_key 
 		--format "keys_values	= % \n" keys_values

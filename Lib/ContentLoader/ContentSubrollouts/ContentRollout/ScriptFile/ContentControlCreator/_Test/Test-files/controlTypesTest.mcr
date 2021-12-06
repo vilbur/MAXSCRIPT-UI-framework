@@ -1,7 +1,7 @@
 
 /*------------------------------------------------------------------------------
 	BUTTON
-----------------------------------------------------------------------------*/
+--------------------------------------------------------------------------*/
 macroscript MacroFileTest_A
 	category:	"MacroFileTest"
 	buttontext:	"MacroFileTest A"
@@ -12,93 +12,55 @@ macroscript MacroFileTest_A
 
 )
 
-/*------------------------------------------------------------------------------
-	BUTTON - SET EVENT DIRECTLY
-----------------------------------------------------------------------------*/
-macroscript MacroFileTest_button_Rightclick
-	category:	"MacroFileTest"
-	buttontext:	"Rightclick test"
-	toolTip:	"Tooltip with Colon:\nand new line"
-	icon:	"event:rightClick"
-(
-	print "Button Rightclick #rightclick"
 
-)
-
-
-/*------------------------------------------------------------------------------
-  LEFT RIGHT CLICK TEST
+--/*------------------------------------------------------------------------------
+--  CHECKBOX
+----------------------------------------------------------------------------------*/	
+--
+--
+--/*  
+--*/ 
+--macroscript macroFileTest_checkbox
+--	category:	"MacroFileTest"
+--	buttontext:	"Checkbox HERE IS BUG"
+--	toolTip:	"Changed event tooltip"
+--	icon:	"type:checkbox|checked:true|border:false|columns:12"
+--(
+--	print "checkbox #changed"
+--)
+--
+--/*
+--*/
+--macroscript macroFileTest_checkbox_right
+--	category:	"MacroFileTest"
+--	buttontext:	"Checkbox HERE IS BUG"
+--	toolTip:	"Right click tooltip"
+--	icon:	"type:checkbox" 
+--
+--(
+--	print "checkbox #rightclick"
+--)
+--	
+--/*------------------------------------------------------------------------------
+--  EditText
 --------------------------------------------------------------------------------*/	
 
-/*
-*/
-macroscript macroFileTest_cotrol_button
-	category:	"MacroFileTest"
-	buttontext:	"Button Left\Right Click"
-	toolTip:	"Left click tooltip"
-	icon:	"border:false"
-(
-	print "Button #pressed"
-)
-
-/*
-*/
-macroscript macroFileTest_cotrol_button_right
-	category:	"MacroFileTest"
-	buttontext:	"Button Left\Right Click"
-	toolTip:	"Right click tooltip"
-(
-	print "Button #rightclick"
-)
-	
-
-/*------------------------------------------------------------------------------
-  CHECKBOX
---------------------------------------------------------------------------------*/	
+--/*  
+--*/ 
+--macroscript macroFileTest_edittext
+--	category:	"MacroFileTest"
+--	buttontext:	"EditText"
+--	toolTip:	"EditText tooltip"
+--	--icon:	"type:EditText|width:256"
+--	icon:	"type:EditText"
+--(
+--	print "BrowsePath test"
+--	format " EventFired.value = % \n"  EventFired.value
+--)
 
 
-/*  
-*/ 
-macroscript macroFileTest_checkbox
-	category:	"MacroFileTest"
-	buttontext:	"Checkbox HERE IS BUG"
-	toolTip:	"Changed event tooltip"
-	icon:	"type:checkbox|checked:true|border:false|columns:12"
-(
-	print "checkbox #changed"
-)
-
-/*
-*/
-macroscript macroFileTest_checkbox_right
-	category:	"MacroFileTest"
-	buttontext:	"Checkbox HERE IS BUG"
-	toolTip:	"Right click tooltip"
-	icon:	"type:checkbox" 
-
-(
-	print "checkbox #rightclick"
-)
-	
-/*------------------------------------------------------------------------------
-  EditText
---------------------------------------------------------------------------------*/	
-
-/*  
-*/ 
-macroscript macroFileTest_edittext
-	category:	"MacroFileTest"
-	buttontext:	"EditText"
-	toolTip:	"EditText tooltip"
-	icon:	"type:EditText|width:256"
-(
-	print "BrowsePath test"
-	format " EventFired.value = % \n"  EventFired.value
-)
-
-
-/*------------------------------------------------------------------------------
-  BROWSE PATH
+--/*------------------------------------------------------------------------------
+--  BROWSE PATH
 --------------------------------------------------------------------------------*/	
 --
 --/*  
@@ -107,17 +69,18 @@ macroscript macroFileTest_edittext
 --	category:	"MacroFileTest"
 --	buttontext:	"BrowsePath"
 --	toolTip:	"BrowsePath tooltip"
---	icon:	"type:BrowsePath|width:256 "
+--	--icon:	"type:BrowsePath|width:256 "
+--	icon:	"type:BrowsePath"
 --(
 --	print "BrowsePath test"
 --	format " EventFired.value = % \n"  EventFired.value
 --)
-
-
-/*------------------------------------------------------------------------------
-  CHECKBUTTON
+--
+--
+--/*------------------------------------------------------------------------------
+--  CHECKBUTTON
 --------------------------------------------------------------------------------*/	
-
+--
 --/*  
 --*/ 
 --macroscript macroFileTest_checkbutton
@@ -191,5 +154,4 @@ macroscript macroFileTest_edittext
 --	format "EventFired	= % \n" EventFired
 --	print "Item doubleclicked"
 --)
---
 --

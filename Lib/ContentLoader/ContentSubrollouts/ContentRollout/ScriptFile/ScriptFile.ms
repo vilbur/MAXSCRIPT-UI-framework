@@ -27,34 +27,31 @@ struct ScriptFile_Content_v
 			MacroScripts = (MacroScriptFileParser_v path:path).MacroScripts
 	),
 	
-	/** Insert controls to ui
+	/** Create controls from ".mcr" file to ui
 	 */
-	function addToUi _Rollout =
-	(	
-		--print("ScriptFile_Content_v.addToUi() " +_Rollout.id)
+	function addToUi &_Rollout =
+	(
+		--print "!!!!!!!!!!!!!!!!!!!!!!!!"
+		print("ScriptFile_Content_v.addToUi() " +_Rollout.id)
 		name	= if( name == undefined )then "" else "";
 		
-		if( this.isMacrosriptFile() ) then
-		(
-			_Controls	= _Rollout.Controls group:(this._getGroupboxName())
-			--format "_Controls	= % \n" _Controls
-			--format "MacroScripts = % \n" MacroScripts
-			for m = 1 to MacroScripts.count do
-				ContentControlCreator_v Macro:MacroScripts[m] ControlBox:_Controls
-		)
-		else
-		(
-			--format "!!! ScriptFile_Content_v.loadMacroscriptFile filein % \n" path
-			filein path
-		)
+		if( this.isMacrosriptFile() and MacroScripts.count > 0 ) then
+			this._createControls(_Rollout.Controls group:(this._getGroupName()))
+
+		
+		_Rollout --return
 	),
 	
-	--/** Add groupbox
-	-- */
-	--function addGroupbox _Rollout =
-	--(
-	--	_Rollout.controls groupbox:( this._getGroupboxName() ) -- get new container for controls
-	--),
+	/** _create controls
+	 */
+	function _createControls _Controls =
+	(
+		print("ScriptFile_Content_v._createControls()" )
+		--format "x _Controls	= % \n" _Controls.GroupBoxes
+		--format "MacroScripts = % \n" MacroScripts
+		for m = 1 to MacroScripts.count do
+			_Controls = (ContentControlCreator_v Macro:MacroScripts[m] _Controls:_Controls).getControls()
+	),
 
 	/** Is maxscript file
 	 */
@@ -82,7 +79,7 @@ struct ScriptFile_Content_v
 	  * 
 	  * @return	string	Name of groupbox, If filename starts with underscore "_", then return undefined and controls are placed to new controls box without groupbox
 	 */
-	function _getGroupboxName =
+	function _getGroupName =
 	(
 		--if ( this.hasGroupbox() ) then
 			( dotNetObject "System.Text.RegularExpressions.Regex" @"[_]+" ).Replace ( trimLeft ( trimRight (getFilenameFile path) "_" )  "_" ) " "

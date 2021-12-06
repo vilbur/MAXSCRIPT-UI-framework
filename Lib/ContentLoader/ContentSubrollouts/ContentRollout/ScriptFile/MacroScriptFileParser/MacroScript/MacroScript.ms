@@ -22,16 +22,16 @@ struct MacroScript_Content_v
 	
 	public
 	
-	/** Get id of control
-	  *
-	  * Id is generated from button text because of one control can consist of multiple macroscripts E.G.: Left\Righclick
-	  *
-	  * @return	#name e.g.: #BUTTON_buttontext
-	 */
-	function getControlId =
-	(
-		(this._prefixByType()) + "_"+ (( dotNetObject "System.Text.RegularExpressions.Regex" @"[^A-Za-z0-9-_]" ).Replace ( toLower buttontext ) "_") as name --return
-	),
+	--/** Get id of control
+	--  *
+	--  * Id is generated from button text because of one control can consist of multiple macroscripts E.G.: Left\Righclick
+	--  *
+	--  * @return	#name e.g.: #BUTTON_buttontext
+	-- */
+	--function getControlId =
+	--(
+	--	(this._prefixByType()) + "_"+ (( dotNetObject "System.Text.RegularExpressions.Regex" @"[^A-Za-z0-9-_]" ).Replace ( toLower buttontext ) "_") as name --return
+	--),
 	
 	/** Get full id
 	 */
@@ -63,12 +63,33 @@ struct MacroScript_Content_v
 		--print "MacroScript_Content_v.getParams()"
 		init_params_string = ""
 
-		this._setSplitParams()
+		this._setParamsSplit()
 		
 		for param in params_split where param[2] != "type" do
 			init_params_string += param[2] as string +":"+ param[3]+" "
 
 		init_params_string --return
+	),
+
+	/** Parse string of icon property
+	  *
+	  *
+	  * @return	string passed to methods in ControlBoxControlTypes E.G.: "columns: pos:"
+	  * @return	2D matrix of keys and values E.G.: #( #("checked:true", "checked", "true"), #("border:false", "border", "false") )	
+	 */
+	function getParamsArray =
+	(
+		--print "MacroScript_Content_v.getParamsArray()"
+		
+		params_key_value = #()
+
+		this._setParamsSplit()
+		--format "params_split	= % \n" params_split
+		
+		for param_split in params_split where param_split[2] != "type" do
+			params_key_value = params_key_value + #(param_split[2] as name , this._convertDatatype(param_split[3]))
+
+		params_key_value --return
 	),
 	
 	/** Get param
@@ -76,7 +97,7 @@ struct MacroScript_Content_v
 	function getParam param_get =
 	(
 		--print "MacroScript_Content_v.getParam()"
-		this._setSplitParams()
+		this._setParamsSplit()
 
 		params = for param in params_split where param[2] == ( param_get as string ) collect param
 
@@ -87,7 +108,7 @@ struct MacroScript_Content_v
 	
 	/** Set split params
 	 */
-	function _setSplitParams =
+	function _setParamsSplit =
 	(
 		if( params_split == undefined ) then
 			params_split = this.splitParams()
@@ -113,6 +134,20 @@ struct MacroScript_Content_v
 		matches = if (ignorecase) then rx.matches string pattern rx_options.IgnoreCase else rx.matches string pattern 
 		
 		(for matchIdx = 0 to matches.count-1 collect for groupIdx = 0 to matches.item[matchIdx].groups.count-1 collect ( matches.item[matchIdx].groups.item[groupIdx].value )) --return
+	),
+	
+	/** Format string value to valid datatype
+	 */
+	function _convertDatatype val =
+	(		
+		if( (for pattern in #( "true", "false", "color*", "[*,*]" ) where matchPattern val pattern:pattern collect pattern).count > 0 ) then 
+			execute val
+
+		else if( ( val_as_number = val as number) != undefined ) then 
+			val_as_number --return
+			
+		else
+			val --return
 	),
 	
 	/**  

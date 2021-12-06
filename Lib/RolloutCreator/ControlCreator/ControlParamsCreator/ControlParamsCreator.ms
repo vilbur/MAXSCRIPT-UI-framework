@@ -32,17 +32,21 @@ struct ControlParamsCreator_v
 		if( value_param != undefined ) then
 			MergeParamsList.setVal value_param[1] value_param[2]
 		
-		
 		/* CONTROLS PARMAS */ 
 		MergeParamsList.merge (_Control.Params)
-
+		--format "_Control.Params	= % \n" MergeParamsList
 		
 		/* DEFAULTS PARMAS */ 
-		this._mergeDefaults (_Control.type)
-
+		for defautls_key in this._getDefaultKeys(_Control.type) do
+		(
+			
+			MergeParamsList.merge (ControlDefaults.getVal(defautls_key as name ))
+			--format "% = % \n" defautls_key MergeParamsList
+		)
 
 		/* MERGE Defaults.keys.#global */ 
 		MergeParamsList.merge ( ControlDefaults.getVal(#global) )
+		--format "MergeParamsList	= % \n" MergeParamsList
 		
 		
 		_Control.params = MergeParamsList
@@ -75,11 +79,37 @@ struct ControlParamsCreator_v
 			
 		trimRight _params  --return
 	),
+
+	/** Hide controls in group box for smooth layout
+	 */
+	function setControlsPositioninGroupBoxToZero _Controls &_Control =
+	(
+		--print "ControlCreator_v.setControlsPositioninGroupBoxToZero()"
+
+		if( (group_box_name = _Control.Params.getVal #GroupBox) != undefined ) then
+		(
+
+			--for group_box_fullname in _Controls.GroupBoxes.keys where matchPattern group_box_fullname pattern:("*_"+group_box_name) do
+			for group_box_fullname in _Controls.GroupBoxes.keys where group_box_fullname == group_box_name do
+			(
+				group_box_controls = _Controls.GroupBoxes.getVal(group_box_fullname)
+
+				_Control.param #pos	[0, 0]
+
+				across =  if( (across = _Control.Params.getVal #across) != undefined ) then across else 4 -- allow user defined width of control via across:parameter
+				
+				_Control.param #across across
+			)
+		)
+
+		_Control --return	
+	),
 	
 	
 	private
 	
-	
+
+
 	/** merge all default types matchi
 	  *
 	  *
@@ -87,13 +117,13 @@ struct ControlParamsCreator_v
 	  
 	  * e.g: match #list|#listbox|#multilistbox   if control_type == "multilistbox"
 	 */
-	function _mergeDefaults control_type =
+	function _getDefaultKeys control_type =
 	(
-		--print "ControlParamsCreator_v.mergeDefaults()"
+		--print "ControlParamsCreator_v._getDefaultKeys()"
 		
-		for defautls_key in this._flipKeysByLenght(ControlDefaults.keys) where  matchPattern (control_type as string ) pattern:( "*" + (defautls_key as string ) + "*") do
-			MergeParamsList.merge (ControlDefaults.getVal(defautls_key as name ))
-		
+		defautls_keys = for defautls_key in this._flipKeysByLenght(ControlDefaults.keys) where  matchPattern (control_type as string ) pattern:( "*" + (defautls_key as string ) + "*") collect defautls_key
+		--format "defautls_keys	= % \n" defautls_keys
+		defautls_keys --return
 	),	
 	
 	/**  

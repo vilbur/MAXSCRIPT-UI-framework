@@ -1,11 +1,15 @@
 /*--------------------------------------------------------------------------------------------
 	
 	
-	IMPORTANT:
+	1) IMPORTANT ON INCLUDE:
 	
-		PUT COMMA CHARACTER"," after include path if file is included as property in struct
+		PUT COMMA CHARACTER "," after include path if file is included as property in struct
+			E.G.: control_types = include "Library/.../Controls/control_types.ms",
 	
-	control_types = include "Library/MAXSCRIPT-UI-framework/Lib/Dialog/Rollout/Controls/control_types.ms",
+	
+	2) IMPORTANT ALLOWING NEW CONTROL:
+		Edit #(event_types) in  "../../../RolloutCreator/ControlCreator/ControlEventsCreator/ControlEventsCreator.ms"
+	
 	
 --------------------------------------------------------------------------------------------*/
 
@@ -20,8 +24,8 @@
 	#Listbox,
 	#multilistbox,
 	#Dropdownlist,
+	#GroupBox,
 	--#Combobox,
-	--#GroupBox,
 	--#Angle,
 	--#Bitmap,
 	--#Colorpicker,

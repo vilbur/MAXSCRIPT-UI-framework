@@ -1,16 +1,17 @@
 filein( getFilenamePath(getSourceFileName()) + "/ControlParamsCreator/ControlParamsCreator.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/ControlEventsCreator/ControlEventsCreator.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/AcrossParameterModifier/AcrossParameterModifier.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/GroupBoxCreator/GroupBoxCreator.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/BrowsePath/BrowsePath.ms" )
 
 /** ControlCreator_v
  */
 struct ControlCreator_v
 (
-	
+
 	_Rollout,
 	_Controls,
-	
+
 	--AcrossModifier,
 	AcrossModifier	= AcrossParameterModifier_v(),
 	ParamsCreator	= ControlParamsCreator_v(),
@@ -20,44 +21,100 @@ struct ControlCreator_v
 	 */
 	function addControls _Controls =
 	(
-		--print "ControlCreator_v.addControls()"
+		print "ControlCreator_v.addControls()"
 		this._Rollout  = _Rollout
 		this._Controls = _Controls
 		--AcrossModifier	= AcrossParameterModifier_v()
-
+		format "_Controls.GroupBoxes	= % \n" _Controls.GroupBoxes
+		
+		GroupBoxCreator.GroupBoxes = _Controls.GroupBoxes
+		
+		this.moveGroupBoxcontrolsToEnd()
 		
 		/* set DEFAULT PARAMETERS */ 
 		ParamsCreator.setControlDefaults (_Controls.Defaults)
-	
-		
+
 		/* merge PARAMTERS */ 
 		this._mergeControlsParameters()
-		
-		
+
 		/* prepare CONTROL TYPES */ 
 		this._convertCustomControls()
-		
-		
+
 		/* modify ACROSS PARAMETER */ 
-		AcrossModifier._acrossParameterModify(this._Controls)
-		
-		
+		AcrossModifier.addFakeControls(this._Controls)
+
 		/* add LOCAL VARIABLES */ 
 		this._addLocalVariablesToRollout()
-		
-		
+
 		/* add TEXT */ 
 		this._addTextToRollout()
-		
-		
+
 		/* add CONTROLS */ 
 		this._addControlsToRollout()
 	),
+
+	private
 	
 	
-	private 
 	
+	/** Move group boxcontrols to end
+	 */
+	function moveGroupBoxcontrolsToEnd =
+	(
+		print "ControlCreator_v.moveGroupBoxcontrolsToEnd()"
+		
+		Controls_in_Groupboxes	= #()
+		
+		
+		for _Control in _Controls.list do
+		(
+			
+			ParamsCreator.setControlsPositioninGroupBoxToZero(_Controls) (_Control)
+
+			
+			
+			if( _Control.type == #groupbox ) then
+			(
+
+				if( (groupbox_height =  (_Controls.GroupBoxes.getVal(_Control.id)).count * 27) == 0 ) then 
+					groupbox_height = 64
+
+				_Control.param #height groupbox_height
+			)
+			else
+
+			if( (group_box_name = _Control.Params.getVal #GroupBox) != undefined ) then
+				append Controls_in_Groupboxes _Control
+			
+		)
+		
+		_Controls.list = ( this.diffArray _Controls.list Controls_in_Groupboxes) + Controls_in_Groupboxes
+
+	),
 	
+	/**  
+	  *	
+	  */
+	fn diffArray a b =
+	(
+		retArray = #()
+		for element in a do
+		(
+			idx = finditem b element
+			if idx == 0 then
+			append retArray element
+		)
+		return retArray
+	),
+	
+	/** _merge controls parameters
+	 */
+	function _mergeControlsParameters =
+	(
+		--print "ControlCreator_v._mergeControlsParameters()"
+		for _Control in _Controls.list do
+			ParamsCreator.mergeParams(_Control)
+	),
 
 	/** Convert custom controls to native maxscript controls
 	 */
@@ -67,20 +124,20 @@ struct ControlCreator_v
 			if( _Control.type == #browsePath ) then
 				_Control = (BrowsePath_v _Control:_Control).getControl()
 	),
-	
+
 	/** _add controls
 	 */
 	function _addControlsToRollout =
 	(
-		this._addControlsGroup #start 
-		
+		this._addControlsGroup #start
+
 		for _Control in _Controls.list do
 		(
 			this._addControl (_Control) -- add control first before variables, functions and events
-			
+
 			this._addControlHandlersToRollout(_Control)
 		)
-		
+
 		this._addControlsGroup #end 
 	),
 
@@ -97,28 +154,25 @@ struct ControlCreator_v
 		_Rollout._RolloutCreator.addText (if( start_or_end == #start ) then "group @"+_Controls.group+"@ (" else ")" ) filter:on
 	),
 
-	
 	/* Add control to RolloutCreator
 	 */
 	function _addControl _Control =
 	(
-		--format "\n"
+		format "\n"
 		--print ("ControlCreator_v._addControl() " +_Control.id )
 		--params = (ParamsCreator.getParams(_Control)(_Rollout.id))
+
+
+		
+		--format "_Control	= % \n" _Control
 		params = ParamsCreator.join(_Control.params)
-		--format "%	= % \n" _Control.id params
+
+		format "%.params	= % \n" _Control.id params
 		_Rollout._RolloutCreator.addControl (_Control.type) (_Control.id) (_Control.caption) paramStr:params
 		--_Rollout._RolloutCreator.addControl (_Control.type) (_Control.id) (_Control.caption) paramStr:""1
 	),
-	
-	/** _set controls parameters
-	 */
-	function _mergeControlsParameters =
-	(
-		for _Control in _Controls.list do
-			ParamsCreator.mergeParams(_Control)
-	),
-	
+
+
 	/** _add value parameter
 	 */
 	function _addValueParameter =
@@ -127,7 +181,7 @@ struct ControlCreator_v
 				val_ini	= ControlValue.getValueFromIni(_Control)(rollout_id)
 		value_param	= this._getValueParameterArray(_Control)(val_ini)
 	),
-	
+
 	/** Add event handlers
 	 */
 	function _addControlHandlersToRollout _Control =
@@ -135,11 +189,11 @@ struct ControlCreator_v
 		--print "ControlCreator_v._addControlHandlersToRollout()"
 		events_list = EventsCreator.getEvents(_Control)(_Rollout.id)
 		--for Event in events_list do format "Event	= % \n" Event
-		
+
 		for Event in events_list do
 			_Rollout._RolloutCreator.addHandler _Control.id Event.type codeStr:(Event.code) paramStr:Event.params filter:on
 	),
-	
+
 	/** Add local variables from Control_v to rollout
 	  * IMPORTANT: local variables must be defined outside group 
 	  *
@@ -151,9 +205,9 @@ struct ControlCreator_v
 		for _Control in _Controls.list where _Control.add_locals != unsupplied do
 			for i = 1 to _Control.add_locals.count by 2 do
 				_Rollout._RolloutCreator.addLocal ( _Control.add_locals[i] as string )  init:_Control.add_locals[i+1]
-				
+
 	),
-	
+
 	/** Add functions to rollout
 	  * IMPORTANT: functions must be defined outside group 
 	 */

@@ -5,7 +5,7 @@ struct ContentControlCreator_v
 	__construct = #(  ),
 	
 	/* required */
-	ControlBox,
+	_Controls,
 	Macro,
 	ControlEventsCreator = ControlEventsCreator_v(),
 	/** Create Control in Controls
@@ -17,19 +17,25 @@ struct ContentControlCreator_v
 		--format "\n"
 		--print "ContentControlCreator_v.createControl()"
 		
-		params = substituteString (Macro.getParams())  "'" "\""
-		
-		_Control = ControlBox.control (Macro.getType()) Macro.buttontext  id:(Macro.getControlId()) add_to_controls:false
+		_Control = _Controls.control (Macro.getType()) Macro.buttontext params:(Macro.getParamsArray()) add_to_controls:false
+		--_Control = _Controls.control (Macro.getType()) Macro.buttontext  id:(Macro.getControlId()) add_to_controls:false
 		--format "_Control	= % \n" _Control
-		if( (_Control_Exist = ControlBox.get(_Control.id)) != undefined ) then
+		if( (_Control_Exist = _Controls.get(_Control.id)) != undefined ) then
 			_Control = _Control_Exist -- update existing control
 		
 		_Control = this._setControlEvent _Control _Control_Exist
 		
 		if ( _Control != _Control_Exist ) then -- add only new control
-			ControlBox.add _Control
+			_Controls.add _Control
 	),
 
+	/** Get controls
+	 */
+	function getControls =
+	(
+		_Controls --return
+	),
+	
 	private
 	
 	/** Set control event
@@ -39,9 +45,8 @@ struct ContentControlCreator_v
 	function _setControlEvent _Control _Control_Exist =
 	(
 		--print "ContentControlCreator_v._setControlEvent()"
-		event_type = this._getEventType (_Control)
-		
-		this._setOnClickEvent (event_type) (_Control) 
+		if( (event_type = this._getEventType (_Control)) != undefined ) then
+			this._setOnClickEvent (event_type) (_Control) 
 		
 		_Control --return
 	),
@@ -65,7 +70,10 @@ struct ContentControlCreator_v
 		if( (event_type = Macro.getParam "event") == undefined ) then
 			event_type = (ControlEventsCreator._getEventsOfControl (control_type_for_events))[ _Control.Events.list.count+1]
 
-		event_type as name
+			
+		if( event_type != undefined ) then
+			event_type as name --return	
+			
 	),
 	
 	/** Set events which call macro

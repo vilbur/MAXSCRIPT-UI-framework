@@ -17,7 +17,7 @@ function Cratemultilistbox prefix =
 	
 	_Controls.Default #height 2 type:#list -- type is mask and must match control type E.G.: match #listbox|#multilistbox|#dropdownlist if type==#list
 	_Controls.Default #across 3 type:#list  -- match dropdownlist|listbox|multilistbox
-	_Controls.Default #across 1 type:#box 
+	--_Controls.Default #across 3 type:#dropdownlist 
 	_Controls.Default #across 2 type:#listbox 
 	_Controls.Default #across 1 type:#multilistbox 
 
@@ -90,9 +90,9 @@ function myltipleListboxes count =
 
 /** Create controls goups
  */
-function createControlsGoups =
+function createControlsGoups _groups =
 (
-	for i = 1 to 2 do
+	for i = 1 to _groups do
 		testFakeControlsOnEndOfGroup(_Rollout.Controls group:("Group of "+(i+1) as string )  ) (i+2) (i+1)
 )
 
@@ -119,9 +119,10 @@ function createsubrolloutsControls =
 --createOnlyButtons(1) prefix:"x"
 createOnlyButtons(10)
 
-myltipleListboxes(1)
---myltipleListboxes(3)
-createControlsGoups()
+--myltipleListboxes(1)
+myltipleListboxes(3)
+createControlsGoups(4)
+--createControlsGoups(1)
 
 createsubrolloutsControls()
 

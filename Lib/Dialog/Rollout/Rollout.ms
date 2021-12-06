@@ -110,7 +110,7 @@ struct Rollout_v
 		this._setId()
 		
 		_RolloutCreator = rolloutCreator id title
-		--_RolloutCreator = rolloutCreator id ("                                                     " + title)
+		--_RolloutCreator = rolloutCreator id ("                                                     " + title) -- maz 2022 hotfix; rollout tites are aliget to left
 	)
 	
 )
