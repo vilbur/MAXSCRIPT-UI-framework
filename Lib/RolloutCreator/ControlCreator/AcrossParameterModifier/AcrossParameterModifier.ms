@@ -26,14 +26,14 @@ struct AcrossParameterModifier_v
 		
 			for control_count = 1 to _Controls.list.count do
 			(
-				format "\n"
+				--format "\n"
 				_Control =  _Controls.list[control_count]
 				
 				if( (control_is_not_in_group_box = _Control.Params.getVal #GroupBox) == undefined ) then
 				(
-					print ("_Control.id = " + _Control.id)
+					--print ("_Control.id = " + _Control.id)
 					across_current	=  _Control.Params.getVal #across
-					format "across_current = % \n" across_current
+					--format "across_current = % \n" across_current
 					--format "_across_left	= % \n" _across_left
 		
 					if( new_row_start = (_across_left == 0) ) then 
@@ -67,7 +67,7 @@ struct AcrossParameterModifier_v
 		
 					if( _across_left != undefined ) then
 						_across_left -= 1
-						format "_across_left	= % \n" _across_left
+						--format "_across_left	= % \n" _across_left
 					
 				)
 	

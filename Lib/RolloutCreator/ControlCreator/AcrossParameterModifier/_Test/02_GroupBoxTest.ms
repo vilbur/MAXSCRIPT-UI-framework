@@ -21,7 +21,7 @@ function createGroupBox prefix:"" control_type:#button =
 	
 	_Controls.Default #across 2 type:#dropdownlist
 	
-	for i = 1 to 3 do 
+	for i = 1 to 1 do 
 	(
 
 		--_Controls.Default #width 96 type:#button
@@ -62,4 +62,3 @@ dialog_width = 420
 --dialog_height = 1024
 dialog_height = undefined
 include "Library/MAXSCRIPT-UI-framework/Lib/RolloutCreator/_Test/includes/CreateTestDialog.ms"
-

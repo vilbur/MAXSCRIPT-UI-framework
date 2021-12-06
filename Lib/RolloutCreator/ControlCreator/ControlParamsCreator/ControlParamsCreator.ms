@@ -80,30 +80,31 @@ struct ControlParamsCreator_v
 		trimRight _params  --return
 	),
 
-	/** Hide controls in group box for smooth layout
-	 */
-	function setControlsPositioninGroupBoxToZero _Controls &_Control =
-	(
-		--print "ControlCreator_v.setControlsPositioninGroupBoxToZero()"
-
-		if( (group_box_name = _Control.Params.getVal #GroupBox) != undefined ) then
-		(
-
-			--for group_box_fullname in _Controls.GroupBoxes.keys where matchPattern group_box_fullname pattern:("*_"+group_box_name) do
-			for group_box_fullname in _Controls.GroupBoxes.keys where group_box_fullname == group_box_name do
-			(
-				group_box_controls = _Controls.GroupBoxes.getVal(group_box_fullname)
-
-				_Control.param #pos	[0, 0]
-
-				across =  if( (across = _Control.Params.getVal #across) != undefined ) then across else 4 -- allow user defined width of control via across:parameter
-				
-				_Control.param #across across
-			)
-		)
-
-		_Control --return	
-	),
+	--/** Hide controls in group box for smooth layout
+	-- */
+	--function setControlsPositioninGroupBoxToZero _Controls &_Control =
+	--(
+	--	print "ControlCreator_v.setControlsPositioninGroupBoxToZero()"
+	--
+	--	if( (group_box_name = _Control.Params.getVal #GroupBox) != undefined ) then
+	--	(
+	--
+	--		--for group_box_fullname in _Controls.GroupBoxes.keys where matchPattern group_box_fullname pattern:("*_"+group_box_name) do
+	--		--for group_box_fullname in _Controls.GroupBoxes.keys where group_box_fullname == group_box_name do
+	--		--for group_box_fullname in _Controls.GroupBoxes.keys where group_box_fullname == group_box_name do
+	--		--(
+	--			--group_box_controls = _Controls.GroupBoxes.getVal(group_box_fullname)
+	--
+	--			_Control.param #pos	[0, 0]
+	--
+	--			--across =  if( (across = _Control.Params.getVal #across) != undefined ) then across else 4 -- allow user defined width of control via across:parameter
+	--			
+	--			--_Control.param #across across
+	--		--)
+	--	)
+	--
+	--	_Control --return	
+	--),
 	
 	
 	private

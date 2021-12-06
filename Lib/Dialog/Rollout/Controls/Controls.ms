@@ -87,7 +87,7 @@ struct Controls_v
 	 */
 	function _setGroupBoxParameters _Control =
 	(
-		--print "Controls_v._setGroupBoxParameters()"
+		print "Controls_v._setGroupBoxParameters()"
 		if( _Control.type == #GroupBox ) then
 		(
 			GroupBoxes.setVal (_Control.id) #()
@@ -95,10 +95,13 @@ struct Controls_v
 		else
 			if( (control_group_box = _Control.Params.getVal #GroupBox) != undefined ) then
 			(
-				--format "control_group_box	= % \n" control_group_box
+				format "control_group_box	= % \n" control_group_box
+				index	= findItem GroupBoxes.keys ("GROUPBOX_"+control_group_box as string )
+				 format "GroupBoxes.keys	= % \n" GroupBoxes.keys
+				 format "index	= % \n" index
 				--if( (_groupbox_controls = GroupBoxes.getVal (control_group_box)) != undefined ) then
 					--for group_box_fullname in _Controls.GroupBoxes.keys where matchPattern group_box_fullname pattern:("*_"+group_box_name) do
-				append GroupBoxes.values[1] _Control.id
+				append GroupBoxes.values[index] _Control.id
 					--append _groupbox_controls _Control.id
 
 		)

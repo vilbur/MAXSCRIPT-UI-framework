@@ -65,13 +65,10 @@ struct ControlCreator_v
 		
 		Controls_in_Groupboxes	= #()
 		
-		
 		for _Control in _Controls.list do
 		(
-			
-			ParamsCreator.setControlsPositioninGroupBoxToZero(_Controls) (_Control)
-
-			
+			if( (control_is_in_group_box = _Control.Params.getVal #GroupBox) != undefined ) then -- set controls positionin group box to zero
+				_Control.param #pos	[0, 0]
 			
 			if( _Control.type == #groupbox ) then
 			(
