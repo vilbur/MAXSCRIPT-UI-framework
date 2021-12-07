@@ -55,7 +55,7 @@ struct RolloutCreator_v
 		ControlCreator = ControlCreator_v _Rollout:_Rollout
 
 			
-		this._setIniToEventCreators()
+		this._setIniToCreators()
 		
 		/* EDIT start */ 
 		_Rollout.rolloutCreatorBegin(this.width)
@@ -124,7 +124,7 @@ struct RolloutCreator_v
 	
 	 /** _set ini to event creators
 	  */
-	 function _setIniToEventCreators =
+	 function _setIniToCreators =
 	 (
 		ini_path = Ini.getPath()
 

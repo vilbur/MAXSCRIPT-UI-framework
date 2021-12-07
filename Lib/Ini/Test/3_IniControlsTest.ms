@@ -2,7 +2,9 @@ clearListener()
 
 filein( getFilenamePath(getSourceFileName()) + "/../../Dialog/../RolloutCreator/RolloutCreator.ms" )
 
-ControlEvents = ControlEvents_v()
+--filein( getFilenamePath(getSourceFileName()) + "/../../RolloutCreator/ControlCreator/ControlEventsCreator/ControlEventsCreator.ms" )
+
+ControlEvents = ControlEventsCreator_v()
 
 /* ONLY THIS TYPES OF CONTROLS WILL BE TESTED
   * 

@@ -30,7 +30,7 @@ struct ControlValue_v
 			return undefined
 		
 		if( (val_ini = getINISetting ini_path rollout_id _Control.id) != "" ) then
-			#(name_of_param, this._convertDatatype(val_ini))
+			#(name_of_param, this._convertDatatype(_Control)(val_ini))
 	),
 	
 	/** _get name of value parameter
@@ -46,14 +46,25 @@ struct ControlValue_v
 	
 	/** Format string value to valid datatype
 	 */
-	function _convertDatatype val =
-	(		
-		if( (for pattern in #( "true", "false", "color*", "[*,*]" ) where matchPattern val pattern:pattern collect pattern).count > 0 ) then 
+	function _convertDatatype _Control val =
+	(
+		 if( ( val_as_number = val as Number ) != undefined ) then
+		(
+			if( _Control.type == #spinner ) then
+			(
+				_range = _Control.Params.getval #range
+				
+				_range.y = val as Number
+				
+				_range --return
+			)
+			else
+				val_as_number --return
+		)
+		else if( (for pattern in #( "true", "false", "(color*", "[*,*]" ) where matchPattern val pattern:pattern collect pattern).count > 0 ) then 
 			execute val
 
-		else if( ( val_as_number = val as number) != undefined ) then 
-			val_as_number --return
-			
+		
 		else
 			val --return
 	),

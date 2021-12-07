@@ -154,7 +154,8 @@ struct Rollout_v
 
 			--print "RolloutCreator_v._setId()"
 			id = "ROLLOUT_" + (( dotNetObject "System.Text.RegularExpressions.Regex" @"[^A-Za-z0-9_]+" ).Replace ( (substituteString id " " "_") ) "")
-			format "@!!!!!!!!!!!! id	= % \n" id
+
+
 			id --return
 		)
 	),

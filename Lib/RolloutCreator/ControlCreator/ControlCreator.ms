@@ -89,11 +89,13 @@ struct ControlCreator_v
 	 */
 	function _addControl _Control =
 	(
-		--format "\n"
-		--print ("ControlCreator_v._addControl() " +_Control.id )
+		format "\n"
+		print ("ControlCreator_v._addControl() " +_Control.id )
 		--format "_Control	= % \n" _Control
+		this._addValueParameter  (_Control) (_Rollout.id)
+		
 		params = ParamsCreator.join(_Control.params)
-
+		format "params	= % \n" params
 		_Rollout._RolloutCreator.addControl (_Control.type) (_Control.id) (_Control.caption) paramStr:params
 	),
 	
@@ -164,11 +166,13 @@ struct ControlCreator_v
 
 	/** _add value parameter
 	 */
-	function _addValueParameter =
+	function _addValueParameter _Control rollout_id = 
 	(
 		--print "ControlCreator_v._addValueParameter()"
-				val_ini	= ControlValue.getValueFromIni(_Control)(rollout_id)
-		value_param	= this._getValueParameterArray(_Control)(val_ini)
+		val_ini	= ParamsCreator.ControlValue.getValueFromIni(_Control)(rollout_id)
+		
+		if( val_ini != undefined ) then
+			_Control.Params.setVal val_ini[1] val_ini[2]
 	),
 
 	/** Add event handlers

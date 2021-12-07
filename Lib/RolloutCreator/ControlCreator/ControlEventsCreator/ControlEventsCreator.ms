@@ -97,6 +97,12 @@ struct ControlEventsCreator_v
 	
 	
 	/** _add save to ini events
+	  *
+	  * KNOWING ISSUES:
+	  * 	PROBLEM:	 #Multilistbox on single clict sometimes does not save to ini
+	  *	SOLUTION:	Use Ctrl key even if seledting only one item 
+	  *
+	  *
 	 */
 	function _addDefaultEvents rollout_id =
 	(
