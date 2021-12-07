@@ -15,32 +15,34 @@ ControlEvents = ControlEventsCreator_v()
 */ 
 control_types_for_test = #(
 	
-	#Label,
-	#Button,
-	#Checkbox,
-	#Checkbutton,
-	#Spinner,
-	#Edittext,
-	#Listbox,
-	#multilistbox,
-	#Dropdownlist,
-	------#Combobox,
-	------#GroupBox,
-	------#Angle,
-	------#Bitmap,
-	------#Colorpicker,
-	------#hyperlink,
-	------#imgTag,
-	------#Mapbutton,
-	------#Materialbutton,
-	------#Pickbutton,
-	------#ProgressBar,
-	------#Slider,
-	------#Curve,-- DOES NOT WORK YET
-	------#popupMenu,-- DOES NOT WORK YET
-	------#Radiobuttons,-- DOES NOT WORK YET
-	#Timer
+	--#Label,
+	--#Button,
+	--#Checkbox,
+	--#Checkbutton,
+	--#Spinner,
+	--#Edittext,
+	--#Listbox,
+	--#multilistbox,
+	--#Dropdownlist,
+	--------#Combobox,
+	--------#GroupBox,
+	--------#Angle,
+	--------#Bitmap,
+	--------#Colorpicker,
+	--------#hyperlink,
+	--------#imgTag,
+	--------#Mapbutton,
+	--------#Materialbutton,
+	--------#Pickbutton,
+	--------#ProgressBar,
+	--------#Slider,
+	--------#Curve,-- DOES NOT WORK YET
+	--------#popupMenu,-- DOES NOT WORK YET
+	--------#Radiobuttons,-- DOES NOT WORK YET
+	--#Timer
+	--
 	
+	/* DEV */ 
 	--#Checkbox
 	--#Button
 	--#Spinner
@@ -48,13 +50,18 @@ control_types_for_test = #(
 
 )
 
+
+/* CUSTOM TYPES */ 
+append ControlEvents.control_types	#browsePath
+append control_types_for_test	#browsePath
+
 controls_with_items = #(
 	#Listbox,
 	#multilistbox,
 	#Dropdownlist,
 	#Combobox
 )
-
+  
 
 /** DEFINE UI 
  *	
@@ -90,4 +97,4 @@ for control_type in ControlEvents.control_types where findItem control_types_for
  */
 _RolloutCreator.createRollout _Rollout
 
-CreateDialog (_RolloutCreator.getDefinition _Rollout)
+CreateDialog (_RolloutCreator.getDefinition _Rollout) width:512

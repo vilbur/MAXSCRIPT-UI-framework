@@ -66,6 +66,7 @@ struct ControlValue_v
 
 		
 		else
+			--substituteString val "\\" "/"
 			val --return
 	),
 	

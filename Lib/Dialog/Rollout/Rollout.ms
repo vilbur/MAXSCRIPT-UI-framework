@@ -108,16 +108,24 @@ struct Rollout_v
 
 		total_length = 20
 		
-		difference = ceil((total_length - title.count)/2) -- center
-	
-			
-		for i = 1 to floor (width/12) + difference do
+		
+		/**
+				KEEP TITTLE IN THE MIDDLE IS MAGIC ROCKET SCIENCE
+				
+				
+				VALUEs aRE lonG TIME TUNED ;)
+		  */
+		difference = ceil((total_length - title.count)/2) -- get difference in length of characters, longer title has shorter prefix and vice versa
+		
+		width_divider = if( width >= 600  ) then 9  -- divide rollout of each length by different divider
+					else if( width >= 400  ) then 12
+					else if( width <= 250  ) then 40
+					else 20
+		
+		for i = 1 to floor (width/width_divider) + difference * 2.5 do -- too width 200px
 			prefix +=" "
-
-
-		for i = 1 to  (difference* 0.5 ) do
-			dashes +="—"
-	
+		
+		
 		prefix + dashes +""+ title +"" +dashes--return
 	)
 	else		
@@ -142,21 +150,13 @@ struct Rollout_v
 		(
 			id  = title
 			
-			id	= trimRight ( trimLeft id )
+			id = substituteString ( trimRight ( trimLeft id )) " " "_" -- replace whitespace with underscore
 			
-			id = substituteString id " " "_" -- replace whitespace with underscore
-			
-			id = this._repleaceCharacters "[^A-Za-z0-9_]+" "" -- remove characters E.G.: "Butt@n_&_1" >>> "Button_1"
-			
-			id = toUpper ( type as string ) + "_" + id -- add prefix by control type E.G.: "test" >>> "BUTTON_test"
-		
-			id = this._repleaceCharacters "[_]+" "_" -- remove underscores E.G.: "button___1" >>> "button_1"
+			id = this._repleaceCharacters "[^A-Za-z0-9_]+" "" -- remove invalid characters E.G.: "Butt@n_&_1" >>> "Button_1"
+					
+			id = this._repleaceCharacters "[_]+" "_" -- remove multiple underscores E.G.: "button___1" >>> "button_1"
 
-			--print "RolloutCreator_v._setId()"
-			id = "ROLLOUT_" + (( dotNetObject "System.Text.RegularExpressions.Regex" @"[^A-Za-z0-9_]+" ).Replace ( (substituteString id " " "_") ) "")
-
-
-			id --return
+			id = "ROLLOUT_" + (( dotNetObject "System.Text.RegularExpressions.Regex" @"[^A-Za-z0-9_]+" ).Replace ( ( substituteString id " " "_") ) "")
 		)
 	),
 	

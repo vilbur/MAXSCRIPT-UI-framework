@@ -17,8 +17,9 @@ struct EventFiredCreator_v
 	(
 		this.params = filterString params " "
 		
-	    (this._defineStruct()) + "; global EventFired = EventFired_v type:#"+event_type+" Control:#"+control_id as string +" "+(this._getParams())
-	    --(this._defineStruct()) + "; global EventFired = EventFired_v type:#"+event_type+" Control:#"+control_id as string +" "+(this._getParams()) + ";format \"!!! EventFired	= % \n\" EventFired;"
+	    EventFired_string = (this._defineStruct()) + "\n\tglobal EventFired = EventFired_v type:#"+event_type+" Control:#"+control_id as string +" "+(this._getParams()) 
+			
+		EventFired_string --return
 	),
 	
 	

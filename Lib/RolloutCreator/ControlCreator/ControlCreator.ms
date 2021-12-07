@@ -89,16 +89,27 @@ struct ControlCreator_v
 	 */
 	function _addControl _Control =
 	(
-		format "\n"
-		print ("ControlCreator_v._addControl() " +_Control.id )
+		--format "\n"
+		--print ("ControlCreator_v._addControl() " +_Control.id )
 		--format "_Control	= % \n" _Control
 		this._addValueParameter  (_Control) (_Rollout.id)
 		
 		params = ParamsCreator.join(_Control.params)
-		format "params	= % \n" params
+		--format "params	= % \n" params
 		_Rollout._RolloutCreator.addControl (_Control.type) (_Control.id) (_Control.caption) paramStr:params
 	),
-	
+
+	/** Add event handlers
+	 */
+	function _addControlHandlersToRollout _Control =
+	(
+		--print "ControlCreator_v._addControlHandlersToRollout()"
+		events_list = EventsCreator.getEvents(_Control)(_Rollout.id)
+
+		for Event in events_list do
+			_Rollout._RolloutCreator.addHandler _Control.id Event.type codeStr:(Event.code) paramStr:Event.params filter:on
+	),
+
 	/** Move group boxcontrols to end
 	 */
 	function moveGroupBoxcontrolsToEnd =
@@ -173,21 +184,6 @@ struct ControlCreator_v
 		
 		if( val_ini != undefined ) then
 			_Control.Params.setVal val_ini[1] val_ini[2]
-	),
-
-	/** Add event handlers
-	 */
-	function _addControlHandlersToRollout _Control =
-	(
-		--print "ControlCreator_v._addControlHandlersToRollout()"
-		events_list = EventsCreator.getEvents(_Control)(_Rollout.id)
-		--for Event in events_list do format "Event	= % \n" Event
-
-		for Event in events_list do
-		(
-			--format "Event	= % \n" Event
-			_Rollout._RolloutCreator.addHandler _Control.id Event.type codeStr:(Event.code) paramStr:Event.params filter:on
-		)
 	),
 
 	/** Add local variables from Control_v to rollout

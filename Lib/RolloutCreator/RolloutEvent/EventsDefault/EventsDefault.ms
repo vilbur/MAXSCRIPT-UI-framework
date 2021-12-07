@@ -31,8 +31,7 @@ struct EventsDefault_v
 	 */
 	function _dialogEvents =
 	(
-		print "EventsDefault_v._dialogEvents()"
-		
+		--print "EventsDefault_v._dialogEvents()"
 		append list ( Event_v type:#open	code:("GroupBoxCreator.sortControlsToGroupBoxes(\""+rollout_id+"\")") )
 		
 		if( ini_path != undefined ) then
@@ -49,6 +48,11 @@ struct EventsDefault_v
 			this._rolloutSaveIni()
 	),
 	/** Dialog save ini
+	  
+	  
+		IMPORTANT: #docked probably doesn't work in max 2022
+	  
+	  
 	 */
 	function _dialogSaveIni =
 	(

@@ -40,6 +40,7 @@ struct ControlDefaults_v
 		--print "ControlDefaults_v._setDefaultsForAllTypes()"
 		
 		control_types = include "Library/MAXSCRIPT-UI-framework/Lib/Dialog/Rollout/Controls/control_types.ms"
+		
 		append control_types #global 
 		
 		control_types = control_types + this.keys

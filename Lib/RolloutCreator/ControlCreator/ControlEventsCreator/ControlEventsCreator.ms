@@ -10,9 +10,17 @@ global STARTUP_EVENTS = #() -- run callbacks of controls like checkbox, checkbut
  * 		
  * 		
  * 		
- *	!!!!!!!!! NOTES FOR ADDING NEW TYPE OF CONTROL !!!
  * 		
- *		Edit arrays: control_types, event_types
+ * 		
+ * 		
+ *										  	  !!!!!!!!! NOTES FOR ADDING NEW TYPE OF CONTROL !!!!!!!!!
+ * 		 
+ *												Edit arrays in this file: control_types, event_types
+ * 		
+ * 		
+ * 		
+ * 		
+ * 		
  */
 struct ControlEventsCreator_v 
 (
@@ -108,15 +116,16 @@ struct ControlEventsCreator_v
 	(
 		--print "ControlEvents_v._addDefaultEvents()"
 		events_list	= #()
-		
+
 		for event_type in events_of_control where findItem dynamic_event_types event_type > 0 do
 		(
+			--format "event_type	= % \n" event_type
 			Event = this._getEvent(event_type)
 			
-			Event.code	= "( setINISetting \""+ini_path+"\" \""+rollout_id+"\" \""+_Control.id+"\" (val as string) );" + Event.code
+			Event.code += "\n\t(setINISetting \""+ini_path+"\" \""+rollout_id+"\" \""+_Control.id+"\" (val as string) );\n"
 
 			Event.params	= params_of_events[findItem events_of_control event_type]
-
+			
 			append events_list Event
 		)
 
@@ -169,6 +178,7 @@ struct ControlEventsCreator_v
 			_EventFired    = EventFiredCreator.getEventFired(events_of_control[i])(Event.params)
 			--format "_EventFired	= % \n" _EventFired
 			Event.code = _EventFired+ ";"+ Event.code
+			--Event.code =  Event.code + ";"+ _EventFired
 		)
 		
 	),

@@ -27,7 +27,7 @@ struct BrowsePath_v
 		for event_type in #( #changed, #entered ) do 
 		(
 			Event = if( (Event = _Control.Events.get event_type) != undefined ) then Event else (Event_v type:event_type )
-			
+			--format "Event.code	= % \n" Event.code
 			Event.code = "\n\tfunction valueIsEmpty _string =
 				(
 					(( dotNetClass @System.Text.RegularExpressions.RegEx@).matches _string @^\s+$|^$@ ).count == 1
@@ -37,12 +37,13 @@ struct BrowsePath_v
 					if( (browsed_path = "+ this._getPathDialog() +") != undefined ) do
 					(
 						"+_Control.id+".text = browsed_path
-						EventFired.val = browsed_path
+						EventFired.val = val = substituteString browsed_path @\\\\@ @\\\\\\\\@;
+						format \"EventFired	= % \n\" EventFired
 						"+ Event.code +" -- fire custom event with browsed variable
 					)
 				else
-					"+local_variable_name+" = "+_Control.id+".text"
-			
+					("+local_variable_name+" = "+_Control.id+".text);"
+	
 			_Control.Events.replace Event
 		)
 
