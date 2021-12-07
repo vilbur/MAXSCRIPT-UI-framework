@@ -161,7 +161,7 @@ struct ControlEventsCreator_v
 			Event = this._getEvent(events_of_control[i])
 
 			_EventFired    = EventFiredCreator.getEventFired(events_of_control[i])(Event.params)
-			
+			--format "_EventFired	= % \n" _EventFired
 			Event.code = _EventFired+ ";"+ Event.code
 		)
 		

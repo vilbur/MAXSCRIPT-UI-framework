@@ -32,7 +32,7 @@ struct ScriptFile_Content_v
 	function addToUi &_Rollout =
 	(
 		--print "!!!!!!!!!!!!!!!!!!!!!!!!"
-		print("ScriptFile_Content_v.addToUi() " +_Rollout.id)
+		--print("ScriptFile_Content_v.addToUi() " +_Rollout.id)
 		name	= if( name == undefined )then "" else "";
 		
 		if( this.isMacrosriptFile() and MacroScripts.count > 0 ) then
@@ -46,7 +46,7 @@ struct ScriptFile_Content_v
 	 */
 	function _createControls _Controls =
 	(
-		print("ScriptFile_Content_v._createControls()" )
+		--print("ScriptFile_Content_v._createControls()" )
 		--format "x _Controls	= % \n" _Controls.GroupBoxes
 		--format "MacroScripts = % \n" MacroScripts
 		for m = 1 to MacroScripts.count do

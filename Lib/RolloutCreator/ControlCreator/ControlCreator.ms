@@ -21,11 +21,11 @@ struct ControlCreator_v
 	 */
 	function addControls _Controls =
 	(
-		print "ControlCreator_v.addControls()"
+		--print "ControlCreator_v.addControls()"
 		this._Rollout  = _Rollout
 		this._Controls = _Controls
 		--AcrossModifier	= AcrossParameterModifier_v()
-		format "_Controls.GroupBoxes	= % \n" _Controls.GroupBoxes
+		--format "_Controls.GroupBoxes	= % \n" _Controls.GroupBoxes
 		
 		GroupBoxCreator.GroupBoxes = _Controls.GroupBoxes
 		
@@ -56,12 +56,52 @@ struct ControlCreator_v
 	private
 	
 	
+	/** _add controls
+	 */
+	function _addControlsToRollout =
+	(
+		this._addControlsGroup #start
+
+		for _Control in _Controls.list do
+		(
+			this._addControl (_Control) -- add control first before variables, functions and events
+
+			this._addControlHandlersToRollout(_Control)
+		)
+
+		this._addControlsGroup #end 
+	),
+
+	/** Add controls group
+	  * 
+	  * https://help.autodesk.com/view/3DSMAX/2016/ENU/?guid=__files_GUID_1361B847_7878_4C52_98DE_5BC5CA830B40_htm
+	 */
+	function _addControlsGroup start_or_end =
+	(
+		--print ("ControlCreator_v._addControlsGroup() " + start_or_end as string )
+		if( _Controls.group == undefined ) do
+			return false
+
+		_Rollout._RolloutCreator.addText (if( start_or_end == #start ) then "group @"+_Controls.group+"@ (" else ")" ) filter:on
+	),
+
+	/* Add control to RolloutCreator
+	 */
+	function _addControl _Control =
+	(
+		--format "\n"
+		--print ("ControlCreator_v._addControl() " +_Control.id )
+		--format "_Control	= % \n" _Control
+		params = ParamsCreator.join(_Control.params)
+
+		_Rollout._RolloutCreator.addControl (_Control.type) (_Control.id) (_Control.caption) paramStr:params
+	),
 	
 	/** Move group boxcontrols to end
 	 */
 	function moveGroupBoxcontrolsToEnd =
 	(
-		print "ControlCreator_v.moveGroupBoxcontrolsToEnd()"
+		--print "ControlCreator_v.moveGroupBoxcontrolsToEnd()"
 		
 		Controls_in_Groupboxes	= #()
 		
@@ -122,54 +162,6 @@ struct ControlCreator_v
 				_Control = (BrowsePath_v _Control:_Control).getControl()
 	),
 
-	/** _add controls
-	 */
-	function _addControlsToRollout =
-	(
-		this._addControlsGroup #start
-
-		for _Control in _Controls.list do
-		(
-			this._addControl (_Control) -- add control first before variables, functions and events
-
-			this._addControlHandlersToRollout(_Control)
-		)
-
-		this._addControlsGroup #end 
-	),
-
-	/** Add controls group
-	  * 
-	  * https://help.autodesk.com/view/3DSMAX/2016/ENU/?guid=__files_GUID_1361B847_7878_4C52_98DE_5BC5CA830B40_htm
-	 */
-	function _addControlsGroup start_or_end =
-	(
-		--print ("ControlCreator_v._addControlsGroup() " + start_or_end as string )
-		if( _Controls.group == undefined ) do
-			return false
-
-		_Rollout._RolloutCreator.addText (if( start_or_end == #start ) then "group @"+_Controls.group+"@ (" else ")" ) filter:on
-	),
-
-	/* Add control to RolloutCreator
-	 */
-	function _addControl _Control =
-	(
-		format "\n"
-		--print ("ControlCreator_v._addControl() " +_Control.id )
-		--params = (ParamsCreator.getParams(_Control)(_Rollout.id))
-
-
-		
-		--format "_Control	= % \n" _Control
-		params = ParamsCreator.join(_Control.params)
-
-		format "%.params	= % \n" _Control.id params
-		_Rollout._RolloutCreator.addControl (_Control.type) (_Control.id) (_Control.caption) paramStr:params
-		--_Rollout._RolloutCreator.addControl (_Control.type) (_Control.id) (_Control.caption) paramStr:""1
-	),
-
-
 	/** _add value parameter
 	 */
 	function _addValueParameter =
@@ -188,7 +180,10 @@ struct ControlCreator_v
 		--for Event in events_list do format "Event	= % \n" Event
 
 		for Event in events_list do
+		(
+			--format "Event	= % \n" Event
 			_Rollout._RolloutCreator.addHandler _Control.id Event.type codeStr:(Event.code) paramStr:Event.params filter:on
+		)
 	),
 
 	/** Add local variables from Control_v to rollout

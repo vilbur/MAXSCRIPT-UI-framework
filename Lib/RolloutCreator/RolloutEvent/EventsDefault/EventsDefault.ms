@@ -33,7 +33,7 @@ struct EventsDefault_v
 	(
 		print "EventsDefault_v._dialogEvents()"
 		
-		append list ( Event_v type:#open	code:("GroupBoxCreator.test(\""+rollout_id+"\")") )
+		append list ( Event_v type:#open	code:("GroupBoxCreator.sortControlsToGroupBoxes(\""+rollout_id+"\")") )
 		
 		if( ini_path != undefined ) then
 			this._dialogSaveIni()

@@ -60,7 +60,7 @@ struct RolloutCreator_v
 		/* EDIT start */ 
 		_Rollout.rolloutCreatorBegin(this.width)
 		
-				/* add LOCAL VARIABLES */ 
+		/* add LOCAL VARIABLES */ 
 		this._addLocalVariablesToRollout (_Rollout)
 
 		/* add TEXT */ 

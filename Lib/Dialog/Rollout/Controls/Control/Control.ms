@@ -15,7 +15,7 @@ struct Control_v
 	id,
 	
 	/* dependency */
-	Events = EventsList_v(),
+	Events = EventsList_v(), -- "../../EventsList/EventsList.ms" 
 	Params = ParamsList_v(),
 
 	

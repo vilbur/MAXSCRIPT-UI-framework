@@ -34,9 +34,10 @@ struct BrowsePath_v
 				)
 				
 				if( valueIsEmpty(val) and valueIsEmpty("+local_variable_name+") ) then
-					if( (val = "+ this._getPathDialog() +") != undefined ) do
+					if( (browsed_path = "+ this._getPathDialog() +") != undefined ) do
 					(
-						"+_Control.id+".text = val
+						"+_Control.id+".text = browsed_path
+						EventFired.val = browsed_path
 						"+ Event.code +" -- fire custom event with browsed variable
 					)
 				else

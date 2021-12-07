@@ -46,7 +46,7 @@ struct ContentControlCreator_v
 	(
 		--print "ContentControlCreator_v._setControlEvent()"
 		if( (event_type = this._getEventType (_Control)) != undefined ) then
-			this._setOnClickEvent (event_type) (_Control) 
+			this._setEventCallMacro (event_type) (_Control) 
 		
 		_Control --return
 	),
@@ -78,10 +78,11 @@ struct ContentControlCreator_v
 	
 	/** Set events which call macro
 	 */
-	function _setOnClickEvent event_type _Control =
+	function _setEventCallMacro event_type _Control =
 	(
-		--format "ContentControlCreator_v._setOnClickEvent event_type	= % \n" event_type
-		callback = "macros.run \""+Macro.category+"\" \""+Macro.macro_name+"\""
+		--format "ContentControlCreator_v._setEventCallMacro event_type	= % \n" event_type
+		callback = "macros.run \""+Macro.category+"\" \""+Macro.macro_name+"\";"
+		--callback = "print \"TEST\";"
 
 		_Control.Event event_type callback tooltip:Macro.toolTip
 	),

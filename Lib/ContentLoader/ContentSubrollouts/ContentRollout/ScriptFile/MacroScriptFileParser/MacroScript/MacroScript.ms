@@ -46,7 +46,7 @@ struct MacroScript_Content_v
 	 */
 	function getType =
 	(
-		if( matchPattern icon pattern:"type:*" ) then
+		if( matchPattern icon pattern:"*type:*" ) then
 			((this._getMatches icon "Type:([^\|]+)"))[1][2] as name
 		else
 			#button
@@ -80,11 +80,9 @@ struct MacroScript_Content_v
 	function getParamsArray =
 	(
 		--print "MacroScript_Content_v.getParamsArray()"
-		
 		params_key_value = #()
 
 		this._setParamsSplit()
-		--format "params_split	= % \n" params_split
 		
 		for param_split in params_split where param_split[2] != "type" do
 			params_key_value = params_key_value + #(param_split[2] as name , this._convertDatatype(param_split[3]))
@@ -140,9 +138,17 @@ struct MacroScript_Content_v
 	 */
 	function _convertDatatype val =
 	(		
-		if( (for pattern in #( "true", "false", "color*", "[*,*]" ) where matchPattern val pattern:pattern collect pattern).count > 0 ) then 
+		--print "MacroScript_Content_v._convertDatatype()"
+		--format "val	= % \n" val
+		if( (for pattern in #( "true", "false", "(color*", "[*,*]" ) where matchPattern val pattern:pattern collect pattern).count > 0 ) then 
 			execute val
 
+		else if( matchPattern val pattern:"#(*" ) then
+		(
+			val = substituteString val "'" "\"" -- replace macroscript define array paramter E.G.: items:#( 'item 1', '2' ) >>> items:#( "item 1", "2" )
+		
+			execute val
+		)
 		else if( ( val_as_number = val as number) != undefined ) then 
 			val_as_number --return
 			

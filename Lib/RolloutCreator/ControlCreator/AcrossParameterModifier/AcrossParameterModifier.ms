@@ -6,11 +6,6 @@
  */
 struct AcrossParameterModifier_v
 (
-
-	--fake_control_caption = "",     -- PRODUCTION
-	--fake_control_caption = "--------", -- SHOW FAKE CONTROL IN UI FOR DEBUG
-
-	--_Controls,
 	_controls_in_row,
 	_across_left,
 
@@ -18,66 +13,54 @@ struct AcrossParameterModifier_v
 	 */
 	function addFakeControls &_Controls =
 	(
-		print ("ControlCreator_v._acrossParameterModify() "+_Controls.group as string )
+		--print ("ControlCreator_v._acrossParameterModify() "+_Controls.group as string )
 
 		_Controls_list_copy	= #()
 
-
-		
-			for control_count = 1 to _Controls.list.count do
-			(
-				--format "\n"
-				_Control =  _Controls.list[control_count]
-				
-				if( (control_is_not_in_group_box = _Control.Params.getVal #GroupBox) == undefined ) then
-				(
-					--print ("_Control.id = " + _Control.id)
-					across_current	=  _Control.Params.getVal #across
-					--format "across_current = % \n" across_current
-					--format "_across_left	= % \n" _across_left
-		
-					if( new_row_start = (_across_left == 0) ) then 
-						_across_left = across_current
-		
-					if( _across_left == undefined ) then
-						_across_left = across_current
-		
-					if( _controls_in_row == undefined ) then
-						_controls_in_row = across_current
-		
-					--format "_controls_in_row	= % \n" _controls_in_row
-		
-					if( across_has_changed = (across_current != _controls_in_row) ) then
-					(
-						--format "new_row_start	= % \n" new_row_start
-						--format "across_has_changed	= % \n" across_has_changed
-		
-						--if( new_row_start == false ) then
-						--if( _across_left != undefined ) then
-		
-						if( new_row_start == false ) then
-							--this._addFakeControls (_Controls) (_Controls_list_copy) (_across_left) fake_control_caption:("next: "+_Control.caption)
-							this._addFakeControls (_Controls) (_Controls_list_copy) (_across_left) fake_control_caption:("next: "+_across_left as string )
-		
-						_controls_in_row = _across_left = across_current
-		
-					)
-					else if ( control_is_not_first = (_across_left != across_current)  ) then 
-						 _Control.Params.delete #across
-		
-					if( _across_left != undefined ) then
-						_across_left -= 1
-						--format "_across_left	= % \n" _across_left
-					
-				)
 	
-				/* ADD CONTROL TO NEW LIST */ 
-				append _Controls_list_copy _Control
+		for control_count = 1 to _Controls.list.count do
+		(
+			_Control =  _Controls.list[control_count]
+			
+			if( (control_is_not_in_group_box = _Control.Params.getVal #GroupBox) == undefined ) then
+			(
+				across_current	=  _Control.Params.getVal #across
+	
+				if( new_row_start = (_across_left == 0) ) then 
+					_across_left = across_current
+	
+				if( _across_left == undefined ) then
+					_across_left = across_current
+	
+				if( _controls_in_row == undefined ) then
+					_controls_in_row = across_current
+	
+				--format "_controls_in_row	= % \n" _controls_in_row
+	
+				if( across_has_changed = (across_current != _controls_in_row) ) then
+				(
+					if( new_row_start == false ) then
+						this._addFakeControls (_Controls) (_Controls_list_copy) (_across_left) --fake_control_caption:("next: "+_across_left as string )
+	
+					_controls_in_row = _across_left = across_current
+	
+				)
+				else if ( control_is_not_first = (_across_left != across_current)  ) then 
+					 _Control.Params.delete #across
+	
+				if( _across_left != undefined ) then
+					_across_left -= 1
+					--format "_across_left	= % \n" _across_left
+				
 			)
+
+			/* ADD CONTROL TO NEW LIST */ 
+			append _Controls_list_copy _Control
+		)
 
 		/* ADD FAKE CONTROLS TO END OF GROUP TO FILL ROW */
 		if( end_of_group = _across_left != undefined ) then
-			this._addFakeControls  (_Controls) (_Controls_list_copy) (_across_left) fake_control_caption:("group end" )
+			this._addFakeControls  (_Controls) (_Controls_list_copy) (_across_left) --fake_control_caption:("group end" )
 
 		_across_left	= undefined -- allow set for new group
 		_controls_in_row	= undefined -- allow set for new group

@@ -45,7 +45,7 @@ struct Dialog_v
 		
 		--format "style	= % \n" style
 		--_RolloutCreator.createRollout (RolloutMain) dialog_rollout:true
-		_RolloutCreator.createRollout (RolloutMain) height:height
+		_RolloutCreator.createRollout (RolloutMain) width:width height:height
 		--format "RolloutMain._RolloutCreator	= % \n" RolloutMain._RolloutCreator
 		
 		CreateDialog (_RolloutCreator.getDefinition(RolloutMain)) pos:(this._getPositionRelativeToWindow(pos)) width:width height:height bgcolor:bgcolor fgcolor:fgcolor bitmap:bitmap style:style modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent

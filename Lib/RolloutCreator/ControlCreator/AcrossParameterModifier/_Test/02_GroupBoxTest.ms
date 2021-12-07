@@ -21,14 +21,14 @@ function createGroupBox prefix:"" control_type:#button =
 	
 	_Controls.Default #across 2 type:#dropdownlist
 	
-	for i = 1 to 1 do 
+	for i = 1 to 4 do 
 	(
 
 		--_Controls.Default #width 96 type:#button
 		--_Controls.Default #width 96 type:#label
 		
-		_Control    = _Controls.control #button ( prefix + i as string ) params:#(#groupbox, #groupbox_left)
-		--_Control    = _Controls.control #dropdownlist ( "DD"+prefix + i as string ) params:#(#groupbox, #groupbox_left)
+		--_Control    = _Controls.control #button ( prefix + i as string ) params:#(#groupbox, #groupbox_left)
+		_Control    = _Controls.control #dropdownlist ( "DD"+prefix + i as string ) params:#(#groupbox, #groupbox_left)
 		--_Control    = _Controls.control #dropdownlist "" id:( "DD"+prefix + i as string ) params:#(#groupbox, #groupbox_left)
 		----_Control    = _Controls.control #listbox ( "LB"+prefix + i as string ) params:#(#groupbox, #groupbox_left)
 		

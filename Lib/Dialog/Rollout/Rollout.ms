@@ -27,7 +27,6 @@ struct Rollout_v
 	/* inhered */ 
 	Layout,
 
-	
 	/** Controls
 	 */
 	function Controls group:undefined =
@@ -50,6 +49,19 @@ struct Rollout_v
 		append _Controls Subrollouts
 		
 		Subrollouts --return
+	),
+
+	/** Rolloutcreator begin
+	  *
+	  * @param	integer	width of rollout, needed to center rollout title
+	  *
+	 */
+	function rolloutCreatorBegin width =
+	(
+		--print "Rollout_v.rolloutcreatorBegin()"
+		_RolloutCreator = rolloutCreator id (this._setTitleCenter(width))
+		
+		_RolloutCreator.begin()
 	),
 	
 	/** Addlocal
@@ -80,7 +92,37 @@ struct Rollout_v
 	),
 	
 	private
+
+	/** Center rollout title with empty space prefix
+	 */
+	function _setTitleCenter width =
+	(
+		--print "Rollout_v._setTitleCenter()"
+		--format "width	= % \n" width
+		prefix = ""
+		dashes = ""
+		
+	if( (max_version = (maxVersion())[8] )!= undefined and max_version > 2020  ) then
+	(
+		prefix = ""
+
+		total_length = 20
+		
+		difference = ceil((total_length - title.count)/2) -- center
 	
+			
+		for i = 1 to floor (width/12) + difference do
+			prefix +=" "
+
+
+		for i = 1 to  (difference* 0.5 ) do
+			dashes +="—"
+	
+		prefix + dashes +""+ title +"" +dashes--return
+	)
+	else		
+		title
+	),
 	
 	/** _get slot
 	 */
@@ -96,21 +138,47 @@ struct Rollout_v
 	 */
 	function _setId =
 	(
-		--print "RolloutCreator_v._setId()"
 		if ( id == undefined or id == unsupplied ) then
-			id = "ROLLOUT_" + (( dotNetObject "System.Text.RegularExpressions.Regex" @"[^A-Za-z0-9_]+" ).Replace ( (substituteString title " " "_") ) "")
+		(
+			id  = title
+			
+			id	= trimRight ( trimLeft id )
+			
+			id = substituteString id " " "_" -- replace whitespace with underscore
+			
+			id = this._repleaceCharacters "[^A-Za-z0-9_]+" "" -- remove characters E.G.: "Butt@n_&_1" >>> "Button_1"
+			
+			id = toUpper ( type as string ) + "_" + id -- add prefix by control type E.G.: "test" >>> "BUTTON_test"
 		
-		id --return
+			id = this._repleaceCharacters "[_]+" "_" -- remove underscores E.G.: "button___1" >>> "button_1"
+
+			--print "RolloutCreator_v._setId()"
+			id = "ROLLOUT_" + (( dotNetObject "System.Text.RegularExpressions.Regex" @"[^A-Za-z0-9_]+" ).Replace ( (substituteString id " " "_") ) "")
+			format "@!!!!!!!!!!!! id	= % \n" id
+			id --return
+		)
+	),
+	
+	/** _repleace string
+	 */
+	function _repleaceCharacters search replace =
+	(
+		( dotNetObject "System.Text.RegularExpressions.Regex" search ).Replace ( id ) replace  --return 
 	),
 	
 	/**  
 	 */
 	on create do
 	(
+		--prnt "RolloutCreator_v._setId()"
 		this._setId()
 		
-		_RolloutCreator = rolloutCreator id title
-		--_RolloutCreator = rolloutCreator id ("                                                     " + title) -- maz 2022 hotfix; rollout tites are aliget to left
+		--this._setTitleCenter()
+		
+		--_RolloutCreator = rolloutCreator id ((this._getPrefix())+title)
+		--_RolloutCreator = rolloutCreator id title
+		--_RolloutCreator = rolloutCreator id ("   "+title)
+		
 	)
 	
 )

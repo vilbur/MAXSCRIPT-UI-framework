@@ -11,6 +11,7 @@ struct EventsList_v
 	function add type callback params:"" tooltip:"" =
 	(
 		--print "ControlEvent_v.add()"
+		--format "callback	= % \n" callback
 		append list (Event_v type:type code:callback tooltip:tooltip params:params)
 	),
 	
