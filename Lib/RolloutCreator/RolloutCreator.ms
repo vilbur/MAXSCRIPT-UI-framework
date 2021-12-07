@@ -20,7 +20,10 @@ struct RolloutCreator_v
 	padding_bottom = 16,
 	subrollouts_slot_height,
 
-	/* optionable */
+	/* store */
+	width,
+	
+	
 	
 	/** New
 	 */
@@ -38,24 +41,26 @@ struct RolloutCreator_v
 
 	/** Create dialog
 	 */
-	function createRollout _Rollout height: =
+	function createRollout _Rollout width: height: =
 	(
 		format "\n"
 		print ("RolloutCreator_v.createRollout() " + _Rollout.id as string )
 		
-		 this._testRolloutTitle(_Rollout.title) 
+		if( width != unsupplied ) then
+			this.width = width
+		
+		 this._testRolloutTitle(_Rollout.title) (_Rollout.id) 
 			
 		--format "_Rollout.title	= % \n" _Rollout.title
-		ControlCreator	= ControlCreator_v _Rollout:_Rollout
+		ControlCreator = ControlCreator_v _Rollout:_Rollout
 
 			
 		this._setIniToEventCreators()
 		
 		/* EDIT start */ 
-		_Rollout._RolloutCreator.begin()
+		_Rollout.rolloutCreatorBegin(this.width)
 		
-		
-		/* add LOCAL VARIABLES */ 
+				/* add LOCAL VARIABLES */ 
 		this._addLocalVariablesToRollout (_Rollout)
 
 		/* add TEXT */ 
@@ -65,7 +70,6 @@ struct RolloutCreator_v
 
 		/* add CONTROLS and SUBROLLOUTS */ 
 		this.addControlsAndSubrolloutes (_Rollout)
-		
 		
 		/* add EVENTS */ 
 		RolloutEvents.bindEvents (_Rollout)
@@ -138,7 +142,6 @@ struct RolloutCreator_v
 		--print "RolloutCreator_v._createSubrollouts()"		
 		this._addSubrolloutsSlots (_Rollout) (Subrollouts)
 		
-		
 		for _Subrollout in Subrollouts.Rollouts do
 			this.createRollout (_Subrollout)
 	 ),
@@ -161,10 +164,10 @@ struct RolloutCreator_v
 	
 	/** Test rollout title
 	 */
-	function _testRolloutTitle rollout_title =
+	function _testRolloutTitle rollout_title rollout_id =
 	(
 		--print "RolloutCreator_v._testRolloutTitle()"
-		if( rollout_title_is_defined = execute ("((class_of_title = classOf "+rollout_title+") != UndefinedClass and class_of_title != RolloutClass) ")  ) then
+		if( rollout_title_is_defined = execute ("((class_of_title = classOf "+rollout_id+") != UndefinedClass and class_of_title != RolloutClass) ")  ) then
 			throw ("\n\nERROR INVALID ROLLOUT TITLE\n\nRollout.title == \""+rollout_title+"\"")	
 	),
 
