@@ -24,7 +24,7 @@ struct Dialog_v
 	--Menu	= DialogMenu_v Dialog:this,
 	
 	/* properties */
-	style = #(#cui_floatable, #style_titlebar, #style_border, #style_sysmenu, #style_resizing),
+	style = #(#cui_floatable, #cui_dock_all, #style_titlebar, #style_border, #style_sysmenu, #style_resizing),
 	
 	RolloutMain, --RENAME TO dialogRollout,
 	
@@ -48,7 +48,7 @@ struct Dialog_v
 		_RolloutCreator.createRollout (RolloutMain) width:width height:height
 		--format "RolloutMain._RolloutCreator	= % \n" RolloutMain._RolloutCreator
 		
-		CreateDialog (_RolloutCreator.getDefinition(RolloutMain)) pos:(this._getPositionRelativeToWindow(pos)) width:width height:height bgcolor:bgcolor fgcolor:fgcolor bitmap:bitmap style:style modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
+		CreateDialog (_RolloutCreator.getDefinition(RolloutMain)) pos:(this._getPositionRelativeToWindow(pos)) autoLayoutOnResize:true  width:width height:height bgcolor:bgcolor fgcolor:fgcolor bitmap:bitmap style:style modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
 		
 		_RolloutCreator.addSubRollouts RolloutMain
 	),
@@ -57,6 +57,8 @@ struct Dialog_v
 	 */
 	function register =
 	(
+		print "Dialog_v.register()"
+		format "style	= % \n" style
 		ENABLE_DOCKED_EVENT = false
 		
 		execute ("cui.RegisterDialogBar "+ RolloutMain.id +" style:"+style as string )

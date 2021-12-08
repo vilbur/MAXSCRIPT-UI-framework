@@ -11,8 +11,7 @@ filein( getFilenamePath(getSourceFileName()) + "/../../../../RolloutCreator/Roll
 include "Library/MAXSCRIPT-UI-framework/Lib/RolloutCreator/_Test/includes/CreateTestRollout.ms"
 
 
-
-_BrowsePath = _Controls.control #browsePath ( "Test Browse" )
+_BrowsePath = _Controls.control #browsePath "[Title is hidden in square brackets]"
 
 _BrowsePath.param #mode	#getOpenFileName 
 _BrowsePath.param #caption	"Browse dialog caption"

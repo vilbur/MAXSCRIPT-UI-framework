@@ -31,7 +31,7 @@ struct Rollout_v
 	 */
 	function Controls group:undefined =
 	(
-		--print "Rollout_v.controls()"
+		print "Rollout_v.controls()"
 		local Controls = Controls_v group:group
 		
 		append _Controls Controls
@@ -43,7 +43,7 @@ struct Rollout_v
 	 */
 	function Subrollouts =
 	(
-		--print "Rollout_v.subrollouts()"
+		print "Rollout_v.subrollouts()"
 		local Subrollouts = Subrollouts_v slot:(this._getSlot())
 		
 		append _Controls Subrollouts
@@ -102,7 +102,7 @@ struct Rollout_v
 		prefix = ""
 		dashes = ""
 		
-	if( (max_version = (maxVersion())[8] )!= undefined and max_version > 2020  ) then
+	if( width != undefined  and (max_version = (maxVersion())[8] )!= undefined and max_version > 2020  ) then
 	(
 		prefix = ""
 

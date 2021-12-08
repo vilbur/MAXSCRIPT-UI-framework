@@ -5,9 +5,11 @@ filein( getFilenamePath(getSourceFileName()) + "/../Ini/Ini.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/../Dialog/Rollout/Rollout.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/../Dialog/Rollout/Subrollouts/Subrollouts.ms" )
 
+filein( getFilenamePath(getSourceFileName()) + "/Event/Event.ms" )
 
-filein( getFilenamePath(getSourceFileName()) + "/RolloutEvent/RolloutEvent.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/RolloutEventBinder/RolloutEventBinder.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/ControlCreator/ControlCreator.ms" )
+
 
 /** RolloutCreator_v
  */
@@ -15,10 +17,10 @@ struct RolloutCreator_v
 (
 	ControlCreator,
 	Ini	= Ini_v(),
-	RolloutEvents	= RolloutEvents_v(),
+	EventBinder	= RolloutEventBinder_v(),
 
 	padding_bottom = 16,
-	subrollouts_slot_height,
+	subrollouts_slot_height = 64,
 
 	/* store */
 	width,
@@ -53,7 +55,7 @@ struct RolloutCreator_v
 			
 		--format "_Rollout.title	= % \n" _Rollout.title
 		ControlCreator = ControlCreator_v _Rollout:_Rollout
-
+		
 			
 		this._setIniToCreators()
 		
@@ -62,17 +64,18 @@ struct RolloutCreator_v
 		
 		/* add LOCAL VARIABLES */ 
 		this._addLocalVariablesToRollout (_Rollout)
-
+		
 		/* add TEXT */ 
 		this._addTextToRollout (_Rollout)
 		
 		this._setSubrolloutsHeight(_Rollout)(height)		
-
+		
 		/* add CONTROLS and SUBROLLOUTS */ 
 		this.addControlsAndSubrolloutes (_Rollout)
 		
+		
 		/* add EVENTS */ 
-		RolloutEvents.bindEvents (_Rollout)
+		EventBinder.bindEvents (_Rollout)
 		
 		
 		/* EDIT end */ 
@@ -128,7 +131,7 @@ struct RolloutCreator_v
 	 (
 		ini_path = Ini.getPath()
 
-		RolloutEvents.ini_path	= ini_path
+		EventBinder.ini_path	= ini_path
 
 		ControlCreator.EventsCreator.ini_path	= ini_path
 
@@ -139,7 +142,7 @@ struct RolloutCreator_v
 	  */
 	 function _createSubrollouts _Rollout Subrollouts =
 	 (
-		--print "RolloutCreator_v._createSubrollouts()"		
+		print "RolloutCreator_v._createSubrollouts()"		
 		this._addSubrolloutsSlots (_Rollout) (Subrollouts)
 		
 		for _Subrollout in Subrollouts.Rollouts do
@@ -150,11 +153,13 @@ struct RolloutCreator_v
 	 */
 	function _addSubrolloutsSlots _Rollout Subrollouts =
 	(
-		
+		print "RolloutCreator_v._addSubrolloutsSlots()"		
+
 		/**  DIASBLE ADDING SUBROLLOUTS SLOT INTO ACROSS LAYOUT
 		  */
 		ControlCreator.AcrossModifier.fakeControlsOnEndofGroup(_Rollout._RolloutCreator) --fake_control_caption:"SUBROLLOUTS"
-
+		--format "Subrollouts.slot	= % \n" Subrollouts.slot
+		--format "subrollouts_slot_height	= % \n" subrollouts_slot_height
 		_Rollout._RolloutCreator.addText ("subRollout "+Subrollouts.slot as string +" \"slot_name\" height:"+subrollouts_slot_height as string )
 	),
 

@@ -18,7 +18,7 @@ struct Controls_v
 	/** Create new control
 	  *
 	  * @property	#name	type	Type of control
-	  * @property	string	caption	Caption of control
+	  * @property	string	caption	Caption of control, caption is hidden if it`s wrapped into brackets "[]" E.G.: "[Browse Path]"
 	  * @property	#name	id	Id of control
 	  * @property	array	params	Params for control
 	  *

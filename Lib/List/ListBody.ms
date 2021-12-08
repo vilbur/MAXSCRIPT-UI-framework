@@ -259,6 +259,6 @@
 		deleteItem values	i
 	),
 	
-
+	public
 	
 	
