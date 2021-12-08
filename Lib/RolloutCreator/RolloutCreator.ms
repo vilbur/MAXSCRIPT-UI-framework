@@ -2,10 +2,11 @@ filein( getFilenamePath(getSourceFileName()) + "/../List/List.ms" )
 
 filein( getFilenamePath(getSourceFileName()) + "/../Ini/Ini.ms" )
 
+filein( getFilenamePath(getSourceFileName()) + "/Event/Event.ms" )
+
 filein( getFilenamePath(getSourceFileName()) + "/../Dialog/Rollout/Rollout.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/../Dialog/Rollout/Subrollouts/Subrollouts.ms" )
 
-filein( getFilenamePath(getSourceFileName()) + "/Event/Event.ms" )
 
 filein( getFilenamePath(getSourceFileName()) + "/RolloutEventBinder/RolloutEventBinder.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/ControlCreator/ControlCreator.ms" )

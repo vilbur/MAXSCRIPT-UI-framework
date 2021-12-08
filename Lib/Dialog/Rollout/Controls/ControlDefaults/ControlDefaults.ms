@@ -17,7 +17,7 @@ struct ControlDefaults_v
 
 	include "Library/MAXSCRIPT-UI-framework/Lib/List/ListBody.ms"
 
-	public
+	--public
 
 	/** Set default param
 	 */

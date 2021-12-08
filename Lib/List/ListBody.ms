@@ -1,3 +1,6 @@
+	
+	public
+
 	keys	= #(),
 	values	= #(),
 	
@@ -97,17 +100,6 @@
 	),
 	
 	
-	/** Join array
-	 */
-	function _join arr delimeter =
-	(
-		_string = ""
-		
-		for i=1 to arr.count do
-			_string += arr[i] + delimeter
-
-		trimRight _string delimeter --return
-	),
 	
 	/** Add array
 	 */
@@ -225,7 +217,17 @@
 	
 	private
 	
-	
+	/** Join array
+	 */
+	function _join arr delimeter =
+	(
+		_string = ""
+		
+		for i=1 to arr.count do
+			_string += arr[i] + delimeter
+
+		trimRight _string delimeter --return
+	),
 	/** _remove undefined
 	 */
 	function _removeUndefined i pattern test =

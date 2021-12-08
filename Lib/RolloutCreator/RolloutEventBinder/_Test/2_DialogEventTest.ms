@@ -31,8 +31,8 @@ function CallbackWithValue val =
 	
 	--format "EventFired.control 	= % \nEventFired.type 	= % \n" EventFired.control EventFired.type
 	dialog_current_state = try(cui.getDockState ROLLOUT_Test)catch(false)
-	format "val 	= % \n" val
-	format "dialog_current_state	= % \n" dialog_current_state
+	--format "val 	= % \n" val
+	--format "dialog_current_state	= % \n" dialog_current_state
 	
 	--format "EventFired 	= % \n\n" EventFired
 )
@@ -56,9 +56,9 @@ function CallbackWith2Params arg_1 arg_2 =
 */
 --Dialog.Events.add #open	"CallbackNoParam()"
 --Dialog.Events.add #close	"CallbackNoParam()"
-Dialog.Events.add #moved	"CallbackWithValue(\"moved\")"
-Dialog.Events.add #resized	"CallbackWithValue(\"resized\")"
-Dialog.Events.add #docked	"CallbackWithValue(\"docked\")"
+Dialog.Events.add #moved	"CallbackWithValue(\"#moved\")"
+Dialog.Events.add #resized	"CallbackWithValue(\"#resized\")"
+Dialog.Events.add #docked	"CallbackWithValue(\"#docked\")"
 --Dialog.Events.add #docked	"CallbackWithValue(val)"
 
 

@@ -23,10 +23,13 @@ struct EventsCombiner_v
 		for event_class in this.keys do
 		(
 			Event	= this._getEvent event_class event_type
-		
-			Event_combined.tooltip	+= "\n"+ Event.tooltip
-			Event_combined.code	+= "\n"+ Event.code
-			Event_combined.params	+= " " + Event.params
+			if( Event != undefined ) then
+			(
+				Event_combined.tooltip	+= "\n"+ Event.tooltip
+				Event_combined.code	+= "\n"+ Event.code
+				Event_combined.params	+= " " + Event.params
+			)
+
 		)
 
 		--format "Event_combined	= % \n\t\t" Event_combined

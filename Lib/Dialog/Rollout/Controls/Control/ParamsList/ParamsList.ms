@@ -17,7 +17,7 @@ struct ParamsList_v
 	
 	include "Library/MAXSCRIPT-UI-framework/Lib/List/ListBody.ms"
 
-	private
+	--private
 	
 
 	/**  

@@ -1,4 +1,5 @@
-filein( getFilenamePath(getSourceFileName()) + "/RolloutEventsDefault/RolloutEventsDefault.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/EventClassDefault/EventClassDefault.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/EventClassSaveIni/EventClassSaveIni.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/EventsCombiner/EventsCombiner.ms" )
 
 global DIALOG_PREVIOUS_STATE = undefined -- this should be in struct
@@ -69,6 +70,7 @@ struct RolloutEventBinder_v
 
 		--this._setCustomEvents()
 		this._setDefaultEvents()
+		--this._setSaveIniEvents()
 		
 		this._bindEachEvent()
 	),
@@ -86,10 +88,10 @@ struct RolloutEventBinder_v
 		if( Event == undefined ) then
 			return false
 
-		format "\n"
-		print ("RolloutEvents_v.bindEvent()")
-		format "event_type	= % \n" event_type
-		format "Event	= % \n" Event
+		--format "\n"
+		--print ("RolloutEvents_v.bindEvent()")
+		--format "event_type	= % \n" event_type
+		--format "Event	= % \n" Event
 
 		handler = "on "+(_Rollout.id)+" "+ event_type as string +" "+this._getParams(event_type)+" do  (" +Event.code+ ")"
 		--format "_Rollout.id	= % \n" _Rollout.id
@@ -109,10 +111,10 @@ struct RolloutEventBinder_v
 		--format "event_type	= % \n" event_type
 		case event_type of
 		(
-			#rolledUp: this._getEventsForRolledUpHandler()
+			--#rolledUp: this._getEventsForRolledUpHandler()
 			--#moved:    this._getEventsForMovedHandler()
 			--#moved:    this._getEventsForMovedHandlerMax2016()
-			#resized:    EventsCombiner.getResized()
+			--#resized:    EventsCombiner.getResized()
 			default:	 EventsCombiner.combine (event_type)
 		)
 	),
@@ -128,8 +130,16 @@ struct RolloutEventBinder_v
 	/** _combine events
 	 */
 	function _setDefaultEvents =
-		EventsCombiner.setEventsClass #DEFAULTS ((RolloutEventsDefault_v rollout_id:_Rollout.id ini_path:ini_path ).getDefaultEvents(_Rollout.is_subrollout)) 
-	),	
+	(
+		EventsCombiner.setEventsClass #DEFAULTS ((EventClassDefault_v()).getEvents(_Rollout.is_subrollout)) 
+	),
+
+	/** _combine events
+	 */
+	function _setSaveIniEvents =
+	(
+		EventsCombiner.setEventsClass #SAVEINI ((EventClassSaveIni_v rollout_id:_Rollout.id ini_path:ini_path ).getEvents(_Rollout.is_subrollout)) 
+	),
 	
 	/** _bind events
 	 */
