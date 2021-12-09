@@ -64,9 +64,8 @@ struct EventsCombiner_v
 	function _getEvent event_class event_type =
 	(
 		--print "EventsCombiner_v.getEvent()"
-		Events	=   this.getVal event_class
-
-		(for Event in Events where Event.type == event_type collect Event)[1]
+		if( (Events = this.getVal(event_class)) != undefined ) then 
+			(for Event in Events where Event.type == event_type collect Event)[1]
 	),
 
 	/**  

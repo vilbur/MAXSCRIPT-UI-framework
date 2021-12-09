@@ -15,7 +15,7 @@ struct GroupBoxCreator_v
 	 */
 	function sortControlsToGroupBoxes rollout_id =
 	(
-		--print "GroupBoxCreator_v.sortControlsToGroupBoxes()"
+		print "GroupBoxCreator_v.sortControlsToGroupBoxes()"
 		--format "rollout_id	= % \n" rollout_id
 		if( GroupBoxes != undefined ) then
 

@@ -69,7 +69,7 @@ struct RolloutEventBinder_v
 		this._Rollout = _Rollout
 
 		this._setCustomEvents()
-		--this._setDefaultEvents()
+		this._setDefaultEvents()
 		this._setSaveIniEvents()
 		
 		this._addHandlers()
@@ -127,7 +127,7 @@ struct RolloutEventBinder_v
 	 */
 	function _setDefaultEvents =
 	(
-		EventsCombiner.setEventsClass #DEFAULTS ((DefaultEvents_v()).getEvents(_Rollout.is_subrollout)) 
+		EventsCombiner.setEventsClass #DEFAULTS ((DefaultEvents_v()).getEvents(_Rollout.id)) 
 	),
 
 	/** _combine events

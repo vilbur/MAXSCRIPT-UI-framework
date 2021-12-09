@@ -10,12 +10,10 @@ struct DefaultEvents_v
 	  *
 	  * @return	list	of default events
 	 */
-	function getEvents rollout_is_subrollout =
+	function getEvents rollout_id =
 	(
 		--print ("DefaultEvents_v.getDefaultEvents()")
 		append List ( Event_v type:#open	code:("GroupBoxCreator.sortControlsToGroupBoxes(\""+rollout_id+"\")") )
-
-		this._setEventsForDialog()
 			
 		List --return
 	),
