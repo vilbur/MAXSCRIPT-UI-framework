@@ -1,6 +1,6 @@
 /** Events default
  */
-struct EventClassSaveIni_v
+struct SaveIniEvents_v
 (
 	/* required */ 
 	rollout_id,
@@ -17,64 +17,43 @@ struct EventClassSaveIni_v
 	function getEvents rollout_is_subrollout =
 	(
 		--print ("DefaultEvents_v.getDefaultEvents()")
-		if( rollout_is_subrollout ) then
-
-			this._setEventsForRollout()
-
-		else
-
-			this._setEventsForDialog()
-
-		List --return
+		if( ini_path != undefined ) do
+			if( rollout_is_subrollout ) then
+	
+				this._getRolloutSaveIniEvents()
+	
+			else
+	
+				this._getDialogSaveIniEvents()
 	),
 	
 	
 	private
 	
-	
-	/** Rollout events
-	 */
-	function _setEventsForRollout =
-	(
-		--print "EventsDefault_v._setEventsForRollout()"
-
-		if( ini_path != undefined ) then
-			this._setRolloutSaveIniEvents()
-	),
-
-	/** _dialog events
-	 */
-	function _setEventsForDialog =
-	(
-		--print "EventsDefault_v._setEventsForDialog()"
-		append List ( Event_v type:#open	code:("format \"%\" (\"\nSAVE INI OPEN\");GroupBoxCreator.sortControlsToGroupBoxes(\""+rollout_id+"\")") )
-		append List ( Event_v type: #moved	code:("format \"%\" (\"\nSAVE INI MOVED\")") )
-		append List ( Event_v type: #resized	code:("format \"%\" (\"\nSAVE INI RESIZED\")") )
-
-		if( ini_path != undefined ) then
-			this._setDialogSaveIniEvents()
-	),
-
 	/** Dialog save ini
 
 		IMPORTANT: #docked probably doesn't work in max 2022
 	 
 	 */
-	function _setDialogSaveIniEvents =
+	function _getDialogSaveIniEvents =
 	(
-		--print "DefaultEvents_v._setDialogSaveIniEvents()"
+		print "DefaultEvents_v._getDialogSaveIniEvents()"
 		this._setSaveIniDefaultEvent #moved	"moved"	"val"
 		this._setSaveIniDefaultEvent #resized	"resized"	"val"
 		this._setSaveIniDefaultEvent #docked	"dock_state"	("(try(cui.getDockState "+rollout_id+")catch(\"cui_floatable\"))")
+		
+		List --return
 	),
 
 	/** Rollout save ini
 	 */
-	function _setRolloutSaveIniEvents =
+	function _getRolloutSaveIniEvents =
 	(
-		--print "DefaultEvents_v._setRolloutSaveIniEvents()"
-		this._setSaveIniDefaultEvent #rolledDown	"rolledUp"	"(val == false)"
-		this._setSaveIniDefaultEvent #rolledUp	"rolledUp" 	"(val == false)"
+		print "DefaultEvents_v._getRolloutSaveIniEvents()"
+		this._setSaveIniDefaultEvent #rolledDown	"rolledUp"	"(not val)"
+		this._setSaveIniDefaultEvent #rolledUp	"rolledUp" 	"(not val)"
+		
+		List --return
 	),
 
 	/** Set save to ini default event

@@ -1,4 +1,6 @@
-try( destroyDialog ROLLOUT_test )catch()
+try(cui.UnRegisterDialogBar ROLLOUT_test)catch() 
+try( destroyDialog          ROLLOUT_test )catch()
+
 
 /** DEFINE ROLLOUT 
  *	

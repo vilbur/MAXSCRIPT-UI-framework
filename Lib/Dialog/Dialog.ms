@@ -5,7 +5,7 @@ global DIALOG_PREVIOUS_STATE = undefined -- this should be in struct
 
 global ENABLE_DOCKED_EVENT = true -- prevent crash on destroying  of dialog // RENAME THIS TO DIALOG_ENABLE_DOCKED_EVENT
 
-/** Dialog
+/** https://help.autodesk.com/view/MAXDEV/2021/ENU/?guid=GUID-816D257C-CD2D-4753-A792-6E7AEFAFA6A7
  */
 struct Dialog_v
 (
@@ -23,32 +23,53 @@ struct Dialog_v
 	Layout 	= Layout_v(),
 	--Menu	= DialogMenu_v Dialog:this,
 	
-	/* properties */
-	style = #(#cui_floatable, #cui_dock_all, #style_titlebar, #style_border, #style_sysmenu, #style_resizing),
-	
 	RolloutMain, --RENAME TO dialogRollout,
 	
 	/* inherit */
 	Events,
 	
+	/* properties */
+	style = #(
+		#style_border, 	-- Creates a window with a double border, but no title.
+		#style_titlebar, 	-- Creates a dialog with a title bar.
+		#style_sysmenu, 	-- Creates a window that has a window menu in its title bar.
+		#style_resizing 	-- Creates a window with a thick frame that can be used to size the window.
+		
+		/* ALLOWED but not DEFAULT styles */ 
+		--#style_toolwindow, 	-- Creates a tool window, which has a title bar and is intended to be used as a floating toolbar. A tool window has a title bar that is shorter than a normal title bar, and the window title is drawn using a smaller font.
+		--#style_minimizebox, 	-- Creates a window that has a minimize button.
+		--#style_maximizebox, 	-- Creates a window that has a maximize button.
+		--#style_sunkenedge, 	-- Specifies that a window has a 3D look in the form of a border with a sunken edge.
+	),
+
+	style_dialog = #(
+		#cui_floatable,	-- Dialogbar can float
+		#cui_dock_all,	-- Dialog bar can dock on all 4 edges of the frame.
+		#cui_handles	-- Show gripper handles when docked
+
+		/* ALLOWED but not DEFAULT styles */ 
+		--#cui_dock_horz,	-- Can dock horizontally (top and bottom)
+		--#cui_dock_vert,	-- Can dock vertically (left and right)
+		--#cui_dock_left ,	-- Can dock to the left
+		--#cui_dock_top,	-- Can dock to the top
+		--#cui_dock_right,	-- Can dock to the right
+		--#cui_dock_bottom,	-- Can dock to the bottom
+		--#cui_max_sized,	-- When this flag is specified, docking the dialogbar on the top causes the dialogbar to expand to the full window width, docked to bottom it expands to full window width minus command panel width.
+	),
+	
 	/** Create
 	  *
 	  * TODO add params for max 2022
 	 */
-	function create pos: width:512 height:1024 bgcolor: fgcolor: bitmap: style: modal: escapeEnable: lockHeight:false lockWidth:true parent: =
+	function create pos: width:512 height:512 bgcolor: fgcolor: bitmap: style: modal: escapeEnable: lockHeight:false lockWidth:true parent: =
 	(
 		print ("Dialog_v.create() " + RolloutMain.id)
 		
-		if( style == unsupplied ) then style = this.style
-		
 		height = this._getDialogHeight(height)
 		
-		--format "style	= % \n" style
-		--_RolloutCreator.createRollout (RolloutMain) dialog_rollout:true
 		_RolloutCreator.createRollout (RolloutMain) width:width height:height
-		--format "RolloutMain._RolloutCreator	= % \n" RolloutMain._RolloutCreator
 		
-		CreateDialog (_RolloutCreator.getDefinition(RolloutMain)) pos:(this._getPositionRelativeToWindow(pos)) autoLayoutOnResize:true  width:width height:height bgcolor:bgcolor fgcolor:fgcolor bitmap:bitmap style:style modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
+		CreateDialog (_RolloutCreator.getDefinition(RolloutMain)) pos:(this._getPositionRelativeToWindow(pos)) autoLayoutOnResize:true  width:width height:height bgcolor:bgcolor fgcolor:fgcolor bitmap:bitmap style:(if( style == unsupplied ) then this.style else style) modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
 		
 		_RolloutCreator.addSubRollouts RolloutMain
 	),
@@ -58,10 +79,9 @@ struct Dialog_v
 	function register =
 	(
 		print "Dialog_v.register()"
-		format "style	= % \n" style
 		ENABLE_DOCKED_EVENT = false
 		
-		execute ("cui.RegisterDialogBar "+ RolloutMain.id +" style:"+style as string )
+		execute ("cui.RegisterDialogBar "+ RolloutMain.id +" style:"+style_dialog as string )
 		
 		ENABLE_DOCKED_EVENT = true
 	),
@@ -98,7 +118,7 @@ struct Dialog_v
 		ENABLE_DOCKED_EVENT = false
 		
 		this.unregister()
-		
+		--sleep 1
 		execute ( "try( destroyDialog "+ RolloutMain.id +" )catch()" )
 		
 		ENABLE_DOCKED_EVENT = true
@@ -143,7 +163,7 @@ struct Dialog_v
 	 */
 	function _getViewportHeight =
 	(
-		--print "Dialog_v._getViewportHeight()"
+		print "Dialog_v._getViewportHeight()"
 		is_maximized	= viewport.numViews == 1
 		
 		height_of_ui	= 0 -- Add heigh
@@ -159,7 +179,7 @@ struct Dialog_v
 			actionMan.executeAction 0 "50026"  -- Tools: Maximize Viewport Toggle
 		
 		viewport_area_size = getViewSize()
-		
+		--format "viewport_area_size	= % \n" viewport_area_size
 		if not( is_maximized ) then 
 			actionMan.executeAction 0 "50026"  -- Tools: Maximize Viewport Toggle
 		

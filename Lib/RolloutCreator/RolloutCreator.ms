@@ -76,7 +76,7 @@ struct RolloutCreator_v
 		
 		
 		/* add EVENTS */ 
-		EventBinder.bindEvents (_Rollout)
+		EventBinder.combineEventsThendAddHandlers(_Rollout)
 		
 		
 		/* EDIT end */ 

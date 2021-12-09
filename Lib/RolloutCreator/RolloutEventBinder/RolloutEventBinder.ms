@@ -1,5 +1,5 @@
-filein( getFilenamePath(getSourceFileName()) + "/EventClassDefault/EventClassDefault.ms" )
-filein( getFilenamePath(getSourceFileName()) + "/EventClassSaveIni/EventClassSaveIni.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/DefaultEvents/DefaultEvents.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/SaveIniEvents/SaveIniEvents.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/EventsCombiner/EventsCombiner.ms" )
 
 global DIALOG_PREVIOUS_STATE = undefined -- this should be in struct
@@ -64,40 +64,39 @@ struct RolloutEventBinder_v
 	
 	/** Bind events
 	 */
-	function bindEvents _Rollout =
+	function combineEventsThendAddHandlers _Rollout =
 	(
 		this._Rollout = _Rollout
 
-		--this._setCustomEvents()
-		this._setDefaultEvents()
-		--this._setSaveIniEvents()
+		this._setCustomEvents()
+		--this._setDefaultEvents()
+		this._setSaveIniEvents()
 		
-		this._bindEachEvent()
+		this._addHandlers()
 	),
 	
 	private
 
-
+	/** _bind events
+	 */
+	function _addHandlers =
+	(
+		--print "global._addHandlers()"
+		dialog_or_rollout_event_types = if( _Rollout.is_subrollout ) then events_rollout else events_dialog
+		
+		for event_type in this._getEventTypes(dialog_or_rollout_event_types) do
+			this._addHandler event_type
+	),
+		
 	/** Bind events
 	 */
-	function _bindEvent event_type =
+	function _addHandler event_type =
 	(
 		--format "this._getEventTypes()	= % \n" (this._getEventTypes())
-		Event = this._getCombinedEvent event_type
-		
-		if( Event == undefined ) then
+		if( (Event = this._getCombinedEvent event_type) == undefined ) then
 			return false
 
-		--format "\n"
-		--print ("RolloutEvents_v.bindEvent()")
-		--format "event_type	= % \n" event_type
-		--format "Event	= % \n" Event
-
-		handler = "on "+(_Rollout.id)+" "+ event_type as string +" "+this._getParams(event_type)+" do  (" +Event.code+ ")"
-		--format "_Rollout.id	= % \n" _Rollout.id
-		--format "event_type	= % \n" event_type
-		--format "callback	= % \n" callback
-		--format "Event.code	= % \n" Event.code
+		handler = "on "+(_Rollout.id)+" "+ event_type as string +" "+this._getParams(event_type)+" do  \n(" +Event.code+ "\n)"
 		--format "handler	= % \n" handler
 		_Rollout._RolloutCreator.addText(handler)
 	),
@@ -106,16 +105,14 @@ struct RolloutEventBinder_v
 	 */
 	function _getCombinedEvent event_type =
 	(
-		--format "\n"
-		--print ("RolloutEvent_v._getCombinedEvent()")
-		--format "event_type	= % \n" event_type
+		format "\n"
+		print ("RolloutEvent_v._getCombinedEvent()")
+		format "event_type	= % \n" event_type
 		case event_type of
 		(
-			--#rolledUp: this._getEventsForRolledUpHandler()
-			--#moved:    this._getEventsForMovedHandler()
-			--#moved:    this._getEventsForMovedHandlerMax2016()
-			--#resized:    EventsCombiner.getResized()
-			default:	 EventsCombiner.combine (event_type)
+			#rolledUp:	this._mutateRolledUpEventToRolledDown()
+			#resized:	this._mutateResizedEventToDocked()
+			default:	EventsCombiner.combine (event_type)
 		)
 	),
 	
@@ -131,148 +128,65 @@ struct RolloutEventBinder_v
 	 */
 	function _setDefaultEvents =
 	(
-		EventsCombiner.setEventsClass #DEFAULTS ((EventClassDefault_v()).getEvents(_Rollout.is_subrollout)) 
+		EventsCombiner.setEventsClass #DEFAULTS ((DefaultEvents_v()).getEvents(_Rollout.is_subrollout)) 
 	),
 
 	/** _combine events
 	 */
 	function _setSaveIniEvents =
 	(
-		EventsCombiner.setEventsClass #SAVEINI ((EventClassSaveIni_v rollout_id:_Rollout.id ini_path:ini_path ).getEvents(_Rollout.is_subrollout)) 
+		EventsCombiner.setEventsClass #SAVEINI ((SaveIniEvents_v rollout_id:_Rollout.id ini_path:ini_path ).getEvents(_Rollout.is_subrollout)) 
 	),
 	
-	/** _bind events
-	 */
-	function _bindEachEvent =
-	(
-		--print "global._bindEachEvent()"
-		for event_type in (event_types = this._getEventTypes()) where this._eventNameIsValid (event_types) (event_type) do
-			this._bindEvent event_type
-	),
-		
+
 
 	/** Bind to rolled up handler
 	  *
 	  * Events #open, #close are bind to #rolledUp handler
-	  *
-	 33
-	function _getEventsForRolledUpHandler =
+	  */
+	function _mutateRolledUpEventToRolledDown =
 	(
-		--print ("RolloutEvents_v._getEventsForRolledUpHandler()")
-		callback_rolledown	= EventsCombiner.combine (#rolledDown)
-		callback_rolledup	= EventsCombiner.combine (#rolledUp)
-
-		if( callback_rolledup.count > 0 or callback_rolledown.count > 0 ) then
-			callback = "if( val == true ) then (" +callback_rolledown+ ")else(" +callback_rolledup+ ")" --return
+		print ("RolloutEvents_v._mutateRolledUpEventToRolledDown()")
+		Event_rolledup = EventsCombiner.combineOrGetNewEvent (#rolledUp)
 		
-		callback --return
+		if( (Event_rolledown = EventsCombiner.combine (#rolledDown)) != undefined ) then 
+			Event_rolledup.code = ";if( val ) then (" +Event_rolledown.code+ ")else(" +Event_rolledup.code+ ")" --return
+		
+		Event_rolledup --return
 	),
 		
-	/** _get events for moved handler
+	/** Callback from #docked event is binded to #resized handler
 	 */
-	function _getEventsForMovedHandler =
+	function _mutateResizedEventToDocked =
 	(
-		print "!!!! global._getEventsForMovedHandler()"
+		print "global._mutateResizedEventToDocked()"
+		Event_resized	= EventsCombiner.combineOrGetNewEvent (#resized)
+		format "Event_resized	= % \n" Event_resized
 		
-		--if(  (max_version = (maxVersion())[8] )!= undefined and max_version >= 2022  ) then 
-			--this._getEventsForResizedHandlerMax()
-		--else
-			--this._getEventsForMovedHandlerMax2016()
-	),	
-		
-	/** _get events for moved handler max2020
-	 */
-	function _getEventsForResizedHandlerMax =
-	(
-		print "global._getEventsForResizedHandlerMax()"
-		callback_resized	= EventsCombiner.combine (#resized)
-		----current_state	= " (dialog_current_state = try(cui.getDockState "+_Rollout.id+")catch(false)) != DIALOG_PREVIOUS_STATE "
-		----set_previous_state   	= " DIALOG_PREVIOUS_STATE = dialog_current_state "
-		----
-		----
-		----if( callback_docked != "" ) then -- on move, if dialog is docked and change its state then call #docked callback
-		----	callback_resized += "\n" + current_state + "\n" + set_previous_state + "\nprint \"STATE:\"\nprint DIALOG_PREVIOUS_STATE as string"
-		--print ("RolloutEvent_v._getEventsForMovedHandlerMax2016()")
-		--callback_resized	= EventsCombiner.combine (#resized)
-		--callback_docked	= EventsCombiner.combine (#docked)
-		----if_resizing_enabled     =	""
-		----if_resizing_enabled     =	" if(ENABLE_RESIZING != false) then\n" -- this is MUST WRAP ALL STRINGS BELOW IN ()
-		--if_docked_event_enabled = " if(ENABLE_DOCKED_EVENT) then "
-		--
-		--prev_state_not_false	= " (DIALOG_PREVIOUS_STATE != false) "
-		--current_state_changed	= " (dialog_current_state = try(cui.getDockState "+_Rollout.id+")catch(false)) != DIALOG_PREVIOUS_STATE "
-		--state_match_cui      	= " matchPattern (dialog_current_state as string) pattern:\"cui_*\" "
-		--set_previous_state   	= " DIALOG_PREVIOUS_STATE = dialog_current_state "
-		--
-		----if( callback_docked != "" ) then -- on move, if dialog is docked and change its state then call #docked callback
-		--	--callback_resized += "if ( "+prev_state_not_false+" and  "+current_state_changed+" and "+state_match_cui+") then ( "+if_docked_event_enabled+" (" + callback_docked + " ))\n" + set_previous_state
-		--format "callback_resized	= % \n" callback_resized
-		--format "callback_docked	= % \n" callback_docked 
-		--callback_resized --return
-		----callback_docked
-		
-		callback_resized.code +=("(format \"%\" (\"\n!!! MERGED EVENT RESIZED\"))") 
-
-		callback_resized
-	),
-	/** _get events for moved handler max2020
-	 */
-	function _getEventsForResizeHandlerMax2022 =
-	(
-		if(  (max_version = (maxVersion())[8] )!= undefined and max_version >= 2022  ) then 
+		if( (Event_docked = EventsCombiner.combine (#docked)) != undefined ) then
 		(
-			callback_resized	= EventsCombiner.combine (#resized)
-
+			prev_state_not_false	= " (DIALOG_PREVIOUS_STATE != false) "
+			current_state_changed	= " (dialog_current_state = try(cui.getDockState "+_Rollout.id+")catch(false)) != DIALOG_PREVIOUS_STATE "
+			current_state_match_cui	= " matchPattern (dialog_current_state as string) pattern:\"cui_*\" "
 			
-		current_state	= " (dialog_current_state = try(cui.getDockState "+_Rollout.id+")catch(false)) != DIALOG_PREVIOUS_STATE "
-
-			callback_resized += current_state + "\n" + "\nprint \"STATE DOCKED:\"\nprint DIALOG_PREVIOUS_STATE as string"
-
+			----if_resizing_enabled     =	" if(ENABLE_RESIZING != false) then\n" -- this is MUST WRAP ALL STRINGS BELOW IN ()
+			if_docked_event_enabled = " if(ENABLE_DOCKED_EVENT) then "
+			
+			re_set_previous_state   	= " DIALOG_PREVIOUS_STATE = dialog_current_state "
+			
+			--if( Event_docked != undefined ) then -- on move, if dialog is docked and change its state then call #docked callback
+			Event_resized.code += "if ( "+prev_state_not_false+" and "+current_state_changed+" and "+current_state_match_cui+") then ( "+if_docked_event_enabled+" (" +Event_docked.code+ " ))\n" +re_set_previous_state
 			
 		)
-	),
-	
-	
-	
-	/** Bind #docked to #moved handler
-	  *
-	  *	Event #docked is bind to #moved handler
-	  * If dialog is docked then callback of #docked is called
-	  *
-	  * #docked is not native maxscript event, it is simulated by checking dock state on #moved event
-	  *
-	 */
-	function _getEventsForMovedHandlerMax2016 =
-	(
-		print ("RolloutEvent_v._getEventsForMovedHandlerMax2016()")
-		Event_moved	= EventsCombiner.combine (#moved)
-		Event_docked	= EventsCombiner.combine (#docked)
-		
-		--if_resizing_enabled     =	""
-		--if_resizing_enabled     =	" if(ENABLE_RESIZING != false) then\n" -- this is MUST WRAP ALL STRINGS BELOW IN ()
-		if_docked_event_enabled = " if(ENABLE_DOCKED_EVENT) then "
 
-		prev_state_not_false	= " (DIALOG_PREVIOUS_STATE != false) "
-		current_state_changed	= " (dialog_current_state = try(cui.getDockState "+_Rollout.id+")catch(false)) != DIALOG_PREVIOUS_STATE "
-		state_match_cui      	= " matchPattern (dialog_current_state as string) pattern:\"cui_*\" "
-		set_previous_state   	= " DIALOG_PREVIOUS_STATE = dialog_current_state "
-		
-		if( Event_docked != undefined ) then -- on move, if dialog is docked and change its state then call #docked callback
-			Event_moved.code += "if ( "+prev_state_not_false+" and  "+current_state_changed+" and "+state_match_cui+") then ( "+if_docked_event_enabled+" (" + Event_moved.code + " ))\n" + set_previous_state
-		
-		Event_moved --return
-	),
-	
+		Event_resized
+	),	
+
 	/** Get events for dialog rollout or subrollout
 	 */
-	function _getEventTypes =
+	function _getEventTypes event_types =
 	(
-		event_types = if( _Rollout.is_subrollout ) then events_rollout else events_dialog
-		
-		for not_native_event in not_native_events where ((index = findItem event_types not_native_event) > 0 ) do 
-			event_types = deleteItem event_types index
-		
-		event_types --return
+		for event_type in event_types where ((index = findItem not_native_events event_type) == 0 ) collect event_type 
 	),
 		
 	/** _get params

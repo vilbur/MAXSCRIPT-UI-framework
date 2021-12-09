@@ -22,20 +22,32 @@ struct EventsCombiner_v
  
 		for event_class in this.keys do
 		(
-			Event	= this._getEvent event_class event_type
-			if( Event != undefined ) then
+			
+			if( (Event = this._getEvent(event_class)(event_type)) != undefined and Event.code !="" ) then
 			(
-				Event_combined.tooltip	+= "\n"+ Event.tooltip
-				Event_combined.code	+= "\n"+ Event.code
+				Event_combined.tooltip	+= ""+ Event.tooltip
+				Event_combined.code	+= ""+ Event.code
 				Event_combined.params	+= " " + Event.params
 			)
-
 		)
 
 		--format "Event_combined	= % \n\t\t" Event_combined
-		Event_combined --return
+		if( Event_combined.code != "" ) then 
+			Event_combined --return
 	),
 	
+	/** Get events
+	  *
+	  *
+	 */
+	function combineOrGetNewEvent event_type =
+	(
+		--print "EventsCombiner_v.combineOrGetNewEvent()"
+		if( (Event = this.combine(event_type)) == undefined ) then
+			Event	= (Event_v type:event_type)
+		
+		Event --return
+	),
 	/** Set events
 	 */
 	function setEventsClass event_type Events_array =

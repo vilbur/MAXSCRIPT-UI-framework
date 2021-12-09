@@ -18,41 +18,20 @@ rollout MainRollout_test "Main Rollout" width:325 height:200
 	(
 		format "\n"
 		print "MainRollout_test.onResized()" 
-		dialog_current_state = try(cui.getDockState MainRollout_test)catch(false)
-		format "% \n" dialog_current_state
-		
-		
-		
-		if( GLOBAL_DIALOG_RESIZED == undefined ) then
-			GLOBAL_DIALOG_RESIZED = new_size
-			
-		else
-		(
-			GLOBAL_DIALOG_RESIZED = undefined
-		)
-
+		format "dialog_current_state = % \n" (try(cui.getDockState MainRollout_test)catch(false))
+	
 	)
 	on MainRollout_test moved new_pos do
 	(
 		format "\n"
 		print "MainRollout_test.onMoved()" 
-		dialog_current_state = try(cui.getDockState MainRollout_test)catch(false)
-		format "% \n" dialog_current_state
+		format "dialog_current_state = % \n" (try(cui.getDockState MainRollout_test)catch(false))
 
 	)
-	
-	on MainRollout_test open do
-	(
-		format "\n"
-		print "MainRollout_test.onOpen()" 
 
-	)
-	
 )
 
 
-
-global GLOBAL_DIALOG_RESIZED
 
 Dialog = CreateDialog MainRollout_test 
 
