@@ -105,9 +105,8 @@ struct RolloutEventBinder_v
 	 */
 	function _getCombinedEvent event_type =
 	(
-		format "\n"
-		print ("RolloutEvent_v._getCombinedEvent()")
-		format "event_type	= % \n" event_type
+		--format "\n"; print ("RolloutEvent_v._getCombinedEvent()")
+		--format "event_type	= % \n" event_type
 		case event_type of
 		(
 			#rolledUp:	this._mutateRolledUpEventToRolledDown()
@@ -155,7 +154,9 @@ struct RolloutEventBinder_v
 		Event_rolledup --return
 	),
 		
-	/** Callback from #docked event is binded to #resized handler
+	/** Mutate #resized event to works as #resized event as well
+	  *
+	  * Callback from #docked event is bind to #resized handler
 	 */
 	function _mutateResizedEventToDocked =
 	(
@@ -175,8 +176,12 @@ struct RolloutEventBinder_v
 			re_set_previous_state   	= " DIALOG_PREVIOUS_STATE = dialog_current_state "
 			
 			--if( Event_docked != undefined ) then -- on move, if dialog is docked and change its state then call #docked callback
-			Event_resized.code += "if ( "+prev_state_not_false+" and "+current_state_changed+" and "+current_state_match_cui+") then ( "+if_docked_event_enabled+" (" +Event_docked.code+ " ))\n" +re_set_previous_state
-			
+			Event_resized.code = "if ( "+prev_state_not_false+" and "+current_state_changed+" and "+current_state_match_cui+")
+									then
+										( "+if_docked_event_enabled+" (" +Event_docked.code+ " )) -- Fire #docked event
+									else "+
+										"(" +Event_resized.code+ ")"+ -- Fire #resized event
+									re_set_previous_state
 		)
 
 		Event_resized

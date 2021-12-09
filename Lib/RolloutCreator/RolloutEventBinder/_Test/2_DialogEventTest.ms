@@ -44,7 +44,7 @@ Dialog.Events.add #lbuttondblclk	"dockdialog()"
 /* CREATE DIALOG */
 Dialog.create()
 
-Dialog.register()
+--Dialog.register()
 
 
 

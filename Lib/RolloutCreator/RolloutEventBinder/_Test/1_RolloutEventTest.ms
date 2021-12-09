@@ -42,5 +42,4 @@ CreateDialog (_RolloutCreator.getDefinition _Rollout)
 _RolloutCreator.addSubRollouts _Rollout
 
 print "--- REGISTER ---"
---cui.RegisterDialogBar ROLLOUT_test style:#( #cui_dock_all, #cui_floatable, #style_resizing )
-cui.RegisterDialogBar ROLLOUT_test style: #(#cui_floatable, #cui_dock_all, #style_titlebar, #style_border, #style_sysmenu)
+cui.RegisterDialogBar ROLLOUT_test style:#( #cui_dock_all, #cui_floatable, #style_resizing )
