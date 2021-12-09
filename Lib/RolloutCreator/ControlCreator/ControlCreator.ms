@@ -89,16 +89,28 @@ struct ControlCreator_v
 	 */
 	function _addControl _Control =
 	(
-		--format "\n"
-		--print ("ControlCreator_v._addControl() " +_Control.id )
-		--format "_Control	= % \n" _Control
+		format "\n"
+		print ("ControlCreator_v._addControl() " +_Control.id )
+		format "_Control	= % \n" _Control
 		this._addValueParameter  (_Control) (_Rollout.id)
 		
 		params = ParamsCreator.join(_Control.params)
 		--format "params	= % \n" params
-		_Rollout._RolloutCreator.addControl (_Control.type) (_Control.id) (_Control.caption) paramStr:params
+		_Rollout._RolloutCreator.addControl (_Control.type) (_Control.id) (this._emptyCaptionIfInBrackets(_Control.caption)) paramStr:params
 	),
 
+	/** Empty caption if caption is in brackets E.G.: "[Groupboxname]"
+	  *
+	  * used for generated groupbox
+	 */
+	function _emptyCaptionIfInBrackets caption =
+	(
+		if( matchPattern caption pattern:("[*]")  ) then
+			caption	= ""
+			
+		caption --return
+	),
+	
 	/** Add event handlers
 	 */
 	function _addControlHandlersToRollout _Control =
@@ -125,7 +137,9 @@ struct ControlCreator_v
 			
 			if( _Control.type == #groupbox ) then
 			(
-
+				format "_Control.caption	= % \n" _Control.caption
+				format "_Controls.GroupBoxes.keys	= % \n" _Controls.GroupBoxes.keys
+				format "_Controls.GroupBoxes.values	= % \n" _Controls.GroupBoxes.values
 				if( (groupbox_height =  (_Controls.GroupBoxes.getVal(_Control.id)).count * 27) == 0 ) then 
 					groupbox_height = 64
 

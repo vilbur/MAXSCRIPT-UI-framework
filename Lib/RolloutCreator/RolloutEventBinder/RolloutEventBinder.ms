@@ -145,7 +145,7 @@ struct RolloutEventBinder_v
 	  */
 	function _mutateRolledUpEventToRolledDown =
 	(
-		print ("RolloutEvents_v._mutateRolledUpEventToRolledDown()")
+		--print ("RolloutEvents_v._mutateRolledUpEventToRolledDown()")
 		Event_rolledup = EventsCombiner.combineOrGetNewEvent (#rolledUp)
 		
 		if( (Event_rolledown = EventsCombiner.combine (#rolledDown)) != undefined ) then 
@@ -160,7 +160,7 @@ struct RolloutEventBinder_v
 	 */
 	function _mutateResizedEventToDocked =
 	(
-		print "global._mutateResizedEventToDocked()"
+		--print "global._mutateResizedEventToDocked()"
 		Event_resized	= EventsCombiner.combineOrGetNewEvent (#resized)
 		format "Event_resized	= % \n" Event_resized
 		

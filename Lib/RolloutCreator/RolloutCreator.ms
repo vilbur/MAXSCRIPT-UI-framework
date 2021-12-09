@@ -81,7 +81,7 @@ struct RolloutCreator_v
 		
 		/* EDIT end */ 
 		_Rollout._RolloutCreator.end()
-		--format "_Rollout._RolloutCreator	= % \n" _Rollout._RolloutCreator
+		--format "_Rollout._RolloutCreator	= % \n" _Rollout._RolloutCreator -- PRINT ROLLOUT DEINITION
 	),
 
 	/** Add controls or subrolloutes

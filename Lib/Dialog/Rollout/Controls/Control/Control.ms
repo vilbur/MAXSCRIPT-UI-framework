@@ -82,8 +82,6 @@ struct Control_v
 	 */
 	function _setIdByCaption =
 	(
-			
-		
 		id  = caption
 		
 		id	= trimRight ( trimLeft id )
@@ -104,24 +102,10 @@ struct Control_v
 		( dotNetObject "System.Text.RegularExpressions.Regex" search ).Replace ( id ) replace  --return 
 	),
 
-	/** Empty caption if caption is in brackets E.G.: "[Groupboxname]"
-	  *
-	  * used for generated groupbox
-	 */
-	function _emptyCaptionIfInBrackets =
-	(
-		if( matchPattern caption pattern:("[*]")  ) then
-			caption	= ""
-	),
-	
 	/**  
 	 */
 	on create do
 	(
 		this._setId()
-			
-			
-			
-		this._emptyCaptionIfInBrackets()
 	)
 )

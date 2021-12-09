@@ -1,5 +1,6 @@
 filein( getFilenamePath(getSourceFileName()) + "/Control/Control.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/ControlDefaults/ControlDefaults.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/GroupBoxes/GroupBoxes.ms" )
 /** Controls
  */
 struct Controls_v
@@ -12,7 +13,7 @@ struct Controls_v
 	/* dependency */
 	Defaults = ControlDefaults_v(),
 	
-	GroupBoxes 	= List_v(),
+	GroupBoxes 	= GroupBoxes_v(),
 	
 	
 	/** Create new control
@@ -26,11 +27,13 @@ struct Controls_v
 	 */
 	function Control type caption id:undefined params:#() locals:#() add_to_controls:true =
 	(
+		print ("Controls_v.Control() " + caption)
+
 		_Control = Control_v type:type caption:caption id:id add_locals:locals
 		
 		this._setParamsToControl(_Control)(params)
 
-		this._setGroupBoxParameters(_Control)
+		GroupBoxes._setGroupBoxParameters(this)(_Control)
 		
 		if( add_to_controls ) then 
 			this.add _Control
@@ -87,17 +90,48 @@ struct Controls_v
 	 */
 	function _setGroupBoxParameters _Control =
 	(
-		--print "Controls_v._setGroupBoxParameters()"
-		if( _Control.type == #GroupBox ) then
+		print "Controls_v._setGroupBoxParameters()"
+		--if( _Control.type == #GroupBox ) then
+		--(
+		--	GroupBoxes.setVal (_Control.id) #()
+		--)
+		--else
+		
+		--groupbox_caption = _Control.Params.getVal #GroupBox
+		--_GroupBox = this.control #GroupBox groupbox_caption --params:#(#across, 2)
+
+		
+		/* if control has #groupbox paramter defined */ 
+		if( (groupbox_caption = _Control.Params.getVal #GroupBox) != undefined ) then
 		(
-			GroupBoxes.setVal (_Control.id) #()
+			for _ControlInList in List where _ControlInList.type == #groupbox and _ControlInList.caption == groupbox_caption do _GroupBox = _ControlInList
+		--		
+			if( _GroupBox == undefined ) then
+			--format "_GroupBox	= % \n" _GroupBox
+				_GroupBox = this.control #GroupBox groupbox_caption --params:#(#across, 2)
+		--
+			 _Control.Params.setVal #GroupBox _GroupBox.id
+			format "groupbox_caption	= % \n" groupbox_caption
+			format "_GroupBox	= % \n" _GroupBox
+		--	--if( ( GroupBox =  ) != undefined ) then
+		--		
+		--	
+		--	--this.control #GroupBox ("LEFT HALF " + prefix ) id:#groupbox_left params:#(#across, 2)
+		--	
+		--	
+		--	
 		)
-		else
-			if( (control_group_box = _Control.Params.getVal #GroupBox) != undefined ) then
-			(
-				index	= findItem GroupBoxes.keys ("GROUPBOX_"+control_group_box as string )
-					append GroupBoxes.values[index] _Control.	id
-		)
+
+		--	GroupBoxes.setVal (_Control.id) #()
+
+		
+		--(
+			
+			
+			
+			--index	= findItem GroupBoxes.keys ("GROUPBOX_"+groupbox_caption as string )
+				--append GroupBoxes.values[index] _Control.	id
+		--)
 	),
 	
 	/**  
