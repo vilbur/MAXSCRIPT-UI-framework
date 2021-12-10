@@ -32,7 +32,7 @@ struct Controls_v
 		
 		this._setParamsToControl(_Control)(params)
 	
-		GroupBoxes.manageGroupbox(this)(_Control)
+		GroupBoxes.manageControlAddTopGroupbox(this)(_Control)
 		
 		if( add_to_controls ) then 
 			this.add _Control

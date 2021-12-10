@@ -7,9 +7,11 @@ struct GroupBoxCreator_v
 	/* dependency */
 	/* reference */
 	/* properties */
-	padding_top	= 16,
+
+	groupbox_margin	= 16,
+	--padding_top	= 16,
 	groupbox_size_fix	= 21,
-	padding_control_top	= 16,
+	--padding_control_top	= 16,
 	controls_in_rollout,
 
 	/** Test
@@ -31,145 +33,114 @@ struct GroupBoxCreator_v
 	function _sortControlsInGroupBox rollout_id groupbox_id groupbox_controls =
 	(
 		format "\n"; print ("GroupBoxCreator_v._sortControlsInGroupBox() " +groupbox_id)
-		--format "groupbox_id	= % \n" groupbox_id
-		controls_count = groupbox_controls.count
+		format "groupbox_controls	= % \n" groupbox_controls
+		_groupbox = execute (rollout_id+"."+groupbox_id as string )
+		groupbox_position =_groupbox.pos
 
-		groupbox_position = execute (rollout_id+"."+groupbox_id  as string +".pos")
-		--format "groupbox_position	= % \n" groupbox_position 
-		next_control = this._getNextControlToGroupBox(groupbox_controls)(rollout_id)(groupbox_id)
-		format "NEXT_CONTROL	= % \n" next_control
-		groupbox_size = this._getSizeValues (next_control) (controls_count)
-		
-		this._setGroupBoxSize (rollout_id+"."+groupbox_id)(groupbox_size)
+		control_position = groupbox_position
 
 		for c = 1 to groupbox_controls.count where  ( control_id = groupbox_controls[c] ) != ""  do
-			this._moveControlToGroupbox (rollout_id+"."+control_id)(groupbox_position)(groupbox_size.y / controls_count)( c )
+			this._moveControlToGroupbox (rollout_id+"."+control_id)(control_position)
+
+		this._setGroupBoxSize (execute(rollout_id+".controls")) (groupbox_controls) (_groupbox)
+
 	),
 
 	/** _move control to groupbox
 	 */
-	function _moveControlToGroupbox control_id_full control_position control_row_height c =
+	function _moveControlToGroupbox control_id_full &control_position =
 	(
-		format "\n"; print "GroupBoxCreator_v._moveControlToGroupbox()"
-		control_width = this._getParameter(control_id_full)(#width)(96)
+		--format "\n"; print "GroupBoxCreator_v._moveControlToGroupbox()"
+		this._setParameter control_id_full #pos control_position
 
-		control_height = this._getParameter(control_id_full)(#height)(21)
+		control_position.y += this._getParameter(control_id_full)(#height) default:(21)
 
-		--if( (control_type = (filterString control_id "_")[1] as name ) == #dropdownlsit ) then 
-			--control_height = 24
-
-		if( c > 1 ) then
-			control_position.y +=  (control_row_height*(c) )
-
-		execute (control_id_full+".pos = " + control_position as string )
+		control_position --return
 	),
-	
-	/** Get groupbox size
+
+	/** _set group box dimensions
 	 */
-	function _getSizeValues next_control controls_count =
+	function _setGroupBoxSize controls_in_rollout groupbox_controls _groupbox =
 	(
-		format "\n"; print "GroupBoxCreator_v._getSizeValues()"
-		--format "next_control	= % \n" next_control
-		groupbox_size = [0,0]
-		if( next_control != undefined ) then
-			groupbox_size_height = next_control.height
-			
-		--format "groupbox_size_height	= % \n" groupbox_size_height
-		groupbox_size.x	= if( next_control != undefined ) then next_control.pos.x	else 128
-		groupbox_size.y	= if( next_control != undefined ) then this._getNextControlHeight next_control	else controls_count * 96
-		
-		groupbox_size --return
-		--groupbox_size = [96,128]
+		format "\n"; print "GroupBoxCreator_v._setGroupBoxSize()"
+		format "!!!!!!!!"
+		format "_groupbox	= % \n" _groupbox
+
+		if ( _groupbox_width = _groupbox.width ) == 90 then -- 90px is default width of groupbox 
+		(
+
+			if( ( next_control = this._getNextControlToGroupBox(controls_in_rollout)(controls_in_rollout)(this._getControlId(_groupbox)) ) != undefined ) then
+				_groupbox.width = next_control.pos.x - _groupbox.pos.x - groupbox_margin
+
+		)
+
+		--this._setParameter(rollout_id+"."+groupbox_id)(#width) (groupbox_size.x - groupbox_size_fix)
 	),
-	
+
 	/** _get groupbox height
 	 */
 	function _getNextControlHeight next_control =
 	(
 		format "\n"; print "GroupBoxCreator_v._getNextControlHeight()"
-		
+
 		control_type = this._getControlType( next_control)
-		
-		
-		
-		
+
 		next_control.height
-		 
-		 
-	),
-	
-	/** _set group box dimensions
-	 */
-	function _setGroupBoxSize groupbox_id_full groupbox_size =
-	(
-		this._setParameterInUi(groupbox_id_full)(#width) (groupbox_size.x - groupbox_size_fix)
-		--this._setParameterInUi(groupbox_id_full)(#height)(groupbox_size.y + groupbox_size_fix)
-	),
-	
-	/** _set parameter
-	 */
-	function _setParameterInUi control_id param val =
-	(
-		--print "GroupBoxCreator_v._setParameterInUi()"
-		execute (control_id+"."+param as string +" = "+(val) as string)
+
 	),
 
 	/** _set parameter
 	 */
-	function _getParameter control_id param default =
+	function _setParameter control_id_full param val =
 	(
-		if ((val =  try(execute (control_id+"."+param as string ) )  catch() ) == undefined ) then
+		--print "GroupBoxCreator_v._setParameter()"
+		execute (control_id_full+"."+param as string +" = "+(val) as string)
+	),
+
+	/** _set parameter
+	 */
+	function _getParameter control_id_full param default:undefined =
+	(
+		if ((val =  try(execute (control_id_full+"."+param as string ) )  catch() ) == undefined ) then
 			val = default
-		--print "GroupBoxCreator_v._setParameterInUi()"
+		--print "GroupBoxCreator_v._setParameter()"
 		val --return
 	),
 	/** Find next control after groupbox
 	  * This control must not be in another groupbox
 	  *
 	 */
-	function _getNextControlToGroupBox groupbox_controls rollout_id groupbox_id =
+	function _getNextControlToGroupBox groupbox_controls controls_in_rollout groupbox_id =
 	(
-
-		controls_in_rollout = execute(rollout_id+".controls" )
 		--format "controls_in_rollout	= % \n" controls_in_rollout
 		format "groupbox_controls	= % \n" groupbox_controls
 		local current_control_index
 		local next_control_index
 
 		for i = 1 to controls_in_rollout.count where this._getControlId(controls_in_rollout[i]) == groupbox_id do current_control_index = i
-		format "current_control_index	= % \n" current_control_index
-		--for i = 1 to controls_in_rollout.count where i > current_control_index and (_next_control = controls_in_rollout[i+1]) != undefined and this._controlIsInGroupbox (_next_control) == false do
-		--for i = 1 to controls_in_rollout.count where i >= current_control_index do
-		for i = 1 to controls_in_rollout.count where i >= current_control_index /* start loop up current control */ and this._controlIsInGroupbox (controls_in_rollout[i+1]) == false  do
+	
+		                                           /* start loop up current control */
+		for i = 1 to controls_in_rollout.count where i >= current_control_index and this._controlIsInGroupbox (controls_in_rollout[i+1]) == false  do
 			if( next_control_index == undefined ) then -- get only first occurence
 				next_control_index = i+1
-		--for i = 1 to controls_in_rollout.count
-		--where	(
-		--			(_next_control	= controls_in_rollout[i+1]) != undefined	and
-		--			(find_current_control	= this._getControlId(controls_in_rollout[i])) == groupbox_id	and
-		--			(control_is_not_in_groupbox	= findItem groupbox_controls (this._getControlId(_next_control))) == 0
-		--	) do
-		--		next_control_index = i+1
 
 		if( next_control_index != undefined ) then
 			controls_in_rollout[next_control_index] --return 
 	),
-	
+
 	/** _is controlin groupbox
 	 */
 	function _controlIsInGroupbox next_control =
 	(
 		--format "\n"; print "GroupBoxCreator_v._controlIsInGroupbox()"
 		is_in_groupbox = false
-		
+
 		for groupbox_controls in GroupBoxes.values where findItem groupbox_controls (this._getControlId(next_control)) > 0 do is_in_groupbox = true
-		
-		--format "next_control	= % \n" next_control
-		--format "is_in_groupbox	= % \n" is_in_groupbox
+
 		if( next_control != undefined ) then
 			is_in_groupbox --return
-	),	
-	
+	),
+
 	/** _get control id
 	 */
 	function _getControlId _control =
@@ -178,31 +149,16 @@ struct GroupBoxCreator_v
 		control_id = (filterString ( _control as string) ":")[2]
 		--format "control_id	= % \n" control_id
 		control_id --return
-		
 	),
-	
+
 	/** _get control id
 	 */
 	function _getControlType _control =
 	(
 		--format "\n"; print "GroupBoxCreator_v._getControlId()"
 		control_type = (filterString ( _control as string) ":")[1]
-		--format "control_type	= % \n" control_type
+
 		control_type as name --return
-		
-	),
-	
-	/** _get control height
-	 */
-	function _getControlHeight =
-	(
-		--print "GroupBoxCreator_v._getControlHeight()"
-		try
-		(
-
-		)
-		catch()
-
 	),
 
 	/**  
@@ -211,7 +167,6 @@ struct GroupBoxCreator_v
 	(
 
 	)
-
 )
 
 global GroupBoxCreator = GroupBoxCreator_v()

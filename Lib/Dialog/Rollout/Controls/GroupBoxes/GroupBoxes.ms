@@ -23,29 +23,25 @@ struct GroupBoxes_v
 	
 	/** Set group box
 	 */
-	function manageGroupbox _Controls _Control =
+	function manageControlAddTopGroupbox _Controls _Control =
 	(
-		print ("Controls_v.manageGroupbox() "+_Control.id)
+		format "\n"; print ("Controls_v.manageGroupbox() "+_Control.id)
 		
-		/* IF CONTROL IS GROUPBOX OR IS IN GROUPBOX */ 
-		if( (groupbox_caption = _Control.Params.getVal #GroupBox) != undefined ) then
+		/* IF CONTROL IS GROUPBOX */ 
+		if( _Control.type == #Groupbox ) then
+			this._saveGroupBox(_Control.id)
+
+		/* IF CONTROL IS IN GROUPBOX */ 
+		if( (groupbox_caption = _Control.Params.getVal #Groupbox) != undefined ) then
 		(
 			format "groupbox_caption	= % \n" groupbox_caption
-			_GroupBox = this._createOrGetGroupBox (_Controls) (groupbox_caption)
+			_GroupBox = this._createOrGetGroupBoxControl (_Controls) (groupbox_caption)
 			
-			format "_Control.Params.getVal #across	= % \n" (_Control.Params.getVal #across)	
-			format "_Control.Params.getVal #height	= % \n" (_Control.Params.getVal #height)	
-			--_GroupBox.Params.setVal #across (_Control.Params.getVal #across)
-			this._setWidthOfGroupbox (_GroupBox) (_Control)
-			
-			_Control.param #pos	[0, 0]
+			--_Control.param #pos	[0, 0]
 
-			--this._change
-			_Control.Params.setVal #GroupBox _GroupBox.id
+			_Control.Params.setVal #Groupbox _GroupBox.id
 
-			index	= this._getIndexOfGroupBox(_GroupBox.id)
-
-			append this.values[index] _Control.id
+			this._addControlToGroupboxList (_GroupBox.id) (_Control.id)
 		)
 	),
 	
@@ -55,32 +51,27 @@ struct GroupBoxes_v
 	
 	/** _get group box
 	 */
-	function _createOrGetGroupBox _Controls groupbox_caption =
+	function _createOrGetGroupBoxControl _Controls groupbox_caption =
 	(
-		--print "Controls_v._createCreateCreateOrGetGroupBox()"
+		print "Controls_v._createCreateCreateOrGetGroupBox()"
 		if( (_GroupBox = this._findGroupboxInControls(_Controls)(groupbox_caption) ) == undefined ) then
+		(
 			_GroupBox = this.createNewGroupBox(_Controls)(groupbox_caption) --params:#(#across, 2)
 			
-		this._saveGroupBox(_GroupBox.id)
+			this._saveGroupBox(_GroupBox.id)
+		)
 		
 		_GroupBox --return
 	),
 	
-	/** _set width of groupbox
+	/** _
 	 */
-	function _setWidthOfGroupbox _GroupBox _Control =
+	function _addControlToGroupboxList _GroupBox_id _Control_id =
 	(
-		_GroupBox.Params.setVal #across (_Control.Params.getVal #across)
+		append  (this.getVal(_GroupBox_id)) _Control_id
 	),
 
 
-	/** _ group box
-	 */
-	function _getIndexOfGroupBox groupbox_id =
-	(
-		--format "\n"; print "GroupBoxes_v._getIndexOfGroupBox()"
-		findItem this.keys groupbox_id --return
-	),
 
 	/** _find groupbox in controls
 	 */
@@ -104,7 +95,7 @@ struct GroupBoxes_v
 	 */
 	function createNewGroupBox _Controls groupbox_caption =
 	(
-		 _Controls.control #GroupBox groupbox_caption
+		 _Controls.control #Groupbox groupbox_caption
 	),
 	
 	/**  

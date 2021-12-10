@@ -17,18 +17,21 @@ function createControls control_type:#button groupbox_name:"" =
 	
 	
 	
-	for i = 1 to 1 do 
-		_Button1    = _Controls.control control_type ( groupbox_name + "."+i as string ) params:#(#groupbox, groupbox_name, #across, 2)
+	for i = 1 to 5 do 
+		_Button1    = _Controls.control control_type ( groupbox_name + " "+i as string ) params:#(#groupbox, groupbox_name, #across, 2)
 )
 
 
 
 _GroupBox_1 = _Controls.control #GroupBox "GroupBox1" params:#(#across, 2, #height, 256) 
+--_GroupBox_1 = _Controls.control #GroupBox "GroupBox1" params:#( #height, 256) 
+--_GroupBox_1 = _Controls.control #GroupBox "GroupBox1" params:#(#across, 2, #height, 256, #width, 128) 
 createControls control_type:#button groupbox_name:"GroupBox1"	
 
 
+_GroupBox_2 = _Controls.control #GroupBox "GroupBox2" params:#(#across, 2, #height, 256,  #width, 256) 
 --_GroupBox_2 = _Controls.control #GroupBox "GroupBox2" params:#(#across, 2) 
---_GroupBox_2 = _Controls.control #GroupBox "GroupBox2" params:#(#across, 2, #height, 256) 
+--_GroupBox_2 = _Controls.control #GroupBox "GroupBox2" params:#(#height, 256) 
 --createControls control_type:#button groupbox_name:"GroupBox2"	
 
 --createControls control_type:#dropdownlist groupbox_name:"Buttons"	
@@ -54,9 +57,9 @@ createControls control_type:#button groupbox_name:"GroupBox1"
 
 /** Create dialog from _Rollout
   */
---dialog_width = 420
 dialog_width = undefined
+dialog_width = 420
 --dialog_height = 1920
-dialog_height = 256
---dialog_height = undefined
+--dialog_height = 256
+dialog_height = undefined
 include "Library/MAXSCRIPT-UI-framework/Lib/RolloutCreator/_Test/includes/CreateTestDialog.ms"
