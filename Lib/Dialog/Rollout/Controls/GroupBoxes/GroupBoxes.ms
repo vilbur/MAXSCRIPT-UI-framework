@@ -25,7 +25,7 @@ struct GroupBoxes_v
 	 */
 	function manageControlAddTopGroupbox _Controls _Control =
 	(
-		format "\n"; print ("Controls_v.manageGroupbox() "+_Control.id)
+		--format "\n"; print ("GroupBoxes_v.manageGroupbox() "+_Control.id)
 		
 		/* IF CONTROL IS GROUPBOX */ 
 		if( _Control.type == #Groupbox ) then
@@ -34,7 +34,7 @@ struct GroupBoxes_v
 		/* IF CONTROL IS IN GROUPBOX */ 
 		if( (groupbox_caption = _Control.Params.getVal #Groupbox) != undefined ) then
 		(
-			format "groupbox_caption	= % \n" groupbox_caption
+			--format "groupbox_caption	= % \n" groupbox_caption
 			_GroupBox = this._createOrGetGroupBoxControl (_Controls) (groupbox_caption)
 			
 			_Control.param #pos	[0, 0]
@@ -53,7 +53,7 @@ struct GroupBoxes_v
 	 */
 	function _createOrGetGroupBoxControl _Controls groupbox_caption =
 	(
-		print "Controls_v._createCreateCreateOrGetGroupBox()"
+		--print "GroupBoxes_v._createCreateCreateOrGetGroupBox()"
 		if( (_GroupBox = this._findGroupboxInControls(_Controls)(groupbox_caption) ) == undefined ) then
 		(
 			_GroupBox = this.createNewGroupBox(_Controls)(groupbox_caption) --params:#(#across, 2)
@@ -102,6 +102,6 @@ struct GroupBoxes_v
 	 */
 	on create do
 	(
-		--print "Controls_v.create()"
+		--print "GroupBoxes_v.create()"
 	)
 )

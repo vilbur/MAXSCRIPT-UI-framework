@@ -36,7 +36,6 @@ struct ControlParamsCreator_v
 		--)
 		/* CONTROLS PARMAS */ 
 		MergeParamsList.merge (_Control.Params)
-		format "_Control.Params	= % \n" MergeParamsList
 		
 		/* DEFAULTS PARMAS */ 
 		for defautls_key in this._getDefaultKeys(_Control.type) do

@@ -89,13 +89,13 @@ struct ControlCreator_v
 	 */
 	function _addControl _Control =
 	(
-		format "\n"
-		print ("ControlCreator_v._addControl() " +_Control.id )
+		--format "\n"
+		--print ("ControlCreator_v._addControl() " +_Control.id )
 		--format "_Control	= % \n" _Control
 		this._addValueParameter  (_Control) (_Rollout.id)
 		
 		params = ParamsCreator.join(_Control.params)
-		format "params	= % \n" params
+		--format "params	= % \n" params
 		_Rollout._RolloutCreator.addControl (_Control.type) (_Control.id) (this._emptyCaptionIfInBrackets(_Control.caption)) paramStr:params
 	),
 

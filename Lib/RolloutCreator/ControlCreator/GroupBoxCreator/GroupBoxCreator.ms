@@ -22,8 +22,8 @@ struct GroupBoxCreator_v
 		print ("GroupBoxCreator_v.sortControlsToGroupBoxes()" + rollout_id as string )
 		if( GroupBoxes != undefined ) then
 			for i = GroupBoxes.keys.count to 1 by -1 do
-				if( GroupBoxes.values[i].count > 0  ) then
-					this._sortControlsInGroupBox(rollout_id)(GroupBoxes.keys[i])(GroupBoxes.values[i])
+				--if( GroupBoxes.values[i].count > 0  ) then
+				this._sortControlsInGroupBox(rollout_id)(GroupBoxes.keys[i])(GroupBoxes.values[i])
 	),
 
 	private
@@ -33,12 +33,12 @@ struct GroupBoxCreator_v
 	function _sortControlsInGroupBox rollout_id groupbox_id groupbox_controls_ids =
 	(
 		format "\n"; print ("GroupBoxCreator_v._sortControlsInGroupBox() " +groupbox_id)
-		format "groupbox_controls_ids	= % \n" groupbox_controls_ids
+		--format "groupbox_controls_ids	= % \n" groupbox_controls_ids
 
 		controls_in_rollout = execute(rollout_id+".controls")
 
 		groupbox_controls = for i = 1 to controls_in_rollout.count where findItem groupbox_controls_ids (this._getControlId(controls_in_rollout[i])) > 0 collect controls_in_rollout[i]
-		format "groupbox_controls	= % \n" groupbox_controls
+		--format "groupbox_controls	= % \n" groupbox_controls
 
 		_groupbox = execute (rollout_id+"."+groupbox_id as string )
 		groupbox_position =_groupbox.pos
@@ -64,39 +64,81 @@ struct GroupBoxCreator_v
 
 		control_position --return
 	),
-
+	
 	/** _set group box dimensions
 	 */
 	function _setGroupBoxSize rollout_id groupbox_controls _groupbox groupbox_id =
 	(
 		format "\n"; print "GroupBoxCreator_v._setGroupBoxSize()"
 		__rollout = execute(rollout_id as string )
-		format "_rollout	= % \n" __rollout
+		--format "_rollout	= % \n" __rollout
 		controls_in_rollout = execute(rollout_id+".controls")
 
-		if ( _groupbox_width = _groupbox.width ) == 90 then -- 90px is default width of groupbox 
-		(
+		next_control = this._getNextControlToGroupBox(controls_in_rollout)(groupbox_id)
 
-			if( ( next_control = this._getNextControlToGroupBox(controls_in_rollout)(groupbox_id) ) != undefined ) then
-			(
-				format "_groupbox	= % \n" _groupbox
-				format "next_control	= % \n" next_control
+		groupbox_pos_y	= this.roundNumber(_groupbox.pos.y)
+		
+		if next_control != undefined then
+			next_control_pos_y	= this.roundNumber(next_control.pos.y)
+		
+		is_next_control_in_same_row = next_control != undefined and (next_control_pos_y <= groupbox_pos_y +20 and next_control_pos_y >= groupbox_pos_y - 20)
 
+		/**  
+		  *	
+		  */
+		if width_is_default = _groupbox.width == 90 do -- 90px is default width of groupbox
+		
+			if is_next_control_in_same_row then
 				_groupbox.width	= next_control.pos.x - _groupbox.pos.x - groupbox_margin
-				_groupbox.height	= next_control.height
-
-			)
+		
 			else
-			(
-				_groupbox.width	= __rollout.width - _groupbox.pos.x - groupbox_margin
-				_groupbox.height	= __rollout.height - _groupbox.pos.y - groupbox_margin
-			)
+				_groupbox.width = __rollout.width - _groupbox.pos.x - groupbox_margin
 
-				format "NEXT_CONTROL	= % \n" next_control
+		/**  
+		  *	
+		  */
+		if height_is_default = _groupbox.height == 30 do -- 90px is default width of groupbox
 
+			 if next_control == undefined then
+				_groupbox.height = __rollout.height - _groupbox.pos.y - groupbox_margin
+
+			if is_next_control_in_same_row then
+				_groupbox.height	=  (this._getControlSize (next_control))			
+
+			else if next_control != undefined then
+				_groupbox.height = next_control.pos.y - _groupbox.pos.y - groupbox_margin
+			
+			else
+				_groupbox.height = __rollout.height - _groupbox.pos.y - groupbox_margin
+
+	),
+	
+	/** Round number 
+	  *	
+	  */
+	fn roundNumber _number =
+	(
+		--format "_number	= % \n" _number
+		(_number/10) as integer * 10
+	),
+	
+	/** Get ntrol size
+	 */
+	function _getControlSize _control =
+	(
+		format "\n"; print "GroupBoxCreator_v._getControlSize()"
+		format "_control	= % \n" _control
+		
+		control_height = try( _control.height ) catch()
+		format "control_height	= % \n" control_height
+		case this._getControlType(_control) of
+		(
+			(#buttonControl):	_control_default_height
+			--(#MultiListBoxControl):	128
+			default:	control_height
 		)
 	),
-
+	
 	/** _get bbox width
 	 */
 	function _getBboxWidth groupbox_controls =
