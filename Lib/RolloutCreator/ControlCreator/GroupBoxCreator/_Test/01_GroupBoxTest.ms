@@ -23,16 +23,16 @@ function createControls control_type:#button groupbox_name:"" =
 
 
 
-_GroupBox_1 = _Controls.control #GroupBox "GroupBox1" params:#(#across, 2, #height, 256) 
---_GroupBox_1 = _Controls.control #GroupBox "GroupBox1" params:#( #height, 256) 
+--_GroupBox_1 = _Controls.control #GroupBox "GroupBox1" params:#(#across, 2, #height, 256) 
+_GroupBox_1 = _Controls.control #GroupBox "GroupBox1" params:#(#across, 2) 
 --_GroupBox_1 = _Controls.control #GroupBox "GroupBox1" params:#(#across, 2, #height, 256, #width, 128) 
 createControls control_type:#button groupbox_name:"GroupBox1"	
 
 
-_GroupBox_2 = _Controls.control #GroupBox "GroupBox2" params:#(#across, 2, #height, 256,  #width, 256) 
---_GroupBox_2 = _Controls.control #GroupBox "GroupBox2" params:#(#across, 2) 
+--_GroupBox_2 = _Controls.control #GroupBox "GroupBox2" params:#(#across, 2, #height, 256,  #width, 256) 
+_GroupBox_2 = _Controls.control #GroupBox "GroupBox2" params:#(#across, 2) 
 --_GroupBox_2 = _Controls.control #GroupBox "GroupBox2" params:#(#height, 256) 
---createControls control_type:#button groupbox_name:"GroupBox2"	
+createControls control_type:#button groupbox_name:"GroupBox2"	
 
 --createControls control_type:#dropdownlist groupbox_name:"Buttons"	
 
@@ -41,6 +41,7 @@ _GroupBox_2 = _Controls.control #GroupBox "GroupBox2" params:#(#across, 2, #heig
 --_GroupBox_2 = _Controls.control #GroupBox "GroupBox 2" params:#(#across, 2)
 --_GroupBox_3 = _Controls.control #GroupBox "GroupBox 3" params:#(#across, 2)
 --_GroupBox_4 = _Controls.control #GroupBox "GroupBox 4" params:#(#across, 2)
+
 
 
 
@@ -60,6 +61,6 @@ _GroupBox_2 = _Controls.control #GroupBox "GroupBox2" params:#(#across, 2, #heig
 dialog_width = undefined
 dialog_width = 420
 --dialog_height = 1920
---dialog_height = 256
-dialog_height = undefined
+dialog_height = 256
+--dialog_height = undefined
 include "Library/MAXSCRIPT-UI-framework/Lib/RolloutCreator/_Test/includes/CreateTestDialog.ms"
