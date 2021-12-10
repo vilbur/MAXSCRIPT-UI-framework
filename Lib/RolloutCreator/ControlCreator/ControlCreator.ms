@@ -29,7 +29,7 @@ struct ControlCreator_v
 		
 		GroupBoxCreator.GroupBoxes = _Controls.GroupBoxes
 		
-		this.moveGroupBoxcontrolsToEnd()
+		this.moveconytrolsToEndOfList()
 		
 		/* set DEFAULT PARAMETERS */ 
 		ParamsCreator.setControlDefaults (_Controls.Defaults)
@@ -41,7 +41,7 @@ struct ControlCreator_v
 		this._convertCustomControls()
 
 		/* modify ACROSS PARAMETER */ 
-		AcrossModifier.addFakeControls(this._Controls)
+		--AcrossModifier.addFakeControls(this._Controls)
 
 		/* add LOCAL VARIABLES */ 
 		this._addLocalVariablesToRollout()
@@ -91,11 +91,11 @@ struct ControlCreator_v
 	(
 		format "\n"
 		print ("ControlCreator_v._addControl() " +_Control.id )
-		format "_Control	= % \n" _Control
+		--format "_Control	= % \n" _Control
 		this._addValueParameter  (_Control) (_Rollout.id)
 		
 		params = ParamsCreator.join(_Control.params)
-		--format "params	= % \n" params
+		format "params	= % \n" params
 		_Rollout._RolloutCreator.addControl (_Control.type) (_Control.id) (this._emptyCaptionIfInBrackets(_Control.caption)) paramStr:params
 	),
 
@@ -122,38 +122,14 @@ struct ControlCreator_v
 			_Rollout._RolloutCreator.addHandler _Control.id Event.type codeStr:(Event.code) paramStr:Event.params filter:on
 	),
 
-	/** Move group boxcontrols to end
+	/** Controls to groupbox will be rendered as last
 	 */
-	function moveGroupBoxcontrolsToEnd =
+	function moveconytrolsToEndOfList =
 	(
-		--print "ControlCreator_v.moveGroupBoxcontrolsToEnd()"
-		
-		Controls_in_Groupboxes	= #()
-		
-		for _Control in _Controls.list do
-		(
-			if( (control_is_in_group_box = _Control.Params.getVal #GroupBox) != undefined ) then -- set controls positionin group box to zero
-				_Control.param #pos	[0, 0]
-			
-			if( _Control.type == #groupbox ) then
-			(
-				format "_Control.caption	= % \n" _Control.caption
-				format "_Controls.GroupBoxes.keys	= % \n" _Controls.GroupBoxes.keys
-				format "_Controls.GroupBoxes.values	= % \n" _Controls.GroupBoxes.values
-				if( (groupbox_height =  (_Controls.GroupBoxes.getVal(_Control.id)).count * 27) == 0 ) then 
-					groupbox_height = 64
-
-				_Control.param #height groupbox_height
-			)
-			else
-
-			if( (group_box_name = _Control.Params.getVal #GroupBox) != undefined ) then
-				append Controls_in_Groupboxes _Control
-			
-		)
+		--print "ControlCreator_v.moveconytrolsToEndOfList()"
+		Controls_in_Groupboxes = for _Control in _Controls.list where _Control.Params.getVal #GroupBox != undefined and _Control.type != #GroupBox collect _Control
 		
 		_Controls.list = ( this.diffArray _Controls.list Controls_in_Groupboxes) + Controls_in_Groupboxes
-
 	),
 	
 	/**  

@@ -12,38 +12,51 @@ include "Library/MAXSCRIPT-UI-framework/Lib/RolloutCreator/_Test/includes/Create
 /*------------------------------------------------------------------------------
 	TESTS DEFINITION
 --------------------------------------------------------------------------------*/
-
-function createGroupBox prefix:"" control_type:#button =
+function createControls control_type:#button groupbox_name:"" =
 (
-	--_Controls.control #GroupBox ("LEFT HALF " + prefix ) id:#groupbox_left params:#(#across, 2)
-
-	--_Controls.Default #across 2 type:#dropdownlist
-
-	for i = 1 to 3 do 
-	(
-		_Button1    = _Controls.control control_type ( prefix + i as string ) params:#(#groupbox, "Group Box Title", #across, 2)
-		--_Button1    = _Controls.control control_type ( "[" + prefix  + i as string +"]" ) params:#(#groupbox, "GroupBox Title", #across, 2)
-	)
-	--_Controls.control #dropdownlist ("FULL WIDTH " + prefix) params:#(#across, 3)
-
-	--_Controls.control #dropdownlist ("LEFT " + prefix  ) --params:#(#across, 1)
-	--_Controls.control #dropdownlist ("RIGHT " + prefix  ) --params:#(#across, 1)
 	
-	--_Controls.control #listbox ("RIGHT HALF " + prefix ) params:#(#across, 2)
-
+	
+	
+	for i = 1 to 1 do 
+		_Button1    = _Controls.control control_type ( groupbox_name + "."+i as string ) params:#(#groupbox, groupbox_name, #across, 2)
 )
+
+
+
+_GroupBox_1 = _Controls.control #GroupBox "GroupBox1" params:#(#across, 2, #height, 256) 
+createControls control_type:#button groupbox_name:"GroupBox1"	
+
+
+--_GroupBox_2 = _Controls.control #GroupBox "GroupBox2" params:#(#across, 2) 
+--_GroupBox_2 = _Controls.control #GroupBox "GroupBox2" params:#(#across, 2, #height, 256) 
+--createControls control_type:#button groupbox_name:"GroupBox2"	
+
+--createControls control_type:#dropdownlist groupbox_name:"Buttons"	
+
+
+
+--_GroupBox_2 = _Controls.control #GroupBox "GroupBox 2" params:#(#across, 2)
+--_GroupBox_3 = _Controls.control #GroupBox "GroupBox 3" params:#(#across, 2)
+--_GroupBox_4 = _Controls.control #GroupBox "GroupBox 4" params:#(#across, 2)
+
+
+
 
 /*------------------------------------------------------------------------------
 	RUN TESTS 
 --------------------------------------------------------------------------------*/
 
---createGroupBox prefix:"DDTest" control_type:#dropdownlist
-createGroupBox prefix:"DDTest" control_type:#button
+
+
+--createControls prefix:"Buttons"	control_type:#dropdownlist
+--createControls prefix:"Dropdowns"	control_type:#dropdownlist
+
 
 /** Create dialog from _Rollout
   */
-dialog_width = 420
+--dialog_width = 420
+dialog_width = undefined
 --dialog_height = 1920
---dialog_height = 1024
-dialog_height = undefined
+dialog_height = 256
+--dialog_height = undefined
 include "Library/MAXSCRIPT-UI-framework/Lib/RolloutCreator/_Test/includes/CreateTestDialog.ms"
