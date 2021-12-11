@@ -14,43 +14,80 @@ include "Library/MAXSCRIPT-UI-framework/Lib/RolloutCreator/_Test/includes/Create
 --------------------------------------------------------------------------------*/
 function createControls control_type:#button groupbox_name:"" =
 (
-	for i = 1 to 5 do 
+	for i = 1 to 3 do 
 		_Button1    = _Controls.control control_type ( groupbox_name + " "+i as string ) params:#(#groupbox, groupbox_name, #across, 2)
 )
 
-
 /** Create group box
  */
-function createGroupBox groupbox_name =
+function createGroupBox groupbox_name groupbox:true =
 (
-	--_GroupBox_1 = _Controls.control #GroupBox "GroupBox1" params:#(#across, 2, #height, 256) 
-	_GroupBox_1 = _Controls.control #GroupBox groupbox_name params:#(#across, 2) 
-	--_GroupBox_1 = _Controls.control #GroupBox groupbox_name params:#(#across, 2, #height, 256, #width, 128) 
+	if groupbox then 
+		_GroupBox = _Controls.control #GroupBox groupbox_name params:#(#across, 2, #height, 128) 
+		--_GroupBox = _Controls.control #GroupBox groupbox_name params:#(#across, 2) 
+		--_GroupBox = _Controls.control #GroupBox groupbox_name params:#(#across, 2, #height, 256, #width, 128) 
 	
-	--createControls control_type:#button groupbox_name:groupbox_name	
+	createControls control_type:#button groupbox_name:groupbox_name	--params:#(#across, 2) 
+)
+
+/** Groupboxes with height
+ */
+function groupboxesWithHeight count:1 =
+(
+	for i = 1 to count do 
+		createGroupBox ("Defined height "+ i as string )
+)
+
+/** Groupboxes with height
+ */
+function selfdefinedGroupboxes count:1 =
+(
+	for i = 1 to count do 
+		createGroupBox ("Self defined groupbox "+ i as string ) groupbox:false
+)
+
+/** Heightby next ntrol
+ */
+function heightbyNextControl =
+(
+	_Controls.control #GroupBox "Height to next row y position"	params:#(#across, 2) 
+	_Controls.control #GroupBox "Height by next groupbox"	params:#(#across, 2) 
+	_Controls.control #GroupBox "Height by this last control in row"	params:#(#across, 2, #height, 96)
+
+	_Controls.control #GroupBox	"Height by next control"	params:#(#across, 2) 
+	_Controls.control #multilistbox	"Test"	params:#(#height, 3)
+)
+
+/** Last groupbox size by rollout
+ */
+function lastGroupboxSizeByRollout =
+(
+	_Controls.control #GroupBox "Fill rollout to the border"	params:#(#across, 2) 
 )
 
 
-for i = 1 to 3 do 
-	createGroupBox ("GroupBoxA"+ i as string )
 
-_Controls.control #GroupBox "Manual position" params:#(#across, 2, #pos, [16,128], #height, 128) 
-_Controls.control #GroupBox "Auto position" params:#(#across, 2) 
-
-
---_Controls.control #dropdownlist "Test" --params:#(#across, 2)
-_Controls.control #multilistbox "Test" --params:#(#across, 2)
---_Controls.control #button "Test" params:#(#across, 2, #height, 128)
 
 /*------------------------------------------------------------------------------
 	RUN TESTS 
 --------------------------------------------------------------------------------*/
 
+groupboxesWithHeight count:3
+
+heightbyNextControl()
+
+selfdefinedGroupboxes count:2
+
+--lastGroupboxSizeByRollout()
 
 
---createControls prefix:"Buttons"	control_type:#dropdownlist
---createControls prefix:"Dropdowns"	control_type:#dropdownlist
 
+
+
+
+/*------------------------------------------------------------------------------
+	CREATE ROLLOUT
+--------------------------------------------------------------------------------*/
 
 /** Create dialog from _Rollout
   */
@@ -58,6 +95,6 @@ dialog_width = 420
 --dialog_width = undefined
 
 dialog_height = 256
-dialog_height = 512
+dialog_height = 720
 --dialog_height = undefined
 include "Library/MAXSCRIPT-UI-framework/Lib/RolloutCreator/_Test/includes/CreateTestDialog.ms"
