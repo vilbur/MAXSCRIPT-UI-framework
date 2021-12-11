@@ -9,9 +9,24 @@ filein( getFilenamePath(getSourceFileName()) + "/../../../RolloutCreator.ms" )
   */
 include "Library/MAXSCRIPT-UI-framework/Lib/RolloutCreator/_Test/includes/CreateTestRollout.ms" -- "../../../_Test/includes/CreateTestRollout.ms"
 
-/*------------------------------------------------------------------------------
+
+/*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	
+	
+	DEFAULT HEIGHT OF GROUPBOX IS USED
+	
+	IF
+		GROUPBOX HAS NOT NEXT CONTROL TO FIT SIZE
+	AND
+		HEIGHT IS NOT DEFINED
+	
+	
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+
+/*
 	TESTS DEFINITION
---------------------------------------------------------------------------------*/
+*/ 
 function createControls control_type:#button groupbox_name:"" =
 (
 	for i = 1 to 3 do 
@@ -38,12 +53,20 @@ function groupboxesWithHeight count:1 =
 		createGroupBox ("Defined height "+ i as string )
 )
 
-/** Groupboxes with height
+/** Crete Groupbox defined as parameter in control
+  *
+  * Usefull when ui is generated from ".mcr" file
+  *
  */
 function selfdefinedGroupboxes count:1 =
 (
-	for i = 1 to count do 
-		createGroupBox ("Self defined groupbox "+ i as string ) groupbox:false
+	for i = 1 to count do
+	(
+		groupbox_name = "Self defined groupbox " + i as string
+		
+		for b = 1 to 3 do
+			_Controls.control #button ( groupbox_name + " "+ b as string ) params:#(#groupbox, groupbox_name, #across, 2)
+	)
 )
 
 /** Heightby next ntrol
@@ -76,9 +99,9 @@ groupboxesWithHeight count:3
 
 heightbyNextControl()
 
-selfdefinedGroupboxes count:2
+selfdefinedGroupboxes count:1 
 
---lastGroupboxSizeByRollout()
+lastGroupboxSizeByRollout()
 
 
 

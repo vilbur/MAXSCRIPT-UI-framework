@@ -14,12 +14,12 @@ struct GroupBoxCreator_v
 	_first_control_offset_y	= 16,
 	--padding_control_top	= 16,
 	_control_default_height	= 24,
-
+	
 	/** Test
 	 */
 	function sortControlsToGroupBoxes rollout_id =
 	(
-		print ("GroupBoxCreator_v.sortControlsToGroupBoxes()" + rollout_id as string )
+		--print ("GroupBoxCreator_v.sortControlsToGroupBoxes()" + rollout_id as string )
 		if( GroupBoxes != undefined ) then
 			for i = GroupBoxes.keys.count to 1 by -1 do
 				this._sortControlsInGroupBox(rollout_id)(GroupBoxes.keys[i])(GroupBoxes.values[i])
@@ -31,7 +31,7 @@ struct GroupBoxCreator_v
 	 */
 	function _sortControlsInGroupBox rollout_id groupbox_id groupbox_controls_ids =
 	(
-		format "\n"; print ("GroupBoxCreator_v._sortControlsInGroupBox() " +groupbox_id)
+		--format "\n"; print ("GroupBoxCreator_v._sortControlsInGroupBox() " +groupbox_id)
 		--format "groupbox_controls_ids	= % \n" groupbox_controls_ids
 		_groupbox = execute (rollout_id+"."+groupbox_id as string )
 
@@ -52,7 +52,7 @@ struct GroupBoxCreator_v
 	 */
 	function _setGroupBoxSize rollout_id groupbox_controls _groupbox groupbox_id =
 	(
-		format "\n"; print "GroupBoxCreator_v._setGroupBoxSize()"
+		--format "\n"; print "GroupBoxCreator_v._setGroupBoxSize()"
 		local _rollout  = execute(rollout_id as string )
 		local _groupbox = execute(rollout_id+"."+groupbox_id as string )
 
@@ -82,22 +82,18 @@ struct GroupBoxCreator_v
 	 */
 	function _setGroupboxHeight _rollout _groupbox next_control is_next_control_in_same_row =
 	(
-		format "\n"; print ("GroupBoxCreator_v._setGroupboxHeight() " + _groupbox as string )
-		format "_groupbox.height	= % \n" _groupbox.height
-		if height_is_default = _groupbox.height == 30 do -- 90px is default width of groupbox
+		--format "\n"; print ("GroupBoxCreator_v._setGroupboxHeight() " + _groupbox as string )
+		--format "_groupbox.height	= % \n" _groupbox.height
+		if height_is_default = _groupbox.height == GROUPBOX_DEFAULT_HEIGHT do -- 90px is default width of groupbox
 		
 			if next_control == undefined then -- if control is last
 				_groupbox.height = _rollout.height - _groupbox.pos.y - groupbox_margin
-				--format "auto height	= % \n" next_control
 			
 			if is_next_control_in_same_row then
 				_groupbox.height	=  (this._getControlSize (next_control))
-				--format "is_next_control_in_same_row	= % \n" is_next_control_in_same_row
 			
 			else if next_control != undefined then -- if next control is on next row
 				_groupbox.height = next_control.pos.y - _groupbox.pos.y - groupbox_margin
-				--format "next_control	= % \n" next_control
-					
 	),
 	
 	/** _is next control in same row
@@ -138,11 +134,11 @@ struct GroupBoxCreator_v
 	 */
 	function _getControlSize _control =
 	(
-		format "\n"; print "GroupBoxCreator_v._getControlSize()"
-		format "_control	= % \n" _control
+		--format "\n"; print "GroupBoxCreator_v._getControlSize()"
+		--format "_control	= % \n" _control
 
 		control_height = try( _control.height ) catch()
-		format "control_height	= % \n" control_height
+		--format "control_height	= % \n" control_height
 		case this._getControlType(_control) of
 		(
 			(#GroupboxControl):	control_height

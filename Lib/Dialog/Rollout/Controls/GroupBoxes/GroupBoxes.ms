@@ -1,3 +1,5 @@
+global GROUPBOX_DEFAULT_HEIGHT = 64
+
 /** GroupBoxes_v
  */
 struct GroupBoxes_v
@@ -8,8 +10,7 @@ struct GroupBoxes_v
 		this.values	= #()
 	*/
 	include "Library/MAXSCRIPT-UI-framework/Lib/List/ListBody.ms"
-
-	
+		
 	/** Get controlcount in groupbox
 	 */
 	function getControlsInGroupbox groupbox_id =
@@ -27,7 +28,11 @@ struct GroupBoxes_v
 	(
 		/* IF CONTROL IS GROUPBOX */ 
 		if( _Control.type == #Groupbox ) then
+		(
+			this._setDefaultHeight(_Control)
+			
 			this._saveGroupBox(_Control.id)
+		)
 	),
 	
 	/** Try add control
@@ -39,7 +44,7 @@ struct GroupBoxes_v
 		(
 			--format "groupbox_caption	= % \n" groupbox_caption
 			_GroupBox = this._createOrGetGroupBoxControl (_Controls) (_Control) (groupbox_caption)
-			
+
 			_Control.param #pos [0, 0] -- move controls aside, so they don`t mess up with layout
 
 			_Control.Params.setVal #Groupbox _GroupBox.id
@@ -48,7 +53,7 @@ struct GroupBoxes_v
 		)
 	),
 	
-	
+	--_Control.Params.setVal #height 196z
 	private
 	
 	
@@ -58,14 +63,25 @@ struct GroupBoxes_v
 	(
 		--print "GroupBoxes_v._createCreateCreateOrGetGroupBox()"
 		if( (_GroupBox = this._findGroupboxInControls(_Controls)(groupbox_caption) ) == undefined ) then
-		(
-			_GroupBox = this.createNewGroupBox(_Controls)(groupbox_caption) --params:#(#across, 2)
-			
-			if( ( control_across = _Control.Params.getVal #across ) != undefined ) then 
-				_GroupBox.Params.setVal #across control_across
-			
-			this._saveGroupBox(_GroupBox.id)
-		)
+		
+			_GroupBox = this._createGroupboxByControl (this._createNewGroupBox(_Controls)(groupbox_caption)) (_Control)
+
+		
+		_GroupBox --return
+	),
+	
+	/** _create groupbox by control
+	 */
+	function _createGroupboxByControl _GroupBox _Control =
+	(		
+		if( ( control_across = _Control.Params.getVal #across ) != undefined ) then 
+			_GroupBox.Params.setVal #across control_across
+		
+		
+		--_GroupBox.Params.setVal #height #bycontrols -- hook for ControlCreator, it will set he by controls by
+		
+		this._setDefaultHeight(_GroupBox)
+		this._saveGroupBox(_GroupBox.id)
 		
 		_GroupBox --return
 	),
@@ -97,9 +113,19 @@ struct GroupBoxes_v
 	
 	/** Craete new
 	 */
-	function createNewGroupBox _Controls groupbox_caption =
+	function _createNewGroupBox _Controls groupbox_caption =
 	(
 		 _Controls.control #Groupbox groupbox_caption
+	),
+	
+	/** _save group box
+	 */
+	function _setDefaultHeight _GroupBox =
+	(
+		--_GroupBox.Params.setVal #height 300
+		
+		if _GroupBox.Params.getVal #height == undefined  do -- 90px is default width of groupbox
+			_GroupBox.Params.setVal #height GROUPBOX_DEFAULT_HEIGHT
 	),
 	
 	/**  
