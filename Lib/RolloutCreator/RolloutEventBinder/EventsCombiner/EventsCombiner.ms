@@ -25,8 +25,8 @@ struct EventsCombiner_v
 			
 			if( (Event = this._getEvent(event_class)(event_type)) != undefined and Event.code !="" ) then
 			(
-				Event_combined.tooltip	+= ""+ Event.tooltip
-				Event_combined.code	+= ""+ Event.code
+				Event_combined.tooltip	+= "\n\t"+ Event.tooltip
+				Event_combined.code	+= "\n\t"+ Event.code + "\t/* EventsCombiner_v: "+event_class as string +" event */"
 				Event_combined.params	+= " " + Event.params
 			)
 		)

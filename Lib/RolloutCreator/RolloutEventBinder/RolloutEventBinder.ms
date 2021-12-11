@@ -2,10 +2,6 @@ filein( getFilenamePath(getSourceFileName()) + "/DefaultEvents/DefaultEvents.ms"
 filein( getFilenamePath(getSourceFileName()) + "/SaveIniEvents/SaveIniEvents.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/EventsCombiner/EventsCombiner.ms" )
 
-global DIALOG_PREVIOUS_STATE = undefined -- this should be in struct
-
-global ENABLE_DOCKED_EVENT = true -- prevent crash on destroying  of dialog
-
 /** RolloutEvent
   * 
   *		1) Available events for dialog|rollout are #open, #close, #resized, #moved, #docked 
@@ -13,11 +9,6 @@ global ENABLE_DOCKED_EVENT = true -- prevent crash on destroying  of dialog
   *		2) Events #open, #close and #docked fires save to ini callback before user defined callback, if ini file is defined then
   *
   *		3) Each event fires global variable EventFired
-  *	
-  *	
-  *	------------------------------------------------------------------------------------------------------------
-  *	
-  *	
   *	
   */
 struct RolloutEventBinder_v 
@@ -92,7 +83,7 @@ struct RolloutEventBinder_v
 	 */
 	function _addHandler event_type =
 	(
-		--format "this._getEventTypes()	= % \n" (this._getEventTypes())
+		--print "global._addHandler()"
 		if( (Event = this._getCombinedEvent event_type) == undefined ) then
 			return false
 
@@ -115,7 +106,6 @@ struct RolloutEventBinder_v
 		)
 	),
 	
-
 	/** _combine events
 	 */
 	function _setCustomEvents =
@@ -162,7 +152,7 @@ struct RolloutEventBinder_v
 	(
 		--print "global._mutateResizedEventToDocked()"
 		Event_resized	= EventsCombiner.combineOrGetNewEvent (#resized)
-		format "Event_resized	= % \n" Event_resized
+		--format "Event_resized	= % \n" Event_resized
 		
 		if( (Event_docked = EventsCombiner.combine (#docked)) != undefined ) then
 		(
@@ -171,14 +161,16 @@ struct RolloutEventBinder_v
 			current_state_match_cui	= " matchPattern (dialog_current_state as string) pattern:\"cui_*\" "
 			
 			----if_resizing_enabled     =	" if(ENABLE_RESIZING != false) then\n" -- this is MUST WRAP ALL STRINGS BELOW IN ()
-			if_docked_event_enabled = " if(ENABLE_DOCKED_EVENT) then "
+			if_docked_event_enabled = " if(EVENT_DOCKED_ENABLED) then "
 			
 			re_set_previous_state   	= " DIALOG_PREVIOUS_STATE = dialog_current_state "
 			
 			--if( Event_docked != undefined ) then -- on move, if dialog is docked and change its state then call #docked callback
 			Event_resized.code = "if ( "+prev_state_not_false+" and "+current_state_changed+" and "+current_state_match_cui+")
 									then
-										( "+if_docked_event_enabled+" (" +Event_docked.code+ " )) -- Fire #docked event
+										( "+if_docked_event_enabled+" (" +Event_docked.code+ " )  -- Fire #docked event
+											EVENT_DOCKED_ENABLED = false 
+										)
 									else "+
 										"(" +Event_resized.code+ ")"+ -- Fire #resized event
 									re_set_previous_state

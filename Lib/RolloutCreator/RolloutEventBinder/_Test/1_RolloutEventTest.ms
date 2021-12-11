@@ -17,7 +17,7 @@ Subrollouts_1	= _Rollout.Subrollouts()
 Subrollout_1	= Subrollouts_1.new "Subrollout1"
 
 /* DIALOG EVENTS */ 
-_Rollout.Events.add #open   "print \"#Open \""
+_Rollout.Events.add #open   "print \"#Open\""
 _Rollout.Events.add #close  "print \"#Close\""
 
 

@@ -1,4 +1,4 @@
-global GROUPBOX_DEFAULT_HEIGHT = 64
+global GROUPBOX_DEFAULT_HEIGHT = 99
 
 /** GroupBoxes_v
  */

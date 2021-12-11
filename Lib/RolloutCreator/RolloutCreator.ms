@@ -47,7 +47,7 @@ struct RolloutCreator_v
 	function createRollout _Rollout width: height: =
 	(
 		format "\n"
-		print ("RolloutCreator_v.createRollout() " + _Rollout.id as string )
+		--print ("RolloutCreator_v.createRollout() " + _Rollout.id as string )
 		
 		if( width != unsupplied ) then
 			this.width = width
@@ -74,10 +74,8 @@ struct RolloutCreator_v
 		/* add CONTROLS and SUBROLLOUTS */ 
 		this.addControlsAndSubrolloutes (_Rollout)
 		
-		
 		/* add EVENTS */ 
 		EventBinder.combineEventsThendAddHandlers(_Rollout)
-		
 		
 		/* EDIT end */ 
 		_Rollout._RolloutCreator.end()
@@ -97,7 +95,7 @@ struct RolloutCreator_v
 			else
 			
 				this._createSubrollouts (_Rollout)(ControlsBox_or_Subrollouts)
-	),
+	), 
 	
 	/** Add sub rollouts
 	 */
@@ -143,7 +141,8 @@ struct RolloutCreator_v
 	  */
 	 function _createSubrollouts _Rollout Subrollouts =
 	 (
-		print "RolloutCreator_v._createSubrollouts()"		
+		print ( "RolloutCreator_v._createSubrollouts " + Subrollouts.slot as string  )
+
 		this._addSubrolloutsSlots (_Rollout) (Subrollouts)
 		
 		for _Subrollout in Subrollouts.Rollouts do
@@ -154,8 +153,8 @@ struct RolloutCreator_v
 	 */
 	function _addSubrolloutsSlots _Rollout Subrollouts =
 	(
-		print "RolloutCreator_v._addSubrolloutsSlots()"		
-
+		--print ("RolloutCreator_v._addSubrolloutsSlots() " + Subrollouts.slot as string )
+		
 		/**  DIASBLE ADDING SUBROLLOUTS SLOT INTO ACROSS LAYOUT
 		  */
 		ControlCreator.AcrossModifier.fakeControlsOnEndofGroup(_Rollout._RolloutCreator) --fake_control_caption:"SUBROLLOUTS"

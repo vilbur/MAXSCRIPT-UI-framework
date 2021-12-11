@@ -3,7 +3,7 @@ filein( getFilenamePath(getSourceFileName()) + "/Layout/Layout.ms" )
 
 global DIALOG_PREVIOUS_STATE = undefined -- this should be in struct
 
-global ENABLE_DOCKED_EVENT = true -- prevent crash on destroying  of dialog // RENAME THIS TO DIALOG_ENABLE_DOCKED_EVENT
+global EVENT_DOCKED_ENABLED = true -- prevent crash on destroying  of dialog // RENAME THIS TO DIALOG_ENABLE_DOCKED_EVENT
 
 /** https://help.autodesk.com/view/MAXDEV/2021/ENU/?guid=GUID-816D257C-CD2D-4753-A792-6E7AEFAFA6A7
  */
@@ -78,12 +78,7 @@ struct Dialog_v
 	 */
 	function register =
 	(
-		print "Dialog_v.register()"
-		ENABLE_DOCKED_EVENT = false
-		
 		execute ("cui.RegisterDialogBar "+ RolloutMain.id +" style:"+style_dialog as string )
-		
-		ENABLE_DOCKED_EVENT = true
 	),
 	
 	/** Unregister dialog bar
@@ -102,30 +97,32 @@ struct Dialog_v
 	function dock state =
 	(
 		this.register()
-		--format "state	= % \n" state
+
 		if ( state != #float ) then
 			execute ("cui.DockDialogBar "+ RolloutMain.id +" #cui_dock_"+ state as string )
 		else
 			execute ("cui.floatDialogBar "+ RolloutMain.id )
+		
+		EVENT_DOCKED_ENABLED = true
 	),
 	
 	/** Destroy dialog
 	 */
 	function destroy =
 	(
-		print "DialogRemote.destroy()"
+		--print "Dialog_v.destroy()"
 		--format "RolloutMain.id	= % \n" RolloutMain.id
-		ENABLE_DOCKED_EVENT = false
+		EVENT_DOCKED_ENABLED = false
 		
 		this.unregister()
 		--sleep 1
 		execute ( "try( destroyDialog "+ RolloutMain.id +" )catch()" )
 		
-		ENABLE_DOCKED_EVENT = true
+		EVENT_DOCKED_ENABLED = true
 	),
 	
 	/*------------------------------------------------------------------------------
-		INHERED
+		Extend RolloutMain
 	--------------------------------------------------------------------------------*/
 	
 	/** rollouts
@@ -163,7 +160,7 @@ struct Dialog_v
 	 */
 	function _getViewportHeight =
 	(
-		print "Dialog_v._getViewportHeight()"
+		--print "Dialog_v._getViewportHeight()"
 		is_maximized	= viewport.numViews == 1
 		
 		height_of_ui	= 0 -- Add heigh

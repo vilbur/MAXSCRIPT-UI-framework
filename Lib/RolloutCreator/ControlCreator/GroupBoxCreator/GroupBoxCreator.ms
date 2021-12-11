@@ -12,7 +12,6 @@ struct GroupBoxCreator_v
 	margin	= 8,
 	padding	= [32, 8],
 	_first_control_offset_y	= 16,
-	--padding_control_top	= 16,
 	_control_default_height	= 24,
 	
 	/** Test
@@ -31,7 +30,7 @@ struct GroupBoxCreator_v
 	 */
 	function _sortControlsInGroupBox rollout_id groupbox_id groupbox_controls_ids =
 	(
-		--format "\n"; print ("GroupBoxCreator_v._sortControlsInGroupBox() " +groupbox_id)
+		--format "\n------------------------------\n"; print ("GroupBoxCreator_v._sortControlsInGroupBox() " +groupbox_id)
 		--format "groupbox_controls_ids	= % \n" groupbox_controls_ids
 		_groupbox = execute (rollout_id+"."+groupbox_id as string )
 
@@ -57,7 +56,7 @@ struct GroupBoxCreator_v
 		local _groupbox = execute(rollout_id+"."+groupbox_id as string )
 
 		next_control = this._getNextControlToGroupBox(_rollout.controls)(groupbox_id)
-
+		--format "NEXT_CONTROL	= % \n" next_control
 		is_next_control_in_same_row = this._isNextControlInSameRow (next_control) ( _groupbox.pos.y)
 		
 		this._setGroupboxWidth  (_rollout) (_groupbox) (next_control) (is_next_control_in_same_row)
@@ -69,10 +68,13 @@ struct GroupBoxCreator_v
 	function _setGroupboxWidth _rollout _groupbox next_control is_next_control_in_same_row =
 	(
 		--format "\n"; print "GroupBoxCreator_v._setGroupboxWidth()"
+		--format "is_next_control_in_same_row	= % \n" is_next_control_in_same_row
+
 		if width_is_default = _groupbox.width == 90 do -- 90px is default width of groupbox
 		
 			if is_next_control_in_same_row then
-				_groupbox.width	= next_control.pos.x - _groupbox.pos.x - groupbox_margin  -- set width up to next control in row
+
+				_groupbox.width	= next_control.pos.x - _groupbox.pos.x - groupbox_margin -- set width up to next control in row
 		
 			else
 				_groupbox.width = _rollout.width - _groupbox.pos.x - groupbox_margin -- set width up to rollout border
@@ -83,17 +85,21 @@ struct GroupBoxCreator_v
 	function _setGroupboxHeight _rollout _groupbox next_control is_next_control_in_same_row =
 	(
 		--format "\n"; print ("GroupBoxCreator_v._setGroupboxHeight() " + _groupbox as string )
+		--format "NEXT_CONTROL	= % \n" next_control
 		--format "_groupbox.height	= % \n" _groupbox.height
 		if height_is_default = _groupbox.height == GROUPBOX_DEFAULT_HEIGHT do -- 90px is default width of groupbox
 		
 			if next_control == undefined then -- if control is last
 				_groupbox.height = _rollout.height - _groupbox.pos.y - groupbox_margin
-			
+				--format "next_control	= % \n" next_control
+				
 			if is_next_control_in_same_row then
 				_groupbox.height	=  (this._getControlSize (next_control))
+				--format "is_next_control_in_same_row	= % \n" is_next_control_in_same_row
 			
 			else if next_control != undefined then -- if next control is on next row
 				_groupbox.height = next_control.pos.y - _groupbox.pos.y - groupbox_margin
+				--format "next_control	= % \n" next_control
 	),
 	
 	/** _is next control in same row
@@ -101,6 +107,8 @@ struct GroupBoxCreator_v
 	function _isNextControlInSameRow next_control groupbox_pos_y =
 	(
 		--format "\n"; print "GroupBoxCreator_v._isNextControlInSameRow()"
+		--format "next_control	= % \n" next_control
+		--format "groupbox_pos_y	= % \n" groupbox_pos_y
 		if next_control != undefined then
 			next_control_pos_y	= next_control.pos.y
 		
@@ -137,9 +145,11 @@ struct GroupBoxCreator_v
 		--format "\n"; print "GroupBoxCreator_v._getControlSize()"
 		--format "_control	= % \n" _control
 
-		control_height = try( _control.height ) catch()
+		if( (control_height = try( _control.height ) catch()) == undefined ) then 
+			control_height = _control_default_height
+		
 		--format "control_height	= % \n" control_height
-		case this._getControlType(_control) of
+		case this._controlType(_control) of
 		(
 			(#GroupboxControl):	control_height
 			(#buttonControl):	_control_default_height
@@ -163,13 +173,19 @@ struct GroupBoxCreator_v
 	  * 	This control MUST NOT be in another groupbox
 	 */
 	function _getNextControlToGroupBox controls_in_rollout groupbox_id =
-	(
+	(--
+		--format "\n"; print "GroupBoxCreator_v._getNextControlToGroupBox()"
 		local next_control_index
-
+		--format "controls_in_rollout	= % \n" controls_in_rollout
 		current_control_index = this._currentControlIndex (controls_in_rollout) (groupbox_id)
-
-		                                           /* start loop up current control */
-		for i = 1 to controls_in_rollout.count where i >= current_control_index and this._controlIsInGroupbox (controls_in_rollout[i+1]) == false  do
+		                                          
+		for i = 1 to controls_in_rollout.count
+		 where	(i		>= current_control_index)	and -- start loop up current control
+			(control_next	= controls_in_rollout[i+1])	!= undefined	and -- if next ccontrol exist
+			(not_in_groupbox	= this._isInGroupbox(control_next))	== false	and -- if control is not in groupbox
+			(control_type	= this._controlType (control_next))	!= #GroupStartControl 	and -- if control is not  #group control
+			(control_type		!= #GroupEndControl )         -- if control is not  #group end control
+		 do
 			if( next_control_index == undefined ) then -- get only first occurence
 				next_control_index = i+1
 
@@ -190,9 +206,10 @@ struct GroupBoxCreator_v
 
 	/** _is controlin groupbox
 	 */
-	function _controlIsInGroupbox next_control =
+	function _isInGroupbox next_control =
 	(
-		--format "\n"; print "GroupBoxCreator_v._controlIsInGroupbox()"
+		--format "\n"; print "GroupBoxCreator_v._isInGroupbox()"
+		
 		is_in_groupbox = false
 
 		for groupbox_controls_ids in GroupBoxes.values where findItem groupbox_controls_ids (this._getControlId(next_control)) > 0 do is_in_groupbox = true
@@ -213,11 +230,11 @@ struct GroupBoxCreator_v
 
 	/** _get control id
 	 */
-	function _getControlType _control =
+	function _controlType _control =
 	(
 		--format "\n"; print "GroupBoxCreator_v._getControlId()"
 		control_type = (filterString ( _control as string) ":")[1]
-
+		--format "control_type	= #% \n" control_type
 		control_type as name --return
 	),
 

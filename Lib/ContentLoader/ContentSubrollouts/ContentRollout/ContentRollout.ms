@@ -24,9 +24,9 @@ struct ContentRollout_v
 	 */
 	function addToUi Subrollouts =
 	(
-		--print ( "ContentRollout_v.addToUi()" )
+		--print ( "ContentRollout_v.addToUi Subrollouts:" + Subrollouts.slot as string  )
 		--format "Subrollouts	= % \n" Subrollouts
-		Rollout_new	= Subrollouts.new title id:title -- get new rollout
+		Rollout_new	= Subrollouts.new title -- get new rollout
 		--print ("ContentRollout_v.addToUi ADD " + title +" TO "+ Subrollouts.id )
 		
 		for Subrollouts_or_Controls in Subrollouts_and_Controls do

@@ -16,7 +16,7 @@ struct SaveIniEvents_v
 	 */
 	function getEvents rollout_is_subrollout =
 	(
-		--print ("DefaultEvents_v.getDefaultEvents()")
+		--print ("SaveIniEvents_v.getDefaultEvents()")
 		if( ini_path != undefined ) do
 			if( rollout_is_subrollout ) then
 	
@@ -26,22 +26,21 @@ struct SaveIniEvents_v
 	
 				this._getDialogSaveIniEvents()
 	),
-	
-	
+
 	private
-	
+
 	/** Dialog save ini
 
 		IMPORTANT: #docked probably doesn't work in max 2022
-	 
+
 	 */
 	function _getDialogSaveIniEvents =
 	(
-		print "DefaultEvents_v._getDialogSaveIniEvents()"
+		--print "SaveIniEvents_v._getDialogSaveIniEvents()"
 		this._setSaveIniDefaultEvent #moved	"moved"	"val"
 		this._setSaveIniDefaultEvent #resized	"resized"	"val"
 		this._setSaveIniDefaultEvent #docked	"dock_state"	("(try(cui.getDockState "+rollout_id+")catch(\"cui_floatable\"))")
-		
+
 		List --return
 	),
 
@@ -49,10 +48,10 @@ struct SaveIniEvents_v
 	 */
 	function _getRolloutSaveIniEvents =
 	(
-		print "DefaultEvents_v._getRolloutSaveIniEvents()"
+		--print "SaveIniEvents_v._getRolloutSaveIniEvents()"
 		this._setSaveIniDefaultEvent #rolledDown	"rolledUp"	"(not val)"
 		this._setSaveIniDefaultEvent #rolledUp	"rolledUp" 	"(not val)"
-		
+
 		List --return
 	),
 

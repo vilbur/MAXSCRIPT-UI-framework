@@ -9,21 +9,20 @@ struct Rollout_v
 	/* required */
 	title,
 	id,
-	
+
 	/* properties */
 	/* extended control params */ 
 	add_locals	= #(),	-- #(#variable_name1, init_value1, #variable_name2, init_value2)	// used in ControlCreator_v._addLocalVariablesToRollout 	"../../../RolloutCreator/ControlCreator/ControlCreator.ms"
 	add_text,		-- string added to rollout	// used in ControlCreator_v._addFunctionsVariablesToRollout	"../../../RolloutCreator/ControlCreator/ControlCreator.ms"
 
 	is_subrollout = false,
-	
+
 	/* dependency */
 	_Controls = #(),
 	Events    = EventsList_v(),
-	
+
 	_RolloutCreator, -- Maxscript native RolloutCreator  https://help.autodesk.com/view/3DSMAX/2016/ENU/?guid=__files_GUID_5FC5036F_E2D7_46C9_9AFA_7B3550B9F254_htm
 
-	
 	/* inhered */ 
 	Layout,
 
@@ -33,21 +32,21 @@ struct Rollout_v
 	(
 		--print "Rollout_v.controls()"
 		local Controls = Controls_v group:group
-		
+
 		append _Controls Controls
-		
+
 		Controls --return
 	),
-	
+
 	/** Get Subrollouts for rollout
 	 */
-	function Subrollouts =
+	function Subrollouts slot: =
 	(
 		--print "Rollout_v.subrollouts()"
-		local Subrollouts = Subrollouts_v slot:(this._getSlot())
-		
+		local Subrollouts = Subrollouts_v slot:(this._getSubrolloutsSlot(slot))
+
 		append _Controls Subrollouts
-		
+
 		Subrollouts --return
 	),
 
@@ -60,10 +59,10 @@ struct Rollout_v
 	(
 		--print "Rollout_v.rolloutcreatorBegin()"
 		_RolloutCreator = rolloutCreator id (this._setTitleCenter(width))
-		
+
 		_RolloutCreator.begin()
 	),
-	
+
 	/** Addlocal
 	 */
 	function addlocal ke val =
@@ -72,16 +71,16 @@ struct Rollout_v
 		append add_locals key
 		append add_locals val
 	),
-	
+
 	/** Add text
 	 */
 	function addText text =
 	(
 		--print "Rollout_v.addText()"
 		add_text += text
-		
+
 	),
-	
+
 	/** Subrollouts
 	  *
 	  * wrapper for user friedly coding
@@ -90,7 +89,7 @@ struct Rollout_v
 	(
 		this.Subrollouts() --return
 	),
-	
+
 	private
 
 	/** Center rollout title with empty space prefix
@@ -101,85 +100,72 @@ struct Rollout_v
 		--format "width	= % \n" width
 		prefix = ""
 		dashes = ""
-		
+
 	if( width != undefined  and (max_version = (maxVersion())[8] )!= undefined and max_version > 2020  ) then
 	(
 		prefix = ""
 
 		total_length = 20
-		
-		
+
 		/**
 				KEEP TITTLE IN THE MIDDLE IS MAGIC ROCKET SCIENCE
-				
-				
+
 				VALUEs aRE lonG TIME TUNED ;)
 		  */
 		difference = ceil((total_length - title.count)/2) -- get difference in length of characters, longer title has shorter prefix and vice versa
-		
+
 		width_divider = if( width >= 600  ) then 9  -- divide rollout of each length by different divider
 					else if( width >= 400  ) then 12
 					else if( width <= 250  ) then 40
 					else 20
-		
+
 		for i = 1 to floor (width/width_divider) + difference * 2.5 do -- too width 200px
 			prefix +=" "
-		
-		
+
 		prefix + dashes +""+ title +"" +dashes--return
 	)
 	else		
 		title
 	),
-	
+
 	/** _get slot
 	 */
-	function _getSlot =
+	function _getSubrolloutsSlot slot =
 	(
-		--print "Rollout_v._getSlot()"
-		local subrollouts = for _struct in _Controls where matchPattern (classof _struct as string ) pattern:@"*Subrollouts_v*" collect _struct 
+		if slot == unsupplied then 
+			slot = "subrollouts_"+(for _struct in _Controls where matchPattern (classof _struct as string ) pattern:@"*Subrollouts_v*" collect _struct).count as string
 
-		("slot_"+id+"_"+(subrollouts.count+1) as string ) --return
+		slot --return 
 	),
-	
+
 	/** Set id by title if not defined
 	 */
 	function _setId =
 	(
 		if ( id == undefined or id == unsupplied ) then
 		(
-			id  = title
-			
-			id = substituteString ( trimRight ( trimLeft id )) " " "_" -- replace whitespace with underscore
-			
-			id = this._repleaceCharacters "[^A-Za-z0-9_]+" "" -- remove invalid characters E.G.: "Butt@n_&_1" >>> "Button_1"
-					
-			id = this._repleaceCharacters "[_]+" "_" -- remove multiple underscores E.G.: "button___1" >>> "button_1"
+			id  = "ROLLOUT_" + title
 
-			id = "ROLLOUT_" + (( dotNetObject "System.Text.RegularExpressions.Regex" @"[^A-Za-z0-9_]+" ).Replace ( ( substituteString id " " "_") ) "")
+			id = substituteString ( trimRight ( trimLeft id )) " " "_" -- replace whitespace with underscore
+
+			id = this._repleaceCharacters "[^A-Za-z0-9_]+" "" -- remove invalid characters E.G.: "Butt@n_&_1" >>> "Button_1"
+
+			id = this._repleaceCharacters "[_]+" "_" -- remove multiple underscores E.G.: "button___1" >>> "button_1"
 		)
 	),
-	
+
 	/** _repleace string
 	 */
 	function _repleaceCharacters search replace =
 	(
 		( dotNetObject "System.Text.RegularExpressions.Regex" search ).Replace ( id ) replace  --return 
 	),
-	
+
 	/**  
 	 */
 	on create do
 	(
-		--prnt "RolloutCreator_v._setId()"
+		--print "Rollout_v.onOpen()"
 		this._setId()
-		
-		--this._setTitleCenter()
-		
-		--_RolloutCreator = rolloutCreator id ((this._getPrefix())+title)
-		--_RolloutCreator = rolloutCreator id title
-		--_RolloutCreator = rolloutCreator id ("   "+title)
-		
 	)
-	
 )

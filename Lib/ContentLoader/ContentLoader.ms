@@ -29,7 +29,7 @@ struct ContentLoader_v
 	 */
 	function create pos: width: height: menu: bgcolor: fgcolor: bitmap: style: modal: escapeEnable: lockHeight: lockWidth: parent: =
 	(
-		print("ContentLoader_v.create()")
+		--print("ContentLoader_v.create()")
 
 		--if( ini != undefined ) then
 			--Dialog.RolloutMain.ini ini

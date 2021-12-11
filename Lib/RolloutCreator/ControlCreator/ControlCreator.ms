@@ -21,7 +21,7 @@ struct ControlCreator_v
 	 */
 	function addControls _Controls =
 	(
-		--print "ControlCreator_v.addControls()"
+		print "ControlCreator_v.addControls()"
 		this._Rollout  = _Rollout
 		this._Controls = _Controls
 		--AcrossModifier	= AcrossParameterModifier_v()
@@ -89,9 +89,8 @@ struct ControlCreator_v
 	 */
 	function _addControl _Control =
 	(
-		--format "\n"
-		--print ("ControlCreator_v._addControl() " +_Control.id )
-		--format "_Control	= % \n" _Control
+		--format "\n"; print ("ControlCreator_v._addControl() " +_Control.id )
+		format "%\n" _Control.id
 		this._addValueParameter  (_Control) (_Rollout.id)
 		
 		params = ParamsCreator.join(_Control.params)
