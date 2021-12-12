@@ -20,7 +20,7 @@ struct GroupBoxCreator_v
 	*/
 	include "Library/MAXSCRIPT-UI-framework/Lib/List/ListBody.ms"
 	
-	groupboxes,
+	GroupBoxes,
 	rollouts	= keys,
 
 	/** Add grouboxes for rollout
@@ -29,12 +29,20 @@ struct GroupBoxCreator_v
 	  * @param	#( #("groupbox_ids"), #(#control_ids )	groupboxes
 	  *
 	 */
-	function addGrouboxesForRollout rollout_id_full groupboxes =
+	function addGrouboxesForRollout rollout_id_full GroupBoxes =
 	(
-		format "\n"; print "GroupBoxCreator_v.addGrouboxesForRollout()"
-		format "rollout_id_full	= % \n" rollout_id_full
-		format "groupboxes	= % \n" groupboxes
-		this.setVal (rollout_id_full) (groupboxes)
+		--format "\n>>>>>>>>>>>><<<<<<<<<<<<\n\n"; print "GroupBoxCreator_v.addGrouboxesForRollout()"
+		--format "rollout_id_full	= % \n" rollout_id_full
+		--format "GroupBoxes.keys	= % \n" GroupBoxes.keys
+		--format "GroupBoxes.values	= % \n" GroupBoxes.values
+		--format "GroupBoxes.values.count > 0	= % \n" (GroupBoxes.values.count > 0)
+		if GroupBoxes.values.count == 0 then 
+			return false
+		
+		if( GroupBoxes.values.count > 0 and ( GroupBoxes_exists = this.getVal (rollout_id_full) ) != undefined ) then 
+			GroupBoxes.values = GroupBoxes_exists.values + GroupBoxes.values
+		
+		this.setVal (rollout_id_full) (GroupBoxes)
 	),
 	
 	/** Test
@@ -44,36 +52,37 @@ struct GroupBoxCreator_v
 	 */
 	function sortControlsToGroupBoxes rollout_id_full =
 	(
-		format "\n"; print ("GroupBoxCreator_v.sortControlsToGroupBoxes()" + rollout_id_full as string )
-		----format "rollout_id_full	= % \n" rollout_id_full
+		--format "\n\n\n******************\n\n\n"; print ("GroupBoxCreator_v.sortControlsToGroupBoxes()" + rollout_id_full as string )
+		--format "rollout_id_full	= % \n" rollout_id_full
 		--format "this.rollouts	= % \n" this.rollouts
-		groupboxes = this.getVal (rollout_id_full)
-		
-		for i = groupboxes.keys.count to 1 by -1 do
-			this._sortControlsInGroupBox(rollout_id_full)(groupboxes.keys[i])(groupboxes.values[i])
+		GroupBoxes = this.getVal (rollout_id_full)
+		--format "GroupBoxes	= % \n" GroupBoxes
+		if( GroupBoxes != undefined ) then 
+			for i = GroupBoxes.keys.count to 1 by -1 do
+				this._sortControlsInGroupBox(rollout_id_full)(GroupBoxes.keys[i])(GroupBoxes.values[i])
 	),
 
 	private
 
 	/** _sort controls in group box
 	 */
-	function _sortControlsInGroupBox rollout_id_full groupbox_id groupbox_controls_ids =
+	function _sortControlsInGroupBox rollout_id_full groupbox_id control_ids_in_groupbox =
 	(
-		--format "\n------------------------------\n"; print ("GroupBoxCreator_v._sortControlsInGroupBox() " +groupbox_id)
-		 --print ("TURNED OFF")
-		 --return false
-		format "rollout_id_full	= % \n" rollout_id_full
-		format "groupbox_id	= % \n" groupbox_id
-		format "groupbox_controls_ids	= % \n" groupbox_controls_ids
+		--format "\n---------------------------------------\n\n"; print ("GroupBoxCreator_v._sortControlsInGroupBox() " +groupbox_id)
+
+		
+		--format "rollout_id_full	= % \n" rollout_id_full
+		--format "groupbox_id	= % \n" groupbox_id
+		--format "control_ids_in_groupbox	= % \n" control_ids_in_groupbox
 		
 		_groupbox = execute (rollout_id_full+"."+groupbox_id as string )
-		format "_groupbox	= % \n" _groupbox
+		--format "_groupbox	= % \n" _groupbox
 		controls_in_rollout = execute(rollout_id_full+".controls")
-		format "controls_in_rollout	= % \n" controls_in_rollout
+		--format "controls_in_rollout	= % \n" controls_in_rollout
 		control_position = this._getControlBoxPosition(_groupbox.pos)
 		
-		groupbox_controls = for i = 1 to controls_in_rollout.count where findItem groupbox_controls_ids (this._getControlId(controls_in_rollout[i])) > 0 collect controls_in_rollout[i]
-		
+		groupbox_controls = for i = 1 to controls_in_rollout.count where findItem control_ids_in_groupbox (this._getControlId(controls_in_rollout[i])) > 0 collect controls_in_rollout[i]
+		--format "groupbox_controls	= % \n" groupbox_controls
 		for groupbox_control in groupbox_controls do
 			this._moveControlToGroupbox (groupbox_control)(control_position)
 		
@@ -245,7 +254,7 @@ struct GroupBoxCreator_v
 		
 		is_in_groupbox = false
 
-		for groupbox_controls_ids in groupboxes.values where findItem groupbox_controls_ids (this._getControlId(next_control)) > 0 do is_in_groupbox = true
+		for control_ids_in_groupbox in groupboxes.values where findItem control_ids_in_groupbox (this._getControlId(next_control)) > 0 do is_in_groupbox = true
 
 		if( next_control != undefined ) then
 			is_in_groupbox --return

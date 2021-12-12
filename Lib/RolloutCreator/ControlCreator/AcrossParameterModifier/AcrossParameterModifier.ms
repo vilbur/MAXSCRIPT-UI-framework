@@ -3,6 +3,8 @@
   * REASON:	Across parameter ignores new value unless it completes his row
   * WHAT IS DONE:	Fake controls are generated to complete and fill row of previous across
   *
+  * IMPORTANT: Controls in groupboxes are IGNORED
+  *
  */
 struct AcrossParameterModifier_v
 (
@@ -13,11 +15,11 @@ struct AcrossParameterModifier_v
 	 */
 	function addFakeControls &_Controls =
 	(
-		format "\n"; print ("AcrossParameterModifier_v._acrossParameterModify()" )
-		format "_Controls	= % \n" _Controls.List.count
+		--format "\n"; print ("AcrossParameterModifier_v._acrossParameterModify()" )
+		--format "_Controls	= % \n" _Controls.List.count
 		
-		for __control__ in _Controls.List do 
-			format "__control__	= % \n" __control__
+		--for __control__ in _Controls.List do 
+			--format "__control__	= % \n" __control__
 		--return false -- DEBUG
 		
 		_Controls_list_copy	= #()

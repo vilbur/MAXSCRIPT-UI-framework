@@ -13,7 +13,8 @@ struct DefaultEvents_v
 	function getEvents rollout_id_full =
 	(
 		--format "\n"; print ("DefaultEvents_v.getEvents()" + rollout_id_full as string )
-		append List ( Event_v type:#open	code:("GroupBoxCreator.sortControlsToGroupBoxes(\""+rollout_id_full+"\")") )
+		--print "DEBUG"
+		--append List ( Event_v type:#open	code:("GroupBoxCreator.sortControlsToGroupBoxes(\""+rollout_id_full+"\")") )
 			
 		List --return
 	),

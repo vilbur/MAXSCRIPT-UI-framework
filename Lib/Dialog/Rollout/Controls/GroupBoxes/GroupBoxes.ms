@@ -45,7 +45,7 @@ struct GroupBoxes_v
 			--format "groupbox_caption	= % \n" groupbox_caption
 			_GroupBox = this._createOrGetGroupBoxControl (_Controls) (_Control) (groupbox_caption)
 
-			--_Control.param #pos [0, 0] -- move controls aside, so they don`t mess up with layout
+			_Control.param #pos [0, 0] -- move controls aside, so they don`t mess up with layout
 
 			_Control.Params.setVal #Groupbox _GroupBox.id
 
