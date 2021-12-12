@@ -73,7 +73,7 @@ struct RolloutEventBinder_v
 	function _addHandlers =
 	(
 		--print "global._addHandlers()"
-		dialog_or_rollout_event_types = if( _Rollout.is_subrollout ) then events_rollout else events_dialog
+		dialog_or_rollout_event_types = if( _Rollout.parent_rollout == undefined ) then events_dialog else events_rollout
 		
 		for event_type in this._getEventTypes(dialog_or_rollout_event_types) do
 			this._addHandler event_type
@@ -124,7 +124,7 @@ struct RolloutEventBinder_v
 	 */
 	function _setSaveIniEvents =
 	(
-		EventsCombiner.setEventsClass #SAVEINI ((SaveIniEvents_v rollout_id:_Rollout.id ini_path:ini_path ).getEvents(_Rollout.is_subrollout)) 
+		EventsCombiner.setEventsClass #SAVEINI ( (SaveIniEvents_v rollout_id:_Rollout.id ini_path:ini_path ).getEvents(_Rollout.parent_rollout) ) 
 	),
 	
 

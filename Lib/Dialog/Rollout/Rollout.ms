@@ -9,17 +9,17 @@ struct Rollout_v
 	/* required */
 	title,
 	id,
-
+	
 	/* properties */
-	/* extended control params */ 
-	add_locals	= #(),	-- #(#variable_name1, init_value1, #variable_name2, init_value2)	// used in ControlCreator_v._addLocalVariablesToRollout 	"../../../RolloutCreator/ControlCreator/ControlCreator.ms"
-	add_text,		-- string added to rollout	// used in ControlCreator_v._addFunctionsVariablesToRollout	"../../../RolloutCreator/ControlCreator/ControlCreator.ms"
-
-	is_subrollout = false,
-
+	parent_rollout, -- store parent id
+	
 	/* dependency */
 	_Controls = #(),
 	Events    = EventsList_v(),
+	
+	/* extended control params */ 
+	add_locals	= #(),	-- #(#variable_name1, init_value1, #variable_name2, init_value2)	// used in ControlCreator_v._addLocalVariablesToRollout 	"../../../RolloutCreator/ControlCreator/ControlCreator.ms"
+	add_text,		-- string added to rollout	// used in ControlCreator_v._addFunctionsVariablesToRollout	"../../../RolloutCreator/ControlCreator/ControlCreator.ms"
 
 	_RolloutCreator, -- Maxscript native RolloutCreator  https://help.autodesk.com/view/3DSMAX/2016/ENU/?guid=__files_GUID_5FC5036F_E2D7_46C9_9AFA_7B3550B9F254_htm
 
@@ -43,7 +43,7 @@ struct Rollout_v
 	function Subrollouts slot: =
 	(
 		--print "Rollout_v.subrollouts()"
-		local Subrollouts = Subrollouts_v slot:(this._getSubrolloutsSlot(slot))
+		local Subrollouts = Subrollouts_v parent_rollout:id slot:(this._getSubrolloutsSlot(slot)) 
 
 		append _Controls Subrollouts
 
@@ -89,7 +89,18 @@ struct Rollout_v
 	(
 		this.Subrollouts() --return
 	),
-
+	
+	/** Get full id to roll 
+	 */
+	function getFullId =
+	(
+		if ( parent_rollout != undefined ) then
+			full_id = parent_rollout +"."+ id --return 
+		
+		else
+			id --return
+	),
+	
 	private
 
 	/** Center rollout title with empty space prefix

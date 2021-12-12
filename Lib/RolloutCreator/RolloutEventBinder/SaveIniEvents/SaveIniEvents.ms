@@ -14,11 +14,11 @@ struct SaveIniEvents_v
 	  *
 	  * @return	list	of default events
 	 */
-	function getEvents rollout_is_subrollout =
+	function getEvents parent_rollout =
 	(
 		--print ("SaveIniEvents_v.getDefaultEvents()")
 		if( ini_path != undefined ) do
-			if( rollout_is_subrollout ) then
+			if( parent_rollout != undefined ) then
 	
 				this._getRolloutSaveIniEvents()
 	
