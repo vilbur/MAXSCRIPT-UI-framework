@@ -1,4 +1,8 @@
-/** Control custom type
+/** Browse path is edittext control with default event which browse path
+  * 
+  * Event is fired if edit text field is empty
+  * 
+  *  Fired with keys ENTER|SPACE|TAB
  */
 struct BrowsePath_v
 (	
@@ -36,13 +40,19 @@ struct BrowsePath_v
 				if( valueIsEmpty(val) and valueIsEmpty("+local_variable_name+") ) then
 					if( (browsed_path = "+ this._getPathDialog() +") != undefined ) do
 					(
-						"+_Control.id+".text = browsed_path
-						EventFired.val = val = substituteString browsed_path @\\\\@ @\\\\\\\\@;
-						format \"EventFired	= % \n\" EventFired
-						"+ Event.code +" -- fire custom event with browsed variable
+						"+_Control.id+".text    = browsed_path
+						"+_Control.id+".tooltip = browsed_path
+					
+						val = EventFired.val    = substituteString browsed_path @\\\\@ @\\\\\\\\@
+					
+						"+ Event.code +"        -- Fire custom event with browsed variable
 					)
 				else
-					("+local_variable_name+" = "+_Control.id+".text);"
+					(
+						"+local_variable_name+" = "+_Control.id+".text
+						"+_Control.id+".tooltip = browsed_path
+					);"
+	
 	
 			_Control.Events.replace Event
 		)

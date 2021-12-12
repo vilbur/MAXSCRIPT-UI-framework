@@ -17,6 +17,7 @@ filein( getFilenamePath(getSourceFileName()) + "/ControlCreator/ControlCreator.m
 struct RolloutCreator_v
 (
 	ControlCreator,
+	
 	Ini	= Ini_v(),
 	EventBinder	= RolloutEventBinder_v(),
 
@@ -46,19 +47,9 @@ struct RolloutCreator_v
 	 */
 	function createRollout _Rollout width: height: =
 	(
-		format "\n"
-		--print ("RolloutCreator_v.createRollout() " + _Rollout.id as string )
-		
-		if( width != unsupplied ) then
-			this.width = width
-		
-		 this._testRolloutTitle(_Rollout.title) (_Rollout.id) 
-			
-		--format "_Rollout.title	= % \n" _Rollout.title
-		ControlCreator = ControlCreator_v _Rollout:_Rollout
-		
-			
-		this._setIniToCreators()
+		format "\n"; print ("RolloutCreator_v.createRollout() " + _Rollout.id as string )
+		this._setupCreation (_Rollout) (width) (height)
+
 		
 		/* EDIT start */ 
 		_Rollout.rolloutCreatorBegin(this.width)
@@ -69,33 +60,33 @@ struct RolloutCreator_v
 		/* add TEXT */ 
 		this._addTextToRollout (_Rollout)
 		
-		this._setSubrolloutsHeight(_Rollout)(height)		
-		
 		/* add CONTROLS and SUBROLLOUTS */ 
-		this.addControlsAndSubrolloutes (_Rollout)
+		this._addControlsAndSubrolloutes (_Rollout)
 		
 		/* add EVENTS */ 
-		EventBinder.combineEventsThendAddHandlers(_Rollout)
+		EventBinder.combineEventsAndAddHandlers(_Rollout)
 		
 		/* EDIT end */ 
 		_Rollout._RolloutCreator.end()
 		--format "_Rollout._RolloutCreator	= % \n" _Rollout._RolloutCreator -- PRINT ROLLOUT DEINITION
 	),
-
-	/** Add controls or subrolloutes
+	
+	/** _setup creation
 	 */
-	function addControlsAndSubrolloutes _Rollout =
+	function _setupCreation _Rollout width height =
 	(
-		--print "RolloutCreator_v.addControlsAndSubrolloutes()"
-		for ControlsBox_or_Subrollouts in _Rollout._Controls do
-			if( this._isControls(ControlsBox_or_Subrollouts) ) then
-			
-				ControlCreator.addControls(ControlsBox_or_Subrollouts)
-			
-			else
-			
-				this._createSubrollouts (_Rollout)(ControlsBox_or_Subrollouts)
-	), 
+		ControlCreator = ControlCreator_v _Rollout:_Rollout
+
+		if( width != unsupplied ) then
+			this.width = width
+		
+		this._validateRolloutTitle(_Rollout.title) (_Rollout.id)
+		
+		this._setSubrolloutsHeight(_Rollout)(height)		
+		
+		this._setIniToCreators()
+	),
+	
 	
 	/** Add sub rollouts
 	 */
@@ -107,10 +98,29 @@ struct RolloutCreator_v
 			(
 				execute  ( "AddSubRollout "+_Rollout.id+"." + _Subrollouts.slot +" "+ _Subrollout.id + " rolledUp:"+(this._getRolledStateFromIni(_Subrollout.id)) )
 				
-				this.addSubRollouts _Subrollout
+				this.addSubRollouts (_Subrollout)
 			)	
 	),
 	
+	
+	private
+	
+	
+	/** Add controls or subrolloutes
+	 */
+	function _addControlsAndSubrolloutes _Rollout =
+	(
+		--print "RolloutCreator_v._addControlsAndSubrolloutes()"
+		for ControlsBox_or_Subrollouts in _Rollout._Controls do
+			if( this._isControls(ControlsBox_or_Subrollouts) ) then
+			
+				ControlCreator.addControls(ControlsBox_or_Subrollouts)
+			
+			else
+			
+				this._createSubrollouts (_Rollout)(ControlsBox_or_Subrollouts)
+	), 
+
 	/** Get rolled state from ini
 	 */
 	function _getRolledStateFromIni subrollout_id =
@@ -167,9 +177,9 @@ struct RolloutCreator_v
 	private
 	
 	
-	/** Test rollout title
+	/** Validate that title of rollout is not maxscript keyword or E.G.: "Rollout|Group|Locals|..."
 	 */
-	function _testRolloutTitle rollout_title rollout_id =
+	function _validateRolloutTitle rollout_title rollout_id =
 	(
 		--print "RolloutCreator_v._testRolloutTitle()"
 		if( rollout_title_is_defined = execute ("((class_of_title = classOf "+rollout_id+") != UndefinedClass and class_of_title != RolloutClass) ")  ) then
@@ -181,13 +191,9 @@ struct RolloutCreator_v
 	function _setSubrolloutsHeight _Rollout height =
 	(
 		--print "RolloutCreator_v._setSubrolloutsHeight()"
-		--format "this._getSubrolloutsCount(_Rollout)	= % \n" (this._getSubrolloutsCount(_Rollout))
-		--format "height	= % \n" height
 		if( ( subrollouts_count = this._getSubrolloutsCount(_Rollout)) > 0 ) then 
 			if( height != undefined and height != unsupplied ) then
 				subrollouts_slot_height = (height - padding_bottom) / subrollouts_count
-				
-		 --subrollouts_slot_height--return
 	),
 		
 	/** Add local variables from Control_v to rollout

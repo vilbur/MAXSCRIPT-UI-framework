@@ -10,10 +10,10 @@ struct DefaultEvents_v
 	  *
 	  * @return	list	of default events
 	 */
-	function getEvents rollout_id =
+	function getEvents rollout_id_full =
 	(
-		--print ("DefaultEvents_v.getDefaultEvents()")
-		append List ( Event_v type:#open	code:("GroupBoxCreator.sortControlsToGroupBoxes(\""+rollout_id+"\")") )
+		--format "\n"; print ("DefaultEvents_v.getEvents()" + rollout_id_full as string )
+		append List ( Event_v type:#open	code:("GroupBoxCreator.sortControlsToGroupBoxes(\""+rollout_id_full+"\")") )
 			
 		List --return
 	),

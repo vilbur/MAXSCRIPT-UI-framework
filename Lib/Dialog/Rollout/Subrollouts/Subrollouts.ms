@@ -5,7 +5,7 @@ struct Subrollouts_v
 	/* required */
 
 	/* properties */
-	parent_rollout, -- store parent id
+	parent_rollout,
 	slot,
 
 	Rollouts	= #(),
@@ -14,8 +14,8 @@ struct Subrollouts_v
 	 */
 	function new title id: =
 	(
-		--print "Subrollouts_v.roll()"
-		local _Rollout = Rollout_v title:title id:id parent_rollout:parent_rollout
+		--print "Subrollouts_v.new()"
+		local _Rollout = Rollout_v title:title id:id parent_rollout:( parent_rollout as string +"."+slot as string)
 
 		append Rollouts _Rollout
 

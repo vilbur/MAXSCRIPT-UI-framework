@@ -2,7 +2,6 @@
  */
 struct GroupBoxCreator_v
 (
-	GroupBoxes,
 	/* required */
 	/* dependency */
 	/* reference */
@@ -13,38 +12,72 @@ struct GroupBoxCreator_v
 	padding	= [32, 8],
 	_first_control_offset_y	= 16,
 	_control_default_height	= 24,
+
+	/* ListBody is defining these variables
+	   
+		this.keys	= #() 
+		this.values	= #()
+	*/
+	include "Library/MAXSCRIPT-UI-framework/Lib/List/ListBody.ms"
+	
+	groupboxes,
+	rollouts	= keys,
+
+	/** Add grouboxes for rollout
+	  *
+	  * @param	#name	rollout_id_full
+	  * @param	#( #("groupbox_ids"), #(#control_ids )	groupboxes
+	  *
+	 */
+	function addGrouboxesForRollout rollout_id_full groupboxes =
+	(
+		format "\n"; print "GroupBoxCreator_v.addGrouboxesForRollout()"
+		format "rollout_id_full	= % \n" rollout_id_full
+		format "groupboxes	= % \n" groupboxes
+		this.setVal (rollout_id_full) (groupboxes)
+	),
 	
 	/** Test
+	  *
+	  * @param	string	rollout_id_full is used to get controls from ui
+	  *
 	 */
-	function sortControlsToGroupBoxes rollout_id =
+	function sortControlsToGroupBoxes rollout_id_full =
 	(
-		--print ("GroupBoxCreator_v.sortControlsToGroupBoxes()" + rollout_id as string )
-		if( GroupBoxes != undefined ) then
-			for i = GroupBoxes.keys.count to 1 by -1 do
-				this._sortControlsInGroupBox(rollout_id)(GroupBoxes.keys[i])(GroupBoxes.values[i])
+		format "\n"; print ("GroupBoxCreator_v.sortControlsToGroupBoxes()" + rollout_id_full as string )
+		----format "rollout_id_full	= % \n" rollout_id_full
+		--format "this.rollouts	= % \n" this.rollouts
+		groupboxes = this.getVal (rollout_id_full)
+		
+		for i = groupboxes.keys.count to 1 by -1 do
+			this._sortControlsInGroupBox(rollout_id_full)(groupboxes.keys[i])(groupboxes.values[i])
 	),
 
 	private
 
 	/** _sort controls in group box
 	 */
-	function _sortControlsInGroupBox rollout_id groupbox_id groupbox_controls_ids =
+	function _sortControlsInGroupBox rollout_id_full groupbox_id groupbox_controls_ids =
 	(
 		--format "\n------------------------------\n"; print ("GroupBoxCreator_v._sortControlsInGroupBox() " +groupbox_id)
-		--format "groupbox_controls_ids	= % \n" groupbox_controls_ids
-		_groupbox = execute (rollout_id+"."+groupbox_id as string )
-
-		controls_in_rollout = execute(rollout_id+".controls")
-
+		 --print ("TURNED OFF")
+		 --return false
+		format "rollout_id_full	= % \n" rollout_id_full
+		format "groupbox_id	= % \n" groupbox_id
+		format "groupbox_controls_ids	= % \n" groupbox_controls_ids
+		
+		_groupbox = execute (rollout_id_full+"."+groupbox_id as string )
+		format "_groupbox	= % \n" _groupbox
+		controls_in_rollout = execute(rollout_id_full+".controls")
+		format "controls_in_rollout	= % \n" controls_in_rollout
 		control_position = this._getControlBoxPosition(_groupbox.pos)
 		
 		groupbox_controls = for i = 1 to controls_in_rollout.count where findItem groupbox_controls_ids (this._getControlId(controls_in_rollout[i])) > 0 collect controls_in_rollout[i]
 		
 		for groupbox_control in groupbox_controls do
-		
 			this._moveControlToGroupbox (groupbox_control)(control_position)
-
-		this._setGroupBoxSize (rollout_id) (groupbox_controls) (_groupbox)(groupbox_id)
+		
+		this._setGroupBoxSize (rollout_id_full) (groupbox_controls) (_groupbox)(groupbox_id)
 	),
 
 	/** _set group box dimensions
@@ -212,7 +245,7 @@ struct GroupBoxCreator_v
 		
 		is_in_groupbox = false
 
-		for groupbox_controls_ids in GroupBoxes.values where findItem groupbox_controls_ids (this._getControlId(next_control)) > 0 do is_in_groupbox = true
+		for groupbox_controls_ids in groupboxes.values where findItem groupbox_controls_ids (this._getControlId(next_control)) > 0 do is_in_groupbox = true
 
 		if( next_control != undefined ) then
 			is_in_groupbox --return

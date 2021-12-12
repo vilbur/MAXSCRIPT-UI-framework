@@ -64,7 +64,7 @@ struct ControlDefaults_v
 		--format "ParamsList	= % \n" ParamsList
 		keys_values = case default_key of
 		(
-			#button:	#( #across, 4,	#width, 96 )
+			#button:	#( #across, 2,	#width, 96 )
 			#list:	#( #across, 1 )
 			#checkbox:	#( #across, 1 )
 			#edittext:	#( #across, 1 )

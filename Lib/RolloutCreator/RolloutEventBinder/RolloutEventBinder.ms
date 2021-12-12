@@ -23,7 +23,7 @@ struct RolloutEventBinder_v
 	 * 
 	 * Event #rolledDown IS NOT NATIVE maxscript event
 	*/
-	events_rollout = #( #rolledUp, #rolledDown ),
+	events_rollout = #( #open, #close, #rolledUp, #rolledDown ),
 	
 	/* DIALOG Events -- https://help.autodesk.com/view/MAXDEV/2021/ENU/?guid=GUID-816D257C-CD2D-4753-A792-6E7AEFAFA6A7
 	 * 
@@ -55,7 +55,7 @@ struct RolloutEventBinder_v
 	
 	/** Bind events
 	 */
-	function combineEventsThendAddHandlers _Rollout =
+	function combineEventsAndAddHandlers _Rollout =
 	(
 		this._Rollout = _Rollout
 
@@ -117,7 +117,7 @@ struct RolloutEventBinder_v
 	 */
 	function _setDefaultEvents =
 	(
-		EventsCombiner.setEventsClass #DEFAULTS ((DefaultEvents_v()).getEvents(_Rollout.id)) 
+		EventsCombiner.setEventsClass #DEFAULTS ( (DefaultEvents_v()).getEvents(_Rollout.getFullId()) ) 
 	),
 
 	/** _combine events

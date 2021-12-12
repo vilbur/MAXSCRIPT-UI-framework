@@ -11,7 +11,7 @@ struct Rollout_v
 	id,
 	
 	/* properties */
-	parent_rollout, -- store parent id
+	parent_rollout,
 	
 	/* dependency */
 	_Controls = #(),
@@ -50,6 +50,15 @@ struct Rollout_v
 		Subrollouts --return
 	),
 
+	/** Subrollouts
+	  *
+	  * Alias for user friedly coding
+	 */
+	function Rollouts =
+	(
+		this.Subrollouts() --return
+	),
+	
 	/** Rolloutcreator begin
 	  *
 	  * @param	integer	width of rollout, needed to center rollout title
@@ -78,27 +87,17 @@ struct Rollout_v
 	(
 		--print "Rollout_v.addText()"
 		add_text += text
-
 	),
 
-	/** Subrollouts
-	  *
-	  * wrapper for user friedly coding
-	 */
-	function Rollouts =
-	(
-		this.Subrollouts() --return
-	),
-	
 	/** Get full id to roll 
 	 */
 	function getFullId =
 	(
 		if ( parent_rollout != undefined ) then
-			full_id = parent_rollout +"."+ id --return 
+			parent_rollout +"."+ id as string --return 
 		
 		else
-			id --return
+			id as string --return
 	),
 	
 	private
@@ -144,9 +143,9 @@ struct Rollout_v
 	function _getSubrolloutsSlot slot =
 	(
 		if slot == unsupplied then 
-			slot = "subrollouts_"+(for _struct in _Controls where matchPattern (classof _struct as string ) pattern:@"*Subrollouts_v*" collect _struct).count as string
+			slot = "subrollouts_"+( subrollouts_count = (for _struct in _Controls where matchPattern (classof _struct as string ) pattern:@"*Subrollouts_v*" collect _struct).count + 1) as string
 
-		slot --return 
+		slot as name --return 
 	),
 
 	/** Set id by title if not defined
@@ -163,6 +162,8 @@ struct Rollout_v
 
 			id = this._repleaceCharacters "[_]+" "_" -- remove multiple underscores E.G.: "button___1" >>> "button_1"
 		)
+		
+		id = id as name
 	),
 
 	/** _repleace string
@@ -176,7 +177,9 @@ struct Rollout_v
 	 */
 	on create do
 	(
-		--print "Rollout_v.onOpen()"
+		print "Rollout_v.onOpen()"
+		format "id	= % \n" id
+		
 		this._setId()
 	)
 )

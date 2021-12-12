@@ -45,7 +45,7 @@ struct GroupBoxes_v
 			--format "groupbox_caption	= % \n" groupbox_caption
 			_GroupBox = this._createOrGetGroupBoxControl (_Controls) (_Control) (groupbox_caption)
 
-			_Control.param #pos [0, 0] -- move controls aside, so they don`t mess up with layout
+			--_Control.param #pos [0, 0] -- move controls aside, so they don`t mess up with layout
 
 			_Control.Params.setVal #Groupbox _GroupBox.id
 
@@ -53,7 +53,7 @@ struct GroupBoxes_v
 		)
 	),
 	
-	--_Control.Params.setVal #height 196z
+
 	private
 	
 	
@@ -65,7 +65,6 @@ struct GroupBoxes_v
 		if( (_GroupBox = this._findGroupboxInControls(_Controls)(groupbox_caption) ) == undefined ) then
 		
 			_GroupBox = this._createGroupboxByControl (this._createNewGroupBox(_Controls)(groupbox_caption)) (_Control)
-
 		
 		_GroupBox --return
 	),
@@ -77,16 +76,13 @@ struct GroupBoxes_v
 		if( ( control_across = _Control.Params.getVal #across ) != undefined ) then 
 			_GroupBox.Params.setVal #across control_across
 		
-		
-		--_GroupBox.Params.setVal #height #bycontrols -- hook for ControlCreator, it will set he by controls by
-		
 		this._setDefaultHeight(_GroupBox)
 		this._saveGroupBox(_GroupBox.id)
 		
 		_GroupBox --return
 	),
 	
-	/** _
+	/** 
 	 */
 	function _addControlToGroupboxList _GroupBox_id _Control_id =
 	(
@@ -122,8 +118,6 @@ struct GroupBoxes_v
 	 */
 	function _setDefaultHeight _GroupBox =
 	(
-		--_GroupBox.Params.setVal #height 300
-		
 		if _GroupBox.Params.getVal #height == undefined  do -- 90px is default width of groupbox
 			_GroupBox.Params.setVal #height GROUPBOX_DEFAULT_HEIGHT
 	),

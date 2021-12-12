@@ -24,12 +24,12 @@ struct ControlCreator_v
 		print "ControlCreator_v.addControls()"
 		this._Rollout  = _Rollout
 		this._Controls = _Controls
-		--AcrossModifier	= AcrossParameterModifier_v()
-		--format "_Controls.GroupBoxes	= % \n" _Controls.GroupBoxes
+		--format "this._Controls	= % \n" this._Controls
+		format "_Controls.GroupBoxes	= % \n" _Controls.GroupBoxes
+		--format "_Rollout	= % \n" _Rollout
+		GroupBoxCreator.addGrouboxesForRollout (_Rollout.getFullId()) (_Controls.GroupBoxes)
 		
-		GroupBoxCreator.GroupBoxes = _Controls.GroupBoxes
-		
-		this.moveconytrolsToEndOfList()
+		this.moveControlsInGroupboxToEndOfList()
 		
 		/* set DEFAULT PARAMETERS */ 
 		ParamsCreator.setControlDefaults (_Controls.Defaults)
@@ -41,7 +41,7 @@ struct ControlCreator_v
 		this._convertCustomControls()
 
 		/* modify ACROSS PARAMETER */ 
-		--AcrossModifier.addFakeControls(this._Controls)
+		AcrossModifier.addFakeControls(this._Controls)
 
 		/* add LOCAL VARIABLES */ 
 		this._addLocalVariablesToRollout()
@@ -53,6 +53,7 @@ struct ControlCreator_v
 		this._addControlsToRollout()
 	),
 
+	
 	private
 	
 	
@@ -90,11 +91,12 @@ struct ControlCreator_v
 	function _addControl _Control =
 	(
 		--format "\n"; print ("ControlCreator_v._addControl() " +_Control.id )
-		format "%\n" _Control.id
+		--format "%\n" _Control.id
 		this._addValueParameter  (_Control) (_Rollout.id)
 		
 		params = ParamsCreator.join(_Control.params)
-		--format "params	= % \n" params
+		format "% %\n" _Control.id params
+
 		_Rollout._RolloutCreator.addControl (_Control.type) (_Control.id) (this._emptyCaptionIfInBrackets(_Control.caption)) paramStr:params
 	),
 
@@ -123,9 +125,9 @@ struct ControlCreator_v
 
 	/** Controls to groupbox will be rendered as last
 	 */
-	function moveconytrolsToEndOfList =
+	function moveControlsInGroupboxToEndOfList =
 	(
-		--print "ControlCreator_v.moveconytrolsToEndOfList()"
+		--print "ControlCreator_v.moveControlsInGroupboxToEndOfList()"
 		Controls_in_Groupboxes = for _Control in _Controls.list where _Control.Params.getVal #GroupBox != undefined and _Control.type != #GroupBox collect _Control
 		
 		_Controls.list = ( this.diffArray _Controls.list Controls_in_Groupboxes) + Controls_in_Groupboxes
