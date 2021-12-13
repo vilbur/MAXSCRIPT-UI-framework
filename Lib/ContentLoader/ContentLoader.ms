@@ -65,7 +65,7 @@ struct ContentLoader_v
 		ContentRollout =  ContentRollout_v path:path
 		
 		Dialog	= Dialog_v title:ContentRollout.title id:ContentRollout.title ini:ini
-
+		
 		ContentRollout
 	)
 )

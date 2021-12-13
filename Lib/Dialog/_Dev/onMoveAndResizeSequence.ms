@@ -17,14 +17,14 @@ rollout MainRollout_test "Main Rollout" width:325 height:200
 	on MainRollout_test resized new_size do
 	(
 		format "\n"
-		print "MainRollout_test.onResized()" 
+		--print "MainRollout_test.onResized()" 
 		format "dialog_current_state = % \n" (try(cui.getDockState MainRollout_test)catch(false))
 	
 	)
 	on MainRollout_test moved new_pos do
 	(
 		format "\n"
-		print "MainRollout_test.onMoved()" 
+		--print "MainRollout_test.onMoved()" 
 		format "dialog_current_state = % \n" (try(cui.getDockState MainRollout_test)catch(false))
 
 	)

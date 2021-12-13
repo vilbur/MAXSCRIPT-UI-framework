@@ -17,7 +17,7 @@ function dockRight =
  */
 function undock =
 (
-	print "Dialog.undock()"
+	--print "Dialog.undock()"
 	format "this._isRegistered()	= % \n" (this._isRegistered())
 	format "this._isDocked()	= % \n" (this._isDocked())
 	
@@ -38,7 +38,7 @@ function undock =
  */
 function dock side =
 (
-	print "DialogDock.dock()"
+	--print "DialogDock.dock()"
 	dock_state = this._getDockStateName side
 	format "dock_state	= % \n" dock_state
 	
@@ -166,7 +166,7 @@ function _getDockStateName side =
 --  */
 -- function resizeSubrolloutsOfDockedDialog =
 -- (
---	print "Dialog.resizeSubrolloutsOfDockedDialog()"
+--	--print "Dialog.resizeSubrolloutsOfDockedDialog()"
 --	 --this._isFloatable()
 --	--if not( this._isFloatable() ) then -- resize before docking
 --	(

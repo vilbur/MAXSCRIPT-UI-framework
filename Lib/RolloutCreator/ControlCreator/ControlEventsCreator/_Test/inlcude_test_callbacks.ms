@@ -2,7 +2,7 @@
  */
 function CallbackNoParam =
 (
-	print "CallbackNoParam"
+	--print "CallbackNoParam"
 
 	format "EventFired.control 	= % \nEventFired.type 	= % \n\n" EventFired.control EventFired.type
 )
@@ -11,7 +11,7 @@ function CallbackNoParam =
  */
 function CallbackWithValue val =
 (
-	print "CallbackWithValue"
+	--print "CallbackWithValue"
 	
 	format "EventFired.control 	= % \nEventFired.type 	= % \n" EventFired.control EventFired.type
 	
@@ -25,7 +25,7 @@ function CallbackWithValue val =
  */
 function CallbackWith2Params arg_1 arg_2 =
 (
-	print "SpinnerEnteredTest"
+	--print "SpinnerEnteredTest"
 	
 	format "EventFired.control 	= % \nEventFired.type 	= % \n" EventFired.control EventFired.type
 

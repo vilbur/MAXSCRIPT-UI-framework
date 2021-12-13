@@ -19,7 +19,7 @@ struct DialogMenu_v
 	 */
 	function create =
 	(
-		print "DialogMenu_v.create()"
+		--print "DialogMenu_v.create()"
 
 		--/* DEFINE MENU */
 		--menu_1	= Menu.menu Dialog.title
@@ -123,7 +123,7 @@ struct DialogMenu_v
 	 */
 	on create do
 	(
-		print("DialogMenu_v.onCreate()")
+		--print("DialogMenu_v.onCreate()")
 		this._checkConstctructProperties()
 	)
 	

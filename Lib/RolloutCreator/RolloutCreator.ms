@@ -104,9 +104,9 @@ struct RolloutCreator_v
 	 */
 	function _addControlsAndSubrolloutes _Rollout =
 	(
-		print "RolloutCreator_v._addControlsAndSubrolloutes()"
-		for ControlsBox_or_Subrollouts in _Rollout._Controls do
-			format "___Controls__	= % \n" ControlsBox_or_Subrollouts
+		--print "RolloutCreator_v._addControlsAndSubrolloutes()"
+		--for ControlsBox_or_Subrollouts in _Rollout._Controls do
+			--format "___Controls__	= % \n" ControlsBox_or_Subrollouts
 
 		for ControlsBox_or_Subrollouts in _Rollout._Controls do
 		(
@@ -152,7 +152,7 @@ struct RolloutCreator_v
 	  */
 	 function _createSubrollouts _Rollout Subrollouts =
 	 (
-		print ( "RolloutCreator_v._createSubrollouts " + Subrollouts.slot as string  )
+		--print ( "RolloutCreator_v._createSubrollouts " + Subrollouts.slot as string  )
 
 		this._addSubrolloutsSlots (_Rollout) (Subrollouts)
 
@@ -189,13 +189,13 @@ struct RolloutCreator_v
 	 */
 	function _setSubrolloutsHeight _Rollout height =
 	(
-		print "RolloutCreator_v._setSubrolloutsHeight()"
-		print "DEDUG HEIGHT OF SUBROLLOUTS"
+		--print "RolloutCreator_v._setSubrolloutsHeight()"
+		--print "DEDUG HEIGHT OF SUBROLLOUTS"
 
 		if( ( subrollouts_count = this._getSubrolloutsCount(_Rollout)) > 0 ) then 
 			if( height != undefined and height != unsupplied ) then
-				--subrollouts_slot_height = (height - padding_bottom) / subrollouts_count
-				subrollouts_slot_height = ((height - padding_bottom) / subrollouts_count) - 512
+				subrollouts_slot_height = (height - padding_bottom) / subrollouts_count
+				--subrollouts_slot_height = ((height - padding_bottom) / subrollouts_count) - 512
 				--subrollouts_slot_height = 256
 	),
 

@@ -26,6 +26,8 @@ struct Dialog_v
 	RolloutMain, --RENAME TO dialogRollout,
 	
 	/* inherit */
+	
+	
 	Events,
 	
 	/* properties */
@@ -63,7 +65,7 @@ struct Dialog_v
 	 */
 	function create pos: width:512 height:512 bgcolor: fgcolor: bitmap: style: modal: escapeEnable: lockHeight:false lockWidth:true parent: =
 	(
-		print ("Dialog_v.create() " + RolloutMain.id)
+		--print ("Dialog_v.create() " + RolloutMain.id)
 		
 		height = this._getDialogHeight(height)
 		

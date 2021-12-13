@@ -21,14 +21,14 @@ struct ControlCreator_v
 	 */
 	function addControls _Controls =
 	(
-		format "\n\n--------------	Controls:%	--------------\n" _Controls.group ; print ("ControlCreator_v.addControls()"  )
+		format "\n\n--------------	Controls:%	--------------\n" _Controls.group;
+		--print ("ControlCreator_v.addControls()"  )
 
 		--this._Rollout  = _Rollout
 		this._Controls = _Controls
-		format "_Controls	= % \n" this._Controls
-		format "_Controls.group	= % \n" this._Controls.group
-		--format "_Controls.GroupBoxes	= % \n" _Controls.GroupBoxes
-		--format "_Rollout	= % \n" _Rollout
+		--format "_Controls	= % \n" this._Controls
+		--format "_Controls.group	= % \n" this._Controls.group
+
 		GroupBoxCreator.addGrouboxesForRollout (_Rollout.getFullId()) (_Controls.GroupBoxes)
 		
 		
@@ -145,7 +145,7 @@ struct ControlCreator_v
 		this._addValueParameter  (_Control) (_Rollout.id)
 		
 		params = ParamsCreator.join(_Control.params)
-		--format "% %\n" _Control.id params
+		format "% %\n" _Control.id params
 
 		_Rollout._RolloutCreator.addControl (_Control.type) (_Control.id) (this._emptyCaptionIfInBrackets(_Control.caption)) paramStr:params
 	),

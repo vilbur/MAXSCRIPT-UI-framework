@@ -58,7 +58,7 @@ function addRollouts padding: margin_x: margin_y: =
 		--_Rollout.Layout.margin.x = margin_x
 		--_Rollout.Layout.margin.y = margin_y
 		format "\n"
-		print rollout_title
+		--print rollout_title
 		format "_Rollout.Layout.padding = % \n" _Rollout.Layout.padding 
 		format "_Rollout.Layout.margin  = % \n" _Rollout.Layout.margin
 	
