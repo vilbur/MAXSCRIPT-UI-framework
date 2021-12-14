@@ -15,7 +15,7 @@ struct ControlCreator_v
 	--AcrossModifier,
 	AcrossModifier	= AcrossParameterModifier_v(),
 	ParamsCreator	= ControlParamsCreator_v(),
-	EventBinder	= ControlEventBinder_v(),
+	EventBinder	= ControlEventBinder_v _Rollout:_Rollout,
 
 	/** Add controls
 	 */
@@ -45,13 +45,17 @@ struct ControlCreator_v
 		AcrossModifier.addFakeControls(this._Controls)
 
 		/* add LOCAL VARIABLES */ 
-		this._addLocalVariablesToRollout()
+		this._addLocalVariablesToCreator()
 
 		/* add TEXT */ 
-		this._addTextToRollout()
+		this._addTextToCreator()
 
 		/* add CONTROLS */ 
-		this._addControlsToRollout()
+		this._addControlsToCreator()
+		
+		/* add HANDLERS */ 
+		this._addHandlersToCreator()
+		
 	),
 
 
@@ -100,20 +104,24 @@ struct ControlCreator_v
 	
 	/** _add controls
 	 */
-	function _addControlsToRollout =
+	function _addControlsToCreator =
 	(
 		this._addControlsGroup #start
 
 		for _Control in _Controls.list do
-		(
 			this._addControl (_Control) -- add control first before variables, functions and events
-
-			EventBinder.combineEventsAndAddHandlers(_Control)
-		)
 
 		this._addControlsGroup #end 
 	),
 
+	/** _add controls
+	 */
+	function _addHandlersToCreator =
+	(
+		for _Control in _Controls.list do
+			EventBinder.combineEventsAndAddHandlers(_Control)
+	),
+	
 	/** Add controls group
 	  * 
 	  * https://help.autodesk.com/view/3DSMAX/2016/ENU/?guid=__files_GUID_1361B847_7878_4C52_98DE_5BC5CA830B40_htm
@@ -189,9 +197,9 @@ struct ControlCreator_v
 	  *
 	  * 	Control_v.rollout_locals =  #(#variable_name1, init_value1, #variable_name2, init_value2)
 	 */
-	function _addLocalVariablesToRollout =
+	function _addLocalVariablesToCreator =
 	(
-		--print "ControlCreator_v._addLocalVariablesToRollout()"
+		--print "ControlCreator_v._addLocalVariablesToCreator()"
 		for _Control in _Controls.list where _Control.add_locals != unsupplied do
 			for i = 1 to _Control.add_locals.count by 2 do
 				_Rollout._RolloutCreator.addLocal ( _Control.add_locals[i] as string )  init:_Control.add_locals[i+1]
@@ -201,9 +209,9 @@ struct ControlCreator_v
 	/** Add functions to rollout
 	  * IMPORTANT: functions must be defined outside group 
 	 */
-	function _addTextToRollout =
+	function _addTextToCreator =
 	(
-		--print "ControlCreator_v._addTextToRollout()"
+		--print "ControlCreator_v._addTextToCreator()"
 		for _Control in _Controls.list where _Control.add_text != undefined do
 			_Rollout._RolloutCreator.addText  _Control.add_text filter:true
 	),

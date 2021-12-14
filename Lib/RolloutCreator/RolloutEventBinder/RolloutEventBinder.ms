@@ -1,6 +1,6 @@
 filein( getFilenamePath(getSourceFileName()) + "/EventClasses/DefaultEvents/DefaultEvents.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/EventClasses/SaveIniEvents/SaveIniEvents.ms" )
-filein( getFilenamePath(getSourceFileName()) + "/EventsCombiner/EventsCombiner.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/EventsCombiner/EventsCombiner.ms" ) -- move this to rollout
 
 /** RolloutEvent
   * 

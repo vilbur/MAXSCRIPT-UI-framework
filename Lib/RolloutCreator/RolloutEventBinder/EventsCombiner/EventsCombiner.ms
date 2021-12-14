@@ -17,7 +17,7 @@ struct EventsCombiner_v
 	 */
 	function combine event_type =
 	(
-		--print ( "EventsCombiner_v.combine() " + event_type as string )
+		print ( "EventsCombiner_v.combine() " + event_type as string )
 		Event_combined = (Event_v type:event_type)
  
 		for event_class in this.keys do
@@ -25,9 +25,12 @@ struct EventsCombiner_v
 			
 			if( (Event = this._getEvent(event_class)(event_type)) != undefined and Event.code !="" ) then
 			(
-				Event_combined.tooltip	+= "\n\t"+ Event.tooltip
-				Event_combined.code	+= "\n\t"+ Event.code + "\t/* EventsCombiner_v: "+event_class as string +" event */"
-				Event_combined.params	+= " " + Event.params
+				Event_combined.tooltip	+= Event.tooltip
+				--Event_combined.code	+= "\t"+ Event.code + "\t/* EventsCombiner_v: "+event_class as string +" event */\n"
+				Event_combined.code	+= Event.code
+				
+				if Event_combined.params != "" then 
+					Event_combined.params	+= " " + Event.params
 			)
 		)
 
@@ -50,7 +53,7 @@ struct EventsCombiner_v
 	 */
 	function setEventsClass event_type Events_array =
 	(
-		--print "EventsCombiner_v.setEvents()"
+		print "EventsCombiner_v.setEvents()"
 		this.setVal event_type Events_array
 	),
 	

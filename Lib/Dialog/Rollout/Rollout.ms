@@ -2,7 +2,7 @@ filein( getFilenamePath(getSourceFileName()) + "/EventsList/EventsList.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/Controls/Controls.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/Subrollouts/Subrollouts.ms" )
 
-/** Rollout
+/** Rollout 
  */
 struct Rollout_v
 (
@@ -178,8 +178,6 @@ struct Rollout_v
 	on create do
 	(
 		--print "Rollout_v.onOpen()"
-		format "id	= % \n" id
-		
 		this._setId()
 	)
 )

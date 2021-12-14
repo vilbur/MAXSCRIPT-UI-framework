@@ -2,7 +2,7 @@ filein( getFilenamePath(getSourceFileName()) + "/EventFiredCreator/EventFiredCre
 
 global STARTUP_EVENTS = #() -- run callbacks of controls like checkbox, checkbutton on UI start
 
-/** ControlEvents_v 
+/** ControlEventBinder_v 
  *
  * DEFAULT CALLBACKS:
  *		1) Fire global variable EventFired = EventFired_v
@@ -25,16 +25,17 @@ global STARTUP_EVENTS = #() -- run callbacks of controls like checkbox, checkbut
 struct ControlEventBinder_v 
 (
 	/* properties */
+	_Rollout,
 	_Control,
-	
+
 	ini_path,
 	dynamic_event_types = #( #changed, #selected ), -- this events fires default save to ini callback
 
 	/* dependency */
-	--EventsCombiner	= EventsCombiner_v(),
+	EventsCombiner	= EventsCombiner_v(),
 
 	control_types = include "Library/MAXSCRIPT-UI-framework/Lib/Dialog/Rollout/Controls/control_types.ms",
-	
+
 	/* If event is array then it has "val" param
 	*
 	* Other items in array defines additional params for event.
@@ -49,24 +50,130 @@ struct ControlEventBinder_v
 		#( #(#selected, "val"),	#(#doubleClicked, "val"),	#(#rightClick, "val")),		-- #listbox	https://help.autodesk.com/view/3DSMAX/2017/ENU/?guid=__files_GUID_7C37748B_C682_4834_B5A6_74185C8C661A_htm
 		#( #(#selected, "val"),	#(#doubleClicked, "val"),	#rightClick,	#selectionEnd ),	-- #multilistbox	
 		#( #(#selected, "val"),	#rightClick ),			-- #dropdownlist	
-		#( ),				-- #GroupBox	
-		
+		#( ),				-- #GroupBox
+
 		/* Custom compounded controls */
 		#( #tick )
 		--#( #(#changed,  "val"),	#(#entered, "val") )	-- #browsePath
 	),
-	
+
 	event_types_of_control,	-- get events from event_types array
 	params_of_events,	-- get params from event_types array
-	
+
 	/** Combine events and add handlers
 	 */
 	function combineEventsAndAddHandlers _Control =
 	(
 		format "\n"; print "ControlEventBinder_v.combineEventsAndAddHandlers()"
 		format "_Control	= % \n" _Control
+		this._Control = _Control
+
+		event_types_of_control	= this._getEventTypesOfControl (_Control.type)
+		params_of_events	= this._getParamsOfEvents  (_Control.type)
+		format "event_types_of_control = % \n" event_types_of_control
+		format "params_of_events	      = % \n" params_of_events
+
+		
+		this._setCallbackParamters()
+
+		this._setCustomEvents()
+		--this._setDefaultEvents()
+		--this._setSaveIniEvents()
+		
+		/* PARAMETER */ 
+		this._Control.Events.list = for event_type in event_types_of_control collect EventsCombiner.combine (event_type)
+		
+		
+		this._addHandlers()
 	),
-	
+
+
+	/** _bind events
+	 */
+	function _addHandlers =
+	(
+		print "ControlEventBinder_v._addHandlers()"
+		for Event in _Control.Events.list do 
+			this._addHandler(Event)
+	),
+
+	/** Bind events
+	 */
+	function _addHandler Event =
+	(
+		format "\n"
+		print "ControlEventBinder_v._addHandler()"
+		if( Event.code == "" ) then
+			return false
+		format "Event	= % \n" Event
+		_Rollout._RolloutCreator.addHandler _Control.id Event.type codeStr:(Event.code) paramStr:Event.params filter:on
+	),
+
+	/** _combine events
+	 */
+	function _setCustomEvents =
+	(
+		print "ControlEventBinder_v._addHandler()"
+		EventsCombiner.setEventsClass #CUSTOM _Control.Events.list
+	),
+
+	/** _combine events
+	 */
+	function _setDefaultEvents =
+	(
+		--EventsCombiner.setEventsClass #DEFAULTS ( (DefaultEvents_v()).getEvents(_Control.getFullId()) ) 
+	),
+
+	/** _combine events
+	 */
+	function _setSaveIniEvents =
+	(
+		--EventsCombiner.setEventsClass #SAVEINI ( (SaveIniEvents_v rollout_id:_Control.id ini_path:ini_path ).getEvents(_Rollout.parent_rollout) ) 
+	),
+
+	/**  get events for control type from event_types array
+	  *
+	  * @return	array of event types for control E.G.: return #( #pressed,	#rightclick) if control_type == #button 
+	 */
+	function _getEventTypesOfControl control_type =
+	(
+		--print "ControlEventBinder_v._getEventTypesOfControl()"
+		for event_type in event_types[findItem control_types control_type] collect
+			if( classOf event_type == Array ) then event_type[1] else event_type
+
+	),
+	/** get params for control type from event_types array
+	 */
+	function _getParamsOfEvents control_type =
+	(
+		--format "\n"; print "ControlEventBinder_v._getParamsOfEvents()"
+		for event_type in event_types[findItem control_types control_type] collect
+			if( classOf event_type == Array ) then event_type[2] else undefined
+	),
+
+
+	/** Get parameters of callback defined in event_types
+	 */
+	function _setCallbackParamters =
+	(
+		--print "ControlEvents._setCallbackParamters()"
+		--format "event_types_of_control	= % \n" event_types_of_control
+		for i = 1 to event_types_of_control.count where params_of_events[i] != undefined  do
+		(
+			Event = this._getEvent(event_types_of_control[i])
+
+			Event.params = params_of_events[i]
+
+			if not( matchPattern Event.code pattern:("* "+Event.params) ) then -- add prameters behind callback E.G.: "callbackFn" >>>  "callbackFn inSpin inCancel"
+				Event.code  += " "+ Event.params
+		)
+	),
+
+
+	/*------------------------------------------------------------------------------
+		******************************** OLD ********************************
+	--------------------------------------------------------------------------------*/
+
 	/** Add handlers
 	  * http://help.autodesk.com/view/3DSMAX/2015/ENU/?guid=__files_GUID_5FC5036F_E2D7_46C9_9AFA_7B3550B9F254_htm
 	 */
@@ -77,43 +184,20 @@ struct ControlEventBinder_v
 		params_of_events	= this._getParamsOfEvents  (_Control.type)
 		format "event_types_of_control	= % \n" event_types_of_control
 		format "params_of_events	= % \n" params_of_events
-		
+
 		/* PARAMETER */ 
 		this._setCallbackParamters()
-		
-		
+
 		/* EVENT FIRED */ 
 		this._addEventFired()
-		
-		
+
 		/* DEFAULT EVENTS */ 
 		if( ini_path != undefined ) then
-			_Control.Events.list = this._addDefaultEvents(rollout_id) 
-		
-		
+			_Control.Events.list = this._addDefaultEvents(rollout_id)
+
 		 _Control.Events.list --return
 	),
 
-	/**  get events for control type from event_types array
-	  *
-	  * @return	array of event types for control E.G.: return #( #pressed,	#rightclick) if control_type == #button 
-	 */
-	function _getEventTypesOfControl control_type =
-	(
-		--print "ControlEvents_v._getEventTypesOfControl()"
-		for event_type in event_types[findItem control_types control_type] collect
-			if( classOf event_type == Array ) then event_type[1] else event_type
-		
-	),
-	/** get params for control type from event_types array
-	 */
-	function _getParamsOfEvents control_type =
-	(
-		for event_type in event_types[findItem control_types control_type] collect
-			if( classOf event_type == Array ) then event_type[2] else undefined
-	),
-	
-	
 	/** _add save to ini events
 	  *
 	  * KNOWING ISSUES:
@@ -124,64 +208,48 @@ struct ControlEventBinder_v
 	 */
 	function _addDefaultEvents rollout_id =
 	(
-		--print "ControlEvents_v._addDefaultEvents()"
+		--print "ControlEventBinder_v._addDefaultEvents()"
 		events_list	= #()
 
 		for event_type in event_types_of_control where findItem dynamic_event_types event_type > 0 do
 		(
 			--format "event_type	= % \n" event_type
 			Event = this._getEvent(event_type)
-			
+
 			Event.code += "\n\t(setINISetting \""+ini_path+"\" \""+rollout_id+"\" \""+_Control.id+"\" (val as string) );\n"
 
 			Event.params	= params_of_events[findItem event_types_of_control event_type]
-			
+
 			append events_list Event
 		)
 
 		events_list --return
 	),
-	
+
 	/** Get event from control, if dos not exists then create new
 	 */
 	function _getEvent event_type =
 	(
-		--print "ControlEvents_v._getEvent()"
+		--print "ControlEventBinder_v._getEvent()"
 		if( (Event_existing = this._getControlEvent(event_type)) != undefined ) then Event_existing else (Event_v type:event_type)
 	),
-	
+
 	/** _get control event
 	 */
 	function _getControlEvent event_type =
 	(
-		--print "ControlEvents_v._getControlEvent()"
+		--print "ControlEventBinder_v._getControlEvent()"
 		(for Event in _Control.Events.list where Event.type == event_type collect Event)[1] --return 
 	),
 
-	/** Get parameters of callback defined in event_types
-	 */
-	function _setCallbackParamters =
-	(
-		print "ControlEvents._setCallbackParamters()"
-		format "event_types_of_control	= % \n" event_types_of_control
-		for i = 1 to event_types_of_control.count where params_of_events[i] != undefined  do
-		(
-			Event = this._getEvent(event_types_of_control[i])
-			
-			Event.params = params_of_events[i]
-			
-			if not( matchPattern Event.code pattern:("* "+Event.params) ) then -- add prameters behind callback E.G.: "callbackFn" >>>  "callbackFn inSpin inCancel"
-				Event.code  += " "+ Event.params
-		)
-	),
-	
+
 	/**_type _add event fired
 	 */
 	function _addEventFired =
 	(
 		--print "ControlEventBinder_v._addEventFired()"
 		EventFiredCreator = EventFiredCreator_v control_id:_Control.id
-		
+
 		for i = 1 to event_types_of_control.count  do
 		(
 			Event = this._getEvent(event_types_of_control[i])
@@ -191,15 +259,14 @@ struct ControlEventBinder_v
 			Event.code = _EventFired+ ";"+ Event.code
 			--Event.code =  Event.code + ";"+ _EventFired
 		)
-		
+
 	),
-	
-	
+
 	--/** Add function brackets E.g.: "fooCallback" return "fooCallback()|fooCallback(val)"
 	-- */
 	--function _addFunctionBrackets &callback params =
 	--(
-	--	--print "ControlEvents_v._addFunctionBrackets()"
+	--	--print "ControlEventBinder_v._addFunctionBrackets()"
 	--	--format "params	= % \n" params
 	--	if( params == "" ) then 
 	--		params = "()"
@@ -209,7 +276,7 @@ struct ControlEventBinder_v
 	--			callback += " " + params
 	--			--callback += "("+params+")"
 	--),
-	
+
 	/** If checkbox has value true, then fire up checkbox`s callback when UI starts
 	 */
 	function _addToStartupEvents type callback =
@@ -221,8 +288,6 @@ struct ControlEventBinder_v
 			appendIfUnique STARTUP_EVENTS (EventFired_true+callback)
 		)
 	),
-	
-	
 
 	/** Exception
 	 */
@@ -230,24 +295,24 @@ struct ControlEventBinder_v
 	(
 		messageBox ("WARNING\n\nUnknown Event Type: #"+ type + "\n\nControl: "+ (Parent_Control.Id.get() ))
 	),
-	
+
 	/*------------------------------------------------------------------------------
 		TEST
 	--------------------------------------------------------------------------------*/
-	
+
 	public
-	
+
 	/** Alias for private method for testing
 	 */
 	function getEventTypesOfControlTest control_type =
 	(
 		this._getEventTypesOfControl (control_type)
 	),
-	
+
 	/*------------------------------------------------------------------------------
 		ON CREATE
 	--------------------------------------------------------------------------------*/
-	
+
 	on create do
 	(
 	)

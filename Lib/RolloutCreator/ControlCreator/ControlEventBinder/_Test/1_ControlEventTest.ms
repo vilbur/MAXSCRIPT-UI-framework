@@ -45,7 +45,8 @@ these_controls_will_be_tested = #(
 	--#Timer
 	
 	/* TEMP FOR DEV */ 
-	#Checkbox
+	#Button
+	--#Checkbox
 	--#browsePath
 
 )
@@ -86,16 +87,19 @@ for control_type in ControlEventBinder.control_types where findItem these_contro
 		/** ADD EVENTS
 		 */
 		for i = 1 to event_types.count do
+		(
+			format "filterString event_params[i]	= % \n" (try((filterString event_params[i] " " ).count)catch(0))
 			_Control.Event event_types[i]  (
-				case try((filterString event_params[i] " ").count)catch() of
+				case try((filterString event_params[i] " " ).count)catch(0) of
 				(
+					0:"CallbackNoParam()"
 					1:"CallbackWithValue"
 					2:"CallbackWith2Params"
-					default:"CallbackNoParam()"
 				)
 			)	
+		) 
 			
-		
+		 
 	)
 )
 
