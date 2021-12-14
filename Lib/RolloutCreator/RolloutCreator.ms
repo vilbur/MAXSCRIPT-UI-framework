@@ -143,7 +143,7 @@ struct RolloutCreator_v
 
 		EventBinder.ini_path	= ini_path
 
-		ControlCreator.EventsCreator.ini_path	= ini_path
+		ControlCreator.EventBinder.ini_path	= ini_path
 
 		ControlCreator.ParamsCreator.ControlValue.ini_path	= ini_path
 	 ),

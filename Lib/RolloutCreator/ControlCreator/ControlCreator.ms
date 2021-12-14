@@ -1,5 +1,5 @@
 filein( getFilenamePath(getSourceFileName()) + "/ControlParamsCreator/ControlParamsCreator.ms" )
-filein( getFilenamePath(getSourceFileName()) + "/ControlEventsCreator/ControlEventsCreator.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/ControlEventBinder/ControlEventBinder.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/AcrossParameterModifier/AcrossParameterModifier.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/GroupBoxCreator/GroupBoxCreator.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/BrowsePath/BrowsePath.ms" )
@@ -15,7 +15,7 @@ struct ControlCreator_v
 	--AcrossModifier,
 	AcrossModifier	= AcrossParameterModifier_v(),
 	ParamsCreator	= ControlParamsCreator_v(),
-	EventsCreator	= ControlEventsCreator_v(),
+	EventBinder	= ControlEventBinder_v(),
 
 	/** Add controls
 	 */
@@ -98,15 +98,6 @@ struct ControlCreator_v
 	
 	private
 	
-	/** _is controls
-	 */
-	function _isControls _Struct =
-	(
-		--format "\n"; print "ControlCreator_v._isControls()"
-		toLower (( filterString( classof _Struct as string ) "_*(:" )[2]) == "controls"  --return		
-	),
-	
-	
 	/** _add controls
 	 */
 	function _addControlsToRollout =
@@ -117,7 +108,7 @@ struct ControlCreator_v
 		(
 			this._addControl (_Control) -- add control first before variables, functions and events
 
-			this._addControlHandlersToRollout(_Control)
+			EventBinder.combineEventsAndAddHandlers(_Control)
 		)
 
 		this._addControlsGroup #end 
@@ -130,10 +121,12 @@ struct ControlCreator_v
 	function _addControlsGroup start_or_end =
 	(
 		--print ("ControlCreator_v._addControlsGroup() " + start_or_end as string )
-		if( _Controls.group == undefined ) do
+		if( _Controls.group == undefined or  matchPattern _Controls.group pattern:("[*]") or _Controls.group == "" ) do
 			return false
+			
+		start_or_end_string = if( start_or_end == #start ) then "group @"+_Controls.group+"@ (" else ")"
 
-		_Rollout._RolloutCreator.addText (if( start_or_end == #start ) then "group @"+_Controls.group+"@ (" else ")" ) filter:on
+		_Rollout._RolloutCreator.addText ( start_or_end_string ) filter:on
 	),
 
 	/* Add control to RolloutCreator
@@ -145,7 +138,7 @@ struct ControlCreator_v
 		this._addValueParameter  (_Control) (_Rollout.id)
 		
 		params = ParamsCreator.join(_Control.params)
-		format "% %\n" _Control.id params
+		format "\n% %\n" _Control.id params
 
 		_Rollout._RolloutCreator.addControl (_Control.type) (_Control.id) (this._emptyCaptionIfInBrackets(_Control.caption)) paramStr:params
 	),
@@ -162,19 +155,7 @@ struct ControlCreator_v
 		caption --return
 	),
 	
-	/** Add event handlers
-	 */
-	function _addControlHandlersToRollout _Control =
-	(
-		--print "ControlCreator_v._addControlHandlersToRollout()"
-		events_list = EventsCreator.getEvents(_Control)(_Rollout.id)
-
-		for Event in events_list do
-			_Rollout._RolloutCreator.addHandler _Control.id Event.type codeStr:(Event.code) paramStr:Event.params filter:on
-	),
-
-	
-	/** _merge controls parameters
+	/*e controls parameters
 	 */
 	function _mergeControlsParameters =
 	(
@@ -226,6 +207,15 @@ struct ControlCreator_v
 		for _Control in _Controls.list where _Control.add_text != undefined do
 			_Rollout._RolloutCreator.addText  _Control.add_text filter:true
 	),
+	
+	/** _is controls
+	 */
+	function _isControls _Struct =
+	(
+		--format "\n"; print "ControlCreator_v._isControls()"
+		toLower (( filterString( classof _Struct as string ) "_*(:" )[2]) == "controls"  --return		
+	),
+
 	/**  
 	 */
 	on create do

@@ -8,7 +8,7 @@
 	
 	
 	2) IMPORTANT ALLOWING NEW CONTROL:
-		Edit #(event_types) in  "../../../RolloutCreator/ControlCreator/ControlEventsCreator/ControlEventsCreator.ms"
+		Edit #(event_types) in  "../../../RolloutCreator/ControlCreator/ControlEventBinder/ControlEventBinder.ms"
 	
 	
 --------------------------------------------------------------------------------------------*/

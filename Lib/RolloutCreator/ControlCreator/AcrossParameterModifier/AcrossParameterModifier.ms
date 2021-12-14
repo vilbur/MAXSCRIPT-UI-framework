@@ -47,7 +47,7 @@ struct AcrossParameterModifier_v
 				if( across_has_changed = (across_current != _controls_in_row) ) then
 				(
 					if( new_row_start == false ) then
-						this._addFakeControls (_Controls) (_Controls_list_copy) (_across_left) fake_control_caption:("next: "+_across_left as string )
+						this._addFakeControls (_Controls) (_Controls_list_copy) (_across_left) --fake_control_caption:("next: "+_across_left as string )
 	
 					_controls_in_row = _across_left = across_current
 	
@@ -67,7 +67,7 @@ struct AcrossParameterModifier_v
 
 		/* ADD FAKE CONTROLS TO END OF GROUP TO FILL ROW */
 		if( end_of_group = _across_left != undefined ) then
-			this._addFakeControls  (_Controls) (_Controls_list_copy) (_across_left) fake_control_caption:("group end" )
+			this._addFakeControls  (_Controls) (_Controls_list_copy) (_across_left) --fake_control_caption:("group end" )
 
 		_across_left	= undefined -- allow set for new group
 		_controls_in_row	= undefined -- allow set for new group

@@ -3,30 +3,30 @@ clearListener()
 
 filein( getFilenamePath(getSourceFileName()) + "/../../../RolloutCreator.ms" )
 
-filein( getFilenamePath(getSourceFileName()) + "/../ControlEventsCreator.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/../ControlEventBinder.ms" )
 
 filein( getFilenamePath(getSourceFileName()) + "/inlcude_test_callbacks.ms" )
 
-ControlEvents = ControlEventsCreator_v()
+ControlEventBinder = ControlEventBinder_v()
 
 
 /* ONLY THIS TYPES OF CONTROLS WILL BE TESTED
   * 
-  * CURRENTLY SUPPORTED CONTROLS are in control_types array in  "../../ControlEventsCreator/ControlEventsCreator.ms"
+  * CURRENTLY SUPPORTED CONTROLS are in control_types array in  "../../ControlEventBinderCreator/ControlEventBinderCreator.ms"
   * 
   *  [HELP Control types](https://help.autodesk.com/view/MAXDEV/2021/ENU/?guid=GUID-E421933F-958E-42FD-80A1-D66F2A2C0A06)
   *
 */ 
 these_controls_will_be_tested = #(
-	#Label,
-	#Button,
-	#Checkbox,
-	#Checkbutton,
-	#Spinner,
-	#Edittext,
-	#Listbox,
-	#multilistbox,
-	#Dropdownlist,
+	--#Label,
+	--#Button,
+	--#Checkbox,
+	--#Checkbutton,
+	--#Spinner,
+	--#Edittext,
+	--#Listbox,
+	--#multilistbox,
+	--#Dropdownlist,
 	----#Combobox,
 	----#GroupBox,
 	----#Angle,
@@ -71,10 +71,10 @@ include "Library/MAXSCRIPT-UI-framework/Lib/RolloutCreator/_Test/includes/Create
 
 /** ADD CONTROLS WITH EVENTS
  */
-for control_type in ControlEvents.control_types where findItem these_controls_will_be_tested control_type > 0 do
+for control_type in ControlEventBinder.control_types where findItem these_controls_will_be_tested control_type > 0 do
 (
-	event_types  = ControlEvents._getEventsOfControl(control_type)
-	event_params = ControlEvents._getParamsOfEvents(control_type)
+	event_types  = ControlEventBinder.getEventTypesOfControlTest(control_type)
+	event_params = ControlEventBinder._getParamsOfEvents(control_type)
 	
 	if( event_types.count > 0 ) then
 	(
@@ -82,7 +82,7 @@ for control_type in ControlEvents.control_types where findItem these_controls_wi
 		--format "control_type	= % \n" control_type
 		--format "params	= % \n" params
 		_Control = _Controls.control control_type ( "Test " + control_type as string ) params:params
-
+	
 		/** ADD EVENTS
 		 */
 		for i = 1 to event_types.count do

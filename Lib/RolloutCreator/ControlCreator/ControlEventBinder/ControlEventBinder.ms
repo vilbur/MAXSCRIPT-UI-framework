@@ -13,16 +13,16 @@ global STARTUP_EVENTS = #() -- run callbacks of controls like checkbox, checkbut
  * 		
  * 		
  * 		
- *										  	  !!!!!!!!! NOTES FOR ADDING NEW TYPE OF CONTROL !!!!!!!!!
+ *							   !!!!!!!!! NOTES FOR ADDING NEW TYPE OF CONTROL !!!!!!!!!
  * 		 
- *												Edit arrays in this file: control_types, event_types
+ *								  Edit arrays in this file: control_types, event_types
  * 		
  * 		
  * 		
  * 		
  * 		
  */
-struct ControlEventsCreator_v 
+struct ControlEventBinder_v 
 (
 	/* properties */
 	_Control,
@@ -56,8 +56,16 @@ struct ControlEventsCreator_v
 		--#( #(#changed,  "val"),	#(#entered, "val") )	-- #browsePath
 	),
 	
-	events_of_control,	-- get events from event_types array
+	event_types_of_control,	-- get events from event_types array
 	params_of_events,	-- get params from event_types array
+	
+	/** Combine events and add handlers
+	 */
+	function combineEventsAndAddHandlers _Control =
+	(
+		format "\n"; print "ControlEventBinder_v.combineEventsAndAddHandlers()"
+		format "_Control	= % \n" _Control
+	),
 	
 	/** Add handlers
 	  * http://help.autodesk.com/view/3DSMAX/2015/ENU/?guid=__files_GUID_5FC5036F_E2D7_46C9_9AFA_7B3550B9F254_htm
@@ -65,9 +73,11 @@ struct ControlEventsCreator_v
 	function getEvents _Control rollout_id =
 	(
 		this._Control	= _Control
-		events_of_control	= this._getEventsOfControl (_Control.type)
+		event_types_of_control	= this._getEventTypesOfControl (_Control.type)
 		params_of_events	= this._getParamsOfEvents  (_Control.type)
-
+		format "event_types_of_control	= % \n" event_types_of_control
+		format "params_of_events	= % \n" params_of_events
+		
 		/* PARAMETER */ 
 		this._setCallbackParamters()
 		
@@ -88,9 +98,9 @@ struct ControlEventsCreator_v
 	  *
 	  * @return	array of event types for control E.G.: return #( #pressed,	#rightclick) if control_type == #button 
 	 */
-	function _getEventsOfControl control_type =
+	function _getEventTypesOfControl control_type =
 	(
-		--print "ControlEvents_v._getEventsOfControl()"
+		--print "ControlEvents_v._getEventTypesOfControl()"
 		for event_type in event_types[findItem control_types control_type] collect
 			if( classOf event_type == Array ) then event_type[1] else event_type
 		
@@ -117,14 +127,14 @@ struct ControlEventsCreator_v
 		--print "ControlEvents_v._addDefaultEvents()"
 		events_list	= #()
 
-		for event_type in events_of_control where findItem dynamic_event_types event_type > 0 do
+		for event_type in event_types_of_control where findItem dynamic_event_types event_type > 0 do
 		(
 			--format "event_type	= % \n" event_type
 			Event = this._getEvent(event_type)
 			
 			Event.code += "\n\t(setINISetting \""+ini_path+"\" \""+rollout_id+"\" \""+_Control.id+"\" (val as string) );\n"
 
-			Event.params	= params_of_events[findItem events_of_control event_type]
+			Event.params	= params_of_events[findItem event_types_of_control event_type]
 			
 			append events_list Event
 		)
@@ -152,10 +162,11 @@ struct ControlEventsCreator_v
 	 */
 	function _setCallbackParamters =
 	(
-		--print "ControlEvents._setCallbackParamters()"
-		for i = 1 to events_of_control.count where params_of_events[i] != undefined  do
+		print "ControlEvents._setCallbackParamters()"
+		format "event_types_of_control	= % \n" event_types_of_control
+		for i = 1 to event_types_of_control.count where params_of_events[i] != undefined  do
 		(
-			Event = this._getEvent(events_of_control[i])
+			Event = this._getEvent(event_types_of_control[i])
 			
 			Event.params = params_of_events[i]
 			
@@ -164,18 +175,18 @@ struct ControlEventsCreator_v
 		)
 	),
 	
-	/** _add event fired
+	/**_type _add event fired
 	 */
 	function _addEventFired =
 	(
-		--print "ControlEventsCreator_v._addEventFired()"
+		--print "ControlEventBinder_v._addEventFired()"
 		EventFiredCreator = EventFiredCreator_v control_id:_Control.id
 		
-		for i = 1 to events_of_control.count  do
+		for i = 1 to event_types_of_control.count  do
 		(
-			Event = this._getEvent(events_of_control[i])
+			Event = this._getEvent(event_types_of_control[i])
 
-			_EventFired    = EventFiredCreator.getEventFired(events_of_control[i])(Event.params)
+			_EventFired    = EventFiredCreator.getEventFired(event_types_of_control[i])(Event.params)
 			--format "_EventFired	= % \n" _EventFired
 			Event.code = _EventFired+ ";"+ Event.code
 			--Event.code =  Event.code + ";"+ _EventFired
@@ -212,16 +223,30 @@ struct ControlEventsCreator_v
 	),
 	
 	
-	private
 
-	
 	/** Exception
 	 */
 	function _exception type =
 	(
 		messageBox ("WARNING\n\nUnknown Event Type: #"+ type + "\n\nControl: "+ (Parent_Control.Id.get() ))
 	),
-
+	
+	/*------------------------------------------------------------------------------
+		TEST
+	--------------------------------------------------------------------------------*/
+	
+	public
+	
+	/** Alias for private method for testing
+	 */
+	function getEventTypesOfControlTest control_type =
+	(
+		this._getEventTypesOfControl (control_type)
+	),
+	
+	/*------------------------------------------------------------------------------
+		ON CREATE
+	--------------------------------------------------------------------------------*/
 	
 	on create do
 	(

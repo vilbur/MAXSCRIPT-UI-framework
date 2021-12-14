@@ -37,8 +37,6 @@ struct EventsCombiner_v
 	),
 	
 	/** Get events
-	  *
-	  *
 	 */
 	function combineOrGetNewEvent event_type =
 	(
