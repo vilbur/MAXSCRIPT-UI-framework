@@ -20,21 +20,14 @@ struct EventsCombiner_v
 		print ( "EventsCombiner_v.combine() " + event_type as string )
 		Event_combined = (Event_v type:event_type)
  
-		for event_class in this.keys do
-		(
-			
-			if( (Event = this._getEvent(event_class)(event_type)) != undefined and Event.code !="" ) then
-			(
-				Event_combined.tooltip	+= Event.tooltip
-				--Event_combined.code	+= "\t"+ Event.code + "\t/* EventsCombiner_v: "+event_class as string +" event */\n"
-				Event_combined.code	+= Event.code
-				
-				if Event_combined.params != "" then 
-					Event_combined.params	+= " " + Event.params
-			)
-		)
+		--for event_class in this.keys do
+			--if( (Event = this._getEvent(event_class)(event_type)) != undefined and Event.code !="" ) then
+					--this._mergeEvents (Event) (Event_combined)
 
-		--format "Event_combined	= % \n\t\t" Event_combined
+		for event_class in this.keys where ( (Event = this._getEvent(event_class)(event_type)) != undefined and Event.code !="" ) do
+			this._mergeEvents (Event) (Event_combined)
+					
+					
 		if( Event_combined.code != "" ) then 
 			Event_combined --return
 	),
@@ -60,6 +53,23 @@ struct EventsCombiner_v
 	
 	private
 	
+	/** _combine event
+	 */
+	function _mergeEvents Event &Event_combined =;
+	(
+		/* CODE */ 
+		if Event.code != "" then 
+			Event_combined.code	+= Event.code + ";"
+		
+		/* PARAMS */ 
+		if Event.params != "" then 
+			Event_combined.params	+= Event.params + " "
+
+		/* TOOLTIP */ 
+		Event_combined.tooltip	+= Event.tooltip
+			
+		Event_combined --return
+	),
 	/** Get event
 	 */
 	function _getEvent event_class event_type =

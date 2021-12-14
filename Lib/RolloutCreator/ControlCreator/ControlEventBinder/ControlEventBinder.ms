@@ -1,4 +1,6 @@
 filein( getFilenamePath(getSourceFileName()) + "/EventFiredCreator/EventFiredCreator.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/EventClasses/DefaultControlEvents/DefaultControlEvents.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/EventClasses/SaveIniControlEvents/SaveIniControlEvents.ms" )
 
 global STARTUP_EVENTS = #() -- run callbacks of controls like checkbox, checkbutton on UI start
 
@@ -10,15 +12,9 @@ global STARTUP_EVENTS = #() -- run callbacks of controls like checkbox, checkbut
  * 		
  * 		
  * 		
- * 		
- * 		
- * 		
  *							   !!!!!!!!! NOTES FOR ADDING NEW TYPE OF CONTROL !!!!!!!!!
  * 		 
  *								  Edit arrays in this file: control_types, event_types
- * 		
- * 		
- * 		
  * 		
  * 		
  */
@@ -77,7 +73,7 @@ struct ControlEventBinder_v
 		this._setCallbackParamters()
 
 		this._setCustomEvents()
-		--this._setDefaultEvents()
+		this._setDefaultEvents()
 		--this._setSaveIniEvents()
 		
 		/* PARAMETER */ 
@@ -105,7 +101,11 @@ struct ControlEventBinder_v
 		print "ControlEventBinder_v._addHandler()"
 		if( Event.code == "" ) then
 			return false
-		format "Event	= % \n" Event
+		
+		format "EVENT	= % \n" Event
+		
+		
+		
 		_Rollout._RolloutCreator.addHandler _Control.id Event.type codeStr:(Event.code) paramStr:Event.params filter:on
 	),
 
@@ -113,7 +113,7 @@ struct ControlEventBinder_v
 	 */
 	function _setCustomEvents =
 	(
-		print "ControlEventBinder_v._addHandler()"
+		print "ControlEventBinder_v._setCustomEvents()"
 		EventsCombiner.setEventsClass #CUSTOM _Control.Events.list
 	),
 
@@ -121,14 +121,14 @@ struct ControlEventBinder_v
 	 */
 	function _setDefaultEvents =
 	(
-		--EventsCombiner.setEventsClass #DEFAULTS ( (DefaultEvents_v()).getEvents(_Control.getFullId()) ) 
+		EventsCombiner.setEventsClass #DEFAULTS ( (DefaultControlEvents_v()).getEvents(control_type) ) 
 	),
 
 	/** _combine events
 	 */
 	function _setSaveIniEvents =
 	(
-		--EventsCombiner.setEventsClass #SAVEINI ( (SaveIniEvents_v rollout_id:_Control.id ini_path:ini_path ).getEvents(_Rollout.parent_rollout) ) 
+		EventsCombiner.setEventsClass #SAVEINI ( (SaveIniControlEvents_v rollout_id:_Rollout.id control_id:_Control.id ini_path:ini_path ).getEvents() ) 
 	),
 
 	/**  get events for control type from event_types array
@@ -191,39 +191,8 @@ struct ControlEventBinder_v
 		/* EVENT FIRED */ 
 		this._addEventFired()
 
-		/* DEFAULT EVENTS */ 
-		if( ini_path != undefined ) then
-			_Control.Events.list = this._addDefaultEvents(rollout_id)
 
 		 _Control.Events.list --return
-	),
-
-	/** _add save to ini events
-	  *
-	  * KNOWING ISSUES:
-	  * 	PROBLEM:	 #Multilistbox on single clict sometimes does not save to ini
-	  *	SOLUTION:	Use Ctrl key even if seledting only one item 
-	  *
-	  *
-	 */
-	function _addDefaultEvents rollout_id =
-	(
-		--print "ControlEventBinder_v._addDefaultEvents()"
-		events_list	= #()
-
-		for event_type in event_types_of_control where findItem dynamic_event_types event_type > 0 do
-		(
-			--format "event_type	= % \n" event_type
-			Event = this._getEvent(event_type)
-
-			Event.code += "\n\t(setINISetting \""+ini_path+"\" \""+rollout_id+"\" \""+_Control.id+"\" (val as string) );\n"
-
-			Event.params	= params_of_events[findItem event_types_of_control event_type]
-
-			append events_list Event
-		)
-
-		events_list --return
 	),
 
 	/** Get event from control, if dos not exists then create new

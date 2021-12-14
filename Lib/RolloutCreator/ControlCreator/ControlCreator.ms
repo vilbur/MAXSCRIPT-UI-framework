@@ -60,6 +60,9 @@ struct ControlCreator_v
 
 
 	/** Controls to groupbox will be rendered as last
+	  
+			MOVE THIS METHOD TO GroupboxCreator
+	  
 	 */
 	function createControlsInGroupboxLast &_Rollout_ =
 	(
@@ -109,19 +112,11 @@ struct ControlCreator_v
 		this._addControlsGroup #start
 
 		for _Control in _Controls.list do
-			this._addControl (_Control) -- add control first before variables, functions and events
+			this._addControlToCreator (_Control) -- add control first before variables, functions and events
 
 		this._addControlsGroup #end 
 	),
 
-	/** _add controls
-	 */
-	function _addHandlersToCreator =
-	(
-		for _Control in _Controls.list do
-			EventBinder.combineEventsAndAddHandlers(_Control)
-	),
-	
 	/** Add controls group
 	  * 
 	  * https://help.autodesk.com/view/3DSMAX/2016/ENU/?guid=__files_GUID_1361B847_7878_4C52_98DE_5BC5CA830B40_htm
@@ -139,9 +134,9 @@ struct ControlCreator_v
 
 	/* Add control to RolloutCreator
 	 */
-	function _addControl _Control =
+	function _addControlToCreator _Control =
 	(
-		--format "\n"; print ("ControlCreator_v._addControl() " +_Control.id )
+		--format "\n"; print ("ControlCreator_v._addControlToCreator() " +_Control.id )
 		--format "_Control.id.full	= % \n"( _Rollout.getFullId() +"." +_Control.id)
 		this._addValueParameter  (_Control) (_Rollout.id)
 		
@@ -162,6 +157,17 @@ struct ControlCreator_v
 			
 		caption --return
 	),
+	
+
+
+	/** Add Handlers of Events
+	 */
+	function _addHandlersToCreator =
+	(
+		for _Control in _Controls.list do
+			EventBinder.combineEventsAndAddHandlers(_Control)
+	),
+	
 	
 	/*e controls parameters
 	 */

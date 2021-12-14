@@ -9,8 +9,7 @@ struct SaveIniEvents_v
 	/* properties */ 
 	List = #(),
 
-	/** Add default callback for event
-	  * Default callback function is added in "Rollout_v._addSaveIniFunction()"
+	/** Add save ini events for Rollout
 	  *
 	  * @return	list	of default events
 	 */
@@ -20,11 +19,11 @@ struct SaveIniEvents_v
 		if( ini_path != undefined ) do
 			if( parent_rollout != undefined ) then
 	
-				this._getRolloutSaveIniEvents()
+				this._getRolloutSaveIniEvents() -- return 
 	
 			else
 	
-				this._getDialogSaveIniEvents()
+				this._getDialogSaveIniEvents() -- return 
 	),
 
 	private
