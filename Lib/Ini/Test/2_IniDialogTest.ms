@@ -2,12 +2,6 @@ clearListener()
 
 filein( getFilenamePath(getSourceFileName()) + "/../../Dialog/Dialog.ms" )
 
---try( destroyDialog          ROLLOUT_test )catch()
-
---ini_path_to_file = (getFilenamePath(getSourceFileName()) + getFilenameFile(getSourceFileName()) + ".ini")
---ini_path_to_dir  = (getSourceFileName())
-
---format "ini_path	= % \n" ini_path
 
 Dialog 	    = Dialog_v title:"Test" ini:(getSourceFileName())
 

@@ -68,7 +68,7 @@ struct ContentControlCreator_v
 		)
 		
 		if( (event_type = Macro.getParam "event") == undefined ) then
-			event_type = (ControlEventBinder._getEventTypesOfControl (control_type_for_events))[ _Control.Events.list.count+1]
+			event_type = (ControlEventBinder._getEventTypesOfControl (_Control))[ _Control.Events.list.count+1]
 
 			
 		if( event_type != undefined ) then

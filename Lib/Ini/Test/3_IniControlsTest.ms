@@ -76,12 +76,10 @@ _RolloutCreator 	= RolloutCreator_v ini:(getSourceFileName())
 _Rollout  = _RolloutCreator.new "Test"
 _Controls = _Rollout.Controls()
 
-ControlEvents = ControlEventBinder_v _Rollout:_Rollout
-
 
 /** ADD CONTROLS WITH EVENTS
  */
-for control_type in ControlEvents.control_types where findItem control_types_for_test control_type > 0 do
+for control_type in 	(EventTypes_v()).event_types where findItem control_types_for_test control_type > 0 do
 (
 	params	= if( findItem controls_with_items control_type > 0 ) then #( #items, #("Item 1","Item 2","Item 3") ) else #()
 	

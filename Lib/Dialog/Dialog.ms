@@ -21,15 +21,13 @@ struct Dialog_v
 	id,
 	
 	/* dependency */
-	_RolloutCreator = RolloutCreator_v(),
+	_RolloutCreator = RolloutCreator_v ini:ini,
 	Layout 	= Layout_v(),
 	--Menu	= DialogMenu_v Dialog:this,
 	
 	RolloutMain, --RENAME TO dialogRollout,
 	
 	/* inherit */
-	
-	
 	Events,
 	
 	/* properties */
@@ -227,14 +225,11 @@ struct Dialog_v
 	 */
 	on create do
 	(
+		--print("Dialog_v.onCreate()")
 		this._checkConstctructProperties()
 
-		--print("Dialog_v.onCreate()")
 		this._setMainRollout()
 		
 		this.destroy()
-		
-		if( ini != undefined ) then
-			_RolloutCreator.Ini.setIni (ini)
 	)
 )

@@ -3,16 +3,16 @@
 struct DefaultControlEvents_v
 (
 	/* properties */
-	List = #(),
+	Events = #(),
 	
 	/** Add default event for Control
 	  *
 	 */
 	function getEvents control_type =
 	(
-		--append List ( Event_v type:#pressed	code:("print \"DEFAULT EVENT\"") )
+		--append Events ( Event_v type:#pressed	code:("print \"DEFAULT EVENT\"") )
 			
-		List --return
+		Events --return
 	),
 
 	/**  

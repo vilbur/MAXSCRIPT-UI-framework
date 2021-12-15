@@ -3,7 +3,7 @@
 struct DefaultEvents_v
 (
 	/* properties */
-	List = #(),
+	Events = #(),
 	
 	/** Add default event for Rollout
 	  *
@@ -13,9 +13,9 @@ struct DefaultEvents_v
 	(
 		--format "\n"; print ("DefaultEvents_v.getEvents()" + rollout_id_full as string )
 		
-		append List ( Event_v type:#open	code:("GroupBoxCreator.sortControlsToGroupBoxes(\""+rollout_id_full+"\")") )
+		append Events ( Event_v type:#open	code:("GroupBoxCreator.sortControlsToGroupBoxes(\""+rollout_id_full+"\")") )
 			
-		List --return
+		Events --return
 	),
 
 	/**  

@@ -7,7 +7,7 @@ struct SaveIniEvents_v
 	ini_path,
 
 	/* properties */ 
-	List = #(),
+	Events = #(),
 
 	/** Add save ini events for Rollout
 	  *
@@ -40,7 +40,7 @@ struct SaveIniEvents_v
 		this._setSaveIniDefaultEvent #resized	"resized"	"val"
 		this._setSaveIniDefaultEvent #docked	"dock_state"	("(try(cui.getDockState "+rollout_id+")catch(\"cui_floatable\"))")
 
-		List --return
+		Events --return
 	),
 
 	/** Rollout save ini
@@ -51,7 +51,7 @@ struct SaveIniEvents_v
 		this._setSaveIniDefaultEvent #rolledDown	"rolledUp"	"(not val)"
 		this._setSaveIniDefaultEvent #rolledUp	"rolledUp" 	"(not val)"
 
-		List --return
+		Events --return
 	),
 
 	/** Set save to ini default event
@@ -62,7 +62,7 @@ struct SaveIniEvents_v
 
 		save_to_ini	= "( setINISetting \""+ini_path+"\" \""+rollout_id+"\" \""+key+"\" ("+val+" as string) )"
 
-		append List ( Event_v type:type	code:(if_val_not_undefined + save_to_ini) )
+		append Events ( Event_v type:type	code:(if_val_not_undefined + save_to_ini) )
 	),
 
 	/**  
