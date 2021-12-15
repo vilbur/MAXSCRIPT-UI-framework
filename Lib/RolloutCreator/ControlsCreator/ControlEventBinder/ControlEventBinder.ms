@@ -20,16 +20,19 @@ global STARTUP_EVENTS = #() -- run callbacks of controls like checkbox, checkbut
  */
 struct ControlEventBinder_v 
 (
+	/* construct */ 
+	ini_path, -- set in RolloutCreator_v._setIniToCreators()
+
+	
 	/* properties */
 	_Rollout,
 	_Control,
 
-	ini_path, -- set in RolloutCreator_v._setIniToCreators()
 
 	/* dependency */
 	EventsCombiner	= EventsCombiner_v(),
 	DefaultControlEvents	= DefaultControlEvents_v(),
-	SaveIniControlEvents	= SaveIniControlEvents_v(),
+	SaveIniControlEvents	= SaveIniControlEvents_v ini_path:ini_path rollout_id:_Rollout.id, 
 
 	control_types = include "Library/MAXSCRIPT-UI-framework/Lib/Dialog/Rollout/Controls/control_types.ms",
 
@@ -72,8 +75,6 @@ struct ControlEventBinder_v
 		format "event_types_of_control = % \n" event_types_of_control
 		format "params_of_events	      = % \n" params_of_events
 
-		
-		this._setCallbackParamters()
 
 		this._setCustomEvents()
 		this._setDefaultEvents()
@@ -81,6 +82,7 @@ struct ControlEventBinder_v
 		
 		this._combineAllEventTypes()
 		
+		this._setCallbackParamters()
 		
 		/* PARAMETER */ 
 		this._addHandlers()
@@ -111,7 +113,7 @@ struct ControlEventBinder_v
 		if( Event.code == "" ) then
 			return false
 		format "EVENT = % \n" Event
-		--_Rollout._RolloutCreator.addHandler _Control.id Event.type codeStr:(Event.code) paramStr:Event.params filter:on
+		_Rollout._RolloutCreator.addHandler _Control.id Event.type codeStr:(Event.code) paramStr:Event.params filter:on
 	),
 
 	/** _combine events
@@ -126,14 +128,14 @@ struct ControlEventBinder_v
 	 */
 	function _setDefaultEvents =
 	(
-		EventsCombiner.setEventsClass #DEFAULTS ( DefaultControlEvents.getEvents(control_type) ) 
+		EventsCombiner.setEventsClass #DEFAULTS ( DefaultControlEvents.getEvents(_Control.type) ) 
 	),
 
 	/** _combine events
 	 */
 	function _setSaveIniEvents =
 	(
-		EventsCombiner.setEventsClass #SAVEINI ( SaveIniControlEvents.getEvents(_Control) )
+		EventsCombiner.setEventsClass #SAVEINI ( SaveIniControlEvents.getEvents(_Control)(event_types_of_control) )
 	),
 
 	/**  get events for control type from event_types array
@@ -291,5 +293,5 @@ struct ControlEventBinder_v
 	on create do
 	(
 		print("ControlEventBinder_v.onCreate()")
-		format "_Rollout	= % \n" _Rollout	)
+		format "_ROLLOUT	= % \n" _Rollout	)
 )

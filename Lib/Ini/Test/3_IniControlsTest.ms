@@ -2,9 +2,6 @@ clearListener()
 
 filein( getFilenamePath(getSourceFileName()) + "/../../Dialog/../RolloutCreator/RolloutCreator.ms" )
 
---filein( getFilenamePath(getSourceFileName()) + "/../../RolloutCreator/ControlCreator/ControlEventBinder/ControlEventBinder.ms" )
-
-ControlEvents = ControlEventBinder_v()
 
 /* ONLY THIS TYPES OF CONTROLS WILL BE TESTED
   * 
@@ -74,12 +71,12 @@ controls_with_items = #(
  */
 try( destroyDialog ROLLOUT_test )catch()
 
-_RolloutCreator 	= RolloutCreator_v()
-_RolloutCreator.Ini.setIni (getSourceFileName())
+_RolloutCreator 	= RolloutCreator_v ini:(getSourceFileName())
 
 _Rollout  = _RolloutCreator.new "Test"
 _Controls = _Rollout.Controls()
 
+ControlEvents = ControlEventBinder_v _Rollout:_Rollout
 
 
 /** ADD CONTROLS WITH EVENTS

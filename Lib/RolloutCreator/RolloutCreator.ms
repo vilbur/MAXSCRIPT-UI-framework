@@ -8,16 +8,19 @@ filein( getFilenamePath(getSourceFileName()) + "/../Dialog/Rollout/Rollout.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/../Dialog/Rollout/Subrollouts/Subrollouts.ms" )
 
 filein( getFilenamePath(getSourceFileName()) + "/RolloutEventBinder/RolloutEventBinder.ms" )
-filein( getFilenamePath(getSourceFileName()) + "/ControlCreator/ControlCreator.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/ControlsCreator/ControlsCreator.ms" )
 
 /** RolloutCreator_v
  */
 struct RolloutCreator_v
 (
-	ControlCreator,
+	/* construct */ 
+	ini, -- path to ini file
+	
+	ControlsCreator,
 
-	Ini	= Ini_v(),
-	EventBinder	= RolloutEventBinder_v(),
+	IniFile	= Ini_v _path:ini,
+	EventBinder	= RolloutEventBinder_v ini_path:(IniFile.getPath()),
 
 	padding_bottom = 16,
 	subrollouts_slot_height = 64,
@@ -30,14 +33,14 @@ struct RolloutCreator_v
 	function createRollout _Rollout width: height: =
 	(
 		format "\n\n\n\n\n\n=====================================	%	=====================================\n"  _Rollout.id; print ("RolloutCreator_v.createRollout()"  )
-		ControlCreator = ControlCreator_v _Rollout:_Rollout
+		ControlsCreator = ControlCreator_v _Rollout:_Rollout ini_path:(IniFile.getPath())
 
 		this._setupCreation (_Rollout) (width) (height)
 
 		/* EDIT start */ 
 		_Rollout.rolloutCreatorBegin(this.width)
 
-		ControlCreator.createControlsInGroupboxLast(_Rollout)
+		ControlsCreator.createControlsInGroupboxLast(_Rollout)
 
 		/* add LOCAL VARIABLES */ 
 		this._addLocalVariablesToRollout (_Rollout)
@@ -90,6 +93,8 @@ struct RolloutCreator_v
 	 */
 	function _setupCreation _Rollout width height =
 	(
+		this._setIniToCreators()
+
 		if( width != unsupplied ) then
 			this.width = width
 
@@ -97,7 +102,6 @@ struct RolloutCreator_v
 
 		this._setSubrolloutsHeight(_Rollout)(height)
 
-		this._setIniToCreators()
 	),
 
 	/** Add controls or subrolloutes
@@ -112,7 +116,7 @@ struct RolloutCreator_v
 		(
 			if( this._isControls(ControlsBox_or_Subrollouts) ) then
 
-				ControlCreator.addControls(ControlsBox_or_Subrollouts)
+				ControlsCreator.addControls(ControlsBox_or_Subrollouts)
 			
 			else
 			
@@ -129,7 +133,7 @@ struct RolloutCreator_v
 		--print "RolloutCreator_v._getRolledStateFromIni()"
 		rolledup_state = "false"
 
-		if( Ini.getPath() != undefined and (rolledup_state_ini = getINISetting (Ini.getPath())subrollout_id "rolledUp") != "" ) then
+		if( IniFile.getPath() != undefined and (rolledup_state_ini = getINISetting (IniFile.getPath())subrollout_id "rolledUp") != "" ) then
 			rolledup_state = rolledup_state_ini
 
 		rolledup_state --return
@@ -139,13 +143,11 @@ struct RolloutCreator_v
 	  */
 	 function _setIniToCreators =
 	 (
-		ini_path = Ini.getPath()
+		print "RolloutCreator_v._setIniToCreators()"
 
-		EventBinder.ini_path	= ini_path
 
-		ControlCreator.EventBinder.ini_path	= ini_path
 
-		ControlCreator.ParamsCreator.ControlValue.ini_path	= ini_path
+		--ControlsCreator.ParamsCreator.ControlValue.ini_path	= ini_path
 	 ),
 
 	 /** _create subrollouts
@@ -165,12 +167,10 @@ struct RolloutCreator_v
 	function _addSubrolloutsSlots _Rollout Subrollouts =
 	(
 		--print ("RolloutCreator_v._addSubrolloutsSlots() " + Subrollouts.slot as string )
-
 		/**  DIASBLE ADDING SUBROLLOUTS SLOT INTO ACROSS LAYOUT
 		  */
-		ControlCreator.AcrossModifier.fakeControlsOnEndofGroup(_Rollout._RolloutCreator) --fake_control_caption:"SUBROLLOUTS"
-		--format "Subrollouts.slot	= % \n" Subrollouts.slot
-		--format "subrollouts_slot_height	= % \n" subrollouts_slot_height
+		ControlsCreator.AcrossModifier.fakeControlsOnEndofGroup(_Rollout._RolloutCreator) --fake_control_caption:"SUBROLLOUTS"
+
 		_Rollout._RolloutCreator.addText ("subRollout "+Subrollouts.slot as string +" \"slot_name\" height:"+subrollouts_slot_height as string )
 	),
 
@@ -259,5 +259,6 @@ struct RolloutCreator_v
 	 */
 	on create do
 	(
+		print("RolloutCreator_v.onCreate()")
 	)	
 )

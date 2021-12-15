@@ -10,7 +10,7 @@ struct DefaultControlEvents_v
 	 */
 	function getEvents control_type =
 	(
-		append List ( Event_v type:#pressed	code:("print \"DEFAULT EVENT\"") )
+		--append List ( Event_v type:#pressed	code:("print \"DEFAULT EVENT\"") )
 			
 		List --return
 	),

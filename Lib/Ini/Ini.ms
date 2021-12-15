@@ -16,6 +16,8 @@ struct Ini_v
 	 */
 	function setIni ini_path =
 	(
+		if( ini_path == undefined ) then 
+			return false
 		--print "Ini_v.setIni()"
 		--format "ini_path	= % \n" ini_path	
 		if( matchPattern ini_path pattern:@"*.ini" ) then
@@ -188,5 +190,6 @@ struct Ini_v
 	on create do
 	(
 		--print("Ini_v.onCreate()")
+		this.setIni (_path) -- try set path on construct
 	)
 )

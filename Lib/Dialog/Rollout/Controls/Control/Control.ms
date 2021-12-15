@@ -5,7 +5,7 @@ filein( getFilenamePath(getSourceFileName()) + "/ParamsList/ParamsList.ms" )
  */
 struct Control_v
 (
-	--__construct = #(  ),
+	__construct = #(  ),
 	
 	/* required */
 	type,

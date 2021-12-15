@@ -8,14 +8,16 @@ filein( getFilenamePath(getSourceFileName()) + "/BrowsePath/BrowsePath.ms" )
  */
 struct ControlCreator_v
 (
-
+	/* construct */ 
+	ini_path, -- set in RolloutCreator_v._setIniToCreators()
 	_Rollout,
+
+	/* dependency */
 	_Controls,
 
-	--AcrossModifier,
 	AcrossModifier	= AcrossParameterModifier_v(),
 	ParamsCreator	= ControlParamsCreator_v(),
-	EventBinder	= ControlEventBinder_v _Rollout:_Rollout,
+	EventBinder	= ControlEventBinder_v _Rollout:_Rollout ini_path:ini_path,
 
 	/** Add controls
 	 */
@@ -236,5 +238,7 @@ struct ControlCreator_v
 	(
 		print "ControlCreator_v.onCreate()"
 		format "_Rollout	= % \n" _Rollout
+		
+		EventBinder.ini_path	= ini_path
 	)	
 )

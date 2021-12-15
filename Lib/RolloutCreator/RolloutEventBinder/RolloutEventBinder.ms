@@ -240,6 +240,6 @@ struct RolloutEventBinder_v
 	
 	on create do
 	(
-		--print("RolloutEvents_v.onCreate()")
+		print("RolloutEventBinder_v.onCreate()")
 	)
 )
