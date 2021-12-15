@@ -24,24 +24,22 @@ struct ControlEventBinder_v
 (
 	/* construct */ 
 	ini_path, -- set in RolloutCreator_v._setIniToCreators()
-
 	
 	/* properties */
 	_Rollout,
 	_Control,
 
-
 	/* dependency */
+	EventTypes	= EventTypes_v(),
 	EventsCombiner	= EventsCombiner_v(),
 	DefaultControlEvents	= DefaultControlEvents_v(),
 	SaveIniControlEvents	= SaveIniControlEvents_v ini_path:ini_path rollout_id:_Rollout.id, 
 
-	control_types = include "Library/MAXSCRIPT-UI-framework/Lib/Dialog/Rollout/Controls/control_types.ms", 
 
-	event_types = (EventTypes_v()).event_types,
+	control_types	= (ControlTypes_v()).control_types,
 	
-	event_types_of_control,	-- get events from event_types array
-	params_of_events,	-- get params from event_types array
+	event_types,	-- get events from event_types array
+	events_params,	-- get params from event_types array
 
 	/** Combine events and add handlers
 	 */
@@ -50,20 +48,15 @@ struct ControlEventBinder_v
 		format "\n"; print "ControlEventBinder_v.combineEventsAndAddHandlers()"
 		format "_Control	= % \n" _Control
 		this._Control = _Control
-
 		
+		event_types	= EventTypes.getEventTypesOfControl	(_Control.type)
+		events_params	= EventTypes.getParamsOfEvents	(_Control.type)
 		
-		event_types_of_control	= this._getEventTypesOfControl (_Control.type)
-		params_of_events	= this._getParamsOfEvents  (_Control.type)
-		format "event_types_of_control = % \n" event_types_of_control
-		format "params_of_events	      = % \n" params_of_events
-
-
 		this._setCustomEvents()
 		this._setDefaultEvents()
 		this._setSaveIniEvents()
 		
-		this._combineAllEventTypes()
+		this._combineEventTypes()
 		
 		this._setCallbackParamters()
 		
@@ -73,10 +66,10 @@ struct ControlEventBinder_v
 
 	/** _combine all event types
 	 */
-	function _combineAllEventTypes =
+	function _combineEventTypes =
 	(
-		--format "\n"; print "ControlEventBinder_v._combineAllEventTypes()"
-		this._Control.Events.list = for event_type in event_types_of_control where (Event = EventsCombiner.combine (event_type)) != undefined collect Event
+		--format "\n"; print "ControlEventBinder_v._combineEventTypes()"
+		this._Control.Events.list = for event_type in event_types where (Event = EventsCombiner.combine (event_type)) != undefined collect Event
 	),
 
 	/** _bind events
@@ -118,42 +111,20 @@ struct ControlEventBinder_v
 	 */
 	function _setSaveIniEvents =
 	(
-		EventsCombiner.setEventsClass #SAVEINI ( SaveIniControlEvents.getEvents(_Control)(event_types_of_control) )
+		EventsCombiner.setEventsClass #SAVEINI ( SaveIniControlEvents.getEvents(_Control)(event_types) )
 	),
-
-	/**  get events for control type from event_types array
-	  *
-	  * @return	array of event types for control E.G.: return #( #pressed,	#rightclick) if control_type == #button 
-	 */
-	function _getEventTypesOfControl control_type =
-	(
-		--print "ControlEventBinder_v._getEventTypesOfControl()"
-		for event_type in event_types[findItem control_types control_type] collect
-			if( classOf event_type == Array ) then event_type[1] else event_type
-
-	),
-	
-	/** get params for control type from event_types array
-	 */
-	function _getParamsOfEvents control_type =
-	(
-		--format "\n"; print "ControlEventBinder_v._getParamsOfEvents()"
-		for event_type in event_types[findItem control_types control_type] collect
-			if( classOf event_type == Array ) then event_type[2] else undefined
-	),
-
 
 	/** Get parameters of callback defined in event_types
 	 */
 	function _setCallbackParamters =
 	(
 		--print "ControlEvents._setCallbackParamters()"
-		--format "event_types_of_control	= % \n" event_types_of_control
-		for i = 1 to event_types_of_control.count where params_of_events[i] != undefined  do
+		--format "event_types	= % \n" event_types
+		for i = 1 to event_types.count where events_params[i] != undefined  do
 		(
-			Event = this._getEvent(event_types_of_control[i])
+			Event = this._getEvent(event_types[i])
 
-			Event.params = params_of_events[i]
+			Event.params = events_params[i]
 
 			if not( matchPattern Event.code pattern:("* "+Event.params) ) then -- add prameters behind callback E.G.: "callbackFn" >>>  "callbackFn inSpin inCancel"
 				Event.code  += " "+ Event.params
@@ -171,10 +142,10 @@ struct ControlEventBinder_v
 	function getEvents _Control rollout_id =
 	(
 		this._Control	= _Control
-		event_types_of_control	= this._getEventTypesOfControl (_Control.type)
-		params_of_events	= this._getParamsOfEvents  (_Control.type)
-		format "event_types_of_control	= % \n" event_types_of_control
-		format "params_of_events	= % \n" params_of_events
+		event_types	= EventTypes.getEventTypesOfControl (_Control.type)
+		events_params	= this.getParamsOfEvents  (_Control.type)
+		format "event_types	= % \n" event_types
+		format "events_params	= % \n" events_params
 
 		/* PARAMETER */ 
 		this._setCallbackParamters()
@@ -210,32 +181,17 @@ struct ControlEventBinder_v
 		--print "ControlEventBinder_v._addEventFired()"
 		EventFiredCreator = EventFiredCreator_v control_id:_Control.id
 
-		for i = 1 to event_types_of_control.count  do
+		for i = 1 to event_types.count  do
 		(
-			Event = this._getEvent(event_types_of_control[i])
+			Event = this._getEvent(event_types[i])
 
-			_EventFired    = EventFiredCreator.getEventFired(event_types_of_control[i])(Event.params)
+			_EventFired    = EventFiredCreator.getEventFired(event_types[i])(Event.params)
 			--format "_EventFired	= % \n" _EventFired
 			Event.code = _EventFired+ ";"+ Event.code
 			--Event.code =  Event.code + ";"+ _EventFired
 		)
 
 	),
-
-	--/** Add function brackets E.g.: "fooCallback" return "fooCallback()|fooCallback(val)"
-	-- */
-	--function _addFunctionBrackets &callback params =
-	--(
-	--	--print "ControlEventBinder_v._addFunctionBrackets()"
-	--	--format "params	= % \n" params
-	--	if( params == "" ) then 
-	--		params = "()"
-	--	
-	--	if not( matchPattern callback pattern:"macros.run*" ) then 
-	--		if not( matchPattern callback pattern:("*(*)") ) then
-	--			callback += " " + params
-	--			--callback += "("+params+")"
-	--),
 
 	/** If checkbox has value true, then fire up checkbox`s callback when UI starts
 	 */
@@ -266,7 +222,7 @@ struct ControlEventBinder_v
 	 */
 	function getEventTypesOfControlTest control_type =
 	(
-		this._getEventTypesOfControl (control_type)
+		EventTypes.getEventTypesOfControl (control_type)
 	),
 
 	/*------------------------------------------------------------------------------

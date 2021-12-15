@@ -2,6 +2,9 @@
  */
 struct EventTypes_v
 (
+	
+	control_types	= (ControlTypes_v()).control_types,
+
 	/* If event is array then it has "val" param
 	*
 	* Other items in array defines additional params for event.
@@ -24,7 +27,37 @@ struct EventTypes_v
 	),
 	
 	
+	/**  get events for control type from event_types array
+	  *
+	  * @return	array of event types for control E.G.: return #( #pressed,	#rightclick) if control_type == #button 
+	 */
+	function getEventTypesOfControl control_type =
+	(
+		--print "ControlEventBinder_v._getEventTypesOfControl()"
+		for event_type in this._eventTypesOfControlType(control_type) collect
+			if( classOf event_type == Array ) then event_type[1] else event_type
+
+	),
+	
+	/** get params for control type from event_types array
+	 */
+	function getParamsOfEvents control_type =
+	(
+		--format "\n"; print "ControlEventBinder_v._getParamsOfEvents()"
+		for event_type in this._eventTypesOfControlType(control_type) collect
+			if( classOf event_type == Array ) then event_type[2] else undefined
+	),
+
+	
 	private
+	
+	
+	/** _event types of control type
+	 */
+	function _eventTypesOfControlType control_type =
+	(
+		event_types[findItem control_types control_type] --return
+	),
 	
 	/**  
 	 */

@@ -10,40 +10,7 @@ filein( getFilenamePath(getSourceFileName()) + "/../../../../RolloutCreator/Roll
 include "Library/MAXSCRIPT-UI-framework/Lib/RolloutCreator/_Test/includes/CreateTestRollout.ms"
 
 
-/* [Control types](https://help.autodesk.com/view/MAXDEV/2021/ENU/?guid=GUID-E421933F-958E-42FD-80A1-D66F2A2C0A06)
-*/ 
-control_types = #(
-	--#Label,
-	--#Button,
-	--#Checkbox,
-	--#Checkbutton,
-	--#Spinner,
-	--#Edittext,
-	--#Listbox,
-	--#multilistbox,
-	--#Dropdownlist,
-	----#Combobox,
-	----#GroupBox,
-	----#Angle,
-	----#Bitmap,
-	----#Colorpicker,
-	----#hyperlink,
-	----#imgTag,
-	----#Mapbutton,
-	----#Materialbutton,
-	----#Pickbutton,
-	----#ProgressBar,
-	----#Slider,
-	----#Curve,-- DOES NOT WORK YET
-	----#popupMenu,-- DOES NOT WORK YET
-	----#Radiobuttons,-- DOES NOT WORK YET
-	--#Timer
-	
-	/* DEV */  
-	--#Button
-	--#browsePath
-	#Checkbox
-)
+control_types	= (ControlTypes_v()).control_types,
 
 
 controls_with_items = #(

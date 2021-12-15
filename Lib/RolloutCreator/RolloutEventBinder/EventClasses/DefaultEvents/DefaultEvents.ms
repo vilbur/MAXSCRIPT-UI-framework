@@ -1,4 +1,4 @@
-/** Events default
+/** Events default for rollout
  */
 struct DefaultEvents_v
 (
@@ -25,5 +25,4 @@ struct DefaultEvents_v
 		--print("EventsDefault_v.onCreate()")
 		--this._checkConstctructProperties()
 	)
-	
 )

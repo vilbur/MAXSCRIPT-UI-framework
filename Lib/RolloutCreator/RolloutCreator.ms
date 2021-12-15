@@ -8,6 +8,7 @@ filein( getFilenamePath(getSourceFileName()) + "/../Dialog/Rollout/Rollout.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/../Dialog/Rollout/Subrollouts/Subrollouts.ms" )
 
 filein( getFilenamePath(getSourceFileName()) + "/RolloutEventBinder/RolloutEventBinder.ms" )
+
 filein( getFilenamePath(getSourceFileName()) + "/ControlsCreator/ControlsCreator.ms" )
 
 /** RolloutCreator_v

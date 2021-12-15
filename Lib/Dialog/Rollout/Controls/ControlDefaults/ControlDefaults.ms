@@ -1,3 +1,5 @@
+filein( getFilenamePath(getSourceFileName()) + "/../ControlTypes/ControlTypes.ms" )
+
 
 /** Defaults RENAME THIS TO ControlsDefaults_v
   *
@@ -14,10 +16,10 @@ struct ControlDefaults_v
 		this.keys   = #( #global,	#button )		
 		this.values = #( List,	List )		
 	*/
-
 	include "Library/MAXSCRIPT-UI-framework/Lib/List/ListBody.ms"
 
-	--public
+	
+	control_types = (ControlTypes_v()).control_types,
 
 	/** Set default param
 	 */
@@ -39,13 +41,9 @@ struct ControlDefaults_v
 	(
 		--print "ControlDefaults_v._setDefaultsForAllTypes()"
 		
-		control_types = include "Library/MAXSCRIPT-UI-framework/Lib/Dialog/Rollout/Controls/control_types.ms"
-		
-		append control_types #global 
+		append control_types #global
 		
 		control_types = control_types + this.keys
-		--if( this.getval(#global) == undefined ) then
-			--this._setParamsList(#global)
 		
 		for default_key in control_types do
 			this.setVal (default_key) (this._getDefaultParamsList(default_key))
