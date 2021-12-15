@@ -234,6 +234,7 @@ struct ControlCreator_v
 	 */
 	on create do
 	(
-		--print "ControlCreator_v.onCreate()"
+		print "ControlCreator_v.onCreate()"
+		format "_Rollout	= % \n" _Rollout
 	)	
 )

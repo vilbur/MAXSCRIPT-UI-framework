@@ -24,11 +24,12 @@ struct ControlEventBinder_v
 	_Rollout,
 	_Control,
 
-	ini_path,
-	dynamic_event_types = #( #changed, #selected ), -- this events fires default save to ini callback
+	ini_path, -- set in RolloutCreator_v._setIniToCreators()
 
 	/* dependency */
 	EventsCombiner	= EventsCombiner_v(),
+	DefaultControlEvents	= DefaultControlEvents_v(),
+	SaveIniControlEvents	= SaveIniControlEvents_v(),
 
 	control_types = include "Library/MAXSCRIPT-UI-framework/Lib/Dialog/Rollout/Controls/control_types.ms",
 
@@ -64,6 +65,8 @@ struct ControlEventBinder_v
 		format "_Control	= % \n" _Control
 		this._Control = _Control
 
+		
+		
 		event_types_of_control	= this._getEventTypesOfControl (_Control.type)
 		params_of_events	= this._getParamsOfEvents  (_Control.type)
 		format "event_types_of_control = % \n" event_types_of_control
@@ -74,15 +77,22 @@ struct ControlEventBinder_v
 
 		this._setCustomEvents()
 		this._setDefaultEvents()
-		--this._setSaveIniEvents()
+		this._setSaveIniEvents()
+		
+		this._combineAllEventTypes()
+		
 		
 		/* PARAMETER */ 
-		this._Control.Events.list = for event_type in event_types_of_control collect EventsCombiner.combine (event_type)
-		
-		
 		this._addHandlers()
 	),
 
+	/** _combine all event types
+	 */
+	function _combineAllEventTypes =
+	(
+		--format "\n"; print "ControlEventBinder_v._combineAllEventTypes()"
+		this._Control.Events.list = for event_type in event_types_of_control where (Event = EventsCombiner.combine (event_type)) != undefined collect Event
+	),
 
 	/** _bind events
 	 */
@@ -97,16 +107,11 @@ struct ControlEventBinder_v
 	 */
 	function _addHandler Event =
 	(
-		format "\n"
 		print "ControlEventBinder_v._addHandler()"
 		if( Event.code == "" ) then
 			return false
-		
-		format "EVENT	= % \n" Event
-		
-		
-		
-		_Rollout._RolloutCreator.addHandler _Control.id Event.type codeStr:(Event.code) paramStr:Event.params filter:on
+		format "EVENT = % \n" Event
+		--_Rollout._RolloutCreator.addHandler _Control.id Event.type codeStr:(Event.code) paramStr:Event.params filter:on
 	),
 
 	/** _combine events
@@ -121,14 +126,14 @@ struct ControlEventBinder_v
 	 */
 	function _setDefaultEvents =
 	(
-		EventsCombiner.setEventsClass #DEFAULTS ( (DefaultControlEvents_v()).getEvents(control_type) ) 
+		EventsCombiner.setEventsClass #DEFAULTS ( DefaultControlEvents.getEvents(control_type) ) 
 	),
 
 	/** _combine events
 	 */
 	function _setSaveIniEvents =
 	(
-		EventsCombiner.setEventsClass #SAVEINI ( (SaveIniControlEvents_v rollout_id:_Rollout.id control_id:_Control.id ini_path:ini_path ).getEvents() ) 
+		EventsCombiner.setEventsClass #SAVEINI ( SaveIniControlEvents.getEvents(_Control) )
 	),
 
 	/**  get events for control type from event_types array
@@ -142,6 +147,7 @@ struct ControlEventBinder_v
 			if( classOf event_type == Array ) then event_type[1] else event_type
 
 	),
+	
 	/** get params for control type from event_types array
 	 */
 	function _getParamsOfEvents control_type =
@@ -284,5 +290,6 @@ struct ControlEventBinder_v
 
 	on create do
 	(
-	)
+		print("ControlEventBinder_v.onCreate()")
+		format "_Rollout	= % \n" _Rollout	)
 )

@@ -44,10 +44,11 @@ struct EventsCombiner_v
 	),
 	/** Set events
 	 */
-	function setEventsClass event_type Events_array =
+	function setEventsClass event_class Events_array =
 	(
 		print "EventsCombiner_v.setEvents()"
-		this.setVal event_type Events_array
+		format "Events_array	= % \n" Events_array
+		this.setVal event_class Events_array
 	),
 	
 	

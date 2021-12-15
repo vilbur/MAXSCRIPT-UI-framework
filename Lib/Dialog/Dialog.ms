@@ -8,7 +8,9 @@ global EVENT_DOCKED_ENABLED = true -- prevent crash on destroying  of dialog // 
 /** https://help.autodesk.com/view/MAXDEV/2021/ENU/?guid=GUID-816D257C-CD2D-4753-A792-6E7AEFAFA6A7
  */
 struct Dialog_v
-( 
+(
+	__construct = #( #title ),
+
 	/* required */
 	title,
 	
@@ -212,10 +214,21 @@ struct Dialog_v
 	),
 	
 
+	/** Check if required properties are defined when an instance of the struct is created.
+	 * @example __construct = #( #property_name ) 
+	 */
+	function _checkConstctructProperties =
+	(
+		for prop in __construct where getProperty this prop == undefined do
+			messageBox ("SaveIniControlEvents\nUndefined construct property !\n\n"+ ((filterString( classof this as string )"(:")[2]) +"."+ prop )
+	),
+
 	/**  
 	 */
 	on create do
 	(
+		this._checkConstctructProperties()
+
 		--print("Dialog_v.onCreate()")
 		this._setMainRollout()
 		

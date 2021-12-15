@@ -57,6 +57,8 @@ struct RolloutEventBinder_v
 	 */
 	function combineEventsAndAddHandlers _Rollout =
 	(
+		format "\n\n~~~~~~~~~	Rollout Events:%	~~~~~~~~~\n" _Rollout.id
+
 		this._Rollout = _Rollout
 
 		this._setCustomEvents()

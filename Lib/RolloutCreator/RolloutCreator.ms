@@ -30,6 +30,8 @@ struct RolloutCreator_v
 	function createRollout _Rollout width: height: =
 	(
 		format "\n\n\n\n\n\n=====================================	%	=====================================\n"  _Rollout.id; print ("RolloutCreator_v.createRollout()"  )
+		ControlCreator = ControlCreator_v _Rollout:_Rollout
+
 		this._setupCreation (_Rollout) (width) (height)
 
 		/* EDIT start */ 
@@ -88,8 +90,6 @@ struct RolloutCreator_v
 	 */
 	function _setupCreation _Rollout width height =
 	(
-		ControlCreator = ControlCreator_v _Rollout:_Rollout
-
 		if( width != unsupplied ) then
 			this.width = width
 

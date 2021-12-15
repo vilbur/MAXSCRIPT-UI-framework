@@ -43,7 +43,7 @@ control_types_for_test = #(
 	--
 	
 	/* DEV */ 
-	--#Checkbox
+	#Checkbox
 	--#Button
 	--#Spinner
 	--#Edittext
@@ -51,9 +51,15 @@ control_types_for_test = #(
 )
 
 
-/* CUSTOM TYPES */ 
-append ControlEvents.control_types	#browsePath
-append control_types_for_test	#browsePath
+/* 
+
+
+		ADD CUSTOM TYPES 
+
+
+*/ 
+-- append ControlEvents.control_types	#browsePath
+-- append control_types_for_test	#browsePath
 
 controls_with_items = #(
 	#Listbox,

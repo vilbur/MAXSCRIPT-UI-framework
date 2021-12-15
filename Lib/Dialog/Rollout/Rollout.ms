@@ -172,7 +172,6 @@ struct Rollout_v
 	(
 		( dotNetObject "System.Text.RegularExpressions.Regex" search ).Replace ( id ) replace  --return 
 	),
-
 	/**  
 	 */
 	on create do

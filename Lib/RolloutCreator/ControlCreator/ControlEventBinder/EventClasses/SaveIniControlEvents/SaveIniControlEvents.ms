@@ -2,22 +2,26 @@
  */
 struct SaveIniControlEvents_v
 (
-	/* required */ 
-	rollout_id,
-	control_id,
+	/* required */
 	ini_path,
+	rollout_id,
 
 	/* properties */ 
 	List = #(),
+	
+	dynamic_event_types = #( #changed, #selected ), -- this events fires default save to ini callback
 
 	/** Add save ini event for Control
 	  *
 	  * @return	list	of default events
 	 */
-	function getEvents =
+	function getEvents _Control =
 	(
 		format "************************************************************"
 		print "SaveIniEvents_v._addDefaultEvents()"
+		format "_Control	= % \n" _Control
+		format "this	= % \n" this
+		
 		
 		
 		List --return
@@ -96,7 +100,7 @@ struct SaveIniControlEvents_v
 	 */
 	on create do
 	(
-		--print("EventsDefault_v.onCreate()")
+		print("SaveIniControlEvents_v.onCreate()")
 		--this._checkConstctructProperties()
 	)
 
