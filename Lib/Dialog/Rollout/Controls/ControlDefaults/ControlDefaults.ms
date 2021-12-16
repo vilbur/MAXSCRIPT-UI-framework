@@ -19,7 +19,7 @@ struct ControlDefaults_v
 	include "Library/MAXSCRIPT-UI-framework/Lib/List/ListBody.ms"
 
 	
-	control_types = (ControlTypes_v()).control_types,
+	control_types = (ControlTypes_v()).getAllTypes(),
 
 	/** Set default param
 	 */

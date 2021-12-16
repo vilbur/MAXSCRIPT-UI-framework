@@ -1,11 +1,10 @@
-/** Control types
+/** [All control types available in maxscript UI ](https://help.autodesk.com/view/MAXDEV/2021/ENU/?guid=GUID-E421933F-958E-42FD-80A1-D66F2A2C0A06)
  */
 struct ControlTypes_v
 (
-	
-	/**  [All types available in maxscript UI ](https://help.autodesk.com/view/MAXDEV/2021/ENU/?guid=GUID-E421933F-958E-42FD-80A1-D66F2A2C0A06)
+	/**  
 	  */
-	control_types = #(
+	list = #(
 		#Label,
 		#Button,
 		#Checkbox,
@@ -27,17 +26,22 @@ struct ControlTypes_v
 		--#Pickbutton,
 		--#ProgressBar,
 		--#Slider,
-		--#Curve,-- DOES NOT WORK YET
-		--#popupMenu,-- DOES NOT WORK YET
-		--#Radiobuttons,-- DOES NOT WORK YET
+		--#Curve,	-- DOES NOT WORK YET
+		--#popupMenu,	-- DOES NOT WORK YET
+		--#Radiobuttons,	-- DOES NOT WORK YET
 		#Timer
 	),
 
+	/** Get all types
+	 */
+	function getAllTypes =
+	(
+		list --return
+	),
 
 	private
 	
-
-	/**  
+	/**;  
 	 */
 	on create do
 	(

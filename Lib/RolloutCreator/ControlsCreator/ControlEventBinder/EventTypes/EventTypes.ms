@@ -3,28 +3,11 @@
 struct EventTypes_v
 (
 	
-	control_types	= (ControlTypes_v()).control_types,
+	control_types	= (ControlTypes_v()).getAllTypes(),
+	--event_types,
+	
+	List 	= List_v(),
 
-	/* If event is array then it has "val" param
-	*
-	* Other items in array defines additional params for event.
-	*/ 
-	event_types = #(
-		#( ),				-- #label	
-		#( #pressed,	#rightclick ),			-- #button	
-		#( #(#changed,  "val"),	#rightclick ),			-- #checkbox	https://help.autodesk.com/view/3DSMAX/2017/ENU/?guid=__files_GUID_D23A42EA_7B69_4DEF_9D6E_C6C85F884268_htm
-		#( #(#changed,  "val"),	#rightclick ),			-- #checkbutton	
-		#( #(#changed,  "val inSpin"),	#(#entered, "inSpin inCancel"),	#(#buttonup, "inCancel"),	#buttondown ),	-- #spinner	
-		#( #(#changed,  "val"),	#(#entered, "val") ),			-- #edittext	https://help.autodesk.com/view/3DSMAX/2017/ENU/?guid=__files_GUID_FC73C160_735C_4F65_A71D_722D63BBB591_htm
-		#( #(#selected, "val"),	#(#doubleClicked, "val"),	#(#rightClick, "val")),		-- #listbox	https://help.autodesk.com/view/3DSMAX/2017/ENU/?guid=__files_GUID_7C37748B_C682_4834_B5A6_74185C8C661A_htm
-		#( #(#selected, "val"),	#(#doubleClicked, "val"),	#rightClick,	#selectionEnd ),	-- #multilistbox	
-		#( #(#selected, "val"),	#rightClick ),			-- #dropdownlist	
-		#( ),				-- #GroupBox
-
-		/* Custom compounded controls */
-		#( #tick )
-		--#( #(#changed,  "val"),	#(#entered, "val") )	-- #browsePath
-	),
 	
 	
 	/**  get events for control type from event_types array
@@ -34,7 +17,7 @@ struct EventTypes_v
 	function getEventTypesOfControl control_type =
 	(
 		--print "ControlEventBinder_v._getEventTypesOfControl()"
-		for event_type in this._eventTypesOfControlType(control_type) collect
+		for event_type in this._eventTypesOfControlType(control_type) where event_type != undefined collect
 			if( classOf event_type == Array ) then event_type[1] else event_type
 
 	),
@@ -44,7 +27,7 @@ struct EventTypes_v
 	function getParamsOfEvents control_type =
 	(
 		--format "\n"; print "ControlEventBinder_v._getParamsOfEvents()"
-		for event_type in this._eventTypesOfControlType(control_type) collect
+		for event_type in this._eventTypesOfControlType(control_type) where event_type != undefined collect
 			if( classOf event_type == Array ) then event_type[2] else undefined
 	),
 
@@ -52,11 +35,36 @@ struct EventTypes_v
 	private
 	
 	
+	/** _set event types
+	 */
+	function _setEventTypes =
+	(
+		--print("EventTypes_v._setEventTypes()")
+		for control_type in control_types do
+		(
+			control_events = case control_type of (
+								#label:	#( )
+								#groupbox:	#( )
+								#button:	#( #pressed,	#rightclick )
+								#checkbox:	#( #(#changed,  "val"),	#rightclick )
+								#checkbutton:	#( #(#changed,  "val"),	#rightclick )
+								#spinner:	#( #(#changed,  "val inSpin"),	#(#entered, "inSpin inCancel"),	#(#buttonup, "inCancel"),	#buttondown )
+								#edittext:	#( #(#changed,  "val"),	#(#entered, "val") )
+								#listbox:	#( #(#selected, "val"),	#(#doubleClicked, "val"),	#(#rightClick, "val"))
+								#multilistbox:	#( #(#selected, "val"),	#(#doubleClicked, "val"),	#rightClick,	#selectionEnd )
+								#dropdownlist:	#( #(#selected, "val"),	#rightClick )
+								default:	undefined
+							)
+			
+			List.setVal (control_type) (control_events)
+		)
+	),
+	
 	/** _event types of control type
 	 */
 	function _eventTypesOfControlType control_type =
 	(
-		event_types[findItem control_types control_type] --return
+		List.getVal (control_type) --return
 	),
 	
 	/**  
@@ -64,5 +72,6 @@ struct EventTypes_v
 	on create do
 	(
 		--print("EventTypes_v.onCreate()")
+		this._setEventTypes()
 	)
 )

@@ -79,7 +79,7 @@ _Controls = _Rollout.Controls()
 
 /** ADD CONTROLS WITH EVENTS
  */
-for control_type in 	(EventTypes_v()).event_types where findItem control_types_for_test control_type > 0 do
+for control_type in (ControlTypes_v()).list where findItem control_types_for_test control_type > 0 do
 (
 	params	= if( findItem controls_with_items control_type > 0 ) then #( #items, #("Item 1","Item 2","Item 3") ) else #()
 	

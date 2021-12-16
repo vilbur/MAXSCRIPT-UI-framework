@@ -36,7 +36,7 @@ struct ControlEventBinder_v
 	SaveIniControlEvents	= SaveIniControlEvents_v ini_path:ini_path rollout_id:_Rollout.id, 
 
 
-	control_types	= (ControlTypes_v()).control_types,
+	control_types	= (ControlTypes_v()).getAllTypes(),
 	
 	event_types,	-- get events from event_types array
 	events_params,	-- get params from event_types array
