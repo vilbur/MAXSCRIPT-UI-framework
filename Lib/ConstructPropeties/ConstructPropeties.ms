@@ -1,10 +1,9 @@
-/** Tet if properties of given class are not undefined
+/** Test if properties of given class are not undefined
  */
 struct ConstructPropeties
 (
 	/* properties */
 	test,
-	properties,
 
 	private
 	
@@ -19,9 +18,8 @@ struct ConstructPropeties
 	 */
 	on create do
 	(
-		for prop in properties where getProperty test prop == undefined do
+		for prop in test.__contruct where getProperty test prop == undefined do
 			messageBox ("STRUCT:\n\n"+ (this._getStructName()) +"\n\n\nPROPERTY:\n\n"+ prop ) title:"UNDEFINED CONSTRUCT PROPERTY"
 		
 	)
-	
 )
