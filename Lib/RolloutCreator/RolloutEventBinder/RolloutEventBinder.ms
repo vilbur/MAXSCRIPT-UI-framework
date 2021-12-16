@@ -13,6 +13,7 @@ filein( getFilenamePath(getSourceFileName()) + "/EventsCombiner/EventsCombiner.m
   */
 struct RolloutEventBinder_v 
 (
+	
 	_Rollout,
 	EventsCombiner	= EventsCombiner_v(),
 	

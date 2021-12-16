@@ -28,8 +28,11 @@ function loadContentTest dir_name =
 --	_controls_B.button ("button by code B")
 --)
 
+
 /*---------------------------------------
 	RUN TESTR
 -----------------------------------------*/
 Dialog = loadContentTest("Dialog-level")
 --Dialog = loadContentTest("Nested-Rollouts")
+
+

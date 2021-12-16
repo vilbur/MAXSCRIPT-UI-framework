@@ -1,17 +1,37 @@
 clearListener()
 
-filein( getFilenamePath(getSourceFileName()) + "/../StructConstruct.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/../ConstructPropeties.ms" )
+
+/** 
+ */
+struct ChildStruct_v
+(
+	__construct = #( #this_is_set, #this_is_not_set ),
+	
+	/* properties */
+	this_is_set,
+	this_is_not_set,
+	
+	/**  
+	 */
+	on create do
+	(
+		ConstructPropeties test:this
+	)
+)
 
 
 /** Struct construct test
  */
 struct ConstructPropetiesTest_v
 (
-	__contruct = #( #this_is_set, #this_is_not_set ),
+	__construct = #( #this_is_set, #this_is_not_set ),
 	
 	/* properties */
 	this_is_set,
 	this_is_not_set,
+	
+	ChildStruct = ChildStruct_v this_is_set:"fooBar",
 	
 	/**  
 	 */

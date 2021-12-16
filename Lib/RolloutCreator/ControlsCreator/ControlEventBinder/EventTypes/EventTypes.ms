@@ -53,7 +53,7 @@ struct EventTypes_v
 								#listbox:	#( #(#selected, "val"),	#(#doubleClicked, "val"),	#(#rightClick, "val"))
 								#multilistbox:	#( #(#selected, "val"),	#(#doubleClicked, "val"),	#rightClick,	#selectionEnd )
 								#dropdownlist:	#( #(#selected, "val"),	#rightClick )
-								default:	undefined
+								--default:	#()
 							)
 			
 			List.setVal (control_type) (control_events)
@@ -64,6 +64,8 @@ struct EventTypes_v
 	 */
 	function _eventTypesOfControlType control_type =
 	(
+		print("EventTypes_v._eventTypesOfControlType() " + control_type as string )
+
 		List.getVal (control_type) --return
 	),
 	

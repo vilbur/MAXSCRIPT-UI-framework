@@ -9,11 +9,11 @@ toolTip:	"Tooltip button pressed"
 	messagebox "\"buttontext\" property is control id\n\nNext occurrence will be added as next event type"
 )
 
-macroscript macro_right_click_test
-category:	"_macrotest"
-buttontext:	"Left\Right click"
-toolTip:	"Tooltip button rightclick"
---icon:	"#(path, index)"
-(
-	messagebox "Right click on button"
-)
+--macroscript macro_right_click_test
+--category:	"_macrotest"
+--buttontext:	"Left\Right click"
+--toolTip:	"Tooltip button rightclick"
+----icon:	"#(path, index)"
+--(
+--	messagebox "Right click on button"
+--)

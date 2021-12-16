@@ -1,3 +1,4 @@
+filein( getFilenamePath(getSourceFileName()) + "/../ConstructPropeties/ConstructPropeties.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/../RolloutCreator/RolloutCreator.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/Layout/Layout.ms" )
 
@@ -226,7 +227,7 @@ struct Dialog_v
 	on create do
 	(
 		--print("Dialog_v.onCreate()")
-		this._checkConstctructProperties()
+		ConstructPropeties test:this
 
 		this._setMainRollout()
 		

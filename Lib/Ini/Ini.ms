@@ -73,7 +73,14 @@ struct Ini_v
 		_path --return
 	),
 	
-	
+	/** Open ini file in Notepad++
+	 */
+	function open =
+	(
+		--format "\n"; print "Ini_v.open()"
+		ShellLaunch  "Notepad++" ("\""+_path+"\"")
+
+	),
 	
 	
 	/*------------------------------------------------------------------------------

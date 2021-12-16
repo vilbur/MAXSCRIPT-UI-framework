@@ -6,11 +6,13 @@ filein( getFilenamePath(getSourceFileName()) + "/Subrollouts/Subrollouts.ms" )
  */
 struct Rollout_v
 (
-	/* required */
+	__construct = #( #title ),
+
+	/* construct */
 	title,
-	id,
 	
 	/* properties */
+	id,
 	parent_rollout,
 	
 	/* dependency */
@@ -176,7 +178,9 @@ struct Rollout_v
 	 */
 	on create do
 	(
-		--print "Rollout_v.onOpen()"
+		print "Rollout_v.onOpen()"
+		ConstructPropeties test:this
+
 		this._setId()
 	)
 )

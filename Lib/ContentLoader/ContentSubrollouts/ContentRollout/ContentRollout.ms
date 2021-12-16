@@ -10,7 +10,9 @@ filein( getFilenamePath(getSourceFileName()) + "/../ContentSubrollouts.ms" )
  */
 struct ContentRollout_v
 (
-	/* required properties */
+	__construct = #( #path ),
+
+	/* construct */
 	path,
 	
 	/*  properties */
@@ -27,7 +29,6 @@ struct ContentRollout_v
 		--print ( "ContentRollout_v.addToUi Subrollouts:" + Subrollouts.slot as string  )
 		--format "Subrollouts	= % \n" Subrollouts
 		Rollout_new	= Subrollouts.new title -- get new rollout
-		--print ("ContentRollout_v.addToUi ADD " + title +" TO "+ Subrollouts.id )
 		
 		for Subrollouts_or_Controls in Subrollouts_and_Controls do
 		--format "Subrollouts_or_Controls = % \n" Subrollouts_or_Controls
@@ -45,9 +46,9 @@ struct ContentRollout_v
 
 		/** _get controls and rollouts
 	 */
-	function _loadContentFromDir =
+	function _initLoadContentFromDir =
 	(
-		--print ("ContentRollout_v._loadContentFromDir() " + title)
+		--print ("ContentRollout_v._initLoadContentFromDir() " + title)
 		
 		for path in (PathsLoader.getSubrolloutsAndControlsPaths()) do
 			append Subrollouts_and_Controls	(this._addSubrolloutOrControlBox path)
@@ -105,6 +106,8 @@ struct ContentRollout_v
 	
 	on create do
 	(
+		ConstructPropeties test:this
+
 		this._setName()
 		this._sanitizeName()
 		
@@ -112,6 +115,6 @@ struct ContentRollout_v
 		
 		PathsLoader.fileInMaxscriptFiles()
 		
-		this._loadContentFromDir()
+		this._initLoadContentFromDir()
 	)
 )

@@ -22,11 +22,16 @@ global STARTUP_EVENTS = #() -- run callbacks of controls like checkbox, checkbut
  */
 struct ControlEventBinder_v 
 (
+	
+	__construct = #( #_Rollout ),
+
 	/* construct */ 
+	_Rollout,
+	
+	/* construct option */ 
 	ini_path, -- set in RolloutCreator_v._setIniToCreators()
 	
 	/* properties */
-	_Rollout,
 	_Control,
 
 	/* dependency */
@@ -54,7 +59,7 @@ struct ControlEventBinder_v
 		
 		this._setCustomEvents()
 		this._setDefaultEvents()
-		this._setSaveIniEvents()
+		--this._setSaveIniEvents()
 		
 		this._combineEventTypes()
 		
@@ -88,7 +93,7 @@ struct ControlEventBinder_v
 		print "ControlEventBinder_v._addHandler()"
 		if( Event.code == "" ) then
 			return false
-		format "EVENT = % \n" Event
+		--format "EVENT = % \n" Event
 		_Rollout._RolloutCreator.addHandler _Control.id Event.type codeStr:(Event.code) paramStr:Event.params filter:on
 	),
 
@@ -232,5 +237,8 @@ struct ControlEventBinder_v
 	on create do
 	(
 		print("ControlEventBinder_v.onCreate()")
-		format "_ROLLOUT	= % \n" _Rollout	)
+		--format "_ROLLOUT	= % \n" _Rollout
+		ConstructPropeties test:this
+	)
+		
 )

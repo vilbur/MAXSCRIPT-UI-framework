@@ -2,14 +2,14 @@
  */
 struct ContentControlCreator_v
 (
-	__construct = #(  ),
 	
 	/* required */
+	_Rollout,
 	_Controls,
 	Macro,
-	ControlEventBinder = ControlEventBinder_v(),
+
+	ControlEventBinder = ControlEventBinder_v _Rollout:_Rollout,
 	/** Create Control in Controls
-	  *
 	  * 
 	 */
 	function createControl =
@@ -68,7 +68,7 @@ struct ContentControlCreator_v
 		)
 		
 		if( (event_type = Macro.getParam "event") == undefined ) then
-			event_type = (ControlEventBinder._getEventTypesOfControl (_Control))[ _Control.Events.list.count+1]
+			event_type = (ControlEventBinder.EventTypes.getEventTypesOfControl (_Control.type))[ _Control.Events.list.count+1]
 
 			
 		if( event_type != undefined ) then
@@ -81,7 +81,7 @@ struct ContentControlCreator_v
 	function _setEventCallMacro event_type _Control =
 	(
 		--format "ContentControlCreator_v._setEventCallMacro event_type	= % \n" event_type
-		callback = "(macros.run \""+Macro.category+"\" \""+Macro.macro_name+"\");"
+		callback = "(macros.run \""+Macro.category+"\" \""+Macro.macro_name+"\")"
 		--format "event_type	= % \n" event_type
 		--format "CALLBACK	= % \n" callback
 		--callback = "print \"TEST\";"

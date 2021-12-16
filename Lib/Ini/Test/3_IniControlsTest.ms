@@ -99,3 +99,8 @@ for control_type in (ControlTypes_v()).list where findItem control_types_for_tes
 _RolloutCreator.createRollout _Rollout
 
 CreateDialog (_RolloutCreator.getDefinition _Rollout) width:512
+
+format "_RolloutCreator.IniFile.getPath()	= % \n" (_RolloutCreator.IniFile.getPath())
+
+
+--_RolloutCreator.IniFile.open()

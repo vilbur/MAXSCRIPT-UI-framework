@@ -1,3 +1,5 @@
+filein( getFilenamePath(getSourceFileName()) + "/../ConstructPropeties/ConstructPropeties.ms" )
+
 filein( getFilenamePath(getSourceFileName()) + "/../List/List.ms" )
 
 filein( getFilenamePath(getSourceFileName()) + "/../Ini/Ini.ms" )
@@ -15,9 +17,12 @@ filein( getFilenamePath(getSourceFileName()) + "/ControlsCreator/ControlsCreator
  */
 struct RolloutCreator_v
 (
-	/* construct */ 
+	__construct = #( ),
+
+	/* construct option */ 
 	ini, -- path to ini file
 	
+	/* construct */ 
 	ControlsCreator,
 
 	IniFile	= Ini_v _path:ini,
@@ -94,8 +99,6 @@ struct RolloutCreator_v
 	 */
 	function _setupCreation _Rollout width height =
 	(
-		this._setIniToCreators()
-
 		if( width != unsupplied ) then
 			this.width = width
 
@@ -115,6 +118,7 @@ struct RolloutCreator_v
 
 		for ControlsBox_or_Subrollouts in _Rollout._Controls do
 		(
+			--if( this._isControls(ControlsBox_or_Subrollouts) ) then
 			if( this._isControls(ControlsBox_or_Subrollouts) ) then
 
 				ControlsCreator.addControls(ControlsBox_or_Subrollouts)
@@ -140,16 +144,6 @@ struct RolloutCreator_v
 		rolledup_state --return
 	),
 
-	 /** _set ini to event creators
-	  */
-	 function _setIniToCreators =
-	 (
-		print "RolloutCreator_v._setIniToCreators()"
-
-
-
-		--ControlsCreator.ParamsCreator.ControlValue.ini_path	= ini_path
-	 ),
 
 	 /** _create subrollouts
 	  */
@@ -261,5 +255,6 @@ struct RolloutCreator_v
 	on create do
 	(
 		print("RolloutCreator_v.onCreate()")
+		ConstructPropeties test:this
 	)	
 )

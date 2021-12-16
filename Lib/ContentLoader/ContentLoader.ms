@@ -1,3 +1,5 @@
+filein( getFilenamePath(getSourceFileName()) + "/../ConstructPropeties/ConstructPropeties.ms" )
+
 filein( getFilenamePath(getSourceFileName()) + "/../Dialog/Dialog.ms" )
 
 filein( getFilenamePath(getSourceFileName()) + "/ContentSubrollouts/ContentRollout/ContentRollout.ms" ) 
@@ -31,9 +33,6 @@ struct ContentLoader_v
 	(
 		--print("ContentLoader_v.create()")
 
-		--if( ini != undefined ) then
-			--Dialog.RolloutMain.ini ini
-		
 		for Subrollouts_or_Controls in ContentRollout.Subrollouts_and_Controls do
 			Subrollouts_or_Controls.addToUi Dialog.RolloutMain
 			
@@ -43,16 +42,7 @@ struct ContentLoader_v
 	),
 	
 	private
-	
-	/** Check if required properties are defined when an instance of the struct is created.
-	 *	
-	 * @example __construct = #( #property_name ) 
-	 */
-	function _checkConstctructProperties =
-	(
-		for prop in __construct where getProperty this prop == undefined do
-			messageBox ("ContentLoader\nUndefined construct property !\n\n"+ ((filterString( classof this as string )"(:")[2]) +"."+ prop )
-	),
+
 	
 	/**  
 	 */
@@ -60,7 +50,7 @@ struct ContentLoader_v
 	(
 		--print("ContentLoader_v.onCreate()")
 
-		this._checkConstctructProperties()
+		ConstructPropeties test:this
 		
 		ContentRollout =  ContentRollout_v path:path
 		

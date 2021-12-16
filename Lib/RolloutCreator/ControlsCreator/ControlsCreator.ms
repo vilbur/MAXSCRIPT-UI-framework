@@ -8,9 +8,11 @@ filein( getFilenamePath(getSourceFileName()) + "/BrowsePath/BrowsePath.ms" )
  */
 struct ControlCreator_v
 (
+	__construct = #( #_Rollout, #ini_path ),
+
 	/* construct */ 
-	ini_path, -- set in RolloutCreator_v._setIniToCreators()
 	_Rollout,
+	ini_path, -- set in RolloutCreator_v._setIniToCreators()
 
 	/* dependency */
 	_Controls,
@@ -36,22 +38,22 @@ struct ControlCreator_v
 		
 		/* set DEFAULT PARAMETERS */ 
 		ParamsCreator.setControlDefaults (_Controls.Defaults)
-
+		
 		/* merge PARAMTERS */ 
 		this._mergeControlsParameters()
-
+		
 		/* prepare CONTROL TYPES */ 
 		this._convertCustomControls()
-
+		
 		/* modify ACROSS PARAMETER */ 
 		AcrossModifier.addFakeControls(this._Controls)
-
+		
 		/* add LOCAL VARIABLES */ 
 		this._addLocalVariablesToCreator()
-
+		
 		/* add TEXT */ 
 		this._addTextToCreator()
-
+		
 		/* add CONTROLS */ 
 		this._addControlsToCreator()
 		
@@ -171,7 +173,7 @@ struct ControlCreator_v
 	),
 	
 	
-	/*e controls parameters
+	/* merge controls parameters
 	 */
 	function _mergeControlsParameters =
 	(
@@ -237,8 +239,8 @@ struct ControlCreator_v
 	on create do
 	(
 		print "ControlCreator_v.onCreate()"
-		format "_Rollout	= % \n" _Rollout
-		
+		--ConstructPropeties test:this
+
 		EventBinder.ini_path	= ini_path
 	)	
 )

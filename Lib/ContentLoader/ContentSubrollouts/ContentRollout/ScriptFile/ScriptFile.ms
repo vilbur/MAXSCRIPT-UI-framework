@@ -36,7 +36,7 @@ struct ScriptFile_Content_v
 		name	= if( name == undefined )then "" else "";
 		
 		if( this.isMacrosriptFile() and MacroScripts.count > 0 ) then
-			this._createControls(_Rollout.Controls group:(this._getGroupName()))
+			this._createControls (_Rollout)
 
 		
 		_Rollout --return
@@ -44,13 +44,13 @@ struct ScriptFile_Content_v
 	
 	/** _create controls
 	 */
-	function _createControls _Controls =
+	function _createControls _Rollout =
 	(
+		_Controls = _Rollout.Controls group:(this._getGroupName())
 		--print("ScriptFile_Content_v._createControls()" )
-		--format "x _Controls	= % \n" _Controls.GroupBoxes
 		--format "MacroScripts = % \n" MacroScripts
 		for m = 1 to MacroScripts.count do
-			_Controls = (ContentControlCreator_v Macro:MacroScripts[m] _Controls:_Controls).getControls()
+			_Controls = (ContentControlCreator_v Macro:MacroScripts[m] _Rollout:_Rollout _Controls:_Controls).getControls()
 	),
 
 	/** Is maxscript file
