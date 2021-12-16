@@ -4,8 +4,8 @@ function CallbackNoParam =
 (
 	print "CallbackNoParam"
 
-	--if( EventFired != undefined ) then 
-		--(format "EventFired.control 	= % \nEventFired.type 	= % \n\n" EventFired.control EventFired.type)
+	if( EventFired != undefined ) then 
+		(format "EventFired.control 	= % \nEventFired.type 	= % \n\n" EventFired.control EventFired.type)
 )
 
 /** on value changed

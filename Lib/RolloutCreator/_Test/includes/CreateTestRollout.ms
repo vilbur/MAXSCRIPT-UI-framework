@@ -2,6 +2,8 @@ try(cui.UnRegisterDialogBar ROLLOUT_test)catch()
 try( destroyDialog          ROLLOUT_test )catch()
 
 
+if( RolloutCreator_v == undefined ) then 
+	throw "RolloutCreator_v struct is MISSING in test file.\n\nPlease import it BEFORE include of CreateTestRollout.ms"
 
 if( group_name == undefined ) then
 	group_name = ""
@@ -12,4 +14,4 @@ _RolloutCreator 	= RolloutCreator_v()
 
 _Rollout = _RolloutCreator.new "Test"
 
-_Controls = _Rollout.Controls group:group_name
+_Controls = _Rollout.Controls group:group_name 

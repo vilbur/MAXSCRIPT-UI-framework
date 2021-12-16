@@ -178,7 +178,7 @@ struct Rollout_v
 	 */
 	on create do
 	(
-		print "Rollout_v.onOpen()"
+		--print "Rollout_v.onOpen()"
 		ConstructPropeties test:this
 
 		this._setId()

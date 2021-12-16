@@ -2,7 +2,6 @@ clearListener()
 
 filein( getFilenamePath(getSourceFileName()) + "/../../Dialog/../RolloutCreator/RolloutCreator.ms" )
 
-
 /* ONLY THIS TYPES OF CONTROLS WILL BE TESTED
   * 
   * CURRENTLY SUPPORTED CONTROLS are in control_types array in  "../ControlEvents.ms"
@@ -11,7 +10,7 @@ filein( getFilenamePath(getSourceFileName()) + "/../../Dialog/../RolloutCreator/
   *
 */ 
 control_types_for_test = #(
-	
+
 	--#Label,
 	--#Button,
 	--#Checkbox,
@@ -38,7 +37,7 @@ control_types_for_test = #(
 	--------#Radiobuttons,-- DOES NOT WORK YET
 	--#Timer
 	--
-	
+
 	/* DEV */ 
 	#Checkbox
 	--#Button
@@ -47,12 +46,9 @@ control_types_for_test = #(
 
 )
 
+/*
 
-/* 
-
-
-		ADD CUSTOM TYPES 
-
+		ADD CUSTOM TYPES
 
 */ 
 -- append ControlEvents.control_types	#browsePath
@@ -64,7 +60,6 @@ controls_with_items = #(
 	#Dropdownlist,
 	#Combobox
 )
-  
 
 /** DEFINE UI 
  *	
@@ -76,22 +71,17 @@ _RolloutCreator 	= RolloutCreator_v ini:(getSourceFileName())
 _Rollout  = _RolloutCreator.new "Test"
 _Controls = _Rollout.Controls()
 
-
 /** ADD CONTROLS WITH EVENTS
  */
 for control_type in (ControlTypes_v()).list where findItem control_types_for_test control_type > 0 do
 (
 	params	= if( findItem controls_with_items control_type > 0 ) then #( #items, #("Item 1","Item 2","Item 3") ) else #()
-	
+
 	if( control_type == #spinner ) then
 		params = #(#range,[1,2,3])
-	
+
 	_Control = _Controls.control control_type ( "Test " + control_type as string ) params:params
 )
-
-
-
-
 
 /** CREATE UI 
  *	
@@ -101,6 +91,5 @@ _RolloutCreator.createRollout _Rollout
 CreateDialog (_RolloutCreator.getDefinition _Rollout) width:512
 
 format "_RolloutCreator.IniFile.getPath()	= % \n" (_RolloutCreator.IniFile.getPath())
-
 
 --_RolloutCreator.IniFile.open()

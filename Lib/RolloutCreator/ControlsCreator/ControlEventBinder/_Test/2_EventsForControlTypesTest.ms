@@ -1,32 +1,33 @@
 clearListener()
 
-
 filein( getFilenamePath(getSourceFileName()) + "/../../../RolloutCreator.ms" )
 
 filein( getFilenamePath(getSourceFileName()) + "/../ControlEventBinder.ms" )
 
 filein( getFilenamePath(getSourceFileName()) + "/inlcude_test_callbacks.ms" )
 
-ControlEventBinder = ControlEventBinder_v()
+/*------------------------------------------------------------------------------
 
+			TEST ALL EVENT TYPES ON ALL CONTROL TYPES
+
+--------------------------------------------------------------------------------*/
 
 /* ONLY THIS TYPES OF CONTROLS WILL BE TESTED
   * 
-  * CURRENTLY SUPPORTED CONTROLS are in control_types array in  "../../ControlEventBinderCreator/ControlEventBinderCreator.ms"
+  * CURRENTLY SUPPORTED CONTROLS are in control_types array in  "../../../../Dialog/Rollout/Controls/ControlTypes/ControlTypes.ms"
   * 
   *  [HELP Control types](https://help.autodesk.com/view/MAXDEV/2021/ENU/?guid=GUID-E421933F-958E-42FD-80A1-D66F2A2C0A06)
   *
 */ 
 these_controls_will_be_tested = #(
-	--#Label,
-	--#Button,
-	--#Checkbox,
-	--#Checkbutton,
-	--#Spinner,
-	--#Edittext,
-	--#Listbox,
-	--#multilistbox,
-	--#Dropdownlist,
+
+	#Checkbox,
+	#Checkbutton,
+	#Spinner,
+	#Edittext,
+	#Listbox,
+	#multilistbox,
+	#Dropdownlist,
 	----#Combobox,
 	----#GroupBox,
 	----#Angle,
@@ -43,7 +44,7 @@ these_controls_will_be_tested = #(
 	----#popupMenu,-- DOES NOT WORK YET
 	----#Radiobuttons,-- DOES NOT WORK YET
 	--#Timer
-	
+
 	/* TEMP FOR DEV */ 
 	#Button
 	--#Checkbox
@@ -58,8 +59,6 @@ controls_with_items = #(
 	#Combobox
 )
 
-
-
 /** Create variables:
   *		_RolloutCreator
   *		_Rollout
@@ -67,23 +66,27 @@ controls_with_items = #(
   */
 include "Library/MAXSCRIPT-UI-framework/Lib/RolloutCreator/_Test/includes/CreateTestRollout.ms"
 
-
-
+--ControlEventBinder = ControlEventBinder_v _Rollout:_Rollout
+EventTypes = EventTypes_v()
 
 /** ADD CONTROLS WITH EVENTS
  */
-for control_type in ControlEventBinder.control_types where findItem these_controls_will_be_tested control_type > 0 do
+for control_type in (ControlTypes_v()).list where findItem these_controls_will_be_tested control_type > 0 do
 (
-	event_types  = ControlEventBinder.getEventTypesOfControlTest(control_type)
-	event_params = ControlEventBinder._getParamsOfEvents(control_type)
-	
+	event_types  = EventTypes.getEventTypesOfControl(control_type)
+	event_params = EventTypes.getParamsOfEvents(control_type)
+
+	--format "\n"
+	--format "control_type	= % \n" control_type
+	--format "event_types	= % \n" event_types
+	--format "event_params	= % \n" event_params
+
 	if( event_types.count > 0 ) then
 	(
 		params	= if( findItem controls_with_items control_type > 0 ) then #( #items, #("Item 1","Item 2","Item 3") ) else #()
-		--format "control_type	= % \n" control_type
 		--format "params	= % \n" params
 		_Control = _Controls.control control_type ( "Test " + control_type as string ) params:params
-	
+
 		/** ADD EVENTS
 		 */
 		for i = 1 to event_types.count do
@@ -97,12 +100,10 @@ for control_type in ControlEventBinder.control_types where findItem these_contro
 					2:"CallbackWith2Params"
 				)
 			)	
-		) 
-			
-		 
+		)
+
 	)
 )
-
 
 /** Create dialog ROLLOUT_test from _Rollout
   *

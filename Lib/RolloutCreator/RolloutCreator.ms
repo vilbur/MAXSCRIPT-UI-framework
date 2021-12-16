@@ -62,7 +62,7 @@ struct RolloutCreator_v
 
 		/* EDIT end */ 
 		_Rollout._RolloutCreator.end()
-		format "_Rollout._RolloutCreator	= % \n" _Rollout._RolloutCreator -- PRINT ROLLOUT DEINITION
+		------format "_Rollout._RolloutCreator	= % \n" _Rollout._RolloutCreator -- DEbuG; PRINT ROLLOUT DEINITION
 	),
 
 	/** New
@@ -254,7 +254,7 @@ struct RolloutCreator_v
 	 */
 	on create do
 	(
-		print("RolloutCreator_v.onCreate()")
+		--print("RolloutCreator_v.onCreate()")
 		ConstructPropeties test:this
 	)	
 )

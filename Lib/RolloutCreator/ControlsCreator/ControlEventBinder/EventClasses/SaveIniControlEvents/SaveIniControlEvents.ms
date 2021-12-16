@@ -19,10 +19,9 @@ struct SaveIniControlEvents_v
 	 */
 	function getEvents _Control event_types =
 	(
-		print "SaveIniEvents_v._addDefaultEvents()"
+		--print "SaveIniEvents_v._addDefaultEvents()"
 		this._Control = _Control
-		format "\n*************************"
-		format "event_types	= % \n" event_types
+
 		for event_type in event_types where this._isSaveIniEventType(event_type) do
 			append Events (this._getEvent(event_type))
 
@@ -48,11 +47,8 @@ struct SaveIniControlEvents_v
 	 */
 	function _getEvent event_type =
 	(
-		print "SaveIniEvents_v._isSaveIniEventType()"
-		format "ini_path	= % \n" ini_path
-		format "rollout_id	= % \n" rollout_id
-		format "_Control.id	= % \n" _Control.id
-		--Event_v type:event_type	code:("if( val != undefined ) then ( setINISetting \""+ini_path+"\" \""+rollout_id+"\" \""+_Control.id+"\" (val as string) )")
+		--print "SaveIniEvents_v._isSaveIniEventType()"
+		Event_v type:event_type	code:("if( val != undefined ) then ( setINISetting \""+ini_path+"\" \""+rollout_id+"\" \""+_Control.id+"\" (val as string) )")
 	),
 
 	/**  

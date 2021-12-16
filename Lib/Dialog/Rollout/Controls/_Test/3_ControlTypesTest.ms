@@ -10,7 +10,7 @@ filein( getFilenamePath(getSourceFileName()) + "/../../../../RolloutCreator/Roll
 include "Library/MAXSCRIPT-UI-framework/Lib/RolloutCreator/_Test/includes/CreateTestRollout.ms"
 
 
-control_types	= (ControlTypes_v()).control_types,
+control_types	= (ControlTypes_v()).list
 
 
 controls_with_items = #(

@@ -53,6 +53,9 @@ struct EventsCombiner_v
 	 */
 	function _mergeEvents Event &Event_combined =;
 	(
+		--print "EventsCombiner_v._mergeEvents()"
+		--format "Event	= % \n"Event
+		
 		/* CODE */ 
 		if Event.code != "" then 
 			Event_combined.code	+= Event.code + ";"

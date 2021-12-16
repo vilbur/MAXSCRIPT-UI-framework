@@ -25,7 +25,7 @@ struct ControlCreator_v
 	 */
 	function addControls _Controls =
 	(
-		format "\n\n--------------	Controls:%	--------------\n" _Controls.group;
+		format "\n\n--------------	Controls group:%	--------------\n" _Controls.group;
 		--print ("ControlCreator_v.addControls()"  )
 
 		--this._Rollout  = _Rollout
@@ -70,7 +70,7 @@ struct ControlCreator_v
 	 */
 	function createControlsInGroupboxLast &_Rollout_ =
 	(
-		format "\n*************\n\n"; print ("ControlCreator_v._createControlsInGroupboxLast() "+_Rollout_.id as string) 
+		--format "\n"; print ("ControlCreator_v._createControlsInGroupboxLast() "+_Rollout_.id as string) 
 		--format "_Rollout_.id	= % \n" _Rollout_.id
 		--format "_Rollout_._Controls	= % \n" _Rollout_._Controls
 
@@ -238,7 +238,7 @@ struct ControlCreator_v
 	 */
 	on create do
 	(
-		print "ControlCreator_v.onCreate()"
+		--print "ControlCreator_v.onCreate()"
 		--ConstructPropeties test:this
 
 		EventBinder.ini_path	= ini_path
