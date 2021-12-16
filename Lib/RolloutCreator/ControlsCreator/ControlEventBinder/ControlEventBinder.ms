@@ -59,7 +59,7 @@ struct ControlEventBinder_v
 		
 		this._setCustomEvents()
 		this._setDefaultEvents()
-		--this._setSaveIniEvents()
+		this._setSaveIniEvents()
 		
 		this._combineEventTypes()
 		
@@ -116,7 +116,9 @@ struct ControlEventBinder_v
 	 */
 	function _setSaveIniEvents =
 	(
-		EventsCombiner.setEventsClass #SAVEINI ( SaveIniControlEvents.getEvents(_Control)(event_types) )
+		--format "***** TEST = % \n"( SaveIniControlEvents.getEvents(_Control)(event_types))
+		if( ini_path != undefined ) then  
+			EventsCombiner.setEventsClass #SAVEINI ( SaveIniControlEvents.getEvents(_Control)(event_types) )
 	),
 
 	/** Get parameters of callback defined in event_types

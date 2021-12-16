@@ -6,15 +6,13 @@ struct SaveIniControlEvents_v
 	ini_path,
 	rollout_id,
 
-	
 	/* properties */ 
 	_Control,
-	
+
 	Events = #(), -- rename this to events
-	
+
 	ini_event_types = #( #changed, #selected ), -- this events fires default save to ini callback
 
-	
 	/** Add save ini event for Control
 	  *
 	  * @return	list	of default events
@@ -23,20 +21,16 @@ struct SaveIniControlEvents_v
 	(
 		print "SaveIniEvents_v._addDefaultEvents()"
 		this._Control = _Control
-
+		format "\n*************************"
+		format "event_types	= % \n" event_types
 		for event_type in event_types where this._isSaveIniEventType(event_type) do
 			append Events (this._getEvent(event_type))
-		
-		for Event in Events do  
-			format "EVENT	= % \n" Event
-			
+
 		Events --return
 	),
 
-	
 	private
-	
-	
+
 	/** _is dynamic event type
 	 */
 	function _isSaveIniEventType event_type =
@@ -44,8 +38,7 @@ struct SaveIniControlEvents_v
 		--print "SaveIniEvents_v._isSaveIniEventType()"
 		findItem ini_event_types event_type > 0
 	),
-	
-	
+
 	/** Add save to ini event
 	  *
 	  * KNOWING ISSUES:
@@ -55,7 +48,11 @@ struct SaveIniControlEvents_v
 	 */
 	function _getEvent event_type =
 	(
-		Event_v type:event_type	code:("if( val != undefined ) then ( setINISetting \""+ini_path+"\" \""+rollout_id+"\" \""+_Control.id+"\" (val as string) )")
+		print "SaveIniEvents_v._isSaveIniEventType()"
+		format "ini_path	= % \n" ini_path
+		format "rollout_id	= % \n" rollout_id
+		format "_Control.id	= % \n" _Control.id
+		--Event_v type:event_type	code:("if( val != undefined ) then ( setINISetting \""+ini_path+"\" \""+rollout_id+"\" \""+_Control.id+"\" (val as string) )")
 	),
 
 	/**  
