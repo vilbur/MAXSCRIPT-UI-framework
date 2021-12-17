@@ -30,7 +30,7 @@ _Button1    = _Controls.control #button "Rollout button"
 
 
 Subrollouts = _Rollout.Subrollouts()
-Subrollout1 = Subrollouts.roll "Subrollout"
+Subrollout1 = Subrollouts.new "Subrollout"
 _Controls   = Subrollout1.Controls()
 _Button2    = _Controls.control #button  "Subrollout button"
 

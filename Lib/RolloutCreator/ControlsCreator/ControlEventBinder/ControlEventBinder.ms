@@ -46,34 +46,41 @@ struct ControlEventBinder_v
 
 	/** Combine events and add handlers
 	 */
-	function combineEventsAndAddHandlers _Control =
+	function combineEvents &_Control =
 	(
-		format "\n"; print ("ControlEventBinder_v.combineEventsAndAddHandlers() "+ _Control.id)
+		format "\n"; print ("ControlEventBinder_v.combineEvents() "+ _Control.id)
 
 		this._Control = _Control
 
 		event_types	= EventTypes.getEventTypesOfControl	(_Control.type)
 		events_params	= EventTypes.getParamsOfEvents	(_Control.type)
 		
-		
 		this._validateEvents()
 		
 		this._setCallbackParamters()
 		
 		this._setDefaultEvents()
-		this._setSaveIniEvents()
-		this._setCustomEvents()
+		--this._setCustomEvents()
+		--this._setSaveIniEvents()
 
 		this._combineEventTypes()
+		
+		_Control --return 
+	),
+	
+	/** Combine events and add handlers
+	 */
+	function addHandlers &_Control =
+	(
+		format "\n"; print ("ControlEventBinder_v.addHandlers() "+ _Control.id)
 
-
-		/* EVENT FIRED */ 
-		this._addEventFired()
+		this._Control = _Control
 
 		/* PARAMETER */ 
 		this._addHandlers()
+		
+		_Control --return
 	),
-
 	/** _combine all event types
 	 */
 	function _combineEventTypes =
@@ -81,6 +88,7 @@ struct ControlEventBinder_v
 		--format "\n"; print "ControlEventBinder_v._combineEventTypes()"
 		this._Control.Events.list = for event_type in event_types where (Event = EventsCombiner.combine (event_type)) != undefined collect Event
 	),
+
 
 	/** _bind events
 	 */
@@ -95,11 +103,11 @@ struct ControlEventBinder_v
 	 */
 	function _addHandler Event =
 	(
-		--print "ControlEventBinder_v._addHandler()"
+		print "ControlEventBinder_v._addHandler()"
 		if( Event.code == "" ) then
 			return false
 		format "EVENT = % \n" Event
-		_Rollout._RolloutCreator.addHandler _Control.id Event.type codeStr:(Event.code) paramStr:Event.params filter:on
+		_Rollout._RolloutCreator.addHandler _Control.id Event.type codeStr:( "("+Event.code+")" ) paramStr:Event.params filter:on
 	),
 
 	/** _combine events
@@ -178,7 +186,7 @@ struct ControlEventBinder_v
 	 */
 	function _getEvent event_type =
 	(
-		--print "ControlEventBinder_v._getEvent()"
+		print ("ControlEventBinder_v._getEvent() " +event_type)
 		if( (Event_existing = this._getControlEvent(event_type)) != undefined ) then Event_existing else (Event_v type:event_type)
 	),
 

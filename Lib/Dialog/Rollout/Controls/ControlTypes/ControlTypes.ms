@@ -29,7 +29,10 @@ struct ControlTypes_v
 		--#Curve,	-- DOES NOT WORK YET
 		--#popupMenu,	-- DOES NOT WORK YET
 		--#Radiobuttons,	-- DOES NOT WORK YET
-		#Timer
+		#Timer,
+		
+		/* CUSTOM CONTROL TYPES */ 
+		#browsePath
 	),
 
 	/** Get all types

@@ -38,7 +38,8 @@ struct RolloutCreator_v
 	 */
 	function createRollout _Rollout width: height: =
 	(
-		format "\n\n\n\n\n\n=====================================	%	=====================================\n"  _Rollout.id; print ("RolloutCreator_v.createRollout()"  )
+		format "\n\n\n\n\n\n=====================================	RolloutCreator_v.%	=====================================\n"  _Rollout.id;
+		--print ("RolloutCreator_v.createRollout()"  )
 		ControlsCreator = ControlCreator_v _Rollout:_Rollout ini_path:(IniFile.getPath())
 
 		this._setupCreation (_Rollout) (width) (height)
@@ -62,7 +63,7 @@ struct RolloutCreator_v
 
 		/* EDIT end */ 
 		_Rollout._RolloutCreator.end()
-		------format "_Rollout._RolloutCreator	= % \n" _Rollout._RolloutCreator -- DEbuG; PRINT ROLLOUT DEINITION
+		--format "_Rollout._RolloutCreator	= % \n" _Rollout._RolloutCreator -- DEbuG; PRINT ROLLOUT DEINITION
 	),
 
 	/** New
@@ -118,7 +119,7 @@ struct RolloutCreator_v
 
 		for ControlsBox_or_Subrollouts in _Rollout._Controls do
 		(
-			--if( this._isControls(ControlsBox_or_Subrollouts) ) then
+			--format "CONTROLSBOX_OR_SUBROLLOUTS	= % \n" ControlsBox_or_Subrollouts
 			if( this._isControls(ControlsBox_or_Subrollouts) ) then
 
 				ControlsCreator.addControls(ControlsBox_or_Subrollouts)

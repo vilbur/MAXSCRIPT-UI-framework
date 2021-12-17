@@ -89,6 +89,6 @@ struct Controls_v
 	 */
 	on create do
 	(
-		--print "Controls_v.create()"
+		print "Controls_v.create()"
 	)
 )

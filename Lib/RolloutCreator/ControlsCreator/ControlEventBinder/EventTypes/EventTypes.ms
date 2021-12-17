@@ -55,6 +55,7 @@ struct EventTypes_v
 			#checkbutton:	#( #(#changed,  "val"),	#rightclick )
 			#spinner:	#( #(#changed,  "val inSpin"),	#(#entered, "inSpin inCancel"),	#(#buttonup, "inCancel"),	#buttondown )
 			#edittext:	#( #(#changed,  "val"),	#(#entered, "val") )
+			#browsePath:	#( #(#changed,  "val"),	#(#entered, "val") )
 			#listbox:	#( #(#selected, "val"),	#(#doubleClicked, "val"),	#(#rightClick, "val"))
 			#multilistbox:	#( #(#selected, "val"),	#(#doubleClicked, "val"),	#rightClick,	#selectionEnd )
 			#dropdownlist:	#( #(#selected, "val"),	#rightClick )
