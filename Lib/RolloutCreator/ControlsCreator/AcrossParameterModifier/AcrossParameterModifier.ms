@@ -64,7 +64,7 @@ struct AcrossParameterModifier_v
 			/* ADD CONTROL TO NEW LIST */ 
 			append _Controls_list_copy _Control
 		)
-
+		--format "_Controls_list_copy	= % \n" _Controls_list_copy
 		/* ADD FAKE CONTROLS TO END OF GROUP TO FILL ROW */
 		if( end_of_group = _across_left != undefined ) then
 			this._addFakeControls  (_Controls) (_Controls_list_copy) (_across_left) --fake_control_caption:("group end" )
@@ -84,7 +84,8 @@ struct AcrossParameterModifier_v
 		--print "AcrossParameterModifier_v.fakeControlsOnEndofGroup()"
 		if( _across_left != undefined ) then
 			for i = 1 to _across_left do
-				_RolloutCreator.addControl "label" ("label"+ (random 1 99999 ) as string ) fake_control_caption
+				--_RolloutCreator.addControl "label" ("label"+ (random 1 999999999 ) as string ) fake_control_caption
+				_RolloutCreator.addControl "label" ("label"+ (timeStamp() ) as string ) fake_control_caption
 
 		_across_left = 0
 	),
@@ -104,7 +105,7 @@ struct AcrossParameterModifier_v
 	function _createFakeControl _Controls fake_control_caption =
 	(
 		--print "AcrossParameterModifier_v._createFakeControl()"
-		_Controls.control #label fake_control_caption id:("label"+ (random 1 99999 ) as string ) --add_to_controls:false --return	
+		_Controls.control #label fake_control_caption id:("label"+ (random 1 999999999 ) as string ) --add_to_controls:false --return	
 	),
 
 	/**  
