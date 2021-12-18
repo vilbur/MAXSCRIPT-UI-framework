@@ -6,10 +6,10 @@ filein ( getFilenamePath(getSourceFileName()) + "/../List.ms" );
 List           = List_v()
 
 /* Add value */ 
-List.setVal #first  "First Item"
-List.setVal #second     "Second Item"
-List.setVal #third      "Third Item Remove"
-List.setVal #fourth     "Fourth"
+-- List.setVal #first  "First Item"
+-- List.setVal #second     "Second Item"
+-- List.setVal #third      "Third Item Remove"
+-- List.setVal #fourth     "Fourth"
 
 
 /* copy a list */  
@@ -23,16 +23,16 @@ List_copy.setVal #delete     "Delete"
 
 
 /* MERGE */ 
-List.merge (List_copy)	                     -- Keep unique, values are not overrided
+-- List.merge (List_copy)	                     -- Keep unique, values are not overrided
 --List.merge (List_copy) unique:false        -- Add all values, simply merge Lists
 --List.merge (List_copy) unique:unsupplied   -- Keep unique, BUT OVERRIDE first List by List_to_merge
-format "List merged	= % \n" List
+-- format "List merged	= % \n" List
 
 
 /* MAKE LIST UNIQUE */ 
 
-List.unique()
-format "List unique = % \n" List
+-- List.unique()
+-- format "List unique = % \n" List
 
 
 

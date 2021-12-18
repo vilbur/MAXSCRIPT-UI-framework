@@ -34,8 +34,9 @@ struct BrowsePath_v
 		/* Get existing event or create new */
 		for event_type in #( #changed, #entered ) do 
 		(
-			Event = if( (Event = _Control.Events.get event_type) != undefined ) then Event else (Event_v type:event_type )
-			
+			--Event = if( (Event = _Control.Events.get event_type) != undefined ) then Event else (Event_v type:event_type )
+			Event =  Event_v type:event_type
+
 			/**  
 			  *	TODO: function valueIsEmpty should be placed in rollout, but there is no problem with it
 			  */
@@ -51,9 +52,7 @@ struct BrowsePath_v
 						"+_Control.id+".text    = browsed_path as string 
 						"+_Control.id+".tooltip = browsed_path as string 
 					
-						--val = EventFired.val    = substituteString browsed_path @\\\\@ @\\\\\\\\@
-					
-						--"+ Event.code +"        -- Fire custom event with browsed variable
+						val = EventFired.val    = substituteString browsed_path @\\\\@ @\\\\\\\\@
 					)
 					else
 						"+prev_value_variable_name+" = val 

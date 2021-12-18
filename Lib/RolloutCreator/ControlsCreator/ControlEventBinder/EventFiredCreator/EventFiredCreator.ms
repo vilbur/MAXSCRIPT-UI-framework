@@ -6,19 +6,21 @@
 struct EventFiredCreator_v
 (
 	/* required */
-	control_id,
+	_Control,
 	
 	/* properties */
 	params,
 	
 	/** Get event
 	 */
-	function getEventFired event_type params =
+	function getEventFired Event =
 	(
-		this.params = filterString params " "
+		--print "EventFiredCreator_v.getEventFired()"
+		this.params = filterString Event.params " "
 		
-	    EventFired_string = (this._defineStruct()) + "\n\tglobal EventFired = EventFired_v type:#"+event_type+" Control:#"+control_id as string +" "+(this._getParams()) 
-			
+	    EventFired_string = (this._defineStruct()) + "\n\t global EventFired = EventFired_v type:#"+Event.type+" Control:#"+_Control.id as string +" "+(this._getParams()) 
+		--format "EventFired_string	= % \n" EventFired_string
+		--"("+ EventFired_string +")" --return
 		EventFired_string --return
 	),
 	
@@ -32,7 +34,7 @@ struct EventFiredCreator_v
 		
 		struct_def = "struct EventFired_v(type,Control"+(this._getProperties())+")"
 		
-		"execute (\""+struct_def+"\")" --return
+		"execute \""+struct_def+"\"" --return
 	),
 	
 	/** _add properties
@@ -41,7 +43,7 @@ struct EventFiredCreator_v
 	(
 		properties = ""
 		
-		for param in params do 
+		for param in this.params do 
 			properties += "," + param
 			
 		properties --return
@@ -51,11 +53,12 @@ struct EventFiredCreator_v
 	 */
 	function _getParams =
 	(
+		print "EventFiredCreator_v._getParams()"
 		params_join = ""
 		
-		for param in params do 
+		for param in this.params do 
 			params_join += param +":" + param +" "
-			
+		format "params_join = % \n" params_join
 		params_join --return
 	),
 
@@ -64,4 +67,5 @@ struct EventFiredCreator_v
 	)
 )
 
-global EventFired = undefined
+global EventFired_v = undefined -- here is casted generated struct
+global EventFired   = undefined -- here is stored instance of EventFired_v

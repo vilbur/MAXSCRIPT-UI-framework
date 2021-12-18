@@ -17,12 +17,12 @@
 	  * @param	mixin	key	key of value
 	  * @param	mixin	value
 	  * @param	boolean|void	unique	Explained above in UNIQUE rules
-	  * @param	boolean	rewrite alias switch for unique parameter, user friendly then unique
+	  * @param	boolean	replace alias switch for unique parameter, user friendly then unique
 	  *
 	 */
-	function setVal key val unique: rewrite: =
+	function setVal key val unique: replace: =
 	(
-		--if( classof rewrite == BooleanClass ) then 
+		--if( classof replace == BooleanClass ) then 
 			--unique = if( rewite ) then unsupplied else true
 		
 		i	= findItem keys key
