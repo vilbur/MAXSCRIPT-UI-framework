@@ -8,6 +8,7 @@ struct DefaultControlEvents_v
 	
 	/** Add default event for Control
 	  *
+	  * @return	array of Events	
 	 */
 	function getEvents _Control =
 	(
@@ -15,8 +16,10 @@ struct DefaultControlEvents_v
 		
 
 		--if( _Control.type == #browsePath ) then
-			--(BrowsePath_v()).getEvents(_Control)
-			--append Events ( Event_v type:#changed	code:("print \"DEFAULT EVENT\"")  params:"val"  )
+			--Events = (BrowsePath_v()).getEvents(_Control)
+		
+		--append Events ( Event_v type:#changed	code:("print \"DEFAULT EVENT\"")  params:"val"  )
+		append Events ( Event_v type:#changed	code:("print \"DEFAULT EVENT\"")  params:"val"  )
 			
 		Events --return
 	),

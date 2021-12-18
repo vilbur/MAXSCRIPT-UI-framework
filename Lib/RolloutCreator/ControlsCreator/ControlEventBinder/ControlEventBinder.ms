@@ -52,12 +52,11 @@ struct ControlEventBinder_v
 
 		this._Control = _Control
 
-		event_types	= EventTypes.getEventTypesOfControl	(_Control.type)
-		events_params	= EventTypes.getParamsOfEvents	(_Control.type)
+		event_types	= EventTypes.getEventTypesOfControl	(this._Control.type)
+		events_params	= EventTypes.getParamsOfEvents	(this._Control.type)
 		
 		this._validateEvents()
 		
-		this._setCallbackParamters()
 		
 		this._setDefaultEvents()
 		--this._setCustomEvents()
@@ -65,15 +64,9 @@ struct ControlEventBinder_v
 
 		this._combineEventTypes()
 		
-		_Control --return 
-	),
-	
-	/** _combine all event types
-	 */
-	function _combineEventTypes =
-	(
-		--format "\n"; print "ControlEventBinder_v._combineEventTypes()"
-		this._Control.Events.list = for event_type in event_types where (Event = EventsCombiner.combine (event_type)) != undefined collect Event
+		this._setEventsParamters()
+
+		this._Control --return 
 	),
 
 	
@@ -84,51 +77,74 @@ struct ControlEventBinder_v
 	(
 		format "\n"; print ("ControlEventBinder_v.addHandlers() "+ _Control.id)
 
-		this._Control = _Control
-
 		/* PARAMETER */ 
 		for Event in _Control.Events.list do 
-			this._addHandler(Event)
+			this._addHandler(_Control)(Event)
 			
-		
 		_Control --return
 	),
-
+	
+	private 
+	
 	/** Bind events
 	 */
-	function _addHandler Event =
+	function _addHandler _Control Event =
 	(
 		print "ControlEventBinder_v._addHandler()"
 		if( Event.code == "" ) then
 			return false
 		format "EVENT = % \n" Event
-		_Rollout._RolloutCreator.addHandler _Control.id Event.type codeStr:( "("+Event.code+")" ) paramStr:Event.params filter:on
+		--_Rollout._RolloutCreator.addHandler _Control.id Event.type codeStr:( "("+Event.code+")" ) paramStr:Event.params filter:on
+	),
+	
+	/** _combine all event types
+	 */
+	function _combineEventTypes =
+	(
+		--format "\n"; print "ControlEventBinder_v._combineEventTypes()"
+		this._Control.Events.list = for event_type in event_types where (Event = EventsCombiner.combine (event_type)) != undefined collect Event
 	),
 
 	/** _combine events
 	 */
 	function _setDefaultEvents =
 	(
-		EventsCombiner.setEventsClass #DEFAULTS ( DefaultControlEvents.getEvents(_Control) ) 
+		EventsCombiner.setEventsClass #DEFAULTS ( DefaultControlEvents.getEvents(this._Control) ) 
 	),
 
 	/** _combine events
 	 */
 	function _setSaveIniEvents =
 	(
-		--format "***** TEST = % \n"( SaveIniControlEvents.getEvents(_Control)(event_types))
+		--format "***** TEST = % \n"( SaveIniControlEvents.getEvents(this._Control)(event_types))
 		if( ini_path != undefined ) then  
-			EventsCombiner.setEventsClass #SAVEINI ( SaveIniControlEvents.getEvents(_Control)(event_types) )
+			EventsCombiner.setEventsClass #SAVEINI ( SaveIniControlEvents.getEvents(this._Control)(event_types) )
 	),
 
 	/** _combine events
 	 */
 	function _setCustomEvents =
 	(
-		--print "ControlEventBinder_v._setCustomEvents()"
-		EventsCombiner.setEventsClass #CUSTOM _Control.Events.list
+		print "ControlEventBinder_v._setCustomEvents()"
+		
+		EventsCombiner.setEventsClass #CUSTOM this._Control.Events.list
 	),
-
+	
+	/** Get parameters of callback defined in event_types
+	  
+	  
+		TODO: REFRACT THIS METHOD
+	  
+	 */
+	function _setEventsParamters =
+	(
+		print "ControlEvents._setEventsParamters()"
+		
+		--for Event in this._Control.Events.list where (params = events_params[findItem event_types Event.type]) != undefined do
+		for Event in this._Control.Events.list where (params = this._getParamsForEventType(Event.type) ) != undefined do
+			Event.params = params
+	),
+	
 	/** Get parameters of callback defined in event_types
 	  
 	  
@@ -137,34 +153,34 @@ struct ControlEventBinder_v
 	 */
 	function _setCallbackParamters =
 	(
-		--print "ControlEvents._setCallbackParamters()"
-		--format "event_types	= % \n" event_types
-		--for i = 1 to event_types.count where events_params[i] != undefined  do
-		for i = 1 to event_types.count do
-		(
-			Event = this._getEvent(event_types[i])
+		print "ControlEvents._setCallbackParamters()"
+		
+		for Event in this._Control.Events.list do
+			if (params = this._getParamsForEventType(Event.type) ) != undefined then 
+			(
+				if not( space_in_string = matchPattern Event.code pattern:("* *") ) then
+					for param in params_split = filterString Event.params where ( param_is_not_added = matchPattern Event.code pattern:("*"+param+"*")) == false do 
+						Event.code  += " "+ param -- add parameters after callback E.G.: "callbackFn" >>>  "callbackFn inSpin inCancel
 
-			if( events_params[i] == undefined ) then
-			(
-				
-				if not( matchPattern Event.code pattern:("*()") ) then -- add brackets after callback E.G.: "callbackFn" >>>  "callbackFn()"
-					Event.code  += "()"
-				
-			) else if not( matchPattern Event.code pattern:("* "+Event.params) ) then -- add parameters after callback E.G.: "callbackFn" >>>  "callbackFn inSpin inCancel"
-			(
-				Event.params = events_params[i]
-				Event.code  += " "+ Event.params
 			)
-				
-		)
-	),
+			else if not( matchPattern Event.code pattern:"*()" ) then -- add parameters after callback E.G.: "callbackFn" >>>  "callbackFn inSpin inCancel"
+				Event.code += "()"                                  -- add brackets after callback E.G.: "callbackFn" >>>  "callbackFn()"
 
+	),
+	
+	/** Get params for event type
+	 */
+	function _getParamsForEventType event_type =
+	(
+		--format "\n"; print "ControlEventBinder_v.getParamsForEventType()"
+		 events_params[findItem event_types event_type]
+	),
 	/**_type _add event fired
 	 */
 	function _addEventFired =
 	(
 		--print "ControlEventBinder_v._addEventFired()"
-		EventFiredCreator = EventFiredCreator_v control_id:_Control.id
+		EventFiredCreator = EventFiredCreator_v control_id:this._Control.id
 
 		for i = 1 to event_types.count  do
 		(
@@ -190,7 +206,7 @@ struct ControlEventBinder_v
 	function _getControlEvent event_type =
 	(
 		--print "ControlEventBinder_v._getControlEvent()"
-		(for Event in _Control.Events.list where Event.type == event_type collect Event)[1] --return 
+		(for Event in this._Control.Events.list where Event.type == event_type collect Event)[1] --return 
 	),
 
 	/** _validate events
@@ -198,8 +214,8 @@ struct ControlEventBinder_v
 	function _validateEvents =
 	(
 		print "ControlEventBinder_v._validateEvents()"
-		for Event in _Control.Events.list where findItem event_types Event.type == 0 do
-			throw  ("WARNING\n\nUnknown Event Type: #"+ Event.type + "\n\nControl: "+ (_Control.id))
+		for Event in this._Control.Events.list where findItem event_types Event.type == 0 do
+			throw  ("WARNING\n\nUnknown Event Type: #"+ Event.type + "\n\nControl: "+ (this._Control.id))
 		
 	),
 	

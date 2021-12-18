@@ -19,8 +19,11 @@ struct BrowsePath_v
 	function getEvents _Control =
 	(
 		--print "BrowsePath_v.getControl()"
-		local_variable_name = (_Control.id + "_prev_state")
+		this._Control = _Control
+		
 		Events	= #()
+		
+		local_variable_name = (_Control.id + "_prev_state")
 		
 		
 		/* Get existing event or create new */
@@ -47,7 +50,7 @@ struct BrowsePath_v
 					(
 						"+local_variable_name+" = "+_Control.id+".text
 						"+_Control.id+".tooltip = browsed_path
-					);"
+					)"
 	
 			append Events Event
 			--_Control.Events.replace Event
@@ -64,13 +67,13 @@ struct BrowsePath_v
 	(
 		print "BrowsePath_v.mutateControl()"
 		this._Control = _Control
-		--this._setDefaultParams(_Control)
+		this._setDefaultParams()
 
-		--local_variable_name = (_Control.id + "_prev_state")
+		local_variable_name = (_Control.id + "_prev_state")
 
 		_Control.type = #editText
 		
-		--_Control.addlocal ( local_variable_name as name ) "\"\"" -- E.G.:  #BROWSEPATH_id_prev_state = ""
+		_Control.addlocal ( local_variable_name as name ) "\"\"" -- E.G.:  #BROWSEPATH_id_prev_state = ""
 
 		--history_path = getINISetting (GetMAXIniFile()) (this._param #historyCategory) "History_00"
 
@@ -82,19 +85,19 @@ struct BrowsePath_v
 	function _setDefaultParams =
 	(
 		--print "BrowsePath_v._setDefaultParams()"
-		--for param in browse_params do
-		--	_Control.Params.setVal(param)(
-		--		case param of
-		--		(
-		--			#mode:	#getSavePath
-		--			--#caption:	_Control.caption
-		--			#historyCategory:	this._param #mode
-		--			#initialDir:	"C:/"
-		--			#types:	"All files|*.*|"
-		--			default: ""
-		--		)
-		--		
-		--	) replace:false
+		for param in browse_params do
+			_Control.Params.setVal(param)(
+				case param of
+				(
+					#mode:	#getSavePath
+					--#caption:	_Control.caption
+					#historyCategory:	this._param #mode
+					#initialDir:	"C:/"
+					#types:	"All files|*.*|"
+					default: ""
+				)
+				
+			) replace:false
 	),
 	
 

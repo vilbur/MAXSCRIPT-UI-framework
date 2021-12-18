@@ -22,8 +22,8 @@ struct EventsCombiner_v
  
 		for event_class in this.keys where ( (Event = this._getEvent(event_class)(event_type)) != undefined and Event.code !="" ) do
 			this._mergeEvents (Event) (Event_combined)
-					
-		format "EVENT_COMBINED	= % \n" Event_combined			
+		
+		--format "EVENT_COMBINED	= % \n" Event_combined			
 		if( Event_combined.code != "" ) then 
 			Event_combined --return
 	),
@@ -61,8 +61,8 @@ struct EventsCombiner_v
 			Event_combined.code	+= Event.code + ";"
 		
 		/* PARAMS */ 
-		if Event.params != "" then 
-			Event_combined.params	+= Event.params + " "
+		--if Event.params != "" then 
+			--Event_combined.params	+= Event.params + " "
 
 		/* TOOLTIP */ 
 		Event_combined.tooltip	+= Event.tooltip

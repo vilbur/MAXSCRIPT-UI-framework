@@ -12,8 +12,8 @@ include "Library/MAXSCRIPT-UI-framework/Lib/RolloutCreator/_Test/includes/Create
 
 
 --_BrowsePath = _Controls.control #browsePath "[Title is hidden in square brackets]"
-_BrowsePath = _Controls.control #browsePath "Test"
--- _BrowsePath = _Controls.control #editText "Test"
+-- _BrowsePath = _Controls.control #browsePath "Test"
+_BrowsePath = _Controls.control #editText "Test"
 
 --_BrowsePath.param #mode	#getOpenFileName 
 --_BrowsePath.param #caption	"Browse dialog caption"

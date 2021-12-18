@@ -1,8 +1,8 @@
+filein( getFilenamePath(getSourceFileName()) + "/BrowsePath/BrowsePath.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/ControlParamsCreator/ControlParamsCreator.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/ControlEventBinder/ControlEventBinder.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/AcrossParameterModifier/AcrossParameterModifier.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/GroupBoxCreator/GroupBoxCreator.ms" )
-filein( getFilenamePath(getSourceFileName()) + "/BrowsePath/BrowsePath.ms" )
 
 /** ControlCreator_v
  */
@@ -12,7 +12,7 @@ struct ControlCreator_v
 
 	/* construct */ 
 	_Rollout,
-	ini_path, -- set in RolloutCreator_v._setIniToCreators()
+	ini_path, -- set in RolloutCreator_v._setIniToRollouts()
 
 	/* dependency */
 	_Controls,
@@ -44,7 +44,7 @@ struct ControlCreator_v
 
 			EventBinder.combineEvents(_Control)
 
-			this._convertCustomControls()
+			this._mutateCustomControlTypes(_Control)
 		)
 
 		/* modify ACROSS PARAMETER */ 
@@ -119,14 +119,47 @@ struct ControlCreator_v
 		print "ControlCreator_v._addControlsToRollout()"
 
 		--this._addControlsGroup #start
-		format "_Controls.list	= % \n" _Controls.list
-		format "_Controls	= % \n" _Controls
+
 		for _Control in _Controls.list do
 			this._addControlToRollout (_Control) -- add control first before variables, functions and events
 
 		--this._addControlsGroup #end 
 	),
 
+	/* Add control to RolloutCreator
+	 */
+	function _addControlToRollout _Control =
+	(
+		format "\n"; print ("ControlCreator_v._addControlToUi() " +_Control.id )
+		--format "_Control.id.full	= % \n"( _Rollout.getFullId() +"." +_Control.id)
+		this._addValueParameter  (_Control) (_Rollout.id)
+
+		params = ParamsCreator.join(_Control.params)
+		format "\n% %\n" _Control.id params
+		--format "_Control	= % \n" _Control
+		_Rollout._RolloutCreator.addControl (_Control.type) (_Control.id) (this._emptyCaptionIfInBrackets(_Control.caption)) paramStr:params
+	),
+
+	/** Add Handlers of Events
+	 */
+	function _addHandlersToRollout =
+	(
+		for _Control in _Controls.list do
+			EventBinder.addHandlers(_Control)
+	),
+
+
+	/** _add value parameter
+	 */
+	function _addValueParameter _Control rollout_id = 
+	(
+		--print "ControlCreator_v._addValueParameter()"
+		val_ini	= ParamsCreator.ControlValue.getValueFromIni(_Control)(rollout_id)
+
+		if( val_ini != undefined ) then
+			_Control.Params.setVal val_ini[1] val_ini[2]
+	),
+	
 	/** Add controls group
 	  * 
 	  * https://help.autodesk.com/view/3DSMAX/2016/ENU/?guid=__files_GUID_1361B847_7878_4C52_98DE_5BC5CA830B40_htm
@@ -142,20 +175,6 @@ struct ControlCreator_v
 		_Rollout._RolloutCreator.addText ( start_or_end_string ) filter:on
 	),
 
-	/* Add control to RolloutCreator
-	 */
-	function _addControlToUi _Control =
-	(
-		format "\n"; print ("ControlCreator_v._addControlToUi() " +_Control.id )
-		--format "_Control.id.full	= % \n"( _Rollout.getFullId() +"." +_Control.id)
-		this._addValueParameter  (_Control) (_Rollout.id)
-
-		params = ParamsCreator.join(_Control.params)
-		format "\n% %\n" _Control.id params
-		format "_Control	= % \n" _Control
-		_Rollout._RolloutCreator.addControl (_Control.type) (_Control.id) (this._emptyCaptionIfInBrackets(_Control.caption)) paramStr:params
-	),
-
 	/** Empty caption if caption is in brackets E.G.: "[Groupboxname]"
 	  *
 	  * used for generated groupbox
@@ -168,33 +187,14 @@ struct ControlCreator_v
 		caption --return
 	),
 
-	/** Add Handlers of Events
-	 */
-	function _addHandlersToUi =
-	(
-		for _Control in _Controls.list do
-			EventBinder.addHandlers(_Control)
-	),
-
-	/** _add value parameter
-	 */
-	function _addValueParameter _Control rollout_id = 
-	(
-		--print "ControlCreator_v._addValueParameter()"
-		val_ini	= ParamsCreator.ControlValue.getValueFromIni(_Control)(rollout_id)
-
-		if( val_ini != undefined ) then
-			_Control.Params.setVal val_ini[1] val_ini[2]
-	),
-
 	/** Add local variables from Control_v to rollout
 	  * IMPORTANT: local variables must be defined outside group 
 	  *
 	  * 	Control_v.rollout_locals =  #(#variable_name1, init_value1, #variable_name2, init_value2)
 	 */
-	function _addLocalVariablesToCreator =
+	function _addLocalVariablesToRollout =
 	(
-		--print "ControlCreator_v._addLocalVariablesToCreator()"
+		--print "ControlCreator_v._addLocalVariablesToRollout()"
 		for _Control in _Controls.list where _Control.add_locals != unsupplied do
 			for i = 1 to _Control.add_locals.count by 2 do
 				_Rollout._RolloutCreator.addLocal ( _Control.add_locals[i] as string )  init:_Control.add_locals[i+1]
@@ -204,20 +204,20 @@ struct ControlCreator_v
 	/** Add functions to rollout
 	  * IMPORTANT: functions must be defined outside group 
 	 */
-	function _addTextToCreator =
+	function _addTextToRollout =
 	(
-		--print "ControlCreator_v._addTextToCreator()"
+		--print "ControlCreator_v._addTextToRollout()"
 		for _Control in _Controls.list where _Control.add_text != undefined do
 			_Rollout._RolloutCreator.addText  _Control.add_text filter:true
 	),
 
 	/** Convert custom controls to native maxscript controls
 	 */
-	function _convertCustomControls =
+	function _mutateCustomControlTypes _Control =
 	(
-		print "ControlCreator_v._convertCustomControls()"
-		for _Control in _Controls.list where _Control.type == #browsePath do
-			_Control.type = #editText
+		print "ControlCreator_v._mutateCustomControlTypes()"
+		if _Control.type == #browsePath do
+			(BrowsePath_v()).mutateControl(_Control)
 	),
 
 	/** _is controls
@@ -234,7 +234,6 @@ struct ControlCreator_v
 	(
 		--print "ControlCreator_v.onCreate()"
 		--ConstructPropeties test:this
-
 		EventBinder.ini_path	= ini_path
 	)	
 )
