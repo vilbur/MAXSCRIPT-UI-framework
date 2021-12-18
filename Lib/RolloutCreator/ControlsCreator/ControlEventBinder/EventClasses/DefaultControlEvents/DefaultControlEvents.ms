@@ -11,15 +11,11 @@ struct DefaultControlEvents_v
 	 */
 	function getEvents _Control =
 	(
-		print ("@@@@@@@@@@@@@ DefaultControlEvents_v.getEvents() "+_Control.type)
-		
-
+		--print ("DefaultControlEvents_v.getEvents() "+_Control.type)
 		if( _Control.type == #browsePath ) then
 			Events = (BrowsePath_v()).getEvents(_Control)
-			--(BrowsePath_v()).getEvents(_Control)
 		
-		--append Events ( Event_v type:#changed	code:("print \"DEFAULT EVENT\"")  params:"val"  )
-		--append Events ( Event_v type:#changed	code:("print \"DEFAULT EVENT\"")  params:"val"  )
+		------append Events ( Event_v type:#changed	code:("print \"DEFAULT EVENT\"")  params:"val"  )
 			
 		Events --return
 	),

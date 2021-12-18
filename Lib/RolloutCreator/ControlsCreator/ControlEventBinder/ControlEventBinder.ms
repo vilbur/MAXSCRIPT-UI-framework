@@ -48,8 +48,7 @@ struct ControlEventBinder_v
 	 */
 	function combineEvents &_Control =
 	(
-		format "\n"; print ("ControlEventBinder_v.combineEvents() "+ _Control.id)
-
+		--format "\n"; print ("ControlEventBinder_v.combineEvents() "+ _Control.id)
 		this._Control = _Control
 
 		event_types	= EventTypes.getEventTypesOfControl	(this._Control.type)
@@ -78,8 +77,7 @@ struct ControlEventBinder_v
 	 */
 	function addHandlers &_Control =
 	(
-		format "\n"; print ("ControlEventBinder_v.addHandlers() "+ _Control.id)
-
+		--format "\n"; print ("ControlEventBinder_v.addHandlers() "+ _Control.id)
 		/* PARAMETER */ 
 		for Event in _Control.Events.list do 
 			this._addHandler(_Control)(Event)
@@ -93,11 +91,10 @@ struct ControlEventBinder_v
 	 */
 	function _addHandler _Control Event =
 	(
-		print "ControlEventBinder_v._addHandler()"
+		--print "ControlEventBinder_v._addHandler()"
 		if( Event.code == "" ) then
 			return false
-		--format "EVENT = % \n" Event
-		format "EVENT.code = % \n" Event.code
+		----format "EVENT = % \n" Event
 		_Rollout._RolloutCreator.addHandler _Control.id Event.type codeStr:( "("+Event.code+")" ) paramStr:Event.params filter:on
 	),
 	

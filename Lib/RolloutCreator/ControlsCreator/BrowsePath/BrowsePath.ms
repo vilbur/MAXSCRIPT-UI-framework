@@ -75,7 +75,7 @@ struct BrowsePath_v
 	 */
 	function mutateControl &_Control =
 	(
-		print "BrowsePath_v.mutateControl()"
+		--print "BrowsePath_v.mutateControl()"
 		this._Control = _Control
 		
 		prev_value_variable_name = (_Control.id + "_prev_state")
@@ -93,8 +93,7 @@ struct BrowsePath_v
 	 */
 	function _setDefaultParams =
 	(
-		print "BrowsePath_v._setDefaultParams()"
-		format "_Control.Params	= % \n" this._Control.Params
+		--print "BrowsePath_v._setDefaultParams()"
 		
 		for param in browse_params do
 			this._Control.Params.setVal(param)(
@@ -111,8 +110,6 @@ struct BrowsePath_v
 			)  unique:true
 		
 		this._Control.Params.filter undefined  test:true
-		format "_Control.Params	= % \n" _Control.Params
-
 	),
 	
 	/** Get dialog getSaveFileName|getOpenFileName  https://help.autodesk.com/view/MAXDEV/2021/ENU/?guid=GUID-D4B43A33-8342-4BC9-80AB-91460861D37C

@@ -19,8 +19,7 @@ struct EventFiredCreator_v
 		this.params = filterString Event.params " "
 		
 	    EventFired_string = (this._defineStruct()) + "\n\t global EventFired = EventFired_v type:#"+Event.type+" Control:#"+_Control.id as string +" "+(this._getParams()) 
-		--format "EventFired_string	= % \n" EventFired_string
-		--"("+ EventFired_string +")" --return
+
 		EventFired_string --return
 	),
 	
@@ -31,7 +30,6 @@ struct EventFiredCreator_v
 	 */
 	function _defineStruct =
 	(
-		
 		struct_def = "struct EventFired_v(type,Control"+(this._getProperties())+")"
 		
 		"execute \""+struct_def+"\"" --return
@@ -53,12 +51,12 @@ struct EventFiredCreator_v
 	 */
 	function _getParams =
 	(
-		print "EventFiredCreator_v._getParams()"
+		--print "EventFiredCreator_v._getParams()"
 		params_join = ""
 		
 		for param in this.params do 
 			params_join += param +":" + param +" "
-		format "params_join = % \n" params_join
+		--format "params_join = % \n" params_join
 		params_join --return
 	),
 

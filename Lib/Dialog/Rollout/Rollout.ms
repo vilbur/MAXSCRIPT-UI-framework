@@ -32,7 +32,7 @@ struct Rollout_v
 	 */
 	function Controls group:undefined =
 	(
-		print "Rollout_v.controls()"
+		--print "Rollout_v.controls()"
 		local Controls = Controls_v group:group
 
 		append _Controls Controls

@@ -95,7 +95,6 @@ struct ControlCreator_v
 				_Controls.list = ( diffArray _Controls.list rollout_groupbox_controls)
 
 				Controls_in_Groupboxes += rollout_groupbox_controls
-
 		)
 
 		if( Controls_in_Groupboxes.count > 0 ) then
@@ -116,14 +115,14 @@ struct ControlCreator_v
 	 */
 	function _addControlsToRollout =
 	(
-		print "ControlCreator_v._addControlsToRollout()"
+		--print "ControlCreator_v._addControlsToRollout()"
 
-		--this._addControlsGroup #start
+		this._addControlsGroup #start
 
 		for _Control in _Controls.list do
 			this._addControlToRollout (_Control) -- add control first before variables, functions and events
 
-		--this._addControlsGroup #end 
+		this._addControlsGroup #end 
 	),
 
 	/* Add control to RolloutCreator
@@ -135,7 +134,7 @@ struct ControlCreator_v
 		this._addValueParameter  (_Control) (_Rollout.id)
 
 		params = ParamsCreator.join(_Control.params)
-		format "\n% %\n" _Control.id params
+		--format "\n% %\n" _Control.id params
 		--format "_Control	= % \n" _Control
 		_Rollout._RolloutCreator.addControl (_Control.type) (_Control.id) (this._emptyCaptionIfInBrackets(_Control.caption)) paramStr:params
 	),
@@ -215,7 +214,7 @@ struct ControlCreator_v
 	 */
 	function _mutateCustomControlTypes _Control =
 	(
-		print "ControlCreator_v._mutateCustomControlTypes()"
+		--print "ControlCreator_v._mutateCustomControlTypes()"
 		if _Control.type == #browsePath do
 			(BrowsePath_v()).mutateControl(_Control)
 	),
