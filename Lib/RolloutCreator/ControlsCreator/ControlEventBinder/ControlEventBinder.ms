@@ -68,6 +68,16 @@ struct ControlEventBinder_v
 		_Control --return 
 	),
 	
+	/** _combine all event types
+	 */
+	function _combineEventTypes =
+	(
+		--format "\n"; print "ControlEventBinder_v._combineEventTypes()"
+		this._Control.Events.list = for event_type in event_types where (Event = EventsCombiner.combine (event_type)) != undefined collect Event
+	),
+
+	
+	
 	/** Combine events and add handlers
 	 */
 	function addHandlers &_Control =
@@ -77,26 +87,11 @@ struct ControlEventBinder_v
 		this._Control = _Control
 
 		/* PARAMETER */ 
-		this._addHandlers()
-		
-		_Control --return
-	),
-	/** _combine all event types
-	 */
-	function _combineEventTypes =
-	(
-		--format "\n"; print "ControlEventBinder_v._combineEventTypes()"
-		this._Control.Events.list = for event_type in event_types where (Event = EventsCombiner.combine (event_type)) != undefined collect Event
-	),
-
-
-	/** _bind events
-	 */
-	function _addHandlers =
-	(
-		--print "ControlEventBinder_v._addHandlers()"
 		for Event in _Control.Events.list do 
 			this._addHandler(Event)
+			
+		
+		_Control --return
 	),
 
 	/** Bind events
@@ -114,7 +109,7 @@ struct ControlEventBinder_v
 	 */
 	function _setDefaultEvents =
 	(
-		EventsCombiner.setEventsClass #DEFAULTS ( DefaultControlEvents.getEvents(_Control.type) ) 
+		EventsCombiner.setEventsClass #DEFAULTS ( DefaultControlEvents.getEvents(_Control) ) 
 	),
 
 	/** _combine events

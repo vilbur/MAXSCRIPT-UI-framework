@@ -16,16 +16,12 @@ struct BrowsePath_v
 	  *
 	  * Add browse path event before users defined event
 	 */
-	function getControl =
+	function getEvents _Control =
 	(
 		--print "BrowsePath_v.getControl()"
 		local_variable_name = (_Control.id + "_prev_state")
-
-		_Control.type = #editText
+		Events	= #()
 		
-		_Control.addlocal ( local_variable_name as name ) "\"\"" -- E.G.:  #BROWSEPATH_id_prev_state = ""
-
-		--history_path = getINISetting (GetMAXIniFile()) (this._param #historyCategory) "History_00"
 		
 		/* Get existing event or create new */
 		for event_type in #( #changed, #entered ) do 
@@ -53,9 +49,30 @@ struct BrowsePath_v
 						"+_Control.id+".tooltip = browsed_path
 					);"
 	
-	
-			_Control.Events.replace Event
+			append Events Event
+			--_Control.Events.replace Event
 		)
+
+		Events --return
+	),
+	
+	/** Browse path
+	  *
+	  * Add browse path event before users defined event
+	 */
+	function mutateControl &_Control =
+	(
+		print "BrowsePath_v.mutateControl()"
+		this._Control = _Control
+		--this._setDefaultParams(_Control)
+
+		--local_variable_name = (_Control.id + "_prev_state")
+
+		_Control.type = #editText
+		
+		--_Control.addlocal ( local_variable_name as name ) "\"\"" -- E.G.:  #BROWSEPATH_id_prev_state = ""
+
+		--history_path = getINISetting (GetMAXIniFile()) (this._param #historyCategory) "History_00"
 
 		_Control --return
 	),
@@ -65,28 +82,22 @@ struct BrowsePath_v
 	function _setDefaultParams =
 	(
 		--print "BrowsePath_v._setDefaultParams()"
-		for param in browse_params do
-			_Control.Params.setVal(param)(
-				case param of
-				(
-					#mode:	#getSavePath
-					--#caption:	_Control.caption
-					#historyCategory:	this._param #mode
-					#initialDir:	"C:/"
-					#types:	"All files|*.*|"
-					default: ""
-				)
-				
-			) replace:false
+		--for param in browse_params do
+		--	_Control.Params.setVal(param)(
+		--		case param of
+		--		(
+		--			#mode:	#getSavePath
+		--			--#caption:	_Control.caption
+		--			#historyCategory:	this._param #mode
+		--			#initialDir:	"C:/"
+		--			#types:	"All files|*.*|"
+		--			default: ""
+		--		)
+		--		
+		--	) replace:false
 	),
 	
-	/** _param
-	 */
-	function _param key =
-	(
-		--print "BrowsePath_v._param()"
-		(_Control.Params.getVal key ) as string --return
-	),
+
 	
 	/** Get dialog getSaveFileName|getOpenFileName  https://help.autodesk.com/view/MAXDEV/2021/ENU/?guid=GUID-D4B43A33-8342-4BC9-80AB-91460861D37C
 	  * 
@@ -103,10 +114,18 @@ struct BrowsePath_v
 		path_dialog --return	
 	),
 	
+	/** _param
+	 */
+	function _param key =
+	(
+		--print "BrowsePath_v._param()"
+		(_Control.Params.getVal key ) as string --return
+	),
+	
 	/**  
 	 */
 	on create do
 	(
-		this._setDefaultParams()
+
 	)
 )
