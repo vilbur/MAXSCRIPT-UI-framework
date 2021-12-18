@@ -33,13 +33,15 @@ struct ControlCreator_v
 		--format "_Controls	= % \n" this._Controls
 		--format "_Controls.group	= % \n" this._Controls.group
 
-		GroupBoxCreator.addGrouboxesForRollout (_Rollout.getFullId()) (_Controls.GroupBoxes)
+		GroupBoxCreator.addGrouboxes (_Rollout.getFullId()) (_Controls.GroupBoxes)
 
 		/* set DEFAULT PARAMETERS */ 
 		ParamsCreator.setControlDefaults (_Controls.Defaults)
 
 		for _Control in _Controls.list do
 		(
+			this._addValueParameter  (_Control) (_Rollout.id)
+			
 			ParamsCreator.mergeParams(_Control)
 
 			EventBinder.combineEvents(_Control)
@@ -50,6 +52,9 @@ struct ControlCreator_v
 		/* modify ACROSS PARAMETER */ 
 		AcrossModifier.addFakeControls(this._Controls)
 
+		
+		
+		
 		/* add LOCAL VARIABLES */ 
 		this._addLocalVariablesToRollout()
 
@@ -131,7 +136,6 @@ struct ControlCreator_v
 	(
 		format "\n"; print ("ControlCreator_v._addControlToUi() " +_Control.id )
 		--format "_Control.id.full	= % \n"( _Rollout.getFullId() +"." +_Control.id)
-		this._addValueParameter  (_Control) (_Rollout.id)
 
 		params = ParamsCreator.join(_Control.params)
 		--format "\n% %\n" _Control.id params
@@ -234,5 +238,6 @@ struct ControlCreator_v
 		--print "ControlCreator_v.onCreate()"
 		--ConstructPropeties test:this
 		EventBinder.ini_path	= ini_path
+		ParamsCreator.ControlValue.ini_path	= ini_path
 	)	
 )

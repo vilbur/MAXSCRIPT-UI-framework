@@ -9,8 +9,6 @@ struct SaveIniControlEvents_v
 	/* properties */ 
 	_Control,
 
-	Events = #(), -- rename this to events
-
 	ini_event_types = #( #changed, #selected ), -- this events fires default save to ini callback
 
 	/** Add save ini event for Control
@@ -19,13 +17,9 @@ struct SaveIniControlEvents_v
 	 */
 	function getEvents _Control event_types =
 	(
-		--print "SaveIniEvents_v._addDefaultEvents()"
 		this._Control = _Control
-
-		for event_type in event_types where this._isSaveIniEventType(event_type) do
-			append Events (this._getEvent(event_type))
-
-		Events --return
+		
+		for event_type in event_types where this._isSaveIniEventType(event_type) collect  this._getEvent(event_type)
 	),
 
 	private

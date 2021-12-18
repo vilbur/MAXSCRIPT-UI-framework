@@ -3,7 +3,6 @@
 struct DefaultControlEvents_v
 (
 	/* properties */
-	Events = #(),
 	
 	/** Add default event for Control
 	  *
@@ -11,6 +10,8 @@ struct DefaultControlEvents_v
 	 */
 	function getEvents _Control =
 	(
+		Events = #()
+
 		--print ("DefaultControlEvents_v.getEvents() "+_Control.type)
 		if( _Control.type == #browsePath ) then
 			Events = (BrowsePath_v()).getEvents(_Control)

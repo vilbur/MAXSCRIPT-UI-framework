@@ -38,7 +38,7 @@ struct RolloutCreator_v
 	 */
 	function createRollout _Rollout width: height: =
 	(
-		format "\n\n\n\n\n\n=====================================	RolloutCreator_v.%	=====================================\n"  _Rollout.id;
+		format "\n\n\n\n=====================================	RolloutCreator_v.%	=====================================\n"  _Rollout.id;
 		--print ("RolloutCreator_v.createRollout()"  )
 		ControlsCreator = ControlCreator_v _Rollout:_Rollout ini_path:(IniFile.getPath())
 

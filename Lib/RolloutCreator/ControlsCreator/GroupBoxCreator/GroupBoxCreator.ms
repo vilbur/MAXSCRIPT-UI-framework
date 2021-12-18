@@ -29,7 +29,7 @@ struct GroupBoxCreator_v
 	  * @param	#( #("groupbox_ids"), #(#control_ids )	groupboxes
 	  *
 	 */
-	function addGrouboxesForRollout rollout_id_full GroupBoxes =
+	function addGrouboxes rollout_id_full GroupBoxes =
 	(
 		--format "\n>>>>>>>>>>>><<<<<<<<<<<<\n\n"; print "GroupBoxCreator_v.addGrouboxesForRollout()"
 		--format "rollout_id_full	= % \n" rollout_id_full
@@ -112,14 +112,17 @@ struct GroupBoxCreator_v
 		--format "\n"; print "GroupBoxCreator_v._setGroupboxWidth()"
 		--format "is_next_control_in_same_row	= % \n" is_next_control_in_same_row
 
-		if width_is_default = _groupbox.width == 90 do -- 90px is default width of groupbox
-		
+		if (width_is_default = _groupbox.width) == 90 do -- 90px is default width of groupbox
+
 			if is_next_control_in_same_row then
 
-				_groupbox.width	= next_control.pos.x - _groupbox.pos.x - groupbox_margin -- set width up to next control in row
+				_groupbox.width	= next_control.pos.x - _groupbox.pos.x -- set width up to next control in row
 		
 			else
-				_groupbox.width = _rollout.width - _groupbox.pos.x - groupbox_margin -- set width up to rollout border
+				_groupbox.width = _rollout.width - _groupbox.pos.x  -- set width up to rollout border
+		
+		
+		_groupbox.width -= groupbox_margin
 	),
 	
 	/** _set groupbox height

@@ -60,7 +60,7 @@ struct ControlEventBinder_v
 		
 		this._setDefaultEvents()
 		this._setCustomEvents()
-		--this._setSaveIniEvents()
+		this._setSaveIniEvents()
 
 		this._combineEventTypes()
 		

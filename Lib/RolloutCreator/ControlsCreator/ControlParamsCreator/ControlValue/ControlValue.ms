@@ -12,8 +12,8 @@ struct ControlValue_v
 	names_of_value_param = #(
 		#( #selection,	#listbox,	#multilistbox,	#dropdownlist ),
 		#( #checked,	#checkbox,	#checkbutton,	#dropdownlist ),
-		#( #range,  	#spinner ),
-		#( #text,  	#edittext )
+		#( #range,  	#spinner ),	
+		#( #text,  	#edittext,	#browsePath  )
 	),
 	
 	/** Get value from ini
@@ -23,13 +23,14 @@ struct ControlValue_v
 	function getValueFromIni _Control rollout_id =
 	(
 		--print "CotrolValue_v.getValueFromIni()"
+		
 		if( ini_path == undefined ) then
 			return undefined
 
 		if( (name_of_param = this._getNameOfValueParameter(_Control.type)) == undefined ) then
 			return undefined
 		
-		if( (val_ini = getINISetting ini_path rollout_id _Control.id) != "" ) then
+		if( (val_ini = getINISetting ini_path (rollout_id as string ) (_Control.id as string )) != "" ) then
 			#(name_of_param, this._convertDatatype(_Control)(val_ini))
 	),
 	

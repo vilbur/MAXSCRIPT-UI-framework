@@ -26,6 +26,8 @@ struct GroupBoxes_v
 	 */
 	function tryAddGroupbox _Controls _Control =
 	(
+		--print ("GroupBoxes_v.tryAddGroupbox() " + _Control.caption)
+
 		/* IF CONTROL IS GROUPBOX */ 
 		if( _Control.type == #Groupbox ) then
 		(
@@ -39,6 +41,8 @@ struct GroupBoxes_v
 	 */
 	function tryAddControl _Controls _Control =
 	(
+		--format "\n"; print ("GroupBoxes_v.tryAddControl() " + _Control.caption)
+		--format "_CONTROL	= % \n" _Control
 		/* IF CONTROL IS IN GROUPBOX */ 
 		if( (groupbox_caption = _Control.Params.getVal #Groupbox) != undefined ) then
 		(
@@ -51,6 +55,7 @@ struct GroupBoxes_v
 
 			this._addControlToGroupboxList (_GroupBox.id) (_Control.id)
 		)
+		--format "groupbox_caption	= % \n" groupbox_caption
 	),
 	
 
@@ -65,7 +70,7 @@ struct GroupBoxes_v
 		if( (_GroupBox = this._findGroupboxInControls(_Controls)(groupbox_caption) ) == undefined ) then
 		
 			_GroupBox = this._createGroupboxByControl (this._createNewGroupBox(_Controls)(groupbox_caption)) (_Control)
-		
+
 		_GroupBox --return
 	),
 	
