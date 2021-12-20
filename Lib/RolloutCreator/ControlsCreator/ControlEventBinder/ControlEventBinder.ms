@@ -56,7 +56,7 @@ struct ControlEventBinder_v
 		
 		this._validateEvents()
 		
-		this._setCallbackParamters()
+		this._setCallbackParamtersToCustomEvent()
 		
 		this._setDefaultEvents()
 		this._setCustomEvents()
@@ -94,7 +94,7 @@ struct ControlEventBinder_v
 		--print "ControlEventBinder_v._addHandler()"
 		if( Event.code == "" ) then
 			return false
-		----format "EVENT = % \n" Event
+		format "\nEVENT = % \n" Event
 		_Rollout._RolloutCreator.addHandler _Control.id Event.type codeStr:( "("+Event.code+")" ) paramStr:Event.params filter:on
 	),
 	
@@ -146,9 +146,9 @@ struct ControlEventBinder_v
 		TODO: REFRACT THIS METHOD
 	  
 	 */
-	function _setCallbackParamters =
+	function _setCallbackParamtersToCustomEvent =
 	(
-		--print "ControlEvents._setCallbackParamters()"
+		--print "ControlEvents._setCallbackParamtersToCustomEvent()"
 		for Event in this._Control.Events.list do
 			if (params = this._getParamsForEventType(Event.type) ) != undefined then 
 			(
@@ -157,7 +157,7 @@ struct ControlEventBinder_v
 						Event.code  += " "+ param -- add parameters after callback E.G.: "callbackFn" >>>  "callbackFn inSpin inCancel
 
 			)
-			else if not( matchPattern Event.code pattern:"*()" ) then -- add parameters after callback E.G.: "callbackFn" >>>  "callbackFn inSpin inCancel"
+			else if not( matchPattern Event.code pattern:"*()" or matchPattern Event.code pattern:"*macros.run*"  ) then -- add parameters after callback E.G.: "callbackFn" >>>  "callbackFn inSpin inCancel"
 				Event.code += "()"                                  -- add brackets after callback E.G.: "callbackFn" >>>  "callbackFn()"
 	),
 	

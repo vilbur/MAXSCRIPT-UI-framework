@@ -185,14 +185,18 @@ struct RolloutCreator_v
 	 */
 	function _setSubrolloutsHeight _Rollout height =
 	(
-		--print "RolloutCreator_v._setSubrolloutsHeight()"
+		print "RolloutCreator_v._setSubrolloutsHeight()"
 		--print "DEDUG HEIGHT OF SUBROLLOUTS"
-
+		format "_Rollout.parent_rollout	= % \n" _Rollout.parent_rollout
+		nested_level = if( _Rollout.parent_rollout == undefined ) then 0 else (filterString _Rollout.parent_rollout ".").count/2 -- split parent_rollout_id and slot id E.G.: ROLLOUT_Parent.children
+		
+		
 		if( ( subrollouts_count = this._getSubrolloutsCount(_Rollout)) > 0 ) then 
 			if( height != undefined and height != unsupplied ) then
 				subrollouts_slot_height = (height - padding_bottom) / subrollouts_count
 				--subrollouts_slot_height = ((height - padding_bottom) / subrollouts_count) - 512
-				--subrollouts_slot_height = 256
+				
+		subrollouts_slot_height -= 34*nested_level
 	),
 
 	/** Add local variables from Control_v to rollout

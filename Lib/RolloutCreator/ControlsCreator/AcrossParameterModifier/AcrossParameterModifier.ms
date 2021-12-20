@@ -85,7 +85,7 @@ struct AcrossParameterModifier_v
 		if( _across_left != undefined ) then
 			for i = 1 to _across_left do
 				--_RolloutCreator.addControl "label" ("label"+ (random 1 999999999 ) as string ) fake_control_caption
-				_RolloutCreator.addControl "label" ("label"+ (timeStamp() ) as string ) fake_control_caption
+				_RolloutCreator.addControl "Fake" (this._generateId()) fake_control_caption
 
 		_across_left = 0
 	),
@@ -105,9 +105,17 @@ struct AcrossParameterModifier_v
 	function _createFakeControl _Controls fake_control_caption =
 	(
 		--print "AcrossParameterModifier_v._createFakeControl()"
-		_Controls.control #label fake_control_caption id:("label"+ (random 1 999999999 ) as string ) --add_to_controls:false --return	
+		_Controls.control #label fake_control_caption id:(this._generateId()) --add_to_controls:false --return	
 	),
-
+	
+	/** _get fake control id
+	 */
+	function _generateId =
+	(
+		--"fake"+ (timeStamp())  as string 
+		"fake"+  (random 1 999999999 )  as string 
+	),
+	
 	/**  
 	 */
 	on create do

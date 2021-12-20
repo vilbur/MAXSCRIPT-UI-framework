@@ -134,8 +134,9 @@ struct ControlCreator_v
 	 */
 	function _addControlToRollout _Control =
 	(
-		format "\n"; print ("ControlCreator_v._addControlToUi() " +_Control.id )
-		--format "_Control.id.full	= % \n"( _Rollout.getFullId() +"." +_Control.id)
+		
+		if not matchPattern _Control.id pattern:"LABEL_fake*" then -- DEBUG - don`t print
+			(format "\n"; print ("ControlCreator_v._addControlToUi() " +_Control.id ))
 
 		params = ParamsCreator.join(_Control.params)
 		--format "\n% %\n" _Control.id params
