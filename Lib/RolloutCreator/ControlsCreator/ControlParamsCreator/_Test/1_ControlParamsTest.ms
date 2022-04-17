@@ -11,7 +11,7 @@ filein( getFilenamePath(getSourceFileName()) + "/../../../RolloutCreator.ms" )
 include "Library/MAXSCRIPT-UI-framework/Lib/RolloutCreator/_Test/includes/CreateTestRollout.ms"
 
 
-_Button2    = _Controls.control #button  "Params on creation" params:#(#width, 128, #height, 64 )
+_Button2    = _Controls.control #button  "Params on creation" params:#(#width, 128, #height, 64, #tooltip, "Test tooltip" )
 _Button2.param #enabled false
 
 

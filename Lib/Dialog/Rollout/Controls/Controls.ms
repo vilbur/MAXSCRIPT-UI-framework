@@ -24,7 +24,7 @@ struct Controls_v
 	  * @property	#name	type	Type of control
 	  * @property	string	caption	Caption of control, caption is hidden if it`s wrapped into brackets "[]" E.G.: "[Browse Path]"
 	  * @property	#name	id	Id of control
-	  * @property	array	params	Params for control
+	  * @property	array	params	Params for control #( #key1, "value1", #key2, "value2" )
 	  *
 	  * @return Object _Control	"./Control/Control.ms"
 	 */
@@ -82,6 +82,8 @@ struct Controls_v
 	 */
 	function _setParamsToControl &_Control keys_values =
 	(
+		--print "Controls_v._setParamsToControl()"
+		--format "keys_values	= % \n" keys_values
 		for i = 1 to keys_values.count  by 2  do
 			_Control.Param keys_values[i] keys_values[i+1]
 

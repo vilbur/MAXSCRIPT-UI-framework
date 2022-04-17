@@ -32,15 +32,17 @@ struct BrowsePath_v
 		this._setDefaultParams()
 
 		/* Get existing event or create new */
-		for event_type in #( #changed, #entered ) do 
-		(
-			--Event = if( (Event = _Control.Events.get event_type) != undefined ) then Event else (Event_v type:event_type )
-			Event =  Event_v type:event_type
+		--for event_type in #( #changed, #entered ) do 
+	
+		--Event = if( (Event = _Control.Events.get event_type) != undefined ) then Event else (Event_v type:event_type )
+		Event_changed =  Event_v type: #changed
+		Event_entered =  Event_v type: #entered
 
-			/**  
-			  *	TODO: function valueIsEmpty should be placed in rollout, but there is no problem with it
-			  */
-			Event.code = "\n\tfunction valueIsEmpty _string =
+		/**  
+		  *	TODO: function valueIsEmpty should be placed in rollout, but there is no problem with it
+		  */
+		Event_changed.code = "
+			function valueIsEmpty _string =
 				(
 					(( dotNetClass @System.Text.RegularExpressions.RegEx@).matches _string @^\s+$|^$@ ).count == 1
 				)
@@ -60,11 +62,22 @@ struct BrowsePath_v
 				else
 					(
 						"+prev_value_variable_name+" = "+_Control.id+".text
-						"+_Control.id+".tooltip = browsed_path as string 
+						"+_Control.id+".tooltip      = browsed_path as string 
 					)"
-	
-			append Events Event
-		)
+				
+				
+		Event_entered.code = "if( val != "+prev_value_variable_name+" ) then
+			(
+				val = EventFired.val    = substituteString val @\\\\@ @\\\\\\\\@
+			)"
+
+		
+		
+
+		
+		
+		append Events Event_changed
+		append Events Event_entered
 		
 		Events --return
 	),
@@ -125,7 +138,7 @@ struct BrowsePath_v
 			
 		for param in browse_params where (val = this._getParam param ) != undefined and param != #mode do
 			path_dialog += " " + param as string +":@"+ val as string +"@"
-		--format "path_dialog = % \n" path_dialog
+		format "path_dialog = % \n" path_dialog
 		path_dialog --return	
 	),
 	

@@ -21,7 +21,6 @@ _Button_1 = _Controls.control #button "Button 1" id:#button_1
 _Controls = _Rollout.Controls()
 _Button_2 = _Controls.control #button "Button 2" id:#button_2
 
-
 /** CREATE UI 
  *	
  */

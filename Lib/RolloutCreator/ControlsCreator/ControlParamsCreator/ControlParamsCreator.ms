@@ -22,7 +22,7 @@ struct ControlParamsCreator_v
 	 */
 	function mergeParams &_Control =
 	(
-		--print "ControlParamsCreator_v.mergeParams()"
+		print "ControlParamsCreator_v.mergeParams()"
 		MergeParamsList 	= List_v()
 		
 		/* VALUE PARAM */ 

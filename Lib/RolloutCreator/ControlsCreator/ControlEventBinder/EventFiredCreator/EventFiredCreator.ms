@@ -1,12 +1,22 @@
-/** Generate struct with  properties as evenet has
+/** Each control event fires global variable EventFired
   *
-  * @return	string E.G.: execute ("struct EventFired_v(type,Control)"); global EventFired = EventFired_v type:#buttonDown Control:#SPINNER_Test_spinner	
+  * Properties of EventFired
+  * 	Type:	name of event
+  * 	Control:	control which has fired this event
+  * 	Control:	control which has fired this event
+  * 	[val]:	value of control
+  
+  * 	[inspin, ...]: Any additional parameter fired with event specific for type of control
   * 
+  * 
+  * 
+  * @return	string E.G.: execute ("struct EventFired_v(Type,Control)"); global EventFired = EventFired_v type:#buttonDown Control:#SPINNER_Test_spinner	
  */
 struct EventFiredCreator_v
 (
 	/* required */
-	_Control,
+	_RolloutClass,	-- Rollout of control
+	_RolloutControl,	-- Control itself
 	
 	/* properties */
 	params,
@@ -16,9 +26,10 @@ struct EventFiredCreator_v
 	function getEventFired Event =
 	(
 		--print "EventFiredCreator_v.getEventFired()"
+		--format "RolloutControl	= % \n" RolloutControl
 		this.params = filterString Event.params " "
 		
-	    EventFired_string = (this._defineStruct()) + "\n\t global EventFired = EventFired_v type:#"+Event.type+" Control:#"+_Control.id as string +" "+(this._getParams()) 
+	    EventFired_string = (this._defineStruct()) + "\n\t global EventFired = EventFired_v Type:#"+Event.type+" Roll:"+ _RolloutClass +" Control:"+ _RolloutControl +" "+(this._getParams()) 
 
 		EventFired_string --return
 	),
@@ -30,7 +41,7 @@ struct EventFiredCreator_v
 	 */
 	function _defineStruct =
 	(
-		struct_def = "struct EventFired_v(type,Control"+(this._getProperties())+")"
+		struct_def = "struct EventFired_v(Type,Roll,Control"+(this._getProperties())+")"
 		
 		"execute \""+struct_def+"\"" --return
 	),

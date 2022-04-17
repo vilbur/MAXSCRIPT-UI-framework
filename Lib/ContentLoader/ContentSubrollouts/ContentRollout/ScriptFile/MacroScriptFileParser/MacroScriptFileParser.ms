@@ -1,4 +1,5 @@
 filein( getFilenamePath(getSourceFileName()) + "/MacroScript/MacroScript.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/ControlParamsParser/ControlParamsParser.ms" )
 
 /** Parese macroscripts in "*.mcr file"
   *
@@ -8,28 +9,33 @@ filein( getFilenamePath(getSourceFileName()) + "/MacroScript/MacroScript.ms" )
 struct MacroScriptFileParser_v
 (
 	__construct = #( #path ),
+	
 	/* required */
 	path,
 	
+	/* properties */
 	file_content = #(),
 	
 	MacroScripts	= #(),
-	MacroScript_last,	-- store currently parsed Macro file
+	MacroScript_last, -- store currently parsed Macro file
 
 	RegEx	= dotNetClass "System.Text.RegularExpressions.Regex",
 	RegEx_options	= dotNetClass "System.Text.RegularExpressions.RegexOptions",
-			
+
+	ControlParamsParser 	= ControlParamsParser_v(),
+	
+	
 	/** Parse MacroScripts
 	  *
-	  * IMPORTANT: Keep EACH PROPERTY on SEPARATE LINE
+	  * IMPORTANT: Keep EACH PROPERTY on ON ITS OWN SEPARATED LINE
 	  *
 	  *	MacroScript <macro_name>
-	  *		category:	  ""
-	  *		buttontext: ""
-	  *		toolTip:	   ""
-	  *		icon:	   "#(path, index)"
+	  *		category:	""
+	  *		buttontext:	""
+	  *		toolTip:	""
+	  *		icon:	"#(path, index)"
 	  *	(
-	  *		messagebox "MacroScript";
+	  *		messageBox "MacroScript";
 	  *	)
 	  *
 	  */
@@ -63,7 +69,7 @@ struct MacroScriptFileParser_v
 	 */
 	function _parseProperties line =
 	(
-		if( this._lineIsProperty line ) then
+		if( this._lineIsProperty (line) ) then
 			this._parseLine line
 			--MacroScript_last.setProp (this._getKeyValuePair line)
 	),
@@ -72,27 +78,36 @@ struct MacroScriptFileParser_v
 	 */
 	function _parseLine line =
 	(
+		--format "\n------\n";
 		--print "MacroScriptParser._parseLine()"
-		key_value = (filterString line ":")
-		key       = toLower key_value[1]
-		--format "key_value	= % \n" key_value
-		setProperty MacroScript_last key (this._joinAndSanitizeValues (deleteItem key_value 1))
-		--format "MacroScript_last = % \n" MacroScript_last
+
+		key	= toLower (filterString line ":")[1]
+
+		val_subs	= substring line (key.count + 2) -1
+		val	= this._stripQuotes ( this._trimWhiteSpace val_subs )
+		
+		if key == "icon" then
+			setProperty MacroScript_last ("params") (ControlParamsParser.parse(val))
+		
+		else
+			setProperty MacroScript_last (key) (val)
+				
 	),
 	
 	/** Find if line start with "MacroScript <macro_name>"
 	 */
 	function _lineIsMacroName line =
 	(
-		RegEx.isMatch line "^\s*MacroScript\s+.+" RegEx_options.IgnoreCase == true --return
+		RegEx.isMatch line "^\s*MacroScript\s+.+" RegEx_options.IgnoreCase --return
 	),
 	
 	/** _line is property
 	 */
 	function _lineIsProperty line =
 	(
-		RegEx.isMatch line "^\s*(category|buttonText|toolTip|icon|silentErrors|autoUndoEnabled)\s*:\s*" RegEx_options.IgnoreCase == true --return
+		RegEx.isMatch line "^\s*(category|buttonText|toolTip|icon|silentErrors|autoUndoEnabled)\s*:\s*" RegEx_options.IgnoreCase  --return
 	),
+	
 	/** Get name of macro from line
 	  * remove whitespace and tab
 	  *
@@ -103,25 +118,6 @@ struct MacroScriptFileParser_v
 	function _getMacroName line =
 	(
 		(filterString line " 	")[2] --return
-	),
-	
-	/** Join and sanitize values
-	 */
-	function _joinAndSanitizeValues values =
-	(
-		this._stripQuotes ( this._trimWhiteSpace (this._joinValues values) )
-	),
-	
-	/** Join values
-	 */
-	function _joinValues values =
-	(
-		val_join = ""
-		
-		for val in values do
-			val_join += ( trimLeft ( trimRight val ) + ":")
-	
-		trimRight val_join ":"	
 	),
 	
 	/** Remove leading and trailing white space
@@ -141,7 +137,6 @@ struct MacroScriptFileParser_v
 		trimLeft ( trimRight _string "\"" ) "\"" --return
 	),
 	
-	
 	/** _add latest parsed macroscript
 	 */
 	function _addLastMacroscript =
@@ -149,7 +144,6 @@ struct MacroScriptFileParser_v
 		if( MacroScript_last != undefined ) then
 			append MacroScripts MacroScript_last
 	),
-
 
 	/** Get file content
 	 */
@@ -175,6 +169,7 @@ struct MacroScriptFileParser_v
 		file_content --return
 	),
 	
+
 	/*------------------------------------------------------------------------------
 		CONSTRUCT
 	--------------------------------------------------------------------------------*/

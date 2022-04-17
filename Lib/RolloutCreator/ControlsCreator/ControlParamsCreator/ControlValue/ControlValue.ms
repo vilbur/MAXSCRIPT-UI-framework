@@ -10,10 +10,10 @@ struct ControlValue_v
 	  *	
 	  */
 	names_of_value_param = #(
-		#( #selection,	#listbox,	#multilistbox,	#dropdownlist ),
-		#( #checked,	#checkbox,	#checkbutton,	#dropdownlist ),
-		#( #range,  	#spinner ),	
-		#( #text,  	#edittext,	#browsePath  )
+		#( #SELECTION,	#listbox,	#multilistbox,	#dropdownlist ),
+		#( #CHECKED,	#checkbox,	#checkbutton,	#dropdownlist ),
+		#( #RANGE,  	#spinner ),	
+		#( #TEXT,  	#edittext,	#browsePath  )
 	),
 	
 	/** Get value from ini

@@ -3,7 +3,6 @@
   * http://docs.autodesk.com/3DSMAX/15/ENU/MAXScript-Help/index.html?url=files/GUID-6E21C768-7256-4500-AB1F-B144F492F055.htm,topicNumber=d30e636049
   *
   *
-  * @property	string	icom	can contain params for control E.G.: "type:checkbox|checked:true|border:false"
   *
   */
 struct MacroScript_Content_v
@@ -13,12 +12,11 @@ struct MacroScript_Content_v
 	macro_name,
 	category,
 	buttontext,
+	
 	tooltip = "",
 	icon    = "",
-	
-	private
-	
-	params_split,
+	params = #( #(), #() ), -- 2D matrix #( #(keys), #(values) )
+
 	
 	public
 	
@@ -58,103 +56,80 @@ struct MacroScript_Content_v
 	  * @return	string passed to methods in ControlBoxControlTypes E.G.: "columns: pos:"
 	  * @return	2D matrix of keys and values E.G.: #( #("checked:true", "checked", "true"), #("border:false", "border", "false") )	
 	 */
-	function getParams =
-	(
+	--function getParams =
+	--(
 		--print "MacroScript_Content_v.getParams()"
-		init_params_string = ""
-
-		this._setParamsSplit()
-		
-		for param in params_split where param[2] != "type" do
-			init_params_string += param[2] as string +":"+ param[3]+" "
-
-		init_params_string --return
-	),
+		--init_params_string = ""
+		--
+		--this._setParamsSplit()
+		--
+		--for param in params_split where param[2] != "type" do
+		--	init_params_string += param[2] as string +":"+ param[3]+" "
+		--
+		--init_params_string --return
+	--),
 
 	/** Parse string of icon property
 	  *
 	  *
-	  * @return	string passed to methods in ControlBoxControlTypes E.G.: "columns: pos:"
-	  * @return	2D matrix of keys and values E.G.: #( #("checked:true", "checked", "true"), #("border:false", "border", "false") )	
+	  * @return	array	params	Params for control #( #key1, "value1", #key2, "value2" )
 	 */
 	function getParamsArray =
 	(
 		--print "MacroScript_Content_v.getParamsArray()"
-		params_key_value = #()
-
-		this._setParamsSplit()
+		params_array = #()
+	
+		for i = 1 to params[1].count do 
+		(
+			append params_array params[1][i]
+			append params_array params[2][i]
+		)
 		
-		for param_split in params_split where param_split[2] != "type" do
-			params_key_value = params_key_value + #(param_split[2] as name , this._convertDatatype(param_split[3]))
-
-		params_key_value --return
+		params_array --return
 	),
 	
 	/** Get param
 	 */
-	function getParam param_get =
+	function getParam param =
 	(
 		--print "MacroScript_Content_v.getParam()"
-		this._setParamsSplit()
-
-		params = for param in params_split where param[2] == ( param_get as string ) collect param
-
-		if( params.count > 0 ) then
-			params[1][3] --return
-	),
-	
-	
-	/** Set split params
-	 */
-	function _setParamsSplit =
-	(
-		if( params_split == undefined ) then
-			params_split = this.splitParams()
-	),
-
-	
-	/** Split params in icon parameter by pipe "|" E.G.: "type:checkbox|checked:true|border:false"
-	  *
-	  * @return	2D matrix of splitted params	E.G.: #( #("checked:true", "checked", "true"), #("border:false", "border", "false")) 
-	 */
-	function splitParams =
-	(
-		this._getMatches icon "(\w+):([^\|]+)"
-	),
-	
-	/** _get matches
-	 */
-	function _getMatches string pattern ignorecase:true =
-	(
-		rx         = dotNetClass "System.Text.RegularExpressions.RegEx"
-		rx_options	= dotNetClass "System.Text.RegularExpressions.RegexOptions"
 		
-		matches = if (ignorecase) then rx.matches string pattern rx_options.IgnoreCase else rx.matches string pattern 
-		
-		(for matchIdx = 0 to matches.count-1 collect for groupIdx = 0 to matches.item[matchIdx].groups.count-1 collect ( matches.item[matchIdx].groups.item[groupIdx].value )) --return
+		if (index = findItem params[1] param )> 0 then 
+			params[2][index] --return
 	),
 	
-	/** Format string value to valid datatype
-	 */
-	function _convertDatatype val =
-	(		
-		--print "MacroScript_Content_v._convertDatatype()"
-		--format "val	= % \n" val
-		if( (for pattern in #( "true", "false", "(color*", "[*,*]" ) where matchPattern val pattern:pattern collect pattern).count > 0 ) then 
-			execute val
+	
+	--/** Set split params
+	-- */
+	--function _setParamsSplit =
+	--(
+	--	if( params_split == undefined ) then
+	--		params_split = this.splitParams()
+	--),
+	--
+	--
+	--/** Split params in icon parameter by pipe "|" E.G.: "type:checkbox|checked:true|border:false"
+	--  *
+	--  * @return	2D matrix of splitted params	E.G.: #( #("checked:true", "checked", "true"), #("border:false", "border", "false")) 
+	-- */
+	--function splitParams =
+	--(
+	--	this._getMatches icon "(\w+):([^\|]+)"
+	--),
+	--
+	--/** _get matches
+	-- */
+	--function _getMatches string pattern ignorecase:true =
+	--(
+	--	rx         = dotNetClass "System.Text.RegularExpressions.RegEx"
+	--	rx_options	= dotNetClass "System.Text.RegularExpressions.RegexOptions"
+	--	
+	--	matches = if (ignorecase) then rx.matches string pattern rx_options.IgnoreCase else rx.matches string pattern 
+	--	
+	--	(for matchIdx = 0 to matches.count-1 collect for groupIdx = 0 to matches.item[matchIdx].groups.count-1 collect ( matches.item[matchIdx].groups.item[groupIdx].value )) --return
+	--),
+	
 
-		else if( matchPattern val pattern:"#(*" ) then
-		(
-			val = substituteString val "'" "\"" -- replace macroscript define array paramter E.G.: items:#( 'item 1', '2' ) >>> items:#( "item 1", "2" )
-		
-			execute val
-		)
-		else if( ( val_as_number = val as number) != undefined ) then 
-			val_as_number --return
-			
-		else
-			val --return
-	),
 	
 	/**  
 	 */

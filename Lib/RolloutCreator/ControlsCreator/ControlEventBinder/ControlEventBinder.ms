@@ -94,7 +94,7 @@ struct ControlEventBinder_v
 		--print "ControlEventBinder_v._addHandler()"
 		if( Event.code == "" ) then
 			return false
-		format "\nEVENT = % \n" Event
+		--format "\nEVENT = % \n" Event
 		_Rollout._RolloutCreator.addHandler _Control.id Event.type codeStr:( "("+Event.code+")" ) paramStr:Event.params filter:on
 	),
 	
@@ -173,7 +173,7 @@ struct ControlEventBinder_v
 	function _addEventFired =
 	(
 		--print "ControlEventBinder_v._addEventFired()"
-		EventFiredCreator = EventFiredCreator_v _Control:_Control
+		EventFiredCreator = EventFiredCreator_v _RolloutClass:(_Rollout.getFullId()) _RolloutControl:( (_Rollout.getFullId()) +"."+ _Control.id as string )
 		
 		for Event in this._Control.Events.list do
 			Event.code = (EventFiredCreator.getEventFired(Event)) + "\n"+ Event.code

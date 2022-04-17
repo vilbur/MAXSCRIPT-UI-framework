@@ -83,7 +83,7 @@ struct ContentRollout_v
 	 */
 	function _getFileContent path =
 	(
-		filein path
+		--filein path
 		
 		ScriptFile_Content_v path:path	-- return
 	),

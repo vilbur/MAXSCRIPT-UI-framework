@@ -185,9 +185,9 @@ struct RolloutCreator_v
 	 */
 	function _setSubrolloutsHeight _Rollout height =
 	(
-		print "RolloutCreator_v._setSubrolloutsHeight()"
+		--print "RolloutCreator_v._setSubrolloutsHeight()"
 		--print "DEDUG HEIGHT OF SUBROLLOUTS"
-		format "_Rollout.parent_rollout	= % \n" _Rollout.parent_rollout
+		--format "_Rollout.parent_rollout	= % \n" _Rollout.parent_rollout
 		nested_level = if( _Rollout.parent_rollout == undefined ) then 0 else (filterString _Rollout.parent_rollout ".").count/2 -- split parent_rollout_id and slot id E.G.: ROLLOUT_Parent.children
 		
 		

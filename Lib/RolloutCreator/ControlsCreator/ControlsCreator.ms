@@ -26,7 +26,7 @@ struct ControlCreator_v
 	function addControls _Controls =
 	(
 		format "\n\n--------------	Controls group:%	--------------\n" _Controls.group;
-		--print ("ControlCreator_v.addControls()"  )
+		print ("ControlCreator_v.addControls()"  )
 
 		--this._Rollout  = _Rollout
 		this._Controls = _Controls
@@ -53,17 +53,15 @@ struct ControlCreator_v
 		AcrossModifier.addFakeControls(this._Controls)
 
 		
-		
-		
 		/* add LOCAL VARIABLES */ 
 		this._addLocalVariablesToRollout()
-
+		
 		/* add TEXT */ 
 		this._addTextToRollout()
-
+		
 		/* add CONTROLS */ 
 		this._addControlsToRollout()
-
+		
 		/* add HANDLERS */ 
 		this._addHandlersToRollout()
 
@@ -120,7 +118,7 @@ struct ControlCreator_v
 	 */
 	function _addControlsToRollout =
 	(
-		--print "ControlCreator_v._addControlsToRollout()"
+		print "ControlCreator_v._addControlsToRollout()"
 
 		this._addControlsGroup #start
 
@@ -134,13 +132,11 @@ struct ControlCreator_v
 	 */
 	function _addControlToRollout _Control =
 	(
-		
 		if not matchPattern _Control.id pattern:"LABEL_fake*" then -- DEBUG - don`t print
 			(format "\n"; print ("ControlCreator_v._addControlToUi() " +_Control.id ))
 
 		params = ParamsCreator.join(_Control.params)
-		--format "\n% %\n" _Control.id params
-		--format "_Control	= % \n" _Control
+
 		_Rollout._RolloutCreator.addControl (_Control.type) (_Control.id) (this._emptyCaptionIfInBrackets(_Control.caption)) paramStr:params
 	),
 

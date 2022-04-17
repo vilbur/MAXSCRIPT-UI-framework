@@ -14,7 +14,7 @@ _Rollout = _RolloutCreator.new "Test"
 
 _Controls = _Rollout.Controls()
 
-_Button_1 = _Controls.control #button "Button 1" id:#button_1
+_Button_1 = _Controls.control #button "Button 1" id:#button_1 params:#( #tooltip, "Test Tooltip")
 
 
 /** CREATE UI 

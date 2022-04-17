@@ -1,11 +1,15 @@
 filein( getFilenamePath(getSourceFileName()) + "/MacroScriptFileParser/MacroScriptFileParser.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/ContentControlCreator/ContentControlCreator.ms" )
+
+
 /** Process ".ms" & ".mcr" file
-  * 1) Get macroscripts from '.mcr' files
+  *
+  * Every ".ms" file creates its own ControlsBox
+  *
+  * 1) Get all macroscripts from single '.mcr' file
   * 2) Filein '.ms' files
   *
   * @property	string	file	Path to file
-  *
   *
   *
   */
@@ -18,6 +22,10 @@ struct ScriptFile_Content_v
 	name,
 	MacroScripts	= #(),
 
+	
+	_Controls,
+	ControlEventBinder,
+	
 	/** File
 	 */
 	function loadMacroscriptFile =
@@ -33,7 +41,7 @@ struct ScriptFile_Content_v
 	(
 		--print "!!!!!!!!!!!!!!!!!!!!!!!!"
 		--print("ScriptFile_Content_v.addToUi() " +_Rollout.id)
-		name	= if( name == undefined )then "" else "";
+		name	= if( name == undefined ) then "" else ""; -- ????????????
 		
 		if( this.isMacrosriptFile() and MacroScripts.count > 0 ) then
 			this._createControls (_Rollout)
@@ -46,13 +54,62 @@ struct ScriptFile_Content_v
 	 */
 	function _createControls _Rollout =
 	(
-		_Controls = _Rollout.Controls group:(this._getGroupName())
-		--print("ScriptFile_Content_v._createControls()" )
-		--format "MacroScripts = % \n" MacroScripts
-		for m = 1 to MacroScripts.count do
-			_Controls = (ContentControlCreator_v Macro:MacroScripts[m] _Rollout:_Rollout _Controls:_Controls).getControls()
+		format "\n"; print("ScriptFile_Content_v._createControls()" )
+		_Controls	= _Rollout.Controls	group:(this._getGroupName())
+		ControlEventBinder	= ControlEventBinder_v 	_Rollout:_Rollout
+		
+		for i = 1 to MacroScripts.count do
+			this._createControlfromMacro (MacroScripts[i])
 	),
+	
+	/** Create controlfrom macro
+	 */
+	function _createControlfromMacro Macro =
+	(
+		--format "\n"; print "ScriptFile_Content_v.createControlfromMacro()"
+		_Control = _Controls.control (Macro.getType()) Macro.buttontext params:(Macro.getParamsArray())  add_to_controls:false
+		
+		if( (_Control_Exist = _Controls.get(_Control.id)) != undefined ) then
+			_Control = _Control_Exist -- update existing control
+					
+		this._setEventCallMacro (_Control) (Macro)
+		
+		if( _Control_Exist == undefined ) then
+			_Controls.add _Control
+	),
+	
+	/** Set events which call macro
+	 */
+	function _setEventCallMacro &_Control Macro =
+	(
+		--format "ContentControlCreator_v._setEventCallMacro event_type	= % \n" event_type
+		event_type = this._getEventType (_Control) (Macro)
+		
+		callback = "(macros.run \""+Macro.category+"\" \""+Macro.macro_name+"\")"
 
+		_Control.Event event_type callback tooltip:Macro.toolTip
+		
+		_Control --return
+	),
+	
+	/** Get type of event by occurence of macro in ".mcr" file
+	  *
+	  * Event types are ordered by arrays in ControlEventBinder.event_types
+	  *
+	  * @return	#type_of_event	
+	 */
+	function _getEventType _Control Macro =
+	(
+		--print "ContentControlCreator_v._getEventType()"
+		if( (event_type = Macro.getParam "event") == undefined ) then
+			event_type = (ControlEventBinder.EventTypes.getEventTypesOfControl (_Control.type))[ _Control.Events.list.count+1] -- get next event type in list
+
+		--if( event_type != undefined ) then
+			--event_type = event_type as name --return
+			
+		event_type --return
+	),
+	
 	/** Is maxscript file
 	 */
 	function isMaxscriptFile =
@@ -65,8 +122,8 @@ struct ScriptFile_Content_v
 	function isMacrosriptFile =
 	(
 		 getFilenameType path == ".mcr" --return
-	
 	),
+	
 	/** Has macro scripts
 	 */
 	function hasMacroScripts =
