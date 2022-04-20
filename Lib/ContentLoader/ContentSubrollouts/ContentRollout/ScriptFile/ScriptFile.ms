@@ -1,5 +1,5 @@
 filein( getFilenamePath(getSourceFileName()) + "/MacroScriptFileParser/MacroScriptFileParser.ms" )
-filein( getFilenamePath(getSourceFileName()) + "/ContentControlCreator/ContentControlCreator.ms" )
+--filein( getFilenamePath(getSourceFileName()) + "/ContentControlCreator/ContentControlCreator.ms" )
 
 
 /** Process ".ms" & ".mcr" file
@@ -66,7 +66,8 @@ struct ScriptFile_Content_v
 	 */
 	function _createControlfromMacro Macro =
 	(
-		--format "\n"; print "ScriptFile_Content_v.createControlfromMacro()"
+		format "\n"; print "ScriptFile_Content_v.createControlfromMacro()"
+		--format "Macro	= % \n" Macro
 		_Control = _Controls.control (Macro.getType()) Macro.buttontext params:(Macro.getParamsArray())  add_to_controls:false
 		
 		if( (_Control_Exist = _Controls.get(_Control.id)) != undefined ) then
@@ -82,7 +83,9 @@ struct ScriptFile_Content_v
 	 */
 	function _setEventCallMacro &_Control Macro =
 	(
-		--format "ContentControlCreator_v._setEventCallMacro event_type	= % \n" event_type
+		format "\n"; print "ScriptFile_Content_v._setEventCallMacro()"
+		format "Macro.toolTip	= % \n" Macro.toolTip
+		
 		event_type = this._getEventType (_Control) (Macro)
 		
 		callback = "(macros.run \""+Macro.category+"\" \""+Macro.macro_name+"\")"
@@ -100,7 +103,7 @@ struct ScriptFile_Content_v
 	 */
 	function _getEventType _Control Macro =
 	(
-		--print "ContentControlCreator_v._getEventType()"
+		--print "ScriptFile_Content_v._getEventType()"
 		if( (event_type = Macro.getParam "event") == undefined ) then
 			event_type = (ControlEventBinder.EventTypes.getEventTypesOfControl (_Control.type))[ _Control.Events.list.count+1] -- get next event type in list
 

@@ -1,5 +1,6 @@
 filein( getFilenamePath(getSourceFileName()) + "/BrowsePath/BrowsePath.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/ControlParamsCreator/ControlParamsCreator.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/TooltipCreator/TooltipCreator.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/ControlEventBinder/ControlEventBinder.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/AcrossParameterModifier/AcrossParameterModifier.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/GroupBoxCreator/GroupBoxCreator.ms" )
@@ -19,6 +20,7 @@ struct ControlCreator_v
 
 	AcrossModifier	= AcrossParameterModifier_v(),
 	ParamsCreator	= ControlParamsCreator_v(),
+	TooltipCreator	= TooltipCreator_v(),
 	EventBinder	= ControlEventBinder_v _Rollout:_Rollout ini_path:ini_path,
 
 	/** Add controls
@@ -44,6 +46,8 @@ struct ControlCreator_v
 			
 			ParamsCreator.mergeParams(_Control)
 
+			TooltipCreator.addTooltips(_Control)
+
 			EventBinder.combineEvents(_Control)
 
 			this._mutateCustomControlTypes(_Control)
@@ -51,7 +55,6 @@ struct ControlCreator_v
 
 		/* modify ACROSS PARAMETER */ 
 		AcrossModifier.addFakeControls(this._Controls)
-
 		
 		/* add LOCAL VARIABLES */ 
 		this._addLocalVariablesToRollout()
@@ -118,7 +121,7 @@ struct ControlCreator_v
 	 */
 	function _addControlsToRollout =
 	(
-		print "ControlCreator_v._addControlsToRollout()"
+		format "\n"; print "ControlCreator_v._addControlsToRollout()"
 
 		this._addControlsGroup #start
 
@@ -133,11 +136,12 @@ struct ControlCreator_v
 	function _addControlToRollout _Control =
 	(
 		if not matchPattern _Control.id pattern:"LABEL_fake*" then -- DEBUG - don`t print
-			(format "\n"; print ("ControlCreator_v._addControlToUi() " +_Control.id ))
-
+			format "_Control.id	= % \n" _Control.id
+			--print ("ControlCreator_v._addControlToUi() " +_Control.id )
+		
 		params = ParamsCreator.join(_Control.params)
 
-		_Rollout._RolloutCreator.addControl (_Control.type) (_Control.id) (this._emptyCaptionIfInBrackets(_Control.caption)) paramStr:params
+		_Rollout._RolloutCreator.addControl (_Control.type) (_Control.id) (this._emptyCaptionIfInBrackets(_Control.caption)) paramStr:params filter:true
 	),
 
 	/** Add Handlers of Events
@@ -147,7 +151,6 @@ struct ControlCreator_v
 		for _Control in _Controls.list do
 			EventBinder.addHandlers(_Control)
 	),
-
 
 	/** _add value parameter
 	 */
