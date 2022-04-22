@@ -34,11 +34,8 @@ struct ControlParamsCreator_v
 		
 		/* DEFAULTS PARMAS */ 
 		for defautls_key in this._getDefaultKeys(_Control.type) do
-		(
-			
 			MergeParamsList.merge (ControlDefaults.getVal(defautls_key as name ))
 			--format "% = % \n" defautls_key MergeParamsList
-		)
 
 		/* MERGE Defaults.keys.#global */ 
 		MergeParamsList.merge ( ControlDefaults.getVal(#global) )
@@ -75,8 +72,6 @@ struct ControlParamsCreator_v
 		trimRight _params  --return
 	),
 
-
-	
 	
 	private
 	
@@ -97,7 +92,6 @@ struct ControlParamsCreator_v
 	  *
 	  *
 	  *
-	  
 	  * e.g: match #list|#listbox|#multilistbox   if control_type == "multilistbox"
 	 */
 	function _getDefaultKeys control_type =

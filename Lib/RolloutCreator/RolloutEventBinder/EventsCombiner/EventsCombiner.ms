@@ -1,4 +1,7 @@
-/** EventsBinder
+/** Combine code of events to single string of code
+  * 
+  * 
+  * 
  */
 struct EventsCombiner_v
 (
@@ -38,6 +41,7 @@ struct EventsCombiner_v
 		
 		Event --return
 	),
+	
 	/** Set events
 	 */
 	function setEventsClass event_class Events_array =
@@ -48,6 +52,7 @@ struct EventsCombiner_v
 	
 	
 	private
+	
 	
 	/** _combine event
 	 */
@@ -69,6 +74,7 @@ struct EventsCombiner_v
 			
 		Event_combined --return
 	),
+	
 	/** Get event
 	 */
 	function _getEvent event_class event_type =

@@ -2,7 +2,7 @@
  */
 struct ControlTypes_v
 (
-	/**  
+	/**  COMMENTED TYPES ARE NOT SUPPORTED
 	  */
 	list = #(
 		#Label,

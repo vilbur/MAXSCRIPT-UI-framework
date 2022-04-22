@@ -2,13 +2,15 @@ filein( getFilenamePath(getSourceFileName()) + "/MacroScriptFileParser/MacroScri
 --filein( getFilenamePath(getSourceFileName()) + "/ContentControlCreator/ContentControlCreator.ms" )
 
 
-/** Process ".ms" & ".mcr" file
+/** Process ".ms" & ".mcr" files
   *
-  * Every ".ms" file creates its own ControlsBox
+  * Every ".mcr" file creates its own ControlsBox
   *
   * 1) Get all macroscripts from single '.mcr' file
-  * 2) Filein '.ms' files
-  *
+  * 2) Create by macroscripts
+  * 3) Filein ".mcr" files
+  * 
+  * 
   * @property	string	file	Path to file
   *
   *
@@ -32,7 +34,11 @@ struct ScriptFile_Content_v
 	(
 		--print ("------------\nScriptFile.loadMacroscriptFile file:\n"+ (path)+"\n")
 		if ( this.isMacrosriptFile() ) then
+		(
+			filein path
 			MacroScripts = (MacroScriptFileParser_v path:path).MacroScripts
+		)
+		
 	),
 	
 	/** Create controls from ".mcr" file to ui

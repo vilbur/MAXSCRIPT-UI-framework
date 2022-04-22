@@ -1,6 +1,6 @@
 clearListener()
 
-filein( getFilenamePath(getSourceFileName()) + "/../../../../../ContentLoader.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/../../../../ContentLoader.ms" )
 
 current_dir	= getFilenamePath(getSourceFileName())
 

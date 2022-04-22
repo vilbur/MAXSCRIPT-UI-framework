@@ -34,8 +34,8 @@ struct Control_v
 	 */
 	function param param val =
 	(
-		print "Control_v.param()"
-		format "param	= % \nval	= % \n\n" param val
+		--print "Control_v.param()"
+		--format "param	= % \nval	= % \n\n" param val
 		Params.setVal param val
 	),
 	
