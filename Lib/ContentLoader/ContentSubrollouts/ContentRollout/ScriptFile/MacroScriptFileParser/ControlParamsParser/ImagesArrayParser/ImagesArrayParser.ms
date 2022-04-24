@@ -12,21 +12,19 @@ struct ImagesArrayParser_v
 	  * 2) $userScripts
 	  * 3) Absolute path
 	  * 
-	  * 
 	 */
 	function getIconPath images =
 	(
 		format "\n"; print "ControlParamsParser_v._getIconPath()"
-		format "path	= % \n" path
+		--format "path	= % \n" path
 		
-		images[1] = this.replaceSystemDir(images[1])
-
-		--format "icon_path	= % \n" images[1]
+		icon_path = images[1]
 		
-		--GetDir 
-		
-		--images[1] = "C:/GoogleDrive/Programs/CG/3DsMax/scripts/Library/MAXSCRIPT-UI-framework/Lib/ContentLoader/ContentSubrollouts/ContentRollout/ScriptFile/_Test/Test-files/icons_sprite.bmp"
-		--images[1] = "$userScripts/Library/MAXSCRIPT-UI-framework/Lib/icons_sprite.bmp"
+		if matchPattern icon_path pattern:"$*" then 
+			images[1] = this.replaceSystemDir(icon_path)
+			
+		else if matchPattern icon_path pattern:"/*" then 
+			images[1] = getFilenamePath(path) +"/"+ icon_path --return
 		
 		images --return
 	),
@@ -38,40 +36,20 @@ struct ImagesArrayParser_v
 		format "\n"; print "ImagesArrayParser_v.replaceSystemDir()"
 		format "icon_path	= % \n" icon_path
 		
+		string_split	= filterString icon_path "/"
 		
-		if matchPattern icon_path pattern:"$*" then 
-		(
-			string_split	= filterString icon_path "/"
-			
-			system_dir = string_split[1]
-			 			
-			system_dir_pah = getDir (( substring string_split[1] 2 -1 ) as name ) + "/"
-			
-			format "system_dir	= % \n" system_dir
-			format "system_dir_pah	= % \n" system_dir_pah
-			
-			icon_path = substituteString icon_path system_dir system_dir_pah
-			--icon_path = substituteString icon_path "$userScripts" "sHIT"
-			
-			--format "icon_path	= % \n" icon_path
-			
-			icon_path --return
-		)
-		else
-		(
-			
-			result = getFilenamePath(path) +"/"+ icon_path --return
-			format "result	= % \n" result
-			result --return
-		)
+		system_dir = string_split[1]
+					
+		system_dir_pah = getDir (( substring string_split[1] 2 -1 ) as name ) + "/"
 		
+		icon_path = substituteString icon_path system_dir system_dir_pah
+		
+		icon_path --return
 	),
-	
 	
 	/**  
 	 */
 	on create do
 	(
 	)
-	
 )

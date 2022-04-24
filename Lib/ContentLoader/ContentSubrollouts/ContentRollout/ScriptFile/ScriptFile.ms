@@ -28,7 +28,7 @@ struct ScriptFile_Content_v
 	_Controls,
 	ControlEventBinder,
 	
-	/** File
+	/** Load controls from .mcr file
 	 */
 	function loadMacroscriptFile =
 	(
@@ -36,6 +36,7 @@ struct ScriptFile_Content_v
 		if ( this.isMacrosriptFile() ) then
 		(
 			filein path
+			
 			MacroScripts = (MacroScriptFileParser_v path:path).MacroScripts
 		)
 		
@@ -60,7 +61,7 @@ struct ScriptFile_Content_v
 	 */
 	function _createControls _Rollout =
 	(
-		format "\n"; print("ScriptFile_Content_v._createControls()" )
+		--format "\n"; print("ScriptFile_Content_v._createControls()" )
 		_Controls	= _Rollout.Controls	group:(this._getGroupName())
 		ControlEventBinder	= ControlEventBinder_v 	_Rollout:_Rollout
 		
@@ -72,7 +73,7 @@ struct ScriptFile_Content_v
 	 */
 	function _createControlfromMacro Macro =
 	(
-		format "\n"; print "ScriptFile_Content_v.createControlfromMacro()"
+		--format "\n"; print "ScriptFile_Content_v.createControlfromMacro()"
 		--format "Macro	= % \n" Macro
 		_Control = _Controls.control (Macro.getType()) Macro.buttontext params:(Macro.getParamsArray())  add_to_controls:false
 		
@@ -89,8 +90,8 @@ struct ScriptFile_Content_v
 	 */
 	function _setEventCallMacro &_Control Macro =
 	(
-		format "\n"; print "ScriptFile_Content_v._setEventCallMacro()"
-		format "Macro.toolTip	= % \n" Macro.toolTip
+		--format "\n"; print "ScriptFile_Content_v._setEventCallMacro()"
+		--format "Macro.toolTip	= % \n" Macro.toolTip
 		
 		event_type = this._getEventType (_Control) (Macro)
 		

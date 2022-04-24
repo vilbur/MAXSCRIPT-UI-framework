@@ -8,7 +8,7 @@ struct ControlParamsParser_v
 	path, -- path to "*.mcr" file
 	
 	/* properties */
-	params = #( #(), #() ),
+	params, -- #( #(), #() ) 2D matrix
 	
 	/* dependency */
 	ImagesArrayParser 	= ImagesArrayParser_v(),
@@ -26,8 +26,10 @@ struct ControlParamsParser_v
 	 */
 	function parse params_string =
 	(
-		format "\n"; print "ControlParamsParser_v.parse()"
+		--format "\n"; print "ControlParamsParser_v.parse()"
 		--format "params_string	= % \n" params_string
+		
+		params = #( #(), #() )
 		
 		params_string = this._escapeSingleQuotes(params_string)
 
@@ -86,12 +88,13 @@ struct ControlParamsParser_v
 		)
 	),
 	
-	/** Get sprite size
+	/** Get size of sprite image
 	 */
 	function _getSpriteSize icon_path =
 	(
 		format "\n"; print "ControlParamsParser_v.getSpriteSize()"
 		format "icon_path	= % \n" icon_path
+		format "icon_path.count	= % \n" icon_path.count
 		img = ( dotNetClass "System.Drawing.Image").FromFile icon_path
 		--imgSize = [img.Height / img.VerticalResolution, img.Width / img.HorizontalResolution]
 		imgSize = [ img.Width,img.Height ]
