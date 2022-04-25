@@ -155,6 +155,7 @@ struct MacroScriptFileParser_v
 		while not eof file_opened do 
 		(
 			line =  readLine file_opened
+			
 			if( line.count > 1 ) then 
 				append file_content ( this._trimWhiteSpace(line))
 				

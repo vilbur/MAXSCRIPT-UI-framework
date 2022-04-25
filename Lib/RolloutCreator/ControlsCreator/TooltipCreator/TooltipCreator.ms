@@ -28,8 +28,10 @@ struct TooltipCreator_v
 	 */
 	function _getTooltipsOfEvents Events =
 	(
-		--format "\n"; print "TooltipCreator_v.getTooltipsOfEvents()"
+		format "\n"; print "TooltipCreator_v.getTooltipsOfEvents()"
 		tooltip = ""
+		
+		format "Events.count	= % \n" Events.count
 		
 		for Event in Events do 
 			tooltip += this._getEventType(Event.type) +": "+ Event.tooltip + "\n"

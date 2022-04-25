@@ -40,7 +40,7 @@ struct ControlParamsParser_v
 			for key_value in key_value_pairs do
 				this._splitKeyAndValue (key_value)
 		)
-
+		--format "params	= % \n" params
 		params --return
 	),
 	
@@ -125,16 +125,23 @@ struct ControlParamsParser_v
 	 */
 	function _convertDatatype val =
 	(		
-		--print "MacroScript_Content_v._convertDatatype()"
+		--print "MacroScriptFileParser_v._convertDatatype()"
 		--format "val	= % \n" val
-		if( (for pattern in #( "true", "false", "(color*", "[*,*]" ) where matchPattern val pattern:pattern collect pattern).count > 0 ) then 
+		
+		/** if Boolean, Color,  Point2, Point3, #Name
+		  *	
+		  */
+		if( (for pattern in #( "true", "false", "(color*", "[*,*]", "#*" ) where matchPattern val pattern:pattern collect pattern).count > 0 ) then 
 			execute val
 			
 		else if( val as number != undefined ) then 
-			val as number --return
+			val as Number --return
 
 		else
 			val --return
+		
+		--format "val	= % \n" val
+		--val --return
 	),
 	
 	/**  

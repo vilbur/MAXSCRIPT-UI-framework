@@ -21,7 +21,6 @@ global STARTUP_EVENTS = #() -- run callbacks of controls like checkbox, checkbut
  */
 struct ControlEventBinder_v 
 (
-
 	__construct = #( #_Rollout ),
 
 	/* construct */ 
@@ -41,8 +40,8 @@ struct ControlEventBinder_v
 
 	control_types	= (ControlTypes_v()).getAllTypes(),
 
-	event_types,	-- get events from event_types array
-	events_params,	-- get params from event_types array
+	event_types,	-- Array of event types of control params
+	events_params,	-- Params of event_types
 
 	/** Combine events and add handlers
 	 */
@@ -50,10 +49,13 @@ struct ControlEventBinder_v
 	(
 		--format "\n"; print ("ControlEventBinder_v.combineEvents() "+ _Control.id)
 		this._Control = _Control
-
+		
 		event_types	= EventTypes.getEventTypesOfControl	(this._Control.type)
 		events_params	= EventTypes.getParamsOfEvents	(this._Control.type)
+		--format "event_types	= % \n" event_types
 		
+		this._normalizeNamesOfEventTypes()
+
 		this._validateEvents()
 		
 		this._setCallbackParamtersToCustomEvent()
@@ -70,8 +72,6 @@ struct ControlEventBinder_v
 
 		this._Control --return 
 	),
-
-	
 	
 	/** Combine events and add handlers
 	 */
@@ -150,15 +150,18 @@ struct ControlEventBinder_v
 	(
 		--print "ControlEvents._setCallbackParamtersToCustomEvent()"
 		for Event in this._Control.Events.list do
+		(
+
 			if (params = this._getParamsForEventType(Event.type) ) != undefined then 
 			(
 				if not( space_in_string = matchPattern Event.code pattern:("* *") ) then
 					for param in params_split = filterString Event.params where ( param_is_not_added = matchPattern Event.code pattern:("*"+param+"*")) == false do 
 						Event.code  += " "+ param -- add parameters after callback E.G.: "callbackFn" >>>  "callbackFn inSpin inCancel
-
+		
 			)
 			else if not( matchPattern Event.code pattern:"*()" or matchPattern Event.code pattern:"*macros.run*"  ) then -- add parameters after callback E.G.: "callbackFn" >>>  "callbackFn inSpin inCancel"
 				Event.code += "()"                                  -- add brackets after callback E.G.: "callbackFn" >>>  "callbackFn()"
+		)
 	),
 	
 	/** Get params for event type
@@ -166,7 +169,7 @@ struct ControlEventBinder_v
 	function _getParamsForEventType event_type =
 	(
 		--format "\n"; print "ControlEventBinder_v.getParamsForEventType()"
-		 events_params[findItem event_types event_type]
+		events_params[findItem event_types event_type]
 	),
 	/**_type _add event fired
 	 */
@@ -177,7 +180,6 @@ struct ControlEventBinder_v
 		
 		for Event in this._Control.Events.list do
 			Event.code = (EventFiredCreator.getEventFired(Event)) + "\n"+ Event.code
-
 	),
 
 	/** Get event from control, if dos not exists then create new
@@ -196,40 +198,24 @@ struct ControlEventBinder_v
 		(for Event in this._Control.Events.list where Event.type == event_type collect Event)[1] --return 
 	),
 
+
+	/** _normalize names of event types
+	 */
+	function _normalizeNamesOfEventTypes =
+	(
+		--format "\n"; print "ControlEventBinder_v._normalizeNamesOfEventTypes()"
+		for Event in this._Control.Events.list where classOf Event.type == String do
+			Event.type = Event.type as name
+	),
+
 	/** _validate events
 	 */
 	function _validateEvents =
 	(
 		--print "ControlEventBinder_v._validateEvents()"
 		for Event in this._Control.Events.list where findItem event_types Event.type == 0 do
-			throw  ("WARNING\n\nUnknown Event Type: #"+ Event.type + "\n\nControl: "+ (this._Control.id))
-		
+			throw  ("\n\n-----------------------------------------\n\nERROR - vilbur\n\nUnknown Event Type: "+ Event.type as string + "\n\nControl: "+ (this._Control.id) + "\n\n-----------------------------------------\n\n")
 	),
-	
-
-	
-	/*------------------------------------------------------------------------------
-		******************************** OLD ********************************
-	--------------------------------------------------------------------------------*/
-
-	--
-	--/** If checkbox has value true, then fire up checkbox`s callback when UI starts
-	-- */
-	--function _addToStartupEvents type callback =
-	--(
-	--	if( Parent_Control._Parameters.getVal #checked == true ) then
-	--	(
-	--		EventFired_true = this.Events.setEventFired type Parent_Control.id.full val:true -- simulate event fired
-	--
-	--		appendIfUnique STARTUP_EVENTS (EventFired_true+callback)
-	--	)
-	--),
-	--
-
-
-	/*------------------------------------------------------------------------------
-		TEST
-	--------------------------------------------------------------------------------*/
 
 	public
 
