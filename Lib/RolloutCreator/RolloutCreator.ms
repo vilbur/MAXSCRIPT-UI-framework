@@ -103,7 +103,7 @@ struct RolloutCreator_v
 		if( width != unsupplied ) then
 			this.width = width
 
-		this._validateRolloutTitle(_Rollout.title) (_Rollout.id)
+		--this._validateRolloutTitle(_Rollout.title) (_Rollout.id) 
 
 		this._setSubrolloutsHeight(_Rollout)(height)
 
@@ -172,14 +172,22 @@ struct RolloutCreator_v
 
 	private
 
-	/** Validate that title of rollout is not maxscript keyword or E.G.: "Rollout|Group|Locals|..."
-	 */
-	function _validateRolloutTitle rollout_title rollout_id =
-	(
-		--print "RolloutCreator_v._testRolloutTitle()"
-		if( rollout_title_is_defined = execute ("((class_of_title = classOf "+rollout_id+") != UndefinedClass and class_of_title != RolloutClass) ")  ) then
-			throw ("\n\nERROR INVALID ROLLOUT TITLE\n\nRollout.title == \""+rollout_title+"\"")	
-	),
+	--/** Validate that title of rollout is not maxscript keyword or E.G.: "Rollout|Group|Locals|..."
+	
+	-- 
+	
+	
+	-- */
+	--function _validateRolloutTitle rollout_title rollout_id =
+	--(
+	--	print "RolloutCreator_v._testRolloutTitle()"
+	--
+	--	--if( rollout_title_is_defined = execute ("((class_of_title = classOf "+rollout_id+") != UndefinedClass and class_of_title != RolloutClass) ")  ) then
+	--	--(
+	--	--	throw ("\n\n\n\nERROR INVALID ROLLOUT TITLE\n\nRollout.title = \""+rollout_title+"\"\n\n\n\n")
+	--	--	
+	--	--)
+	--),
 
 	/** _set subrollouts height
 	 */

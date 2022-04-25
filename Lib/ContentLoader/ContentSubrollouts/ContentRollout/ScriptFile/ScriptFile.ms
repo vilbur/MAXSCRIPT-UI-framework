@@ -1,3 +1,4 @@
+filein( getFilenamePath(getSourceFileName()) + "/MacroScript/MacroScript.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/MacroScriptFileParser/MacroScriptFileParser.ms" )
 --filein( getFilenamePath(getSourceFileName()) + "/ContentControlCreator/ContentControlCreator.ms" )
 
@@ -75,6 +76,7 @@ struct ScriptFile_Content_v
 	(
 		--format "\n"; print "ScriptFile_Content_v.createControlfromMacro()"
 		--format "Macro	= % \n" Macro
+		
 		_Control = _Controls.control (Macro.getType()) Macro.buttontext params:(Macro.getParamsArray())  add_to_controls:false
 		
 		if( (_Control_Exist = _Controls.get(_Control.id)) != undefined ) then
@@ -91,7 +93,6 @@ struct ScriptFile_Content_v
 	function _setEventCallMacro &_Control Macro =
 	(
 		--format "\n"; print "ScriptFile_Content_v._setEventCallMacro()"
-		--format "Macro.toolTip	= % \n" Macro.toolTip
 		
 		event_type = this._getEventType (_Control) (Macro)
 		

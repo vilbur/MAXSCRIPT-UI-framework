@@ -15,7 +15,7 @@ _Rollout = _RolloutCreator.new "Test"
 
 Subrollouts = _Rollout.Subrollouts()
 
-Subrollout_1 = Subrollouts.new "Subrollout1" id:#subrollout_1
+Subrollout_1 = Subrollouts.new "Subrollout1"
 Subrollout_2 = Subrollouts.new "Subrollout2" id:#subrollout_2
 
 --format "_Rollout     = % \n" _Rollout

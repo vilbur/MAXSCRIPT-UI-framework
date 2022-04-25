@@ -92,9 +92,9 @@ struct ControlParamsParser_v
 	 */
 	function _getSpriteSize icon_path =
 	(
-		format "\n"; print "ControlParamsParser_v.getSpriteSize()"
-		format "icon_path	= % \n" icon_path
-		format "icon_path.count	= % \n" icon_path.count
+		--format "\n"; print "ControlParamsParser_v.getSpriteSize()"
+		--format "icon_path	= % \n" icon_path
+		--format "icon_path.count	= % \n" icon_path.count
 		img = ( dotNetClass "System.Drawing.Image").FromFile icon_path
 		--imgSize = [img.Height / img.VerticalResolution, img.Width / img.HorizontalResolution]
 		imgSize = [ img.Width,img.Height ]
@@ -134,7 +134,7 @@ struct ControlParamsParser_v
 			val as number --return
 
 		else
-			execute val --return
+			val --return
 	),
 	
 	/**  

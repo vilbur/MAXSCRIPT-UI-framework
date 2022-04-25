@@ -1,5 +1,5 @@
 try(cui.UnRegisterDialogBar ROLLOUT_test)catch() 
-try( destroyDialog          ROLLOUT_test )catch()
+try( destroyDialog          ROLLOUT_test)catch()
 
 
 if( RolloutCreator_v == undefined ) then 

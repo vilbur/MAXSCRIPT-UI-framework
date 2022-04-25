@@ -16,7 +16,7 @@ format "_Rollout	= % \n" _Rollout
  *	
  */
 
-_Rollout._RolloutCreator.begin()
+_Rollout.rolloutCreatorBegin 256
 
 _Rollout._RolloutCreator.end()
 

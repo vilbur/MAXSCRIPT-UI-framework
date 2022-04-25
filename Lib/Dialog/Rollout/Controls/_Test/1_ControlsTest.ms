@@ -13,8 +13,8 @@ _Rollout  = Rollout_v title:"Test"
 
 _Controls = _Rollout.Controls()
 
-_Button_1 = _Controls.control #button "Button 1" id:#button_1
-_Button_2 = _Controls.control #button "Button 2" id:#button_2
+_Button_1 = _Controls.control #button	"Button 1"
+_Checkbox = _Controls.control #checkbox	"Checkbox 2"
 
 
 format "_Rollout	= % \n" _Rollout

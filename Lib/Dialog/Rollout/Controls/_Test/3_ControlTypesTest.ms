@@ -1,52 +1,41 @@
 clearListener()
 
-filein( getFilenamePath(getSourceFileName()) + "/../../../../RolloutCreator/RolloutCreator.ms" )
-
-/** Create variables:
-  *		_RolloutCreator
-  *		_Rollout
-  *		_Controls
-  */
-include "Library/MAXSCRIPT-UI-framework/Lib/RolloutCreator/_Test/includes/CreateTestRollout.ms"
+filein( getFilenamePath(getSourceFileName()) + "/../../Rollout.ms" )
 
 
-control_types	= (ControlTypes_v()).list
+try( destroyDialog ROLLOUT_test )catch()
 
 
-controls_with_items = #(
-	#Listbox,
-	#multilistbox,
-	#Dropdownlist,
-	#Combobox
-)
+/** DEFINE UI 
+ *	
+ */
+_Rollout  = Rollout_v title:"Test"
+
+_Controls = _Rollout.Controls()
+
+_Button_1 = _Controls.control #button "Button 1" id:#button_1
+_Button_2 = _Controls.control #button "Button 2" id:#button_2
+
+
+format "_Rollout	= % \n" _Rollout
+format "_Controls	= % \n" _Controls
+format "_Button_1	= % \n" _Button_1
 
 
 
-for control_type in control_types do
-(
-	params	= if( findItem controls_with_items control_type > 0 ) then #( #items, #("Item 1","Item 2","Item 3") ) else #()
+/** CREATE UI 
+ *	
+ */
+_RolloutCreator = rolloutCreator (_Rollout.id) (_Rollout.title)
 
-	_Control = _Controls.control control_type ( "Test " + control_type as string ) params:params
-)
-
-
---for i = 1 to 10 do
---(
---	across = 4
---	
---	if( i > 4  ) then across = 3
---	if( i > 7  ) then across = 2
---	if( i > 9  ) then across = 1
---	
---	_Button1    = _Controls.control #button ( "Button"+ i as string ) params:#(#across, across)
---)
+_RolloutCreator.begin()
 
 
-/** Create dialog ROLLOUT_test from _Rollout
-  *
-  */
-dialog_width  = 512
---dialog_width  = unsupplied
-dialog_height = unsupplied
+for _Controls in _Rollout._Controls do
+	for _Control in _Controls.list do
+		_RolloutCreator.addControl _Control.type _Control.id _Control.caption
 
-include "Library/MAXSCRIPT-UI-framework/Lib/RolloutCreator/_Test/includes/CreateTestDialog.ms"
+
+_RolloutCreator.end()
+
+CreateDialog (_RolloutCreator.def)
