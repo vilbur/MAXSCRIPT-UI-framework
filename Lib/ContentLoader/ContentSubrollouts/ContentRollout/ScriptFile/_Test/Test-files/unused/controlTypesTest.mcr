@@ -24,7 +24,7 @@
 ----	category:	"MacroFileTest"
 ----	buttontext:	"Checkbox HERE IS BUG"
 ----	toolTip:	"Changed event tooltip"
-----	icon:	"type:checkbox|checked:true|border:false|columns:12"
+----	icon:	"type:checkbox|checked:true|border:false"
 ----(
 ----	print "checkbox #changed"
 ----	format "EventFired	= % \n" EventFired

@@ -1,6 +1,8 @@
 filein( getFilenamePath(getSourceFileName()) + "/../ConstructPropeties/ConstructPropeties.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/../RolloutCreator/RolloutCreator.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/Layout/Layout.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/AutoRunEvents/AutoRunEvents.ms" )
+
 
 global DIALOG_PREVIOUS_STATE = undefined -- this should be in struct
 
@@ -23,6 +25,7 @@ struct Dialog_v
 	
 	/* dependency */
 	_RolloutCreator = RolloutCreator_v ini:ini,
+	AutoRunMacros 	= AutoRunMacros_v(),
 	Layout 	= Layout_v(),
 	--Menu	= DialogMenu_v Dialog:this,
 	
@@ -75,6 +78,8 @@ struct Dialog_v
 		CreateDialog (_RolloutCreator.getDefinition(RolloutMain)) pos:(this._getPositionRelativeToWindow(pos)) autoLayoutOnResize:true  width:width height:height bgcolor:bgcolor fgcolor:fgcolor bitmap:bitmap style:(if( style == unsupplied ) then this.style else style) modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
 		
 		_RolloutCreator.addSubRollouts RolloutMain
+		
+		AutoRunMacros.executeMacros()
 	),
     
 	/** Register dialog bar

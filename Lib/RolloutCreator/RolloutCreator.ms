@@ -13,6 +13,7 @@ filein( getFilenamePath(getSourceFileName()) + "/RolloutEventBinder/RolloutEvent
 
 filein( getFilenamePath(getSourceFileName()) + "/ControlsCreator/ControlsCreator.ms" )
 
+
 /** RolloutCreator_v
  */
 struct RolloutCreator_v
@@ -38,7 +39,8 @@ struct RolloutCreator_v
 	 */
 	function createRollout _Rollout width: height: =
 	(
-		format "\n\n\n\n=====================================	RolloutCreator_v.%	=====================================\n"  _Rollout.id;
+		format "\n\n\n\n=====================================	RolloutCreator_v.%	=====================================\n"  ( _Rollout.id as string );
+		--format "classOf _Rollout.id	= % \n" (classOf _Rollout.id)
 		--print ("RolloutCreator_v.createRollout()"  )
 		ControlsCreator = ControlCreator_v _Rollout:_Rollout ini_path:(IniFile.getPath())
 
@@ -93,7 +95,7 @@ struct RolloutCreator_v
 				this.addSubRollouts (_Subrollout)
 			)	
 	),
-
+	
 	private
 
 	/** _setup creation
@@ -173,10 +175,6 @@ struct RolloutCreator_v
 	private
 
 	--/** Validate that title of rollout is not maxscript keyword or E.G.: "Rollout|Group|Locals|..."
-	
-	-- 
-	
-	
 	-- */
 	--function _validateRolloutTitle rollout_title rollout_id =
 	--(

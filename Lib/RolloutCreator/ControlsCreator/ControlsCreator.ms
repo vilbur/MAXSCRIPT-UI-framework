@@ -48,6 +48,8 @@ struct ControlCreator_v
 
 			TooltipCreator.addTooltips(_Control)
 
+			this.addToAutoRunEvents(_Control) -- MUST RUN BEFORE combineEvents(), because only custom events are used to autorun
+
 			EventBinder.combineEvents(_Control)
 
 			this._mutateCustomControlTypes(_Control)
@@ -136,7 +138,8 @@ struct ControlCreator_v
 	function _addControlToRollout _Control =
 	(
 		if not matchPattern _Control.id pattern:"LABEL_fake*" then -- DEBUG - don`t print
-			format "_Control.id	= % \n" _Control.id
+			format "\n%.%" ( _Rollout.id as string ) _Control.id
+			--format "_Control.id	= % \n" _Control.id
 			--print ("ControlCreator_v._addControlToUi() " +_Control.id )
 		
 		params = ParamsCreator.join(_Control.params)
@@ -222,6 +225,16 @@ struct ControlCreator_v
 		if _Control.type == #browsePath do
 			(BrowsePath_v()).mutateControl(_Control)
 	),
+
+
+	/** Add to auto run
+	 */
+	function addToAutoRunEvents _Control =
+	(
+		--format "\n"; print "ControlCreator_v.addToAutoRunEvents()"
+		if( Event = _Control.Events.get #changed ) != undefined and _Control.Params.getVal "checked" == true then
+			append AUTORUN_EVENTS Event.CODE
+	), 
 
 	/** _is controls
 	 */

@@ -9,6 +9,7 @@ struct TooltipCreator_v
 	/* reference */
 	/* inhered */
 	/* properties */
+	_Control,
 	
 	/** Add tooltips
 	 */
@@ -16,25 +17,28 @@ struct TooltipCreator_v
 	(
 		--format "\n"; print "TooltipCreator_v.addTooltips()"
 		--format "_Control.Events.List	= % \n" _Control.Events.List
-
-		_Control.params.setVal "tooltip" (this._getTooltipsOfEvents(_Control.Events.List))
+		this._Control = _Control
 		
-		_Control --return 
+		this._Control.params.setVal "tooltip" (this._getTooltipsOfEvents())
+		
+		this._Control --return 
 	),
 
 	private
 	
 	/** Get tooltips of events
 	 */
-	function _getTooltipsOfEvents Events =
+	function _getTooltipsOfEvents =
 	(
-		format "\n"; print "TooltipCreator_v.getTooltipsOfEvents()"
+		--format "\n"; print "TooltipCreator_v.getTooltipsOfEvents()"
+		Events = this._Control.Events.List
+		
 		tooltip = ""
 		
-		format "Events.count	= % \n" Events.count
+		--format "Events.count	= % \n" Events.count
 		
 		for Event in Events do 
-			tooltip += this._getEventType(Event.type) +": "+ Event.tooltip + "\n"
+			tooltip += this._getEventPrefix(Event.type) + Event.tooltip + "\n"
 			
 			
 		trimRight tooltip "\n" --return
@@ -42,15 +46,18 @@ struct TooltipCreator_v
 	
 	/** Get event type
 	 */
-	function _getEventType event_type =
+	function _getEventPrefix event_type =
 	(
 		--format "\n"; print "TooltipCreator_v.getEventType()"
-		case event_type of
-		(
-			(#pressed):	"LMB"	
-			(#rightclick):	"RMB"	
-			default:	event_type as string 
-		)
+		if this._Control.Events.List.count > 1 then 
+			case event_type of
+			(
+				(#pressed):	"LMB: "	
+				(#rightclick):	"RMB: "	
+				default:	event_type as string 
+			)
+		else
+			"" --return
 	),
 	
 	/**  

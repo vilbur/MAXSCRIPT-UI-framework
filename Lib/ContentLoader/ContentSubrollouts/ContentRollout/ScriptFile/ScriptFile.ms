@@ -70,7 +70,7 @@ struct ScriptFile_Content_v
 			this._createControlfromMacro (MacroScripts[i])
 	),
 	
-	/** Create controlfrom macro
+	/** Create control from macro
 	 */
 	function _createControlfromMacro Macro =
 	(
@@ -78,10 +78,11 @@ struct ScriptFile_Content_v
 		--format "Macro	= % \n" Macro
 		
 		_Control = _Controls.control (Macro.getType()) Macro.buttontext params:(Macro.getParamsArray())  add_to_controls:false
-		
+		--format "_Control.id	= % \n" _Control.id
 		if( (_Control_Exist = _Controls.get(_Control.id)) != undefined ) then
 			_Control = _Control_Exist -- update existing control
-					
+		
+		--format "_Control_Exist	= % \n" _Control_Exist			
 		this._setEventCallMacro (_Control) (Macro)
 		
 		if( _Control_Exist == undefined ) then
