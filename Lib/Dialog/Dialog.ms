@@ -25,7 +25,7 @@ struct Dialog_v
 	
 	/* dependency */
 	_RolloutCreator = RolloutCreator_v ini:ini,
-	AutoRunMacros 	= AutoRunMacros_v(),
+	AutoRunEvents 	= AutoRunEvents_v(),
 	Layout 	= Layout_v(),
 	--Menu	= DialogMenu_v Dialog:this,
 	
@@ -79,7 +79,7 @@ struct Dialog_v
 		
 		_RolloutCreator.addSubRollouts RolloutMain
 		
-		AutoRunMacros.executeMacros()
+		AutoRunEvents.executeMacros()
 	),
     
 	/** Register dialog bar
