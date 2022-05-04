@@ -33,4 +33,3 @@ struct AutoRunEvents_v
 )
 
 
-global AUTORUN_EVENTS = #()
