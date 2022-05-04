@@ -8,6 +8,8 @@ global DIALOG_PREVIOUS_STATE = undefined -- this should be in struct
 
 global EVENT_DOCKED_ENABLED = true -- prevent crash on destroying  of dialog // RENAME THIS TO DIALOG_ENABLE_DOCKED_EVENT
 
+global AUTORUN_EVENTS = #()
+
 /** https://help.autodesk.com/view/MAXDEV/2021/ENU/?guid=GUID-816D257C-CD2D-4753-A792-6E7AEFAFA6A7
  */
 struct Dialog_v
@@ -69,7 +71,8 @@ struct Dialog_v
 	 */
 	function create pos: width:512 height:512 bgcolor: fgcolor: bitmap: style: modal: escapeEnable: lockHeight:false lockWidth:true parent: =
 	(
-		--print ("Dialog_v.create() " + RolloutMain.id)
+		--format "\n"; print "Dialog_v.create()"
+		this._setDialogGlobal()
 		
 		height = this._getDialogHeight(height)
 		
@@ -79,7 +82,7 @@ struct Dialog_v
 		
 		_RolloutCreator.addSubRollouts RolloutMain
 		
-		AutoRunEvents.executeMacros()
+		--AutoRunEvents.executeMacros()
 	),
     
 	/** Register dialog bar
@@ -151,7 +154,17 @@ struct Dialog_v
 
 	private
 	
-		
+	/** Set dialog id as global variable
+	  *
+	  * It is for unnecessary for make EventFired working
+	  *
+	 */
+	function _setDialogGlobal =
+	(
+		--format "\n"; print "global._setDialogGlobal()"
+		execute("global "+id)
+	),
+	
 	/** _get dialog height
 	 */
 	function _getDialogHeight height =
