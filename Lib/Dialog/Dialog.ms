@@ -31,7 +31,7 @@ struct Dialog_v
 	Layout 	= Layout_v(),
 	--Menu	= DialogMenu_v Dialog:this,
 	
-	RolloutMain, --RENAME TO dialogRollout,
+	RolloutMain, --RENAME TO DialogRollout,
 	
 	/* inherit */
 	Events,
@@ -71,8 +71,7 @@ struct Dialog_v
 	 */
 	function create pos: width:512 height:512 bgcolor: fgcolor: bitmap: style: modal: escapeEnable: lockHeight:false lockWidth:true parent: =
 	(
-		--format "\n"; print "Dialog_v.create()"
-		this._setDialogGlobal()
+		format "\n"; print "Dialog_v.create()"
 		
 		height = this._getDialogHeight(height)
 		
@@ -81,6 +80,9 @@ struct Dialog_v
 		CreateDialog (_RolloutCreator.getDefinition(RolloutMain)) pos:(this._getPositionRelativeToWindow(pos)) autoLayoutOnResize:true  width:width height:height bgcolor:bgcolor fgcolor:fgcolor bitmap:bitmap style:(if( style == unsupplied ) then this.style else style) modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
 		
 		_RolloutCreator.addSubRollouts RolloutMain
+		
+		this._setPositionOrDockByIni()
+		
 		
 		--AutoRunEvents.executeMacros()
 	),
@@ -96,6 +98,7 @@ struct Dialog_v
 	 */
 	function unregister =
 	(
+		--print "Dialog_v.unregister()"
 		execute ("try(cui.UnRegisterDialogBar "+ RolloutMain.id +")catch()")
 	),
 	
@@ -162,7 +165,7 @@ struct Dialog_v
 	function _setDialogGlobal =
 	(
 		--format "\n"; print "global._setDialogGlobal()"
-		execute("global "+id)
+		execute("global "+RolloutMain.id)
 	),
 	
 	/** _get dialog height
@@ -230,7 +233,33 @@ struct Dialog_v
 		Events = RolloutMain.Events
 	),
 	
+	/** _load ini position
+	 */
+	function _setPositionOrDockByIni =
+	(
+		--format "\n"; print "global._setPositionOrDockByIni()"
+		if( ini != undefined ) then
+		(
+			ini_path =  (_RolloutCreator.IniFile.getPath())
 
+			dock_state	= getINISetting ini_path ( RolloutMain.id as string ) "dock_state"
+			position	= getINISetting ini_path ( RolloutMain.id as string ) "position"
+			
+			if( dock_state != "" and dock_state != "cui_floatable" ) then
+			(
+				this.register()
+				
+				execute("cui.DockDialogBar "+ RolloutMain.id +" #"+ dock_state )
+			)
+			else if( position != "" ) then
+			(
+				execute("SetDialogPos "+ RolloutMain.id +" "+ position )
+				
+				this.register()
+			)
+		)
+	),
+	
 	/** Check if required properties are defined when an instance of the struct is created.
 	 * @example __construct = #( #property_name ) 
 	 */
@@ -248,6 +277,8 @@ struct Dialog_v
 		ConstructPropeties test:this
 
 		this._setMainRollout()
+		
+		this._setDialogGlobal()
 		
 		this.destroy()
 	)
