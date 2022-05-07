@@ -30,16 +30,17 @@ struct SaveIniEvents_v
 
 	/** Dialog save ini
 
-		IMPORTANT: #docked probably doesn't work in max 2022
-
 	 */
 	function _getDialogSaveIniEvents =
 	(
 		--print "SaveIniEvents_v._getDialogSaveIniEvents()"
-		this._setSaveIniDefaultEvent #moved	"moved"	"val"
-		this._setSaveIniDefaultEvent #resized	"resized"	"val"
-		this._setSaveIniDefaultEvent #docked	"dock_state"	("(try(cui.getDockState "+rollout_id+")catch(\"cui_floatable\"))")
 
+		--this._setSaveIniDefaultEvent #moved	"moved"	"val"
+		--this._setSaveIniDefaultEvent #resized	"resized"	"val"
+		
+		this._setSaveIniDefaultEvent #close	"position"	("(GetDialogPos "+rollout_id+")")
+		this._setSaveIniDefaultEvent #close	"dock_state"	("(try(cui.getDockState "+rollout_id+")catch(\"cui_floatable\"))")
+		
 		Events --return
 	),
 
@@ -58,11 +59,12 @@ struct SaveIniEvents_v
 	 */
 	function _setSaveIniDefaultEvent type key val =
 	(
-		if_val_not_undefined	= "if( val != undefined ) then " -- on subrollout creation is "rolledUp" fired with undefined value
+		------if_val_not_undefined	= "if( val != undefined ) then " -- on subrollout creation is "rolledUp" fired with undefined value
+		------EVENT =   ( Event_v type:type	code:(if_val_not_undefined + save_to_ini) )
 
 		save_to_ini	= "( setINISetting \""+ini_path+"\" \""+rollout_id+"\" \""+key+"\" ("+val+" as string) )"
 
-		append Events ( Event_v type:type	code:(if_val_not_undefined + save_to_ini) )
+		append Events ( Event_v type:type	code:save_to_ini )
 	),
 
 	/**  
