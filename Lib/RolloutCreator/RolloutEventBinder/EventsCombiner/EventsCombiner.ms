@@ -27,7 +27,7 @@ struct EventsCombiner_v
 			this._mergeEvents (Events) (Event_combined)
 		
 		--format "EVENT_COMBINED	= % \n" Event_combined			
-		if( Event_combined.code != "" ) then 
+		--if( Event_combined.code != "" ) then 
 			Event_combined --return
 	),
 	

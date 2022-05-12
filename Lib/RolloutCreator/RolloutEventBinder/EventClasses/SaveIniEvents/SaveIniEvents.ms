@@ -1,4 +1,19 @@
 /** Events default
+  
+  
+  
+  
+  DELETE THIS STRUCT
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
  */
 struct SaveIniEvents_v
 (
