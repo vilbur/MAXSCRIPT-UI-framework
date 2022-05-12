@@ -29,5 +29,6 @@ struct Subrollouts_v
 	on create do
 	(
 		--print("Subrollouts_v.onCreate()")
+		--format "slot	= % \n" slot
 	)
 )

@@ -64,16 +64,16 @@ struct IniSaver_v
 	(
 		format "\n"; print "IniSaver_v._saveControlsAndSubrollouts()"
 
-		for ctrl in _RolloutClass.controls do
+		for control in _RolloutClass.controls do
 		(
-			--format "ctrl	= % \n" ctrl
-			format "( classOf ctrl )	= % \n" ( classOf ctrl)
+			--format "control	= % \n" control
+			format "( classOf control )	= % \n" ( classOf control)
 
-			if classOf ctrl == SubRollout then
-				this._saveSubRollouts(ctrl)
+			if classOf control == SubRollout then
+				this._saveSubRollouts(control)(_RolloutClass.name)
 
-			else if findItem save_classes (classOf ctrl) > 0 then 
-				this._saveControl(_RolloutClass)(ctrl)
+			else if findItem save_classes (classOf control) > 0 then 
+				this._saveControl(_RolloutClass)(control)
 
 		)
 
@@ -81,24 +81,24 @@ struct IniSaver_v
 
 	/** _save rollout
 	 */
-	function _saveSubRollouts _SubRolloutClass =
+	function _saveSubRollouts _SubRolloutClass rollout_id =
 	(
 		format "\n"; print "IniSaver_v._saveSubRollouts()"
 		format "_SubRolloutClass	= % \n" _SubRolloutClass;
 
 		rollout_ids = for _rollout in _SubRolloutClass.Rollouts collect _rollout.name as name
 
-		this._saveToIni (_SubRolloutClass.name) ("rollouts") (rollout_ids as string )
+		this._saveToIni (rollout_id) (_SubRolloutClass.name) (rollout_ids as string )
 
-		for ctrl in _SubRolloutClass.Rollouts do
+		for control in _SubRolloutClass.Rollouts do
 		(
-			--format "ctrl	= % \n" ctrl
+			--format "control	= % \n" control
 
-			if classOf ctrl == RolloutClass then
-				this._saveRollout(ctrl)
+			if classOf control == RolloutClass then
+				this._saveRollout(control)
 
-		--	--format "( classOf ctrl)	= % \n" ( classOf ctrl)
-		--	--format "ctrl	= % \n" ctrl.Rollouts
+		--	--format "( classOf control)	= % \n" ( classOf control)
+		--	--format "control	= % \n" control.Rollouts
 		--	
 		)
 
@@ -126,9 +126,9 @@ struct IniSaver_v
 
 		local val
 
-		format "classOf ctrl	= % \n" (classOf ctrl)
+		format "classOf control	= % \n" (classOf control)
 
-		if (matches = (this.regexGetMatches( (classOf ctrl) as string ) "Check|Box|EditText|Spinner")).count > 0 then
+		if (matches = (this.regexGetMatches( (classOf control) as string ) "Check|Box|EditText|Spinner")).count > 0 then
 		(
 
 			format "matches[1][1]	= % \n" matches[1][1]
