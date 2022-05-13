@@ -28,9 +28,9 @@ struct IniSaver_v
 	 */
 	function saveRollout rollout_id =
 	(
-		clearListener()
-		format "\n"; print "IniSaver_v.saveRollout()"
-		format "rollout_id	= % \n" rollout_id
+		--clearListener()
+		--format "\n"; print "IniSaver_v.saveRollout()"
+		--format "rollout_id	= % \n" rollout_id
 
 		--_Rollout = execute(rollout_id)
 
@@ -49,8 +49,8 @@ struct IniSaver_v
 	 */
 	function _saveDialog _Rollout =
 	(
-		format "\n"; print "IniSaver_v._saveDialog()"
-		format "_Rollout	= % \n" _Rollout
+		--format "\n"; print "IniSaver_v._saveDialog()"
+		--format "_Rollout	= % \n" _Rollout
 
 		this._saveToIni _Rollout.name "position"	(GetDialogPos _Rollout )
 		this._saveToIni _Rollout.name "dock_state"	(try(cui.getDockState _Rollout )catch())
@@ -62,12 +62,12 @@ struct IniSaver_v
 	 */
 	function _saveControlsAndSubrollouts _RolloutClass =
 	(
-		format "\n"; print "IniSaver_v._saveControlsAndSubrollouts()"
+		--format "\n"; print "IniSaver_v._saveControlsAndSubrollouts()"
 
 		for control in _RolloutClass.controls do
 		(
 			--format "control	= % \n" control
-			format "( classOf control )	= % \n" ( classOf control)
+			--format "( classOf control )	= % \n" ( classOf control)
 
 			if classOf control == SubRollout then
 				this._saveSubRollouts(control)(_RolloutClass.name)
@@ -83,8 +83,8 @@ struct IniSaver_v
 	 */
 	function _saveSubRollouts _SubRolloutClass rollout_id =
 	(
-		format "\n"; print "IniSaver_v._saveSubRollouts()"
-		format "_SubRolloutClass	= % \n" _SubRolloutClass;
+		--format "\n"; print "IniSaver_v._saveSubRollouts()"
+		--format "_SubRolloutClass	= % \n" _SubRolloutClass;
 
 		rollout_ids = for _rollout in (this._getOrderedRollouts(_SubRolloutClass.Rollouts)) collect _rollout.name as name
 
@@ -108,10 +108,10 @@ struct IniSaver_v
 	 */
 	function _saveRollout _RolloutClass =
 	(
-		format "\n"; print "IniSaver_v._saveRollout()"
-		format "_RolloutClass	= % \n" _RolloutClass.name
+		--format "\n"; print "IniSaver_v._saveRollout()"
+		--format "_RolloutClass	= % \n" _RolloutClass.name
 
-		this._saveToIni (_RolloutClass.name) ("rolledUp") (_RolloutClass.open as string )
+		this._saveToIni (_RolloutClass.name) ("rolledUp") ( (not _RolloutClass.open) as string )
 
 		this._saveControlsAndSubrollouts(_RolloutClass)
 
@@ -121,17 +121,17 @@ struct IniSaver_v
 	 */
 	function _saveControl _RolloutClass Ctrl =
 	(
-		format "\n"; print "IniSaver_v._saveControl()"
-		format "Ctrl.name 	= % \n" Ctrl.name
+		--format "\n"; print "IniSaver_v._saveControl()"
+		--format "Ctrl.name 	= % \n" Ctrl.name
 
 		local val
 
-		format "classOf control	= % \n" (classOf control)
+		--format "classOf control	= % \n" (classOf control)
 
 		if (matches = (this.regexGetMatches( (classOf control) as string ) "Check|Box|EditText|Spinner")).count > 0 then
 		(
 
-			format "matches[1][1]	= % \n" matches[1][1]
+			--format "matches[1][1]	= % \n" matches[1][1]
 
 			val = case matches[1][1] as name of
 				(
@@ -188,7 +188,7 @@ struct IniSaver_v
 	 */
 	on create do
 	(
-		print("IniSaver_v.onCreate()")
+		--print("IniSaver_v.onCreate()")
 		--ConstructPropeties test:this
 	)	
 )
