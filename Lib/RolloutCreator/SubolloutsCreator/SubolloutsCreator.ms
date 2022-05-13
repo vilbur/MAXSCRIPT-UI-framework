@@ -11,47 +11,42 @@ struct SubolloutsCreator_v
 	/* inhered */
 	/* properties */
 	ini_path,
-	slot_height = 164,
 	
+	slot_height = 64, -- default minimal height of slot
+	padding_bottom = 16,
+
 	/** Get height of subrollouts slot
 	 */
-	function getSubrolloutsHeight rollout_height slots_count =
+	function setSubrolloutsHeight rollout_height =
 	(
 		format "\n"; print "SubolloutsCreator_v.getSubrolloutsHeight()"
-		format "rollout_height	= % \n" rollout_height
-		format "slots_count	= % \n" slots_count
 		
-		slot_height = 64 -- default minimal height of slot
-		padding_bottom = 16
+		slots_count = (this._getSubrollouts(_Rollout)).count 
 
 		nested_level = if( _Rollout.parent_rollout == undefined ) then 0 else (filterString _Rollout.parent_rollout ".").count/2 -- split parent_rollout_id and slot id E.G.: ROLLOUT_Parent.children
-		format "nested_level	= % \n" nested_level
 		
 		if( slots_count > 0 ) then 
 			if( rollout_height != undefined and rollout_height != unsupplied ) then
 				slot_height = (rollout_height - padding_bottom) / slots_count
-				--slot_height = ((rollout_height - padding_bottom) / slots_count) - 512
 				
 		slot_height -= 34*nested_level
-
-		slot_height --return
 	),
 	
 	 /** _create subrollouts
 	  */
 	 --function addSubrolloutsSlot _Rollout Subrollouts =
-	 function addSubrolloutsSlot Subrollouts =
+	 function addSubrolloutSlots Subrollouts =
 	 (
 		print ( "RolloutCreator_v._createSubrollouts " + Subrollouts.slot as string  )
 		format "_Rollout	= % \n" _Rollout.id
 		format "Subrollouts.slot	= % \n" Subrollouts.slot
 		format "Subrollouts	= % \n" Subrollouts.rollouts
 		
-		--ini_file = IniFile.getPath()
+		--ini_path = IniFile.getPath()
 		
-		--if( ini_file != undefined ) then 
+		--if( ini_path != undefined ) then 
 		--(
-		--	rollouts_order = getINISetting ini_file (_Rollout.id as string ) (Subrollouts.slot as string )
+		--	rollouts_order = getINISetting ini_path (_Rollout.id as string ) (Subrollouts.slot as string )
 		--	
 		--	format "rollouts_order	= % \n" rollouts_order
 		--)
@@ -71,34 +66,40 @@ struct SubolloutsCreator_v
 	function addSubRollouts _Rollout =
 	(
 		--print "RolloutCreator_v._addSubRollouts()"
-		for _Subrollouts in _Rollout._Controls where this._isSubrollouts(_Subrollouts) do
+		for _Subrollouts in this._getSubrollouts(_Rollout) do
 			for _Subrollout in _Subrollouts.Rollouts do
 			(
-				--execute  ( "AddSubRollout "+_Rollout.id+"." + _Subrollouts.slot +" "+ _Subrollout.id + " rolledUp:"+(this._getRolledStateFromIni(_Subrollout.id)) )
-				execute  ( "AddSubRollout "+_Rollout.id+"." + _Subrollouts.slot +" "+ _Subrollout.id + " rolledUp:false" )
+				execute  ( "AddSubRollout "+_Rollout.id+"." + _Subrollouts.slot +" "+ _Subrollout.id + " rolledUp:"+(this._getRolledStateFromIni(_Subrollout.id)) )
 
 				this.addSubRollouts (_Subrollout)
 			)	
 	),
 	
+	
 	private
 	
 	
-	--/** _get subrollouts count
-	-- */
-	--function _getSubrolloutsCount _Rollout =
-	--(
-	--	--print "RolloutCreator_v._getSubrolloutsCount()"
-	--	(for _Subrollouts in _Rollout._Controls where this._isSubrollouts(_Subrollouts) collect _Subrollouts).count --return
-	--),
-	
-	/** _is subrollouts
+	/** Get rolled state from ini
 	 */
-	function _isSubrollouts _Struct =
+	function _getRolledStateFromIni subrollout_id =
+	(
+		--print "RolloutCreator_v._getRolledStateFromIni()"
+		rolledup_state = "false"
+
+		if( ini_path != undefined and (rolledup_state_ini = getINISetting (ini_path) subrollout_id "rolledUp") != "" ) then
+			rolledup_state = rolledup_state_ini
+
+		rolledup_state --return
+	),
+	
+	/** _get subrollouts count
+	 */
+	function _getSubrollouts _Rollout =
 	(
 		--print "RolloutCreator_v._getSubrolloutsCount()"
-		this._getType _Struct == "subrollouts"
+		for _Subrollouts in _Rollout._Controls where matchPattern (classOf _Subrollouts  as string ) pattern:@"*subrollouts_v*" collect _Subrollouts--return
 	),
+	
 	
 	/** Get name given struct
 	  * @property	struct	_Struct
@@ -109,34 +110,7 @@ struct SubolloutsCreator_v
 	(
 		toLower (( filterString( classof _Struct as string ) "_*(:" )[2])  --return
 	),
-	
-	/** _create subrollouts
-	 */
-	function _createSubrollouts =
-	(
-		format "\n"; print "SubolloutsCreator_v._createSubrollouts()"
-		
-		--print ( "RolloutCreator_v._createSubrollouts " + Subrollouts.slot as string  )
-		--format "_Rollout	= % \n" _Rollout.id
-		--format "Subrollouts.slot	= % \n" Subrollouts.slot
-		--format "Subrollouts	= % \n" Subrollouts.rollouts
-		
-		--ini_file = IniFile.getPath()
-		--
-		--if( ini_file != undefined ) then 
-		--(
-		--	rollouts_order = getINISetting ini_file (_Rollout.id as string ) (Subrollouts.slot as string )
-		--	
-		--	format "rollouts_order	= % \n" rollouts_order
-		--)
-		
-		this._addSubrolloutsSlots (_Rollout) (Subrollouts)
 
-		--for _Subrollout in Subrollouts.Rollouts do
-		--	this.createRollout (_Subrollout)
-		
-	),
-	
 	/**  
 	 */
 	on create do

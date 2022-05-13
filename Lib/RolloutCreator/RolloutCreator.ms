@@ -32,6 +32,7 @@ struct RolloutCreator_v
 	ControlsCreator,
 	SubolloutsCreator = SubolloutsCreator_v ini_path:(IniFile.getPath()),
 
+	
 	/* properties */
 
 	/* store */
@@ -47,6 +48,10 @@ struct RolloutCreator_v
 		
 		ControlsCreator   = ControlCreator_v    _Rollout:_Rollout ini_path:(IniFile.getPath())
 		SubolloutsCreator._Rollout = _Rollout
+		
+		
+		SubolloutsCreator.setSubrolloutsHeight(height)
+		
 		
 		this._setWidth(width)
 
@@ -91,18 +96,10 @@ struct RolloutCreator_v
 		_Rollout._RolloutCreator.def
 	),
 	
-	/** _get subrollouts count
-	 */
-	function _getSubrolloutsCount _Rollout =
-	(
-		--print "RolloutCreator_v._getSubrolloutsCount()"
-		(for _Subrollouts in _Rollout._Controls where this._isSubrollouts(_Subrollouts) collect _Subrollouts).count --return
-	),
-
-	
 	
 	private
 
+	
 	/** _setup creation
 	 */
 	function _setWidth width =
@@ -124,7 +121,7 @@ struct RolloutCreator_v
 				ControlsCreator.addControls(ControlsBox_or_Subrollouts)
 			
 			else
-				SubolloutsCreator.addSubrolloutsSlot(ControlsBox_or_Subrollouts)
+				SubolloutsCreator.addSubrolloutSlots(ControlsBox_or_Subrollouts)
 		)
 	),
 
@@ -136,19 +133,6 @@ struct RolloutCreator_v
 			for _Subrollout in Subrollouts.Rollouts do
 				this.createRollout (_Subrollout)
 	 ),
-	
-	/** Get rolled state from ini
-	 */
-	function _getRolledStateFromIni subrollout_id =
-	(
-		--print "RolloutCreator_v._getRolledStateFromIni()"
-		rolledup_state = "false"
-
-		if( IniFile.getPath() != undefined and (rolledup_state_ini = getINISetting (IniFile.getPath())subrollout_id "rolledUp") != "" ) then
-			rolledup_state = rolledup_state_ini
-
-		rolledup_state --return
-	),
 	
 	/** Add local variables from Control_v to rollout
 	  *
@@ -170,14 +154,16 @@ struct RolloutCreator_v
 		--print "ControlCreator_v._addTextToRollout()"
 		--format "_Rollout.add_text	= % \n" _Rollout.add_text
 		if( _Rollout.add_text != undefined ) then
-				_Rollout._RolloutCreator.addText  _Rollout.add_text filter:true
+			_Rollout._RolloutCreator.addText  _Rollout.add_text filter:true
 	),
 
 	/** _is control box
 	 */
 	function _isControls _Struct =
 	(
-		this._getType _Struct == "controls"
+		--this._getType _Struct == "controls"
+		matchPattern (classOf _Struct  as string ) pattern:@"*controls_v*" 
+
 	),
 
 	/** _is subrollouts
@@ -185,18 +171,19 @@ struct RolloutCreator_v
 	function _isSubrollouts _Struct =
 	(
 		--print "RolloutCreator_v._getSubrolloutsCount()"
-		this._getType _Struct == "subrollouts"
+		--this._getType _Struct == "subrollouts"
+		matchPattern (classOf _Struct  as string ) pattern:@"*subrollouts_v*" 
 	),
 
-	/** Get name given struct
-	  * @property	struct	_Struct
-	  *
-	  * @return	string lower case	name of given struc stripped of "_v" suffix E.G.: "FooStruct_v" returm "foostruct"
-	 */
-	function _getType _Struct =
-	(
-		toLower (( filterString( classof _Struct as string ) "_*(:" )[2])  --return
-	),
+	--/** Get name given struct
+	--  * @property	struct	_Struct
+	--  *
+	--  * @return	string lower case	name of given struc stripped of "_v" suffix E.G.: "FooStruct_v" returm "foostruct"
+	-- */
+	--function _getType _Struct =
+	--(
+	--	toLower (( filterString( classof _Struct as string ) "_*(:" )[2])  --return
+	--),
 
 	/**  
 	 */
