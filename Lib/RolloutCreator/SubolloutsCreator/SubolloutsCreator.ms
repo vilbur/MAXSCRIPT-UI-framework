@@ -13,25 +13,25 @@ struct SubolloutsCreator_v
 	
 	/** Get height of subrollouts slot
 	 */
-	function getSubrolloutsHeight rollout_height =
+	function getSubrolloutsHeight rollout_height slots_count =
 	(
-		--format "\n"; print "SubolloutsCreator_v.getSubrolloutsHeight()"
+		format "\n"; print "SubolloutsCreator_v.getSubrolloutsHeight()"
+		format "rollout_height	= % \n" rollout_height
+		format "slots_count	= % \n" slots_count
+		
 		slot_height = 64 -- default minimal height of slot
 		padding_bottom = 16
 
-		--print "RolloutCreator_v._setSubrolloutsHeight()"
-		--print "DEDUG HEIGHT OF SUBROLLOUTS"
-		--format "_Rollout.parent_rollout	= % \n" _Rollout.parent_rollout
 		nested_level = if( _Rollout.parent_rollout == undefined ) then 0 else (filterString _Rollout.parent_rollout ".").count/2 -- split parent_rollout_id and slot id E.G.: ROLLOUT_Parent.children
+		format "nested_level	= % \n" nested_level
 		
-		
-		if( ( subrollouts_count = this._getSubrolloutsCount(_Rollout)) > 0 ) then 
+		if( slots_count > 0 ) then 
 			if( rollout_height != undefined and rollout_height != unsupplied ) then
-				slot_height = (rollout_height - padding_bottom) / subrollouts_count
-				--slot_height = ((rollout_height - padding_bottom) / subrollouts_count) - 512
+				slot_height = (rollout_height - padding_bottom) / slots_count
+				--slot_height = ((rollout_height - padding_bottom) / slots_count) - 512
 				
 		slot_height -= 34*nested_level
-		
+
 		slot_height --return
 	),
 	
@@ -39,13 +39,13 @@ struct SubolloutsCreator_v
 	private
 	
 	
-	/** _get subrollouts count
-	 */
-	function _getSubrolloutsCount _Rollout =
-	(
-		--print "RolloutCreator_v._getSubrolloutsCount()"
-		(for _Subrollouts in _Rollout._Controls where this._isSubrollouts(_Subrollouts) collect _Subrollouts).count --return
-	),
+	--/** _get subrollouts count
+	-- */
+	--function _getSubrolloutsCount _Rollout =
+	--(
+	--	--print "RolloutCreator_v._getSubrolloutsCount()"
+	--	(for _Subrollouts in _Rollout._Controls where this._isSubrollouts(_Subrollouts) collect _Subrollouts).count --return
+	--),
 	
 	/** _is subrollouts
 	 */
@@ -87,8 +87,8 @@ struct SubolloutsCreator_v
 		
 		this._addSubrolloutsSlots (_Rollout) (Subrollouts)
 
-		for _Subrollout in Subrollouts.Rollouts do
-			this.createRollout (_Subrollout)
+		--for _Subrollout in Subrollouts.Rollouts do
+		--	this.createRollout (_Subrollout)
 		
 	),
 	
@@ -96,7 +96,7 @@ struct SubolloutsCreator_v
 	 */
 	on create do
 	(
-		--print("SubolloutsCreator_v.onCreate()")
+		print("SubolloutsCreator_v.onCreate()")
 		--ConstructPropeties test:this
 		--this._createSubrollouts()
 	)

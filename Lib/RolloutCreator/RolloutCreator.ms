@@ -33,7 +33,8 @@ struct RolloutCreator_v
 	
 	/* properties */
 	--padding_bottom = 16,
-	subrollouts_slot_height = 64,
+	slot_height = 64,
+	--slot_height = 256,
 
 	/* store */
 	width,
@@ -49,8 +50,8 @@ struct RolloutCreator_v
 		ControlsCreator   = ControlCreator_v    _Rollout:_Rollout ini_path:(IniFile.getPath())
 		SubolloutsCreator = SubolloutsCreator_v _Rollout:_Rollout
 		
-		subrollouts_slot_height = SubolloutsCreator.getSubrolloutsHeight(height)
-
+		
+		slot_height = SubolloutsCreator.getSubrolloutsHeight(height)(this._getSubrolloutsCount(_Rollout))
 		
 		this._setWidth(width)
 
@@ -70,8 +71,9 @@ struct RolloutCreator_v
 		this._addControlsAndSubrolloutes (_Rollout)
 
 		
-		/* add EVENTS */ 
-		EventBinder.combineEventsAndAddHandlers(_Rollout)
+		/* add EVENTS */
+		if( ini != undefined ) then 
+			EventBinder.combineEventsAndAddHandlers(_Rollout)
 
 		/* EDIT end */ 
 		_Rollout._RolloutCreator.end()
@@ -130,28 +132,21 @@ struct RolloutCreator_v
 				ControlsCreator.addControls(ControlsBox_or_Subrollouts)
 			
 			else
+			(
 				
-				this._createSubrollouts (_Rollout)(ControlsBox_or_Subrollouts)
+				this._addSubrolloutsSlot (_Rollout)(ControlsBox_or_Subrollouts)
+			)
 		)
+		
+		for ControlsBox_or_Subrollouts in _Rollout._Controls do
+			if( this._isSubrollouts(ControlsBox_or_Subrollouts) ) then
+				this._createSubrollouts (_Rollout)(ControlsBox_or_Subrollouts)
+		
 	),
-
-	/** Get rolled state from ini
-	 */
-	function _getRolledStateFromIni subrollout_id =
-	(
-		--print "RolloutCreator_v._getRolledStateFromIni()"
-		rolledup_state = "false"
-
-		if( IniFile.getPath() != undefined and (rolledup_state_ini = getINISetting (IniFile.getPath())subrollout_id "rolledUp") != "" ) then
-			rolledup_state = rolledup_state_ini
-
-		rolledup_state --return
-	),
-
 
 	 /** _create subrollouts
 	  */
-	 function _createSubrollouts _Rollout Subrollouts =
+	 function _addSubrolloutsSlot _Rollout Subrollouts =
 	 (
 		print ( "RolloutCreator_v._createSubrollouts " + Subrollouts.slot as string  )
 		format "_Rollout	= % \n" _Rollout.id
@@ -167,57 +162,44 @@ struct RolloutCreator_v
 			format "rollouts_order	= % \n" rollouts_order
 		)
 		
-		this._addSubrolloutsSlots (_Rollout) (Subrollouts)
+		format "SLOT_HEIGHT	= % \n" slot_height
 
+		/**  DISABLE ADDING SUBROLLOUTS SLOT INTO ACROSS LAYOUT
+		  */
+		ControlsCreator.AcrossModifier.fakeControlsOnEndofGroup(_Rollout._RolloutCreator) --fake_control_caption:"SUBROLLOUTS"
+
+		_Rollout._RolloutCreator.addText ("subRollout "+Subrollouts.slot as string +" \"slot_name\" height:"+slot_height as string )
+		
+
+	 ),
+
+	 /** _create subrollouts
+	  */
+	 function _createSubrollouts _Rollout Subrollouts =
+	 (
+		--format "\n"; print "RolloutCreator_v._createSubrollouts()"
+		
 		for _Subrollout in Subrollouts.Rollouts do
 			this.createRollout (_Subrollout)
 	 ),
 
-	/** Add subrollouts slot
-	 */
-	function _addSubrolloutsSlots _Rollout Subrollouts =
-	(
-		--print ("RolloutCreator_v._addSubrolloutsSlots() " + Subrollouts.slot as string )
-		/**  DIASBLE ADDING SUBROLLOUTS SLOT INTO ACROSS LAYOUT
-		  */
-		ControlsCreator.AcrossModifier.fakeControlsOnEndofGroup(_Rollout._RolloutCreator) --fake_control_caption:"SUBROLLOUTS"
 
-		_Rollout._RolloutCreator.addText ("subRollout "+Subrollouts.slot as string +" \"slot_name\" height:"+subrollouts_slot_height as string )
+	
+
+	/** Get rolled state from ini
+	 */
+	function _getRolledStateFromIni subrollout_id =
+	(
+		--print "RolloutCreator_v._getRolledStateFromIni()"
+		rolledup_state = "false"
+
+		if( IniFile.getPath() != undefined and (rolledup_state_ini = getINISetting (IniFile.getPath())subrollout_id "rolledUp") != "" ) then
+			rolledup_state = rolledup_state_ini
+
+		rolledup_state --return
 	),
 
-	private
-
-	--/** Validate that title of rollout is not maxscript keyword or E.G.: "Rollout|Group|Locals|..."
-	-- */
-	--function _validateRolloutTitle rollout_title rollout_id =
-	--(
-	--	print "RolloutCreator_v._testRolloutTitle()"
-	--
-	--	--if( rollout_title_is_defined = execute ("((class_of_title = classOf "+rollout_id+") != UndefinedClass and class_of_title != RolloutClass) ")  ) then
-	--	--(
-	--	--	throw ("\n\n\n\nERROR INVALID ROLLOUT TITLE\n\nRollout.title = \""+rollout_title+"\"\n\n\n\n")
-	--	--	
-	--	--)
-	--),
-
-	--/** _set subrollouts height
-	-- */
-	--function _setSubrolloutsHeight _Rollout height =
-	--(
-	--	--print "RolloutCreator_v._setSubrolloutsHeight()"
-	--	--print "DEDUG HEIGHT OF SUBROLLOUTS"
-	--	--format "_Rollout.parent_rollout	= % \n" _Rollout.parent_rollout
-	--	nested_level = if( _Rollout.parent_rollout == undefined ) then 0 else (filterString _Rollout.parent_rollout ".").count/2 -- split parent_rollout_id and slot id E.G.: ROLLOUT_Parent.children
-	--	
-	--	
-	--	if( ( subrollouts_count = this._getSubrolloutsCount(_Rollout)) > 0 ) then 
-	--		if( height != undefined and height != unsupplied ) then
-	--			subrollouts_slot_height = (height - padding_bottom) / subrollouts_count
-	--			--subrollouts_slot_height = ((height - padding_bottom) / subrollouts_count) - 512
-	--			
-	--	subrollouts_slot_height -= 34*nested_level
-	--),
-
+	
 	/** Add local variables from Control_v to rollout
 	  *
 	  * 	Control_v.rollout_locals =  #(#variable_name1, init_value1, #variable_name2, init_value2)
@@ -241,13 +223,6 @@ struct RolloutCreator_v
 				_Rollout._RolloutCreator.addText  _Rollout.add_text filter:true
 	),
 
-	--/** _get subrollouts count
-	-- */
-	--function _getSubrolloutsCount _Rollout =
-	--(
-	--	--print "RolloutCreator_v._getSubrolloutsCount()"
-	--	(for _Subrollouts in _Rollout._Controls where this._isSubrollouts(_Subrollouts) collect _Subrollouts).count --return
-	--),
 
 	/** _is control box
 	 */
@@ -263,7 +238,15 @@ struct RolloutCreator_v
 		--print "RolloutCreator_v._getSubrolloutsCount()"
 		this._getType _Struct == "subrollouts"
 	),
-
+	
+	/** _get subrollouts count
+	 */
+	function _getSubrolloutsCount _Rollout =
+	(
+		--print "RolloutCreator_v._getSubrolloutsCount()"
+		(for _Subrollouts in _Rollout._Controls where this._isSubrollouts(_Subrollouts) collect _Subrollouts).count --return
+	),
+	
 	/** Get name given struct
 	  * @property	struct	_Struct
 	  *
