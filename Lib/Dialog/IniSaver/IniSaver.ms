@@ -86,7 +86,7 @@ struct IniSaver_v
 		format "\n"; print "IniSaver_v._saveSubRollouts()"
 		format "_SubRolloutClass	= % \n" _SubRolloutClass;
 
-		rollout_ids = for _rollout in _SubRolloutClass.Rollouts collect _rollout.name as name
+		rollout_ids = for _rollout in (this._getOrderedRollouts(_SubRolloutClass.Rollouts)) collect _rollout.name as name
 
 		this._saveToIni (rollout_id) (_SubRolloutClass.name) (rollout_ids as string )
 
@@ -172,7 +172,18 @@ struct IniSaver_v
 		if( val != undefined ) then 
 			setINISetting ini_file section key ( val as string )
 	),
-
+	
+	/** Get subrollouts by order in UI
+	 */
+	function _getOrderedRollouts rollouts =
+	(
+		fn sortByY A B = (windows.getWindowPos A.hWnd).y - (windows.getWindowPos B.hWnd).y
+		
+		qsort rollouts sortByY --> 'rollouts' will now be sorted based on Y
+		
+		rollouts --return
+	),
+	
 	/**  
 	 */
 	on create do
