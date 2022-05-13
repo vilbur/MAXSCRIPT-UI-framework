@@ -25,16 +25,14 @@ struct RolloutCreator_v
 	ini, -- path to ini file
 	
 	/* dependency */ 
-	ControlsCreator,
-	SubolloutsCreator,
-
 	IniFile	= Ini_v _path:ini,
+
 	EventBinder	= RolloutEventBinder_v ini_path:(IniFile.getPath()),
-	
+
+	ControlsCreator,
+	SubolloutsCreator = SubolloutsCreator_v ini_path:(IniFile.getPath()),
+
 	/* properties */
-	--padding_bottom = 16,
-	slot_height = 64,
-	--slot_height = 256,
 
 	/* store */
 	width,
@@ -48,10 +46,7 @@ struct RolloutCreator_v
 		--print ("RolloutCreator_v.createRollout()"  )
 		
 		ControlsCreator   = ControlCreator_v    _Rollout:_Rollout ini_path:(IniFile.getPath())
-		SubolloutsCreator = SubolloutsCreator_v _Rollout:_Rollout
-		
-		
-		slot_height = SubolloutsCreator.getSubrolloutsHeight(height)(this._getSubrolloutsCount(_Rollout))
+		SubolloutsCreator._Rollout = _Rollout
 		
 		this._setWidth(width)
 
@@ -67,9 +62,11 @@ struct RolloutCreator_v
 		this._addTextToRollout (_Rollout)
 		
 		
-		/* add CONTROLS and SUBROLLOUTS */ 
-		this._addControlsAndSubrolloutes (_Rollout)
+		/* add CONTROLS and SUBROLLOUTS SLOTS */ 
+		this._addControlsAndSubrolloutesSlots (_Rollout)
 
+		/* create SUBROLLOUTS */ 
+		this._createSubrollouts (_Rollout)
 		
 		/* add EVENTS */
 		if( ini != undefined ) then 
@@ -93,20 +90,16 @@ struct RolloutCreator_v
 	(
 		_Rollout._RolloutCreator.def
 	),
-
-	/** Add sub rollouts
+	
+	/** _get subrollouts count
 	 */
-	function addSubRollouts _Rollout =
+	function _getSubrolloutsCount _Rollout =
 	(
-		--print "RolloutCreator_v._addSubRollouts()"
-		for _Subrollouts in _Rollout._Controls where this._isSubrollouts(_Subrollouts) do
-			for _Subrollout in _Subrollouts.Rollouts do
-			(
-				execute  ( "AddSubRollout "+_Rollout.id+"." + _Subrollouts.slot +" "+ _Subrollout.id + " rolledUp:"+(this._getRolledStateFromIni(_Subrollout.id)) )
-
-				this.addSubRollouts (_Subrollout)
-			)	
+		--print "RolloutCreator_v._getSubrolloutsCount()"
+		(for _Subrollouts in _Rollout._Controls where this._isSubrollouts(_Subrollouts) collect _Subrollouts).count --return
 	),
+
+	
 	
 	private
 
@@ -120,72 +113,30 @@ struct RolloutCreator_v
 
 	/** Add controls or subrolloutes
 	 */
-	function _addControlsAndSubrolloutes _Rollout =
+	function _addControlsAndSubrolloutesSlots _Rollout =
 	(
-		--print "RolloutCreator_v._addControlsAndSubrolloutes()"
+		--print "RolloutCreator_v._addControlsAndSubrolloutesSlots()"
 		
 		for ControlsBox_or_Subrollouts in _Rollout._Controls do
 		(
 			--format "CONTROLSBOX_OR_SUBROLLOUTS	= % \n" ControlsBox_or_Subrollouts
 			if( this._isControls(ControlsBox_or_Subrollouts) ) then
-
 				ControlsCreator.addControls(ControlsBox_or_Subrollouts)
 			
 			else
-			(
-				
-				this._addSubrolloutsSlot (_Rollout)(ControlsBox_or_Subrollouts)
-			)
+				SubolloutsCreator.addSubrolloutsSlot(ControlsBox_or_Subrollouts)
 		)
-		
-		for ControlsBox_or_Subrollouts in _Rollout._Controls do
-			if( this._isSubrollouts(ControlsBox_or_Subrollouts) ) then
-				this._createSubrollouts (_Rollout)(ControlsBox_or_Subrollouts)
-		
 	),
 
 	 /** _create subrollouts
 	  */
-	 function _addSubrolloutsSlot _Rollout Subrollouts =
+	 function _createSubrollouts _Rollout =
 	 (
-		print ( "RolloutCreator_v._createSubrollouts " + Subrollouts.slot as string  )
-		format "_Rollout	= % \n" _Rollout.id
-		format "Subrollouts.slot	= % \n" Subrollouts.slot
-		format "Subrollouts	= % \n" Subrollouts.rollouts
-		
-		ini_file = IniFile.getPath()
-		
-		if( ini_file != undefined ) then 
-		(
-			rollouts_order = getINISetting ini_file (_Rollout.id as string ) (Subrollouts.slot as string )
-			
-			format "rollouts_order	= % \n" rollouts_order
-		)
-		
-		format "SLOT_HEIGHT	= % \n" slot_height
-
-		/**  DISABLE ADDING SUBROLLOUTS SLOT INTO ACROSS LAYOUT
-		  */
-		ControlsCreator.AcrossModifier.fakeControlsOnEndofGroup(_Rollout._RolloutCreator) --fake_control_caption:"SUBROLLOUTS"
-
-		_Rollout._RolloutCreator.addText ("subRollout "+Subrollouts.slot as string +" \"slot_name\" height:"+slot_height as string )
-		
-
+		for Subrollouts in _Rollout._Controls where this._isSubrollouts(Subrollouts) do
+			for _Subrollout in Subrollouts.Rollouts do
+				this.createRollout (_Subrollout)
 	 ),
-
-	 /** _create subrollouts
-	  */
-	 function _createSubrollouts _Rollout Subrollouts =
-	 (
-		--format "\n"; print "RolloutCreator_v._createSubrollouts()"
-		
-		for _Subrollout in Subrollouts.Rollouts do
-			this.createRollout (_Subrollout)
-	 ),
-
-
 	
-
 	/** Get rolled state from ini
 	 */
 	function _getRolledStateFromIni subrollout_id =
@@ -198,7 +149,6 @@ struct RolloutCreator_v
 
 		rolledup_state --return
 	),
-
 	
 	/** Add local variables from Control_v to rollout
 	  *
@@ -223,7 +173,6 @@ struct RolloutCreator_v
 				_Rollout._RolloutCreator.addText  _Rollout.add_text filter:true
 	),
 
-
 	/** _is control box
 	 */
 	function _isControls _Struct =
@@ -238,15 +187,7 @@ struct RolloutCreator_v
 		--print "RolloutCreator_v._getSubrolloutsCount()"
 		this._getType _Struct == "subrollouts"
 	),
-	
-	/** _get subrollouts count
-	 */
-	function _getSubrolloutsCount _Rollout =
-	(
-		--print "RolloutCreator_v._getSubrolloutsCount()"
-		(for _Subrollouts in _Rollout._Controls where this._isSubrollouts(_Subrollouts) collect _Subrollouts).count --return
-	),
-	
+
 	/** Get name given struct
 	  * @property	struct	_Struct
 	  *

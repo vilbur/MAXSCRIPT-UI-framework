@@ -10,6 +10,8 @@ struct SubolloutsCreator_v
 	/* reference */
 	/* inhered */
 	/* properties */
+	ini_path,
+	slot_height = 164,
 	
 	/** Get height of subrollouts slot
 	 */
@@ -35,7 +37,50 @@ struct SubolloutsCreator_v
 		slot_height --return
 	),
 	
+	 /** _create subrollouts
+	  */
+	 --function addSubrolloutsSlot _Rollout Subrollouts =
+	 function addSubrolloutsSlot Subrollouts =
+	 (
+		print ( "RolloutCreator_v._createSubrollouts " + Subrollouts.slot as string  )
+		format "_Rollout	= % \n" _Rollout.id
+		format "Subrollouts.slot	= % \n" Subrollouts.slot
+		format "Subrollouts	= % \n" Subrollouts.rollouts
+		
+		--ini_file = IniFile.getPath()
+		
+		--if( ini_file != undefined ) then 
+		--(
+		--	rollouts_order = getINISetting ini_file (_Rollout.id as string ) (Subrollouts.slot as string )
+		--	
+		--	format "rollouts_order	= % \n" rollouts_order
+		--)
+		
+		format "SLOT_HEIGHT	= % \n" slot_height
 
+		/**  DISABLE ADDING SUBROLLOUTS SLOT INTO ACROSS LAYOUT
+		  */
+		--ControlsCreator.AcrossModifier.fakeControlsOnEndofGroup(_Rollout._RolloutCreator) --fake_control_caption:"SUBROLLOUTS"
+
+		_Rollout._RolloutCreator.addText ("subRollout "+Subrollouts.slot as string +" \"slot_name\" height:"+slot_height as string )
+
+	 ),
+	
+	/** Add sub rollouts
+	 */
+	function addSubRollouts _Rollout =
+	(
+		--print "RolloutCreator_v._addSubRollouts()"
+		for _Subrollouts in _Rollout._Controls where this._isSubrollouts(_Subrollouts) do
+			for _Subrollout in _Subrollouts.Rollouts do
+			(
+				--execute  ( "AddSubRollout "+_Rollout.id+"." + _Subrollouts.slot +" "+ _Subrollout.id + " rolledUp:"+(this._getRolledStateFromIni(_Subrollout.id)) )
+				execute  ( "AddSubRollout "+_Rollout.id+"." + _Subrollouts.slot +" "+ _Subrollout.id + " rolledUp:false" )
+
+				this.addSubRollouts (_Subrollout)
+			)	
+	),
+	
 	private
 	
 	
