@@ -161,9 +161,11 @@ struct Rollout_v
 	(
 		if ( id == undefined or id == unsupplied ) then
 		(
-			id  = "ROLLOUT_" + title
-
+			id = substituteString title "Rollout" "" -- remove "rollout" from title to avoid id like: "ROLLOUT_Rollout_A" if title is "Rollout A'
+			
 			id = substituteString ( trimRight ( trimLeft id )) " " "_" -- replace whitespace with underscore
+			
+			id  = "ROLLOUT_" + id -- add prefix
 
 			id = this._repleaceCharacters "[^A-Za-z0-9_]+" "" -- remove invalid characters E.G.: "Butt@n_&_1" >>> "Button_1"
 
