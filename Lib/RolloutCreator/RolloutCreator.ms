@@ -47,12 +47,9 @@ struct RolloutCreator_v
 		--print ("RolloutCreator_v.createRollout()"  )
 		
 		ControlsCreator   = ControlCreator_v    _Rollout:_Rollout ini_path:(IniFile.getPath())
+		
 		SubolloutsCreator._Rollout = _Rollout
-		
-		
-		SubolloutsCreator.setSubrolloutsHeight(height)
-		
-		
+
 		this._setWidth(width)
 
 		/* EDIT start */ 
@@ -66,6 +63,9 @@ struct RolloutCreator_v
 		/* add TEXT */ 
 		this._addTextToRollout (_Rollout)
 		
+		
+		/* set height of SUBROLLOUTS slot */ 
+		SubolloutsCreator.setSubrolloutsHeight(height)
 		
 		/* add CONTROLS and SUBROLLOUTS SLOTS */ 
 		this._addControlsAndSubrolloutesSlots (_Rollout)
