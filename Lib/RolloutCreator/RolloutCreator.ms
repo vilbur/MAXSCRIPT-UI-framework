@@ -121,7 +121,13 @@ struct RolloutCreator_v
 				ControlsCreator.addControls(ControlsBox_or_Subrollouts)
 			
 			else
+			(
+				/**  DISABLE ADDING SUBROLLOUTS SLOT INTO ACROSS LAYOUT
+				  */
+				ControlsCreator.AcrossModifier.fakeControlsOnEndofGroup(_Rollout._RolloutCreator) --fake_control_caption:"SUBROLLOUTS"
+
 				SubolloutsCreator.addSubrolloutSlots(ControlsBox_or_Subrollouts)
+			)
 		)
 	),
 
