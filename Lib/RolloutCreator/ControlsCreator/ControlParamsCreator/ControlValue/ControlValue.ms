@@ -49,26 +49,18 @@ struct ControlValue_v
 	 */
 	function _convertDatatype _Control val =
 	(
-		 if( ( val_as_number = val as Number ) != undefined ) then
-		(
-			if( _Control.type == #spinner ) then
-			(
-				_range = _Control.Params.getval #range
-				
-				_range.y = val as Number
-				
-				_range --return
-			)
-			else
-				val_as_number --return
-		)
-		else if( (for pattern in #( "true", "false", "(color*", "[*,*]" ) where matchPattern val pattern:pattern collect pattern).count > 0 ) then 
-			execute val
+		if classOf (val_converted = try((execute(val)))catch()) == UndefinedClass then val_converted = substituteString val "\\" "\\\\"
 
-		
-		else
-			--substituteString val "\\" "/"
-			val --return
+		if( _Control.type == #spinner ) then
+		(
+			_range = _Control.Params.getval #range
+			
+			_range.y = val_converted
+			
+			_range --return
+			
+		) else
+			val_converted --return
 	),
 	
 	/**  

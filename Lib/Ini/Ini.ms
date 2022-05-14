@@ -56,14 +56,9 @@ struct Ini_v
 	 */
 	function _convertDatatype val =
 	(		
-		if( (for pattern in #( "true", "false", "color*", "[*,*]" ) where matchPattern val pattern:pattern collect pattern).count > 0 ) then 
-			execute val
-
-		else if( ( val_as_number = val as number) != undefined ) then 
-			val_as_number --return
-			
-		else
-			substituteString val "\\" "\\\\" -- escape string
+		if classOf (val_converted = try((execute(val)))catch()) == UndefinedClass then val_converted = substituteString val "\\" "\\\\"
+		
+		val_converted --return
 	),
 	
 	/** Get path
@@ -79,7 +74,6 @@ struct Ini_v
 	(
 		--format "\n"; print "Ini_v.open()"
 		ShellLaunch  "Notepad++" ("\""+_path+"\"")
-
 	),
 	
 	
