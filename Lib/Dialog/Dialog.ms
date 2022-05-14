@@ -71,7 +71,7 @@ struct Dialog_v
 	 */
 	function create pos: width:512 height:512 bgcolor: fgcolor: bitmap: style: modal: escapeEnable: lockHeight:false lockWidth:true parent: =
 	(
-		format "\n"; print "Dialog_v.create()"
+		--format "\n"; print "Dialog_v.create()"
 		
 		height = this._getDialogHeight(height)
 		
@@ -79,7 +79,7 @@ struct Dialog_v
 		
 		CreateDialog (_RolloutCreator.getDefinition(RolloutMain)) pos:(this._getPositionRelativeToWindow(pos)) autoLayoutOnResize:true  width:width height:height bgcolor:bgcolor fgcolor:fgcolor bitmap:bitmap style:(if( style == unsupplied ) then this.style else style) modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
 		
-		_RolloutCreator.addSubRollouts RolloutMain
+		_RolloutCreator.SubolloutsCreator.addSubRollouts (RolloutMain)
 		
 		this._setPositionOrDockByIni()
 		

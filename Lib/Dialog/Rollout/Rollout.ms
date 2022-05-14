@@ -75,7 +75,7 @@ struct Rollout_v
 
 	/** Addlocal
 	 */
-	function addlocal ke val =
+	function addlocal key val =
 	(
 		--print "Rollout_v.addlocal()"
 		append add_locals key

@@ -1,9 +1,6 @@
 clearListener()
 
-
 filein( getFilenamePath(getSourceFileName()) + "/../../Lib/RolloutCreator/RolloutCreator.ms" )
-
-try( destroyDialog ROLLOUT_test )catch()
 
 
 /** DEFINE UI 

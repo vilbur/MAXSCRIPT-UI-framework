@@ -1,5 +1,5 @@
 filein( getFilenamePath(getSourceFileName()) + "/Control/Control.ms" )
-filein( getFilenamePath(getSourceFileName()) + "/ControlDefaults/ControlDefaults.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/DefaultParameters/DefaultParameters.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/GroupBoxes/GroupBoxes.ms" )
 
 
@@ -14,7 +14,7 @@ struct Controls_v
 	list = #(),
 
 	/* dependency */
-	Defaults = ControlDefaults_v(),
+	DefaultParameters = DefaultParameters_v(),
 	
 	GroupBoxes 	= GroupBoxes_v(),
 	
@@ -30,7 +30,9 @@ struct Controls_v
 	 */
 	function Control type caption id:undefined params:#() locals:#() add_to_controls:true =
 	(
-		--print ("Controls_v.Control() " + caption)
+		format "\n"; print "Controls_v.Control()"
+		format "caption	= % \n" caption
+		
 		_Control = Control_v type:type caption:caption id:id add_locals:locals
 		
 		this._setParamsToControl(_Control)(params)
@@ -68,26 +70,67 @@ struct Controls_v
 	function Default key val type:#global =
 	(
 		--print ("Controls_v.Default("+Key as string +", "+val as string +", type:#"+type as string+")")
-		Defaults.setDefaultParam key val type:type
+		 DefaultParameters.setDefaultParam key val type:type
 	),
 
+	/** Wrapper of method this.Default() for mass assignment params in array
+	  * 
+	  * @param	#array keys_values	#( #key1,"value1", #key2,"value2" )
+	  * 
+	 */
+	function Defaults keys_values type:#global =
+	(
+		for i = 1 to keys_values.count  by 2  do
+			this.Default keys_values[i] keys_values[i+1] type:type
+	),
 	
 	private
 	
 	
 	/** Set params to control
-	 * @property	Array	keys_values	#( #key1, "value1", #key2, "value2" )
+	 * @property	array|string	params	E.G.: #( #key1, "value1", #key2, "value2" ) | "#key1:value1, #key2:value2"
 	 *  
 	 * 
 	 */
-	function _setParamsToControl &_Control keys_values =
+	function _setParamsToControl &_Control params =
 	(
-		--print "Controls_v._setParamsToControl()"
-		--format "keys_values	= % \n" keys_values
-		for i = 1 to keys_values.count  by 2  do
-			_Control.Param keys_values[i] keys_values[i+1]
-
+		print "Controls_v._setParamsToControl()"
+		
+		if classOf params == string then 
+			params = this._splitParamsString (params)
+	
+		for i = 1 to params.count  by 2  do
+			_Control.Param params[i] params[i+1]
+				
 		_Control --return
+	),
+	
+	
+	/** _split params string
+	  *
+	  * @param	string	params_string E.G.: "width:256|height:64, border:false"
+	  *
+	  * @return	array E.G.: #("width", 256, "height", 64, "border", false) 
+	 */
+	function _splitParamsString params_string =
+	(
+		format "\n"; print "Controls_v._splitParamsString()"
+		params = #() 
+		
+		for key_value_pair in filterString params_string "|," splitEmptyTokens:false do
+			for key_value in filterString key_value_pair ":"  do
+				append params (this._convertDatatype( trimRight ( trimLeft key_value )))
+		
+		params --return
+	),
+	
+	/** Format string value to valid datatype
+	 */
+	function _convertDatatype val =
+	(		
+		if classOf (val_converted = try((execute(val)))catch()) == UndefinedClass then val_converted = substituteString val "\\" "\\\\"
+		
+		val_converted --return
 	),
 	
 	/**  

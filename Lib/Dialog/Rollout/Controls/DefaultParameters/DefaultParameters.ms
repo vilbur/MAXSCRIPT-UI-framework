@@ -1,16 +1,17 @@
 filein( getFilenamePath(getSourceFileName()) + "/../ControlTypes/ControlTypes.ms" )
 
 
-/** Defaults RENAME THIS TO ControlsDefaults_v
+/** Default parameters for control types
   *
-  *	Priority of default parameters 
+  *
+  *	Parameters are used by this priority:
   *
   *		1) User defined for control type
-  *		2) Global default per control type
+  *		2) Global default for control type
   *		3) Global defaults for all controls
   *
  */
-struct ControlDefaults_v
+struct DefaultParameters_v
 (
 	/*
 		this.keys   = #( #global,	#button )		

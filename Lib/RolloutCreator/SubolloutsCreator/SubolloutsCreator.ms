@@ -38,13 +38,7 @@ struct SubolloutsCreator_v
 	 function addSubrolloutSlots Subrollouts =
 	 (
 		--print ( "RolloutCreator_v._createSubrollouts " + Subrollouts.slot as string  )
-
-		/**  DISABLE ADDING SUBROLLOUTS SLOT INTO ACROSS LAYOUT
-		  */
-		--ControlsCreator.AcrossModifier.fakeControlsOnEndofGroup(_Rollout._RolloutCreator) --fake_control_caption:"SUBROLLOUTS"
-
 		_Rollout._RolloutCreator.addText ("subRollout "+Subrollouts.slot as string +" \"slot_name\" height:"+slot_height as string )
-
 	 ),
 	
 	/** Add sub rollouts

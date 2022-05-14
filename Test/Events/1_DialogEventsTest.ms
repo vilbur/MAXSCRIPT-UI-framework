@@ -18,21 +18,25 @@ Dialog 	= Dialog_v title:"Test"  ini:( getSourceFileName())
 
 /* ROLLOUT */ 
 _Rollouts  = Dialog.Rollouts()
-_Rollout = _Rollouts.new "Subrollout 1"
-_Rollout_2 = _Rollouts.new "Subrollout 2"
+-- _Rollouts  = Dialog.Rollouts()
+_Rollout = _Rollouts.new "Rollout 1"
+_Rollout_2 = _Rollouts.new "Rollout 2"
 
-_Rollout.Events.add #rolledUp	"print(\"Custom Rollout event #open \"+val as string )"
-_Controls = _Rollout.Controls group:"Subrollout Controls"
+-- _Rollout.Events.add #rolledUp	"print(\"Custom Rollout event #open \"+val as string )"
+-- _Controls = _Rollout.Controls group:"Rollout Controls"
 
-_Button_1 = _Controls.control #checkbox "Cbeckbox 1" 
+-- _Button_1 = _Controls.control #checkbox "Cbeckbox 1" 
 
 
 /* SUBROLLOUTS */ 
 Subrolllouts = _Rollout.Rollouts()
-_Subrolllout = Subrolllouts.new "Nested"
-_Subrolllout.Events.add #rolledUp	"print(\"Custom Subrolllout event #open \"+val as string )"
+_Subrolllout = Subrolllouts.new "Subrollout"
+--_Subrolllout.Events.add #rolledUp	"print(\"Custom Subrolllout event #open \"+val as string )"
 
 
+Subrolllouts = _Subrolllout.Rollouts()
+_NestedRollout = Subrolllouts.new "Nested"
+--_NestedRollout.Events.add #rolledUp	"print(\"Custom Subrolllout event #open \"+val as string )"
 
 
 Dialog.create()

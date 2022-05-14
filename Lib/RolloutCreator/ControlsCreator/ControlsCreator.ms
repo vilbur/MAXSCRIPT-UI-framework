@@ -38,7 +38,7 @@ struct ControlCreator_v
 		GroupBoxCreator.addGrouboxes (_Rollout.getFullId()) (_Controls.GroupBoxes)
 
 		/* set DEFAULT PARAMETERS */ 
-		ParamsCreator.setControlDefaults (_Controls.Defaults)
+		ParamsCreator.setControlDefaults (_Controls.DefaultParameters)
 
 		for _Control in _Controls.list do
 		(
