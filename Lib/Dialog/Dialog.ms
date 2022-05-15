@@ -237,14 +237,14 @@ struct Dialog_v
 	 */
 	function _setPositionOrDockByIni =
 	(
-		format "\n"; print "global._setPositionOrDockByIni()"
+		--format "\n"; print "global._setPositionOrDockByIni()"
 		if( ini != undefined ) then
 		(
 			ini_path =  (_RolloutCreator.IniFile.getPath())
 
 			dock_state	= getINISetting ini_path ( RolloutMain.id as string ) "dock_state"
 			position	= getINISetting ini_path ( RolloutMain.id as string ) "position"
-			format "dock_state	= % \n" dock_state
+			--format "dock_state	= % \n" dock_state
 			
 			if( dock_state != "" and dock_state != "cui_floatable" ) then
 			(

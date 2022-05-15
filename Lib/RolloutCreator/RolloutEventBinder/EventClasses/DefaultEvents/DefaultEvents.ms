@@ -12,7 +12,7 @@ struct DefaultEvents_v
 	 */
 	function getEvents rollout_id_full =
 	(
-		format "\n"; print ("DefaultEvents_v.getEvents()" + rollout_id_full as string )
+		--format "\n"; print ("DefaultEvents_v.getEvents()" + rollout_id_full as string )
 		
 		--append Events ( Event_v type:#open	code:("GroupBoxCreator.sortControlsToGroupBoxes(\""+rollout_id_full+"\")") )
 		

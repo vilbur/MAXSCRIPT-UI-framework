@@ -57,7 +57,7 @@ struct RolloutEventBinder_v
 	 */
 	function combineEventsAndAddHandlers _Rollout =
 	(
-		format "\n\n~~~~~~~~~	Rollout Events:%	~~~~~~~~~\n" _Rollout.id
+		--format "\n\n~~~~~~~~~	Rollout Events:%	~~~~~~~~~\n" _Rollout.id
 
 		this._Rollout = _Rollout
 
@@ -93,14 +93,14 @@ struct RolloutEventBinder_v
 		if Event.code == "" then 
 			return false
 		
-		print "RolloutEventBinder_v._addHandler()"
-		format "event_type	= % \n" event_type
+		--print "RolloutEventBinder_v._addHandler()"
+		--format "event_type	= % \n" event_type
 		
-		format "Event.code	= % \n" Event.code	
+		--format "Event.code	= % \n" Event.code	
 		--format "Event	= % \n" Event
 		handler = "on "+(_Rollout.id)+" "+ event_type as string +" "+this._getParams(event_type)+" do  \n(" +Event.code+ "\n)"
 		
-		format "handler	= % \n" handler
+		--format "handler	= % \n" handler
 		_Rollout._RolloutCreator.addText(handler)
 	),
 	

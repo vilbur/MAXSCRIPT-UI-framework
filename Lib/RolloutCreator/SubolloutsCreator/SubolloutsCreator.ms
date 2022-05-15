@@ -45,7 +45,7 @@ struct SubolloutsCreator_v
 	 */
 	function addSubRollouts _Rollout =
 	(
-		print "SubolloutsCreator_v._addSubRollouts()"
+		--print "SubolloutsCreator_v._addSubRollouts()"
 		this._Rollout = _Rollout
 		
 		for Subrollouts in this._getSubrollouts(_Rollout) do
@@ -53,7 +53,7 @@ struct SubolloutsCreator_v
 			subrollout_ids	= for Subrollout in Subrollouts.Rollouts collect Subrollout.id			
 
 			rollouts_order	= this._getOrderOfsubrollouts(Subrollouts)
-			format "rollouts_order	= % \n" rollouts_order
+			--format "rollouts_order	= % \n" rollouts_order
 			
 			for subrollout_id in rollouts_order where ( index = findItem subrollout_ids subrollout_id ) > 0 do
 			(
