@@ -53,11 +53,11 @@ struct SubolloutsCreator_v
 			subrollout_ids	= for Subrollout in Subrollouts.Rollouts collect Subrollout.id			
 
 			rollouts_order	= this._getOrderOfsubrollouts(Subrollouts)
-			--format "rollouts_order	= % \n" rollouts_order
+			format "rollouts_order	= % \n" rollouts_order
 			
-			for subrollout_id in rollouts_order do
+			for subrollout_id in rollouts_order where ( index = findItem subrollout_ids subrollout_id ) > 0 do
 			(
-				Subrollout = Subrollouts.Rollouts[findItem subrollout_ids subrollout_id]
+				Subrollout = Subrollouts.Rollouts[index]
 				--format "Subrollout	= % \n" Subrollout
 				execute  ( "AddSubRollout "+_Rollout.id+"." + Subrollouts.slot +" "+ Subrollout.id + " rolledUp:"+(this._getRolledStateFromIni(Subrollout.id)) )
 
