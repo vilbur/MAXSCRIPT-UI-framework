@@ -93,13 +93,17 @@ struct ScriptFile_Content_v
 	 */
 	function _setEventCallMacro &_Control Macro =
 	(
-		--format "\n"; print "ScriptFile_Content_v._setEventCallMacro()"
+		format "\n"; print "ScriptFile_Content_v._setEventCallMacro()"
 		
 		event_type = this._getEventType (_Control) (Macro)
+		format "event_type	= % \n" event_type
 		
-		callback = "(macros.run \""+Macro.category+"\" \""+Macro.macro_name+"\")"
-
-		_Control.Event event_type callback tooltip:Macro.toolTip
+		if( event_type != undefined ) then
+		(
+			callback = "(macros.run \""+Macro.category+"\" \""+Macro.macro_name+"\")"
+	
+			_Control.Event event_type callback tooltip:Macro.toolTip
+		)
 		
 		_Control --return
 	),
