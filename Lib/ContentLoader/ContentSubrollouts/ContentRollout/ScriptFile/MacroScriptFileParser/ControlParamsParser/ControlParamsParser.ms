@@ -71,7 +71,7 @@ struct ControlParamsParser_v
 		(
 			val = this._convertDatatype( this._trimWhiteSpace(val))
 
-			append params[1] ( this._trimWhiteSpace(key) )
+			append params[1] ( this._trimWhiteSpace(key) as name )
 			append params[2] val			
 		)
 		else
@@ -123,25 +123,12 @@ struct ControlParamsParser_v
 	
 	/** Format string value to valid datatype
 	 */
-	function _convertDatatype val =
+	function _convertDatatype _string =
 	(		
 		--print "MacroScriptFileParser_v._convertDatatype()"
-		--format "val	= % \n" val
-		
-		/** if Boolean, Color,  Point2, Point3, #Name
-		  *	
-		  */
-		if( (for pattern in #( "true", "false", "(color*", "[*,*]", "#*" ) where matchPattern val pattern:pattern collect pattern).count > 0 ) then 
-			execute val
-			
-		else if( val as number != undefined ) then 
-			val as Number --return
-
-		else
-			val --return
-		
-		--format "val	= % \n" val
-		--val --return
+		if classOf (val_converted = try((execute(_string)))catch()) == UndefinedClass then val_converted = substituteString _string "\\" "\\\\"
+	
+		val_converted --return
 	),
 	
 	/**  
