@@ -2,8 +2,7 @@ clearListener()
 
 /** INCLUDE UI 
  */
-filein( getFilenamePath(getSourceFileName()) + "/../ContentLoader.ms" )
-
+filein( getFilenamePath(getSourceFileName()) + "/../../../Lib/ContentLoader/ContentLoader.ms" )
 
 /** Load content from file tree
  */
@@ -32,7 +31,7 @@ function loadContentTest dir_name =
 /*---------------------------------------
 	RUN TESTR
 -----------------------------------------*/
- Dialog = loadContentTest("Dialog-level")
+ Dialog = loadContentTest("Test-Content")
 -- Dialog = loadContentTest("Nested-Rollouts")
 
 
