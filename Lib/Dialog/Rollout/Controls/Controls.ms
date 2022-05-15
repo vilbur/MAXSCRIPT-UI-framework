@@ -30,9 +30,8 @@ struct Controls_v
 	 */
 	function Control type caption id:undefined params:#() locals:#() add_to_controls:true =
 	(
-		format "\n"; print "Controls_v.Control()"
-		format "caption	= % \n" caption
-		
+		--format "\n"; print "Controls_v.Control()"
+		--format "caption	= % \n" caption
 		_Control = Control_v type:type caption:caption id:id add_locals:locals
 		
 		this._setParamsToControl(_Control)(params)
@@ -94,7 +93,7 @@ struct Controls_v
 	 */
 	function _setParamsToControl &_Control params =
 	(
-		print "Controls_v._setParamsToControl()"
+		--print "Controls_v._setParamsToControl()"
 		
 		if classOf params == string then 
 			params = this._splitParamsString (params)
@@ -114,7 +113,7 @@ struct Controls_v
 	 */
 	function _splitParamsString params_string =
 	(
-		format "\n"; print "Controls_v._splitParamsString()"
+		--format "\n"; print "Controls_v._splitParamsString()"
 		params = #() 
 		
 		for key_value_pair in filterString params_string "|," splitEmptyTokens:false do

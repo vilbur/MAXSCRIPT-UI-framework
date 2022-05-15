@@ -28,7 +28,7 @@ struct ControlCreator_v
 	function addControls _Controls =
 	(
 		format "\n\n--------------	Controls group:%	--------------\n" _Controls.group;
-		print ("ControlCreator_v.addControls()"  )
+		--print ("ControlCreator_v.addControls()"  )
 
 		--this._Rollout  = _Rollout
 		this._Controls = _Controls
@@ -123,8 +123,7 @@ struct ControlCreator_v
 	 */
 	function _addControlsToRollout =
 	(
-		format "\n"; print "ControlCreator_v._addControlsToRollout()"
-
+		--format "\n"; print "ControlCreator_v._addControlsToRollout()"
 		this._addControlsGroup #start
 
 		for _Control in _Controls.list do

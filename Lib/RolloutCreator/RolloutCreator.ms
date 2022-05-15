@@ -79,7 +79,13 @@ struct RolloutCreator_v
 
 		/* EDIT end */ 
 		_Rollout._RolloutCreator.end()
-		--format "\n\n_Rollout._RolloutCreator	= % \n" _Rollout._RolloutCreator -- DEbuG; PRINT ROLLOUT DEINITION
+		
+		--format "%\n\n" "------------------------------------------------------------"
+		--
+		--format "%\n" _Rollout._RolloutCreator.def
+		--format "%\n" _Rollout
+		--
+		--format "%\n\n" "------------------------------------------------------------"
 	),
 
 	/** New
