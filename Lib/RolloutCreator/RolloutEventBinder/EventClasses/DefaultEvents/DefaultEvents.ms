@@ -14,7 +14,7 @@ struct DefaultEvents_v
 	(
 		--format "\n"; print ("DefaultEvents_v.getEvents()" + rollout_id_full as string )
 		
-		--append Events ( Event_v type:#open	code:("GroupBoxCreator.sortControlsToGroupBoxes(\""+rollout_id_full+"\")") )
+		append Events ( Event_v type:#open	code:("GroupBoxCreator.sortControlsToGroupBoxes(\""+rollout_id_full+"\")") )
 		
 		--append Events ( Event_v type:#okToClose	code:("print(\"okToClose "+rollout_id_full+"\"); true") )
 		append Events ( Event_v type:#okToClose	code:("(IniSaver_v ini_file:\""+ini_path+"\").saveRollout(\""+rollout_id_full+"\")") )

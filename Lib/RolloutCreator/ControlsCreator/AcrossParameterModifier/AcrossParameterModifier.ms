@@ -10,7 +10,9 @@ struct AcrossParameterModifier_v
 (
 	_controls_in_row,
 	_across_left,
-
+	fake_control_caption = "",
+	--fake_control_caption = "FAKE", -- DEV
+	
 	/** 
 	 */
 	function addFakeControls &_Controls =
@@ -21,18 +23,20 @@ struct AcrossParameterModifier_v
 		--for __control__ in _Controls.List do 
 			--format "__control__	= % \n" __control__
 		--return false -- DEBUG
-		
-		_Controls_list_copy	= #()
+		--format "_Controls.list.count	= % \n" _Controls.list.count
 
+		_Controls_list_copy	= #()
+		--format " _Controls.list = % \n"  _Controls.list
 	
 		for control_count = 1 to _Controls.list.count do
 		(
 			_Control =  _Controls.list[control_count]
-			
+			--format "_Control.id	= % \n" _Control.id
+
 			if( (control_is_not_in_group_box = _Control.Params.getVal #GroupBox) == undefined ) then
 			(
 				across_current	=  _Control.Params.getVal #across
-	
+				--format "across_current	= % \n" across_current
 				if( new_row_start = (_across_left == 0) ) then 
 					_across_left = across_current
 	
@@ -60,18 +64,19 @@ struct AcrossParameterModifier_v
 					--format "_across_left	= % \n" _across_left
 				
 			)
-
 			/* ADD CONTROL TO NEW LIST */ 
 			append _Controls_list_copy _Control
 		)
-		--format "_Controls_list_copy	= % \n" _Controls_list_copy
-		/* ADD FAKE CONTROLS TO END OF GROUP TO FILL ROW */
+		--format "_Controls_list_copy.count	= % \n" _Controls_list_copy.count
+		/* ADD FAKE CONTROLS TO END OF GROUP TO FILL ROW
+		
+				LOOP
+		*/
 		if( end_of_group = _across_left != undefined ) then
 			this._addFakeControls  (_Controls) (_Controls_list_copy) (_across_left) --fake_control_caption:("group end" )
 
 		_across_left	= undefined -- allow set for new group
 		_controls_in_row	= undefined -- allow set for new group
-
 		_Controls.list = _Controls_list_copy
 
 		_Controls --return 
@@ -94,8 +99,10 @@ struct AcrossParameterModifier_v
 
 	/** _add fake controls
 	 */
-	function _addFakeControls _Controls &_Controls_list_copy fake_count fake_control_caption:"" =
+	function _addFakeControls _Controls &_Controls_list_copy fake_count fake_control_caption:fake_control_caption=
 	(
+		--print "AcrossParameterModifier_v._addFakeControls()"
+		--format "fake_count	= % \n" fake_count
 		for i = 1 to fake_count do
 			append _Controls_list_copy (this._createFakeControl (_Controls) (fake_control_caption))
 	),
@@ -105,7 +112,10 @@ struct AcrossParameterModifier_v
 	function _createFakeControl _Controls fake_control_caption =
 	(
 		--print "AcrossParameterModifier_v._createFakeControl()"
-		_Controls.control #label fake_control_caption id:(this._generateId()) --add_to_controls:false --return	
+		_Control = _Controls.control #label fake_control_caption id:(this._generateId()) --add_to_controls:false --return
+		--format "FakeControl	= % \n" _Control.id	
+		
+		_Control --return
 	),
 	
 	/** _get fake control id

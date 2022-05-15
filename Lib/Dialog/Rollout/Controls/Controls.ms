@@ -1,5 +1,5 @@
 filein( getFilenamePath(getSourceFileName()) + "/Control/Control.ms" )
-filein( getFilenamePath(getSourceFileName()) + "/DefaultParameters/DefaultParameters.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/DefaultParameters/DefaultParameters.ms" )	/* DefaultParameters */
 filein( getFilenamePath(getSourceFileName()) + "/GroupBoxes/GroupBoxes.ms" )
 
 
