@@ -12,24 +12,33 @@ struct SubolloutsCreator_v
 	/* properties */
 	ini_path,
 	
-	slot_height = 64, -- default minimal height of slot
 	padding_bottom = 16,
+	slot_height = 64, -- default minimal height of slot
 
 	/** Get height of subrollouts slot
 	 */
 	function setSubrolloutsHeight rollout_height =
 	(
 		--format "\n"; print "SubolloutsCreator_v.setSubrolloutsHeight()"
-		
-		slots_count = (this._getSubrollouts(_Rollout)).count 
 
-		nested_level = if( _Rollout.parent_rollout == undefined ) then 0 else (filterString _Rollout.parent_rollout ".").count/2 -- split parent_rollout_id and slot id E.G.: ROLLOUT_Parent.children
+		Subrollouts = this._getSubrollouts(_Rollout)
+
+		Subrollouts_with_height = for Subrollout in Subrollouts where Subrollout.height != undefined and Subrollout.height != unsupplied collect Subrollout
 		
-		if( slots_count > 0 ) then 
-			if( rollout_height != undefined and rollout_height != unsupplied ) then
-				slot_height = (rollout_height - padding_bottom) / slots_count
-				
+		nested_level = if( _Rollout.parent_rollout == undefined ) then 0 else (filterString _Rollout.parent_rollout ".").count/2 -- split parent_rollout_id and slot id E.G.: ROLLOUT_Parent.children
+
+		
+		for Subrollout in Subrollouts_with_height do
+			rollout_height -= Subrollout.height
+		
+		if( (Subrollouts_height_undefined = Subrollouts.count - Subrollouts_with_height.count) > 0 ) then
+			slot_height = (rollout_height - padding_bottom) / Subrollouts_height_undefined
+			
 		slot_height -= 34*nested_level
+		
+		for Subrollout in Subrollouts where Subrollout.height == undefined or Subrollout.height == unsupplied do
+			Subrollout.height = slot_height
+		
 	),
 	
 	 /** _create subrollouts
@@ -37,8 +46,9 @@ struct SubolloutsCreator_v
 	 --function addSubrolloutsSlot _Rollout Subrollouts =
 	 function addSubrolloutSlots Subrollouts =
 	 (
-		--print ( "SubolloutsCreator_v._createSubrollouts " + Subrollouts.slot as string  )
-		_Rollout._RolloutCreator.addText ("subRollout "+Subrollouts.slot as string +" \"slot_name\" height:"+slot_height as string )
+		--print ( "SubolloutsCreator_v.addSubrolloutSlots " + Subrollouts.slot as string  )
+		--format "Subrollouts.height	= % \n" Subrollouts.height
+		_Rollout._RolloutCreator.addText ("subRollout "+Subrollouts.slot as string +" \"slot_name\" height:"+Subrollouts.height as string )
 	 ),
 	
 	/** Add sub rollouts
@@ -68,6 +78,8 @@ struct SubolloutsCreator_v
 	
 	
 	private
+	
+	
 	
 	
 	/** Get rolled state from ini

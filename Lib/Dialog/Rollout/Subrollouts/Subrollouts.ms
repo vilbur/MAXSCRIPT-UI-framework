@@ -7,9 +7,11 @@ struct Subrollouts_v
 	/* properties */
 	parent_rollout,
 	slot,
+	height,
+	--height = 32,
 
 	Rollouts	= #(),
-
+	--shit = "SHIT",
 	/** Create new rollout
 	 */
 	function new title id: =
