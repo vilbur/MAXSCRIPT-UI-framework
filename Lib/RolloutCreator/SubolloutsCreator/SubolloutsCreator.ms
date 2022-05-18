@@ -17,28 +17,19 @@ struct SubolloutsCreator_v
 
 	/** Get height of subrollouts slot
 	 */
-	function setSubrolloutsHeight rollout_height =
+	function setSubrolloutsSlotHeight rollout_height =
 	(
 		--format "\n"; print "SubolloutsCreator_v.setSubrolloutsHeight()"
-
 		Subrollouts = this._getSubrollouts(_Rollout)
+		
+		Subrollouts_with_height = this._getSubrolloutWithHeightDefined()
 
-		Subrollouts_with_height = for Subrollout in Subrollouts where Subrollout.height != undefined and Subrollout.height != unsupplied collect Subrollout
-		
-		nested_level = if( _Rollout.parent_rollout == undefined ) then 0 else (filterString _Rollout.parent_rollout ".").count/2 -- split parent_rollout_id and slot id E.G.: ROLLOUT_Parent.children
+		empty_space = rollout_height - (this._getDefinedHeights(Subrollouts_with_height))
 
-		
-		for Subrollout in Subrollouts_with_height do
-			rollout_height -= Subrollout.height
-		
-		if( (Subrollouts_height_undefined = Subrollouts.count - Subrollouts_with_height.count) > 0 ) then
-			slot_height = (rollout_height - padding_bottom) / Subrollouts_height_undefined
-			
-		slot_height -= 34*nested_level
-		
+		slot_height = this._getSlotHeight(empty_space)(Subrollouts.count - Subrollouts_with_height.count)
+
 		for Subrollout in Subrollouts where Subrollout.height == undefined or Subrollout.height == unsupplied do
 			Subrollout.height = slot_height
-		
 	),
 	
 	 /** _create subrollouts
@@ -48,6 +39,12 @@ struct SubolloutsCreator_v
 	 (
 		--print ( "SubolloutsCreator_v.addSubrolloutSlots " + Subrollouts.slot as string  )
 		--format "Subrollouts.height	= % \n" Subrollouts.height
+		--_Rollout._RolloutCreator.addControl (#label) ("subrollouts_label_"+) (this._emptyCaptionIfInBrackets(_Control.caption)) paramStr:params filter:true
+		--_Rollout._RolloutCreator.addControl (#label) ("label_title_"+Subrollouts.slot) (Subrollouts.slot)
+		--_Rollout._RolloutCreator.addControl (#button) ("label_title_"+Subrollouts.slot) (Subrollouts.slot) paramStr:"border:false across:1"
+		
+
+		
 		_Rollout._RolloutCreator.addText ("subRollout "+Subrollouts.slot as string +" \"slot_name\" height:"+Subrollouts.height as string )
 	 ),
 	
@@ -79,8 +76,49 @@ struct SubolloutsCreator_v
 	
 	private
 	
+	/** Get subrollout with height defined
+	 */
+	function _getSubrolloutWithHeightDefined =
+	(
+		--format "\n"; print "SubolloutsCreator_v.getSubrolloutWithHeightDefined()"
+		for Subrollout in this._getSubrollouts(_Rollout) where Subrollout.height != undefined and Subrollout.height != unsupplied collect Subrollout --return
+	),
+	
+	/** Get nested level
+	 */
+	function _getNestedLevel = -- split parent_rollout_id and slot id E.G.: ROLLOUT_Parent.children 
+	(
+		--format "\n"; print "SubolloutsCreator_v._getNestedLevel()"
+		if( _Rollout.parent_rollout == undefined ) then 0 else (filterString _Rollout.parent_rollout ".").count/2 --return
+	),
 	
 	
+	/** Get occupied space by controls and subrollouts with definied height
+	 */
+	function _getDefinedHeights Subrollouts_with_height =
+	(
+		--format "\n"; print "SubolloutsCreator_v.getOccupiedSpace()"
+		
+		defined_heights = 0
+		
+		for Subrollout in (Subrollouts_with_height) do
+			defined_heights = Subrollout.height
+		
+		defined_heights --return
+	),
+
+	/** Get slot height
+	 */
+	function _getSlotHeight empty_space subrollouts_count =
+	(
+		--format "\n"; print "SubolloutsCreator_v._getSlotHeight()"
+		if( subrollouts_count > 0 ) then
+			slot_height = (empty_space - padding_bottom) / subrollouts_count
+			
+		slot_height -= 34*(this._getNestedLevel())
+
+		slot_height --return
+	),
 	
 	/** Get rolled state from ini
 	 */

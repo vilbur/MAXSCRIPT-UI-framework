@@ -42,7 +42,7 @@ struct RolloutCreator_v
 	 */
 	function createRollout _Rollout width: height: =
 	(
-		format "\n\n\n\n=====================================	RolloutCreator_v.%	=====================================\n"  ( _Rollout.id as string );
+		format "\n\n\n\n=====================================	RolloutCreator_v.createRollout() %	=====================================\n"  ( _Rollout.id as string );
 		--format "classOf _Rollout.id	= % \n" (classOf _Rollout.id)
 		--print ("RolloutCreator_v.createRollout()"  )
 		
@@ -65,7 +65,8 @@ struct RolloutCreator_v
 		
 		
 		/* set height of SUBROLLOUTS slot */ 
-		SubolloutsCreator.setSubrolloutsHeight(height)
+		if( height != unsupplied ) then 
+			SubolloutsCreator.setSubrolloutsSlotHeight(height)
 		
 		/* add CONTROLS and SUBROLLOUTS SLOTS */ 
 		this._addControlsAndSubrolloutesSlots (_Rollout)
