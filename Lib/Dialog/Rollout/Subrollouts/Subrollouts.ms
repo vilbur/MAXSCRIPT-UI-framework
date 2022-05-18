@@ -8,15 +8,16 @@ struct Subrollouts_v
 	parent_rollout,
 	slot,
 	height,
-	--height = 32,
+	--height = 128,
 
 	Rollouts	= #(),
-	--shit = "SHIT",
-	/** Create new rollout
+
+	/** Get new Rollout
 	 */
 	function new title id: =
 	(
 		--print "Subrollouts_v.new()"
+		--format "title	= % \n" title
 		local _Rollout = Rollout_v title:title id:id parent_rollout:( parent_rollout as string +"."+slot as string)
 
 		append Rollouts _Rollout

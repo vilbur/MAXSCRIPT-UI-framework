@@ -40,25 +40,36 @@ struct Rollout_v
 		Controls --return
 	),
 
-	/** Get Subrollouts for rollout
+	/** Get new slot of subrollouts
 	 */
-	function Subrollouts slot: =
+	function Subrollouts slot: height:height =
 	(
-		local Subrollouts = Subrollouts_v parent_rollout:id slot:(this._getSubrolloutsSlot(slot)) 
+		local Subrollouts = Subrollouts_v parent_rollout:id slot:(this._getSubrolloutsSlot(slot)) height:height 
 
 		append _Controls Subrollouts
 
 		Subrollouts --return
 	),
 
-	/** Subrollouts
+	/** Get new slot of subrollouts
 	  *
-	  * Alias for user friedly coding
+	  * Front end alias for user this.Subrollouts()
 	 */
-	function Rollouts slot: =
+	function Rollouts slot: height: =
 	(
-		this.Subrollouts slot:slot --return
+		--print "Rollout_v.Rollouts()"
+		this.Subrollouts slot:slot height:height --return
 	),
+	
+
+	/*------------------------------------------------------------------------------
+		
+		TODO:
+		
+		Move methods of _RolloutCreator to RolloutCreator_v.ms
+		
+	--------------------------------------------------------------------------------*/
+	
 	
 	/** Rolloutcreator begin
 	  *
@@ -143,7 +154,7 @@ struct Rollout_v
 	 */
 	function _getSubrolloutsSlot slot =
 	(
-		if slot == unsupplied then
+		if slot == undefinedr or slot == unsupplied then
 		(
 			subrollouts_count = (for _struct in _Controls where matchPattern (classof _struct as string ) pattern:@"*Subrollouts_v*" collect _struct).count + 1 -- Add 1 because of current subrollouts are not added yet
 						

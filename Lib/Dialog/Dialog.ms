@@ -74,14 +74,15 @@ struct Dialog_v
 		--format "\n"; print "Dialog_v.create()"
 		
 		height = this._getDialogHeight(height)
-		
+		--format "height	= % \n" height
 		_RolloutCreator.createRollout (RolloutMain) width:width height:height
-		
+		--format "RolloutMain	= % \n" RolloutMain
 		CreateDialog (_RolloutCreator.getDefinition(RolloutMain)) pos:(this._getPositionRelativeToWindow(pos)) autoLayoutOnResize:true  width:width height:height bgcolor:bgcolor fgcolor:fgcolor bitmap:bitmap style:(if( style == unsupplied ) then this.style else style) modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
+		--CreateDialog (_RolloutCreator.getDefinition(RolloutMain)) 
 		
 		_RolloutCreator.SubolloutsCreator.addSubRollouts (RolloutMain)
 		
-		this._setPositionOrDockByIni()
+		--this._setPositionOrDockByIni()
 		
 		
 		--AutoRunEvents.executeMacros()
@@ -141,9 +142,9 @@ struct Dialog_v
 	
 	/** rollouts
      */
-    function rollouts =
+    function Rollouts slot: height: =
     (
-        RolloutMain.rollouts() --return
+        RolloutMain.rollouts slot:slot height:height --return
     ),
 
 	/** Controls
