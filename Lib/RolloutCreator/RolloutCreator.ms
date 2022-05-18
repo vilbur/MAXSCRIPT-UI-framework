@@ -46,7 +46,7 @@ struct RolloutCreator_v
 		--format "classOf _Rollout.id	= % \n" (classOf _Rollout.id)
 		--print ("RolloutCreator_v.createRollout()"  )
 		
-		ControlsCreator   = ControlCreator_v    _Rollout:_Rollout ini_path:(IniFile.getPath())
+		ControlsCreator   = ControlCreator_v _Rollout:_Rollout ini_path:(IniFile.getPath())
 		
 		SubolloutsCreator._Rollout = _Rollout
 
@@ -64,10 +64,16 @@ struct RolloutCreator_v
 		this._addTextToRollout (_Rollout)
 		
 		
-		/* set height of SUBROLLOUTS slot */ 
-		if( height != unsupplied ) then 
-			SubolloutsCreator.setSubrolloutsSlotHeight(height)
+		if( _Rollout.height != undefined ) then
+			height =  _Rollout.height
+
 		
+		/* set height of SUBROLLOUTS slot */ 
+		if( height != unsupplied ) then
+			SubolloutsCreator.setSubrolloutsSlotHeight(height)
+
+			--height = _Rollout.height
+
 		/* add CONTROLS and SUBROLLOUTS SLOTS */ 
 		this._addControlsAndSubrolloutesSlots (_Rollout)
 

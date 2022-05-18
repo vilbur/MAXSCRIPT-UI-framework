@@ -30,13 +30,7 @@ struct SubolloutsCreator_v
 		slot_height = this._getSlotHeight(empty_space)(Subrollouts_all.count - Subrollouts_with_height.count)
 
 		for Subrollout in Subrollouts_all where Subrollout.height == undefined or Subrollout.height == unsupplied do
-		--for Subrollout in Subrollouts_all do
-		(
-			--format "SUBROLLOUT assign	= % \n" Subrollout.slot
 			Subrollout.height = slot_height
-			--Subrollout.height = 256
-			
-		)
 	),
 	
 	 /** _create subrollouts
@@ -46,14 +40,9 @@ struct SubolloutsCreator_v
 	 (
 		--format "----------------------------------------------------	= % \n" "----------------------------------------------------"
 		--format "\n"; print ( "SubolloutsCreator_v.addSubrolloutSlots " + _Rollout.id+"."+Subrollouts.slot as string  )
-		--format "Subrollouts.height	= % \n" Subrollouts.height
 		
-		if( Subrollouts.height == undefined ) then
-		(
-			--format "SUBROLLOUTS MISSING	= % \n" Subrollouts.slot
-			
-			Subrollouts.height = 128
-		)
+		------if( Subrollouts.height == undefined ) then
+		------	Subrollouts.height = 128
 		
 		_Rollout._RolloutCreator.addText ("subRollout "+Subrollouts.slot as string +" \"slot_name\" height:"+Subrollouts.height as string )
 	 ),
@@ -101,7 +90,7 @@ struct SubolloutsCreator_v
 	function _getNestedLevel = -- split parent_rollout_id and slot id E.G.: ROLLOUT_Parent.children 
 	(
 		--format "\n"; print "SubolloutsCreator_v._getNestedLevel()"
-		if( _Rollout.parent_rollout == undefined ) then 0 else (filterString _Rollout.parent_rollout ".").count/2 --return
+		if( _Rollout.parent_rollout_id == undefined ) then 0 else (filterString _Rollout.parent_rollout_id ".").count/2 --return
 	),
 	
 	
