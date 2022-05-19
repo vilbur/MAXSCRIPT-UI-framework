@@ -13,7 +13,8 @@ struct Rollout_v
 	
 	/* properties */
 	id,
-	parent_rollout,
+	height,
+	parent_rollout_id,
 	
 	/* dependency */
 	_Controls = #(),
@@ -44,7 +45,7 @@ struct Rollout_v
 	 */
 	function Subrollouts slot: height:height =
 	(
-		local Subrollouts = Subrollouts_v parent_rollout:id slot:(this._getSubrolloutsSlot(slot)) height:height 
+		local Subrollouts = Subrollouts_v parent_rollout_id:id slot:(this._getSubrolloutsSlot(slot)) height:height 
 
 		append _Controls Subrollouts
 
@@ -59,6 +60,18 @@ struct Rollout_v
 	(
 		--print "Rollout_v.Rollouts()"
 		this.Subrollouts slot:slot height:height --return
+	),
+	
+	/** Get Subrollouts
+	  * 
+	  * @return	object Subrollouts_v	
+	 */
+	function get slot =
+	(
+		format "\n"; print "Rollout_v.get()"
+		--format "slot as name	= % \n" (slot as name)
+		
+		(for _Control in _Controls where hasProperty _Control "slot" and _Control.slot == ( slot as name ) collect _Control)[1] --return
 	),
 	
 
@@ -105,8 +118,8 @@ struct Rollout_v
 	 */
 	function getFullId =
 	(
-		if ( parent_rollout != undefined ) then
-			parent_rollout +"."+ id as string --return 
+		if ( parent_rollout_id != undefined ) then
+			parent_rollout_id +"."+ id as string --return 
 		
 		else
 			id as string --return
@@ -172,11 +185,14 @@ struct Rollout_v
 	(
 		if ( id == undefined or id == unsupplied ) then
 		(
-			id = substituteString title "Rollout" "" -- remove "rollout" from title to avoid id like: "ROLLOUT_Rollout_A" if title is "Rollout A'
+			id = title
+			--id = substituteString title "Rollout" "" -- remove "rollout" from title to avoid id like: "ROLLOUT_Rollout_A" if title is "Rollout A'
 			
 			id = substituteString ( trimRight ( trimLeft id )) " " "_" -- replace whitespace with underscore
 			
-			id  = "ROLLOUT_" + id -- add prefix
+			--id  = "ROLLOUT_" + id -- add prefix
+
+			id = this._repleaceCharacters "^(\d+)" "" -- remove number as first letter, global variable MUST NOT starts with number
 
 			id = this._repleaceCharacters "[^A-Za-z0-9_]+" "" -- remove invalid characters E.G.: "Butt@n_&_1" >>> "Button_1"
 

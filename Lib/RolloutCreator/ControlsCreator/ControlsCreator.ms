@@ -27,7 +27,7 @@ struct ControlCreator_v
 	 */
 	function addControls _Controls =
 	(
-		format "\n\n--------------	Controls group:%	--------------\n" _Controls.group;
+	--	format "\n\n--------------	Controls group:%	--------------\n" _Controls.group;
 		--print ("ControlCreator_v.addControls()"  )
 
 		--this._Rollout  = _Rollout
@@ -138,8 +138,6 @@ struct ControlCreator_v
 	(
 		if not matchPattern _Control.id pattern:"LABEL_fake*" then -- DEBUG - don`t print
 			format "\n%.%" ( _Rollout.id as string ) _Control.id
-			--format "_Control.id	= % \n" _Control.id
-			--print ("ControlCreator_v._addControlToUi() " +_Control.id )
 		
 		params = ParamsCreator.join(_Control.params)
 

@@ -1,14 +1,16 @@
+global DIALOG_PREVIOUS_STATE = undefined -- this should be in struct
+
+global EVENT_DOCKED_ENABLED = true -- prevent crash on destroying  of dialog // RENAME THIS TO DIALOG_ENABLE_DOCKED_EVENT
+
+global AUTORUN_EVENTS = #()
+
+
 filein( getFilenamePath(getSourceFileName()) + "/../ConstructPropeties/ConstructPropeties.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/../RolloutCreator/RolloutCreator.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/Layout/Layout.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/AutoRunEvents/AutoRunEvents.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/IniSaver/IniSaver.ms" )
 
-global DIALOG_PREVIOUS_STATE = undefined -- this should be in struct
-
-global EVENT_DOCKED_ENABLED = true -- prevent crash on destroying  of dialog // RENAME THIS TO DIALOG_ENABLE_DOCKED_EVENT
-
-global AUTORUN_EVENTS = #()
 
 /** https://help.autodesk.com/view/MAXDEV/2021/ENU/?guid=GUID-816D257C-CD2D-4753-A792-6E7AEFAFA6A7
  */
@@ -31,7 +33,7 @@ struct Dialog_v
 	Layout 	= Layout_v(),
 	--Menu	= DialogMenu_v Dialog:this,
 	
-	RolloutMain, --RENAME TO DialogRollout,
+	RolloutMain, --RENAME TO DialogRollout ???,
 	
 	/* inherit */
 	Events,
@@ -82,10 +84,9 @@ struct Dialog_v
 		
 		_RolloutCreator.SubolloutsCreator.addSubRollouts (RolloutMain)
 		
-		--this._setPositionOrDockByIni()
+		this._setPositionOrDockByIni()
 		
-		
-		--AutoRunEvents.executeMacros()
+		AutoRunEvents.executeMacros()
 	),
     
 	/** Register dialog bar
