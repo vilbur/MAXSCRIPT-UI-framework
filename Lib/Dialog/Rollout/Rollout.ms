@@ -198,9 +198,31 @@ struct Rollout_v
 
 			id = this._repleaceCharacters "[_]+" "_" -- remove multiple underscores E.G.: "button___1" >>> "button_1"
 		
+		this.validateid()
+		
 		id = id as name
 	),
 
+	/** Validate title
+	 */
+	function validateid =
+	(
+		--format "\n"; print "Subrollouts_v.validateTitle()"
+		--format "id	= % \n" id
+		variable_test = execute (id)
+		--format "variable_test	= % \n" (classof variable_test)
+		
+		if classof variable_test != UndefinedClass and classof variable_test != RolloutClass then
+		(
+			id_prefixed = "ROLLOUT_" + id
+		
+			print ("\n\n!!!!!!!!! WARNING !!!!!!!!!!!!\n\nRollout id \"" + id + "\" is MaxScript variable\n\nRollout id has been changed to \"" + id_prefixed + "\"\n\n")
+			
+			id  = id_prefixed
+		)
+		
+	),
+	
 	/** _repleace string
 	 */
 	function _repleaceCharacters search replace =

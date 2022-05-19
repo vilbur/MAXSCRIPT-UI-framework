@@ -41,13 +41,6 @@ struct Subrollouts_v
 	
 	
 	private
-
-	/** Validate title
-	 */
-	function validateTitle =
-	(
-		--format "\n"; print "Subrollouts_v.validateTitle()"
-	),
 	
 	/**  
 	 */
