@@ -27,11 +27,9 @@ struct ContentRollout_v
 	function addToUi Subrollouts =
 	(
 		--print ( "ContentRollout_v.addToUi Subrollouts:" + Subrollouts.slot as string  )
-		--format "Subrollouts	= % \n" Subrollouts
 		Rollout_new	= Subrollouts.new title -- get new rollout
 		
 		for Subrollouts_or_Controls in Subrollouts_and_Controls do
-		--format "Subrollouts_or_Controls = % \n" Subrollouts_or_Controls
 			Subrollouts_or_Controls.addToUi Rollout_new
 	),
 	
@@ -98,10 +96,16 @@ struct ContentRollout_v
 	/** 1) Remove invalid characters, valid characters: "A-Za-z0-9-_"
 	  * 2) Replace underscore "_" with whitespace " " E.G.: This_is_test" >>> "This is test"
 	 */
-	function _sanitizeName =
+	function _sanitizeTitle =
 	(
-		title = ( dotNetObject "System.Text.RegularExpressions.Regex" "^rollout-"    ).Replace title ""
-		title = ( dotNetObject "System.Text.RegularExpressions.Regex" "[^A-Za-z0-9]" ).Replace title ""
+		--print ("ContentRollout_v._sanitizeTitle() " )
+		title = substituteString title " " "xWHITESPACEx" -- preserve whitespace workaround, "[^A-Za-z0-9_-\s]" DOES NOT WORK
+
+		title = ( dotNetObject "System.Text.RegularExpressions.Regex" "^rollout-"    ).Replace title "" -- remove prefix "rolout-" from directory name
+
+		title = ( dotNetObject "System.Text.RegularExpressions.Regex" "[^A-Za-z0-9_-]" ).Replace title ""
+
+		title = substituteString title "xWHITESPACEx" " " -- put whitespace back
 	),
 	
 	on create do
@@ -109,7 +113,7 @@ struct ContentRollout_v
 		ConstructPropeties test:this
 
 		this._setName()
-		this._sanitizeName()
+		this._sanitizeTitle()
 		
 		PathsLoader = PathsLoader_v path:path
 		

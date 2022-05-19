@@ -68,7 +68,7 @@ struct Rollout_v
 	 */
 	function get slot =
 	(
-		format "\n"; print "Rollout_v.get()"
+		--format "\n"; print "Rollout_v.get()"
 		--format "slot as name	= % \n" (slot as name)
 		
 		(for _Control in _Controls where hasProperty _Control "slot" and _Control.slot == ( slot as name ) collect _Control)[1] --return
@@ -183,21 +183,20 @@ struct Rollout_v
 	 */
 	function _setId =
 	(
+		--print "Rollout_v._setId()"
 		if ( id == undefined or id == unsupplied ) then
-		(
-			id = title
+			id = toLower title
+			
 			--id = substituteString title "Rollout" "" -- remove "rollout" from title to avoid id like: "ROLLOUT_Rollout_A" if title is "Rollout A'
+			--id  = "ROLLOUT_" + id -- add prefix
 			
 			id = substituteString ( trimRight ( trimLeft id )) " " "_" -- replace whitespace with underscore
-			
-			--id  = "ROLLOUT_" + id -- add prefix
 
 			id = this._repleaceCharacters "^(\d+)" "" -- remove number as first letter, global variable MUST NOT starts with number
 
-			id = this._repleaceCharacters "[^A-Za-z0-9_]+" "" -- remove invalid characters E.G.: "Butt@n_&_1" >>> "Button_1"
+			id = this._repleaceCharacters "[^A-Za-z0-9_]" "_" -- remove invalid characters E.G.: "Butt@n_&_1" >>> "Button_1"
 
 			id = this._repleaceCharacters "[_]+" "_" -- remove multiple underscores E.G.: "button___1" >>> "button_1"
-		)
 		
 		id = id as name
 	),

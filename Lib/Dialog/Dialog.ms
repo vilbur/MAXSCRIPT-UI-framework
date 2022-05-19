@@ -86,7 +86,7 @@ struct Dialog_v
 		
 		this._setPositionOrDockByIni()
 		
-		AutoRunEvents.executeMacros()
+		--AutoRunEvents.executeMacros()
 	),
     
 	/** Register dialog bar

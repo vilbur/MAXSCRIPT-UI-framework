@@ -72,8 +72,6 @@ struct RolloutCreator_v
 		if( height != unsupplied ) then
 			SubolloutsCreator.setSubrolloutsSlotHeight(height)
 
-			--height = _Rollout.height
-
 		/* add CONTROLS and SUBROLLOUTS SLOTS */ 
 		this._addControlsAndSubrolloutesSlots (_Rollout)
 
@@ -182,7 +180,6 @@ struct RolloutCreator_v
 	(
 		--this._getType _Struct == "controls"
 		matchPattern (classOf _Struct  as string ) pattern:@"*controls_v*" 
-
 	),
 
 	/** _is subrollouts
@@ -190,19 +187,8 @@ struct RolloutCreator_v
 	function _isSubrollouts _Struct =
 	(
 		--print "RolloutCreator_v._getSubrolloutsCount()"
-		--this._getType _Struct == "subrollouts"
 		matchPattern (classOf _Struct  as string ) pattern:@"*subrollouts_v*" 
 	),
-
-	--/** Get name given struct
-	--  * @property	struct	_Struct
-	--  *
-	--  * @return	string lower case	name of given struc stripped of "_v" suffix E.G.: "FooStruct_v" returm "foostruct"
-	-- */
-	--function _getType _Struct =
-	--(
-	--	toLower (( filterString( classof _Struct as string ) "_*(:" )[2])  --return
-	--),
 
 	/**  
 	 */

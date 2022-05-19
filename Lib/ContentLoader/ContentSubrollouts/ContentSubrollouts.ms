@@ -33,7 +33,7 @@ struct ContentSubrollouts_v
 
 		slot = trimLeft slot  "rollouts-"
 
-		slot = ( dotNetObject "System.Text.RegularExpressions.Regex" @"[^A-Za-z0-9]" ).Replace slot ""
+		slot = ( dotNetObject "System.Text.RegularExpressions.Regex" @"[^A-Za-z0-9_]" ).Replace slot ""
 	),
 
 	/** _set rollouts

@@ -16,7 +16,7 @@ struct Subrollouts_v
 	 */
 	function new title id: =
 	(
-		--print "Subrollouts_v.new()"
+		--format "\n"; print "Subrollouts_v.new()"
 		--format "title	= % \n" title
 		local _Rollout = Rollout_v title:title id:id parent_rollout_id:( parent_rollout_id as string +"."+slot as string) height:height
 
@@ -29,12 +29,12 @@ struct Subrollouts_v
 	 */
 	function get rollout_id =
 	(
-		format "\n"; print "Subrollouts_v.get()"
-		format "rollout_id	= % \n" rollout_id
+		--format "\n"; print "Subrollouts_v.get()"
+		--format "rollout_id	= % \n" rollout_id
 		
 		--for _Rollout in Rollouts where _Rollout.id == ( rollout_id as name ) do 
-		for _Rollout in Rollouts  do 
-		format "_Rollout.id	= % \n" _Rollout.id
+		--for _Rollout in Rollouts  do 
+		--format "_Rollout.id	= % \n" _Rollout.id
 		
 		(for _Rollout in Rollouts where _Rollout.id == ( rollout_id as name ) collect _Rollout)[1] --return
 	),
@@ -42,6 +42,13 @@ struct Subrollouts_v
 	
 	private
 
+	/** Validate title
+	 */
+	function validateTitle =
+	(
+		--format "\n"; print "Subrollouts_v.validateTitle()"
+	),
+	
 	/**  
 	 */
 	on create do
