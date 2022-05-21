@@ -62,16 +62,22 @@ struct Rollout_v
 		this.Subrollouts slot:slot height:height --return
 	),
 	
-	/** Get Subrollouts
+	/** Get Subrollouts_v or Rollout_v 
 	  * 
-	  * @return	object Subrollouts_v	
+	  * 
+	  * 
+	  * @return	object Subrollouts_v|Rollout_v
 	 */
-	function get slot =
+	function get id =
 	(
 		--format "\n"; print "Rollout_v.get()"
-		--format "slot as name	= % \n" (slot as name)
 		
-		(for _Control in _Controls where hasProperty _Control "slot" and _Control.slot == ( slot as name ) collect _Control)[1] --return
+		--local found_result
+		
+		if( ( local found_result = this._getSubrolloutSlot(id) ) == undefined ) then
+			found_result = this._getRollout(id)
+		
+		found_result --return
 	),
 	
 
@@ -216,7 +222,7 @@ struct Rollout_v
 		(
 			id_prefixed = "ROLLOUT_" + id
 		
-			print ("\n\n!!!!!!!!! WARNING !!!!!!!!!!!!\n\nRollout id \"" + id + "\" is MaxScript variable\n\nRollout id has been changed to \"" + id_prefixed + "\"\n\n")
+			print ("WARNING: Rollout id \"" + id + "\" is MaxScript variable, Rollout id has been changed to \"" + id_prefixed + "\"")
 			
 			id  = id_prefixed
 		)
@@ -229,6 +235,37 @@ struct Rollout_v
 	(
 		( dotNetObject "System.Text.RegularExpressions.Regex" search ).Replace ( id ) replace  --return 
 	),
+	
+	/** Search for subrollouts slot
+	 */
+	function _getSubrolloutSlot slot =
+	(
+		--format "\n"; print "Rollout_v._getSubrollout()"
+		(for _Subrollouts in (this._getSubrollouts()) where _Subrollouts.slot == slot as name collect _Subrollouts)[1] --return
+	),
+	
+	/** Search for rollout in subrolluts
+	 */
+	function _getRollout id =
+	(
+		--format "\n"; print "Rollout_v.getRollouts()"
+		local found_rollout
+		
+		for _Subrollouts in this._getSubrollouts() do
+			if( ( rollout_exists = _Subrollouts.get(id) ) != undefined ) then
+				found_rollout = rollout_exists
+
+		found_rollout --return
+	),
+	
+	/** Get subrollouts
+	 */
+	function _getSubrollouts =
+	(
+		--format "\n"; print "Rollout_v._getSubrolouts()"
+		for _Control in _Controls where hasProperty _Control "slot" collect _Control --return
+	),
+	
 	/**  
 	 */
 	on create do

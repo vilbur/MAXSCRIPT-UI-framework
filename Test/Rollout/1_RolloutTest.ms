@@ -25,7 +25,7 @@ Dialog 	= Dialog_v title:(getFilenameFile(getSourceFileName()))
 
 /* ROLLOUTS */ 	
 
-_Rollouts_A = addRollouts ( Dialog.Rollouts slot:#rollouts_A height:256 )	("Rollout A")(1)
+_Rollouts_A = addRollouts ( Dialog.Rollouts slot:#rollouts_A height:128 )	("Rollout A")(1)
 _Rollouts_B = addRollouts ( Dialog.Rollouts() )	("Rollout B")(2)
 _Rollouts_C = addRollouts ( Dialog.Rollouts() )	("Rollout C")(3)
 
@@ -46,20 +46,17 @@ _SuperNestedSubRollouts	= addRollouts (_NestedSubRollouts[1].Rollouts())("Super 
 
 
 
-/** GET ROLLOUTS AND SLOTS and changed properties
+/** GET ROLLOUT OR SUBROLLOUT SLOT and chang its properties
   *	
   */
---_SubRollouts_A = Dialog.RolloutMain.get (#rollouts_A)
---_SubRollouts_A.height = 512
+_SubRollouts_A	= Dialog.RolloutMain.get (#rollouts_A)
+_SubRollouts_A.height = 512
+-- format "_SubRollouts_A	= % \n" _SubRollouts_A
 
 
---_Rollout_A = _SubRollouts_A.get (#Rollout_a1)
---_Rollout_A.title = "Changed title"
---_Rollout_A.height = 512
-
---_SubRollout_A = _SubRollouts_A.get (#subrollouts_1)
---format "_SubRollout_A	= % \n" _SubRollout_A
---_SubRollout_A.height = 512
+_Rollout_A1	= Dialog.RolloutMain.get (#rollout_a1)
+-- format "_Rollout_A1	= % \n" _Rollout_A1
+_Rollout_A1.title = "Rollout A1 - Changed title"
 
 
 

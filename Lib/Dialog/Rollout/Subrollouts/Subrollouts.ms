@@ -30,12 +30,6 @@ struct Subrollouts_v
 	function get rollout_id =
 	(
 		--format "\n"; print "Subrollouts_v.get()"
-		--format "rollout_id	= % \n" rollout_id
-		
-		--for _Rollout in Rollouts where _Rollout.id == ( rollout_id as name ) do 
-		--for _Rollout in Rollouts  do 
-		--format "_Rollout.id	= % \n" _Rollout.id
-		
 		(for _Rollout in Rollouts where _Rollout.id == ( rollout_id as name ) collect _Rollout)[1] --return
 	),
 	
@@ -47,6 +41,5 @@ struct Subrollouts_v
 	on create do
 	(
 		--print("Subrollouts_v.onCreate()")
-		--format "slot	= % \n" slot
 	)
 )
