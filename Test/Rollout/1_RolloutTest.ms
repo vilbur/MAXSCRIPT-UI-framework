@@ -57,6 +57,7 @@ _SubRollouts_A.height = 512
 _Rollout_A1	= Dialog.RolloutMain.get (#rollout_a1)
 -- format "_Rollout_A1	= % \n" _Rollout_A1
 _Rollout_A1.title = "Rollout A1 - Changed title"
+_Rollout_A1.height = 512
 
 
 
