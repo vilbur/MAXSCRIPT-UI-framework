@@ -17,7 +17,9 @@ struct DefaultEvents_v
 		append Events ( Event_v type:#open	code:("GroupBoxCreator.sortControlsToGroupBoxes(\""+rollout_id_full+"\")") )
 		
 		--append Events ( Event_v type:#okToClose	code:("print(\"okToClose "+rollout_id_full+"\"); true") )
-		append Events ( Event_v type:#okToClose	code:("(IniSaver_v ini_file:\""+ini_path+"\").saveRollout(\""+rollout_id_full+"\")") )
+		
+		if( ini_path != undefined ) then 
+			append Events ( Event_v type:#okToClose	code:("(IniSaver_v ini_file:\""+ini_path+"\").saveRollout(\""+rollout_id_full+"\")") )
 		
 		
 		Events --return

@@ -6,6 +6,7 @@
   */
 struct Ini_v
 (
+	/* required */
 	_path,	-- full pah to *.ini file*
 	--_dir,	-- dir of *.ini file
 	--file,	-- *.ini filename
@@ -77,6 +78,15 @@ struct Ini_v
 	),
 	
 	
+
+	/** Is defined
+	 */
+	function isDefined =
+	(
+		--format "\n"; print "Ini_v.isDefined()"
+		_path != undefined --return
+	),
+
 	/*------------------------------------------------------------------------------
 		DEPRECATED
 	--------------------------------------------------------------------------------*/

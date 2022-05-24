@@ -2,7 +2,7 @@ filein( getFilenamePath(getSourceFileName()) + "/../ConstructPropeties/Construct
 
 filein( getFilenamePath(getSourceFileName()) + "/../List/List.ms" )
 
-filein( getFilenamePath(getSourceFileName()) + "/../Ini/Ini.ms" )
+--filein( getFilenamePath(getSourceFileName()) + "/../Ini/Ini.ms" )
 
 filein( getFilenamePath(getSourceFileName()) + "/Event/Event.ms" )
 
@@ -22,15 +22,13 @@ struct RolloutCreator_v
 	__construct = #( ),
 
 	/* construct option */ 
-	ini, -- path to ini file
+	Ini,
 	
 	/* dependency */ 
-	IniFile	= Ini_v _path:ini,
-
-	EventBinder	= RolloutEventBinder_v ini_path:(IniFile.getPath()),
+	EventBinder	= RolloutEventBinder_v ini_path:(Ini.getPath()),
 
 	ControlsCreator,
-	SubolloutsCreator = SubolloutsCreator_v ini_path:(IniFile.getPath()),
+	SubolloutsCreator = SubolloutsCreator_v ini_path:(Ini.getPath()),
 
 	
 	/* properties */
@@ -49,7 +47,7 @@ struct RolloutCreator_v
 		--format "height	= % \n" height
 		--print ("RolloutCreator_v.createRollout()"  )
 		
-		ControlsCreator   = ControlCreator_v _Rollout:_Rollout ini_path:(IniFile.getPath())
+		ControlsCreator   = ControlCreator_v _Rollout:_Rollout ini_path:(Ini.getPath())
 		
 		SubolloutsCreator._Rollout = _Rollout
 

@@ -9,6 +9,7 @@ filein( getFilenamePath(getSourceFileName()) + "/../ConstructPropeties/Construct
 filein( getFilenamePath(getSourceFileName()) + "/../RolloutCreator/RolloutCreator.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/Layout/Layout.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/AutoRunEvents/AutoRunEvents.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/../Ini/Ini.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/IniSaver/IniSaver.ms" )
 
 
@@ -22,13 +23,12 @@ struct Dialog_v
 	title,
 	
 	/* construct */
-	ini, -- path to ini file
+	Ini,
 
-	/* optionable */
+	/* options */
 	id,
 	
 	/* dependency */
-	_RolloutCreator = RolloutCreator_v ini:ini,
 	AutoRunEvents 	= AutoRunEvents_v(),
 	Layout 	= Layout_v(),
 	--Menu	= DialogMenu_v Dialog:this,
@@ -36,7 +36,7 @@ struct Dialog_v
 	RolloutMain, --RENAME TO DialogRollout ???,
 	
 	/* inherit */
-	Events,
+	Events, -- RolloutMain.Events
 	
 	/* properties */
 	style = #(
@@ -71,14 +71,16 @@ struct Dialog_v
 	  *
 	  * TODO add params for max 2022
 	 */
-	function create pos: width:512 height:512 bgcolor: fgcolor: bitmap: style: modal: escapeEnable: lockHeight:false lockWidth:true parent: =
+	function create pos: width:512 height: bgcolor: fgcolor: bitmap: style: modal: escapeEnable: lockHeight:false lockWidth:true parent: =
 	(
 		--format "\n"; print "Dialog_v.create()"
 		
 		height = this._getDialogHeight(height)
-		--format "height	= % \n" height
+		
+		_RolloutCreator = RolloutCreator_v Ini:Ini
+
 		_RolloutCreator.createRollout (RolloutMain) width:width height:height
-		--format "RolloutMain	= % \n" RolloutMain
+
 		CreateDialog (_RolloutCreator.getDefinition(RolloutMain)) pos:(this._getPositionRelativeToWindow(pos)) autoLayoutOnResize:true  width:width height:height bgcolor:bgcolor fgcolor:fgcolor bitmap:bitmap style:(if( style == unsupplied ) then this.style else style) modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
 		--CreateDialog (_RolloutCreator.getDefinition(RolloutMain)) 
 		
@@ -182,16 +184,28 @@ struct Dialog_v
 		execute("global "+RolloutMain.id)
 	),
 	
-	/** _get dialog height
+	/** Get height of dialog 
+	  *
+	  * 1. get from ini
+	  * 2. use defined height
+	  * 3. get default height
+	  *
 	 */
 	function _getDialogHeight height =
 	(
-		--print "Dialog_v._getDialogHeight()"
+		print "Dialog_v._getDialogHeight()"
 		--format "height	= % \n" height
-		if( height != unsupplied ) then
-			return height
+
+		if( Ini.isDefined() and (dialog_size = Ini.load( RolloutMain.id as string )("size")) != undefined) then
+			dialog_size.y --return
 		
-		this._getViewportHeight() --return
+		else if( height != unsupplied ) then
+			height --return 
+		
+		else
+			512 --return
+		
+		--this._getViewportHeight() --return
 	),
 	
 	/** Get height of maximized viewport to find out height of docked dialog
@@ -252,23 +266,20 @@ struct Dialog_v
 	function _setPositionOrDockByIni =
 	(
 		--format "\n"; print "global._setPositionOrDockByIni()"
-		if( ini != undefined ) then
+		if Ini.isDefined() then
 		(
-			ini_path =  (_RolloutCreator.IniFile.getPath())
-
-			dock_state	= getINISetting ini_path ( RolloutMain.id as string ) "dock_state"
-			position	= getINISetting ini_path ( RolloutMain.id as string ) "position"
-			--format "dock_state	= % \n" dock_state
+			dock_state	= Ini.load( RolloutMain.id as string )("dock_state")
+			position	= Ini.load( RolloutMain.id as string )("position")
 			
-			if( dock_state != "" and dock_state != "cui_floatable" ) then
+			if( dock_state != undefined and dock_state != "cui_floatable" ) then
 			(
 				this.register()
 				
 				execute("cui.DockDialogBar "+ RolloutMain.id +" #"+ dock_state )
 			)
-			else if( position != "" ) then
+			else if( position != undefined ) then
 			(
-				execute("SetDialogPos "+ RolloutMain.id +" "+ position )
+				execute("SetDialogPos "+ RolloutMain.id +" "+ position as string )
 				
 				this.register()
 			)
@@ -291,6 +302,8 @@ struct Dialog_v
 		--print("Dialog_v.onCreate()")
 		ConstructPropeties test:this
 
+		Ini	= Ini_v _path:Ini
+		
 		this._setMainRollout()
 		
 		this._setDialogGlobal()
