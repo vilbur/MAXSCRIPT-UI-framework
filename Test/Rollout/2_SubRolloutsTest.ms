@@ -25,16 +25,18 @@ Dialog 	= Dialog_v title:(getFilenameFile(getSourceFileName()))
 
 _Rollouts = addRollouts ( Dialog.Rollouts slot:#rollouts_A height:1024 )	("Rollout A")(1)
 
+height = 512
+
 /* SUB ROLLOUTS */ 	
 
 for i = 1 to 6 do
 (
 	title = ("subrollout_"+ i as string )
 
-	_Rollouts = addRollouts (_Rollouts[1].Rollouts height:320 ) title 1 slot:( title as name)
+	_Rollouts = addRollouts (_Rollouts[1].Rollouts height:(height -= 48 ) ) title 1 slot:( title as name)
 )
 
 
 /* CREATE DIALOG */ 
  -- Dialog.create()
-Dialog.create width:720 height:1024 
+Dialog.create width:720 height:640 

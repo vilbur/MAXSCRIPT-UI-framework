@@ -36,9 +36,6 @@ Dialog 	= Dialog_v title:(getFilenameFile(getSourceFileName()))
 /* ROLLOUTS */ 	
 
 _Rollouts_A = addRollouts ( Dialog.Rollouts height:512 )("Rollout A")(1)
---_Rollouts_B = addRollouts ( Dialog.Rollouts() )("Rollout B")(1)
---_Rollouts_C = addRollouts ( Dialog.Rollouts())("Rollout C" )(3)
-
 
 /* SUBROLLOUTS */ 
 
@@ -57,22 +54,23 @@ _SuperNestedSubRollouts	= addRollouts (_NestedSubRollouts[1].Rollouts())("Super 
 _SuperSuperNestedSubRollouts	= addRollouts (_SuperNestedSubRollouts[1].Rollouts())("Super Super Nested A")(1)
 
 
-/*  SET HEIGHT */ 
--- _Rollouts_A[1].height = 512
-_SubRollouts[1].height = 320
+/*  SET HEIGHT */
+
+ _Rollouts_A[1].height = 460
+_SubRollouts[1].height = 380
 _NestedSubRollouts[1].height = 256
-_SuperNestedSubRollouts[1].height = 8
+_SuperNestedSubRollouts[1].height = 128
 
 
 /*
    CONTROLS
 */ 
- --_Controls	= addControls( _SuperNestedSubRollouts[1].controls() )("Button Rollout A1")(6)
- --_Controls	= addControls( _SuperNestedSubRollouts[2].controls() )("Button Rollout A2")(6)
+_Controls	= addControls( _Rollouts_A[1].controls() )("Rollout A")(1)
+Subrollout_Controls	= addControls( _SubRollouts[1].controls() )("Subrollout A")(2)
 
---Nested_Controls	= addControls( _NestedSubRollouts[1].controls() )("Button Rollout A")(2)
+Nested_Controls	= addControls( _NestedSubRollouts[1].controls() )("Nested A")(3)
 
---_SuperNestedSub_Controls	= addControls( _SuperNestedSubRollouts[1].controls() )("Button Rollout A")(2)
+_SuperNestedSub_Controls	= addControls( _SuperNestedSubRollouts[1].controls() )("Super Nested A")(4)
 
 
 /* CREATE DIALOG */ 
