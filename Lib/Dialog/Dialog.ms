@@ -157,6 +157,18 @@ struct Dialog_v
 	),
 	
 
+
+	/** Get Subrollouts_v or Rollout_v 
+	  * 
+	  * @param	name	id	id of rollout or subrollout slot
+	  * 
+	  * @return	object Subrollouts_v|Rollout_v
+	 */
+	function get id =
+	(
+		Dialog.RolloutMain.get (id)--return
+	),
+
 	private
 	
 	/** Set dialog id as global variable

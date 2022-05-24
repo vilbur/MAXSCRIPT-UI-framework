@@ -38,11 +38,7 @@ struct SubolloutsCreator_v
 	 --function addSubrolloutsSlot _Rollout Subrollouts =
 	 function addSubrolloutSlots Subrollouts =
 	 (
-		--format "----------------------------------------------------	= % \n" "----------------------------------------------------"
-		--format "\n"; print ( "SubolloutsCreator_v.addSubrolloutSlots " + _Rollout.id+"."+Subrollouts.slot as string  )
-		
-		------if( Subrollouts.height == undefined ) then
-		------	Subrollouts.height = 128
+		format "\n\n=====================================	SubolloutsCreator_v.addSubrolloutSlots() %.%	=====================================\n" ( _Rollout.id as string ) ( Subrollouts.slot as string );
 		
 		_Rollout._RolloutCreator.addText ("subRollout "+Subrollouts.slot as string +" \"slot_name\" height:"+Subrollouts.height as string )
 	 ),
@@ -51,21 +47,21 @@ struct SubolloutsCreator_v
 	 */
 	function addSubRollouts _Rollout =
 	(
-		--print "SubolloutsCreator_v._addSubRollouts()"
-		--format "_Rollout.id	= % \n" _Rollout.id
+		--format "\n"; print "SubolloutsCreator_v._addSubRollouts()"
+		--format "Parent rollout	= % \n" _Rollout.id
 		this._Rollout = _Rollout
-		--format "Subrollouts	= % \n" (this._getSubrollouts(_Rollout))
+		--format "Subrollouts	= % \n" (this._getSubrollouts(_Rollout)).count
 		for Subrollouts in this._getSubrollouts(_Rollout) do
 		(
 			subrollout_ids	= for Subrollout in Subrollouts.Rollouts collect Subrollout.id			
-
+			--format "subrollout_ids	= % \n" subrollout_ids
 			rollouts_order	= this._getOrderOfsubrollouts(Subrollouts)
 			----format "rollouts_order	= % \n" rollouts_order
 			
 			for subrollout_id in rollouts_order where ( index = findItem subrollout_ids subrollout_id ) > 0 do
 			(
 				Subrollout = Subrollouts.Rollouts[index]
-				--format "\n"; print ( "SubolloutsCreator_v.addSubrolloutSlots " + _Rollout.id+"."+Subrollout.id as string  )
+				--print ( "Subrollout " +Subrollout.id as string  )
 				
 				execute  ( "AddSubRollout "+_Rollout.id+"." + Subrollouts.slot +" "+ Subrollout.id + " rolledUp:"+(this._getRolledStateFromIni(Subrollout.id)) )
 

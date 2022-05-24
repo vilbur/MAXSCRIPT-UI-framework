@@ -25,43 +25,24 @@ struct Subrollouts_v
 		_Rollout --return
 	),
 
-	/** Get rollout from Rollouts
+	/** Get Subrollouts_v or Rollout_v 
+	  * 
+	  * 
+	  * @param	name	id	id of rollout or subrollout slot
+	  * 
+	  * @return	object Subrollouts_v|Rollout_v
 	 */
 	function get id =
 	(
-		format "\n"; print "Subrollouts_v.get()"
-		format "slot	= % \n" slot
-		--format "id	= % \n" id
-		local found_rollout
-		local found_result
-
-		--(for _Rollout in Rollouts where _Rollout.id == ( id as name ) collect _Rollout)[1] --return
-		
-		--for _Rollout in Rollouts where (found_rollout = _Rollout.get (id)) != undefined do
-		--(
-		--	found_result = found_rollout
-		--	
-		--	format "FOUND_ROLLOUT	= % \n" found_rollout
-		--	--format "FOUND_RESULT	= % \n" found_result
-		--)
+		--format "\n"; print "Subrollouts_v.get()"
 		if id == slot then
-			return found_rollout
+			return this
+			
 		else
+			for _Rollout in Rollouts where (found_rollout = _Rollout.get (id)) != undefined do
+				return found_rollout
 		
-			for _Rollout in Rollouts do
-			(
-				found_rollout = _Rollout.get (id)
-				
-				if( found_rollout != undefined ) then
-					return found_rollout
-	
-					--found_result = found_rollout
-				
-			)
-		
-		--format "FOUND_RESULT	= % \n" found_result
-
-		--found_result --return 		
+		undefined --return
 	),
 	
 	

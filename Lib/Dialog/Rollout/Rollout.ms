@@ -62,70 +62,25 @@ struct Rollout_v
 		this.Subrollouts slot:slot height:height --return
 	),
 	
-	/** Get Subrollouts_v or Rollout_v 
+	/** Get Subrollouts_v or Rollout_v
+	  * works for nested subrollouts as well
 	  * 
-	  * 
+	  * @param	name	id	id of rollout or subrollout slot
 	  * 
 	  * @return	object Subrollouts_v|Rollout_v
 	 */
 	function get id =
 	(
-		format "\n"; print "Rollout_v.get()"
-		format "this.id	= % \n" this.id
-		--format "id	= % \n" id
-		
-		--format "id == this.id	= % \n" (id == this.id)
-		local found_result
-		local found_rollout
-		
-		--if( ( local found_result = this._getSubrolloutSlot(id) ) == undefined ) then
-			--found_result = this._getRollout(id)
+		--format "\n"; print "Rollout_v.get()"
+		--format "this.id	= % \n" this.id
 
 		if id == this.id then
-			--found_result = this
 			return this --return
 		else
-			--for _Subrollouts in this._getSubrollouts() where (found_rollout = _Subrollouts.get (id)) != undefined do
-				--found_result = found_rollout
-				
+			for _Subrollouts in this._getSubrollouts() where (found_rollout = _Subrollouts.get (id)) != undefined do
+				return found_rollout
 		
-			for _Subrollouts in this._getSubrollouts() do
-			(
-				found_rollout = _Subrollouts.get (id)
-					
-				if( found_rollout != undefined ) then
-					return found_rollout
-					--found_result = found_rollout
-
-				--format "found_result	= % \n" found_result
-			)
-		
-		
-		--found_result --return
-	),
-	
-	/** Search for subrollouts slot
-	 */
-	function _getSubrolloutSlot slot =
-	(
-		format "\n"; print "Rollout_v._getSubrolloutSlot()"
-		format "slot	= % \n" slot
-		(for _Subrollouts in (this._getSubrollouts()) where _Subrollouts.slot == slot as name collect _Subrollouts)[1] --return
-	),
-	
-	/** Search for rollout in subrolluts
-	 */
-	function _getRollout id =
-	(
-		format "\n"; print "Rollout_v.getRollout()"
-		format "id	= % \n" id
-		local found_rollout
-		
-		for _Subrollouts in this._getSubrollouts() do
-			if( ( rollout_exists = _Subrollouts.get(id) ) != undefined ) then
-				found_rollout = rollout_exists
-
-		found_rollout --return
+		undefined --return
 	),
 
 	/*------------------------------------------------------------------------------
@@ -226,8 +181,8 @@ struct Rollout_v
 						
 			suffix = if (subrollouts_count > 1 ) then ("_"+subrollouts_count as string ) else ""
 			
-			--slot = "subrollouts_"+ subrollouts_count as string	
-			slot = id as string + "_slot_"+ subrollouts_count as string	-- DEV
+			slot = "subrollouts_"+ subrollouts_count as string	-- 	EG: parent_rollout.subrollouts_1
+			--slot = id as string + "_slot_"+ subrollouts_count as string	-- DEV	E.G.: parent_rollout.parent_rollout_slot_1
 		)
 
 		slot as name --return 
@@ -246,7 +201,7 @@ struct Rollout_v
 			
 			id = substituteString ( trimRight ( trimLeft id )) " " "_" -- replace whitespace with underscore
 
-			id = this._repleaceCharacters "^(\d+)" "" -- remove number as first letter, global variable MUST NOT starts with number
+			id = this._repleaceCharacters "^(\d*[_-]*)" "" -- remove number as first letter, global variable MUST NOT starts with number E.G.: "1_FooDialog|_FooDialog" >>> "FooDialog"
 
 			id = this._repleaceCharacters "[^A-Za-z0-9_]" "_" -- remove invalid characters E.G.: "Butt@n_&_1" >>> "Button_1"
 

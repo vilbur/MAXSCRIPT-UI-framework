@@ -53,6 +53,7 @@ struct IniSaver_v
 		--format "_Rollout	= % \n" _Rollout
 
 		this._saveToIni _Rollout.name "position"	(GetDialogPos _Rollout )
+		this._saveToIni _Rollout.name "size"	(GetDialogSize _Rollout )
 		this._saveToIni _Rollout.name "dock_state"	(try(cui.getDockState _Rollout )catch())
 
 		this._saveControlsAndSubrollouts(_Rollout)
