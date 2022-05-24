@@ -45,7 +45,7 @@ struct Rollout_v
 	 */
 	function Subrollouts slot: height:height =
 	(
-		local Subrollouts = Subrollouts_v parent_rollout_id:id slot:(this._getSubrolloutsSlot(slot)) height:height 
+		local Subrollouts = Subrollouts_v parent_rollout_id:id slot:(this._getSubrolloutsSlotName(slot)) height:height 
 
 		append _Controls Subrollouts
 
@@ -70,16 +70,63 @@ struct Rollout_v
 	 */
 	function get id =
 	(
-		--format "\n"; print "Rollout_v.get()"
+		format "\n"; print "Rollout_v.get()"
+		format "this.id	= % \n" this.id
+		--format "id	= % \n" id
 		
-		--local found_result
+		--format "id == this.id	= % \n" (id == this.id)
+		local found_result
+		local found_rollout
 		
-		if( ( local found_result = this._getSubrolloutSlot(id) ) == undefined ) then
-			found_result = this._getRollout(id)
+		--if( ( local found_result = this._getSubrolloutSlot(id) ) == undefined ) then
+			--found_result = this._getRollout(id)
+
+		if id == this.id then
+			--found_result = this
+			return this --return
+		else
+			--for _Subrollouts in this._getSubrollouts() where (found_rollout = _Subrollouts.get (id)) != undefined do
+				--found_result = found_rollout
+				
 		
-		found_result --return
+			for _Subrollouts in this._getSubrollouts() do
+			(
+				found_rollout = _Subrollouts.get (id)
+					
+				if( found_rollout != undefined ) then
+					return found_rollout
+					--found_result = found_rollout
+
+				--format "found_result	= % \n" found_result
+			)
+		
+		
+		--found_result --return
 	),
 	
+	/** Search for subrollouts slot
+	 */
+	function _getSubrolloutSlot slot =
+	(
+		format "\n"; print "Rollout_v._getSubrolloutSlot()"
+		format "slot	= % \n" slot
+		(for _Subrollouts in (this._getSubrollouts()) where _Subrollouts.slot == slot as name collect _Subrollouts)[1] --return
+	),
+	
+	/** Search for rollout in subrolluts
+	 */
+	function _getRollout id =
+	(
+		format "\n"; print "Rollout_v.getRollout()"
+		format "id	= % \n" id
+		local found_rollout
+		
+		for _Subrollouts in this._getSubrollouts() do
+			if( ( rollout_exists = _Subrollouts.get(id) ) != undefined ) then
+				found_rollout = rollout_exists
+
+		found_rollout --return
+	),
 
 	/*------------------------------------------------------------------------------
 		
@@ -95,10 +142,10 @@ struct Rollout_v
 	  * @param	integer	width of rollout, needed to center rollout title
 	  *
 	 */
-	function rolloutCreatorBegin width =
+	function rolloutCreatorBegin rollout_width =
 	(
 		--print "Rollout_v.rolloutcreatorBegin()"
-		_RolloutCreator = rolloutCreator id (this._setTitleCenter(width))
+		_RolloutCreator = rolloutCreator id (this._setTitleCenter(rollout_width))
 
 		_RolloutCreator.begin()
 	),
@@ -171,15 +218,16 @@ struct Rollout_v
 
 	/** _get slot
 	 */
-	function _getSubrolloutsSlot slot =
+	function _getSubrolloutsSlotName slot =
 	(
-		if slot == undefinedr or slot == unsupplied then
+		if slot == undefined or slot == unsupplied then
 		(
 			subrollouts_count = (for _struct in _Controls where matchPattern (classof _struct as string ) pattern:@"*Subrollouts_v*" collect _struct).count + 1 -- Add 1 because of current subrollouts are not added yet
 						
 			suffix = if (subrollouts_count > 1 ) then ("_"+subrollouts_count as string ) else ""
 			
-			slot = "subrollouts_"+ subrollouts_count as string
+			--slot = "subrollouts_"+ subrollouts_count as string	
+			slot = id as string + "_slot_"+ subrollouts_count as string	-- DEV
 		)
 
 		slot as name --return 
@@ -236,27 +284,7 @@ struct Rollout_v
 		( dotNetObject "System.Text.RegularExpressions.Regex" search ).Replace ( id ) replace  --return 
 	),
 	
-	/** Search for subrollouts slot
-	 */
-	function _getSubrolloutSlot slot =
-	(
-		--format "\n"; print "Rollout_v._getSubrollout()"
-		(for _Subrollouts in (this._getSubrollouts()) where _Subrollouts.slot == slot as name collect _Subrollouts)[1] --return
-	),
-	
-	/** Search for rollout in subrolluts
-	 */
-	function _getRollout id =
-	(
-		--format "\n"; print "Rollout_v.getRollouts()"
-		local found_rollout
-		
-		for _Subrollouts in this._getSubrollouts() do
-			if( ( rollout_exists = _Subrollouts.get(id) ) != undefined ) then
-				found_rollout = rollout_exists
 
-		found_rollout --return
-	),
 	
 	/** Get subrollouts
 	 */
