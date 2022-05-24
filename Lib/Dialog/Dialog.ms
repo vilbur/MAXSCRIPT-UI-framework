@@ -168,7 +168,7 @@ struct Dialog_v
 	 */
 	function get id =
 	(
-		Dialog.RolloutMain.get (id)--return
+		RolloutMain.get (id)--return
 	),
 
 	private
@@ -301,7 +301,7 @@ struct Dialog_v
 	(
 		--print("Dialog_v.onCreate()")
 		ConstructPropeties test:this
-
+		
 		Ini	= Ini_v _path:Ini
 		
 		this._setMainRollout()
