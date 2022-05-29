@@ -13,6 +13,7 @@ struct Rollout_v
 	
 	/* properties */
 	id,
+	width,
 	height,
 	parent_rollout_id,
 	

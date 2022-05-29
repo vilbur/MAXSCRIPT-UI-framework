@@ -76,7 +76,7 @@ struct Dialog_v
 		--format "\n"; print "Dialog_v.create()"
 		
 		height = this._getDialogHeight(height)
-		
+		--format "height	= % \n" height
 		_RolloutCreator = RolloutCreator_v Ini:Ini
 
 		_RolloutCreator.createRollout (RolloutMain) width:width height:height

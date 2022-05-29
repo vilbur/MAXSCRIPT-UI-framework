@@ -45,6 +45,7 @@ struct RolloutCreator_v
 		--format "_Rollout.height	= % \n" _Rollout.height
 		--format "classOf  height	= % \n" (classOf  height)
 		--format "height	= % \n" height
+		--format "width	= % \n" width
 		--print ("RolloutCreator_v.createRollout()"  )
 		
 		ControlsCreator   = ControlCreator_v _Rollout:_Rollout ini_path:(Ini.getPath())
@@ -67,6 +68,9 @@ struct RolloutCreator_v
 		
 		if _Rollout.height != undefined and _Rollout.height != unsupplied then
 			height =  _Rollout.height
+			
+		if _Rollout.width == undefined or _Rollout.width == unsupplied then
+			_Rollout.width = width 
 		
 		--format "HEIGHT	= % \n" height
 

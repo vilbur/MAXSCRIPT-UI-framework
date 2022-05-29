@@ -1,4 +1,6 @@
-filein( getFilenamePath(getSourceFileName()) + "/BrowsePath/BrowsePath.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/ControlTypes/BrowsePath/BrowsePath.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/ControlTypes/Radiobuttons/Radiobuttons.ms" )
+
 filein( getFilenamePath(getSourceFileName()) + "/ControlParamsCreator/ControlParamsCreator.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/TooltipCreator/TooltipCreator.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/ControlEventBinder/ControlEventBinder.ms" )
@@ -52,7 +54,7 @@ struct ControlCreator_v
 
 			EventBinder.combineEvents(_Control)
 
-			this._mutateCustomControlTypes(_Control)
+			this._mutateControlTypes(_Control)
 		)
 
 		/* modify ACROSS PARAMETER */ 
@@ -216,11 +218,18 @@ struct ControlCreator_v
 
 	/** Convert custom controls to native maxscript controls
 	 */
-	function _mutateCustomControlTypes _Control =
+	function _mutateControlTypes _Control =
 	(
-		--print "ControlCreator_v._mutateCustomControlTypes()"
-		if _Control.type == #browsePath do
+		--print "ControlCreator_v._mutateControlTypes()"
+		
+		--format "_Rollout.width	= % \n" _Rollout.width
+
+		
+		if _Control.type == #browsePath then
 			(BrowsePath_v()).mutateControl(_Control)
+		
+		else if _Control.type == #Radiobuttons then
+			(Radiobuttons_v()).setParams(_Control)
 	),
 
 

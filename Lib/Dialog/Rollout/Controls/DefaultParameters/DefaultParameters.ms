@@ -67,6 +67,9 @@ struct DefaultParameters_v
 			#list:	#( #across, 1 )
 			#checkbox:	#( #across, 1 )
 			#edittext:	#( #across, 1 )
+			--#Radiobuttons:	#( #offset, [128,0] )
+			#Radiobuttons:	#( #across, 1)
+			--#Radiobuttons:	#( #offsets, #([0,0], [0,0])  )
 			--#global:	#( #across, 4 )
 			--#global:	#( #border, false )
 			--default:	#( ) -- #global

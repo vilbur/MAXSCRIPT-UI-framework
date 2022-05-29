@@ -8,27 +8,27 @@ struct ControlTypes_v
 		#Label,
 		#Button,
 		#Checkbox,
-		#Checkbutton,
+		#CheckButton,
 		#Spinner,
 		#Edittext,
 		#Listbox,
-		#multilistbox,
+		#MultiListBox,
 		#Dropdownlist,
 		#GroupBox,
-		--#Combobox,
+		#Combobox,
 		--#Angle,
 		--#Bitmap,
-		--#Colorpicker,
+		#ColorPicker,
 		--#hyperlink,
 		--#imgTag,
 		--#Mapbutton,
 		--#Materialbutton,
-		--#Pickbutton,
+		#PickButton,
 		--#ProgressBar,
-		--#Slider,
+		#Slider,
 		--#Curve,	-- DOES NOT WORK YET
 		--#popupMenu,	-- DOES NOT WORK YET
-		--#Radiobuttons,	-- DOES NOT WORK YET
+		#RadioButtons,	-- DOES NOT WORK YET
 		#Timer,
 		
 		/* CUSTOM CONTROL TYPES */ 

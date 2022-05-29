@@ -10,8 +10,8 @@ struct AcrossParameterModifier_v
 (
 	_controls_in_row,
 	_across_left,
-	fake_control_caption = "",
-	--fake_control_caption = "FAKE", -- DEV
+	--fake_control_caption = "",
+	fake_control_caption = "FAKE", -- DEV
 	
 	/** 
 	 */

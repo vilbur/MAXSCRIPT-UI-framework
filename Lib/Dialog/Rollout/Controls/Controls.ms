@@ -28,14 +28,22 @@ struct Controls_v
 	  *
 	  * @return Object _Control	"./Control/Control.ms"
 	 */
-	function Control type caption id:undefined params:#() locals:#() add_to_controls:true =
+	function Control type caption id:undefined params:#() items:#() locals:#() add_to_controls:true =
 	(
 		--format "\n"; print "Controls_v.Control()"
+		--format "items	= % \n" items
+		--format "params	= % \n" params
 		--format "caption	= % \n" caption
+		--params = #(#labels, #("item") )
 		_Control = Control_v type:type caption:caption id:id add_locals:locals
+
+				
+		if( items != unsupplied ) then 
+			_Control.Param #items (items)
+		
 		
 		this._setParamsToControl(_Control)(params)
-	
+
 		GroupBoxes.tryAddGroupbox(this)(_Control)
 		GroupBoxes.tryAddControl (this)(_Control)
 		
