@@ -200,7 +200,8 @@ struct Ini_v
 	 */
 	on create do
 	(
-		--print("Ini_v.onCreate()")
+		format "\n"; print("Ini_v.onCreate()")
+		format "_path	= % \n" _path
 		this.setIni (_path) -- try set path on construct
 	)
 )

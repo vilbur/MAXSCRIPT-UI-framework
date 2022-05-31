@@ -15,6 +15,7 @@ struct ControlCreator_v
 
 	/* construct */ 
 	_Rollout,
+	Ini,
 	ini_path, -- set in RolloutCreator_v._setIniToRollouts()
 
 	/* dependency */
@@ -58,7 +59,7 @@ struct ControlCreator_v
 		)
 
 		/* modify ACROSS PARAMETER */ 
-		AcrossModifier.addFakeControls(this._Controls)
+		--AcrossModifier.addFakeControls(this._Controls)
 		
 		/* add LOCAL VARIABLES */ 
 		this._addLocalVariablesToRollout()
@@ -158,11 +159,23 @@ struct ControlCreator_v
 	 */
 	function _addValueParameter _Control rollout_id = 
 	(
-		--print "ControlCreator_v._addValueParameter()"
-		val_ini	= ParamsCreator.ControlValue.getValueFromIni(_Control)(rollout_id)
-
-		if( val_ini != undefined ) then
-			_Control.Params.setVal val_ini[1] val_ini[2]
+		print "ControlCreator_v._addValueParameter()"
+		--format "_Control.type	= % \n" _Control.type
+		--val_ini	= ParamsCreator.ControlValue.getValueFromIni(_Control)(rollout_id)
+		--format "Ini	= % \n" Ini
+		
+		if( Ini.isDefined() and (value_param_name = ParamsCreator.ControlValue._getNameOfValueParameter( _Control.type ) ) != undefined ) then
+		(
+			
+			format "value_param_name	= % \n" value_param_name
+		
+			ini_value = Ini.load(rollout_id)(_Control.id)
+			format "ini_value	= % \n" ini_value
+			
+			
+			_Control.Params.setVal value_param_name ini_value
+			
+		)
 	),
 	
 	/** Add controls group
@@ -254,7 +267,8 @@ struct ControlCreator_v
 	 */
 	on create do
 	(
-		--print "ControlCreator_v.onCreate()"
+		print "ControlCreator_v.onCreate()"
+		format "ini_path	= % \n" ini_path
 		--ConstructPropeties test:this
 		EventBinder.ini_path	= ini_path
 		ParamsCreator.ControlValue.ini_path	= ini_path

@@ -48,7 +48,7 @@ struct RolloutCreator_v
 		--format "width	= % \n" width
 		--print ("RolloutCreator_v.createRollout()"  )
 		
-		ControlsCreator   = ControlCreator_v _Rollout:_Rollout ini_path:(Ini.getPath())
+		ControlsCreator   = ControlCreator_v _Rollout:_Rollout ini_path:(Ini.getPath()) Ini:Ini
 		
 		SubolloutsCreator._Rollout = _Rollout
 
@@ -201,7 +201,8 @@ struct RolloutCreator_v
 	 */
 	on create do
 	(
-		--print("RolloutCreator_v.onCreate()")
+		format "\n"; print("RolloutCreator_v.onCreate()")
+		format "Ini	= % \n" Ini
 		ConstructPropeties test:this
 	)	
 )

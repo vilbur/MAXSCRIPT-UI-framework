@@ -21,7 +21,8 @@ function getItems count prefix =
 )
 
 
-_RolloutCreator 	= RolloutCreator_v Ini:(Ini_v())
+-- _RolloutCreator 	= RolloutCreator_v Ini:(Ini_v())
+ _RolloutCreator 	= RolloutCreator_v Ini:(Ini_v _path:(getSourceFileName()))
 
 _Rollout = _RolloutCreator.new "Test"
 
@@ -31,16 +32,17 @@ _Controls = _Rollout.Controls group:"Test"
 /** CREATE RADIOBUTTONS
   *	
   */
-_Controls.control #RadioButtons "Row Column 1" items:(getItems( 3 )("Column"))
+--_Controls.control #RadioButtons "Row Column 1" items:(getItems( 3 )("Column"))
+_Controls.control #RadioButtons "Row Column 1" items:(getItems( 3 )("Column") params:#(#selection, 2 ) )
 
-_Controls.control #RadioButtons "Offset in Row 1" items:(getItems( 4 )("Column"))  params:#(#offset, [-96, 0] )
-
-_Controls.control #RadioButtons "Offset in Row 1.1" items:(getItems( 4 )("Column"))  params:#(#offset, [-96, 0], #offsets, [8, 0] )
-
-_Controls.control #RadioButtons "Offset in Row 3" items:(getItems( 2 )("Column"))  params:#(#offset, [-96, 0], #offsets, [48, 0])
-
-_Controls.control #RadioButtons "Offset in Row 4" items:(getItems( 6 )("Column"))  params:#(#offset, [-96, 0], #offsets, [24, 0], #columns, 3)
-
+--_Controls.control #RadioButtons "Offset in Row 1" items:(getItems( 4 )("Column"))  params:#(#offset, [-96, 0] )
+--
+--_Controls.control #RadioButtons "Offset in Row 1.1" items:(getItems( 4 )("Column"))  params:#(#offset, [-96, 0], #offsets, [8, 0] )
+--
+--_Controls.control #RadioButtons "Offset in Row 3" items:(getItems( 2 )("Column"))  params:#(#offset, [-96, 0], #offsets, [48, 0])
+--
+--_Controls.control #RadioButtons "Offset in Row 4" items:(getItems( 6 )("Column"))  params:#(#offset, [-96, 0], #offsets, [24, 0], #columns, 3)
+--
 
 
 

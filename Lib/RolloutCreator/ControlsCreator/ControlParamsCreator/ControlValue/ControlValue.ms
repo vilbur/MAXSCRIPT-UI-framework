@@ -10,8 +10,8 @@ struct ControlValue_v
 	  *	
 	  */
 	names_of_value_param = #(
-		#( #SELECTION,	#listbox,	#multilistbox,	#dropdownlist ),
-		#( #CHECKED,	#checkbox,	#checkbutton,	#dropdownlist ),
+		#( #SELECTION,	#listbox,	#multilistbox,	#dropdownlist, #combobox, #RadioButtons ),
+		#( #CHECKED,	#checkbox,	#checkbutton ),
 		#( #RANGE,  	#spinner ),	
 		#( #TEXT,  	#edittext,	#browsePath  )
 	),
