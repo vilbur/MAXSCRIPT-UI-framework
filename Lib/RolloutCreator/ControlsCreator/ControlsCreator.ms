@@ -44,7 +44,6 @@ struct ControlCreator_v
 
 		for _Control in _Controls.list do
 		(
-			--this._setControlValue  (_Control) (_Rollout.id)
 			ControlValue.setControlValue  (_Control) (_Rollout.id)
 			
 			ParamsCreator.mergeParams(_Control)
@@ -59,7 +58,7 @@ struct ControlCreator_v
 		)
 
 		/* modify ACROSS PARAMETER */ 
-		--AcrossModifier.addFakeControls(this._Controls)
+		AcrossModifier.addFakeControls(this._Controls)
 		
 		/* add LOCAL VARIABLES */ 
 		this._addLocalVariablesToRollout()
