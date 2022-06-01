@@ -4,7 +4,7 @@ filein( getFilenamePath(getSourceFileName()) + "/../../Lib/RolloutCreator/Rollou
 filein( getFilenamePath(getSourceFileName()) + "/../../Lib/Ini/Ini.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/../../Lib/Dialog/IniSaver/IniSaver.ms" )
 
-try( destroyDialog test )catch()
+try( destroyDialog Controls_test )catch()
 
 /** DEFINE UI 
  *
@@ -15,7 +15,7 @@ try( destroyDialog test )catch()
  -- _RolloutCreator 	= RolloutCreator_v Ini:(Ini_v _path:(getSourceFileName()))
 _RolloutCreator 	= RolloutCreator_v Ini:(Ini_v())
 
-_Rollout = _RolloutCreator.new "Test"
+_Rollout = _RolloutCreator.new "Controls Test"
 
 _Controls = _Rollout.Controls group:"Test"
 
@@ -30,14 +30,16 @@ _Controls = _Rollout.Controls group:"Test"
 /**  COMMENTED TYPES ARE NOT SUPPORTED
   */
 control_types = #(
+	--#Label,
+	--#Button,
 	--#Checkbox,
 	--#CheckButton,
 	--#Pickbutton,
 	--#Spinner,
-	--#Edittext,
-	
-	--#Listbox,
-	#MultiListBox,
+	----#Edittext,
+	--
+	-- #Listbox,
+	-- #MultiListBox,
 	--#Dropdownlist,
 	--#Combobox,
 	--#ColorPicker,
@@ -54,13 +56,20 @@ control_types = #(
 	--#Curve,	-- DOES NOT WORK YET
 	--#popupMenu,	-- DOES NOT WORK YET
 	--#Timer,
+	--#browsePath,
 	
 	/* END OF ARRAY */ 
-	 #GroupBox
+	 -- #GroupBox
+
+	/* DEVELOPENT */ 
+
+	#Listbox
+	-- #Button
+
 
 )
 
---items_of_controls = for i = 1 to 3 collect ("item "+ i as string )
+items_of_controls = for i = 1 to 3 collect ("item "+ i as string )
 --items_of_controls = for i = 1 to 2 collect (""+ i as string )
 
 
@@ -70,8 +79,10 @@ function addControls control_types =
 (
 	--format "\n"; print ".addControls()"'
 	for control_type in control_types do
-		_Controls.control control_type (control_type as string +" 1") items:(for i = 1 to 3 collect ("item "+ i as string ))
-
+		--_Controls.control control_type (control_type as string +" 1") items:items_of_controls  params:#(#default, 2)
+		_Controls.control control_type (control_type as string +" 1") items:items_of_controls 
+		
+			--_Controls.control control_type (control_type as string +" 1") params:#(#items, items_of_controls, #labels,#("Radio 1", "Radio 2", "Radio 3"), #columns, 4)
 )
 
 

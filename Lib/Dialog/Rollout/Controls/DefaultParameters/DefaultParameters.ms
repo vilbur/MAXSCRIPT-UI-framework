@@ -42,7 +42,7 @@ struct DefaultParameters_v
 	 */
 	function setDefaultsForEachControlType =
 	(
-		print "DefaultParameters_v._setDefaultsForAllTypes()"
+		--print "DefaultParameters_v._setDefaultsForAllTypes()"
 		this._setControlTypes()
 		
 		this._setValuesForEachControlType()
@@ -142,8 +142,7 @@ struct DefaultParameters_v
 	 */
 	function _getControlTypeClass control_type type_classes =
 	(
-		print "DefaultParameters_v.getControlClass()"
-		--format "control_type	= % \n" control_type
+		--print "DefaultParameters_v.getControlClass()"
 		rx         = dotNetClass "System.Text.RegularExpressions.RegEx"
 		rx_options = dotNetClass "System.Text.RegularExpressions.RegexOptions"
 

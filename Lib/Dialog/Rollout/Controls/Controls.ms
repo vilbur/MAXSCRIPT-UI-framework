@@ -28,18 +28,16 @@ struct Controls_v
 	  *
 	  * @return Object _Control	"./Control/Control.ms"
 	 */
-	function Control type caption id:undefined params:#() items: locals:#() add_to_controls:true =
+	function Control type caption id:undefined params:#() items: value: locals:#() add_to_controls:true =
 	(
 		--format "\n"; print "Controls_v.Control()"
-		--format "items	= % \n" items
-		--format "params	= % \n" params
-		--format "caption	= % \n" caption
-		--params = #(#labels, #("item") )
 		_Control = Control_v type:type caption:caption id:id add_locals:locals
-
 				
 		if( items != unsupplied ) then 
-			_Control.Param #items (items)
+			_Control.Param (#items) (items)
+
+		if( value != unsupplied ) then 
+			_Control.Param (#value) (value)
 		
 		
 		this._setParamsToControl(_Control)(params)
@@ -101,8 +99,8 @@ struct Controls_v
 	 */
 	function _setParamsToControl &_Control params =
 	(
-		--print "Controls_v._setParamsToControl()"
-		
+		--format "\n"; print "Controls_v._setParamsToControl()"
+		--format "params	= % \n" params
 		if classOf params == string then 
 			params = this._splitParamsString (params)
 	

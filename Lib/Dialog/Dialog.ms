@@ -10,7 +10,6 @@ filein( getFilenamePath(getSourceFileName()) + "/../RolloutCreator/RolloutCreato
 filein( getFilenamePath(getSourceFileName()) + "/Layout/Layout.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/AutoRunEvents/AutoRunEvents.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/../Ini/Ini.ms" )
-filein( getFilenamePath(getSourceFileName()) + "/IniSaver/IniSaver.ms" )
 
 
 /** https://help.autodesk.com/view/MAXDEV/2021/ENU/?guid=GUID-816D257C-CD2D-4753-A792-6E7AEFAFA6A7
@@ -193,7 +192,7 @@ struct Dialog_v
 	 */
 	function _getDialogHeight height =
 	(
-		print "Dialog_v._getDialogHeight()"
+		--print "Dialog_v._getDialogHeight()"
 		--format "height	= % \n" height
 
 		if( Ini.isDefined() and (dialog_size = Ini.load( RolloutMain.id as string )("size")) != undefined) then

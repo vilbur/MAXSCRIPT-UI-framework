@@ -31,7 +31,7 @@ _Controls.Default #border false type:#list
 
 /* CONTROL PARAMS */ 
 --_Button1    = _Controls.control #button ( "Button" )
---_Button1	= _Controls.control #button ( "Button" ) params:#(#across, across)
+_Button1	= _Controls.control #button ( "Button" ) params:#(#across, across)
 _MultiListBox	= _Controls.control #MultiListBox ( "MultiListBox" ) params:#(#across, across)
 
 

@@ -32,13 +32,10 @@ struct ControlCreator_v
 	 */
 	function addControls _Controls =
 	(
-	--	format "\n\n--------------	Controls group:%	--------------\n" _Controls.group;
+		--format "\n\n--------------	Controls group:%	--------------\n" _Controls.group;
 		--print ("ControlCreator_v.addControls()"  )
 
-		--this._Rollout  = _Rollout
 		this._Controls = _Controls
-		--format "_Controls	= % \n" this._Controls
-		--format "_Controls.group	= % \n" this._Controls.group
 
 		GroupBoxCreator.addGrouboxes (_Rollout.getFullId()) (_Controls.GroupBoxes)
 
@@ -80,15 +77,12 @@ struct ControlCreator_v
 
 	/** Controls to groupbox will be rendered as last
 
-			MOVE THIS METHOD TO GroupboxCreator
+			MOVE THIS METHOD TO GroupboxCreator and REFRACT IT
 
 	 */
 	function createControlsInGroupboxLast &_Rollout_ =
 	(
 		--format "\n"; print ("ControlCreator_v._createControlsInGroupboxLast() "+_Rollout_.id as string) 
-		--format "_Rollout_.id	= % \n" _Rollout_.id
-		--format "_Rollout_._Controls	= % \n" _Rollout_._Controls
-
 		fn diffArray a b =
 		(
 			retArray = #()
@@ -134,7 +128,9 @@ struct ControlCreator_v
 
 		for _Control in _Controls.list do
 			this._addControlToRollout (_Control) -- add control first before variables, functions and events
-
+			
+		format "\n" -- send "OK" message to the end of log
+			
 		this._addControlsGroup #end 
 	),
 
@@ -146,8 +142,8 @@ struct ControlCreator_v
 			format "\n%.%" ( _Rollout.id as string ) _Control.id
 		
 		params = ParamsCreator.join(_Control.params)
-
-		_Rollout._RolloutCreator.addControl (_Control.type) (_Control.id) (this._emptyCaptionIfInBrackets(_Control.caption)) paramStr:params filter:true
+		format " params	= % \n" params
+		_Rollout._RolloutCreator.addControl (_Control.type) (_Control.id) (this._getCaption(_Control.caption)) paramStr:params filter:true;
 	),
 
 	/** Add Handlers of Events
@@ -157,45 +153,6 @@ struct ControlCreator_v
 		for _Control in _Controls.list do
 			EventBinder.addHandlers(_Control)
 	),
-
-	--/** _add value parameter
-	-- */
-	--function _setControlValue _Control rollout_id = 
-	--(
-	--	print "ControlCreator_v._setControlValue()"
-	--	--format "_Control.type	= % \n" _Control.type
-	--	--val_ini	= ParamsCreator.ControlValue.getValueFromIni(_Control)(rollout_id)
-	--	--format "Ini	= % \n" Ini
-	--	value_param_name = ParamsCreator.ControlValue._getNameOfValueParameter( _Control.type )
-	--	
-	--	
-	--	if value_param_name != undefined  then 
-	--	(
-	--		/* Get value from ini */ 
-	--		if Ini.isDefined() then
-	--		(
-	--			
-	--			format "value_param_name	= % \n" value_param_name
-	--		
-	--			ini_value = Ini.load(rollout_id)(_Control.id)
-	--			format "ini_value	= % \n" ini_value
-	--			
-	--			
-	--			_Control.Params.setVal value_param_name ini_value
-	--			
-	--		) else
-	--		(
-	--			
-	--			_Control.Params.setVal value_param_name 2
-	--		)
-	--
-	--		
-	--		
-	--		
-	--	)
-	--	
-	--	
-	--),
 	
 	/** Add controls group
 	  * 
@@ -212,11 +169,15 @@ struct ControlCreator_v
 		_Rollout._RolloutCreator.addText ( start_or_end_string ) filter:on
 	),
 
-	/** Empty caption if caption is in brackets E.G.: "[Groupboxname]"
+	/** Empty caption if caption is in square brackets
 	  *
-	  * used for generated groupbox
+	  * Mainly used for groupbox control
+	  * 
+	  * @property	string	caption	of control
+	  *
+	  * @return	string return empty string if caption is for instance "[Foo Control Caption]"
 	 */
-	function _emptyCaptionIfInBrackets caption =
+	function _getCaption caption =
 	(
 		if( matchPattern caption pattern:("[*]")  ) then
 			caption	= ""
@@ -286,8 +247,8 @@ struct ControlCreator_v
 	 */
 	on create do
 	(
-		print "ControlCreator_v.onCreate()"
-		format "ini_path	= % \n" ini_path
+		--print "ControlCreator_v.onCreate()"
+		--format "ini_path	= % \n" ini_path
 		--ConstructPropeties test:this
 		
 		ControlValue.Ini = Ini

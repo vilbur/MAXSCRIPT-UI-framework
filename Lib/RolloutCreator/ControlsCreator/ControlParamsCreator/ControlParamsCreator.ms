@@ -25,12 +25,9 @@ struct ControlParamsCreator_v
 	 */
 	function mergeParams &_Control =
 	(
-		format "\n"; print "ControlParamsCreator_v.mergeParams()"
+		--format "\n"; print "ContolParamsCreator_v.mergeParams()"
+		--format "_Control.Params	= % \n" _Control.Params
 		ParamsListMerged 	= List_v()
-		
-		/* VALUE PARAM */ 
-		--if( ( value_param = this._getVaueParameter(_Control)) != undefined ) then
-			--ParamsListMerged.setVal value_param[1] value_param[2]
 		
 		/* CONTROLS PARMAS */ 
 		ParamsListMerged.merge (_Control.Params)
@@ -41,7 +38,6 @@ struct ControlParamsCreator_v
 
 		/* MERGE Defaults.keys.#global */ 
 		ParamsListMerged.merge ( DefaultParameters.getVal(#global) )
-		format "ParamsListMerged	= % \n" ParamsListMerged
 		
 		_Control.params = ParamsListMerged
 		
@@ -76,19 +72,19 @@ struct ControlParamsCreator_v
 
 	
 	private
-	
-	/** _get vaue parameter
-	 */
-	function _getVaueParameter _Control =
-	(
-		print "ControlParamsCreator_v._getVaueParameter()"
-		value_param_name =	ControlValue._getNameOfValueParameter( _Control.type )
-
-		value_param = _Control.Params.getVal(value_param_name)
-
-		if( value_param != undefined ) then
-			#( value_param_name, value_param )
-	),
+	--
+	--/** _get vaue parameter
+	-- */
+	--function _getVaueParameter _Control =
+	--(
+	--	print "ControlParamsCreator_v._getVaueParameter()"
+	--	value_param_name =	ControlValue._getNameOfValueParameter( _Control.type )
+	--
+	--	value_param = _Control.Params.getVal(value_param_name)
+	--
+	--	if( value_param != undefined ) then
+	--		#( value_param_name, value_param )
+	--),
 
 
 	/** Format value to string
@@ -134,7 +130,6 @@ struct ControlParamsCreator_v
 
 	on create do
 	(
-		print "ControlParamsCreator_v.onCreate()"
-	
+		--print "ControlParamsCreator_v.onCreate()"
 	)
 )

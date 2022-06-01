@@ -31,9 +31,9 @@ struct IniSaver_v
 	function saveRollout rollout_id =
 	(
 		clearListener()
-		format "\n"; print "IniSaver_v.saveRollout()"
-		format "rollout_id	= % \n" rollout_id
-		format "ini_file	= % \n" ini_file
+		--format "\n"; print "IniSaver_v.saveRollout()"
+		--format "rollout_id	= % \n" rollout_id
+		--format "ini_file	= % \n" ini_file
 		--_Rollout = execute(rollout_id)
 
 		--if _Rollout.inDialog == true then
@@ -51,8 +51,8 @@ struct IniSaver_v
 	 */
 	function _saveDialog _Rollout =
 	(
-		format "\n"; print "IniSaver_v._saveDialog()"
-		format "_Rollout	= % \n" _Rollout
+		--format "\n"; print "IniSaver_v._saveDialog()"
+		--format "_Rollout	= % \n" _Rollout
 
 		this._saveToIni _Rollout.name "position"	(GetDialogPos _Rollout )
 		this._saveToIni _Rollout.name "size"	(GetDialogSize _Rollout )
@@ -65,12 +65,12 @@ struct IniSaver_v
 	 */
 	function _saveControlsAndSubrollouts _RolloutClass =
 	(
-		format "\n"; print "IniSaver_v._saveControlsAndSubrollouts()"
+		--format "\n"; print "IniSaver_v._saveControlsAndSubrollouts()"
 
 		for control in _RolloutClass.controls do
 		(
-			format "control	= % \n" control
-			format "( classOf control )	= % \n" ( classOf control)
+			--format "control	= % \n" control
+			--format "( classOf control )	= % \n" ( classOf control)
 
 			if classOf control == SubRollout then
 				this._saveSubRollouts(control)(_RolloutClass.name)
@@ -111,7 +111,7 @@ struct IniSaver_v
 	 */
 	function _saveRollout _RolloutClass =
 	(
-		format "\n"; print "IniSaver_v._saveRollout()"
+		--format "\n"; print "IniSaver_v._saveRollout()"
 		--format "_RolloutClass	= % \n" _RolloutClass.name
 
 		this._saveToIni (_RolloutClass.name) ("rolledUp") ( (not _RolloutClass.open) as string )
@@ -124,8 +124,8 @@ struct IniSaver_v
 	 */
 	function _saveControl _RolloutClass Ctrl =
 	(
-		format "\n"; print "IniSaver_v._saveControl()"
-		format "Ctrl.name 	= % \n" Ctrl.name
+		--format "\n"; print "IniSaver_v._saveControl()"
+		--format "Ctrl.name 	= % \n" Ctrl.name
 
 		local val
 
@@ -134,7 +134,7 @@ struct IniSaver_v
 		if (matches = (this.regexGetMatches( (classOf Ctrl) as string ) "Check|Box|EditText|Spinner|Radio")).count > 0 then
 		(
 
-			format "matches[1][1]	= % \n" matches[1][1]
+			--format "matches[1][1]	= % \n" matches[1][1]
 
 			val = case matches[1][1] as name of
 				(
@@ -148,7 +148,7 @@ struct IniSaver_v
 				)
 		)
 
-		format "val	= % \n" val
+		--format "val	= % \n" val
 
 		if( val != undefined ) then 
 			this._saveToIni (_RolloutClass.name) Ctrl.name (val as string )

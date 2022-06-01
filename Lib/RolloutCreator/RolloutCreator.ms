@@ -201,8 +201,8 @@ struct RolloutCreator_v
 	 */
 	on create do
 	(
-		format "\n"; print("RolloutCreator_v.onCreate()")
-		format "Ini	= % \n" Ini
+		--format "\n"; print("RolloutCreator_v.onCreate()")
+		--format "Ini	= % \n" Ini
 		ConstructPropeties test:this
 	)	
 )

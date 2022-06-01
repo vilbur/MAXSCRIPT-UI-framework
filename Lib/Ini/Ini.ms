@@ -1,3 +1,5 @@
+filein( getFilenamePath(getSourceFileName()) + "/IniSaver/IniSaver.ms" )
+
 /** Save Load ini settings
   *
   *
