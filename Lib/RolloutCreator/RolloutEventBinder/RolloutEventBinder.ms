@@ -12,8 +12,10 @@ filein( getFilenamePath(getSourceFileName()) + "/EventsCombiner/EventsCombiner.m
   */
 struct RolloutEventBinder_v 
 (
-	
+	/* construct */ 
 	_Rollout,
+	
+	/* dependency */
 	EventsCombiner	= EventsCombiner_v(),
 	
 	/* inhered */ 

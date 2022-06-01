@@ -10,10 +10,9 @@ struct ControlParamsCreator_v
 	DefaultParameters, -- defaults parameters for controls
 	
 	/* dependency */
-	--ControlValue 	= ControlValue_v(),
+	ParamsListMerged,
 
 	/* properties */ 
-	ParamsListMerged,
 	
 	/** Get params for control
 	  * 
@@ -72,19 +71,6 @@ struct ControlParamsCreator_v
 
 	
 	private
-	--
-	--/** _get vaue parameter
-	-- */
-	--function _getVaueParameter _Control =
-	--(
-	--	print "ControlParamsCreator_v._getVaueParameter()"
-	--	value_param_name =	ControlValue._getNameOfValueParameter( _Control.type )
-	--
-	--	value_param = _Control.Params.getVal(value_param_name)
-	--
-	--	if( value_param != undefined ) then
-	--		#( value_param_name, value_param )
-	--),
 
 
 	/** Format value to string
