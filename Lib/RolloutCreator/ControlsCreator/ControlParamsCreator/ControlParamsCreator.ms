@@ -1,4 +1,3 @@
-filein( getFilenamePath(getSourceFileName()) + "/ControlValue/ControlValue.ms" )
 
 /** Control Params http://help.autodesk.com/view/3DSMAX/2016/ENU/?guid=__files_GUID_EA37E7DB_1E74_4377_B3D8_EDAE19CE27E7_htm
   * 
@@ -8,52 +7,55 @@ filein( getFilenamePath(getSourceFileName()) + "/ControlValue/ControlValue.ms" )
 struct ControlParamsCreator_v
 (
 	/* inherit */
-	ControlDefaults, -- defaults parameters for controls
+	DefaultParameters, -- defaults parameters for controls
 	
 	/* dependency */
-	ControlValue 	= ControlValue_v(),
+	--ControlValue 	= ControlValue_v(),
 
 	/* properties */ 
-	MergeParamsList,
+	ParamsListMerged,
 	
 	/** Get params for control
 	  * 
+	  * Priority of params
+	  * 	1) User Defined param
+	  * 	2) Global per control type E.g.:  #(#multiListBox, #listbox, #list) 
+	  * 	3) Global for all controls
 	  * 
 	 */
 	function mergeParams &_Control =
 	(
-		--print "ControlParamsCreator_v.mergeParams()"
-		MergeParamsList 	= List_v()
+		format "\n"; print "ControlParamsCreator_v.mergeParams()"
+		ParamsListMerged 	= List_v()
 		
 		/* VALUE PARAM */ 
-		if( ( value_param = this._getVaueParameter(_Control)) != undefined ) then
-			MergeParamsList.setVal value_param[1] value_param[2]
+		--if( ( value_param = this._getVaueParameter(_Control)) != undefined ) then
+			--ParamsListMerged.setVal value_param[1] value_param[2]
 		
 		/* CONTROLS PARMAS */ 
-		MergeParamsList.merge (_Control.Params)
+		ParamsListMerged.merge (_Control.Params)
 		
 		/* DEFAULTS PARMAS */ 
-		for defautls_key in this._getDefaultKeys(_Control.type) do
-			MergeParamsList.merge (ControlDefaults.getVal(defautls_key as name ))
-			--format "% = % \n" defautls_key MergeParamsList
+		for control_type_key in DefaultParameters.getKeysForControlType(_Control.type) do
+			ParamsListMerged.merge ( DefaultParameters.getParametersForControlType(control_type_key) )
 
 		/* MERGE Defaults.keys.#global */ 
-		MergeParamsList.merge ( ControlDefaults.getVal(#global) )
-		--format "MergeParamsList	= % \n" MergeParamsList
+		ParamsListMerged.merge ( DefaultParameters.getVal(#global) )
+		format "ParamsListMerged	= % \n" ParamsListMerged
 		
-		_Control.params = MergeParamsList
+		_Control.params = ParamsListMerged
 		
 		_Control --return
 	),
 	
-	/** Set control defaults
+	/** Set DefaultParameters_v from Controls_v
 	 */
-	function setControlDefaults ControlDefaults =
+	function setDefaultParameters DefaultParameters =
 	(
-		--print "ControlParamsCreator_v.setControlDefaults()"
-		this.ControlDefaults = ControlDefaults
+		--print "ControlParamsCreator_v.setDefaultParameters()"
+		this.DefaultParameters = DefaultParameters
 		
-		this.ControlDefaults.setDefaultsForAllTypes()
+		this.DefaultParameters.setDefaultsForEachControlType()
 	),
 	
 	/** Join array
@@ -79,7 +81,7 @@ struct ControlParamsCreator_v
 	 */
 	function _getVaueParameter _Control =
 	(
-		--print "ControlParamsCreator_v._getVaueParameter()"
+		print "ControlParamsCreator_v._getVaueParameter()"
 		value_param_name =	ControlValue._getNameOfValueParameter( _Control.type )
 
 		value_param = _Control.Params.getVal(value_param_name)
@@ -88,30 +90,6 @@ struct ControlParamsCreator_v
 			#( value_param_name, value_param )
 	),
 
-	/** merge all default types matchi
-	  *
-	  *
-	  *
-	  * e.g: match #list|#listbox|#multilistbox   if control_type == "multilistbox"
-	 */
-	function _getDefaultKeys control_type =
-	(
-		--print "ControlParamsCreator_v._getDefaultKeys()"
-		
-		defautls_keys = for defautls_key in this._flipKeysByLenght(ControlDefaults.keys) where  matchPattern (control_type as string ) pattern:( "*" + (defautls_key as string ) + "*") collect defautls_key
-		--format "defautls_keys	= % \n" defautls_keys
-		defautls_keys --return
-	),	
-	
-	/**  
-	  *	
-	  */
-	function _flipKeysByLenght arr =
-	(
-		arr = sort (deepCopy arr)
-		
-		for i=arr.count to 1 by -1 collect arr[i]
-	),
 
 	/** Format value to string
 	  *
@@ -156,5 +134,7 @@ struct ControlParamsCreator_v
 
 	on create do
 	(
+		print "ControlParamsCreator_v.onCreate()"
+	
 	)
 )

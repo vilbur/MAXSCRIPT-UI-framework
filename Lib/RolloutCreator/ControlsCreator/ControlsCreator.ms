@@ -1,6 +1,7 @@
 filein( getFilenamePath(getSourceFileName()) + "/ControlTypes/BrowsePath/BrowsePath.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/ControlTypes/Radiobuttons/Radiobuttons.ms" )
 
+filein( getFilenamePath(getSourceFileName()) + "/ControlValue/ControlValue.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/ControlParamsCreator/ControlParamsCreator.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/TooltipCreator/TooltipCreator.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/ControlEventBinder/ControlEventBinder.ms" )
@@ -23,10 +24,11 @@ struct ControlCreator_v
 
 	AcrossModifier	= AcrossParameterModifier_v(),
 	ParamsCreator	= ControlParamsCreator_v(),
+	ControlValue 	= ControlValue_v(),
 	TooltipCreator	= TooltipCreator_v(),
 	EventBinder	= ControlEventBinder_v _Rollout:_Rollout ini_path:ini_path,
 
-	/** Add controls
+	/** Add controls to rollout
 	 */
 	function addControls _Controls =
 	(
@@ -40,12 +42,13 @@ struct ControlCreator_v
 
 		GroupBoxCreator.addGrouboxes (_Rollout.getFullId()) (_Controls.GroupBoxes)
 
-		/* set DEFAULT PARAMETERS */ 
-		ParamsCreator.setControlDefaults (_Controls.DefaultParameters)
+		/* pass DEFAULT PARAMETERS to params creator */ 
+		ParamsCreator.setDefaultParameters(_Controls.DefaultParameters)
 
 		for _Control in _Controls.list do
 		(
-			this._addValueParameter  (_Control) (_Rollout.id)
+			--this._setControlValue  (_Control) (_Rollout.id)
+			ControlValue.setControlValue  (_Control) (_Rollout.id)
 			
 			ParamsCreator.mergeParams(_Control)
 
@@ -155,28 +158,44 @@ struct ControlCreator_v
 			EventBinder.addHandlers(_Control)
 	),
 
-	/** _add value parameter
-	 */
-	function _addValueParameter _Control rollout_id = 
-	(
-		print "ControlCreator_v._addValueParameter()"
-		--format "_Control.type	= % \n" _Control.type
-		--val_ini	= ParamsCreator.ControlValue.getValueFromIni(_Control)(rollout_id)
-		--format "Ini	= % \n" Ini
-		
-		if( Ini.isDefined() and (value_param_name = ParamsCreator.ControlValue._getNameOfValueParameter( _Control.type ) ) != undefined ) then
-		(
-			
-			format "value_param_name	= % \n" value_param_name
-		
-			ini_value = Ini.load(rollout_id)(_Control.id)
-			format "ini_value	= % \n" ini_value
-			
-			
-			_Control.Params.setVal value_param_name ini_value
-			
-		)
-	),
+	--/** _add value parameter
+	-- */
+	--function _setControlValue _Control rollout_id = 
+	--(
+	--	print "ControlCreator_v._setControlValue()"
+	--	--format "_Control.type	= % \n" _Control.type
+	--	--val_ini	= ParamsCreator.ControlValue.getValueFromIni(_Control)(rollout_id)
+	--	--format "Ini	= % \n" Ini
+	--	value_param_name = ParamsCreator.ControlValue._getNameOfValueParameter( _Control.type )
+	--	
+	--	
+	--	if value_param_name != undefined  then 
+	--	(
+	--		/* Get value from ini */ 
+	--		if Ini.isDefined() then
+	--		(
+	--			
+	--			format "value_param_name	= % \n" value_param_name
+	--		
+	--			ini_value = Ini.load(rollout_id)(_Control.id)
+	--			format "ini_value	= % \n" ini_value
+	--			
+	--			
+	--			_Control.Params.setVal value_param_name ini_value
+	--			
+	--		) else
+	--		(
+	--			
+	--			_Control.Params.setVal value_param_name 2
+	--		)
+	--
+	--		
+	--		
+	--		
+	--	)
+	--	
+	--	
+	--),
 	
 	/** Add controls group
 	  * 
@@ -270,7 +289,9 @@ struct ControlCreator_v
 		print "ControlCreator_v.onCreate()"
 		format "ini_path	= % \n" ini_path
 		--ConstructPropeties test:this
+		
+		ControlValue.Ini = Ini
+		
 		EventBinder.ini_path	= ini_path
-		ParamsCreator.ControlValue.ini_path	= ini_path
 	)	
 )

@@ -33,7 +33,7 @@ _Controls = _Rollout.Controls group:"Test"
   *	
   */
 --_Controls.control #RadioButtons "Row Column 1" items:(getItems( 3 )("Column"))
-_Controls.control #RadioButtons "Row Column 1" items:(getItems( 3 )("Column") params:#(#selection, 2 ) )
+--_Controls.control #RadioButtons "Row Column 1" items:(getItems( 3 )("Column") params:#(#selection, 2 ) )
 
 --_Controls.control #RadioButtons "Offset in Row 1" items:(getItems( 4 )("Column"))  params:#(#offset, [-96, 0] )
 --

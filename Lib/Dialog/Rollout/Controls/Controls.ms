@@ -28,7 +28,7 @@ struct Controls_v
 	  *
 	  * @return Object _Control	"./Control/Control.ms"
 	 */
-	function Control type caption id:undefined params:#() items:#() locals:#() add_to_controls:true =
+	function Control type caption id:undefined params:#() items: locals:#() add_to_controls:true =
 	(
 		--format "\n"; print "Controls_v.Control()"
 		--format "items	= % \n" items

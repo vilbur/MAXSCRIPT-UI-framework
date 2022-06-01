@@ -4,7 +4,7 @@ filein( getFilenamePath(getSourceFileName()) + "/../../Lib/RolloutCreator/Rollou
 filein( getFilenamePath(getSourceFileName()) + "/../../Lib/Ini/Ini.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/../../Lib/Dialog/IniSaver/IniSaver.ms" )
 
-try( destroyDialog test )catch()
+try( destroyDialog Controls_test )catch()
 
 /** DEFINE UI 
  *
@@ -12,10 +12,10 @@ try( destroyDialog test )catch()
  */
 
 
- _RolloutCreator 	= RolloutCreator_v Ini:(Ini_v _path:(getSourceFileName()))
--- _RolloutCreator 	= RolloutCreator_v Ini:(Ini_v())
+ -- _RolloutCreator 	= RolloutCreator_v Ini:(Ini_v _path:(getSourceFileName()))
+_RolloutCreator 	= RolloutCreator_v Ini:(Ini_v())
 
-_Rollout = _RolloutCreator.new "Test"
+_Rollout = _RolloutCreator.new "Controls Test"
 
 _Controls = _Rollout.Controls group:"Test"
 
@@ -36,14 +36,14 @@ control_types = #(
 	--#CheckButton,
 	--#Pickbutton,
 	--#Spinner,
-	--#Edittext,
+	----#Edittext,
 	--
-	--#Listbox,
-	--#MultiListBox,
+	-- #Listbox,
+	-- #MultiListBox,
 	--#Dropdownlist,
 	--#Combobox,
 	--#ColorPicker,
-	#RadioButtons,
+	-- #RadioButtons,
 
 	--#Angle,
 	--#Bitmap,
@@ -56,10 +56,16 @@ control_types = #(
 	--#Curve,	-- DOES NOT WORK YET
 	--#popupMenu,	-- DOES NOT WORK YET
 	--#Timer,
+	--#browsePath,
 	
-	/* CUSTOM CONTROL TYPES */ 
-	--#browsePath
-	 #GroupBox
+	/* END OF ARRAY */ 
+	 -- #GroupBox
+
+	/* DEVELOPENT */ 
+
+	#Listbox
+	-- #Button
+
 
 )
 
@@ -73,23 +79,9 @@ function addControls control_types =
 (
 	--format "\n"; print ".addControls()"'
 	for control_type in control_types do
-	(
+		--_Controls.control control_type (control_type as string +" 1") items:items_of_controls  params:#(#default, 2)
+		_Controls.control control_type (control_type as string +" 1") items:items_of_controls 
 		
-		params = #(#items, items_of_controls)
-		
-		params = case control_type of (
-
-			--#RadioButtons:	params + #(#labels, items_of_controls, #columns, 4)
-			#RadioButtons:	params + #(#labels, items_of_controls)
-			--#RadioButtons:	params + #(#labels, items_of_controls, #columns, 2)
-			--#RadioButtons:	params + #(#labels, items_of_controls, #columns, 2, #offset, [48,0])
-			default:	params
-			)
-		
-		
-		format "params	= % \n" params
-		_Controls.control control_type (control_type as string +" 1") params:params
-	)
 			--_Controls.control control_type (control_type as string +" 1") params:#(#items, items_of_controls, #labels,#("Radio 1", "Radio 2", "Radio 3"), #columns, 4)
 )
 

@@ -1,3 +1,5 @@
+filein( getFilenamePath(getSourceFileName()) + "/../../../Ini/Ini.ms" )
+
 try(cui.UnRegisterDialogBar ROLLOUT_test)catch() 
 try( destroyDialog          ROLLOUT_test)catch()
 
@@ -10,7 +12,7 @@ if( group_name == undefined ) then
 /** DEFINE ROLLOUT 
  *	
  */
-_RolloutCreator 	= RolloutCreator_v()
+_RolloutCreator 	= RolloutCreator_v Ini:(Ini_v())
 
 _Rollout = _RolloutCreator.new "Test"
 
