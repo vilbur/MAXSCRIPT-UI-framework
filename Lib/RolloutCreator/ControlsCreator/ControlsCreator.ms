@@ -17,7 +17,6 @@ struct ControlCreator_v
 	/* construct */ 
 	_Rollout,
 	Ini,
-	ini_path, -- set in RolloutCreator_v._setIniToRollouts()
 
 	/* dependency */
 	_Controls,
@@ -26,7 +25,7 @@ struct ControlCreator_v
 	ParamsCreator	= ControlParamsCreator_v(),
 	ControlValue 	= ControlValue_v(),
 	TooltipCreator	= TooltipCreator_v(),
-	EventBinder	= ControlEventBinder_v _Rollout:_Rollout ini_path:ini_path,
+	EventBinder	= ControlEventBinder_v _Rollout:_Rollout,
 
 	/** Add controls to rollout
 	 */
@@ -249,6 +248,6 @@ struct ControlCreator_v
 		--print "ControlCreator_v.onCreate()"
 		ControlValue.Ini = Ini
 		
-		EventBinder.ini_path	= ini_path
+		EventBinder.ini_path	= Ini.getPath()
 	)	
 )

@@ -264,7 +264,7 @@ struct Dialog_v
 	 */
 	function _setPositionOrDockByIni =
 	(
-		--format "\n"; print "global._setPositionOrDockByIni()"
+		format "\n"; print "globQal._setPositionOrDockByIni()"
 		if Ini.isDefined() then
 		(
 			dock_state	= Ini.load( RolloutMain.id as string )("dock_state")
@@ -272,14 +272,14 @@ struct Dialog_v
 			
 			if( dock_state != undefined and dock_state != "cui_floatable" ) then
 			(
+				--print "Set Dialog Dock"
 				this.register()
-				
 				execute("cui.DockDialogBar "+ RolloutMain.id +" #"+ dock_state )
 			)
 			else if( position != undefined ) then
 			(
+				--print "Set Dialog Float"
 				execute("SetDialogPos "+ RolloutMain.id +" "+ position as string )
-				
 				this.register()
 			)
 		)

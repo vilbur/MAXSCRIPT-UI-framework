@@ -9,7 +9,7 @@ _Controls   = Dialog.Controls group:"Main Controls"
 
 
 /* SETUP */ 
-Dialog.Ini.delete() -- delte ini file for next run of test
+--Dialog.Ini.delete() -- delte ini file for next run of test
 
 items = for i = 1 to 3 collect ("item "+ i as string )
 
@@ -30,7 +30,7 @@ _Controls.control #MultiListbox "MultiListbox"	items:items params:#(#selection, 
 _Controls.control #dropdownList "dropdownList"	items:items value:2
 
 _Controls.control #radioButtons "RadioButtons value"	items:items value:2
-_Controls.control #radioButtons "RadioButtons param"	items:items params:#(#default, 3)
+_Controls.control #radioButtons "RadioButtons param"	params:#(#items,items, #default, 3)
 
 
 /* DIALOG CREATE */ 
