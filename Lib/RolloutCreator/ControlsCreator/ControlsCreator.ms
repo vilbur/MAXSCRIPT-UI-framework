@@ -248,9 +248,6 @@ struct ControlCreator_v
 	on create do
 	(
 		--print "ControlCreator_v.onCreate()"
-		--format "ini_path	= % \n" ini_path
-		--ConstructPropeties test:this
-		
 		ControlValue.Ini = Ini
 		
 		EventBinder.ini_path	= ini_path

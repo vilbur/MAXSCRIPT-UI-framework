@@ -10,10 +10,6 @@ struct Ini_v
 (
 	/* required */
 	_path,	-- full pah to *.ini file*
-	--_dir,	-- dir of *.ini file
-	--file,	-- *.ini filename
-	--
-	--load_values_on_init = true,
 	
 	/** Set ini
 	 */
@@ -79,7 +75,13 @@ struct Ini_v
 		ShellLaunch  "Notepad++" ("\""+_path+"\"")
 	),
 	
-	
+	/** Delete ini file
+	 */
+	function delete =
+	(
+		--format "\n"; print "Ini_v.deleteFile()"
+		deleteFile _path
+	),
 
 	/** Is defined
 	 */
@@ -89,52 +91,13 @@ struct Ini_v
 		_path != undefined --return
 	),
 
-	/*------------------------------------------------------------------------------
-		DEPRECATED
-	--------------------------------------------------------------------------------*/
-	
-	
-	/** Set path to dir which contains *.ini fie
-	  * @property	string	_path	path to dir
-	 */
-	function dir _path =
-	(
-		--print ( "Ini_v.dir() = " + _path as string )
-		_path = this._escapePath _path
-		
-		this._getSetProp #_dir _path --return
-	),
-
-	--/** Set filename of *.ini file
-	--  * @property	string	filename	of *.ini file E.G.: "foo.ini" 
-	-- */
-	--function file filename =
-	--(
-	--	--print ( "Ini_v.file() = " + filename as string )
-	--	this._getSetProp #_file filename --return
-	--),
-
-	--/** Get\set ini file path
-	--  * @param	string|#get _path	Path to ini file, or #get
-	--  *
-	--  * @return	string|self path to ini file if _path=#get	
-	--  */
-	--function path _path =
-	--(
-	--	--print ("------------\nIni.path() " + _path as string) 
-	--	if( _path != #get ) then
-	--		_path = this._escapePath _path
-	--
-	--	this._getSetProp #_path _path --return
-	--),
-
 	/** Is defined
 	 */
 	function isDefined =
 	(
 		_path != undefined
 	),
-	
+
 	/** Load values on init
 	 */
 	function loadValuesOnInit =
@@ -202,8 +165,8 @@ struct Ini_v
 	 */
 	on create do
 	(
-		format "\n"; print("Ini_v.onCreate()")
-		format "_path	= % \n" _path
+		--format "\n"; print("Ini_v.onCreate()")
+		--format "_path	= % \n" _path
 		this.setIni (_path) -- try set path on construct
 	)
 )
