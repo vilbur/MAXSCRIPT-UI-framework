@@ -16,18 +16,18 @@ struct ControlTypes_v
 		#Dropdownlist,
 		#GroupBox,
 		#Combobox,
-		--#Angle,
-		--#Bitmap,
+		#Angle,
+		#Bitmap,
 		#ColorPicker,
-		--#hyperlink,
-		--#imgTag,
-		--#Mapbutton,
-		--#Materialbutton,
+		#hyperlink,
+		#imgTag,
+		#Mapbutton,
+		#Materialbutton,
 		#PickButton,
-		--#ProgressBar,
+		#ProgressBar,
 		#Slider,
-		--#Curve,	-- DOES NOT WORK YET
-		--#popupMenu,	-- DOES NOT WORK YET
+		#Curve,	-- DOES NOT WORK YET
+		#popupMenu,	-- DOES NOT WORK YET
 		#RadioButtons,	-- DOES NOT WORK YET
 		#Timer,
 		

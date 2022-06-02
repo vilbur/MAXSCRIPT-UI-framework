@@ -122,8 +122,8 @@ struct IniSaver_v
 	 */
 	function _saveControl _RolloutClass Ctrl =
 	(
-		format "\n"; print "IniSaver_v._saveControl()"
-		format "ClassOf Ctrl	= % \n" (classOf Ctrl)
+		--format "\n"; print "IniSaver_v._saveControl()"
+		--format "ClassOf Ctrl	= % \n" (classOf Ctrl)
 		--format "Ctrl.name 	= % \n" Ctrl.name
 
 		local val
@@ -133,8 +133,9 @@ struct IniSaver_v
 			CheckBoxControl:	Ctrl.checked
 			CheckButtonControl:	Ctrl.checked
 			
-			SpinnerControl:	Ctrl.range
-			SliderControl:	Ctrl.range
+			SpinnerControl:	Ctrl.value
+			SliderControl:	Ctrl.value
+			AngleControl:	Ctrl.degrees
 			
 			ListboxControl:	Ctrl.selection
 			ComboboxControl:	Ctrl.selection
@@ -146,7 +147,6 @@ struct IniSaver_v
 			ColorPickerControl:	Ctrl.color
 			RadioButtonsControl:	Ctrl.state
 		
-			--AngleControl:	
 			--BitmapControl:	
 			--hyperlinkControl:	
 			--imgTagControl:	
@@ -158,7 +158,7 @@ struct IniSaver_v
 			--TimerControl:	
 			
 		)
-		format "val	= % \n" val
+		--format "val	= % \n" val
 		if( val != undefined ) then 
 			this._saveToIni (_RolloutClass.name) Ctrl.name (val as string )
 	),
@@ -180,10 +180,10 @@ struct IniSaver_v
 	 */
 	function _saveToIni section key val =
 	(
-		format "\n"; print "IniSaver_v._saveToIni()"
-		format "section	= % \n" section
-		format "key	= % \n" key
-		format "val	= % \n" val
+		--format "\n"; print "IniSaver_v._saveToIni()"
+		--format "section	= % \n" section
+		--format "key	= % \n" key
+		--format "val	= % \n" val
 		if( val != undefined ) then 
 			setINISetting ini_file section key ( val as string )
 	),

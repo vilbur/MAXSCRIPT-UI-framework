@@ -12,10 +12,10 @@ struct ControlValue_v
 	  *	
 	  */
 	names_of_value_param = #(
-		#( #SELECTION,	#listbox,	#multilistbox,	#dropdownlist, #combobox	),
-		#( #CHECKED,	#checkbox,	#checkbutton		),
-		#( #RANGE,  	#spinner,	#slider		),	
-		#( #TEXT,  	#edittext,	#browsePath		),
+		#( #SELECTION,	#Listbox,	#Multilistbox,	#Dropdownlist, #Combobox	),
+		#( #CHECKED,	#Checkbox,	#Checkbutton		),
+		#( #RANGE,  	#Spinner,	#Slider,	#Angle	),	
+		#( #TEXT,  	#Edittext,	#BrowsePath		),
 		#( #DEFAULT,  	#RadioButtons			)
 	),
 
@@ -37,12 +37,12 @@ struct ControlValue_v
 		/* Get value from ini */ 
 		if Ini.isDefined() and (ini_value = Ini.load(rollout_id)(_Control.id)) != undefined then
 			--_Control.Params.setVal value_param_name (this._convertDatatype(_Control)(ini_value))
-			_Control.Params.setVal value_param_name ini_value
+			this._setValueByIni _Control value_param_name ini_value
 			
 		else
-			this._setControlValueParameter (_Control)(value_param_name)
+			this._setValueByParameter (_Control)(value_param_name)
 	),
-
+	
 	/** Each control type has different name of parameter for default value
 	  * 
 	  * E.G.: 
@@ -61,24 +61,36 @@ struct ControlValue_v
 			name_of_param[1] --return
 	),
 
+	/** Set value by ini
+	 */
+	function _setValueByIni _Control value_param_name _value =
+	(
+		--format "\n"; print "ControlValue_v._setValueByIni()"
+		if (this._isRangeControlType(_Control.type)) then
+			_value = this._setValueIntoRange (_Control) (_value)
+			
+		_Control.Params.setVal value_param_name _value
+	),
+
 	/** Set parameter of value with correct name for control type
 	  * 	then remove #value paramater
 	  *
  	  * E.G.: set #checked parameter and delete #value
 	  *
 	 */
-	function _setControlValueParameter _Control value_param_name =
+	function _setValueByParameter _Control value_param_name =
 	(
-		--format "\n"; print "ControlValue_v._setControlValueParameter()"
+		format "\n"; print "ControlValue_v._setValueByParameter()"
 
 		if( ( _value = _Control.Params.getVal (#value) ) == undefined ) then --try get parameter #value  e.g.: params:#(#value, true)
 			_value = _Control.Params.getVal (value_param_name)	            --try get parameter by name e.g.: params:#(#checked, true)
+			format "_VALUE	= % \n" _value
 
 		if( _value != undefined ) then
 		(
-			if( _Control.type == #spinner or _Control.type == #slider ) then
+			if (this._isRangeControlType(_Control.type)) then
 				_value = this._setValueIntoRange (_Control) (_value)
-
+			format "_VALUE	= % \n" _value
 			_Control.Params.delete (#value)
 			_Control.Params.delete (value_param_name)
 			
@@ -92,17 +104,26 @@ struct ControlValue_v
 	 */
 	function _setValueIntoRange _Control _value =
 	(
-		--format "\n"; print "ControlValue_v._setValueIntoRange()"
+		format "\n"; print "ControlValue_v._setValueIntoRange()"
+		format "_value	= % \n" _value
 		if classOf _value != point3  then
 		(
 			 _range = if( ( range_param = _Control.Params.getval #range ) != undefined ) then range_param else default_range
-			--format "_range	= % \n" _range
+			format "_range	= % \n" _range
 			_range.z = _value
 			
 			_range --return
 		)
 		else
 			_value --return 
+	),
+	
+	/** Is range control type
+	 */
+	function _isRangeControlType control_type =
+	(
+		--format "\n"; print "ControlValue_v._isRangeControlType()"
+		findItem names_of_value_param[3] control_type > 0
 	),
 	
 	/**  

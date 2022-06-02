@@ -29,23 +29,24 @@ _Controls = _Rollout.Controls group:"Test"
 /**  COMMENTED TYPES ARE NOT SUPPORTED
   */
 control_types = #(
-	--#Label,
-	--#Button,
-	--#Checkbox,
-	--#CheckButton,
-	--#Pickbutton,
-	--#Spinner,
-	--#Edittext,
-	--
-	--#Listbox,
-	--#MultiListBox,
-	--#Dropdownlist,
-	--#Combobox,
-	--#ColorPicker,
-	--#RadioButtons,
-	#Slider,
+	-- #Label,
+	-- #Button,
+	-- #Checkbox,
+	-- #CheckButton,
+	-- #Pickbutton,
+	-- #Spinner,
+	-- #Edittext,
+	-- #BrowsePath,
 
-	--#Angle,
+	-- #Listbox,
+	-- #MultiListBox,
+	-- #Dropdownlist,
+	-- #Combobox,
+	-- #ColorPicker,
+	-- #RadioButtons,
+	-- #Slider,
+
+	#Angle,
 	--#Bitmap,
 	--#hyperlink,
 	--#imgTag,
@@ -55,7 +56,6 @@ control_types = #(
 	--#Curve,	-- DOES NOT WORK YET
 	--#popupMenu,	-- DOES NOT WORK YET
 	--#Timer,
-	--#browsePath,
 	
 	/* END OF ARRAY */ 
 	#GroupBox

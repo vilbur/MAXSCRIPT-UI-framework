@@ -46,6 +46,7 @@ struct EventTypes_v
 	function _setEventTypes control_type =
 	(
 		--format "\n"; print "EventTypes_v._setEventTypes()"
+		--format "control_type	= % \n" control_type
 		control_events = case control_type of (
 			#Label:	#( )
 			#Groupbox:	#( )
@@ -56,18 +57,19 @@ struct EventTypes_v
 			#Radiobuttons:	#( #(#changed,  "val"),	#rightclick )
 			#PickButton:	#( #(#picked,   "val"),	#rightclick )
 			#CheckButton:	#( #(#changed,  "val"),	#rightclick )
+			#Angle:	#( #(#changed,  "val"),	#rightclick )
+			#Edittext:	#( #(#changed,  "val"),	#(#entered,	     "val") )
+			#BrowsePath:	#( #(#changed,  "val"),	#(#entered,       "val") )
+			#Listbox:	#( #(#selected, "val"),	#(#doubleClicked, "val"),	#(#rightClick, "val"))
 			#Slider:	#( #(#changed,  "val"),	#rightclick,	#buttondown,	#buttonup  )
 			#Spinner:	#( #(#changed,  "val inSpin"),	#(#entered, "inSpin inCancel"),	#(#buttonup, "inCancel"),	#buttondown )
-			#Edittext:	#( #(#changed,  "val"),	#(#entered, "val") )
-			#BrowsePath:	#( #(#changed,  "val"),	#(#entered, "val") )
-			#Listbox:	#( #(#selected, "val"),	#(#doubleClicked, "val"),	#(#rightClick, "val"))
 			#MultiListBox:	#( #(#selected, "val"),	#(#doubleClicked, "val"),	#rightClick,	#selectionEnd )
 			#Combobox:	#( #(#selected, "val"),	#(#doubleClicked, "val"),	#(#entered , "val"),	#(#changed , "val"),	#rightClick)
 			#Dropdownlist:	#( #(#selected, "val"),	#rightClick )
-			default:	undefined
-			--default:	#()
+			--default:	undefined
+			default:	#()
 		)
-
+		--format "control_events	= % \n" control_events
 		if( control_events != undefined ) then 
 			List.setVal (control_type) (control_events)
 		else
