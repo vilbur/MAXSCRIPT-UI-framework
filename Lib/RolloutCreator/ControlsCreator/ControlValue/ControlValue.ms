@@ -4,9 +4,7 @@ struct ControlValue_v
 (
 	/* properties */
 	Ini,
-
-	--default_range = [0,100,0],
-	--default_range = [0,360,0],
+	_Control,
 	
 	/** Each control has different property where value is stored
 	  * E.G.: EditText.text|Checkbox.checked|Spinner.range 
@@ -30,17 +28,18 @@ struct ControlValue_v
 	function setControlValue _Control rollout_id = 
 	(
 		--print "ControlCreator_v._setControlValue()"
-
+		this._Control = _Control
+		
 		/* if control type has value E.G.: #label or #groupbox HAS NOT VALUE */ 
-		if (value_param_name = this._getNameOfValueParameter( _Control.type ) ) == undefined  then 
+		if (value_param_name = this._getNameOfValueParameter() ) == undefined  then 
 			return false		
 		
 		/* Get value from ini */ 
 		if Ini.isDefined() and (ini_value = Ini.load(rollout_id)(_Control.id)) != undefined then
-			this._setValueByIni _Control value_param_name ini_value
+			this._setValueByIni value_param_name ini_value
 			
 		else
-			this._setValueByParameter (_Control)(value_param_name)
+			this._setValueByParameter(value_param_name)
 			
 		_Control.Params.delete (#value)
 	),
@@ -54,10 +53,10 @@ struct ControlValue_v
 	  * 
 	  *  @return	name of parameter
 	 */
-	function _getNameOfValueParameter control_type =
+	function _getNameOfValueParameter =
 	(
 		--print "ControlValue_v._getNameOfValueParameter()"
-		name_of_param = for param_name_array in names_of_value_param where findItem param_name_array control_type > 0 collect param_name_array[1]
+		name_of_param = for param_name_array in names_of_value_param where findItem param_name_array _Control.type > 0 collect param_name_array[1]
 
 		if( name_of_param.count > 0 ) then
 			name_of_param[1] --return
@@ -65,11 +64,11 @@ struct ControlValue_v
 
 	/** Set value by ini
 	 */
-	function _setValueByIni _Control value_param_name _value =
+	function _setValueByIni value_param_name _value =
 	(
 		--format "\n"; print "ControlValue_v._setValueByIni()"
-		if (this._isRangeControlType(_Control.type)) then
-			_value = this._setValueIntoRange (_Control) (_value)
+		if (this._isRangeControlType()) then
+			_value = this._setValueIntoRange(_value)
 			
 		_Control.Params.setVal value_param_name _value
 	),
@@ -80,7 +79,7 @@ struct ControlValue_v
  	  * E.G.: set #checked parameter and delete #value
 	  *
 	 */
-	function _setValueByParameter _Control value_param_name =
+	function _setValueByParameter value_param_name =
 	(
 		--format "\n"; print "ControlValue_v._setValueByParameter()"
 
@@ -90,8 +89,8 @@ struct ControlValue_v
 
 		if( _value != undefined ) then
 		(
-			if (this._isRangeControlType(_Control.type)) then
-				_value = this._setValueIntoRange (_Control) (_value)
+			if (this._isRangeControlType()) then
+				_value = this._setValueIntoRange(_value)
 	
 			_Control.Params.setVal (value_param_name) (_value)
 		)
@@ -101,7 +100,7 @@ struct ControlValue_v
 	  * 
 	  * @return	point3	
 	 */
-	function _setValueIntoRange _Control _value =
+	function _setValueIntoRange _value =
 	(
 		--format "\n"; print "ControlValue_v._setValueIntoRange()"
 		--format "_value	= % \n" _value
@@ -119,10 +118,10 @@ struct ControlValue_v
 	
 	/** Is range control type
 	 */
-	function _isRangeControlType control_type =
+	function _isRangeControlType =
 	(
 		--format "\n"; print "ControlValue_v._isRangeControlType()"
-		findItem names_of_value_param[3] control_type > 0
+		findItem names_of_value_param[3] _Control.type > 0
 	),
 	
 	/**  
