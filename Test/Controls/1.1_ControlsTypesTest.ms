@@ -2,7 +2,6 @@ clearListener()
 
 filein( getFilenamePath(getSourceFileName()) + "/../../Lib/RolloutCreator/RolloutCreator.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/../../Lib/Ini/Ini.ms" )
-filein( getFilenamePath(getSourceFileName()) + "/../../Lib/Dialog/IniSaver/IniSaver.ms" )
 
 try( destroyDialog Controls_test )catch()
 
@@ -36,14 +35,15 @@ control_types = #(
 	--#CheckButton,
 	--#Pickbutton,
 	--#Spinner,
-	----#Edittext,
+	--#Edittext,
 	--
-	-- #Listbox,
-	-- #MultiListBox,
+	--#Listbox,
+	--#MultiListBox,
 	--#Dropdownlist,
 	--#Combobox,
 	--#ColorPicker,
-	-- #RadioButtons,
+	--#RadioButtons,
+	#Slider,
 
 	--#Angle,
 	--#Bitmap,
@@ -52,21 +52,17 @@ control_types = #(
 	--#Mapbutton,
 	--#Materialbutton,
 	--#ProgressBar,
-	--#Slider,
 	--#Curve,	-- DOES NOT WORK YET
 	--#popupMenu,	-- DOES NOT WORK YET
 	--#Timer,
 	--#browsePath,
 	
 	/* END OF ARRAY */ 
-	 -- #GroupBox
+	#GroupBox
 
 	/* DEVELOPENT */ 
-
-	#Listbox
+	--#Listbox
 	-- #Button
-
-
 )
 
 items_of_controls = for i = 1 to 3 collect ("item "+ i as string )

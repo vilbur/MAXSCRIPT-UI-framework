@@ -5,16 +5,18 @@ struct ControlValue_v
 	/* properties */
 	Ini,
 
+	default_range = [0,100,0],
+	
 	/** Each control has different property where value is stored
 	  * E.G.: EditText.text|Checkbox.checked|Spinner.range 
 	  *	
 	  */
 	names_of_value_param = #(
-		#( #SELECTION,	#listbox,	#multilistbox,	#dropdownlist, #combobox ),
-		#( #CHECKED,	#checkbox,	#checkbutton ),
-		#( #RANGE,  	#spinner ),	
-		#( #DEFAULT,  	#RadioButtons ),	
-		#( #TEXT,  	#edittext,	#browsePath  )
+		#( #SELECTION,	#listbox,	#multilistbox,	#dropdownlist, #combobox	),
+		#( #CHECKED,	#checkbox,	#checkbutton		),
+		#( #RANGE,  	#spinner,	#slider		),	
+		#( #TEXT,  	#edittext,	#browsePath		),
+		#( #DEFAULT,  	#RadioButtons			)
 	),
 
 	/** Add value parameter
@@ -26,7 +28,7 @@ struct ControlValue_v
 	 */
 	function setControlValue _Control rollout_id = 
 	(
-		--print "ControlCreator_v._setControlValue()"
+		print "ControlCreator_v._setControlValue()"
 
 		/* if control type has value E.G.: #label or #groupbox HAS NOT VALUE */ 
 		if (value_param_name = this._getNameOfValueParameter( _Control.type ) ) == undefined  then 
@@ -34,6 +36,7 @@ struct ControlValue_v
 		
 		/* Get value from ini */ 
 		if Ini.isDefined() and (ini_value = Ini.load(rollout_id)(_Control.id)) != undefined then
+			--_Control.Params.setVal value_param_name (this._convertDatatype(_Control)(ini_value))
 			_Control.Params.setVal value_param_name ini_value
 			
 		else
@@ -58,25 +61,6 @@ struct ControlValue_v
 			name_of_param[1] --return
 	),
 
-	/** Format string value to valid datatype
-	 */
-	function _convertDatatype _Control val =
-	(
-		if classOf (val_converted = try((execute(val)))catch()) == UndefinedClass then val_converted = substituteString val "\\" "\\\\"
-
-		if( _Control.type == #spinner ) then
-		(
-			_range = _Control.Params.getval #range
-
-			_range.y = val_converted
-
-			_range --return
-
-		) else
-			val_converted --return
-	),
-
-
 	/** Set parameter of value with correct name for control type
 	  * 	then remove #value paramater
 	  *
@@ -86,18 +70,41 @@ struct ControlValue_v
 	function _setControlValueParameter _Control value_param_name =
 	(
 		--format "\n"; print "ControlValue_v._setControlValueParameter()"
+
 		if( ( _value = _Control.Params.getVal (#value) ) == undefined ) then --try get parameter #value  e.g.: params:#(#value, true)
 			_value = _Control.Params.getVal (value_param_name)	            --try get parameter by name e.g.: params:#(#checked, true)
-		
+
 		if( _value != undefined ) then
 		(
+			if( _Control.type == #spinner or _Control.type == #slider ) then
+				_value = this._setValueIntoRange (_Control) (_value)
+
 			_Control.Params.delete (#value)
 			_Control.Params.delete (value_param_name)
 			
-			_Control.Params.setVal value_param_name _value
+			_Control.Params.setVal (value_param_name) (_value)
 		)
 	),
-
+	
+	/** Format string value to valid datatype
+	  * 
+	  * @return	point3	
+	 */
+	function _setValueIntoRange _Control _value =
+	(
+		--format "\n"; print "ControlValue_v._setValueIntoRange()"
+		if classOf _value != point3  then
+		(
+			 _range = if( ( range_param = _Control.Params.getval #range ) != undefined ) then range_param else default_range
+			--format "_range	= % \n" _range
+			_range.z = _value
+			
+			_range --return
+		)
+		else
+			_value --return 
+	),
+	
 	/**  
 	 */
 	on create do

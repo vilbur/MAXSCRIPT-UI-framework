@@ -13,18 +13,19 @@ struct IniSaver_v
 	/* properties */
 	--Dialog,
 
-	save_classes = #(
-		
-		CheckBoxControl ,
-		CheckButtonControl ,
-		SpinnerControl ,
-		EditTextControl ,
-		ListBoxControl ,
-		MultiListBoxControl ,
-		RadioControl ,
-		ComboBoxControl
-
-	),
+	--save_classes = #(
+	--	
+	--	CheckBoxControl ,
+	--	CheckButtonControl ,
+	--	SpinnerControl ,
+	--	SliderControl ,
+	--	EditTextControl ,
+	--	ListBoxControl ,
+	--	MultiListBoxControl ,
+	--	RadioControl ,
+	--	ComboBoxControl
+	--
+	--),
 
 	/** Save to file
 	 */
@@ -75,7 +76,8 @@ struct IniSaver_v
 			if classOf control == SubRollout then
 				this._saveSubRollouts(control)(_RolloutClass.name)
 
-			else if findItem save_classes (classOf control) > 0 then 
+			else
+			--else if findItem save_classes (classOf control) > 0 then 
 				this._saveControl(_RolloutClass)(control)
 
 		)
@@ -100,9 +102,6 @@ struct IniSaver_v
 			if classOf control == RolloutClass then
 				this._saveRollout(control)
 
-		--	--format "( classOf control)	= % \n" ( classOf control)
-		--	--format "control	= % \n" control.Rollouts
-		--	
 		)
 
 	),
@@ -117,42 +116,51 @@ struct IniSaver_v
 		this._saveToIni (_RolloutClass.name) ("rolledUp") ( (not _RolloutClass.open) as string )
 
 		this._saveControlsAndSubrollouts(_RolloutClass)
-
 	),
 
 	/** _save control
 	 */
 	function _saveControl _RolloutClass Ctrl =
 	(
-		--format "\n"; print "IniSaver_v._saveControl()"
+		format "\n"; print "IniSaver_v._saveControl()"
+		format "ClassOf Ctrl	= % \n" (classOf Ctrl)
 		--format "Ctrl.name 	= % \n" Ctrl.name
 
 		local val
 
-		--format "classOf control	= % \n" (classOf Ctrl)
-
-		if (matches = (this.regexGetMatches( (classOf Ctrl) as string ) "Check|Box|EditText|Spinner|Radio")).count > 0 then
+		val = case classOf Ctrl of
 		(
-
-			--format "matches[1][1]	= % \n" matches[1][1]
-
-			val = case matches[1][1] as name of
-				(
-					#Check:	Ctrl.checked
-					#Spinner:	Ctrl.value
-					#EditText:	Ctrl.text
-					#Box:	Ctrl.selection
-					#Radio:	Ctrl.state
-					--#ListBox:	Ctrl.selection
-					--default:	
-				)
+			CheckBoxControl:	Ctrl.checked
+			CheckButtonControl:	Ctrl.checked
+			
+			SpinnerControl:	Ctrl.range
+			SliderControl:	Ctrl.range
+			
+			ListboxControl:	Ctrl.selection
+			ComboboxControl:	Ctrl.selection
+			MultiListBoxControl:	Ctrl.selection
+			DropdownlistControl:	Ctrl.selection
+			
+			EdittextControl:	Ctrl.text
+			PickbuttonControl:	Ctrl.object 
+			ColorPickerControl:	Ctrl.color
+			RadioButtonsControl:	Ctrl.state
+		
+			--AngleControl:	
+			--BitmapControl:	
+			--hyperlinkControl:	
+			--imgTagControl:	
+			--MapbuttonControl:	
+			--MaterialbuttonControl:	
+			--ProgressBarControl:	
+			--CurveControl:		-- DOES NOT WORK YET
+			--popupMenuControl:		-- DOES NOT WORK YET
+			--TimerControl:	
+			
 		)
-
-		--format "val	= % \n" val
-
+		format "val	= % \n" val
 		if( val != undefined ) then 
 			this._saveToIni (_RolloutClass.name) Ctrl.name (val as string )
-
 	),
 
 	/**  
@@ -172,10 +180,10 @@ struct IniSaver_v
 	 */
 	function _saveToIni section key val =
 	(
-		--format "\n"; print "IniSaver_v._saveToIni()"
-		--format "section	= % \n" section
-		--format "key	= % \n" key
-		--format "val	= % \n" val
+		format "\n"; print "IniSaver_v._saveToIni()"
+		format "section	= % \n" section
+		format "key	= % \n" key
+		format "val	= % \n" val
 		if( val != undefined ) then 
 			setINISetting ini_file section key ( val as string )
 	),
