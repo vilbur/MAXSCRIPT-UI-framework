@@ -43,9 +43,9 @@ struct ControlCreator_v
 
 		for _Control in _Controls.list do
 		(
-			ControlValue.setControlValue  (_Control) (_Rollout.id)
-			
 			ParamsCreator.mergeParams(_Control)
+			format "_Control.Params	= % \n" _Control.Params
+			ControlValue.setControlValue (_Control) (_Rollout.id)
 
 			TooltipCreator.addTooltips(_Control)
 

@@ -142,7 +142,7 @@
 	  *
 	  * UNIQUE rules:
 	  *
-	  *		1) unique 	== true	>>> Keep unique, values are not overrided
+	  *		1) unique 	== true	>>> Keep unique, values are not overriden
 	  *		2) unique 	== false	>>> Add all values, simply merge Lists
 	  *		3) unique	== unsupplied	>>> Keep unique, BUT OVERRIDE first List by List_to_merge
 	  *
@@ -157,7 +157,7 @@
 			for i = 1 to List_to_merge.keys.count do
 				this.setVal (List_to_merge.keys[i]) (List_to_merge.values[i]) unique:unique
 		
-		else
+		--else
 			--print "ListBody.ms.merge(List_to_merge==undefined)"
 		
 		this --return 

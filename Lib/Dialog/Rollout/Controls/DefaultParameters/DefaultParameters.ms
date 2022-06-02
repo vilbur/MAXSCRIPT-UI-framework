@@ -65,7 +65,8 @@ struct DefaultParameters_v
 	 */
 	function getParametersForControlType control_type =
 	(
-		--format "\n"; print "DefaultParameters_v.getParametersForControlType()"		
+		--format "\n"; print "DefaultParameters_v.getParametersForControlType()"
+		--format "this.getVal(control_type as name )	= % \n" (this.getVal(control_type as name ))
 		this.getVal(control_type as name )
 	),
 	
@@ -115,15 +116,15 @@ struct DefaultParameters_v
 		--format "ParamsList	= % \n" ParamsList
 		keys_values = case control_type of
 		(
-			#Button:	#( #across, 4,	#width, 96 )
-			#List:	#( #across, 1 )
-			#Checkbox:	#( #across, 1 )
-			#Edittext:	#( #across, 1 )
-			--#Radiobuttons:	#( #offset, [128,0] )
-			#Radiobuttons:	#( #across, 1)
-			#Angle:	#( #dir, #cw)
-			--#Radiobuttons:	#( #offsets, #([0,0], [0,0])  )
-			#Global:	#( #across, 4 )
+			#Button:	#( #across,4,	#width,96 )
+			#List:	#( #across,1 )
+			#Checkbox:	#( #across,1 )
+			#Edittext:	#( #across,1 )
+			#Radiobuttons:	#( #across,1)
+			#Slider:	#( #range,[0,100,0])
+			#Spinner:	#( #range,[0,100,0])
+			#Angle:	#( #range,[0,360,0],	#dir,#cw,	#StartDegrees,-90 )
+			#Global:	#( #across,4 )
 			--default:	#( ) -- #global
 		)
 		
