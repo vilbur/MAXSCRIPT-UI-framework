@@ -24,21 +24,28 @@ struct ControlParamsCreator_v
 	 */
 	function mergeParams &_Control =
 	(
-		--format "\n"; print "ContolParamsCreator_v.mergeParams()"
-		--format "_Control.Params	= % \n" _Control.Params
-		ParamsListMerged 	= List_v()
-		
-		/* CONTROLS PARMAS */ 
-		ParamsListMerged.merge (_Control.Params)
+		----format "\n"; print "ContolParamsCreator_v.mergeParams()"
+		----format "_Control.Params	= % \n" _Control.Params
+		----ParamsListMerged 	= List_v()
+		----
+		----/* CONTROLS PARMAS */ 
+		----ParamsListMerged.merge (_Control.Params)
+		----
+		----/* DEFAULTS PARMAS */ 
+		----for control_type_key in DefaultParameters.getKeysForControlType(_Control.type) do
+		----	ParamsListMerged.merge ( DefaultParameters.getParametersForControlType(control_type_key) )
+		----
+		----/* MERGE Defaults.keys.#global */ 
+		----ParamsListMerged.merge ( DefaultParameters.getVal(#global) )
+		--
+		----_Control.params = ParamsListMerged
 		
 		/* DEFAULTS PARMAS */ 
 		for control_type_key in DefaultParameters.getKeysForControlType(_Control.type) do
-			ParamsListMerged.merge ( DefaultParameters.getParametersForControlType(control_type_key) )
-
-		/* MERGE Defaults.keys.#global */ 
-		ParamsListMerged.merge ( DefaultParameters.getVal(#global) )
+			_Control.Params.merge ( DefaultParameters.getParametersForControlType(control_type_key) )
 		
-		_Control.params = ParamsListMerged
+		/* MERGE Defaults.keys.#global */ 
+		_Control.Params.merge ( DefaultParameters.getVal(#global) )
 		
 		_Control --return
 	),
