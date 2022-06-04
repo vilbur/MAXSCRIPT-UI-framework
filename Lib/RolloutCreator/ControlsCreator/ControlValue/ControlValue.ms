@@ -7,15 +7,19 @@ struct ControlValue_v
 	_Control,
 	
 	/** Each control has different property where value is stored
-	  * E.G.: EditText.text|Checkbox.checked|Spinner.range 
 	  *	
+	  * E.G.: EditText.text|Checkbox.checked|Spinner.range 
+	  *
+	  * Used for pass value: parameter on Control creation as well
 	  */
 	names_of_value_param = #(
 		#( #SELECTION,	#Listbox,	#Multilistbox,	#Dropdownlist, #Combobox	),
 		#( #CHECKED,	#Checkbox,	#Checkbutton		),
 		#( #RANGE,  	#Spinner,	#Slider,	#Angle	),	
 		#( #TEXT,  	#Edittext,	#BrowsePath		),
-		#( #DEFAULT,  	#RadioButtons			)
+		#( #DEFAULT,  	#RadioButtons			),
+		#( #MATERIAL,  	#Materialbutton			),
+		#( #ADDRESS,  	#hyperlink			)
 	),
 
 	/** Add value parameter
@@ -35,7 +39,8 @@ struct ControlValue_v
 			return false		
 		
 		/* Get value from ini */ 
-		if Ini.isDefined() and (ini_value = Ini.load(rollout_id)(_Control.id)) != undefined then
+		--if Ini.isDefined() and (ini_value = Ini.load(rollout_id)(_Control.id)) != undefined then
+		if (ini_value = this._getIniValue (rollout_id)) != undefined then
 			this._setValueByIni value_param_name ini_value
 			
 		else
@@ -62,6 +67,16 @@ struct ControlValue_v
 			name_of_param[1] --return
 	),
 
+	
+	/** Get value from ini file
+	 */
+	function _getIniValue rollout_id =
+	(
+		--format "\n"; print "ControlValue_v._getIniValue()"
+		if Ini.isDefined() and (ini_value = Ini.load(rollout_id)(_Control.id)) != undefined then
+			ini_value --return
+	),
+	
 	/** Set value by ini
 	 */
 	function _setValueByIni value_param_name _value =

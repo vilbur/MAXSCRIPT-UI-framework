@@ -85,9 +85,9 @@ struct Dialog_v
 		
 		_RolloutCreator.SubolloutsCreator.addSubRollouts (RolloutMain)
 		
-		--this._setPositionOrDockByIni()
+		this._setPositionOrDockByIni()
 		
-		--AutoRunEvents.executeMacros()
+		AutoRunEvents.executeMacros()
 	),
     
 	/** Register dialog bar
