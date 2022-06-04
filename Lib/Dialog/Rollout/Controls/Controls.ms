@@ -28,7 +28,7 @@ struct Controls_v
 	  *
 	  * @return Object _Control	"./Control/Control.ms"
 	 */
-	function Control type caption id:undefined params:#() items: value: locals:#() add_to_controls:true =
+	function Control type caption id:undefined params:#() items: value: across: locals:#() add_to_controls:true =
 	(
 		--format "\n"; print "Controls_v.Control()"
 		_Control = Control_v type:type caption:caption id:id add_locals:locals
@@ -38,6 +38,9 @@ struct Controls_v
 
 		if( value != unsupplied ) then 
 			_Control.Param (#value) (value)
+		
+		if( across != unsupplied ) then 
+			_Control.Param (#across) (across)
 		
 		
 		this._setParamsToControl(_Control)(params)

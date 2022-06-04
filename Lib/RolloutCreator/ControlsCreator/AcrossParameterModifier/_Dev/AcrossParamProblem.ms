@@ -21,7 +21,7 @@ rollout across_problem "across_problem"
 	button button_2 "b2"
 	button button_3 "b3"
 	button button_4 "b4"
-	button button_5 "b5"
+	button button_5 "b5" across:4 -- this across destroy across:1 of list_1
 	button button_6 "b6"
 	
 	listbox list_1 "list_1" across:1 --pos:[0,64]

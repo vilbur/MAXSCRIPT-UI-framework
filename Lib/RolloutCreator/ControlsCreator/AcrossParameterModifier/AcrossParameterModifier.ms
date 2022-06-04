@@ -13,30 +13,28 @@ struct AcrossParameterModifier_v
 	fake_control_caption = "",
 	--fake_control_caption = "FAKE", -- DEV
 	
-	/** 
+	/** Fill end of row with fake controls to keep layout
 	 */
 	function addFakeControls &_Controls =
 	(
-		--format "\n"; print ("AcrossParameterModifier_v._acrossParameterModify()" )
-		--format "_Controls	= % \n" _Controls.List.count
-		
-		--for __control__ in _Controls.List do 
-			--format "__control__	= % \n" __control__
-		--return false -- DEBUG
-		--format "_Controls.list.count	= % \n" _Controls.list.count
-
+		--format "\n"; print ("AcrossParameterModifier_v.addFakeControls()" )
 		_Controls_list_copy	= #()
+
+		local across_last
+
 		--format " _Controls.list = % \n"  _Controls.list
 	
 		for control_count = 1 to _Controls.list.count do
 		(
 			_Control =  _Controls.list[control_count]
-			--format "_Control.id	= % \n" _Control.id
 
-			if( (control_is_not_in_group_box = _Control.Params.getVal #GroupBox) == undefined ) then
-			(
+			--if( (control_is_not_in_group_box = _Control.Params.getVal #GroupBox) == undefined ) then
+			--(
 				across_current	=  _Control.Params.getVal #across
-				--format "across_current	= % \n" across_current
+				
+				if( across_current == undefined and across_last != undefined  ) then -- get across of previous control, so only first control in row must have across parameter defined
+					across_current = across_last
+				
 				if( new_row_start = (_across_left == 0) ) then 
 					_across_left = across_current
 	
@@ -46,7 +44,6 @@ struct AcrossParameterModifier_v
 				if( _controls_in_row == undefined ) then
 					_controls_in_row = across_current
 	
-				--format "_controls_in_row	= % \n" _controls_in_row
 	
 				if( across_has_changed = (across_current != _controls_in_row) ) then
 				(
@@ -61,9 +58,11 @@ struct AcrossParameterModifier_v
 	
 				if( _across_left != undefined ) then
 					_across_left -= 1
-					--format "_across_left	= % \n" _across_left
 				
-			)
+			--)
+			
+			across_last = across_current
+			
 			/* ADD CONTROL TO NEW LIST */ 
 			append _Controls_list_copy _Control
 		)
