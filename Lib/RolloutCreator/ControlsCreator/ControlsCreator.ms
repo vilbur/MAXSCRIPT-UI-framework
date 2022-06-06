@@ -57,7 +57,7 @@ struct ControlCreator_v
 		)
 
 		/* modify ACROSS PARAMETER */ 
-		AcrossModifier.addFakeControls(this._Controls)
+		AcrossModifier.createRows(this._Controls)
 		
 		/* add LOCAL VARIABLES */ 
 		this._addLocalVariablesToRollout()
@@ -136,13 +136,15 @@ struct ControlCreator_v
 	 */
 	function _addControlToRollout _Control =
 	(
-		if not matchPattern _Control.id pattern:"LABEL_fake*" then -- DEBUG - don`t print
-			format "\n%.%" ( _Rollout.id as string ) _Control.id
-		
-		--_Control.Params.delete (#value)
-		
 		params = ParamsCreator.join(_Control.params)
-		format " params	= % \n" params
+
+		/* DEBUG LOG */ 
+		if not matchPattern _Control.id pattern:"LABEL_fake*" then -- DEBUG - don`t print
+		(
+			format "\n%.%" ( _Rollout.id as string ) _Control.id
+			
+			format " params	= % \n" params
+		)
 		
 		_Rollout._RolloutCreator.addControl (_Control.type) (_Control.id) (this._getCaption(_Control.caption)) paramStr:params filter:true;
 	),

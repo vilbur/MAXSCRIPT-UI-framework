@@ -6,7 +6,7 @@ filein( getFilenamePath(getSourceFileName()) + "/../../../../ContentLoader/Conte
 
 /** Load content from file tree
  */
-function loadContentTest dir_name =
+function loadContentTest =
 (
 	current_dir	= getFilenamePath(getSourceFileName())
 
@@ -31,7 +31,7 @@ function loadContentTest dir_name =
 /*---------------------------------------
 	RUN TESTR
 -----------------------------------------*/
- Dialog = loadContentTest("Dialog-level")
+ Dialog = loadContentTest()
 -- Dialog = loadContentTest("Nested-Rollouts")
 
 

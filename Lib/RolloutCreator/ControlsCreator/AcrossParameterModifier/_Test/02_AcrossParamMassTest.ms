@@ -36,11 +36,11 @@ function Cratemultilistbox prefix =
 /** Controls without fakes
  *  make upside down pyramid of controls 
  */
-function eachRowDifferenCountOfControls count prefix:"" =
+function eachRowDifferenCountOfControls count prefix:"" across:4 =
 (
 	_Controls.Default #border true 
 
-	across = 4
+	--across = 4
 
 	for i = 1 to count do 
 	(
@@ -49,8 +49,8 @@ function eachRowDifferenCountOfControls count prefix:"" =
 		if( i > 9  ) then across = 1
 		
 		_Controls.Default #width 96 type:#button
-		--_Controls.Default #width 96 type:#label
-		_Button1    = _Controls.control #button ( prefix + i as string +" of  "+ count as string) params:#(#across, across)
+		--_Button1    = _Controls.control #button ( prefix + i as string +" of  "+ count as string) params:#(#across, across)
+		_Button1    = _Controls.control #button ( prefix + i as string) params:#(#across, across)
 	)
 )
 
@@ -70,9 +70,9 @@ function testFakeControlsOnEndOfGroup _Controls count across =
 --------------------------------------------------------------------------------*/
 /** CreateOnlyButtons
  */
-function createOnlyButtons count prefix:"" =
+function createOnlyButtons count prefix:"" across:4 =
 (
-	eachRowDifferenCountOfControls count prefix:prefix
+	eachRowDifferenCountOfControls count prefix:prefix across:across
 )
 
 
@@ -117,13 +117,17 @@ function createsubrolloutsControls =
 	RUN TESTS 
 --------------------------------------------------------------------------------*/
 
---createOnlyButtons(1) prefix:"x"
+createOnlyButtons(5) prefix:"A"
+createOnlyButtons(3) prefix:"B" across:2
+createOnlyButtons(5) prefix:"C " across:3
 createOnlyButtons(10)
 
---myltipleListboxes(1)
 myltipleListboxes(1)
--- createControlsGoups(4)
-createControlsGoups(3)
+--myltipleListboxes(1)
+--
+ createControlsGoups(1)
+--createControlsGoups(3)
+ --createControlsGoups(4)
 
 -- createsubrolloutsControls()
 

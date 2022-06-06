@@ -8,14 +8,131 @@
  */
 struct AcrossParameterModifier_v
 (
-	_controls_in_row,
-	_across_left,
-	fake_control_caption = "",
-	--fake_control_caption = "FAKE", -- DEV
+	Controls_in_row,
+	across_left,
+
+	--fake_control_caption = "",
+	fake_control_caption = "FAKE", -- DEV
 	
 	/** Fill end of row with fake controls to keep layout
 	 */
-	function addFakeControls &_Controls =
+	function createRows &_Controls =
+	(
+		format "\n"; print ("AcrossParameterModifier_v.addFakeControls()" )
+		
+		Controls_in_row = _Controls.list
+		
+		_Controls.list	= #()
+		local across_last
+
+		/** get count of controlsin row
+		 */
+		function getCountOfControlsinRow across_current =
+		(
+			format "\n"; print "AcrossParameterModifier_v.getCountOfControlsinRow()"
+			if( controls_in_row == undefined ) then
+				controls_in_row = across_current
+			
+			controls_in_row --return
+		)
+
+		/** _add fake controls
+		*/
+	   function _addFakeControls _Controls fake_count fake_control_caption:fake_control_caption across: =
+	   (
+			print "AcrossParameterModifier_v._addFakeControls()"
+			for i = 1 to fake_count do
+				this._createFakeControl (_Controls) (fake_control_caption) across
+	   )
+	   
+		--NEW_ROW_START = true
+		across_left = 0
+		position_in_row = 0
+		
+		for i = 1 to Controls_in_row.count do
+		(
+			_Control = Controls_in_row[i]
+			format "\n"
+			format "_Control.id      = % \n" _Control.id
+			across_current	=  if( (across_param = _Control.Params.getVal #across) != undefined ) then across_param else across_last
+			
+			 
+			ACROSS_CHANGED = across_last != undefined and (across_current != across_last)
+			
+				
+			--if( ACROSS_CHANGED = (across_current != across_last) ) then
+			--if ACROSS_CHANGED and i > 1  then
+
+			format "ACROSS_CHANGED	= % \n" ACROSS_CHANGED
+			format "position_in_row	= % \n" position_in_row
+			
+			
+			--if ACROSS_CHANGED and across_last != undefined and across_last != position_in_row then
+			if ACROSS_CHANGED then
+			(
+				print "_ADDFAKECONTROLS"
+				format "across_current = % \n" across_current
+				format "across_last	= % \n" across_last
+				format "position_in_row	= % \n" position_in_row
+				--_addFakeControls _Controls(across_last)r
+				across_left = across_last - position_in_row 
+				--across_left = position_in_row - across_last 
+				--across_left = if(across_last > position_in_row ) then across_last - position_in_row  else position_in_row - across_last 
+				format "across_left	= % \n" across_left
+				_addFakeControls _Controls(across_left ) across:across_last fake_control_caption:("Row End left: "+across_left as string )
+			)
+				----_addFakeControls _Controls(across_left)
+			
+			
+
+			position_in_row = if ACROSS_CHANGED or position_in_row >= across_current then 1 else position_in_row+1
+
+			
+			
+			
+			--_Control.caption +=  " " + position_in_row as string
+			--_Control.caption +=  " " + position_in_row as string
+			--_Control.caption += " - " + position_in_row as string + "  of " + across_current as string
+			_Control.caption = position_in_row as string + "  of " + across_current as string + " " + ACROSS_CHANGED as string + " " + _Control.caption
+			--count_in_row	=  if( count_in_row	== undefined )	then across_current else count_in_row
+			
+			
+
+
+			--format "count_in_row     = % \n" count_in_row
+			--format "across_left      = % \n" across_left
+			--format "NEW_ROW_START    = % \n" NEW_ROW_START
+			--format "ACROSS_CHANGED   = % \n" ACROSS_CHANGED
+
+
+
+			
+			
+
+					
+			across_last = across_current
+
+			append _Controls.list _Control
+		)
+		
+		--format "ACROSS_LEFT	= % \n" across_left
+		/* ADD FAKE CONTROLS TO END OF GROUPBOX TO FILL ROW
+		
+				LOOP
+		*/
+		--if( END_OF_GROUP = across_left != undefined ) then
+			--_addFakeControls _Controls(across_left) fake_control_caption:("Group End left: "+across_left as string )
+			--_addFakeControls _Controls(across_left)
+
+		across_left	= undefined -- allow set for new group
+		count_in_row	= undefined -- allow set for new group
+		
+		_Controls --return 
+	),
+	
+	/** Fill end of row with fake controls to keep layout
+	 */
+	function addFakeControlsBAK &_Controls =
 	(
 		--format "\n"; print ("AcrossParameterModifier_v.addFakeControls()" )
 		_Controls_list_copy	= #()
@@ -27,39 +144,68 @@ struct AcrossParameterModifier_v
 		for control_count = 1 to _Controls.list.count do
 		(
 			_Control =  _Controls.list[control_count]
+			format "\n_Control.id	= % \n" _Control.id
 
 			--if( (control_is_not_in_group_box = _Control.Params.getVal #GroupBox) == undefined ) then
 			--(
+			
 				across_current	=  _Control.Params.getVal #across
+				format "across_current	= % \n" across_current
 				
-				if( across_current == undefined and across_last != undefined  ) then -- get across of previous control, so only first control in row must have across parameter defined
+				--if( across_current == "row" ) then -- get across of previous control, so only first control in row must have across parameter defined
+				--(
+				--	across_current = undefined
+				--	_Control.Params.delete #across
+				--	
+				--)
+				
+				--if( across_current == undefined and across_last != undefined  ) then -- get across of previous control, so only first control in row must have across parameter defined
+				if( across_current == undefined ) then -- get across of previous control, so only first control in row must have across parameter defined
 					across_current = across_last
 				
-				if( new_row_start = (_across_left == 0) ) then 
-					_across_left = across_current
+				
+				/*
+					
+				  
+				*/
+				
+				
+				
+				
+				
+				if( NEW_ROW_START = (across_left == 0) ) then 
+					across_left = across_current
+					
+					
 	
-				if( _across_left == undefined ) then
-					_across_left = across_current
-	
-				if( _controls_in_row == undefined ) then
-					_controls_in_row = across_current
+				if( across_left == undefined ) then
+					across_left = across_current
+					
 	
 	
-				if( across_has_changed = (across_current != _controls_in_row) ) then
+				if( count_in_row == undefined ) then
+					count_in_row = across_current
+	
+	
+	
+				if( ACROSS_HAS_CHANGED = (across_current != count_in_row) ) then
 				(
-					if( new_row_start == false ) then
-						this._addFakeControls (_Controls) (_Controls_list_copy) (_across_left) --fake_control_caption:("next: "+_across_left as string )
+					if( NEW_ROW_START == false ) then
+						this._addFakeControls (_Controls) (_Controls_list_copy) (across_left) --fake_control_caption:("next: "+across_left as string )
 	
-					_controls_in_row = _across_left = across_current
+					count_in_row = across_left = across_current
 	
 				)
-				else if ( control_is_not_first = (_across_left != across_current)  ) then 
+				else if ( CONTROL_IS_NOT_FIRST = (across_left != across_current)  ) then 
 					 _Control.Params.delete #across
 	
-				if( _across_left != undefined ) then
-					_across_left -= 1
+	
+	
+				if( across_left != undefined ) then
+					across_left -= 1
 				
 			--)
+			
 			
 			across_last = across_current
 			
@@ -67,53 +213,37 @@ struct AcrossParameterModifier_v
 			append _Controls_list_copy _Control
 		)
 		--format "_Controls_list_copy.count	= % \n" _Controls_list_copy.count
-		/* ADD FAKE CONTROLS TO END OF GROUP TO FILL ROW
+		/* ADD FAKE CONTROLS TO END OF GROUPBOX TO FILL ROW
 		
 				LOOP
 		*/
-		if( end_of_group = _across_left != undefined ) then
-			this._addFakeControls  (_Controls) (_Controls_list_copy) (_across_left) --fake_control_caption:("group end" )
+		if( END_OF_GROUP = across_left != undefined ) then
+			this._addFakeControls  (_Controls) (_Controls_list_copy) (across_left) --fake_control_caption:("group end" )
 
-		_across_left	= undefined -- allow set for new group
-		_controls_in_row	= undefined -- allow set for new group
+		across_left	= undefined -- allow set for new group
+		count_in_row	= undefined -- allow set for new group
 		_Controls.list = _Controls_list_copy
 
 		_Controls --return 
 	),
 
-	/** Starts new rollout
-	 */
-	function fakeControlsOnEndofGroup _RolloutCreator fake_control_caption:"" =
-	(
-		--print "AcrossParameterModifier_v.fakeControlsOnEndofGroup()"
-		if( _across_left != undefined ) then
-			for i = 1 to _across_left do
-				--_RolloutCreator.addControl "label" ("label"+ (random 1 999999999 ) as string ) fake_control_caption
-				_RolloutCreator.addControl "Fake" (this._generateId()) fake_control_caption
-
-		_across_left = 0
-	),
 
 	private
 
-	/** _add fake controls
-	 */
-	function _addFakeControls _Controls &_Controls_list_copy fake_count fake_control_caption:fake_control_caption=
-	(
-		--print "AcrossParameterModifier_v._addFakeControls()"
-		--format "fake_count	= % \n" fake_count
-		for i = 1 to fake_count do
-			append _Controls_list_copy (this._createFakeControl (_Controls) (fake_control_caption))
-	),
 
 	/** _create fake control
 	 */
-	function _createFakeControl _Controls fake_control_caption =
+	function _createFakeControl _Controls fake_control_caption across =
 	(
-		--print "AcrossParameterModifier_v._createFakeControl()"
+		print "AcrossParameterModifier_v._createFakeControl()"
+		format "across	= % \n" across
+		--_Control = _Controls.control #label fake_control_caption id:(this._generateId()) --add_to_controls:false --return
 		_Control = _Controls.control #label fake_control_caption id:(this._generateId()) --add_to_controls:false --return
-		--format "FakeControl	= % \n" _Control.id	
 		
+		--_Control.Params.setVal #across across
+
+		--format "FakeControl	= % \n" _Control.id	
+		--format "this._generateId()	= % \n" (this._generateId())
 		_Control --return
 	),
 	
