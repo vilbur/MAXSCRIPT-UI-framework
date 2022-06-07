@@ -26,21 +26,22 @@ struct GroupBoxCreator_v
 	/** Add grouboxes for rollout
 	  *
 	  * @param	#name	rollout_id_full
-	  * @param	#( #("groupbox_ids"), #(#control_ids )	groupboxes
+	  * @param	#( #("groupbox_ids"), #(#control_ids )	GroupBoxes
 	  *
 	 */
 	function addGrouboxes rollout_id_full GroupBoxes =
 	(
-		--format "\n>>>>>>>>>>>><<<<<<<<<<<<\n\n"; print "GroupBoxCreator_v.addGrouboxesForRollout()"
-		--format "rollout_id_full	= % \n" rollout_id_full
-		--format "GroupBoxes.keys	= % \n" GroupBoxes.keys
-		--format "GroupBoxes.values	= % \n" GroupBoxes.values
+		format "\n>>>>>>>>>>>><<<<<<<<<<<<\n\n"; print "GroupBoxCreator_v.addGrouboxesForRollout()"
+		format "rollout_id_full	= % \n" rollout_id_full
+		format "GroupBoxes.ids	= % \n" GroupBoxes.ids
+		format "GroupBoxes.controls	= % \n" GroupBoxes.controls
 		--format "GroupBoxes.values.count > 0	= % \n" (GroupBoxes.values.count > 0)
-		if GroupBoxes.values.count == 0 then 
+		if GroupBoxes.controls.count == 0 then 
 			return false
 		
-		if( GroupBoxes.values.count > 0 and ( GroupBoxes_exists = this.getVal (rollout_id_full) ) != undefined ) then 
-			GroupBoxes.values = GroupBoxes_exists.values + GroupBoxes.values
+		--if( GroupBoxes.controls.count > 0 and ( GroupBoxes_exists = this.getVal (rollout_id_full) ) != undefined ) then 
+		--if( (  GroupBoxes_exists = this.getVal (rollout_id_full) )!= undefined ) then 
+			--GroupBoxes.controls = GroupBoxes_exists.controls + GroupBoxes.controls
 		
 		this.setVal (rollout_id_full) (GroupBoxes)
 	),
@@ -52,7 +53,7 @@ struct GroupBoxCreator_v
 	 */
 	function sortControlsToGroupBoxes rollout_id_full =
 	(
-		--format "\n\n\n******************\n\n\n"; print ("GroupBoxCreator_v.sortControlsToGroupBoxes()" + rollout_id_full as string )
+		format "\n\n\n******************\n\n\n"; print ("GroupBoxCreator_v.sortControlsToGroupBoxes()" + rollout_id_full as string )
 		--format "rollout_id_full	= % \n" rollout_id_full
 		--format "this.rollouts	= % \n" this.rollouts
 		GroupBoxes = this.getVal (rollout_id_full)

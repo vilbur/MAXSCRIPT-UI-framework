@@ -116,15 +116,16 @@ struct DefaultParameters_v
 		--format "ParamsList	= % \n" ParamsList
 		keys_values = case control_type of
 		(
-			#Button:	#( #across,4,	#width,96 )
+			#Global:	#( #across,4 )
+			#Groupbox:	#( #height,128 )
+			--#Button:	#( #across,4,	#width,96 )
+			--#Checkbox:	#( #across,4 )
 			#List:	#( #across,1 )
-			#Checkbox:	#( #across,1 )
 			#Edittext:	#( #across,1 )
 			#Radiobuttons:	#( #across,1)
 			#Slider:	#( #range,[0,100,0])
 			#Spinner:	#( #range,[0,100,0])
 			#Angle:	#( #range,[0,360,0],	#dir,#cw,	#StartDegrees,-90 )
-			#Global:	#( #across,4 )
 			--default:	#( ) -- #global
 		)
 		

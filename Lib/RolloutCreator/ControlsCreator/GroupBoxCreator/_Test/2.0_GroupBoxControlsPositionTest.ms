@@ -16,7 +16,7 @@ function createGroupBox count prefix:"" control_type:#button =
 
 	groupbox_id = ("groupbox_" + prefix) as name 
 	_Controls.control #GroupBox ("LEFT HALF " + prefix ) id:groupbox_id params:#(#across, 2)
-	_Controls.control #listbox ("RIGHT HALF " + prefix ) params:#(#across, 2)
+	--_Controls.control #listbox ("RIGHT HALF " + prefix ) params:#(#across, 2)
 	
 	
 	_Controls.Default #across 2 type:#dropdownlist
@@ -25,7 +25,8 @@ function createGroupBox count prefix:"" control_type:#button =
 	(
 	
 	
-		_Control    = _Controls.control control_type ( prefix + i as string ) params:#(#groupbox, groupbox_id)
+		_Control    = _Controls.control #button ( prefix + i as string ) params:#(#groupbox, groupbox_id)
+		--_Control    = _Controls.control control_type ( prefix + i as string ) params:#(#groupbox, groupbox_id)
 	
 	)
 	--_Controls.control #dropdownlist ("FULL WIDTH " + prefix) params:#(#across, 3)
@@ -47,7 +48,7 @@ function createGroupBox count prefix:"" control_type:#button =
 --createGroupBox()
 --createGroupBox prefix:"Groupbox A"
 
-for i = 1 to 5 do
+for i = 1 to 1 do
 	createGroupBox i prefix:("DDTest" + i as string ) control_type:#dropdownlist
 	--createGroupBox i prefix:("DDTest" + i as string ) control_type:#button
 	

@@ -2,7 +2,7 @@
 macroscript macro_test_across_1
 category:	"_macrotest"
 buttontext:	"Control 1"
-icon:	"across:4"
+--icon:	"across:3"
 (
 
 )
