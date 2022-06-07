@@ -60,7 +60,7 @@ function eachRowDifferenCountOfControls count prefix:"" across:4 =
 function testFakeControlsOnEndOfGroup _Controls count across =
 (
 	for i = 1 to count do
-		_Control    = _Controls.control #button ( i as string + " of "+ count as string +" across "+ across as string ) params:#(#across, across)
+		_Controls.control #button ( i as string + " of "+ count as string +" across:"+ across as string ) params:#(#across, across)
 )
 
 
@@ -97,6 +97,17 @@ function createControlsGoups _groups =
 		testFakeControlsOnEndOfGroup(_Rollout.Controls group:("Group of "+(i+1) as string )  ) (i+2) (i+1)
 )
 
+/** Create controls goups
+ */
+function createControlsGoupsWithAcross _groups =
+(
+	--for i = 1 to _groups do
+		--testFakeControlsOnEndOfGroup(_Rollout.Controls group:("Across Group of "+(i+1) as string )  ) (i+2) (i+1)
+		
+		Groupbox = _Rollout.Controls group:"Across"
+		
+		Groupbox.control #button "groupbox test"params:#(#across, 2)
+)
 /** Createsubrollouts
  */
 function createsubrolloutsControls =
@@ -117,19 +128,21 @@ function createsubrolloutsControls =
 	RUN TESTS 
 --------------------------------------------------------------------------------*/
 
-createOnlyButtons(5) prefix:"A"
-createOnlyButtons(3) prefix:"B" across:2
-createOnlyButtons(5) prefix:"C " across:3
-createOnlyButtons(10)
+--createOnlyButtons(5) prefix:"A"
+--createOnlyButtons(3) prefix:"B" across:2
+--createOnlyButtons(5) prefix:"C " across:3
+--createOnlyButtons(10)
 
-myltipleListboxes(1)
 --myltipleListboxes(1)
---
- createControlsGoups(1)
---createControlsGoups(3)
- --createControlsGoups(4)
+--myltipleListboxes(1)
 
--- createsubrolloutsControls()
+
+groups_count = 3
+ --createControlsGoups(groups_count)
+
+createControlsGoupsWithAcross(1)
+ 
+ --createsubrolloutsControls()
 
 /** Create dialog from _Rollout
   */

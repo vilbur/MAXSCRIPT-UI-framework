@@ -1,4 +1,4 @@
-global GROUPBOX_DEFAULT_HEIGHT = 99
+global GROUPBOX_DEFAULT_HEIGHT = 24
 
 /** GroupBoxes_v
  */
@@ -10,6 +10,10 @@ struct GroupBoxes_v
 		this.values	= #()
 	*/
 	include "Library/MAXSCRIPT-UI-framework/Lib/List/ListBody.ms"
+
+	ids	= keys,
+	controls	= values,
+
 		
 	/** Get controlcount in groupbox
 	 */
@@ -37,9 +41,9 @@ struct GroupBoxes_v
 		)
 	),
 	
-	/** Try add control
+	/** Try add control to Groupbox
 	 */
-	function tryAddControl _Controls _Control =
+	function tryAddControlToGroupbox _Controls _Control =
 	(
 		--format "\n"; print ("GroupBoxes_v.tryAddControl() " + _Control.caption)
 		--format "_CONTROL	= % \n" _Control

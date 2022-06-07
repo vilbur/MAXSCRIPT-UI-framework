@@ -78,9 +78,9 @@ struct ControlCreator_v
 			MOVE THIS METHOD TO GroupboxCreator and REFRACT IT
 
 	 */
-	function createControlsInGroupboxLast &_Rollout_ =
+	function sendControlsIngrouboxToEndOfQueue &_Rollout_ =
 	(
-		--format "\n"; print ("ControlCreator_v._createControlsInGroupboxLast() "+_Rollout_.id as string) 
+		--format "\n"; print ("ControlCreator_v.sendControlsIngrouboxToEndOfQueue() "+_Rollout_.id as string) 
 		fn diffArray a b =
 		(
 			retArray = #()

@@ -52,7 +52,7 @@ struct RolloutCreator_v
 		/* EDIT start */ 
 		_Rollout.rolloutCreatorBegin(this.width)
 
-		ControlsCreator.createControlsInGroupboxLast(_Rollout)
+		ControlsCreator.sendControlsIngrouboxToEndOfQueue(_Rollout)
 
 		/* add LOCAL VARIABLES */ 
 		this._addLocalVariablesToRollout (_Rollout)
@@ -137,7 +137,7 @@ struct RolloutCreator_v
 			(
 				/**  DISABLE ADDING SUBROLLOUTS SLOT INTO ACROSS LAYOUT
 				  */
-				ControlsCreator.AcrossModifier.fakeControlsOnEndofGroup(_Rollout._RolloutCreator) --fake_control_caption:"SUBROLLOUTS"
+				--ControlsCreator.AcrossModifier.fakeControlsOnEndofGroup(_Rollout._RolloutCreator) --fake_control_caption:"SUBROLLOUTS"
 
 				SubolloutsCreator.addSubrolloutSlots(ControlsBox_or_Subrollouts)
 			)
