@@ -52,7 +52,7 @@ struct RolloutCreator_v
 		/* EDIT start */ 
 		_Rollout.rolloutCreatorBegin(this.width)
 
-		ControlsCreator.sendControlsIngrouboxToEndOfQueue(_Rollout)
+		ControlsCreator.crateControslInGroupboxAsLast(_Rollout)
 
 		/* add LOCAL VARIABLES */ 
 		this._addLocalVariablesToRollout (_Rollout)

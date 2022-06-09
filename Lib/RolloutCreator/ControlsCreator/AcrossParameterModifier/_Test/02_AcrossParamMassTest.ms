@@ -124,6 +124,12 @@ function createsubrolloutsControls =
 )
 
 
+
+
+
+
+
+
 /*------------------------------------------------------------------------------
 	RUN TESTS 
 --------------------------------------------------------------------------------*/
@@ -138,15 +144,25 @@ function createsubrolloutsControls =
 
 
 groups_count = 3
- --createControlsGoups(groups_count)
+ createControlsGoups(groups_count)
 
 createControlsGoupsWithAcross(1)
  
  --createsubrolloutsControls()
 
-/** Create dialog from _Rollout
-  */
+
+
+
+
+
+
+
+
+
+/*------------------------------------------------------------------------------
+	CREATE DIALOG
+--------------------------------------------------------------------------------*/
 dialog_width = 420
-dialog_height = 1920
+dialog_height = 1600
 --dialog_height = 1024
 include "Library/MAXSCRIPT-UI-framework/Lib/RolloutCreator/_Test/includes/CreateTestDialog.ms"

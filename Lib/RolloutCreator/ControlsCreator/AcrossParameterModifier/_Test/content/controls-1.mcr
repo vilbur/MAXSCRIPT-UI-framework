@@ -20,7 +20,7 @@ category:	"_macrotest"
 buttontext:	"Control 3"
 --icon:	"type:checkbox"
 --icon:	"type:checkbox|across:row"
-icon:	"type:checkbox|across:1"
+--icon:	"type:checkbox|across:1"
 (
 
 )

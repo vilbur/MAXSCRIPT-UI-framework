@@ -1,4 +1,13 @@
 /** Group box creator
+  
+  1) Controls in group box are created as last on position [0,0], it will not break across layout
+  
+  2 ) On rollout created call GroupBoxCreator_v._sortControlsInGroupBox()
+  
+  
+  
+  
+  
  */
 struct GroupBoxCreator_v
 (
@@ -31,10 +40,10 @@ struct GroupBoxCreator_v
 	 */
 	function addGrouboxes rollout_id_full GroupBoxes =
 	(
-		format "\n>>>>>>>>>>>><<<<<<<<<<<<\n\n"; print "GroupBoxCreator_v.addGrouboxesForRollout()"
-		format "rollout_id_full	= % \n" rollout_id_full
-		format "GroupBoxes.ids	= % \n" GroupBoxes.ids
-		format "GroupBoxes.controls	= % \n" GroupBoxes.controls
+		--format "\n>>>>>>>>>>>><<<<<<<<<<<<\n\n"; print "GroupBoxCreator_v.addGrouboxesForRollout()"
+		--format "rollout_id_full	= % \n" rollout_id_full
+		--format "GroupBoxes.ids	= % \n" GroupBoxes.ids
+		--format "GroupBoxes.controls	= % \n" GroupBoxes.controls
 		--format "GroupBoxes.values.count > 0	= % \n" (GroupBoxes.values.count > 0)
 		if GroupBoxes.controls.count == 0 then 
 			return false
@@ -54,10 +63,9 @@ struct GroupBoxCreator_v
 	function sortControlsToGroupBoxes rollout_id_full =
 	(
 		format "\n\n\n******************\n\n\n"; print ("GroupBoxCreator_v.sortControlsToGroupBoxes()" + rollout_id_full as string )
-		--format "rollout_id_full	= % \n" rollout_id_full
 		--format "this.rollouts	= % \n" this.rollouts
 		GroupBoxes = this.getVal (rollout_id_full)
-		--format "GroupBoxes	= % \n" GroupBoxes
+
 		if( GroupBoxes != undefined ) then 
 			for i = GroupBoxes.keys.count to 1 by -1 do
 				this._sortControlsInGroupBox(rollout_id_full)(GroupBoxes.keys[i])(GroupBoxes.values[i])
@@ -65,7 +73,9 @@ struct GroupBoxCreator_v
 
 	private
 
-	/** _sort controls in group box
+	/** Sort controls in group box callback
+	  *
+	  * called when rollout is created
 	 */
 	function _sortControlsInGroupBox rollout_id_full groupbox_id control_ids_in_groupbox =
 	(

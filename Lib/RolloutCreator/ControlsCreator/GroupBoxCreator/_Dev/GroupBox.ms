@@ -14,12 +14,12 @@ try( destroyDialog controls_vertical )catch()
 */ 
 rollout controls_vertical "controls_vertical"
 (
-	group "Test"
+	group "This is Contropls group"
 	(
 		/** LIST BOX IN SECOND COLUMN ON RIGHT 
 		  *	
 		  */
-	   groupBox	groupBox_1	"box 1"	across:2
+	   groupBox	groupBox_1	"This is Groupbox 1"	across:2
 	   listbox	list_1	"list_1"	height:3
 	   
 	   --button button_1 "b1" align:#left pos:[13, 20] --pos & offset - equivalent values
@@ -31,15 +31,23 @@ rollout controls_vertical "controls_vertical"
 	  *	
 	  */
 	   listbox	list_2	"list_2"	height:3	across:2 
-	   groupBox	groupBox_2	"box 2"	align:#right	across:2 
+	   groupBox	groupBox_2	"This is Groupbox 2"	align:#right	across:2 
 	   
 	   button button_3 "b3" align:#right offset:[0, -50]
 	   button button_4 "b4" align:#right
 	   dropdownlist	dropdownlist1 "dd1" align:#right
 	   --button button_5 "b5" align:#right
-	   
-		
 	)
+	
+	group "This is Contropls group 2"
+	(
+	   button button_21 "b21" align:#left
+	)
+	group "This is Contropls group 3"
+	(
+	   button button_31 "b31" align:#left
+	)
+	
 	on controls_vertical open do
 	(
 		/* get width and height of BUTTON does not work in max 2016 */ 
@@ -50,7 +58,7 @@ rollout controls_vertical "controls_vertical"
 	
 )
 
-CreateDialog controls_vertical width:256 pos:[1600,512]
+CreateDialog controls_vertical width:256 pos:[1980,512]
 
 
  /* in max 2016 is bug when getting size of control */ 

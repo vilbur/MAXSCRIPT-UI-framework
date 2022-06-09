@@ -74,7 +74,7 @@ function selfdefinedGroupboxes count:1 =
 function heightbyNextControl =
 (
 	--_Controls.control #GroupBox "Height to next row y position"	params:#(#across, 2) 
-	_Controls.control #EditText "[Reset accros]"	params:#(#across, 1) value:"Reset accros"
+	_Controls.control #EditText "[Reset across]"	params:#(#across, 1) value:"Reset accros"
 	_Controls.control #GroupBox "Height by next groupbox"	params:#(#across, 2) 
 	_Controls.control #GroupBox "Height by this last control in row"	params:#(#across, 2, #height, 96)
 
@@ -96,13 +96,13 @@ function lastGroupboxSizeByRollout =
 	RUN TESTS 
 --------------------------------------------------------------------------------*/
 
---groupboxesWithHeight count:3
+groupboxesWithHeight count:3
 
 --heightbyNextControl()
 
 --selfdefinedGroupboxes count:2
 
-lastGroupboxSizeByRollout()
+--lastGroupboxSizeByRollout()
 
 
 

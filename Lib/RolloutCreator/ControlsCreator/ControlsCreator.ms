@@ -21,7 +21,6 @@ struct ControlCreator_v
 	/* dependency */
 	_Controls,
 
-	AcrossModifier	= AcrossParameterModifier_v(),
 	ParamsCreator	= ControlParamsCreator_v(),
 	ControlValue 	= ControlValue_v(),
 	TooltipCreator	= TooltipCreator_v(),
@@ -31,7 +30,7 @@ struct ControlCreator_v
 	 */
 	function addControls _Controls =
 	(
-		--format "\n\n--------------	Controls group:%	--------------\n" _Controls.group;
+		format "\n\n--------------	Controls group:%	--------------\n" _Controls.group;
 		--print ("ControlCreator_v.addControls()"  )
 
 		this._Controls = _Controls
@@ -57,7 +56,7 @@ struct ControlCreator_v
 		)
 
 		/* modify ACROSS PARAMETER */ 
-		AcrossModifier.createRows(this._Controls)
+		(AcrossParameterModifier_v()).addFakeControls(this._Controls)
 		
 		/* add LOCAL VARIABLES */ 
 		this._addLocalVariablesToRollout()
@@ -78,9 +77,9 @@ struct ControlCreator_v
 			MOVE THIS METHOD TO GroupboxCreator and REFRACT IT
 
 	 */
-	function sendControlsIngrouboxToEndOfQueue &_Rollout_ =
+	function crateControslInGroupboxAsLast &_Rollout_ =
 	(
-		--format "\n"; print ("ControlCreator_v.sendControlsIngrouboxToEndOfQueue() "+_Rollout_.id as string) 
+		--format "\n"; print ("ControlCreator_v.crateControslInGroupboxAsLast() "+_Rollout_.id as string) 
 		fn diffArray a b =
 		(
 			retArray = #()
