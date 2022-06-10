@@ -89,9 +89,9 @@ struct Control_v
 		
 		id = substituteString id " " "_" -- replace whitespace with underscore
 
-		id = this._repleaceCharacters "[^A-Za-z0-9_]+"	""	-- remove characters	E.G.: "Butt@n_&_1" >>> "Button_1"
+		id = this._repleaceCharacters "[^A-Za-z0-9_]+"	""	-- remove characters	E.G.: "Button_&_1" >>> "Button_1"
 		
-		id = toUpper ( type as string ) + "_" + id -- add prefix by control type E.G.: "test" >>> "BUTTON_test"
+		--id = toUpper ( type as string ) + "_" + id -- add prefix by control type E.G.: "test" >>> "BUTTON_test"
 		
 		id = this._repleaceCharacters "[_]+"	"_"	-- remove underscores	E.G.: "button___1" >>> "button_1"
 	),
