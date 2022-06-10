@@ -20,7 +20,13 @@ struct EventTypes_v
 
 	),
 
-	/** get params for control type from event_types array
+	/** Get parameters of event defined in this._setEventTypes()
+	  * 
+	  * E.G.: For control type #Spinner return
+	  * 			1) return 'val inSpin' if event type #changed
+	  * 			2) return undefined    if event type #buttondown
+	  * 
+	  * @return	string|undefined	
 	 */
 	function getParamsOfEvents control_type =
 	(

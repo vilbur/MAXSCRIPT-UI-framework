@@ -7,8 +7,8 @@ global STARTUP_EVENTS = #() -- run callbacks of controls like checkbox, checkbut
 
 /** ControlEventBinder_v 
  *
- * DEFAULT CALLBACKS:
- *		1) Fire global variable EventFired = EventFired_v
+ * FUNCTIONS OF DEFAULT CALLBACKS:
+ *		1) Each event fires global variable EventFired
  * 		2) Save value of control to ini file if is defined
  * 		
  * 		
@@ -40,8 +40,8 @@ struct ControlEventBinder_v
 
 	control_types	= (ControlTypes_v()).getAllTypes(),
 
-	event_types,	-- Array of event types of control params
-	events_params,	-- Params of event_types
+	event_types,	-- E.G.: #(#changed, 	#rightClick)	keys
+	events_params,	-- E.G.: #("val",	undefined)	values
 
 	/** Combine events and add handlers
 	 */
@@ -52,13 +52,12 @@ struct ControlEventBinder_v
 		
 		event_types	= EventTypes.getEventTypesOfControl	(this._Control.type)
 		events_params	= EventTypes.getParamsOfEvents	(this._Control.type)
-		--format "event_types	= % \n" event_types
 		
 		this._normalizeNamesOfEventTypes()
 
 		this._validateEvents()
 		
-		this._setCallbackParamtersToCustomEvent()
+		this._addParametersToCallback()
 		
 		this._setDefaultEvents()
 		this._setCustomEvents()
@@ -78,14 +77,13 @@ struct ControlEventBinder_v
 	function addHandlers &_Control =
 	(
 		--format "\n"; print ("ControlEventBinder_v.addHandlers() "+ _Control.id)
-		/* PARAMETER */ 
 		for Event in _Control.Events.list do 
 			this._addHandler(_Control)(Event)
 			
 		_Control --return
 	),
 	
-	private 
+	--private 
 	
 	/** Bind events
 	 */
@@ -115,15 +113,6 @@ struct ControlEventBinder_v
 
 	/** _combine events
 	 */
-	function _setSaveIniEvents =
-	(
-		--format "***** TEST = % \n"( SaveIniControlEvents.getEvents(this._Control)(event_types))
-		if( ini_path != undefined ) then  
-			EventsCombiner.setEventsClass #SAVEINI ( SaveIniControlEvents.getEvents(this._Control)(event_types) )
-	),
-
-	/** _combine events
-	 */
 	function _setCustomEvents =
 	(
 		--print "ControlEventBinder_v._setCustomEvents()"
@@ -132,45 +121,46 @@ struct ControlEventBinder_v
 	),
 	
 	/** Set parameters of events
+	  *
+	  * E.G.: Event.params = "Val"
 	 */
 	function _setEventsParamters =
 	(
 		--print "ControlEvents._setEventsParamters()"
-		for Event in this._Control.Events.list where (params = this._getParamsForEventType(Event.type) ) != undefined do
+		for Event in this._Control.Events.list where (params = this._paramsOfEvent(Event.type) ) != undefined do
 			Event.params = params
 	),
 	
-	/** Get parameters of callback defined in event_types
-	  
-	  
-		TODO: REFRACT THIS METHOD
-	  
+	/** Get params for given event type
+	  * 
+	  * @return	string 
 	 */
-	function _setCallbackParamtersToCustomEvent =
-	(
-		--print "ControlEvents._setCallbackParamtersToCustomEvent()"
-		for Event in this._Control.Events.list do
-		(
-
-			if (params = this._getParamsForEventType(Event.type) ) != undefined then 
-			(
-				if not( space_in_string = matchPattern Event.code pattern:("* *") ) then
-					for param in params_split = filterString Event.params where ( param_is_not_added = matchPattern Event.code pattern:("*"+param+"*")) == false do 
-						Event.code  += " "+ param -- add parameters after callback E.G.: "callbackFn" >>>  "callbackFn inSpin inCancel
-		
-			)
-			else if not( matchPattern Event.code pattern:"*()" or matchPattern Event.code pattern:"*macros.run*"  ) then -- add parameters after callback E.G.: "callbackFn" >>>  "callbackFn inSpin inCancel"
-				Event.code += "()"                                  -- add brackets after callback E.G.: "callbackFn" >>>  "callbackFn()"
-		)
-	),
-	
-	/** Get params for event type
-	 */
-	function _getParamsForEventType event_type =
+	function _paramsOfEvent event_type =
 	(
 		--format "\n"; print "ControlEventBinder_v.getParamsForEventType()"
 		events_params[findItem event_types event_type]
 	),
+	
+	/** Add paramters to callback if not set all ready
+	  * 
+	  * E.G.:	input:	Event.code = "callBackFn"
+	  *	output:	Event.code = "callBackFn()" or "callBackFn val"
+	 */
+	function _addParametersToCallback =
+	(
+		--print "ControlEvents._addParametersToCallback()"
+		for Event in this._Control.Events.list where not matchPattern Event.code pattern:"*macros.run*" do
+		(
+			if ( params = this._paramsOfEvent(Event.type) ) != undefined then 
+				for param in params_split = filterString params " " where ( PARAM_IS_NOT_ADDED = matchPattern Event.code pattern:("*"+param+"*")) == false do 
+					Event.code  += " ("+ param + ")" -- add parameters after callback E.G.: "callbackFn" >>>  "callbackFn inSpin inCancel
+		
+			
+			else if not( matchPattern Event.code pattern:"*()" ) then
+				Event.code += "()" -- add brackets after callback E.G.: "callbackFn" >>>  "callbackFn()"
+		)
+	),
+
 	/**_type _add event fired
 	 */
 	function _addEventFired =
@@ -214,16 +204,7 @@ struct ControlEventBinder_v
 	(
 		--print "ControlEventBinder_v._validateEvents()"
 		for Event in this._Control.Events.list where findItem event_types Event.type == 0 do
-			throw  ("\n\n-----------------------------------------\n\nERROR - vilbur\n\nUnknown Event Type: "+ Event.type as string + "\n\nControl: "+ (this._Control.id) + "\n\n-----------------------------------------\n\n")
-	),
-
-	public
-
-	/** Alias for private method for testing
-	 */
-	function getEventTypesOfControlTest control_type =
-	(
-		EventTypes.getEventTypesOfControl (control_type)
+			throw  ("\n\n-----------------------------------------\n\n\nERROR - You try add unknown type of event for control (vilbur) \n\n\nControl.id: #"+ (this._Control.id) + "\nEvent.type: #"+ Event.type as string + "\n\n\n-----------------------------------------\n\n\n")
 	),
 
 	/*------------------------------------------------------------------------------
