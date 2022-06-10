@@ -6,12 +6,14 @@ filein( getFilenamePath(getSourceFileName()) + "/../../../../../Ini/Ini.ms" )
 
 try( destroyDialog test )catch()
 
+
+/*------------------------------------------------------------------------------
+	TEST SETUP
+--------------------------------------------------------------------------------*/
 /** DEFINE UI 
  * 
  * [All control types available in maxscript UI ](https://help.autodesk.com/view/MAXDEV/2021/ENU/?guid=GUID-E421933F-958E-42FD-80A1-D66F2A2C0A06)
  */
-
---items_of_controls = for i = 1 to 2 collect (""+ i as string )
 
 /** Get items
  */
@@ -29,22 +31,18 @@ _Rollout = _RolloutCreator.new "Test"
 _Controls = _Rollout.Controls group:"Test"
 
 
-/** CREATE RADIOBUTTONS
-  *	
-  */
---_Controls.control #RadioButtons "Row Column 1" items:(getItems( 3 )("Column"))
 
--- _Controls.control #RadioButtons "Row Column 1" items:(getItems( 3 )("Column") params:#(#selection, 2 ) )
+/*------------------------------------------------------------------------------
+	TEST RADIOBUTTONS
+--------------------------------------------------------------------------------*/
 
-_Controls.control #RadioButtons "Offset in Row 1" items:(getItems( 4 )("Column"))  params:#(#offset, [-96, 0] ) value:3
---
---_Controls.control #RadioButtons "Offset in Row 1.1" items:(getItems( 4 )("Column"))  params:#(#offset, [-96, 0], #offsets, [8, 0] )
---
---_Controls.control #RadioButtons "Offset in Row 3" items:(getItems( 2 )("Column"))  params:#(#offset, [-96, 0], #offsets, [48, 0])
---
---_Controls.control #RadioButtons "Offset in Row 4" items:(getItems( 6 )("Column"))  params:#(#offset, [-96, 0], #offsets, [24, 0], #columns, 3)
---
+_Controls.control #RadioButtons "Row default in params" items:(getItems( 3 )("Column")) params:#(#align, #left )
 
+_Controls.control #RadioButtons "Offset defined as single Point2" items:(getItems( 4 )("Column"))  params:#(#offsets, [8, 16] ) value:3
+
+_Controls.control #RadioButtons "Offset defined for each button" items:(getItems( 3 )("Column"))  params:#( #offsets, #([0, 0], [0, 8], [0, 16]) )
+
+_Controls.control #RadioButtons "Multiple columns and single offset" items:(getItems( 9 )("Column"))  params:#( #offsets,[64, 32], #columns,3, #align,#left )
 
 
 

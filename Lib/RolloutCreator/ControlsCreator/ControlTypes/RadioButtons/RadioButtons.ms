@@ -75,35 +75,26 @@ struct RadioButtons_v
 
 		labels  = _Control.Params.getVal #labels
 		columns = _Control.Params.getVal #columns
-		
-		--offset = _Control.Params.getVal #offset
 		offsets = _Control.Params.getVal #offsets
 
 		offsets_all = #()
 		
-		controls_in_row = 1
-		
-		row = 0
+		controls_in_row  = 0
+		row_offset       = 0
 
 		if( offsets != undefined and classof offsets == Point2 ) then
 		(
 			for i = 1 to labels.count do
 			(
-				is_new_row = labels.count / i as float
+				controls_in_row = if controls_in_row == columns then 1 else controls_in_row + 1
 				
-				append offsets_all [offsets.x, offsets.y]
-
-				if controls_in_row == columns then 
-					controls_in_row = 1
+				row_offset = if controls_in_row == 1 then row_offset + offsets.y else row_offset
 				
-				else
-					controls_in_row += 1
-									
+				append offsets_all [offsets.x, row_offset]
 			 )
-			--format "OFFSETS	= % \n" offsets_all
+
 			_Control.Params.setVal #offsets offsets_all
 		)
-
 	),
 
 	/**  
