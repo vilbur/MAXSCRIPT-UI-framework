@@ -5,29 +5,30 @@
  */
 struct EventsCombiner_v
 (
-	
-	/* ListBody is defining these variables
-	   
-		this.keys	= #(#CUSTOM,	#DEFAULT,	#POST)  
-		this.values 	= #(#(Events),	#(Events),	#(Events))  
-	*/
 	include "Library/MAXSCRIPT-UI-framework/Lib/List/ListBody.ms"
+	/*
+	   change variable names of keys and values
+		
+	*/
+	classes = this.keys,	-- E.G.: #(#CUSTOM,	#DEFAULT,	#POST)  
+	events  = this.values, 	-- E.G.: #(#(Events),	#(Events),	#(Events))
 	
-	/** Get events
+	/** Merge callbacks for each class of events
 	  *
 	  * @property	#name	event_type	#pressed|#rightclick|#changed etc.
 	  *
+	  * @return	Event_v|undefined 	if event has not callback fn then return undefined
 	 */
 	function combine event_type =
 	(
 		--print ( "EventsCombiner_v.combine() " + event_type as string )
 		Event_combined = (Event_v type:event_type)
  
-		for event_class in this.keys where (Events = this._getEventsOfType(event_class)(event_type)) != undefined do
+		for event_class in this.classes where (Events = this._getEventsOfType(event_class)(event_type)) != undefined do
 			this._mergeEvents (Events) (Event_combined)
 		
 		--format "EVENT_COMBINED	= % \n" Event_combined			
-		--if( Event_combined.code != "" ) then 
+		if( Event_combined.code != "" ) then 
 			Event_combined --return
 	),
 	

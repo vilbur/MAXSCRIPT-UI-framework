@@ -52,8 +52,10 @@ struct Control_v
 	function addlocal key val =
 	(
 		--print "Rollout_v.addlocal()"
+		
 		append add_locals key
-		append add_locals val
+		
+		append add_locals (if classof val == string then "\"" + val + "\"" else val) -- if string, then wrap to quotes
 	),
 	
 	/** Add text

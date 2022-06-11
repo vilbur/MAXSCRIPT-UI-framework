@@ -62,7 +62,7 @@ struct GroupBoxCreator_v
 	 */
 	function sortControlsToGroupBoxes rollout_id_full =
 	(
-		format "\n\n\n******************\n\n\n"; print ("GroupBoxCreator_v.sortControlsToGroupBoxes()" + rollout_id_full as string )
+		--format "\n\n\n******************\n\n\n"; print ("GroupBoxCreator_v.sortControlsToGroupBoxes()" + rollout_id_full as string )
 		--format "this.rollouts	= % \n" this.rollouts
 		GroupBoxes = this.getVal (rollout_id_full)
 
