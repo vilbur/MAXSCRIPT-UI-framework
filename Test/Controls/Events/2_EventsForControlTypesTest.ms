@@ -1,8 +1,8 @@
 clearListener()
 
-filein( getFilenamePath(getSourceFileName()) + "/../../../RolloutCreator.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/../../../Lib/RolloutCreator/RolloutCreator.ms" )
 
-filein( getFilenamePath(getSourceFileName()) + "/../ControlEventBinder.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/../../../Lib/RolloutCreator/ControlsCreator/ControlEventBinder/ControlEventBinder.ms" )
 
 filein( getFilenamePath(getSourceFileName()) + "/inlcude_test_callbacks.ms" )
 

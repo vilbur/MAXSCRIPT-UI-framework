@@ -18,17 +18,17 @@
 ----------------------------------------------------------------------------------*/	
 --
 --
-----/*  
-----*/ 
-----macroscript macroFileTest_checkbox
-----	category:	"MacroFileTest"
-----	buttontext:	"Checkbox HERE IS BUG"
-----	toolTip:	"Changed event tooltip"
-----	icon:	"type:checkbox|checked:true|border:false"
-----(
-----	print "checkbox #changed"
-----	format "EventFired	= % \n" EventFired
-----)
+--/*  
+--*/ 
+--macroscript macroFileTest_checkbox
+--	category:	"MacroFileTest"
+--	buttontext:	"Checkbox"
+--	toolTip:	"Changed event tooltip"
+--	icon:	"type:#checkbox|checked:true|border:false"
+--(
+--	print "checkbox #changed"
+--	format "EventFired	= % \n" EventFired
+--)
 ----
 ----/*
 ----*/
@@ -175,4 +175,31 @@
 ----	print "checkbox #changed"
 ----	format "EventFired	= % \n" EventFired
 ----)
-----	
+----
+
+/*------------------------------------------------------------------------------
+	RADIOBUTTONS
+--------------------------------------------------------------------------------*/
+
+/*
+*	
+*/	
+macroscript	modifiers_activate_modifier
+category:	"_Modifiers"  
+buttonText:	"Radio test"
+--tooltip:	"Keep active first Edit Poly modifier"
+icon:	"type:RadioButtons|items:#('item 1', 'item 2', 'item 3')|unselect:true|default:3|align:#left"
+--icon:	"type:RadioButtons|items:#('Edit Poly', 'Unwrap', 'Last Modifier')|unselect:true|align:#left"
+--icon:	"type:RadioButtons|items:#('Edit Poly', 'Unwrap', 'Last Modifier')|default:3|align:#left"
+(
+	format "EventFired	= % \n" EventFired
+	--if( EventFired.val ) then
+	--(
+	--	--activateFirstEditPoly()
+	--	
+	--	onModPanelChanged ("activateFirstEditPoly")
+	--)
+	--else
+	--	onModPanelChangedKill ("activateFirstEditPoly")
+)
+
