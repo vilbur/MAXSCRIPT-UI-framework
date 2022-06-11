@@ -21,24 +21,38 @@ struct RadioButtons_v
 	 */
 	function setParams _Control =
 	(
+		--format "\n"; print "RadioButtons_v.setParams()"
 		this._Control = _Control
 		
 		this._setLabels()
 		
 		this._setButtonsToRow()
-
-		----_Control.Params.setVal #offsets #( [0,0], [48,0], [48,32] )
-		--
-		----labels = _Control.Params.getVal #labels
-		----offsets = _Control.Params.getVal #offsets
-		----across  = _Control.Params.getVal #across
 		
 		this._setOffsets()
 		
-		--_Control.Params.setVal #labels items
-		
+		this._makeUnselectAble()
 	),
 
+	/** Make radiobuttons unselectable
+	 */
+	function getEvents _Control =
+	(
+		--format "\n"; print "RadioButtons_v.getEvents()"
+		Events	= #()
+		Event =  Event_v type: #changed
+		
+		save_state_var = this._getSaveStateVariableName(_Control.id)
+
+		Event.code = "
+			if val == "+save_state_var+" then 
+				"+(_Control.id as string) +".state = 0
+			else	
+				"+save_state_var+" = val"
+		
+		append Events Event
+		
+		Events --return
+	),
 	
 	private
 	
@@ -66,7 +80,7 @@ struct RadioButtons_v
 			_Control.Params.setVal #columns labels.count
 	),
 		
-	/** Set offsets
+	/** Set offsets for each button
 	 */
 	function _setOffsets =
 	(
@@ -97,6 +111,34 @@ struct RadioButtons_v
 		)
 	),
 
+	/** Make unselectable radiobuttons
+	  * 
+	  * Add variable to store previous state
+	  * 
+	  */
+	function _makeUnselectAble =
+	(
+		--format "\n"; print "RadioButtons_v._makeUnselectAble()"
+		if( ( _Control.Params.getVal #unselect ) != undefined ) then
+		(
+			default	= _Control.Params.getVal #default
+			save_state	= 
+
+			init_state = if( default != undefined ) then default else 0
+			
+			_Control.addLocal( this._getSaveStateVariableName(_Control.id) as name ) init_state
+			
+			_Control.Params.delete #unselect
+		)
+	),
+	
+	/** Get save state variable name
+	 */
+	function _getSaveStateVariableName control_id =
+	(
+		--format "\n"; print "RadioButtons_v._getSaveStateVariableName()"
+		control_id as string + "_prev_state" --return
+	),
 	/**  
 	 */
 	on create do

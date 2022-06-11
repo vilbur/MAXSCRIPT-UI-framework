@@ -16,8 +16,9 @@ struct DefaultControlEvents_v
 		if( _Control.type == #browsePath ) then
 			Events = (BrowsePath_v()).getEvents(_Control)
 		
-		------append Events ( Event_v type:#changed	code:("print \"DEFAULT EVENT\"")  params:"val"  )
-			
+		else if( _Control.type == #RadioButtons ) then
+			Events = (RadioButtons_v()).getEvents(_Control)
+
 		Events --return
 	),
 	

@@ -17,10 +17,8 @@ try( destroyDialog test )catch()
 
 /** Get items
  */
-function getItems count prefix =
-(
-	for i = 1 to count collect (prefix+" "+ i as string )
-)
+function getItems count = for i = 1 to count collect ("Button "+ i as string )
+
 
 
 _RolloutCreator 	= RolloutCreator_v Ini:(Ini_v())
@@ -36,13 +34,13 @@ _Controls = _Rollout.Controls group:"Test"
 	TEST RADIOBUTTONS
 --------------------------------------------------------------------------------*/
 
-_Controls.control #RadioButtons "Row default in params" items:(getItems( 3 )("Column")) params:#(#align, #left )
-
-_Controls.control #RadioButtons "Offset defined as single Point2" items:(getItems( 4 )("Column"))  params:#(#offsets, [8, 16] ) value:3
-
-_Controls.control #RadioButtons "Offset defined for each button" items:(getItems( 3 )("Column"))  params:#( #offsets, #([0, 0], [0, 8], [0, 16]) )
-
-_Controls.control #RadioButtons "Multiple columns and single offset" items:(getItems( 9 )("Column"))  params:#( #offsets,[64, 32], #columns,3, #align,#left )
+_Controls.control #RadioButtons "Unselectable buttons"	params:#( #unselect,true,	#align,#left )	items:(getItems( 3 )) --value:3 
+		
+_Controls.control #RadioButtons "Offset defined as single Point2"	params:#( #offsets, [8, 16],	#align,#left ) items:(getItems( 4 ))
+		
+_Controls.control #RadioButtons "Offset defined for each button"	params:#( #offsets, #([0, 0], [0, 8], [0, 16]),	#align,#left )	items:(getItems( 3 )) 
+		
+_Controls.control #RadioButtons "Multiple columns with single offset"	params:#( #offsets,[64, 32], #columns,3,	#align,#left)	items:(getItems( 9 )) 
 
 
 
