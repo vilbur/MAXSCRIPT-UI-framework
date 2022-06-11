@@ -1,6 +1,5 @@
 filein( getFilenamePath(getSourceFileName()) + "/EventFiredCreator/EventFiredCreator.ms" )
-filein( getFilenamePath(getSourceFileName()) + "/EventClasses/DefaultControlEvents/DefaultControlEvents.ms" )
-filein( getFilenamePath(getSourceFileName()) + "/EventClasses/SaveIniControlEvents/SaveIniControlEvents.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/DefaultControlEvents/DefaultControlEvents.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/EventTypes/EventTypes.ms" )
 
 global STARTUP_EVENTS = #() -- run callbacks of controls like checkbox, checkbutton on UI start
