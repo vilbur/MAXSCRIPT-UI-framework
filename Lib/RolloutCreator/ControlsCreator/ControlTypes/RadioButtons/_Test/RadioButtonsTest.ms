@@ -20,9 +20,10 @@ try( destroyDialog test )catch()
 function getItems count = for i = 1 to count collect ("Button "+ i as string )
 
 
+--Ini = Ini_v()
+Ini = Ini_v _path:(getSourceFileName())
 
-_RolloutCreator 	= RolloutCreator_v Ini:(Ini_v())
- -- _RolloutCreator 	= RolloutCreator_v Ini:(Ini_v _path:(getSourceFileName()))
+_RolloutCreator 	= RolloutCreator_v Ini:Ini
 
 _Rollout = _RolloutCreator.new "Test"
 
@@ -34,7 +35,7 @@ _Controls = _Rollout.Controls group:"Test"
 	TEST RADIOBUTTONS
 --------------------------------------------------------------------------------*/
 
-_Controls.control #RadioButtons "Unselectable buttons"	params:#( #unselect,true,	#align,#left )	items:(getItems( 3 )) --value:3 
+_Controls.control #RadioButtons "Unselectable buttons"	params:#( #unselect,true,	#align,#left )	items:(getItems( 3 )) value:3 
 		
 _Controls.control #RadioButtons "Offset defined as single Point2"	params:#( #offsets, [8, 16],	#align,#left ) items:(getItems( 4 ))
 		

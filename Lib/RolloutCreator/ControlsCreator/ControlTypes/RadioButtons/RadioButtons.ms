@@ -2,9 +2,10 @@
 	
 	1) Buttons are set to row in default
 	
-	2) Parameter #offset can be set only as single Point2 value, not necessary define it for each column E.G.:  params:#(#offsets, [8, 16] )
+	2) Buttons are UNSELECTABLE, choose same button again causes select none if parameter #unselect == true E.G.: params:#( #UNSELECT,true )
+
+	3) Parameter #offset can be set only as single Point2 value, not necessary define it for each column E.G.:  params:#(#OFFSETS, [8, 16] )
 	
-	3)
  */
 struct RadioButtons_v
 (
@@ -119,12 +120,11 @@ struct RadioButtons_v
 	function _makeUnselectAble =
 	(
 		--format "\n"; print "RadioButtons_v._makeUnselectAble()"
-		if( ( _Control.Params.getVal #unselect ) != undefined ) then
+		if( ( unselectable = _Control.Params.getVal #unselect ) != undefined and unselectable == true ) then
 		(
 			default	= _Control.Params.getVal #default
-			save_state	= 
 
-			init_state = if( default != undefined ) then default else 0
+			init_state = if( default != undefined ) then default else 1
 			
 			_Control.addLocal( this._getSaveStateVariableName(_Control.id) as name ) init_state
 			
@@ -144,7 +144,5 @@ struct RadioButtons_v
 	on create do
 	(
 		--print("RadioButtons_v.onCreate()")
-		--ConstructPropeties test:this
 	)
-
 )
