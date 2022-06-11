@@ -41,7 +41,7 @@ struct ContentSubrollouts_v
 	function _setRollouts paths =
 	(
 		for path in paths do 
-			append Rollouts ( RolloutParrent.Roll path )
+			append Rollouts ( RolloutParrent.new path )
 	),
 
 	on create do
