@@ -67,7 +67,8 @@ struct EventsCombiner_v
 			(
 				/* CODE */ 
 				if Event.code != "" then 
-					Event_combined.code	+= Event.code + ";"
+					Event_combined.code	+= "\n"+Event.code + ";"
+					--Event_combined.code	+= Event.code + ";"
 				
 				/* PARAMS */ 
 				--if Event.params != "" then 

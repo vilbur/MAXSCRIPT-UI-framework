@@ -264,7 +264,7 @@ struct Dialog_v
 	 */
 	function _setPositionOrDockByIni =
 	(
-		format "\n"; print "global._setPositionOrDockByIni()"
+		--format "\n"; print "global._setPositionOrDockByIni()"
 		if Ini.isDefined() then
 		(
 			dock_state	= Ini.load( RolloutMain.id as string )("dock_state")

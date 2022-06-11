@@ -18,8 +18,8 @@ function dockRight =
 function undock =
 (
 	--print "Dialog.undock()"
-	format "this._isRegistered()	= % \n" (this._isRegistered())
-	format "this._isDocked()	= % \n" (this._isDocked())
+	--format "this._isRegistered()	= % \n" (this._isRegistered())
+	--format "this._isDocked()	= % \n" (this._isDocked())
 	
 	
 	if ( this._isRegistered() and this._isDocked() ) then
@@ -40,7 +40,7 @@ function dock side =
 (
 	--print "DialogDock.dock()"
 	dock_state = this._getDockStateName side
-	format "dock_state	= % \n" dock_state
+	--format "dock_state	= % \n" dock_state
 	
 	if ( dock_state != #cui_floatable ) then
 	(

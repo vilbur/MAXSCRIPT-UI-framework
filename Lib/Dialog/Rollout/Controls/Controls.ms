@@ -102,8 +102,8 @@ struct Controls_v
 	 */
 	function _setParamsToControl &_Control params =
 	(
-		format "\n"; print "Controls_v._setParamsToControl()"
-		format "params	= % \n" params
+		--format "\n"; print "Controls_v._setParamsToControl()"
+		--format "params	= % \n" params
 		if classOf params == string then 
 			params = this._splitParamsString (params)
 	

@@ -138,7 +138,7 @@ struct BrowsePath_v
 			
 		for param in browse_params where (val = this._getParam param ) != undefined and param != #mode do
 			path_dialog += " " + param as string +":@"+ val as string +"@"
-		format "path_dialog = % \n" path_dialog
+		--format "path_dialog = % \n" path_dialog
 		path_dialog --return	
 	),
 	
