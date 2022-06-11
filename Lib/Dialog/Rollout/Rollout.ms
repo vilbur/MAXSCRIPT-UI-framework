@@ -30,6 +30,16 @@ struct Rollout_v
 	/* inhered */ 
 	Layout,
 
+	/** Create new rollout in first slot
+	 */
+	function Roll title id: =
+	(
+		--format "\n"; print "Rollout_v.rollout()"
+		Subrollouts = if (Subrollout_slots = this.getSubrollouts()).count > 0 then Subrollout_slots[1] else this.Rollouts()
+		
+		Subrollouts.Roll title id:id --return
+	),
+	
 	/** Controls
 	 */
 	function Controls group:undefined =
@@ -135,8 +145,18 @@ struct Rollout_v
 			id as string --return
 	),
 	
+	/** Get subrollouts
+	 */
+	function getSubrollouts =
+	(
+		--format "\n"; print "Rollout_v._getSubrolouts()"
+		for _Control in _Controls where hasProperty _Control "slot" collect _Control --return
+	),
+	
+	
 	private
 
+	
 	/** Center rollout title with empty space prefix
 	 */
 	function _setTitleCenter width =
@@ -208,9 +228,9 @@ struct Rollout_v
 			id = this._repleaceCharacters "[^A-Za-z0-9_]" "_" -- remove invalid characters E.G.: "Butt@n_&_1" >>> "Button_1"
 
 			id = this._repleaceCharacters "[_]+" "_" -- remove multiple underscores E.G.: "button___1" >>> "button_1"
-		
+
 		this.validateid()
-		
+
 		id = id as name
 	),
 
@@ -219,19 +239,14 @@ struct Rollout_v
 	function validateid =
 	(
 		--format "\n"; print "Subrollouts_v.validateTitle()"
-		--format "id	= % \n" id
-		variable_test = execute (id)
-		--format "variable_test	= % \n" (classof variable_test)
-		
-		if classof variable_test != UndefinedClass and classof variable_test != RolloutClass then
+		if matchPattern id pattern:@"rollout" or classof ( executed_id = execute (id) ) != UndefinedClass and classof ( executed_id ) != RolloutClass then
 		(
 			id_prefixed = "ROLLOUT_" + id
 		
-			print ("WARNING: Rollout id \"" + id + "\" is MaxScript variable, Rollout id has been changed to \"" + id_prefixed + "\"")
+			print ("WARNING: Rollout id \"" + id + "\" is MaxScript variable, Rollout id has been changed to \"" + id_prefixed + "\"\n\n\n")
 			
 			id  = id_prefixed
 		)
-		
 	),
 	
 	/** _repleace string
@@ -243,13 +258,7 @@ struct Rollout_v
 	
 
 	
-	/** Get subrollouts
-	 */
-	function _getSubrollouts =
-	(
-		--format "\n"; print "Rollout_v._getSubrolouts()"
-		for _Control in _Controls where hasProperty _Control "slot" collect _Control --return
-	),
+
 	
 	/**  
 	 */

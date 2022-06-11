@@ -20,7 +20,7 @@ menu_1.item "Item 1" "messagebox \"Item 1\""
 
 
 /* CONTROLS */
-Controls	= _Rollout.controls.new groupbox:"Test Groupbox"
+Controls	= _Rollout.controls.Roll groupbox:"Test Groupbox"
 Button_LMB = Controls.button "Menu LMB"
 Button_RMB = Controls.button "Menu RMB"
 

@@ -10,7 +10,7 @@ Dialog	= Dialog_v title:(getFilenameFile(getSourceFileName()))
 
 Rollouts_1 = Dialog.rollouts()
 
-Rollout_A	= Rollouts_1.new "Subrollout A"
+Rollout_A	= Rollouts_1.Roll "Subrollout A"
 
 
 

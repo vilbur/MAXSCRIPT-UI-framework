@@ -11,17 +11,17 @@ try( destroyDialog ROLLOUT_test )catch()
 
 _RolloutCreator 	= RolloutCreator_v()
 
-_Rollout = _RolloutCreator.new "Test" id:#ROLLOUT_test
+_Rollout = _RolloutCreator.Roll "Test" id:#ROLLOUT_test
 
 Subrollouts = _Rollout.Subrollouts()
 
-_Subrollout_1 = Subrollouts.new "Subrollout1" id:#subrollout_1
---_Subrollout_2 = Subrollouts.new "Subrollout2" id:#subrollout_2
+_Subrollout_1 = Subrollouts.Roll "Subrollout1" id:#subrollout_1
+--_Subrollout_2 = Subrollouts.Roll "Subrollout2" id:#subrollout_2
 
 
 _Nesteds  = _Subrollout_1.Subrollouts()
-_Nested_1 = _Nesteds.new "Nested 1" id:#subrollout_nested_1
---_Nested_2 = _Nesteds.new "Nested 2" id:#subrollout_nested_2
+_Nested_1 = _Nesteds.Roll "Nested 1" id:#subrollout_nested_1
+--_Nested_2 = _Nesteds.Roll "Nested 2" id:#subrollout_nested_2
 
 --format "_Rollout      = % \n" _Rollout
 --format "_Subrollout_1 = % \n" _Subrollout_1

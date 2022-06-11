@@ -27,7 +27,7 @@ struct ContentRollout_v
 	function addToUi Subrollouts =
 	(
 		--print ( "ContentRollout_v.addToUi Subrollouts:" + Subrollouts.slot as string  )
-		Rollout_new	= Subrollouts.new title -- get new rollout
+		Rollout_new	= Subrollouts.Roll title -- get new rollout
 		
 		for Subrollouts_or_Controls in Subrollouts_and_Controls do
 			Subrollouts_or_Controls.addToUi Rollout_new

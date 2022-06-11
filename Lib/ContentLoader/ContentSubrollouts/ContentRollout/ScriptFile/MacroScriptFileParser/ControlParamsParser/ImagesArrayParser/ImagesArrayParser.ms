@@ -15,7 +15,7 @@ struct ImagesArrayParser_v
 	 */
 	function getIconPath images =
 	(
-		format "\n"; print "ControlParamsParser_v._getIconPath()"
+		--format "\n"; print "ControlParamsParser_v._getIconPath()"
 		--format "path	= % \n" path
 		
 		icon_path = images[1]
@@ -33,8 +33,8 @@ struct ImagesArrayParser_v
 	 */
 	function replaceSystemDir icon_path =
 	(
-		format "\n"; print "ImagesArrayParser_v.replaceSystemDir()"
-		format "icon_path	= % \n" icon_path
+		--format "\n"; print "ImagesArrayParser_v.replaceSystemDir()"
+		--format "icon_path	= % \n" icon_path
 		
 		string_split	= filterString icon_path "/"
 		

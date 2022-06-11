@@ -141,6 +141,15 @@ struct Dialog_v
 	/*------------------------------------------------------------------------------
 		Extend RolloutMain
 	--------------------------------------------------------------------------------*/
+	/** Create new rollout in first slot
+	 */
+	function Roll title id: =
+	(
+		--format "\n"; print "Rollout_v.rollout()"
+		Subrollouts = if (Subrollout_slots = RolloutMain.getSubrollouts()).count > 0 then Subrollout_slots[1] else this.Rollouts()
+		
+		Subrollouts.Roll title id:id --return
+	),
 	
 	/** rollouts
      */

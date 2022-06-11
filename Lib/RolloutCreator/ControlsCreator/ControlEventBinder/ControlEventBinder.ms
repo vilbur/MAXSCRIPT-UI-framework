@@ -35,7 +35,6 @@ struct ControlEventBinder_v
 	EventTypes	= EventTypes_v(),
 	EventsCombiner	= EventsCombiner_v(),
 	DefaultControlEvents	= DefaultControlEvents_v(),
-	SaveIniControlEvents	= SaveIniControlEvents_v ini_path:ini_path rollout_id:_Rollout.id,
 
 	control_types	= (ControlTypes_v()).getAllTypes(),
 
@@ -59,14 +58,14 @@ struct ControlEventBinder_v
 		this._addParametersToCallback()
 		
 		this._setDefaultEvents()
-		this._setCustomEvents()
+		--this._setCustomEvents()
 		----------this._setSaveIniEvents() -- DEPRECATED and UNUSED, but not deleted yet in case for later use
 
 		this._combineEventTypes()
 		
 		this._setEventsParamters()
 		
-		this._addEventFired()
+		--this._addEventFired()
 
 		this._Control --return 
 	),
@@ -92,7 +91,8 @@ struct ControlEventBinder_v
 		if( Event.code == "" ) then
 			return false
 		--format "\nEVENT = % \n" Event
-		_Rollout._RolloutCreator.addHandler _Control.id Event.type codeStr:( "("+Event.code+")" ) paramStr:Event.params filter:on
+		format "\nEVENT.code = % \n" Event.code
+		--_Rollout._RolloutCreator.addHandler _Control.id Event.type codeStr:( "("+Event.code+")" ) paramStr:Event.params filter:on
 	),
 	
 	/** _combine all event types
@@ -115,7 +115,6 @@ struct ControlEventBinder_v
 	function _setCustomEvents =
 	(
 		--print "ControlEventBinder_v._setCustomEvents()"
-		
 		EventsCombiner.setEventsClass #CUSTOM this._Control.Events.list
 	),
 	

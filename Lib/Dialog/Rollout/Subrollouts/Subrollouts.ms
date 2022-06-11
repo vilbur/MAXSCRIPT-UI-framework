@@ -11,18 +11,27 @@ struct Subrollouts_v
 	--height = 128, -- DEV
 
 	Rollouts	= #(),
-
-	/** Get new Rollout
+	
+	/** Create new Rollout
 	 */
-	function new title id: =
+	function Roll title id: =
 	(
-		--format "\n"; print "Subrollouts_v.new()"
+		format "\n"; print "Subrollouts_v.Roll()"
 		--format "title	= % \n" title
 		local _Rollout = Rollout_v title:title id:id parent_rollout_id:( parent_rollout_id as string +"."+slot as string) height:height
 
 		append Rollouts _Rollout
 
 		_Rollout --return
+	),
+	
+	/** Get new Rollout
+	 */
+	function new title id: =
+	(
+		format "\n"; print "!!!!!!!! DEPRECATED METHOD Subrollouts_v.Roll() please use Subrollouts_v.roll() "
+
+		this.Roll title id:id --return
 	),
 
 	/** Get Subrollouts_v or Rollout_v 

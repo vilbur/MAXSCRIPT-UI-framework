@@ -6,7 +6,17 @@ clearListener()
 	  How it works: When same value is selected then radio buttons are unselected
   */	
 
-try( destroyDialog test_radio_buttons )catch()
+try( destroyDialog rollout_main )catch()
+
+
+rollout rollout_main "rollout_main" height:200 
+(
+  subRollout slot_1 "slot" height:256
+
+)
+
+
+
 
 rollout test_radio_buttons "Test RadioButtons"
 (
@@ -22,4 +32,6 @@ rollout test_radio_buttons "Test RadioButtons"
 		radio_buttons_prev_state = val
 	)
 )
-CreateDialog test_radio_buttons
+CreateDialog rollout_main width:256
+
+AddSubRollout rollout_main.slot_1	test_radio_buttons

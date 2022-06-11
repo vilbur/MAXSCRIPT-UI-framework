@@ -122,9 +122,9 @@ struct IniSaver_v
 	 */
 	function _saveControl _RolloutClass Ctrl =
 	(
-		format "\n"; print "IniSaver_v._saveControl()"
-		format "ClassOf Ctrl	= % \n" (classOf Ctrl)
-		format "Ctrl.name 	= % \n" Ctrl.name
+		--format "\n"; print "IniSaver_v._saveControl()"
+		--format "ClassOf Ctrl	= % \n" (classOf Ctrl)
+		--format "Ctrl.name 	= % \n" Ctrl.name
 
 		local val
 
@@ -158,7 +158,7 @@ struct IniSaver_v
 			--TimerControl:	
 			
 		)
-		format "val	= % \n" val
+		--format "val	= % \n" val
 		if( val != undefined ) then 
 			this._saveToIni (_RolloutClass.name) Ctrl.name (val as string )
 	),

@@ -11,12 +11,12 @@ try( destroyDialog ROLLOUT_test )catch()
 
 _RolloutCreator 	= RolloutCreator_v()
 
-_Rollout = _RolloutCreator.new "Test"
+_Rollout = _RolloutCreator.Roll "Test"
 
 Subrollouts = _Rollout.Subrollouts()
 
-Subrollout_1 = Subrollouts.new "Subrollout1"
-Subrollout_2 = Subrollouts.new "Subrollout2" id:#subrollout_2
+Subrollout_1 = Subrollouts.Roll "Subrollout1"
+Subrollout_2 = Subrollouts.Roll "Subrollout2" id:#subrollout_2
 
 --format "_Rollout     = % \n" _Rollout
 --format "Subrollouts  = % \n" Subrollouts

@@ -94,11 +94,7 @@ struct RolloutEventBinder_v
 		
 		if Event == undefined then 
 			return false
-		
-		
-		--if Event.code == "" then 
-			--return false
-		
+
 		--print "RolloutEventBinder_v._addHandler()"
 		--format "event_type	= % \n" event_type
 		--format "Event.code	= % \n" Event.code	

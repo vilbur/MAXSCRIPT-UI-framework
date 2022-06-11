@@ -14,6 +14,6 @@ if( group_name == undefined ) then
  */
 _RolloutCreator 	= RolloutCreator_v Ini:(Ini_v())
 
-_Rollout = _RolloutCreator.new "Test"
+_Rollout = _RolloutCreator.Roll "Test"
 
 _Controls = _Rollout.Controls group:group_name 

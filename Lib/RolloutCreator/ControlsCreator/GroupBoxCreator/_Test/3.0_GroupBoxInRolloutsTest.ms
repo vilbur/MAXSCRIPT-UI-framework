@@ -59,7 +59,7 @@ function groupboxInSubrollout groupbox_count:1 =
 
 	for s = 1 to 2 do
 	(
-		Subrollout_1 = Subrollouts_1.new ("Subrollout "+s as string )
+		Subrollout_1 = Subrollouts_1.Roll ("Subrollout "+s as string )
 		
 		_Controls_sub = Subrollout_1.controls group:("SUBROLLOUT "+s as string +" CONTROLS")
 		

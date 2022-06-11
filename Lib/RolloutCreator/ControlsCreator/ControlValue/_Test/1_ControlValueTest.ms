@@ -10,9 +10,9 @@ _Rollout.ini	= (getFilenamePath(getSourceFileName()) + getFilenameFile(getSource
 
 SubRollouts = _Rollout.subrollouts()
 
-Rollout_A    = SubRollouts.new "Subrollout A"
+Rollout_A    = SubRollouts.Roll "Subrollout A"
 
-_Controls = Rollout_A.Controls.new groupbox:"test"
+_Controls = Rollout_A.Controls.Roll groupbox:"test"
 
 
 /* NO VALUE CONTROLS  */

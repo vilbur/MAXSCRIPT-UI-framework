@@ -9,7 +9,7 @@ try( destroyDialog ROLLOUT_test )catch()
  *	
  */
 _RolloutCreator = RolloutCreator_v()
-_Rollout        = _RolloutCreator.new "Test"
+_Rollout        = _RolloutCreator.Roll "Test"
 
 
 /* CONTROLS IN GROUP */ 

@@ -22,7 +22,7 @@ function addSubRollouts_1 =
 (
 	_Rollouts_1 = Dialog.Rollouts()
 	
-	global _Subrolllout_1 = _Rollouts_1.new "Subrollout A"
+	global _Subrolllout_1 = _Rollouts_1.Roll "Subrollout A"
 	
 	_Controls_1 = _Subrolllout_1.Controls()
 
@@ -37,7 +37,7 @@ function addSubRollouts_2 =
 (
 	_Rollouts_2	  = Dialog.Rollouts()
 	
-	_Subrolllout_2 = _Rollouts_2.new "Subrollout B"
+	_Subrolllout_2 = _Rollouts_2.Roll "Subrollout B"
 )
 
 /** Add controls
@@ -53,7 +53,7 @@ function addControls _Controls prefix =
 function addNestedSubrollouts_1 =
 (
 	NesteRollouts = _Subrolllout_1.Rollouts()
-	NesteRollout  = NesteRollouts.new "Nested"
+	NesteRollout  = NesteRollouts.Roll "Nested"
 	
 	_Controls_1 = NesteRollout.Controls()
 

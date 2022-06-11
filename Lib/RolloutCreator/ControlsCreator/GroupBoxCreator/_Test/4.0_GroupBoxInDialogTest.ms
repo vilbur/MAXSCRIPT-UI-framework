@@ -18,7 +18,7 @@ Dialog 	= Dialog_v title:"Test"
 _Controls = Dialog.Controls()
 
 --_Rollouts_1	= Dialog.Rollouts()
---_Rollout	= _Rollouts_1.new "Subrollout A"
+--_Rollout	= _Rollouts_1.Roll "Subrollout A"
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -67,7 +67,7 @@ function groupboxInSubrollout groupbox_count:1 =
 
 	for s = 1 to 2 do
 	(
-		Subrollout_1 = Subrollouts_1.new ("Subrollout1"+s as string )
+		Subrollout_1 = Subrollouts_1.Roll ("Subrollout1"+s as string )
 		
 		_Controls_sub = Subrollout_1.controls()
 		

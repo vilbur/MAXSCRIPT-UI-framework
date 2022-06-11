@@ -2,7 +2,7 @@
 	
 	1) Buttons are set to row in default
 	
-	2) Buttons are UNSELECTABLE, choose same button again causes select none if parameter #unselect == true E.G.: params:#( #UNSELECT,true )
+	2) Buttons are UNSELECTABLE, choose same button again and buttons will be unselected if parameter #unselect == true E.G.: params:#( #UNSELECT,true )
 
 	3) Parameter #offset can be set only as single Point2 value, not necessary define it for each column E.G.:  params:#(#OFFSETS, [8, 16] )
 	
@@ -43,12 +43,14 @@ struct RadioButtons_v
 		Event =  Event_v type: #changed
 		
 		save_state_var = this._getSaveStateVariableName(_Control.id)
-
-		Event.code = "
+		--format "**********************************************************"
+		--format "SAVE_STATE_VAR	= % \n" SAVE_STATE_VAR
+		--Event.code = "
+		Event.code = " print \"CHANGED\"
 			if val == "+save_state_var+" then 
-				"+(_Control.id as string) +".state = 0
-			else	
-				"+save_state_var+" = val"
+				"+(_Control.id as string) +".state = val = 0
+				
+			"+save_state_var+" = val"
 		
 		append Events Event
 		
@@ -119,13 +121,13 @@ struct RadioButtons_v
 	  */
 	function _makeUnselectAble =
 	(
-		--format "\n"; print "RadioButtons_v._makeUnselectAble()"
+		format "\n"; print "RadioButtons_v._makeUnselectAble()"
 		if( ( unselectable = _Control.Params.getVal #unselect ) != undefined and unselectable == true ) then
 		(
 			default	= _Control.Params.getVal #default
 
 			init_state = if( default != undefined ) then default else 1
-			
+			format "init_state	= % \n" init_state
 			_Control.addLocal( this._getSaveStateVariableName(_Control.id) as name ) init_state
 			
 			_Control.Params.delete #unselect

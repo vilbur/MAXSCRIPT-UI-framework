@@ -11,13 +11,13 @@ try( destroyDialog          ROLLOUT_test )catch()
  */
 _RolloutCreator 	= RolloutCreator_v()
 
-_Rollout = _RolloutCreator.new "Test"
+_Rollout = _RolloutCreator.Roll "Test"
 
 
 Subrollouts_1 = _Rollout.Subrollouts()
 --Subrollouts_2 = _Rollout.Subrollouts()
 
-Subrollout_1 = Subrollouts_1.new "Subrollout1"
+Subrollout_1 = Subrollouts_1.Roll "Subrollout1"
 
 /* DIALOG EVENTS */ 
 _Rollout.Events.add #open   "print \"Open\""

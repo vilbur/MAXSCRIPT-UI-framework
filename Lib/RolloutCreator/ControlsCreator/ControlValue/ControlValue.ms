@@ -86,7 +86,8 @@ struct ControlValue_v
 		--format "\n"; print "ControlValue_v._setValueByIni()"
 		if (this._isRangeControlType()) then
 			_value = this._setValueIntoRange(_value)
-			
+		
+		--format "_value	= % \n" _value
 		_Control.Params.setVal value_param_name _value
 	),
 

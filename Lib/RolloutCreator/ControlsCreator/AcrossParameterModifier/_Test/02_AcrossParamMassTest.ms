@@ -115,7 +115,7 @@ function createsubrolloutsControls =
 	--format "_Rollout	= % \n" _Rollout
 	Subrollouts_1 = _Rollout.Subrollouts()
 	
-	Subrollout_1 = Subrollouts_1.new "Subrollout1"
+	Subrollout_1 = Subrollouts_1.Roll "Subrollout1"
 	
 	_Controls = Subrollout_1.controls group:"Subrollouts test"
 	
