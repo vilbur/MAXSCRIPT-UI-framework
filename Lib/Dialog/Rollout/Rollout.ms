@@ -193,21 +193,22 @@ struct Rollout_v
 		title
 	),
 
-	/** _get slot
+	/** Generate slot id if not defined
+	  * 
+	  * 1st slot id "subrollouts"
+	  * 2nd and others has numbered suffix E.G.: "subrollouts_2"
+	  *
+	  * @return	string	
 	 */
-	function _getSubrolloutsSlotName slot =
+	function _getSubrolloutsSlotName slot_id =
 	(
-		if slot == undefined or slot == unsupplied then
+		if slot_id == undefined or slot_id == unsupplied then
 		(
 			subrollouts_count = (for _struct in _Controls where matchPattern (classof _struct as string ) pattern:@"*Subrollouts_v*" collect _struct).count + 1 -- Add 1 because of current subrollouts are not added yet
 						
-			suffix = if (subrollouts_count > 1 ) then ("_"+subrollouts_count as string ) else ""
-			
-			slot = "subrollouts_"+ subrollouts_count as string	-- 	EG: parent_rollout.subrollouts_1
-			--slot = id as string + "_slot_"+ subrollouts_count as string	-- DEV	E.G.: parent_rollout.parent_rollout_slot_1
+			suffix = if (subrollouts_count > 1 ) then "subrollouts_" +subrollouts_count as string else "subrollouts"
 		)
-
-		slot as name --return 
+		slot_id as name --return 
 	),
 
 	/** Set id by title if not defined
@@ -255,10 +256,6 @@ struct Rollout_v
 	(
 		( dotNetObject "System.Text.RegularExpressions.Regex" search ).Replace ( id ) replace  --return 
 	),
-	
-
-	
-
 	
 	/**  
 	 */
