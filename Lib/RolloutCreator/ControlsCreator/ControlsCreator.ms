@@ -52,7 +52,7 @@ struct ControlCreator_v
 
 			EventBinder.combineEvents(_Control)
 
-			this._mutateControlTypes(_Control)
+			this._customizeControlTypes(_Control)
 		)
 
 		/* modify ACROSS PARAMETER */ 
@@ -213,18 +213,18 @@ struct ControlCreator_v
 
 	/** Convert custom controls to native maxscript controls
 	 */
-	function _mutateControlTypes _Control =
+	function _customizeControlTypes _Control =
 	(
-		--print "ControlCreator_v._mutateControlTypes()"
+		--print "ControlCreator_v._customizeControlTypes()"
 		
 		--format "_Rollout.width	= % \n" _Rollout.width
 
 		
 		if _Control.type == #browsePath then
-			(BrowsePath_v()).mutateControl(_Control)
+			(BrowsePath_v()).convertToEditText(_Control)
 		
 		else if _Control.type == #Radiobuttons then
-			(Radiobuttons_v()).setParams(_Control)
+			(RadioButtons_v()).setParams(_Control)
 	),
 
 

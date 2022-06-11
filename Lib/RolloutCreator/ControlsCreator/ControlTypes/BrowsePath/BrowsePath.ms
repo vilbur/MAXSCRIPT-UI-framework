@@ -86,7 +86,7 @@ struct BrowsePath_v
 	  *
 	  * Add browse path event before users defined event
 	 */
-	function mutateControl &_Control =
+	function convertToEditText &_Control =
 	(
 		--print "BrowsePath_v.mutateControl()"
 		this._Control = _Control

@@ -1,4 +1,4 @@
-filein( getFilenamePath(getSourceFileName()) + "/EventClasses/DefaultEvents/DefaultEvents.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/DefaultEvents/DefaultEvents.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/EventsCombiner/EventsCombiner.ms" ) -- move this to rollout
 
 /** RolloutEvent
@@ -92,8 +92,12 @@ struct RolloutEventBinder_v
 		--if( (Event = this._getCombinedEvent event_type) == undefined ) then
 		Event = EventsCombiner.combine (event_type)
 		
-		if Event.code == "" then 
+		if Event == undefined then 
 			return false
+		
+		
+		--if Event.code == "" then 
+			--return false
 		
 		--print "RolloutEventBinder_v._addHandler()"
 		--format "event_type	= % \n" event_type
