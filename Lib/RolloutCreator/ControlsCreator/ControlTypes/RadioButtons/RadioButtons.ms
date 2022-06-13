@@ -43,13 +43,12 @@ struct RadioButtons_v
 		Event =  Event_v type: #changed
 		
 		save_state_var = this._getSaveStateVariableName(_Control.id)
-		--format "**********************************************************"
-		--format "SAVE_STATE_VAR	= % \n" SAVE_STATE_VAR
-		--Event.code = "
+
 		Event.code = " print \"CHANGED\"
 			if val == "+save_state_var+" then 
 				"+(_Control.id as string) +".state = val = 0
-				
+			
+			EventFired.val     = val
 			"+save_state_var+" = val"
 		
 		append Events Event
@@ -121,7 +120,7 @@ struct RadioButtons_v
 	  */
 	function _makeUnselectAble =
 	(
-		format "\n"; print "RadioButtons_v._makeUnselectAble()"
+		--format "\n"; print "RadioButtons_v._makeUnselectAble()"
 		if( ( unselectable = _Control.Params.getVal #unselect ) != undefined and unselectable == true ) then
 		(
 			default	= _Control.Params.getVal #default
