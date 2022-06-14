@@ -58,14 +58,14 @@ struct ControlEventBinder_v
 		this._addParametersToCallback()
 		
 		this._setDefaultEvents()
-		--this._setCustomEvents()
+		this._setCustomEvents()
 		----------this._setSaveIniEvents() -- DEPRECATED and UNUSED, but not deleted yet in case for later use
 
 		this._combineEventTypes()
 		
 		this._setEventsParamters()
 		
-		--this._addEventFired()
+		this._addEventFired()
 
 		this._Control --return 
 	),
@@ -91,8 +91,8 @@ struct ControlEventBinder_v
 		if( Event.code == "" ) then
 			return false
 		--format "\nEVENT = % \n" Event
-		format "\nEVENT.code = % \n" Event.code
-		--_Rollout._RolloutCreator.addHandler _Control.id Event.type codeStr:( "("+Event.code+")" ) paramStr:Event.params filter:on
+		--format "\nEVENT.code = % \n" Event.code
+		_Rollout._RolloutCreator.addHandler _Control.id Event.type codeStr:( "("+Event.code+")" ) paramStr:Event.params filter:on
 	),
 	
 	/** _combine all event types
