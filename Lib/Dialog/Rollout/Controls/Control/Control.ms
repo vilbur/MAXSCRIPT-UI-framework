@@ -51,7 +51,7 @@ struct Control_v
 	 */
 	function addlocal key val =
 	(
-		--print "Rollout_v.addlocal()"
+		print "Control_v.addlocal()"
 		
 		append add_locals key
 		
@@ -62,7 +62,7 @@ struct Control_v
 	 */
 	function addText text =
 	(
-		--print "Rollout_v.addText()"
+		--print "Control_v.addText()"
 		add_text += text
 	),
 

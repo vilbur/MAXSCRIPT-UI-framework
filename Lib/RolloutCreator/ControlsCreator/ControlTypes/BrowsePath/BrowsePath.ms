@@ -27,7 +27,7 @@ struct BrowsePath_v
 		
 		Events	= #()
 		
-		prev_value_variable_name = (_Control.id + "_prev_state")
+		prev_value_variable = (_Control.id + "_prev_state")
 		
 		this._setDefaultParams()
 
@@ -47,7 +47,7 @@ struct BrowsePath_v
 					(( dotNetClass @System.Text.RegularExpressions.RegEx@).matches _string @^\s+$|^$@ ).count == 1
 				)
 				
-				if( val != "+prev_value_variable_name+" and valueIsEmpty(val) and valueIsEmpty("+prev_value_variable_name+") ) then
+				if( val != "+prev_value_variable+" and valueIsEmpty(val) and valueIsEmpty("+prev_value_variable+") ) then
 				(
 					if( (browsed_path = "+ this._getPathDialog() +") != undefined ) then
 					(
@@ -57,25 +57,21 @@ struct BrowsePath_v
 						val = EventFired.val    = substituteString browsed_path @\\\\@ @\\\\\\\\@
 					)
 					else
-						"+prev_value_variable_name+" = val 
+						"+prev_value_variable+" = val 
 				)
 				else
 					(
-						"+prev_value_variable_name+" = "+_Control.id+".text
+						"+prev_value_variable+" = "+_Control.id+".text
 						"+_Control.id+".tooltip      = browsed_path as string 
 					)"
 				
 				
-		Event_entered.code = "if( val != "+prev_value_variable_name+" ) then
+		Event_entered.code = "if( val != "+prev_value_variable+" ) then
 			(
 				val = EventFired.val    = substituteString val @\\\\@ @\\\\\\\\@
 			)"
-
-		
-		
-
-		
-		
+			
+			
 		append Events Event_changed
 		append Events Event_entered
 		
@@ -91,13 +87,13 @@ struct BrowsePath_v
 		--print "BrowsePath_v.mutateControl()"
 		this._Control = _Control
 		
-		prev_value_variable_name = (_Control.id + "_prev_state")
+		prev_value_variable = (_Control.id + "_prev_state")
 
 		_Control.type = #editText
 		
-		_Control.addlocal ( prev_value_variable_name as name ) "\"\"" -- E.G.:  #BROWSEPATH_id_prev_state = ""
+		_Control.addlocal ( prev_value_variable as name ) "" -- E.G.:  #BROWSEPATH_id_prev_state = ""
 
-		--history_path = getINISetting (GetMAXIniFile()) (this._getParam #historyCategory) "History_00"
+		------history_path = getINISetting (GetMAXIniFile()) (this._getParam #historyCategory) "History_00"
 
 		_Control --return
 	),
