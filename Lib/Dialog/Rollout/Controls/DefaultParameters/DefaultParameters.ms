@@ -122,6 +122,7 @@ struct DefaultParameters_v
 			--#Checkbox:	#( #across,4 )
 			#List:	#( #across,1 )
 			#Edittext:	#( #across,1 )
+			#BrowsePath:	#( #across,1 )
 			#Radiobuttons:	#( #across,1)
 			#Slider:	#( #range,[0,100,0])
 			#Spinner:	#( #range,[0,100,0])
