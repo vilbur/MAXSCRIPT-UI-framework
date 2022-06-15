@@ -138,9 +138,8 @@ struct IniSaver_v
 			AngleControl:	Ctrl.degrees
 			
 			ListboxControl:	Ctrl.selection
-			ComboboxControl:	Ctrl.selection
+			ComboboxControl:	Ctrl.selection -- ComboBox and DropdownList ALSO !!!
 			MultiListBoxControl:	Ctrl.selection
-			DropdownlistControl:	Ctrl.selection
 			
 			EdittextControl:	Ctrl.text
 			PickbuttonControl:	Ctrl.object 
