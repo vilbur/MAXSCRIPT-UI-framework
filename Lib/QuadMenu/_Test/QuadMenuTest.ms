@@ -43,7 +43,7 @@ format "quad	= % \n" quad
 --menuMan.createSubMenuItem "_QQQ name" menu
 --
 --format "quad	= % \n" quad
-QuadMenu.setRightClick(quad)
+QuadMenu.setRightClick("_quadMenuTest")
 
 --QuadMenu.resetRightClick()
 

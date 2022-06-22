@@ -16,11 +16,11 @@ struct QuadMenu_v
 	
 	/** Create
 	 */
-	function create name quad1Name quad2Name quad3Name quad4Name =
+	function create quad_name quad1Name quad2Name quad3Name quad4Name =
 	(
 		--format "\n"; print "QuadMenu_v.create()"
-		if( ( quad = menuMan.findQuadMenu name ) == undefined ) then 
-			quad = menuMan.createQuadMenu name quad1Name quad2Name quad3Name quad4Name
+		if( ( quad = menuMan.findQuadMenu quad_name ) == undefined ) then 
+			quad = menuMan.createQuadMenu quad_name quad1Name quad2Name quad3Name quad4Name
 			
 		quad --return
 	),
@@ -30,10 +30,12 @@ struct QuadMenu_v
 	  * @param	name	which	#nonePressed #shiftPressed #altPressed #controlPressed #shiftAndAltPressed #shiftAndControlPressed #controlAndAltPressed #shiftAndAltAndControlPressed
 	  *
 	 */
-	function setRightClick quad which:#nonePressed  =
+	function setRightClick quad_name which:#nonePressed  =
 	(
 		format "\n"; print "QuadMenu_v.setRightClick()"
-		menuMan.setViewportRightClickMenu which quad
+		
+		if( ( quadmenu = menuMan.findQuadMenu quad_name ) != undefined ) then 
+			menuMan.setViewportRightClickMenu which quad_name
 	),
 	
 	/** Reset right click
@@ -41,10 +43,9 @@ struct QuadMenu_v
 	function resetRightClick =
 	(
 		--format "\n"; print "QuadMenu_v.resetRightClick()"
-		   quadmenu = menuMan.findQuadMenu "Default Viewport Quad"
-			if quadmenu != undefined do menuMan.setViewportRightClickMenu #nonePressed quadmenu
-			quadmenu = menuMan.findQuadMenu "Modeling 1 [Cntrl+RMB]"
-			if quadmenu != undefined do menuMan.setViewportRightClickMenu #controlPressed quadmenu
+		this.setRightClick("Default Viewport Quad")	which:#nonePressed
+		
+		this.setRightClick("Modeling 1 [Cntrl+RMB]")	which:#controlPressed
 	),
 	
 	/** Add menu item
