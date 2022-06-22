@@ -12,8 +12,41 @@ struct QuadMenu_v
 	/* reference */
 	/* inhered */
 	/* properties */
+	quad,
 	
-
+	/** Create
+	 */
+	function create name quad1Name quad2Name quad3Name quad4Name =
+	(
+		--format "\n"; print "QuadMenu_v.create()"
+		if( ( quad = menuMan.findQuadMenu name ) == undefined ) then 
+			quad = menuMan.createQuadMenu name quad1Name quad2Name quad3Name quad4Name
+			
+		quad --return
+	),
+	
+	/** Set right click\\
+	  *
+	  * @param	name	which	#nonePressed #shiftPressed #altPressed #controlPressed #shiftAndAltPressed #shiftAndControlPressed #controlAndAltPressed #shiftAndAltAndControlPressed
+	  *
+	 */
+	function setRightClick quad which:#nonePressed  =
+	(
+		format "\n"; print "QuadMenu_v.setRightClick()"
+		menuMan.setViewportRightClickMenu which quad
+	),
+	
+	/** Reset right click
+	 */
+	function resetRightClick =
+	(
+		--format "\n"; print "QuadMenu_v.resetRightClick()"
+		   quadmenu = menuMan.findQuadMenu "Default Viewport Quad"
+			if quadmenu != undefined do menuMan.setViewportRightClickMenu #nonePressed quadmenu
+			quadmenu = menuMan.findQuadMenu "Modeling 1 [Cntrl+RMB]"
+			if quadmenu != undefined do menuMan.setViewportRightClickMenu #controlPressed quadmenu
+	),
+	
 	/** Add menu item
 	 */
 	function addItem menu_name macro_script_name category title: =
@@ -28,6 +61,8 @@ struct QuadMenu_v
 		
 			menu.addItem item (menu.numItems() +1)
 		)
+		
+		menu --return
 	),
 	
 	/** Get existing item from menu

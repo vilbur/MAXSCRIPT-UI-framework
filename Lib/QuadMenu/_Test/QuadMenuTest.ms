@@ -15,8 +15,11 @@ toolTip:	"Context Menu Test"
 (
 	
 	on isVisible return selection.count == 0
-
-	messageBox "Context Menu Test" 
+	
+	on execute do -- !IMPORTANT TO USE
+    (
+		messageBox "Context Menu Test"
+	)
 )
   
 
@@ -24,11 +27,26 @@ QuadMenu 	= QuadMenu_v()
 
 --menu = QuadMenu.getMenu "_New Menu"
 
-
-QuadMenu.addItem "_New Menu" ("context_menu_test") ("_Test") title:"Context Menu Test"
-
- 
+--quad = QuadMenu.create "_quadMenuTest" "quad1Name" "quad2Name" "quad3Name" "quad4Name" 
 --
+--menu = QuadMenu.addItem "_Test Menu" ("context_menu_test") ("_Test") title:"Context Menu Test"
+
+
+        --quad_sub = quad.getMenu 1; -- bottom right
+		
+		
+quad = menuMan.findQuadMenu "_quadMenuTest"
+
+--format "menu	= % \n" menu	
+format "quad	= % \n" quad
+--quad_sub.addItem menu 1
+--menuMan.createSubMenuItem "_QQQ name" menu
+--
+--format "quad	= % \n" quad
+QuadMenu.setRightClick(quad)
+
+--QuadMenu.resetRightClick()
+
 --format "menu_items	= % \n" menu_items
 --
 --

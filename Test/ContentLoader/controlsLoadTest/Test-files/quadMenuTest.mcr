@@ -17,7 +17,7 @@ icon:	"quad:true"
 	
 	on isVisible return selection.count == 0
 
-	 on execute do -- !IMPORTANT TO USE
+	 on execute do -- !IMPORTANT TO USE IN QUAD MENU
     (
 		messageBox "Context Menu Test" 
 	)
