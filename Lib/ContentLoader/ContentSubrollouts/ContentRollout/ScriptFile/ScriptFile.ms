@@ -2,6 +2,7 @@ filein( getFilenamePath(getSourceFileName()) + "/MacroScript/MacroScript.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/MacroScriptFileParser/MacroScriptFileParser.ms" )
 --filein( getFilenamePath(getSourceFileName()) + "/ContentControlCreator/ContentControlCreator.ms" )
 
+filein( getFilenamePath(getSourceFileName()) + "/../../../../QuadMenu/QuadMenu.ms" )
 
 /** Process ".ms" & ".mcr" files
   *
@@ -22,12 +23,13 @@ struct ScriptFile_Content_v
 	path,
 
 	/* private properties */
-	name,
+	filename, -- filename of ".mcr" file
 	MacroScripts	= #(),
 
 	
 	_Controls,
 	ControlEventBinder,
+	QuadMenuCreator = QuadMenu_v(),
 	
 	/** Load controls from .mcr file
 	 */
@@ -47,13 +49,13 @@ struct ScriptFile_Content_v
 	 */
 	function addToUi &_Rollout =
 	(
-		--print "!!!!!!!!!!!!!!!!!!!!!!!!"
-		--print("ScriptFile_Content_v.addToUi() " +_Rollout.id)
-		name	= if( name == undefined ) then "" else ""; -- ????????????
+		print "!!!!!!!!!!!!!!!!!!!!!!!!"
+		print("ScriptFile_Content_v.addToUi() " +_Rollout.id)
+		format "filename	= % \n" filename
+		--filename	= if( filename == undefined ) then "" else ""; -- ????????????
 		
 		if( this.isMacrosriptFile() and MacroScripts.count > 0 ) then
 			this._createControls (_Rollout)
-
 		
 		_Rollout --return
 	),
@@ -74,11 +76,15 @@ struct ScriptFile_Content_v
 	 */
 	function _createControlfromMacro Macro =
 	(
-		--format "\n"; print "ScriptFile_Content_v.createControlfromMacro()"
-		--format "Macro	= % \n" Macro
+		format "\n"; print "ScriptFile_Content_v.createControlfromMacro()"
+		format "Macro	= % \n" Macro
 		
 		_Control = _Controls.control (Macro.getType()) Macro.buttontext params:(Macro.getParamsArray())  add_to_controls:false
 		--format "_Control.id	= % \n" _Control.id
+		
+		this._addToQuadMenu (_Control)(Macro)
+		
+		
 		if( (_Control_Exist = _Controls.get(_Control.id)) != undefined ) then
 			_Control = _Control_Exist -- update existing control
 		
@@ -87,6 +93,17 @@ struct ScriptFile_Content_v
 		
 		if( _Control_Exist == undefined ) then
 			_Controls.add _Control
+	),
+	
+	/** Add to quad menu
+	 */
+	function _addToQuadMenu _Control Macro =
+	(
+		format "\n"; print "ScriptFile_Content_v.addToQuadMenu()"
+		format "filename	= % \n" filename
+		
+		if( ( quad = _Control.Params.getVal #quad ) != undefined ) then 
+			QuadMenuCreator.addItem ("_"+filename)(Macro.macro_name)(Macro.category) title:Macro.buttontext
 	),
 	
 	/** Set events which call macro
@@ -119,7 +136,7 @@ struct ScriptFile_Content_v
 			event_type = (ControlEventBinder.EventTypes.getEventTypesOfControl (_Control.type))[ _Control.Events.list.count+1] -- get next event type in list
 
 		--if( event_type != undefined ) then
-			--event_type = event_type as name --return
+			--event_type = event_type as filename --return
 			
 		event_type --return
 	),
@@ -146,7 +163,7 @@ struct ScriptFile_Content_v
 	),
 
 
-	/** Get name of groupbox by file name
+	/** Get filename of groupbox by file filename
 	  * 
 	  * @return	string	Name of groupbox, If filename starts with underscore "_", then return undefined and controls are placed to new controls box without groupbox
 	 */
@@ -167,11 +184,11 @@ struct ScriptFile_Content_v
 	--),
 
 
-	/** Set rollout name by folder name E.g.: "Rollout-1" >> "Rollout 1"
+	/** Set rollout filename by folder filename E.g.: "Rollout-1" >> "Rollout 1"
 	 */
 	function _setName =
 	(
-		name = getFilenameFile path
+		filename = getFilenameFile path
 	),
 	
 	on create do
