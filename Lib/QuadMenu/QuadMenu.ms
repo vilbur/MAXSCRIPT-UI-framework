@@ -34,8 +34,8 @@ struct QuadMenu_v
 	(
 		format "\n"; print "QuadMenu_v.setRightClick()"
 		
-		if( ( quadmenu = menuMan.findQuadMenu quad_name ) != undefined ) then 
-			menuMan.setViewportRightClickMenu which quad_name
+		if( ( quad_menu = menuMan.findQuadMenu quad_name ) != undefined ) then 
+			menuMan.setViewportRightClickMenu which quad_menu
 	),
 	
 	/** Reset right click

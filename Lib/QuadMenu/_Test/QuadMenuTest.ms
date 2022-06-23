@@ -23,60 +23,63 @@ toolTip:	"Context Menu Test"
 )
   
 
-QuadMenu 	= QuadMenu_v()
+/** Createmenu
+ */
+function createmenu =
+(
+	--format "\n"; print ".createmenu()"
+	QuadMenu 	= QuadMenu_v()
 
---menu = QuadMenu.getMenu "_New Menu"
+	----menu = QuadMenu.getMenu "_New Menu"
+	
+	quad = QuadMenu.create "_quadMenuTest" "quad1Name" "quad2Name" "quad3Name" "quad4Name" 
+	
+	menu = QuadMenu.addItem "_Test Menu" ("context_menu_test") ("_Test") title:"Context Menu Test"
+	------
+	------
+	------        ----quad_sub = quad.getMenu 1; -- bottom right
+	------		
+	------		
+	--------quad = menuMan.findQuadMenu "_quadMenuTest"
+	
+	format "quad	= % \n" quad
+	
+	QuadMenu.setRightClick("_quadMenuTest")
 
---quad = QuadMenu.create "_quadMenuTest" "quad1Name" "quad2Name" "quad3Name" "quad4Name" 
---
---menu = QuadMenu.addItem "_Test Menu" ("context_menu_test") ("_Test") title:"Context Menu Test"
+)
+
+/** Modify menu
+ */
+function modifyMenu =
+(
+	--format "\n"; print ".modifyMenu()"
+	
+	quad_menu = menuMan.findQuadMenu "_quadMenuTest"
+	
+	menuMan.setShowAllQuads quad_menu true
+	
+	format "quad_menu	= % \n" quad_menu
+	
+	quad_sub = quad_menu.getMenu 2; -- bottom right
+	--quad_sub_2 = quad_menu.getMenu 2
+	format "quad_sub	= % \n" quad_sub
+	
+	--item = quad_sub.getItem 1
+	--quad_sub_2.addItem item 1
+	
+	--format "item	= % \n" item
+	
+	--format "item.getTitle()	= % \n" (item.getTitle())
+	
+	menu = menuMan.findMenu "_Test Menu"
+	menu_item = menuMan.createSubMenuItem "_Test Menu Submenu" menu
+	format "menu	= % \n" menu
+	quad_sub.addItem menu_item 1
+	
 
 
-        --quad_sub = quad.getMenu 1; -- bottom right
-		
-		
-quad = menuMan.findQuadMenu "_quadMenuTest"
+)
 
---format "menu	= % \n" menu	
-format "quad	= % \n" quad
---quad_sub.addItem menu 1
---menuMan.createSubMenuItem "_QQQ name" menu
---
---format "quad	= % \n" quad
-QuadMenu.setRightClick("_quadMenuTest")
 
---QuadMenu.resetRightClick()
-
---format "menu_items	= % \n" menu_items
---
---
---for menu_item in menu_items do 
---	format "menu_item.getTitle()	= % \n" (menu_item.getTitle())
-
---
--- 
---
-----format "menu_items	= % \n" menu_items
---myStringStream = stringStream ""
---macros.list to:myStringStream
---
---seek myStringStream 0
---
---counter	= 0
-----lines	= #()
---
---while not eof myStringStream do 
---(
---	line =  readLine myStringStream
---	format "line	= % \n" line
---	--if( line.count > 1 ) then 
---		--append all_macros ( this._trimWhiteSpace(line))
---		
---	counter += 1
---)
-
---seek myStringStream 0    -- reset position to beginning
---
---close myStringStream -- closes the file
---
---format "all_macros	= % \n" all_macros
+--createmenu()
+modifyMenu()
