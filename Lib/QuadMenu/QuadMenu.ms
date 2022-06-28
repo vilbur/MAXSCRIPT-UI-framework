@@ -83,13 +83,13 @@ struct QuadMenu_v
 	
 	/** Get or create new context menu
 	 */
-	function getMenu _name =
+	function getMenu name =
 	(
 		--format "\n"; print "QuadMenu_v.getMenu()"
-		--format "_name	= % \n" _name
+		--format "name	= % \n" name
 
-		if( (menu = menuMan.findMenu(_name) ) == undefined ) then
-			menu = menuMan.createMenu _name
+		if( name != undefined and ( quad = menuMan.findQuadMenu name ) == undefined ) then 
+			menu = menuMan.createMenu name
 			
 		menu --return 
 	),

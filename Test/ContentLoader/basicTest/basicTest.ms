@@ -31,7 +31,9 @@ function loadContentTest dir_name =
 /*---------------------------------------
 	RUN TESTR
 -----------------------------------------*/
+
  Dialog = loadContentTest("Test-Content")
+ 
 -- Dialog = loadContentTest("Nested-Rollouts")
 
 

@@ -89,7 +89,7 @@ struct Rollout_v
 		if id == this.id then
 			return this --return
 		else
-			for _Subrollouts in this._getSubrollouts() where (found_rollout = _Subrollouts.get (id)) != undefined do
+			for _Subrollouts in this.getSubrollouts() where (found_rollout = _Subrollouts.get (id)) != undefined do
 				return found_rollout
 		
 		undefined --return

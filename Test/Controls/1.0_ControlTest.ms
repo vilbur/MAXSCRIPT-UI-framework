@@ -8,10 +8,13 @@ Dialog 	    = Dialog_v title:"Test"  ini:(getSourceFileName())
 _Controls   = Dialog.Controls group:"Main Controls"
 
 
-_Controls.control #button "Button" id:#button_1
+--_Controls.control #button "Button" id:#button_1
 
-_Controls.control #checkbox "Checkbox"
+--_Controls.control #checkbox "Checkbox"
 
+_Controls.control #Dropdownlist "Dropdownlist"
+
+--_Controls.control #browsePath "browsePath"
 
 /* DIALOG CREATE */ 
 Dialog.create()

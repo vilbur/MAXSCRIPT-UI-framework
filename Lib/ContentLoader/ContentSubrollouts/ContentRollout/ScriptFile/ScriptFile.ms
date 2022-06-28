@@ -16,6 +16,9 @@ filein( getFilenamePath(getSourceFileName()) + "/../../../../QuadMenu/QuadMenu.m
   * @property	string	file	Path to file
   *
   *
+  
+  RENAME THIS TO contentCotnrolCreator
+  
   */
 struct ScriptFile_Content_v
 (
@@ -82,7 +85,7 @@ struct ScriptFile_Content_v
 		_Control = _Controls.control (Macro.getType()) Macro.buttontext params:(Macro.getParamsArray())  add_to_controls:false
 		--format "_Control.id	= % \n" _Control.id
 		
-		this._addToQuadMenu (_Control)(Macro)
+		--this._addToQuadMenu (_Control)(Macro)
 		
 		
 		if( (_Control_Exist = _Controls.get(_Control.id)) != undefined ) then
