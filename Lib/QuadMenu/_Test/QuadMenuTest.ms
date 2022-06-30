@@ -3,6 +3,9 @@ clearListener()
 filein( getFilenamePath(getSourceFileName()) + "/../QuadMenu.ms" )
 
 
+quad_menu_name = "_Test Quad"
+
+
 /**  
  *	
  */
@@ -11,9 +14,9 @@ category:	"_Test"
 buttontext:	"Context Menu Test"
 toolTip:	"Context Menu Test"
 --toolTip:	"contenxt_menu_test"
---icon:	"#(path, index)"
+icon:	("quad"+quad_menu_name)
 (
-	on isVisible return selection.count == 0
+	--on isVisible return selection.count == 0
 	
 	on execute do -- !IMPORTANT TO USE
     (
@@ -22,16 +25,14 @@ toolTip:	"Context Menu Test"
 )
   
 
+--QuadMenu 	= QuadMenu_v name:quad_menu_name
+QuadMenu 	= QuadMenu_v (quad_menu_name)
 
-QuadMenu 	= QuadMenu_v _name:"_Test Quad"
-
-QuadMenu.setShowAllQuads()
-
-
-QuadMenu.addMenu "_Test Menu Submenu"
+--QuadMenu.addMenu "_Test Menu Submenu"
 	
-QuadMenu.addItem "_Test Menu Submenu" ("context_menu_test") ("_Test") title:"Context Menu Test"
-
-QuadMenu.setRightClick("_quadMenuTest")
+--QuadMenu.addItem "_Test Menu Submenu" ("context_menu_test") ("_Test") title:"Context Menu Test"
+--
+--QuadMenu.setRightClick()
 	
+--QuadMenu.showAllQuads()
 
