@@ -32,6 +32,37 @@ struct QuadMenu_v
 		this --return
 	),
 	
+	/** Add menu
+	 */
+	function addMenu menu_name quad_index =
+	(
+		--format "\n"; print "QuadMenu_v.addMenu()"
+		menu = this.getMenu menu_name 
+		
+		quad_menu = quad.getMenu quad_index
+		
+		menu_item = this.getItem (quad_menu) (menu_name)
+		--format "MENU_ITEM	= % \n" MENU_ITEM
+		
+		if( menu_item == undefined ) then 
+		(
+			menu_item = menuMan.createSubMenuItem menu_name menu
+			
+			menu_item.setDisplayFlat(true)
+
+			quad_menu.addItem menu_item 1
+		)
+			
+	),
+	
+	
+	
+	/*------------------------------------------------------------------------------
+		CONTEXT MENU
+	--------------------------------------------------------------------------------*/
+	
+	
+	
 	/** Add menu item
 	 */
 	function addItem menu_name macro_script_name category title: =
@@ -40,15 +71,16 @@ struct QuadMenu_v
 		--format "title	= % \n" title 
 		menu = this.getMenu (menu_name)
 		--format "menu	= % \n" menu
+		
 		if( (item = this.getItem(menu)(title)) == undefined ) then
 		(
-			--format "item	= % \n" item
+			--format "CREATE ITEM	= % \n" item
 			
 			item = menuMan.createActionItem (macro_script_name) (category)
 		
 			menu.addItem item (menu.numItems() +1)
 		)
-		
+		--format "item	= % \n" item
 		menu --return
 	),
 	
@@ -74,11 +106,19 @@ struct QuadMenu_v
 		--format "\n"; print "QuadMenu_v.getMenu()"
 		--format "menu_name	= % \n" menu_name
 
-		if( menu_name != undefined and ( menu = menuMan.findMenu menu_name ) == undefined ) then 
+		if( menu_name != undefined and ( menu = menuMan.findMenu menu_name ) == undefined ) then
+		(
+			 print "create new menu"
+			
 			menu = menuMan.createMenu menu_name
-		
+		)
+		--format "menu	= % \n" menu
 		menu --return 
 	),
+	
+	
+	
+	
 	
 	
 	/** Show all quads
@@ -88,6 +128,7 @@ struct QuadMenu_v
 		----format "\n"; print "QuadMenu_v.showAllQuads()"
 		menuMan.setShowAllQuads quad switch
 
+		this --return
 	),
 	
 	/** Set right click
@@ -100,6 +141,8 @@ struct QuadMenu_v
 		--format "\n"; print "QuadMenu_v.setRightClick()"
 		--format "quad	= % \n" quad
 		menuMan.setViewportRightClickMenu which quad
+		
+		this --return
 	),
 	
 	/** Reset right click
@@ -110,7 +153,25 @@ struct QuadMenu_v
 		this.setRightClick("Default Viewport Quad")	which:#nonePressed
 		
 		this.setRightClick("Modeling 1 [Cntrl+RMB]")	which:#controlPressed
+		
+		this --return
 	),
+	
+	/** Set flat
+	 */
+	function setFlat menu_name =
+	(
+		--format "\n"; print "QuadMenu_v.setFlat()"
+		Menu = this.getMenu(menu_name)
+		--format "Menu	= % \n" Menu
+		--Menu.setDisplayFlat(true)
+		menu_item = getItem Menu menu_name
+		
+		--format "menu_name	= % \n" menu_name
+		
+		this --return
+	),
+	
 	
 	private
 	
