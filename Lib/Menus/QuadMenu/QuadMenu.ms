@@ -54,6 +54,18 @@ struct QuadMenu_v
 		)
 			
 	),
+
+	/** Get or setQuad new context menu
+	 */
+	function getQuadMenu menu_name =
+	(
+		--format "\n"; print "QuadMenu_v.getMenu()"
+		--format "menu_name	= % \n" menu_name
+
+		
+	),
+	
+	
 	
 	
 	
@@ -108,7 +120,7 @@ struct QuadMenu_v
 
 		if( menu_name != undefined and ( menu = menuMan.findMenu menu_name ) == undefined ) then
 		(
-			 print "create new menu"
+			print "create new menu"
 			
 			menu = menuMan.createMenu menu_name
 		)

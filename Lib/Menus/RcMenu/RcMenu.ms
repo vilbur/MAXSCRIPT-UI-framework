@@ -2,7 +2,7 @@ filein( getFilenamePath(getSourceFileName()) + "/MenuItem.ms" )
 
 /** Menu
  */
-struct Menu_v
+struct RcMenu_v
 (
 	__construct = #( ),
 	
@@ -17,7 +17,7 @@ struct Menu_v
 	 */
 	function menu _name =
 	(
-		local _menu =  Menu_v name:_name type:"submenu"
+		local _menu =  RcMenu_v name:_name type:"submenu"
 		
 		this._addItem _menu
 		
@@ -32,7 +32,7 @@ struct Menu_v
 	 */
 	function item title command id:"" =
 	(
-		--print "Menu_v.item()"
+		--print "RcMenu_v.item()"
 		this._addItem (MenuItem_v title:(title as string) command:command id:id)
 	),
 
@@ -51,7 +51,7 @@ struct Menu_v
 	 */
 	function create =
 	(
-		--print "Menu_v.create()"
+		--print "RcMenu_v.create()"
 		menu_def	= this._getMenuDefinition()
 		subitems	= this._getDefinitionsOfMenuItems()
 		commands	= this._getAllCommandsDefinitions()
