@@ -14,19 +14,26 @@ struct Menu_v
 	/* properties */
 	menu,
 	
+	/** Create
+	 */
+	function create =
+	(
+		--format "\n"; print "Menu_v.create()"
+		
+		if menu == undefined then 
+			menu = menuMan.createMenu this.name
+		
+		this --return
+	),
 	
 	/** Add menu item
 	 */
-	function addItem menu_name macro_script_name category title: =
+	function addItem macro_script_name category title: =
 	(
-		--format "\n"; print "QuadMenuCreator_v.addItem()"
+		--format "\n"; print "Menu_v.addItem()"
 		--format "title	= % \n" title 
-
-		
 		if( (item = this.getItem(menu)(title)) == undefined ) then
 		(
-			format "CREATE ITEM	= % \n" item
-			
 			item = menuMan.createActionItem (macro_script_name) (category)
 		
 			menu.addItem item (menu.numItems() +1)
@@ -37,7 +44,7 @@ struct Menu_v
 	 */
 	function getItem menu item_title =
 	(
-		--format "\n"; print "QuadMenu_v.getItem()"
+		--format "\n"; print "Menu_v.getItem()"
 		--format "menu	= % \nitem_title	= % \n\n" menu item_title
 		
 		menu_items = for i = 1 to menu.numItems() collect menu.getItem(i)
@@ -55,8 +62,9 @@ struct Menu_v
 	function _setMenu =
 	(
 		format "\n"; print "Menu_v._setMenu()"
-		if( this.name != undefined  and ( menu = menuMan.findMenu this.name ) == undefined ) then 
-			menu = menuMan.createMenu this.name
+		--if( this.name != undefined  and ( menu = menuMan.findMenu this.name ) == undefined ) then 
+		if this.name != undefined then 
+			menu = menuMan.findMenu this.name
 	),
 		
 	/**  

@@ -25,12 +25,12 @@ icon:	("quad"+quad_menu_name)
 )
   
 
---QuadMenu 	= QuadMenu_v name:quad_menu_name
-QuadMenu 	= QuadMenu_v (quad_menu_name)
+--QuadMenu 	= QuadMenu_v (quad_menu_name)
+QuadMenu 	= (QuadMenu_v (quad_menu_name)).create()
 
---QuadMenu.addMenu "_Test Menu Submenu"
+QuadMenu.addMenu "_Test Menu Submenu" 1
 	
---QuadMenu.addItem "_Test Menu Submenu" ("context_menu_test") ("_Test") title:"Context Menu Test"
+QuadMenu.addItem "_Test Menu Submenu" ("context_menu_test") ("_Test") title:"Context Menu Test"
 --
 --QuadMenu.setRightClick()
 	

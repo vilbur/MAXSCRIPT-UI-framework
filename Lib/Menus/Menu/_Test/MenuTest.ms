@@ -19,8 +19,9 @@ icon:	("quad"+quad_menu_name)
 		messageBox "Context Menu Test"
 	)
 )
-menu_name = "_Test Menu"
+--menu_name = "_Test Menu"
 --Menu 	= Menu_v()
-Menu 	= Menu_v(menu_name)
+--Menu 	= (Menu_v(menu_name)).create()
+
 --Menu 	= Menu_v("_Test Menu") #(1,2,3)
-Menu.addItem "_Test Menu" ("context_menu_test") ("_Test") title:"Context Menu Test"
+Menu.addItem ("context_menu_test") ("_Test") title:"Context Menu Test"

@@ -1,6 +1,6 @@
 /** Quad menu
   
-  https://forums.cgsociety.org/t/mxs-adding-custom-item-to-convert-to-quad-menu/1870495
+  https://forums.cgsociety.org/t/mxs-adding-custom-item-to-convert-to-quad_menu-menu/1870495
   https://help.autodesk.com/view/MAXDEV/2021/ENU/?guid=GUID-6E21C768-7256-4500-AB1F-B144F492F055
  */
 struct QuadMenu_v
@@ -14,21 +14,32 @@ struct QuadMenu_v
 	/* reference */
 	/* inhered */
 	/* properties */
-	quad,
+	quad_menu,
 	quads = #("quad1", "quad2", "quad3", "quad4"), -- names of sections
 	
-	/** Create quad menu
+	/** Create
+	 */
+	function create =
+	(
+		format "\n"; print "Menu_v.create()"
+		format "menu	= % \n" menu
+		if menu == undefined then 
+			quad_menu = menuMan.createQuadMenu name quads[1] quads[2] quads[3] quads[4]
+		
+		this --return
+	),
+		
+	/** Create quad_menu menu
 	  * 
 	  * @return	this	 
 	 */
-	function setQuad =
+	function _setQuad =
 	(
-		--format "\n"; print "QuadMenu_v.setQuad()"
+		--format "\n"; print "QuadMenu_v._setQuad()"
 		----format "name	= % \n" name
-		if( name != undefined and ( quad = menuMan.findQuadMenu name ) == undefined ) then 
-			quad = menuMan.createQuadMenu name quads[1] quads[2] quads[3] quads[4]
+		if this.name != undefined then 
+			quad_menu = menuMan.findQuadMenu this.name
 		
-		----format "quad	= % \n" quad
 		this --return
 	),
 	
@@ -36,26 +47,27 @@ struct QuadMenu_v
 	 */
 	function addMenu menu_name quad_index =
 	(
-		--format "\n"; print "QuadMenu_v.addMenu()"
-		menu = this.getMenu menu_name 
+		format "\n"; print "QuadMenu_v.addMenu()"
+
+		menu = quad_menu.getMenu quad_index
 		
-		quad_menu = quad.getMenu quad_index
+		if this._menuExists(menu_name) == false then
+			menu = this._createMenu(menu_name)
 		
-		menu_item = this.getItem (quad_menu) (menu_name)
-		--format "MENU_ITEM	= % \n" MENU_ITEM
 		
-		if( menu_item == undefined ) then 
+		format "MENU_EXISTS	= % \n" menu_exists
+		if( (menu_item = this.getItem menu menu_name) == undefined ) then 
 		(
 			menu_item = menuMan.createSubMenuItem menu_name menu
 			
 			menu_item.setDisplayFlat(true)
-
-			quad_menu.addItem menu_item 1
+		
+			menu.addItem menu_item 1
 		)
 			
 	),
 
-	/** Get or setQuad new context menu
+	/** Get or _setQuad new context menu
 	 */
 	function getQuadMenu menu_name =
 	(
@@ -100,7 +112,9 @@ struct QuadMenu_v
 	 */
 	function getItem menu item_title =
 	(
-		--format "\n"; print "QuadMenu_v.getItem()"
+		format "\n"; print "QuadMenu_v.getItem()"
+		--format "menu	= % \n" menu
+		--format "menu.numItems()	= % \n" (menu.numItems())
 		--format "menu	= % \nitem_title	= % \n\n" menu item_title
 		
 		menu_items = for i = 1 to menu.numItems() collect menu.getItem(i)
@@ -111,19 +125,19 @@ struct QuadMenu_v
 	),
 	 
 
-	/** Get or setQuad new context menu
+	/** Get or _setQuad new context menu
 	 */
 	function getMenu menu_name =
 	(
 		--format "\n"; print "QuadMenu_v.getMenu()"
 		--format "menu_name	= % \n" menu_name
 
-		if( menu_name != undefined and ( menu = menuMan.findMenu menu_name ) == undefined ) then
-		(
-			print "create new menu"
-			
-			menu = menuMan.createMenu menu_name
-		)
+		--if( menu_name != undefined and ( menu = menuMan.findMenu menu_name ) == undefined ) then
+		--(
+		--	print "create new menu"
+		--	
+		--	menu = menuMan.createMenu menu_name
+		--)
 		--format "menu	= % \n" menu
 		menu --return 
 	),
@@ -138,7 +152,7 @@ struct QuadMenu_v
 	function showAllQuads switch:true =
 	(
 		----format "\n"; print "QuadMenu_v.showAllQuads()"
-		menuMan.setShowAllQuads quad switch
+		menuMan.setShowAllQuads quad_menu switch
 
 		this --return
 	),
@@ -151,8 +165,8 @@ struct QuadMenu_v
 	function setRightClick which:#nonePressed  =
 	(
 		--format "\n"; print "QuadMenu_v.setRightClick()"
-		--format "quad	= % \n" quad
-		menuMan.setViewportRightClickMenu which quad
+		--format "quad_menu	= % \n" quad_menu
+		menuMan.setViewportRightClickMenu which quad_menu
 		
 		this --return
 	),
@@ -187,15 +201,28 @@ struct QuadMenu_v
 	
 	private
 	
+	/** Menu exists
+	 */
+	function _menuExists menu_name =
+	(
+		--format "\n"; print "QuadMenu_v._menuExists()"
+		 menuMan.findMenu menu_name != undefined
+	),
 	
-	
+	/** Create
+	 */
+	function _createMenu menu_name =
+	(
+		--format "\n"; print "QuadMenu_v.create()"
+		menuMan.createMenu menu_name
+	),
 	/**  
 	 */
-	on setQuad do
+	on create do
 	(
 		--print("QuadMenu_v.onCreate()")
 		--ConstructPropeties test:this
-		this.setQuad()
+		this._setQuad()
 		
 	)
 	
