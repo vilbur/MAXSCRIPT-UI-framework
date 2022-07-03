@@ -14,7 +14,7 @@ category:	"_Test"
 buttontext:	"Context Menu Test"
 toolTip:	"Context Menu Test"
 --toolTip:	"contenxt_menu_test"
-icon:	("quad"+quad_menu_name)
+--icon:	("quad"+quad_menu_name)
 (
 	--on isVisible return selection.count == 0
 	
@@ -28,11 +28,19 @@ icon:	("quad"+quad_menu_name)
 --QuadMenu 	= QuadMenu_v (quad_menu_name)
 QuadMenu 	= (QuadMenu_v (quad_menu_name)).create()
 
-QuadMenu.addMenu "_Test Menu Submenu" 1
-	
-QuadMenu.addItem "_Test Menu Submenu" ("context_menu_test") ("_Test") title:"Context Menu Test"
+Quad = QuadMenu.Quads[1]
 --
---QuadMenu.setRightClick()
+Quad.addItem ("context_menu_test") ("_Test")
+Quad.addItem ("context_menu_test") ("_Test") title:"Context Menu Test Custom Title"
+Quad.addItem ("context_menu_test") ("_Test")
+
+--format "QuadMenu	= % \n" QuadMenu
+
+--QuadMenu.addMenu "_Test Menu Submenu" 1
 	
---QuadMenu.showAllQuads()
+--QuadMenu.addItem "_Test Menu Submenu" ("context_menu_test") ("_Test") title:"Context Menu Test"
+--
+QuadMenu.setRightClick()
+	
+QuadMenu.showAllQuads()
 
