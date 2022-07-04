@@ -1,6 +1,3 @@
-
-
-
 /**  
   *	
   */
@@ -14,39 +11,17 @@ struct Menu_v
 	/* properties */
 	menu,
 	
-	--/** Create
-	-- */
-	--function create =
-	--(
-	--	--format "\n"; print "Menu_v.create()"
-	--	this._getMenu()
-	--	
-	--	--if menu == undefined then 
-	--		--menu = menuMan.createMenu this.name
-	--	
-	--	this --return
-	--),
-	
 	/** Add menu item
 	 */
 	function addItem category macro_script_name title: =
 	(
 		--format "\n"; print "Menu_v.addItem()"
-		
 		item = menuMan.createActionItem (macro_script_name) (category)
-		
-		--format "item	= % \n" item
-		--format "item.getTitle()	= % \n" (item.getTitle())
-		--format "menu.getTitle()	= % \n" (menu.getTitle())
 		
 		if( title != unsupplied ) then 
 			this._setTitle(item)(title)
 		else
 			title = item.getTitle()
-
-
-		--if( title == unsupplied ) then 
-			--title = item.getTitle()
 		
 		exists = this._itemExists(title)
 		--format "exists	= % \n" exists
@@ -54,37 +29,29 @@ struct Menu_v
 			menu.addItem item (menu.numItems() +1)
 	),
 	
-	
 	/** Add quad from 'menus' to quad
 	  *
 	  * return Menu_v
 	 */
-	function addMenu menu_name flat:true =
+	function addMenu menu_name flat:false =
 	(
-		format "\n"; print "Menu_v.addMenu()"
-		--exists = this._itemExists(menu_name)
-		--format "exists	= % \n" exists
-		format "menu_name	= % \n" menu_name
-		format "menu.getTitle()	= % \n" (menu.getTitle())
+		--format "\n"; print "Menu_v.addMenu()"
+		submenu = this._getMenu(menu_name)
 
-	
 		if not this._itemExists(menu_name) then
 		(
-			menu_item = menuMan.createSubMenuItem (menu_name) (this._getMenu(menu_name))
-			--format "menu	= % \n" menu
-			--format "menu_item	= % \n" menu_item
-			format "menu.getTitle()	= % \n" (menu.getTitle())
-			format "menu_item.getTitle()	= % \n" (menu_item.getTitle())
+			menu_item = menuMan.createSubMenuItem (menu_name) (submenu)
 			
-			--if flat then 
-				--menu_item.setDisplayFlat(true)
+			if flat then 
+				menu_item.setDisplayFlat(true)
 			
 			menu.addItem menu_item (menu.numItems() +1)
 		)
-		
-		Menu_v menu:menu --return
+		Menu_v menu:submenu --return
 	),
 	
+	
+	private
 	
 	
 	/** Get existing item from menu
@@ -105,10 +72,7 @@ struct Menu_v
 		--format "menu_item_found	= % \n" menu_item_found
 		menu_item_found[1] != undefined --return
 	),
-	
-	private
-	
-	
+
 	/** Set menu
 	 */
 	function _getMenu menu_name =
@@ -137,22 +101,6 @@ struct Menu_v
 		item --return	
 	),
 	
-	--/** Set flat
-	-- */
-	--function setFlat menu_name =
-	--(
-	--	--format "\n"; print "QuadMenu_v.setFlat()"
-	--	Menu = this.getMenu(menu_name)
-	--	--format "Menu	= % \n" Menu
-	--	--Menu.setDisplayFlat(true)
-	--	menu_item = getItem Menu menu_name
-	--	
-	--	--format "menu_name	= % \n" menu_name
-	--	
-	--	this --return
-	--),
-	--
-	
 	/**  
 	 */
 	on create do
@@ -162,5 +110,4 @@ struct Menu_v
 		if menu == undefined then 
 			menu = this._getMenu(this.name)
 	)
-	
 )

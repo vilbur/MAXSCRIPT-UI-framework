@@ -10,8 +10,12 @@ mcr_category = "_Test"
 mcr_name     = "context_menu_test"
 
 
-/**  
- *	
+
+/*------------------------------------------------------------------------------
+	DEFINE TESTS
+--------------------------------------------------------------------------------*/
+
+/**  Create test macroscript
  */
 execute ("macroscript	context_menu_test category:	\"_Test\" buttontext:	\"Context Menu Test\" toolTip:	\"Context Menu Test\" ( on execute do ( messageBox \"Context Menu Test\"	))")
   
@@ -22,7 +26,7 @@ function createMenu =
 (
 	Menu 	= Menu_v (menu_name)
 
-	Menu.addItem (mcr_category) (mcr_name) title:"Item in menu" --add item to menu
+	Menu.addItem (mcr_category) (mcr_name) title:"Item in submenu" --add item to menu
 )
 
 /** CREATE QUAD MENU 
@@ -33,33 +37,31 @@ function createQuadMenu =
 	--QuadMenu 	= (QuadMenu_v (quad_menu_name)).create()
 	QuadMenu 	= QuadMenu_v (quad_menu_name)
 	
-	Quad = QuadMenu.Quads[1]
-	format "Quad	= % \n" Quad
-	format "Quad.menu.getTitle()	= % \n" (Quad.menu.getTitle())
-	Menu = Quad.addMenu (menu_name)
 	
-	--Quad.addItem (mcr_category) (mcr_name) -- add item to qaud
-	--
-	
-	
-	--format "Menu	= % \n" Menu
-	--QuadMenu.addMenu menu_name 1
+	Quad_1 = QuadMenu.Quads[1]
+	Quad_2 = QuadMenu.Quads[2]
+
+	/* ADD ITEM TO QUAD 1 */ 
+	Quad_1.addItem (mcr_category) (mcr_name) -- add item to qaud
 	
 	
+	/* ADD SUBMENU TO QUAD 2 */ 
+	Menu = Quad_2.addMenu (menu_name)
 	
-	--Quad.addItem ("context_menu_test") ("_Test")
-	--Quad.addItem ("context_menu_test") ("_Test") title:"Context Menu Test Custom Title"
-	
-	--format "QuadMenu	= % \n" QuadMenu
-	
-		
-	--QuadMenu.addItem "_Test Menu Submenu" ("context_menu_test") ("_Test") title:"Context Menu Test"
-	--
-	--QuadMenu.setRightClick()
-	--QuadMenu.showAllQuads()
+	/* ADD ITEM TO SUBMENU*/ 
+	Menu.addItem (mcr_category) (mcr_name) title:"Item added via QuadMenu" --add item to menu
+
+	/* SET QUAD MENU OPTIONS */ 
+	QuadMenu.setRightClick()
+	QuadMenu.showAllQuads()
 	
 )
 
---createMenu()
+
+
+/*------------------------------------------------------------------------------
+	RUN TESTS
+--------------------------------------------------------------------------------*/
+createMenu()
 
 createQuadMenu()

@@ -17,25 +17,8 @@ struct QuadMenu_v
 	quad_menu,
 	Quads	= #(),
 	
-	macroscripts = #(),
-	--quad_names = #("quad1", "quad2", "quad3", "quad4"), -- names of sections
-	
-	--/** Create
-	-- */
-	--function create =
-	--(
-	--	format "\n"; print "Menu_v.create()"
-	--	--format "menu	= % \n" menu
-	--	if quad_menu != undefined then
-	--		return this
-	--		
-	--	quad_menu = menuMan.createQuadMenu name (name+"_"+1 as string )(name+"_"+2 as string )(name+"_"+3 as string )(name+"_"+4 as string )
-	--	
-	--	this._setQuads()
-	--	
-	--	this --return
-	--),
-		
+	macroscripts = #(),	
+
 	/** Create quad_menu menu
 	  * 
 	  * @return	this	 
@@ -69,6 +52,8 @@ struct QuadMenu_v
 	(
 		format "\n"; print "QuadMenu_v.addMenu()"
 		Quads[quad_index].addMenu (menu_name)
+		
+		
 	),
 
 	/** Show all quad_names
@@ -89,7 +74,6 @@ struct QuadMenu_v
 	function setRightClick which:#nonePressed  =
 	(
 		--format "\n"; print "QuadMenu_v.setRightClick()"
-		--format "quad_menu	= % \n" quad_menu
 		menuMan.setViewportRightClickMenu which quad_menu
 	),
 	
@@ -103,7 +87,6 @@ struct QuadMenu_v
 		this.setRightClick("Modeling 1 [Cntrl+RMB]")	which:#controlPressed
 	),
 	
-
 	
 	private
 
@@ -113,12 +96,8 @@ struct QuadMenu_v
 	on create do
 	(
 		--print("QuadMenu_v.onCreate()")
-		--ConstructPropeties test:this
 		this._setQuad()
 		
 		this._setQuads()
-		
-		--this._loadMacroscripts()
 	)
-	
 )
