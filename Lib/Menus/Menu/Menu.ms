@@ -50,6 +50,13 @@ struct Menu_v
 		Menu_v menu:submenu --return
 	),
 	
+	/** Set title
+	 */
+	function setTitle title =
+	(
+		--format "\n"; print "Menu_v.setTitle()"
+		menu.setTitle title
+	),
 	
 	private
 	
