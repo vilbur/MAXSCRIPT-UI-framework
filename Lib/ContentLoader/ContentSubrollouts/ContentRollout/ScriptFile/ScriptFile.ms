@@ -83,13 +83,13 @@ struct ScriptFile_Content_v
 		--format "Macro	= % \n" Macro
 		macro_type = Macro.getType()
 		macro_params = Macro.getParamsArray()
-		format "macro_type	= % \n" macro_type
-		format "macro_params	= % \n" macro_params
+		--format "macro_type	= % \n" macro_type
+		--format "macro_params	= % \n" macro_params
 		
 		_Control = _Controls.control (Macro.getType()) Macro.buttontext params:(Macro.getParamsArray())  add_to_controls:false
 		--format "_Control.id	= % \n" _Control.id
 		
-		--this._addToQuadMenu (_Control)(Macro)
+		this._addToQuadMenu (_Control)(Macro)
 		
 		
 		if( (_Control_Exist = _Controls.get(_Control.id)) != undefined ) then
@@ -108,28 +108,31 @@ struct ScriptFile_Content_v
 	(
 		if( ( quad_name = _Control.Params.getVal #quad ) != undefined ) then
 		(
-			format "\n"; print "ScriptFile_Content_v.addToQuadMenu()"
-			format "Macro	= % \n" Macro
+			--format "\n"; print "ScriptFile_Content_v.addToQuadMenu()"
+			--format "Macro	= % \n" Macro
 			--format "filename	= % \n" filename
-			format "quad_name	= % \n" quad_name
+			--format "quad_name	= % \n" quad_name
 			--format "quad_name	= % \n" (classOf quad_name)
 			
 			quad_name_split	= filterString quad_name "."
-			format "quad_name_split	= % \n" quad_name_split
+			--format "quad_name_split	= % \n" quad_name_split
 			
 			QuadMenu = QuadMenu_v(quad_name_split[1])
 			
-			quad_index = quad_name_split[2] as integer
-			--menu_name = if matchPattern filename pattern:"_*" then filename else "_"+ filename -- REMOVE THIS LINE
+			quad_index = quad_name_split[2]
 			
-			--QuadMenu.Quads[quad_index].addItem (Macro.macro_name)(Macro.category) title:Macro.buttontext
-			QuadMenu.Quads[quad_index].addItem (Macro.category)(Macro.macro_name)
+			if quad_index == undefined then
+				quad_index = 1
+
+--			
+			--QuadMenu.Quads[quad_index as integer ].addItem (Macro.category)(Macro.macro_name) title:Macro.buttontext
+			QuadMenu.Quads[quad_index as integer ].addItem (Macro.category)(Macro.macro_name)
 		)
 		else if( ( menu_name = _Control.Params.getVal #menu ) != undefined ) then
 		(
-			format "\n"; print "ScriptFile_Content_v.addToQuadMenu()"
-			format "Macro	= % \n" Macro
-			format "menu_name	= % \n" menu_name
+			--format "\n"; print "ScriptFile_Content_v.addToQuadMenu()"
+			--format "Macro	= % \n" Macro
+			--format "menu_name	= % \n" menu_name
 			
 			Menu 	= Menu_v (menu_name)
 
