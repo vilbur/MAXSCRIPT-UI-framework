@@ -9,7 +9,7 @@ struct MacroScript_Content_v
 (
 
 	/* Properties of macroscript */ 
-	name,
+	macro_name,
 	category,
 	buttontext,
 
@@ -45,7 +45,12 @@ struct MacroScript_Content_v
 	(
 		--print "MacroScript_Content_v.getParamsArray()"
 		if( (control_type = this.getParam(#type)) != undefined ) then
+		(
+			format "control_type	= % \n" control_type
+			format "classof control_type	= % \n" (classof control_type)
+			format "control_type as name	= % \n" (control_type as name)
 			(control_type as name )--return
+		)
 		else
 			#button
 	),

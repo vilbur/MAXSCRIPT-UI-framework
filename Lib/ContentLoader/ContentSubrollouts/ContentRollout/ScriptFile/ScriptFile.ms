@@ -81,11 +81,15 @@ struct ScriptFile_Content_v
 	(
 		--format "\n"; print "ScriptFile_Content_v.createControlfromMacro()"
 		--format "Macro	= % \n" Macro
+		macro_type = Macro.getType()
+		macro_params = Macro.getParamsArray()
+		format "macro_type	= % \n" macro_type
+		format "macro_params	= % \n" macro_params
 		
 		_Control = _Controls.control (Macro.getType()) Macro.buttontext params:(Macro.getParamsArray())  add_to_controls:false
 		--format "_Control.id	= % \n" _Control.id
 		
-		this._addToQuadMenu (_Control)(Macro)
+		--this._addToQuadMenu (_Control)(Macro)
 		
 		
 		if( (_Control_Exist = _Controls.get(_Control.id)) != undefined ) then
@@ -118,8 +122,8 @@ struct ScriptFile_Content_v
 			quad_index = quad_name_split[2] as integer
 			--menu_name = if matchPattern filename pattern:"_*" then filename else "_"+ filename -- REMOVE THIS LINE
 			
-			--QuadMenu.Quads[quad_index].addItem (Macro.name)(Macro.category) title:Macro.buttontext
-			QuadMenu.Quads[quad_index].addItem (Macro.category)(Macro.name)
+			--QuadMenu.Quads[quad_index].addItem (Macro.macro_name)(Macro.category) title:Macro.buttontext
+			QuadMenu.Quads[quad_index].addItem (Macro.category)(Macro.macro_name)
 		)
 		else if( ( menu_name = _Control.Params.getVal #menu ) != undefined ) then
 		(
@@ -129,7 +133,7 @@ struct ScriptFile_Content_v
 			
 			Menu 	= Menu_v (menu_name)
 
-			Menu.addItem (Macro.category) (Macro.name)
+			Menu.addItem (Macro.category) (Macro.macro_name)
 		)
 	),
 	
@@ -142,7 +146,7 @@ struct ScriptFile_Content_v
 		
 		if( event_type != undefined ) then
 		(
-			callback = "(macros.run \""+Macro.category+"\" \""+Macro.name+"\")"
+			callback = "(macros.run \""+Macro.category+"\" \""+Macro.macro_name+"\")"
 	
 			_Control.Event event_type callback tooltip:Macro.toolTip
 		)

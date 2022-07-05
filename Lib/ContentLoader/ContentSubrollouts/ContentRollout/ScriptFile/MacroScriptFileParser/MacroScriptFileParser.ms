@@ -28,7 +28,7 @@ struct MacroScriptFileParser_v
 	  *
 	  * IMPORTANT: Keep EACH PROPERTY on ON ITS OWN SEPARATED LINE
 	  *
-	  *	MacroScript <name>
+	  *	MacroScript <macro_name>
 	  *		category:	""
 	  *		buttontext:	""
 	  *		toolTip:	""
@@ -59,7 +59,7 @@ struct MacroScriptFileParser_v
 	(
 		this._addLastMacroscript()
 
-		MacroScript_last = MacroScript_Content_v name:name
+		MacroScript_last = MacroScript_Content_v macro_name:name
 
 		MacroScript_last --return
 	),
