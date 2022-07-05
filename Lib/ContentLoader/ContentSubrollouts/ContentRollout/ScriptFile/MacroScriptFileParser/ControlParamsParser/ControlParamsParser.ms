@@ -26,8 +26,8 @@ struct ControlParamsParser_v
 	 */
 	function parse params_string =
 	(
-		--format "\n"; print "ControlParamsParser_v.parse()"
-		--format "params_string	= % \n" params_string
+		format "\n"; print "ControlParamsParser_v.parse()"
+		format "params_string	= % \n" params_string
 		
 		params = #( #(), #() )
 		

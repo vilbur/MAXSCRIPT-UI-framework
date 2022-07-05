@@ -54,7 +54,6 @@ function createQuadMenu =
 	/* SET QUAD MENU OPTIONS */ 
 	QuadMenu.setRightClick()
 	QuadMenu.showAllQuads()
-	
 )
 
 

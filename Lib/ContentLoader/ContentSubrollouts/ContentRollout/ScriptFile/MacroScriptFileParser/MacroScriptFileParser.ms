@@ -28,7 +28,7 @@ struct MacroScriptFileParser_v
 	  *
 	  * IMPORTANT: Keep EACH PROPERTY on ON ITS OWN SEPARATED LINE
 	  *
-	  *	MacroScript <macro_name>
+	  *	MacroScript <name>
 	  *		category:	""
 	  *		buttontext:	""
 	  *		toolTip:	""
@@ -59,7 +59,7 @@ struct MacroScriptFileParser_v
 	(
 		this._addLastMacroscript()
 
-		MacroScript_last = MacroScript_Content_v macro_name:name
+		MacroScript_last = MacroScript_Content_v name:name
 
 		MacroScript_last --return
 	),
@@ -93,7 +93,7 @@ struct MacroScriptFileParser_v
 				
 	),
 	
-	/** Find if line start with "MacroScript <macro_name>"
+	/** Find if line start with "MacroScript <name>"
 	 */
 	function _lineIsMacroName line =
 	(
@@ -110,9 +110,9 @@ struct MacroScriptFileParser_v
 	/** Get name of macro from line
 	  * remove whitespace and tab
 	  *
-	  * @property	string	line	"MacroScript macro_name"
+	  * @property	string	line	"MacroScript name"
 	  *
-	  * @return	string	macro_name
+	  * @return	string	name
 	 */
 	function _getMacroName line =
 	(

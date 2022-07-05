@@ -9,7 +9,7 @@ struct MacroScript_Content_v
 (
 
 	/* Properties of macroscript */ 
-	macro_name,
+	name,
 	category,
 	buttontext,
 

@@ -77,8 +77,8 @@ struct Menu_v
 	 */
 	function _getMenu menu_name =
 	(
-		format "\n"; print "Menu_v._getMenu()"
-		format "menu_name	= % \n" menu_name
+		--format "\n"; print "Menu_v._getMenu()"
+		--format "menu_name	= % \n" menu_name
 		--if( this.name != undefined  and ( menu = menuMan.findMenu this.name ) == undefined ) then
 		local menu
 		

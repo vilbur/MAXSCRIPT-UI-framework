@@ -2,7 +2,7 @@ filein( getFilenamePath(getSourceFileName()) + "/MacroScript/MacroScript.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/MacroScriptFileParser/MacroScriptFileParser.ms" )
 --filein( getFilenamePath(getSourceFileName()) + "/ContentControlCreator/ContentControlCreator.ms" )
 
-filein( getFilenamePath(getSourceFileName()) + "/../../../../QuadMenu/QuadMenu.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/../../../../Menus/QuadMenu/QuadMenu.ms" )
 
 /** Process ".ms" & ".mcr" files
   *
@@ -32,7 +32,7 @@ struct ScriptFile_Content_v
 	
 	_Controls,
 	ControlEventBinder,
-	QuadMenuCreator = QuadMenu_v(),
+	QuadMenu,
 	
 	/** Load controls from .mcr file
 	 */
@@ -52,9 +52,9 @@ struct ScriptFile_Content_v
 	 */
 	function addToUi &_Rollout =
 	(
-		print "!!!!!!!!!!!!!!!!!!!!!!!!"
-		print("ScriptFile_Content_v.addToUi() " +_Rollout.id)
-		format "filename	= % \n" filename
+		--print "!!!!!!!!!!!!!!!!!!!!!!!!"
+		--print("ScriptFile_Content_v.addToUi() " +_Rollout.id)
+		--format "filename	= % \n" filename
 		--filename	= if( filename == undefined ) then "" else ""; -- ????????????
 		
 		if( this.isMacrosriptFile() and MacroScripts.count > 0 ) then
@@ -79,13 +79,13 @@ struct ScriptFile_Content_v
 	 */
 	function _createControlfromMacro Macro =
 	(
-		format "\n"; print "ScriptFile_Content_v.createControlfromMacro()"
-		format "Macro	= % \n" Macro
+		--format "\n"; print "ScriptFile_Content_v.createControlfromMacro()"
+		--format "Macro	= % \n" Macro
 		
 		_Control = _Controls.control (Macro.getType()) Macro.buttontext params:(Macro.getParamsArray())  add_to_controls:false
 		--format "_Control.id	= % \n" _Control.id
 		
-		--this._addToQuadMenu (_Control)(Macro)
+		this._addToQuadMenu (_Control)(Macro)
 		
 		
 		if( (_Control_Exist = _Controls.get(_Control.id)) != undefined ) then
@@ -102,11 +102,35 @@ struct ScriptFile_Content_v
 	 */
 	function _addToQuadMenu _Control Macro =
 	(
-		format "\n"; print "ScriptFile_Content_v.addToQuadMenu()"
-		format "filename	= % \n" filename
-		
-		if( ( quad = _Control.Params.getVal #quad ) != undefined ) then 
-			QuadMenuCreator.addItem ("_"+filename)(Macro.macro_name)(Macro.category) title:Macro.buttontext
+		if( ( quad_name = _Control.Params.getVal #quad ) != undefined ) then
+		(
+			format "\n"; print "ScriptFile_Content_v.addToQuadMenu()"
+			format "Macro	= % \n" Macro
+			--format "filename	= % \n" filename
+			format "quad_name	= % \n" quad_name
+			--format "quad_name	= % \n" (classOf quad_name)
+			
+			quad_name_split	= filterString quad_name "."
+			format "quad_name_split	= % \n" quad_name_split
+			
+			QuadMenu = QuadMenu_v(quad_name_split[1])
+			
+			quad_index = quad_name_split[2] as integer
+			--menu_name = if matchPattern filename pattern:"_*" then filename else "_"+ filename -- REMOVE THIS LINE
+			
+			--QuadMenu.Quads[quad_index].addItem (Macro.name)(Macro.category) title:Macro.buttontext
+			QuadMenu.Quads[quad_index].addItem (Macro.category)(Macro.name)
+		)
+		else if( ( menu_name = _Control.Params.getVal #menu ) != undefined ) then
+		(
+			format "\n"; print "ScriptFile_Content_v.addToQuadMenu()"
+			format "Macro	= % \n" Macro
+			format "menu_name	= % \n" menu_name
+			
+			Menu 	= Menu_v (menu_name)
+
+			Menu.addItem (Macro.category) (Macro.name)
+		)
 	),
 	
 	/** Set events which call macro
@@ -118,7 +142,7 @@ struct ScriptFile_Content_v
 		
 		if( event_type != undefined ) then
 		(
-			callback = "(macros.run \""+Macro.category+"\" \""+Macro.macro_name+"\")"
+			callback = "(macros.run \""+Macro.category+"\" \""+Macro.name+"\")"
 	
 			_Control.Event event_type callback tooltip:Macro.toolTip
 		)
