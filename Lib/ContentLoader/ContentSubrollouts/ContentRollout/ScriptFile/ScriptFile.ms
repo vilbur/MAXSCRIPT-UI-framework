@@ -89,11 +89,13 @@ struct ScriptFile_Content_v
 		_Control = _Controls.control (Macro.getType()) Macro.buttontext params:(Macro.getParamsArray())  add_to_controls:false
 		--format "_Control.id	= % \n" _Control.id
 		
-		this._addToQuadMenu (_Control)(Macro)
 		
 		
 		if( (_Control_Exist = _Controls.get(_Control.id)) != undefined ) then
 			_Control = _Control_Exist -- update existing control
+		
+		
+		this._addToQuadMenu (_Control)(Macro)
 		
 		--format "_Control_Exist	= % \n" _Control_Exist			
 		this._setEventCallMacro (_Control) (Macro)
@@ -106,38 +108,25 @@ struct ScriptFile_Content_v
 	 */
 	function _addToQuadMenu _Control Macro =
 	(
-		if( ( quad_name = _Control.Params.getVal #quad ) != undefined ) then
+		--format "\n"; print "ScriptFile_Content_v.addToQuadMenu()"
+		quad_name = _Control.Params.getVal #quad 
+		menu_name = _Control.Params.getVal #menu
+		title     = if (title_param = _Control.Params.getVal #title) != undefined then title_param else Macro.buttontext
+		
+		if quad_name != undefined then
 		(
-			--format "\n"; print "ScriptFile_Content_v.addToQuadMenu()"
-			--format "Macro	= % \n" Macro
-			--format "filename	= % \n" filename
-			--format "quad_name	= % \n" quad_name
-			--format "quad_name	= % \n" (classOf quad_name)
-			
 			quad_name_split	= filterString quad_name "."
-			--format "quad_name_split	= % \n" quad_name_split
-			
-			QuadMenu = QuadMenu_v(quad_name_split[1])
-			
+						
 			quad_index = quad_name_split[2]
 			
 			if quad_index == undefined then
 				quad_index = 1
 
---			
-			--QuadMenu.Quads[quad_index as integer ].addItem (Macro.category)(Macro.macro_name) title:Macro.buttontext
-			QuadMenu.Quads[quad_index as integer ].addItem (Macro.category)(Macro.macro_name)
+			(QuadMenu_v(quad_name_split[1])).Quads[quad_index as integer ].addItem (Macro.category)(Macro.macro_name) title:title
 		)
-		else if( ( menu_name = _Control.Params.getVal #menu ) != undefined ) then
-		(
-			--format "\n"; print "ScriptFile_Content_v.addToQuadMenu()"
-			--format "Macro	= % \n" Macro
-			--format "menu_name	= % \n" menu_name
-			
-			Menu 	= Menu_v (menu_name)
+		else if menu_name != undefined then
+			(Menu_v (menu_name)).addItem (Macro.category) (Macro.macro_name) title:title
 
-			Menu.addItem (Macro.category) (Macro.macro_name)
-		)
 	),
 	
 	/** Set events which call macro

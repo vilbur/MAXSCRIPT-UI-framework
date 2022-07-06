@@ -99,12 +99,10 @@ struct Menu_v
 	 */
 	function _setTitle &item title =
 	(
-		--format "\n"; print "Menu_v._setTiitle()"
-		if( title != unsupplied ) then 
-		(
-			item.setTitle title
-			item.setUseCustomTitle true
-		)
+		item.setTitle title
+
+		item.setUseCustomTitle true
+
 		item --return	
 	),
 	
