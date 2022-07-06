@@ -31,7 +31,7 @@ struct ControlParamsParser_v
 		
 		params = #( #(), #() )
 		
-		params_string = this._escapeSingleQuotes(params_string)
+		this._escapeSingleQuotes(params_string)
 
 		if this._isIconArray (params_string) == false then 
 		(
@@ -40,7 +40,7 @@ struct ControlParamsParser_v
 			for key_value in key_value_pairs do
 				this._splitKeyAndValue (key_value)
 		)
-		--format "params	= % \n" params
+		format "params	= % \n" params
 		params --return
 	),
 	
@@ -60,13 +60,14 @@ struct ControlParamsParser_v
 	 */
 	function _splitKeyAndValue key_value =
 	(
-		--format "\n"; print "ControlParamsParser_v.splitKeyAndValue()"
+		format "\n"; print "ControlParamsParser_v.splitKeyAndValue()"
 		colon_index = findString key_value ":"
 		
 		key	= substring key_value 1 (colon_index-1)
-		val	= substring key_value (colon_index+1)	-1
+		val	= substring key_value   (colon_index+1)	-1
 		
-		
+		format "key	= % \n" key
+		format "val	= % \n" val
 		if key != "images" then
 		(
 			val = this._convertDatatype( this._trimWhiteSpace(val))
@@ -111,7 +112,7 @@ struct ControlParamsParser_v
 	
 	/** Replace "'" with "\""
 	 */
-	function _escapeSingleQuotes params_string =
+	function _escapeSingleQuotes &params_string =
 	(
 		--format "\n"; print "ControlParamsParser_v.escapeQuotes()"
 		

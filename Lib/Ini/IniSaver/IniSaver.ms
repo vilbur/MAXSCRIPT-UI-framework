@@ -31,7 +31,6 @@ struct IniSaver_v
 	 */
 	function saveRollout rollout_id =
 	(
-		clearListener()
 		--format "\n"; print "IniSaver_v.saveRollout()"
 		--format "rollout_id	= % \n" rollout_id
 		--format "ini_file	= % \n" ini_file

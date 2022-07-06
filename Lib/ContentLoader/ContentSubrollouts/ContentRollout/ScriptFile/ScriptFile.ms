@@ -81,23 +81,16 @@ struct ScriptFile_Content_v
 	(
 		--format "\n"; print "ScriptFile_Content_v.createControlfromMacro()"
 		--format "Macro	= % \n" Macro
-		macro_type = Macro.getType()
+		macro_type   = Macro.getType()
 		macro_params = Macro.getParamsArray()
-		--format "macro_type	= % \n" macro_type
-		--format "macro_params	= % \n" macro_params
 		
-		_Control = _Controls.control (Macro.getType()) Macro.buttontext params:(Macro.getParamsArray())  add_to_controls:false
-		--format "_Control.id	= % \n" _Control.id
-		
-		
-		
-		if( (_Control_Exist = _Controls.get(_Control.id)) != undefined ) then
-			_Control = _Control_Exist -- update existing control
-		
+		_Control = _Controls.Control (Macro.getType()) Macro.buttontext params:(Macro.getParamsArray())  add_to_controls:false
 		
 		this._addToQuadMenu (_Control)(Macro)
 		
-		--format "_Control_Exist	= % \n" _Control_Exist			
+		if(_Control_Exist = _Controls.get(_Control.id)) != undefined then
+			_Control = _Control_Exist -- update existing control
+		
 		this._setEventCallMacro (_Control) (Macro)
 		
 		if( _Control_Exist == undefined ) then
@@ -108,15 +101,19 @@ struct ScriptFile_Content_v
 	 */
 	function _addToQuadMenu _Control Macro =
 	(
-		--format "\n"; print "ScriptFile_Content_v.addToQuadMenu()"
-		quad_name = _Control.Params.getVal #quad 
-		menu_name = _Control.Params.getVal #menu
-		title     = if (title_param = _Control.Params.getVal #title) != undefined then title_param else Macro.buttontext
+		--format "\n\n"; print "ScriptFile_Content_v.addToQuadMenu()"
+		--format "Macro.macro_name	= % \n" Macro.macro_name
+		quad_name	= _Control.Params.getVal #quad 
+		menu_name	= _Control.Params.getVal #menu
+		title	= _Control.Params.getVal #title
+		
+		if title == undefined then 
+			title = Macro.buttontext
 		
 		if quad_name != undefined then
 		(
 			quad_name_split	= filterString quad_name "."
-						
+
 			quad_index = quad_name_split[2]
 			
 			if quad_index == undefined then
