@@ -1,3 +1,4 @@
+
 /** Add macroscript to menus and quad menu
  *
  */
@@ -10,7 +11,8 @@ category:	"_Test"
 buttontext:	"Menu Test"
 toolTip:	"Menu Test"
 --toolTip:	"contenxt_menu_test"
-icon:	"menu:_Test Menu"
+--icon:	"menu:_Test Menu"
+icon:	"quad:_Quad Test.1" 
 (
 	on execute do messageBox "Menu Test" 
 )
@@ -29,7 +31,8 @@ toolTip:	"_Quad Test"
  */
 icon:	"quad:_Quad Test.2" 
 (
-	on execute do messageBox "_Quad Test" -- IMPORTANT TO USE 'ON EXECUTE DO' in macroscript
+	
+	on execute do messageBox "_Quad Test" -- IMPORTANT TO USE 'ON EXECUTE DO' if command is used in menu
 )
 
 
@@ -42,10 +45,12 @@ buttontext:	"Use custom title in icon parameter"
 toolTip:	""
 icon:	"menu:_Test Menu|title:Custom Title"
 (
-	messageBox "Custom Title" beep:false
+    on isVisible return selection.count>0
+
+	on execute do messageBox "Custom Title" beep:false
 )
 
-/** MODIFy QUAD MENU 
+/** MODIFY QUAD MENU 
   *	
   */
 QuadMenu 	= QuadMenu_v ("_Quad Test")
@@ -53,7 +58,7 @@ QuadMenu 	= QuadMenu_v ("_Quad Test")
 QuadMenu.Quads[1].setTitle ("First Quad")
 QuadMenu.Quads[2].setTitle ("Second Quad")
 
-QuadMenu.Quads[1].addMenu ("_Test Menu")
+QuadMenu.Quads[1].addMenu ("_Test Menu") flat:true
 
 QuadMenu.showAllQuads()
 QuadMenu.setRightClick()
