@@ -25,10 +25,14 @@ clearListener()
 --	"#(#())"
 --)
 
+executed_string_is_variable = 999
+
 input_values = #(
-	"test",
+	"simpleString",
+	"executed_string_is_variable",
+	"'quoted_string'",
 	"space in string",
-	"C:\This\is\path",
+	"C:\String\is\path",
 	true,
 	123,
 	1.0,
@@ -41,35 +45,8 @@ input_values = #(
 )
 
 /*------------------------------------------------------------------------------
-	CONVERT DATA TYPE
+	HELP FUNCTIONS
 --------------------------------------------------------------------------------*/
-
-function convertStringToDatatype _string =
-(
-	if classOf (val_converted = try((execute(_string)))catch()) == UndefinedClass then val_converted = substituteString _string "\\" "\\\\"
-
-	val_converted --return
-)
-
-/*------------------------------------------------------------------------------
-	TEST FUNCTIONS
---------------------------------------------------------------------------------*/
-
-/** Test string array
- */
-function testStringArray =
-(
-	print "STRING ARRAY TEST"
-	format "\n"
-
-	this_is_string = joinToStringArray(input_values)
-	this_is_array = convertStringToDatatype(this_is_string)
-	format "this_is_string = % \n\n" this_is_string
-	format "this_is_array  = % \n\n" this_is_array
-
-	for item in this_is_array do
-		format " 	item: %	is classOf:% \n\n"  item (classOf item)
-)
 
 /** Convert strings to datatypes
  */
@@ -85,9 +62,6 @@ function convertStringsToDatatypes =
 		formatOutput (_string) (correct_datatype)
 	)
 )
-/*------------------------------------------------------------------------------
-	HELP FUNCTIONS
---------------------------------------------------------------------------------*/
 
 /** Join strings to string array
  */
@@ -112,18 +86,38 @@ function formatOutput input_val val_converted =
 	format "\"%\" 	=> 	%	\nis classOf:% \n\n" input_val val_converted (classOf val_converted)
 )
 
-/** Convert values to strings
- */
-function convertValuesToStrings values =
-(
-	----format "\n"; print ".convertValuesToStrings()"
-	strings = #()
+/*------------------------------------------------------------------------------
+  
+	TEST FUNCTIONS
+	
+--------------------------------------------------------------------------------*/
 
-	for i=1 to values.count do
-		append strings ( values[i] as string)
+function convertStringToDatatype _string =
+(	
+	match_string  = (( dotNetClass "System.Text.RegularExpressions.RegEx" ).match _string "^'*[A-Za-z0-1_]+'*$" ( dotNetClass "System.Text.RegularExpressions.RegexOptions" ).IgnoreCase ).success
+	val_converted = try((execute(_string)))catch()
+	classof_val   = classOf val_converted
 
-	strings --return
+	if ( match_string and classof_val != BooleanClass ) or classof_val == string  or classof_val == UndefinedClass  then substituteString _string "\\" "\\\\" else val_converted
 )
+
+
+/** Test string array
+ */
+function testStringArray =
+(
+	print "STRING ARRAY TEST"
+	format "\n"
+
+	this_is_string = joinToStringArray(input_values)
+	this_is_array = convertStringToDatatype(this_is_string)
+	format "this_is_string = % \n\n" this_is_string
+	format "this_is_array  = % \n\n" this_is_array
+
+	for item in this_is_array do
+		format " 	item: %	is classOf:% \n\n"  item (classOf item)
+)
+
 
 /*------------------------------------------------------------------------------
 
