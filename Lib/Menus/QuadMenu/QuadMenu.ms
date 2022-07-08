@@ -52,8 +52,6 @@ struct QuadMenu_v
 	(
 		format "\n"; print "QuadMenu_v.addMenu()"
 		Quads[quad_index].addMenu (menu_name)
-		
-		
 	),
 
 	/** Show all quad_names

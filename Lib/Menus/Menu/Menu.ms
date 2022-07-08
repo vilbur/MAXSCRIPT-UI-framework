@@ -50,6 +50,14 @@ struct Menu_v
 		Menu_v menu:submenu --return
 	),
 	
+	/** Add separator
+	 */
+	function addSeparator =
+	(
+		--format "\n"; print "Menu_v.addSeparator()"
+		menu.addItem (menuMan.createSeparatorItem()) (menu.numItems() +1)
+	),
+	
 	/** Set title
 	 */
 	function setTitle title =

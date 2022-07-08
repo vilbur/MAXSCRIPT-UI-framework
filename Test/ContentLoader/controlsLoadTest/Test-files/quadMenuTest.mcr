@@ -53,13 +53,19 @@ icon:	"menu:_Test Menu|title:Custom Title"
 /** MODIFY QUAD MENU 
   *	
   */
-QuadMenu 	= QuadMenu_v ("_Quad Test")
+QuadMenuTest 	= QuadMenu_v ("_Quad Test")
 
-QuadMenu.Quads[1].setTitle ("First Quad")
-QuadMenu.Quads[2].setTitle ("Second Quad")
+QuadMenuTest.Quads[1].setTitle ("First Quad")
+QuadMenuTest.Quads[2].setTitle ("Second Quad")
 
-QuadMenu.Quads[1].addMenu ("_Test Menu") flat:true
+QuadMenuTest.Quads[1].addMenu ("_Test Menu") flat:true
 
-QuadMenu.showAllQuads()
-QuadMenu.setRightClick()
---QuadMenu.resetRightClick()
+QuadMenuTest.Quads[1].addSeparator()
+
+QuadMenuTest.Quads[1].addItem ("Tools") ("Move")
+
+
+QuadMenuTest.showAllQuads()
+QuadMenuTest.setRightClick()
+--QuadMenuTest.resetRightClick()
+
