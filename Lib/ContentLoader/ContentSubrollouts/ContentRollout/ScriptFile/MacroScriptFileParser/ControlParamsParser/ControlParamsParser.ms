@@ -27,18 +27,15 @@ struct ControlParamsParser_v
 	function parse params_string =
 	(
 		--format "\n"; print "ControlParamsParser_v.parse()"
-		
+		--format "params_string	= % \n" params_string
 		params = #( #(), #() )
 		
 		params_string = this._escapeSingleQuotes(params_string)
 
-		if this._isIconArray (params_string) == false then 
-		(
-			key_value_pairs = filterString params_string "|" splitEmptyTokens:false
-			
-			for key_value in key_value_pairs do
+		if not this._isIconArray (params_string) then 
+			for key_value in (filterString params_string "|" splitEmptyTokens:false) do
 				this._splitKeyAndValue (key_value)
-		)
+
 		--format "params	= % \n" params
 		params --return
 	),
@@ -57,17 +54,28 @@ struct ControlParamsParser_v
 	
 	/** Split key and value
 	 */
-	function _splitKeyAndValue key_value =
+	function _splitKeyAndValue key_value_string =
 	(
 		--format "\n"; print "ControlParamsParser_v.splitKeyAndValue()"
-		colon_index = findString key_value ":"
+		--format "key_value_string	= % \n" key_value_string
+		----colon_index = findString key_value ":"
+		----
+		----key	= substring key_value 1 (colon_index-1)
+		----val	= substring key_value   (colon_index+1)	-1
 		
-		key	= substring key_value 1 (colon_index-1)
-		val	= substring key_value   (colon_index+1)	-1
+		key_value = filterString key_value_string ":" splitEmptyTokens:false
 		
+		key	= key_value[1]
+		val	= key_value[2]
+		
+		--format "key	= % \n" key
+		--format "val	= % \n" val
+		--format "classOF val	= % \n" (classOf val)
+				
 		if key != "images" then
 		(
 			val = this._convertDatatype( this._trimWhiteSpace(val))
+			--format "classOF val	= % \n" (classOf val)
 
 			append params[1] ( this._trimWhiteSpace(key) as name )
 			append params[2] val			
@@ -122,11 +130,12 @@ struct ControlParamsParser_v
 	/** Format string value to valid datatype
 	 */
 	function _convertDatatype _string =
-	(		
-		--print "MacroScriptFileParser_v._convertDatatype()"
-		if classOf (val_converted = try((execute(_string)))catch()) == UndefinedClass then val_converted = substituteString _string "\\" "\\\\"
+	(	
+		match_string  = (( dotNetClass "System.Text.RegularExpressions.RegEx" ).match _string "^'*[A-Za-z0-1_]+'*$" ( dotNetClass "System.Text.RegularExpressions.RegexOptions" ).IgnoreCase ).success
+		val_converted = try((execute(_string)))catch()
+		classof_val   = classOf val_converted
 	
-		val_converted --return
+		if ( match_string and classof_val != BooleanClass ) or classof_val == string  or classof_val == UndefinedClass  then substituteString _string "\\" "\\\\" else val_converted
 	),
 	
 	/**  

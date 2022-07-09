@@ -47,6 +47,18 @@ input_values = #(
 /*------------------------------------------------------------------------------
 	HELP FUNCTIONS
 --------------------------------------------------------------------------------*/
+/** Convert values to strings
+ */
+function convertValuesToStrings values =
+(
+	----format "\n"; print ".convertValuesToStrings()"
+	strings = #()
+
+	for i=1 to values.count do
+		append strings ( values[i] as string)
+
+	strings --return
+)
 
 /** Convert strings to datatypes
  */

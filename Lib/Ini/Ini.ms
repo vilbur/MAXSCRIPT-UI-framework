@@ -53,11 +53,13 @@ struct Ini_v
 
 	/** Format string value to valid datatype
 	 */
-	function _convertDatatype val =
-	(		
-		if classOf (val_converted = try((execute(val)))catch()) == UndefinedClass then val_converted = substituteString val "\\" "\\\\"
-		
-		val_converted --return
+	function _convertDatatype _string =
+	(	
+		match_string  = (( dotNetClass "System.Text.RegularExpressions.RegEx" ).match _string "^'*[A-Za-z0-1_]+'*$" ( dotNetClass "System.Text.RegularExpressions.RegexOptions" ).IgnoreCase ).success
+		val_converted = try((execute(_string)))catch()
+		classof_val   = classOf val_converted
+	
+		if ( match_string and classof_val != BooleanClass ) or classof_val == string  or classof_val == UndefinedClass  then substituteString _string "\\" "\\\\" else val_converted
 	),
 	
 	/** Get path
