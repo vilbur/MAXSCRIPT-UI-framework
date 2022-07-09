@@ -25,21 +25,31 @@ clearListener()
 --	"#(#())"
 --)
 
-executed_string_is_variable = 999
+string_is_defined_variable = 999
 
 input_values = #(
+	
+	/* executed strings bellow manifest as string */ 
+	"string_is_defined_variable",
 	"simpleString",
-	"executed_string_is_variable",
-	"'quoted_string'",
+	"'single_quoted'",
+	"\"double_quoted\"",
 	"space in string",
 	"C:\String\is\path",
 	true,
+	false,
+	undefined,
+	unsupplied,
+	0,
 	123,
+	
+	/* executed strings bellow manifest correctly */ 
 	1.0,
-	[1.1,2.0],
-	[1,2,3.3],
-	color 1 2 3,
+	[1.1, 2.0],
+	[1, 2, 3.3],
+	color 128 64 0,
 	#{},
+	#{1..3},
 	#(),
 	#(#())
 )
@@ -55,9 +65,16 @@ function convertValuesToStrings values =
 	strings = #()
 
 	for i=1 to values.count do
-		append strings ( values[i] as string)
+		append strings ( values[i] as string )
 
 	strings --return
+)
+/** Format output
+ */
+function formatOutput input_val val_converted =
+(
+	format "classOf = % \n" (classOf val_converted)
+	format "output  = % \n" val_converted
 )
 
 /** Convert strings to datatypes
@@ -91,12 +108,6 @@ function joinToStringArray strings =
 	"#("+_string+")" --return
 )
 
-/** Format output
- */
-function formatOutput input_val val_converted =
-(
-	format "\"%\" 	=> 	%	\nis classOf:% \n\n" input_val val_converted (classOf val_converted)
-)
 
 /*------------------------------------------------------------------------------
   
@@ -105,12 +116,17 @@ function formatOutput input_val val_converted =
 --------------------------------------------------------------------------------*/
 
 function convertStringToDatatype _string =
-(	
-	match_string  = (( dotNetClass "System.Text.RegularExpressions.RegEx" ).match _string "^'*[A-Za-z0-1_]+'*$" ( dotNetClass "System.Text.RegularExpressions.RegexOptions" ).IgnoreCase ).success
-	val_converted = try((execute(_string)))catch()
-	classof_val   = classOf val_converted
+(
+	--format "is_string     = % \n" is_string
+	format "\nInput:"; print _string
 
-	if ( match_string and classof_val != BooleanClass ) or classof_val == string  or classof_val == UndefinedClass  then substituteString _string "\\" "\\\\" else val_converted
+	rx	= dotNetClass "System.Text.RegularExpressions.RegEx"
+	rx_options	= dotNetClass "System.Text.RegularExpressions.RegexOptions"
+	
+	known_class  = (rx.match _string "^\s*(\d+|true|false|undefined|unsupplied|\(\s*color\s+\d+\s+\d+\s+\d+\s*\))\s*$" rx_options.IgnoreCase ).success
+	
+	if known_class == false and (is_string = ( rx.match _string "(^'*[A-Za-z0-1_]+'*$)|[\s\\\/]" rx_options.IgnoreCase ).success ) then _string else try((execute(_string)))catch()
+	
 )
 
 
