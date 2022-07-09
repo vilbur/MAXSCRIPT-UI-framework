@@ -34,7 +34,7 @@ struct Rollout_v
 	 */
 	function Roll title id: =
 	(
-		--format "\n"; print "Rollout_v.rollout()"
+		format "\n"; print "Rollout_v.Roll()"
 		Subrollouts = if (Subrollout_slots = this.getSubrollouts()).count > 0 then Subrollout_slots[1] else this.Rollouts()
 		
 		Subrollouts.Roll title id:id --return
@@ -70,7 +70,8 @@ struct Rollout_v
 	 */
 	function Rollouts slot: height: =
 	(
-		--print "Rollout_v.Rollouts()"
+		print "Rollout_v.Rollouts()"
+		
 		this.Subrollouts slot:slot height:height --return
 	),
 	
@@ -202,15 +203,21 @@ struct Rollout_v
 	 */
 	function _getSubrolloutsSlotName slot_id =
 	(
+		--print "Rollout_v._getSubrolloutsSlotName()"
 		if slot_id == undefined or slot_id == unsupplied then
-		(
-			subrollouts_count = (for _struct in _Controls where matchPattern (classof _struct as string ) pattern:@"*Subrollouts_v*" collect _struct).count + 1 -- Add 1 because of current subrollouts are not added yet
-						
-			suffix = if (subrollouts_count > 1 ) then "subrollouts_" +subrollouts_count as string else "subrollouts"
-		)
+			slot_id = if ((subrollouts_count = this._getSubrolloutsCount()) > 1 ) then "subrollouts_" +subrollouts_count as string else "subrollouts"
+
 		slot_id as name --return 
 	),
-
+	
+	/** Get subrollouts count
+	 */
+	function _getSubrolloutsCount =
+	(
+		--format "\n"; print "Rollout_v._getSubrolloutsCount()"
+		(for _struct in _Controls where matchPattern (classof _struct as string ) pattern:@"*Subrollouts_v*" collect _struct).count + 1 -- Add 1 because of current subrollouts are not added yet
+	),
+	
 	/** Set id by title if not defined
 	 */
 	function _setId =
