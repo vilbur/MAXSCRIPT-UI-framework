@@ -15,7 +15,8 @@ struct Menu_v
 	 */
 	function addItem category macro_script_name title: =
 	(
-		--format "\n"; print "Menu_v.addItem()"
+		format "\n"; print "Menu_v.addItem()"
+		format "title	= % \n" title
 		item = menuMan.createActionItem (macro_script_name) (category)
 		
 		if( title != unsupplied ) then 
@@ -107,6 +108,9 @@ struct Menu_v
 	 */
 	function _setTitle &item title =
 	(
+		format "\n"; print "Menu_v._setTitle()"
+		format "item	= % \n" item
+		format "title	= % \n" title
 		item.setTitle title
 
 		item.setUseCustomTitle true

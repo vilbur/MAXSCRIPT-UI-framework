@@ -32,7 +32,7 @@ items = for i = 1 to 3 collect ("item "+ i as string )
 -- _Controls.control #dropdownList "dropdownList"	items:items value:2
 
  --_Controls.control #radioButtons "RadioButtons value"	items:items value:2
--- _Controls.control #radioButtons "RadioButtons param"	params:#(#items,items, #default, 3)
+ --_Controls.control #radioButtons "RadioButtons param"	params:#(#items,items, #default, 3)
 
 
 -- /* Range controls */ 

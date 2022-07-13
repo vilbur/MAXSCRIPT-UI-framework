@@ -187,10 +187,10 @@
 macroscript	modifiers_activate_modifier
 category:	"_Modifiers"  
 buttonText:	"Radio test"
---tooltip:	"Keep active first Edit Poly modifier"
-icon:	"type:RadioButtons|items:#('item 1', 'item 2', 'item 3')|unselect:true|default:3|align:#left"
---icon:	"type:RadioButtons|items:#('Edit Poly', 'Unwrap', 'Last Modifier')|unselect:true|align:#left"
---icon:	"type:RadioButtons|items:#('Edit Poly', 'Unwrap', 'Last Modifier')|default:3|align:#left"
+tooltip:	"Radiobutton test"
+--icon:	"items:#( 1,  2,  3 )"
+
+icon:	"type:RadioButtons|items:#('Edit Poly', 'Unwrap', 'Last Modifier')|unselect:true|default:3|align:#left"
 (
 	format "EventFired	= % \n" EventFired
 	--if( EventFired.val ) then

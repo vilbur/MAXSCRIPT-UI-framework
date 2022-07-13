@@ -136,12 +136,14 @@ struct Controls_v
 	 */
 	function _convertDatatype _string =
 	(	
+		--_string = substituteString _string "\\" "\\\\"
+
 		rx	= dotNetClass "System.Text.RegularExpressions.RegEx"
 		rx_options	= dotNetClass "System.Text.RegularExpressions.RegexOptions"
 		
 		known_class  = (rx.match _string "^\s*(\d+|true|false|undefined|unsupplied|\(\s*color\s+\d+\s+\d+\s+\d+\s*\))\s*$" rx_options.IgnoreCase ).success
 		
-		if known_class == false and (is_string = ( rx.match _string "(^'*[A-Za-z0-1_]+'*$)|[\s\\\/]" rx_options.IgnoreCase ).success ) then substituteString _string "\\" "\\\\" else try((execute(_string)))catch()
+		if known_class == false and (is_string = ( rx.match _string "(^'*[A-Za-z0-1_]+'*$)" rx_options.IgnoreCase ).success ) then (@"" + _string )else (try((execute(_string)))catch(_string))
 	),
 	
 	/**  

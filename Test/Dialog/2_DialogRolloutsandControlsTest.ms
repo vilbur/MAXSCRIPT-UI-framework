@@ -7,7 +7,7 @@ filein( "$userscripts\Library\MAXSCRIPT-UI-framework\Lib\Dialog\Dialog.ms" )
 
 
 /* DIALOG */ 
-Dialog 	    = Dialog_v title:"Test"  ini:(getSourceFileName())
+Dialog 	    = Dialog_v ("Test") ini:(getSourceFileName())
 
 
 --_Controls   = Dialog.Controls group:"Main Controls"

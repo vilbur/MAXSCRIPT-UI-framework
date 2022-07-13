@@ -12,3 +12,12 @@ ContentLoader	= ContentLoader_v path:(current_dir+"/Test-files")
 ContentLoader.create width:512 height:512
 
 
+--QuadMenuCreator = (QuadMenu_v("_Test Quad")).setQuad()
+--format "QuadMenuCreator	= % \n" QuadMenuCreator
+
+
+--QuadMenuCreator.addMenu("_quadMenuTest") 1
+--format "Menu	= % \n" Menu
+--QuadMenuCreator.setFlat("_quadMenuTest")
+
+--QuadMenuCreator.setRightClick()

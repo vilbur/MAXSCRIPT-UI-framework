@@ -123,8 +123,6 @@ function joinToStringArray strings =
 function convertStringToDatatype _string =
 (
 	--format "\n"; print "convertStringToDatatype()"
-
-	_string_executed = try((execute(_string)))catch(_string)
 	
 	rx	= dotNetClass "System.Text.RegularExpressions.RegEx"
 	rx_options	= dotNetClass "System.Text.RegularExpressions.RegexOptions"
@@ -174,7 +172,7 @@ function testStringArray =
 
 --------------------------------------------------------------------------------*/
 
---convertStringsToDatatypes()
+convertStringsToDatatypes()
 
 testStringArray()
 

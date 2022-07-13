@@ -77,6 +77,10 @@ struct ControlValue_v
 		--format "\n"; print "ControlValue_v._getIniValue()"
 		if Ini.isDefined() and (ini_value = Ini.load(rollout_id)(_Control.id)) != undefined then
 			ini_value --return
+		--(
+		--	format "INI_VALUE	= % \n" ini_value
+		--	format "classOf ini_value	= % \n" (classOf ini_value)
+		--)
 	),
 	
 	/** Set value by ini

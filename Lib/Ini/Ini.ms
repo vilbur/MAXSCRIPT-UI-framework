@@ -43,15 +43,15 @@ struct Ini_v
 	 */
 	function load _section _key default:undefined =
 	(
-		print "Ini.load()"
-		format "_section	= % \n" _section
-		format "_key	= % \n" _key
+		--print "Ini.load()"
+		--format "_section	= % \n" _section
+		--format "_key	= % \n" _key
 		val	= default
 		--format "val	= % \n" val
 		--format "default	= % \n" default
 		--format "classOf default	= % \n" (classOf default)
 		val_from_ini = getINISetting _path ( _section	as string ) ( _key as string ) -- return
-		format "\nval_from_ini = % \n" val_from_ini
+		--format "\nval_from_ini = % \n" val_from_ini
 		if( val_from_ini == "" or val_from_ini == undefined ) then val else this._convertDatatype(val_from_ini) --return
 	),
 
@@ -59,12 +59,14 @@ struct Ini_v
 	 */
 	function _convertDatatype _string =
 	(	
+		--_string = substituteString _string "\\" "\\\\"
+
 		rx	= dotNetClass "System.Text.RegularExpressions.RegEx"
 		rx_options	= dotNetClass "System.Text.RegularExpressions.RegexOptions"
 		
 		known_class  = (rx.match _string "^\s*(\d+|true|false|undefined|unsupplied|\(\s*color\s+\d+\s+\d+\s+\d+\s*\))\s*$" rx_options.IgnoreCase ).success
 		
-		if known_class == false and (is_string = ( rx.match _string "(^'*[A-Za-z0-1_]+'*$)|[\s\\\/]" rx_options.IgnoreCase ).success ) then substituteString _string "\\" "\\\\" else try((execute(_string)))catch()
+		if known_class == false and (is_string = ( rx.match _string "(^'*[A-Za-z0-1_]+'*$)" rx_options.IgnoreCase ).success ) then (@"" + _string )else (try((execute(_string)))catch(_string))
 	),
 	
 	/** Get path
