@@ -10,32 +10,18 @@ clearListener()
 	
 --------------------------------------------------------------------------------*/
 
---strings_for_comparssion = #(
---	"string",
---	"Also string",
---	"C:\This\is\path",
---	"true",
---	"123",
---	"1.0",
---	"[1.1,2.0]",
---	"[1,2,3.3]",
---	"color 1 2 3",
---	"#{}",
---	"#()",
---	"#(#())"
---)
-
-string_is_defined_variable = 999
+string_is_defined_variable_also = 999
 
 input_values = #(
 	
 	/* executed strings bellow manifest as string */ 
-	"string_is_defined_variable",
+	"string_is_defined_variable_also",
 	"simpleString",
 	"'single_quoted'",
-	"\"double_quoted\"",
+	"\"escaped_quotes\"",
 	"space in string",
-	"C:\String\is\path",
+	@"C:\not escaped\path",
+	"C:/forward/slash/path",
 	true,
 	false,
 	undefined,
@@ -48,10 +34,16 @@ input_values = #(
 	[1.1, 2.0],
 	[1, 2, 3.3],
 	color 128 64 0,
+	( color 128 32 256),
 	#{},
 	#{1..3},
 	#(),
-	#(#())
+	#(#()),
+	#(1, 2 ,3, "A", "B", "C"),
+	
+
+	"END OF ARRAY"
+
 )
 
 /*------------------------------------------------------------------------------
@@ -73,8 +65,9 @@ function convertValuesToStrings values =
  */
 function formatOutput input_val val_converted =
 (
-	format "classOf = % \n" (classOf val_converted)
+	format "\nInput:"; print input_val
 	format "output  = % \n" val_converted
+	format "classOf = % \n" (classOf val_converted)
 )
 
 /** Convert strings to datatypes
@@ -87,7 +80,8 @@ function convertStringsToDatatypes =
 	for _string in strings do
 	(
 		correct_datatype = convertStringToDatatype(_string)
-
+		--format "correct_datatype	= % \n" correct_datatype
+		--format "classof correct_datatype	= % \n" (classof correct_datatype)
 		formatOutput (_string) (correct_datatype)
 	)
 )
@@ -101,7 +95,18 @@ function joinToStringArray strings =
 	_string = ""
 
 	for i=1 to strings.count do
-		_string += (if classOf strings[i] == string then "\"" +strings[i]+ "\""  else strings[i] as string ) + delimeter
+	(
+		string_input =
+		
+		if classOf strings[i] == string and matchPattern strings[i] pattern:"\"*" == false then
+			_string += "\"" +strings[i]+ "\"" 
+			
+		else
+			_string +=  strings[i] as string
+		
+		_string += delimeter
+		
+	)
 
 	_string = trimRight _string delimeter
 
@@ -117,16 +122,16 @@ function joinToStringArray strings =
 
 function convertStringToDatatype _string =
 (
-	--format "is_string     = % \n" is_string
-	format "\nInput:"; print _string
+	--format "\n"; print "convertStringToDatatype()"
 
+	_string_executed = try((execute(_string)))catch(_string)
+	
 	rx	= dotNetClass "System.Text.RegularExpressions.RegEx"
 	rx_options	= dotNetClass "System.Text.RegularExpressions.RegexOptions"
 	
-	known_class  = (rx.match _string "^\s*(\d+|true|false|undefined|unsupplied|\(\s*color\s+\d+\s+\d+\s+\d+\s*\))\s*$" rx_options.IgnoreCase ).success
-	
-	if known_class == false and (is_string = ( rx.match _string "(^'*[A-Za-z0-1_]+'*$)|[\s\\\/]" rx_options.IgnoreCase ).success ) then substituteString _string "\\" "\\\\" else try((execute(_string)))catch()
-	
+	known_class = (rx.match _string "^\s*(\d+|true|false|undefined|unsupplied|\(\s*color\s+\d+\s+\d+\s+\d+\s*\))\s*$" rx_options.IgnoreCase ).success
+
+	if known_class == false and (is_string = ( rx.match _string "(^'*[A-Za-z0-1_]+'*$)" rx_options.IgnoreCase ).success ) then (@"" + _string )else (try((execute(_string)))catch(_string))
 )
 
 
@@ -138,21 +143,41 @@ function testStringArray =
 	format "\n"
 
 	this_is_string = joinToStringArray(input_values)
-	this_is_array = convertStringToDatatype(this_is_string)
-	format "this_is_string = % \n\n" this_is_string
-	format "this_is_array  = % \n\n" this_is_array
-
-	for item in this_is_array do
-		format " 	item: %	is classOf:% \n\n"  item (classOf item)
+	--format "this_is_string = % \n\n" this_is_string
+	
+	for item in (convertStringToDatatype(this_is_string)) do
+		format "item:    %\nclassOf: % \n\n"  item (classOf item)
 )
+
 
 
 /*------------------------------------------------------------------------------
 
-					RUN TEST
+			RUN SINGLE TESTS
 
 --------------------------------------------------------------------------------*/
 
-convertStringsToDatatypes()
+--escaped_quotes = convertStringToDatatype("\"escaped_quotes\"")
+--format "escaped_quotes	= % \n" escaped_quotes
+--
+--not_escaped_path = convertStringToDatatype(@"C:\not escaped\path")
+--format "not_escaped_path	= % \n" not_escaped_path
 
---testStringArray()
+--string_array = convertStringToDatatype( "#(\"escaped_quotes\")" )
+--format "string_array	= % \n" string_array
+--format "classof string_array	= % \n" (classof string_array)
+
+
+/*------------------------------------------------------------------------------
+
+			RUN MASS TESTS
+
+--------------------------------------------------------------------------------*/
+
+--convertStringsToDatatypes()
+
+testStringArray()
+
+
+
+
