@@ -26,8 +26,8 @@ struct ControlParamsParser_v
 	 */
 	function parse params_string =
 	(
-		--format "\n"; print "ControlParamsParser_v.parse()"
-		--format "params_string	= % \n" params_string
+		format "\n"; print "ControlParamsParser_v.parse()"
+		format "params_string	= % \n" params_string
 		params = #( #(), #() )
 		
 		params_string = this._escapeSingleQuotes(params_string)
@@ -53,29 +53,20 @@ struct ControlParamsParser_v
 	),
 	
 	/** Split key and value
+	  * 
 	 */
 	function _splitKeyAndValue key_value_string =
 	(
 		--format "\n"; print "ControlParamsParser_v.splitKeyAndValue()"
 		--format "key_value_string	= % \n" key_value_string
-		----colon_index = findString key_value ":"
-		----
-		----key	= substring key_value 1 (colon_index-1)
-		----val	= substring key_value   (colon_index+1)	-1
+		colon_index = findString key_value_string ":" -- split string by firt occurencce of ":"
 		
-		key_value = filterString key_value_string ":" splitEmptyTokens:false
-		
-		key	= key_value[1]
-		val	= key_value[2]
-		
-		--format "key	= % \n" key
-		--format "val	= % \n" val
-		--format "classOF val	= % \n" (classOf val)
+		key	= substring key_value_string 1 (colon_index-1)
+		val	= substring key_value_string   (colon_index+1)	-1
 				
 		if key != "images" then
 		(
 			val = this._convertDatatype( this._trimWhiteSpace(val))
-			--format "classOF val	= % \n" (classOf val)
 
 			append params[1] ( this._trimWhiteSpace(key) as name )
 			append params[2] val			
