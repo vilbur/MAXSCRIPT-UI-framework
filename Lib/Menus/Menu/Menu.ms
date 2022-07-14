@@ -1,5 +1,5 @@
 /**  
-  *	
+  *	HELP: https://help.autodesk.com/view/MAXDEV/2021/ENU/?guid=GUID-1374EDCA-CC8B-4B43-81A5-6ED98DBE01D3
   */
 struct Menu_v
 (	
@@ -13,11 +13,19 @@ struct Menu_v
 	
 	/** Add menu item
 	 */
-	function addItem category macro_script_name title: =
+	function addItem category macro_script_name title: group: =
 	(
 		format "\n"; print "Menu_v.addItem()"
+		format "category	= % \n" category
+		format "macro_script_name	= % \n" macro_script_name
 		format "title	= % \n" title
-		item = menuMan.createActionItem (macro_script_name) (category)
+
+		item = if( group == unsupplied ) then menuMan.createActionItem (macro_script_name) (category) else menuMan.createMenuItemFromAction (group) (macro_script_name) category:(category)
+		
+		format "item	= % \n" item
+		
+		if item == undefined then 
+			return false
 		
 		if( title != unsupplied ) then 
 			this._setTitle(item)(title)
