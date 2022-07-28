@@ -4,6 +4,14 @@ filein( getFilenamePath(getSourceFileName()) + "/MacroScriptFileParser/MacroScri
 
 filein( getFilenamePath(getSourceFileName()) + "/../../../../Menus/QuadMenu/QuadMenu.ms" )
 
+/*
+		TODO:
+
+		RENAME THIS TO contentCotnrolCreator
+
+*/ 
+	 
+  
 /** Process ".ms" & ".mcr" files
   *
   * Every ".mcr" file creates its own ControlsBox
@@ -15,10 +23,6 @@ filein( getFilenamePath(getSourceFileName()) + "/../../../../Menus/QuadMenu/Quad
   * 
   * @property	string	file	Path to file
   *
-  *
-  
-  RENAME THIS TO contentCotnrolCreator
-  
   */
 struct ScriptFile_Content_v
 (
@@ -29,11 +33,15 @@ struct ScriptFile_Content_v
 	filename, -- filename of ".mcr" file
 	MacroScripts	= #(),
 
-	
+	/* Dependency */ 
 	_Controls,
 	ControlEventBinder,
 	QuadMenu,
-	
+
+	/* Store */ 
+	InheritParams = List_v(),
+	inherit_params	= #( #width, #height, #across ),
+
 	/** Load controls from .mcr file
 	 */
 	function loadMacroscriptFile =
@@ -91,6 +99,9 @@ struct ScriptFile_Content_v
 		if(_Control_Exist = _Controls.get(_Control.id)) != undefined then
 			_Control = _Control_Exist -- update existing control
 		
+		else
+			this.inheritParameters (_Control)
+		
 		this._setEventCallMacro (_Control) (Macro)
 		
 		if( _Control_Exist == undefined ) then
@@ -124,6 +135,36 @@ struct ScriptFile_Content_v
 		else if menu_name != undefined then
 			(Menu_v (menu_name)).addItem (Macro.category) (Macro.macro_name) title:title
 
+	),
+	
+	
+	/** Inherit parameters of previous same control type
+	  * 	So in ".mcr" file is not necessary define for each control
+	  * 
+	  * params types are defined in this.inherit_params
+	 */
+	function inheritParameters &_Control =
+	(
+		--format "\n"; print "ScriptFile_Content_v.inheritParameters()"
+		--format "InheritParams	= % \n" InheritParams
+
+		inherit_values	= if (values_exists = InheritParams.getVal(_Control.type)) != undefined then values_exists else #()
+		
+		for i = 1 to inherit_params.count do 
+		(
+			param_type	= inherit_params[i]
+			param_value = _Control.Params.getVal (param_type) 
+
+			if( param_value = _Control.Params.getVal (param_type) ) != undefined then -- if controls has parameter defined, then save if for next control
+				inherit_values[i] = param_value
+			
+			else if inherit_values[i] != undefined then -- inherit param value
+				_Control.Params.setVal (param_type) (inherit_values[i])
+		)
+
+		InheritParams.setVal(_Control.type) (inherit_values)
+
+		_Control --return
 	),
 	
 	/** Set events which call macro
