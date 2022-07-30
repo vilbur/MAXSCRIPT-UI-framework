@@ -140,9 +140,9 @@ struct ControlCreator_v
 		/* DEBUG LOG */ 
 		if not matchPattern _Control.id pattern:"LABEL_fake*" then -- DEBUG - don`t print
 		(
-			format "\n%.%" ( _Rollout.id as string ) _Control.id
+			format "\nControl:%.%" ( _Rollout.id as string ) _Control.id
 			
-			format " params	= % \n" params
+			format "	Params: % \n" params
 		)
 		
 		_Rollout._RolloutCreator.addControl (_Control.type) (_Control.id) (this._getCaption(_Control.caption)) paramStr:params filter:true;
