@@ -19,7 +19,7 @@ struct TooltipCreator_v
 		--format "_Control.Events.List	= % \n" _Control.Events.List
 		this._Control = _Control
 		
-		this._Control.params.setVal "tooltip" (this._getTooltipsOfEvents())
+		this._Control.params.setVal #tooltip (this._getTooltipsOfEvents())
 		
 		this._Control --return 
 	),
@@ -64,7 +64,7 @@ struct TooltipCreator_v
 	 */
 	on create do
 	(
-		--print("TooltipCreator_v.onCreate()")
+		print("TooltipCreator_v.onCreate()")
 		--ConstructPropeties test:this
 	)
 )
