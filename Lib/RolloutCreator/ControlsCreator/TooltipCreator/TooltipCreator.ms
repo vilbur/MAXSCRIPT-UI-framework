@@ -18,7 +18,7 @@ struct TooltipCreator_v
 		--format "\n"; print "TooltipCreator_v.addTooltips()"
 		--format "_Control.Events.List	= % \n" _Control.Events.List
 		this._Control = _Control
-		
+
 		this._Control.params.setVal #tooltip (this._getTooltipsOfEvents())
 		
 		this._Control --return 
@@ -33,13 +33,10 @@ struct TooltipCreator_v
 		--format "\n"; print "TooltipCreator_v.getTooltipsOfEvents()"
 		Events = this._Control.Events.List
 		
-		tooltip = ""
-		
-		--format "Events.count	= % \n" Events.count
+		tooltip = if( tooltip_param = _Control.params.getVal #tooltip ) != undefined then tooltip_param + "\n" else ""
 		
 		for Event in Events do 
 			tooltip += this._getEventPrefix(Event.type) + Event.tooltip + "\n"
-			
 			
 		trimRight tooltip "\n" --return
 	),
@@ -64,7 +61,7 @@ struct TooltipCreator_v
 	 */
 	on create do
 	(
-		print("TooltipCreator_v.onCreate()")
+		--print("TooltipCreator_v.onCreate()")
 		--ConstructPropeties test:this
 	)
 )

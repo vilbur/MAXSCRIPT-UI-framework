@@ -154,7 +154,7 @@ struct ControlEventBinder_v
 					Event.code  += " ("+ param + ")" -- add parameters after callback E.G.: "callbackFn" >>>  "callbackFn inSpin inCancel
 		
 			
-			else if not( matchPattern Event.code pattern:"*()" ) then
+			else if not( matchPattern Event.code pattern:"*(*)" ) and not (  matchPattern Event.code pattern:"*\"*\"" ) then -- if not match E.G.: "print (\"XXX\")" OR "print \"XXX\""
 				Event.code += "()" -- add brackets after callback E.G.: "callbackFn" >>>  "callbackFn()"
 		)
 	),
