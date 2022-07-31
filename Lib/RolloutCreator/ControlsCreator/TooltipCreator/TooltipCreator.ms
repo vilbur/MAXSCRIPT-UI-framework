@@ -12,7 +12,8 @@ struct TooltipCreator_v
 		--format "\n"; print "TooltipCreator_v.addTooltips()"
 		this._Control = _Control
 
-		this._Control.params.setVal #tooltip (this._getTooltipsOfEvents())
+		if( tooltip = this._getTooltipsOfEvents() ) != undefined then
+			this._Control.params.setVal (#tooltip) (tooltip)
 		
 		this._Control --return 
 	),
@@ -26,12 +27,13 @@ struct TooltipCreator_v
 		--format "\n"; print "TooltipCreator_v.getTooltipsOfEvents()"
 		Events = this._Control.Events.List
 		
-		tooltip = if( tooltip_param = _Control.params.getVal #tooltip ) != undefined then tooltip_param + "\n" else ""
+		tooltip = tooltip_param = _Control.params.getVal #tooltip
 		
 		for Event in Events where Event.tooltip != "" do
 			tooltip += this._getEventPrefix(Event.type) + Event.tooltip + "\n"
 			
-		trimRight tooltip "\n" --return
+		--trimRight tooltip "\n" --return
+		tooltip --return
 	),
 	
 	/** Get event type
@@ -46,8 +48,6 @@ struct TooltipCreator_v
 				(#rightclick):	"RMB: "	
 				default:	this._capitalize(event_type as string ) + ":"
 			)
-		else
-			"" --return
 	),
 	
 	/** Capitalize first letter

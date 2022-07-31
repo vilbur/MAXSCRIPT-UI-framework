@@ -10,7 +10,18 @@ struct BrowsePath_v
 	_Control,
 	
 	/* properties */
-	browse_params = #( #mode, #caption, #initialDir, #types, #filename, #historyCategory ), -- https://help.autodesk.com/view/MAXDEV/2021/ENU/?guid=GUID-D4B43A33-8342-4BC9-80AB-91460861D37C
+	browse_params = #(  -- https://help.autodesk.com/view/MAXDEV/2021/ENU/?guid=GUID-D4B43A33-8342-4BC9-80AB-91460861D37C
+		#mode,	-- #getOpenFileName|#getSaveFileName|#getSavePath is default
+		#caption,
+		#initialDir,
+		#types,
+		#filename,
+		#historyCategory
+	),
+	
+	Events	= #(),
+
+	prev_value_variable,
 	
 	/** Browse path
 	  *
@@ -25,57 +36,72 @@ struct BrowsePath_v
 		--print "BrowsePath_v.getControl()"
 		this._Control = _Control
 		
-		Events	= #()
-		
 		prev_value_variable = (_Control.id + "_prev_state")
-		
+
+		tooltip = if( tooltip_param = this._Control.params.getVal #tooltip ) != undefined then tooltip_param else ""
+
 		this._setDefaultParams()
 
-		/* Get existing event or create new */
-		--for event_type in #( #changed, #entered ) do 
-	
-		--Event = if( (Event = _Control.Events.get event_type) != undefined ) then Event else (Event_v type:event_type )
-		Event_changed =  Event_v type: #changed
-		Event_entered =  Event_v type: #entered
+		this._setChangedEvent(tooltip)
+		this._setEnteredEvent(tooltip)
 
-		/**  
-		  *	TODO: function valueIsEmpty should be placed in rollout, but there is no problem with it
-		  */
+		Events --return
+	),
+	
+	/** Get changed event
+	 */
+	function _setChangedEvent tooltip =
+	(
+		--format "\n"; print "BrowsePath_v._getChangedEvent()"
+		Event_changed =  Event_v type: #changed
+		
+
+		/** NOTE: function valueIsEmpty should be placed in rollout, but there is no problem with it  */
 		Event_changed.code = "
 			function valueIsEmpty _string =
-				(
-					(( dotNetClass @System.Text.RegularExpressions.RegEx@).matches _string @^\s+$|^$@ ).count == 1
-				)
-				
-				if( val != "+prev_value_variable+" and valueIsEmpty(val) and valueIsEmpty("+prev_value_variable+") ) then
-				(
-					if( (browsed_path = "+ this._getPathDialog() +") != undefined ) then
-					(
-						"+_Control.id+".text    = browsed_path as string 
-						"+_Control.id+".tooltip = browsed_path as string 
-					
-						val = EventFired.val    = substituteString browsed_path @\\\\@ @\\\\\\\\@
-					)
-					else
-						"+prev_value_variable+" = val 
-				)
-				else
-					(
-						"+prev_value_variable+" = "+_Control.id+".text
-						"+_Control.id+".tooltip      = browsed_path as string 
-					)"
-				
-				
-		Event_entered.code = "if( val != "+prev_value_variable+" ) then
 			(
-				val = EventFired.val    = substituteString val @\\\\@ @\\\\\\\\@
+				(( dotNetClass @System.Text.RegularExpressions.RegEx@).matches _string @^\s+$|^$@ ).count == 1
+			)
+			
+			if( val != "+prev_value_variable+" and valueIsEmpty(val) and valueIsEmpty("+prev_value_variable+") ) then -- IF VALUE HAS CHANGED AND FIELD IS EMPTY
+			(
+				 -- OPEN BROWSE DIALOG
+				if( (browsed_path = "+ this._getPathDialog() +") != undefined ) then -- IF PATH HAS BEEN BROWSED
+				(
+					"+this._Control.id+".text    = browsed_path as string 
+					"+this._Control.id+".tooltip = browsed_path as string 
+				
+					val = EventFired.val = substituteString browsed_path @\\\\@ @\\\\\\\\@
+				)
+				else 
+				(
+					"+prev_value_variable+" = val -- IF DIALOG WAS CANCELED
+					"+this._Control.id+".tooltip = \""+tooltip+"\" 
+				)
+			)
+			else
+			(
+				"+prev_value_variable+" = "+this._Control.id+".text
+				"+this._Control.id+".tooltip = \""+tooltip+"\" 
 			)"
-			
-			
+
 		append Events Event_changed
-		append Events Event_entered
+	),
+	/** Get entered event
+	 */
+	function _setEnteredEvent tooltip =
+	(
+		--format "\n"; print "BrowsePath_v._getEnteredEvent()"
+		Event_entered =  Event_v type: #entered
 		
-		Events --return
+		Event_entered.code = "
+			if( val != \"\" ) then
+				val = EventFired.val = "+this._Control.id+".tooltip = substituteString val @\\\\@ @\\\\\\\\@
+			
+			else
+				"+this._Control.id+".tooltip = \""+tooltip+"\""
+
+		append Events Event_entered
 	),
 	
 	/** Browse path
@@ -93,7 +119,7 @@ struct BrowsePath_v
 		
 		_Control.addlocal ( prev_value_variable as name ) "" -- E.G.:  #BROWSEPATH_id_prev_state = ""
 
-		------history_path = getINISetting (GetMAXIniFile()) (this._getParam #historyCategory) "History_00"
+		--------history_path = getINISetting (GetMAXIniFile()) (this._getParam #historyCategory) "History_00"
 
 		_Control --return
 	),
