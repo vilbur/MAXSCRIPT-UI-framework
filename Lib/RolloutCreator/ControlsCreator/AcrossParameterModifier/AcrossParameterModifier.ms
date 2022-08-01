@@ -18,7 +18,7 @@ struct AcrossParameterModifier_v
 	--across_last	= 0,
 	across_last,
 	position_in_row	= 0,
-	controls_count,
+	--row_ends,
 	
 	fake_control_caption = "",
 	--fake_control_caption = "FAKE", -- DEV
@@ -30,22 +30,25 @@ struct AcrossParameterModifier_v
 		--format "\n\n\n"; print ("AcrossParameterModifier_v.addFakeControls()" )		
 		this._Controls = _Controls
 	
-		controls_count = _Controls.list.count
+		--controls_count = _Controls.list.count
 		
 		for i = 1 to _Controls.list.count do
 		(
-			format "\n\n\n--------------------------------------\n_CONTROL: % \n\n" _Controls.list[i].caption
+			format "\n--------------------------------------\n\n_CONTROL: % \n\n" _Controls.list[i].caption
 			index = i
 			
 			this._setAcrossOfCurrentControl(_Controls.list[i])
 			
 			format "index	= % \n" index
 			format "across_current	= % \n" across_current
-			format "across_last	= % \n" across_last			
+			format "across_last	= % \n" across_last
+			
+			last_row_was_filled = across_last == position_in_row
+			
 			this._setPositionInRow()
 			format "position_in_row	= % \n" position_in_row
-						 
-			this._tryFillEndOfRow(position_in_row)
+								 
+			this._fillEndOfRowBeforeControl( last_row_was_filled )
 
 			across_last = across_current
 			
@@ -53,7 +56,6 @@ struct AcrossParameterModifier_v
 			
 			if this._isLastControl() then
 				this._fillEndOfGroup()
-
 		)
 		
 		_Controls.List = List_new
@@ -75,17 +77,17 @@ struct AcrossParameterModifier_v
 	
 	/** Fill end of row
 	 */
-	function _tryFillEndOfRow position_in_row =
+	function _fillEndOfRowBeforeControl last_row_was_filled =
 	(
-		format "\n"; print "AcrossParameterModifier_v._tryFillEndOfRow()"
+		format "\n"; print "AcrossParameterModifier_v._fillEndOfRowBeforeControl()"
 		across_changed = this._acrossChanged()
 		
 		format "across_changed	= % \n" across_changed
 		
-		if( across_changed ) then
+		if( across_changed and last_row_was_filled == false ) then
 		(
 			--this._insertFakeAfterControl(across_last - position_in_row  )
-			this._addFakeControl(across_last - position_in_row  ) fake_control_caption:("ROW END left: "+ (across_last - position_in_row) as string ) -- DEBUG PARAM
+			this._addFakeControl( across_last - position_in_row  ) fake_control_caption:("ROW END left: "+ (across_last - position_in_row) as string ) -- DEBUG PARAM
 		)
 	),
 	
@@ -104,10 +106,10 @@ struct AcrossParameterModifier_v
 	function _isLastControl =
 	(
 		format "\n"; print "AcrossParameterModifier_v._isLastControl()"
-		format "controls_count	= % \n" controls_count
+		format "controls_count	= % \n"  _Controls.list.count
 		format "index	= % \n" index
-		format "_isLastControl	= % \n" (controls_count == index)
-		controls_count == index  --return
+		format "_isLastControl	= % \n" ( _Controls.list.count == index)
+		 _Controls.list.count == index  --return
 	),
 	
 	/** Get position in row

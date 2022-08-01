@@ -132,7 +132,7 @@ function subrolloutsControls =
 function firstControlSingleInRow =
 (
 	--format "\n"; print ".firstControlSingleInRow()"
-	_Controls = _Rollout.Controls group:"Label and full widthr control bellow"
+	_Controls = _Rollout.Controls group:"Single control in row"
 
 	
 	_Controls.control #label "Label in 1st row" align:#left across:4
@@ -153,10 +153,10 @@ function firstControlSingleInRow =
 	RUN TESTS 
 --------------------------------------------------------------------------------*/
 
-onlyButtons(5) prefix:"A"
--- onlyButtons(3) prefix:"B" across:2
--- onlyButtons(5) prefix:"C" across:3
--- onlyButtons(10) prefix:"D"
+onlyButtons(5)  prefix:"A "
+onlyButtons(3)  prefix:"B " across:2
+onlyButtons(5)  prefix:"C " across:3
+onlyButtons(10) prefix:"D "
 
 --myltipleListboxes(1)
 --myltipleListboxes(1)
@@ -169,7 +169,7 @@ createControlsGoups(groups_count)
 --createControlsGoupsWithAcross(2)
  
 
--- firstControlSingleInRow()
+firstControlSingleInRow()
 
 --subrolloutsControls()
 
