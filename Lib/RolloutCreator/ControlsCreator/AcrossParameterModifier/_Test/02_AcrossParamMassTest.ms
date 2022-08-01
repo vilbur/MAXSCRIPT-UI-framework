@@ -61,8 +61,7 @@ function eachRowDifferenCountOfControls count prefix:"" across:4 =
 function testFakeControlsOnEndOfGroup _Controls count across =
 (
 	for i = 1 to count do
-		-- _Controls.control #button ( i as string + " of "+ count as string +" across:"+ across as string ) params:#(#across, across)
-		_Controls.control #button ( "_" + i as string + " of "+ count as string +" across:"+ across as string ) params:#(#across, across)
+		_Controls.control #button ( "Btn " + i as string + " of "+ count as string +" across:"+ across as string ) params:#(#across, across)
 )
 
 
@@ -96,7 +95,8 @@ function myltipleListboxes count =
 function createControlsGoups _groups =
 (
 	for i = 1 to _groups do
-		testFakeControlsOnEndOfGroup(_Rollout.Controls group:("Group of "+(i+1) as string )  ) (i+2) (i+1)
+		testFakeControlsOnEndOfGroup(_Rollout.Controls group:("Group of "+ i as string )  ) (i+1) (i)
+
 )
 
 /** Create controls goups
@@ -134,18 +134,9 @@ function firstControlSingleInRow =
 	--format "\n"; print ".firstControlSingleInRow()"
 	_Controls = _Rollout.Controls group:"Single control in row"
 
-	
-	_Controls.control #label "Label in 1st row" align:#left across:4
-	--_Controls.control #label "Label in 1st row" align:#left across:1 
-	--_Controls.control #label "Label in 1st row" align:#left across:1 
-	
-	_Controls.control #Edittext "Edit Text" across:1
-	--_Controls.control #Edittext "Edittext"
-
-
+	_Controls.control #label   "Label alone in row" across:4 align:#left 
+	_Controls.control #Edittext "Full width control" across:1
 )
-
-
 
 
 
@@ -158,24 +149,16 @@ onlyButtons(3)  prefix:"B " across:2
 onlyButtons(5)  prefix:"C " across:3
 onlyButtons(10) prefix:"D "
 
---myltipleListboxes(1)
---myltipleListboxes(1)
 
+createControlsGoups(4)
 
-groups_count = 3
--- groups_count = 1
-createControlsGoups(groups_count)
-
---createControlsGoupsWithAcross(2)
  
-
 firstControlSingleInRow()
 
---subrolloutsControls()
+myltipleListboxes(1)
+-- myltipleListboxes(3)
 
-
-
-
+subrolloutsControls()
 
 
 /*------------------------------------------------------------------------------

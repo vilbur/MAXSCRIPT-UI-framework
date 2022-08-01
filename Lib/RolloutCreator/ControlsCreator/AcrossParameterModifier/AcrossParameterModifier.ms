@@ -12,43 +12,36 @@ struct AcrossParameterModifier_v
 
 	List_new = #(),
 
-	
 	index,
 	across_current,
-	--across_last	= 0,
-	across_last,
+	across_last	= 0,
 	position_in_row	= 0,
-	--row_ends,
-	
-	fake_control_caption = "",
-	--fake_control_caption = "FAKE", -- DEV
 	
 	/** Fill end of row with fake controls to keep layout
 	 */
 	function addFakeControls &_Controls =
 	(
-		--format "\n\n\n"; print ("AcrossParameterModifier_v.addFakeControls()" )		
+		----format "\n\n\n"; print ("AcrossParameterModifier_v.addFakeControls()" )		
 		this._Controls = _Controls
 	
 		--controls_count = _Controls.list.count
 		
 		for i = 1 to _Controls.list.count do
 		(
-			format "\n--------------------------------------\n\n_CONTROL: % \n\n" _Controls.list[i].caption
+			--format "\n--------------------------------------\n\n_CONTROL: % \n\n" _Controls.list[i].caption
 			index = i
 			
 			this._setAcrossOfCurrentControl(_Controls.list[i])
+			--format "index	= % \n" index
+			--format "across_current	= % \n" across_current
+			--format "across_last	= % \n" across_last
 			
-			format "index	= % \n" index
-			format "across_current	= % \n" across_current
-			format "across_last	= % \n" across_last
-			
-			last_row_was_filled = across_last == position_in_row
+			controls_left	= across_last - position_in_row
 			
 			this._setPositionInRow()
-			format "position_in_row	= % \n" position_in_row
+			--format "position_in_row	= % \n" position_in_row
 								 
-			this._fillEndOfRowBeforeControl( last_row_was_filled )
+			this._fillEndOfRowBeforeControl(controls_left)
 
 			across_last = across_current
 			
@@ -71,24 +64,22 @@ struct AcrossParameterModifier_v
 	 */
 	function _setAcrossOfCurrentControl _Control =
 	(
-		--format "\n"; print "AcrossParameterModifier_v._setAcrossOfCurrentControl()"
+		----format "\n"; print "AcrossParameterModifier_v._setAcrossOfCurrentControl()"
 		across_current = if( (across_param = _Control.Params.getVal #across) != undefined ) then across_param else across_last --return 
 	),
 	
 	/** Fill end of row
 	 */
-	function _fillEndOfRowBeforeControl last_row_was_filled =
+	function _fillEndOfRowBeforeControl controls_left =
 	(
-		format "\n"; print "AcrossParameterModifier_v._fillEndOfRowBeforeControl()"
+		--format "\n"; print "AcrossParameterModifier_v._fillEndOfRowBeforeControl()"
 		across_changed = this._acrossChanged()
 		
-		format "across_changed	= % \n" across_changed
+		--format "across_changed	= % \n" across_changed
 		
-		if( across_changed and last_row_was_filled == false ) then
-		(
-			--this._insertFakeAfterControl(across_last - position_in_row  )
-			this._addFakeControl( across_last - position_in_row  ) fake_control_caption:("ROW END left: "+ (across_last - position_in_row) as string ) -- DEBUG PARAM
-		)
+		if( across_changed and controls_left > 0 ) then
+			this._addFakeControl(controls_left)
+			--this._addFakeControl( controls_left  ) fake_control_caption:("ROW END left: "+ (controls_left) as string ) -- DEBUG PARAM
 	),
 	
 	/** If control is last in group, then add fake controls to fill group
@@ -96,19 +87,19 @@ struct AcrossParameterModifier_v
 	 */
 	function _fillEndOfGroup =
 	(
-		format "\n"; print "AcrossParameterModifier_v._fillEndOfGroup()"
-		--this._insertFakeAfterControl(across_current - position_in_row )
-		this._addFakeControl(across_current - position_in_row ) fake_control_caption:("GROUP END left: "+ (across_current - position_in_row) as string ) -- DEBUG PARAM
+		--format "\n"; print "AcrossParameterModifier_v._fillEndOfGroup()"
+		this._addFakeControl(across_current - position_in_row )
+		--this._addFakeControl(across_current - position_in_row ) fake_control_caption:("GROUP END left: "+ (across_current - position_in_row) as string ) -- DEBUG PARAM
 	),
 
 	/** Find out if control is last in list
 	 */
 	function _isLastControl =
 	(
-		format "\n"; print "AcrossParameterModifier_v._isLastControl()"
-		format "controls_count	= % \n"  _Controls.list.count
-		format "index	= % \n" index
-		format "_isLastControl	= % \n" ( _Controls.list.count == index)
+		--format "\n"; print "AcrossParameterModifier_v._isLastControl()"
+		--format "controls_count	= % \n"  _Controls.list.count
+		--format "index	= % \n" index
+		--format "_isLastControl	= % \n" ( _Controls.list.count == index)
 		 _Controls.list.count == index  --return
 	),
 	
@@ -116,9 +107,9 @@ struct AcrossParameterModifier_v
 	 */
 	function _setPositionInRow =
 	(
-		--format "\n"; print "AcrossParameterModifier_v._setPositionInRow()"
-		--format "across_current != across_last	= % \n" (across_current != across_last)
-		--format "position_in_row >= across_current	= % \n" (position_in_row >= across_current)
+		----format "\n"; print "AcrossParameterModifier_v._setPositionInRow()"
+		----format "across_current != across_last	= % \n" (across_current != across_last)
+		----format "position_in_row >= across_current	= % \n" (position_in_row >= across_current)
 		position_in_row = if across_current != across_last or position_in_row >= across_current then 1 else position_in_row+1
 	),
 	
@@ -126,8 +117,8 @@ struct AcrossParameterModifier_v
 	 */
 	function _acrossChanged =
 	(
-		format "\n"; print "AcrossParameterModifier_v._acrossChanged()"
-		if across_last != undefined  then -- IF CONTROL IS FIRST AND SECOND CONTROL SHOULD BE IN NEXT ROW
+		--format "\n"; print "AcrossParameterModifier_v._acrossChanged()"
+		if across_last != 0  then -- IF CONTROL IS FIRST AND SECOND CONTROL SHOULD BE IN NEXT ROW
 			across_current != across_last --return
 		
 		else
@@ -136,11 +127,11 @@ struct AcrossParameterModifier_v
 	
 	/** _add fake controls
 	*/
-	function _addFakeControl fake_controls_count fake_control_caption:fake_control_caption =
+	function _addFakeControl fake_controls_count fake_control_caption:"" =
 	(
-		print "AcrossParameterModifier_v._addFakeControl()"
-		format "fake_controls_count	= % \n" fake_controls_count
-		format "fake_control_caption	= % \n" fake_control_caption
+		--print "AcrossParameterModifier_v._addFakeControl()"
+		--format "fake_controls_count	= % \n" fake_controls_count
+		--format "fake_control_caption	= % \n" fake_control_caption
 		for i = 1 to fake_controls_count do
 			append List_new (this._createFakeControl(fake_control_caption))
 			--insertItem (this._createFakeControl(fake_control_caption)) _Controls.list (index) 
