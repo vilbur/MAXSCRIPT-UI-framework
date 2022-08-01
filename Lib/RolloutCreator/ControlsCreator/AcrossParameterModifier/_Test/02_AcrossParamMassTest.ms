@@ -49,8 +49,9 @@ function eachRowDifferenCountOfControls count prefix:"" across:4 =
 		if( i > 9  ) then across = 1
 		
 		_Controls.Default #width 96 type:#button
-		--_Button1    = _Controls.control #button ( prefix + i as string +" of  "+ count as string) params:#(#across, across)
-		_Button1    = _Controls.control #button ( prefix + i as string) params:#(#across, across)
+		_Button1    = _Controls.control #button ( prefix + i as string +" of  "+ count as string + " across:" +across as string) params:#(#across, across)
+		-- _Button1    = _Controls.control #button ( prefix + i as string +" of  "+ count as string) params:#(#across, across)
+		--_Button1    = _Controls.control #button ( prefix + i as string ) params:#(#across, across)
 	)
 )
 
@@ -60,7 +61,8 @@ function eachRowDifferenCountOfControls count prefix:"" across:4 =
 function testFakeControlsOnEndOfGroup _Controls count across =
 (
 	for i = 1 to count do
-		_Controls.control #button ( i as string + " of "+ count as string +" across:"+ across as string ) params:#(#across, across)
+		-- _Controls.control #button ( i as string + " of "+ count as string +" across:"+ across as string ) params:#(#across, across)
+		_Controls.control #button ( "_" + i as string + " of "+ count as string +" across:"+ across as string ) params:#(#across, across)
 )
 
 
@@ -70,7 +72,7 @@ function testFakeControlsOnEndOfGroup _Controls count across =
 --------------------------------------------------------------------------------*/
 /** CreateOnlyButtons
  */
-function createOnlyButtons count prefix:"" across:4 =
+function onlyButtons count prefix:"" across:4 =
 (
 	eachRowDifferenCountOfControls count prefix:prefix across:across
 )
@@ -101,16 +103,17 @@ function createControlsGoups _groups =
  */
 function createControlsGoupsWithAcross _groups =
 (
-	--for i = 1 to _groups do
-		--testFakeControlsOnEndOfGroup(_Rollout.Controls group:("Across Group of "+(i+1) as string )  ) (i+2) (i+1)
+	for i = 1 to _groups do
+		testFakeControlsOnEndOfGroup(_Rollout.Controls group:("Across Group of "+(i+1) as string )  ) (i+2) (i+1)
 		
 		Groupbox = _Rollout.Controls group:"Across"
 		
 		Groupbox.control #button "groupbox test"params:#(#across, 2)
 )
+
 /** Createsubrollouts
  */
-function createsubrolloutsControls =
+function subrolloutsControls =
 (
 	--format "_Rollout	= % \n" _Rollout
 	Subrollouts_1 = _Rollout.Subrollouts()
@@ -124,7 +127,23 @@ function createsubrolloutsControls =
 )
 
 
+/** Bug with first control
+ */
+function firstControlSingleInRow =
+(
+	--format "\n"; print ".firstControlSingleInRow()"
+	_Controls = _Rollout.Controls group:"Label and full widthr control bellow"
 
+	
+	_Controls.control #label "Label in 1st row" align:#left across:4
+	--_Controls.control #label "Label in 1st row" align:#left across:1 
+	--_Controls.control #label "Label in 1st row" align:#left across:1 
+	
+	_Controls.control #Edittext "Edit Text" across:1
+	--_Controls.control #Edittext "Edittext"
+
+
+)
 
 
 
@@ -134,25 +153,25 @@ function createsubrolloutsControls =
 	RUN TESTS 
 --------------------------------------------------------------------------------*/
 
---createOnlyButtons(5) prefix:"A"
---createOnlyButtons(3) prefix:"B" across:2
---createOnlyButtons(5) prefix:"C " across:3
---createOnlyButtons(10)
+onlyButtons(5) prefix:"A"
+-- onlyButtons(3) prefix:"B" across:2
+-- onlyButtons(5) prefix:"C" across:3
+-- onlyButtons(10) prefix:"D"
 
 --myltipleListboxes(1)
 --myltipleListboxes(1)
 
 
 groups_count = 3
- createControlsGoups(groups_count)
+-- groups_count = 1
+createControlsGoups(groups_count)
 
-createControlsGoupsWithAcross(1)
+--createControlsGoupsWithAcross(2)
  
- --createsubrolloutsControls()
 
+-- firstControlSingleInRow()
 
-
-
+--subrolloutsControls()
 
 
 
