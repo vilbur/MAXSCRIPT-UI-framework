@@ -64,9 +64,16 @@ struct Ini_v
 		rx	= dotNetClass "System.Text.RegularExpressions.RegEx"
 		rx_options	= dotNetClass "System.Text.RegularExpressions.RegexOptions"
 		
-		known_class  = (rx.match _string "^\s*(\d+|true|false|undefined|unsupplied|\(\s*color\s+\d+\s+\d+\s+\d+\s*\))\s*$" rx_options.IgnoreCase ).success
-		
-		if known_class == false and (is_string = ( rx.match _string "(^'*[A-Za-z0-1_]+'*$)" rx_options.IgnoreCase ).success ) then (@"" + _string )else (try((execute(_string)))catch(_string))
+		is_variable = (rx.match _string "^\s*(\d+|true|false|undefined|unsupplied|\(\s*color\s+\d+\s+\d+\s+\d+\s*\))\s*$" rx_options.IgnoreCase ).success
+	
+		if not is_variable and (is_string = ( rx.match _string "(^'*[A-Za-z0-1_\s]+'*$)" rx_options.IgnoreCase ).success ) then
+		(
+			@"" + _string -- IS STRING
+		)
+		else
+		(
+			try((execute(_string)))catch(_string) -- IS VARIABLE
+		)
 	),
 	
 	/** Get path

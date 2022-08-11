@@ -26,8 +26,8 @@ struct ControlParamsParser_v
 	 */
 	function parse params_string =
 	(
-		format "\n"; print "ControlParamsParser_v.parse()"
-		format "params_string	= % \n" params_string
+		--format "\n"; print "ControlParamsParser_v.parse()"
+		--format "params_string	= % \n" params_string
 		params = #( #(), #() )
 		
 		params_string = this._escapeSingleQuotes(params_string)
@@ -57,7 +57,7 @@ struct ControlParamsParser_v
 	 */
 	function _splitKeyAndValue key_value_string =
 	(
-		--format "\n"; print "ControlParamsParser_v.splitKeyAndValue()"
+		format "\n"; print "ControlParamsParser_v.splitKeyAndValue()"
 		--format "key_value_string	= % \n" key_value_string
 		colon_index = findString key_value_string ":" -- split string by firt occurencce of ":"
 		
@@ -123,13 +123,19 @@ struct ControlParamsParser_v
 	function _convertDatatype _string =
 	(
 		--_string = substituteString _string "\\" "\\\\"
-
 		rx	= dotNetClass "System.Text.RegularExpressions.RegEx"
 		rx_options	= dotNetClass "System.Text.RegularExpressions.RegexOptions"
 		
-		known_class  = (rx.match _string "^\s*(\d+|true|false|undefined|unsupplied|\(\s*color\s+\d+\s+\d+\s+\d+\s*\))\s*$" rx_options.IgnoreCase ).success
-		
-		if known_class == false and (is_string = ( rx.match _string "(^'*[A-Za-z0-1_]+'*$)" rx_options.IgnoreCase ).success ) then (@"" + _string )else (try((execute(_string)))catch(_string))
+		is_variable = (rx.match _string "^\s*(\d+|true|false|undefined|unsupplied|\(\s*color\s+\d+\s+\d+\s+\d+\s*\))\s*$" rx_options.IgnoreCase ).success
+	
+		if not is_variable and (is_string = ( rx.match _string "(^'*[A-Za-z0-1_\s]+'*$)" rx_options.IgnoreCase ).success ) then
+		(
+			@"" + _string -- IS STRING
+		)
+		else
+		(
+			try((execute(_string)))catch(_string) -- IS VARIABLE
+		)
 	),
 	
 	/**  

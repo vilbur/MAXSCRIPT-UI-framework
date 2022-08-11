@@ -14,7 +14,9 @@ string_is_defined_variable_also = 999
 
 input_values = #(
 	
-	/* executed strings bellow manifest as string */ 
+	/* executed strings bellow manifest as string */
+	"Render X",
+	"classOf X",
 	"string_is_defined_variable_also",
 	"simpleString",
 	"'single_quoted'",
@@ -41,7 +43,7 @@ input_values = #(
 	#(#()),
 	#(1, 2 ,3, "A", "B", "C"),
 	
-
+	
 	"END OF ARRAY"
 
 )
@@ -127,9 +129,17 @@ function convertStringToDatatype _string =
 	rx	= dotNetClass "System.Text.RegularExpressions.RegEx"
 	rx_options	= dotNetClass "System.Text.RegularExpressions.RegexOptions"
 	
-	known_class = (rx.match _string "^\s*(\d+|true|false|undefined|unsupplied|\(\s*color\s+\d+\s+\d+\s+\d+\s*\))\s*$" rx_options.IgnoreCase ).success
+	is_variable = (rx.match _string "^\s*(\d+|true|false|undefined|unsupplied|\(\s*color\s+\d+\s+\d+\s+\d+\s*\))\s*$" rx_options.IgnoreCase ).success
 
-	if known_class == false and (is_string = ( rx.match _string "(^'*[A-Za-z0-1_]+'*$)" rx_options.IgnoreCase ).success ) then (@"" + _string )else (try((execute(_string)))catch(_string))
+	if not is_variable and (is_string = ( rx.match _string "(^'*[A-Za-z0-1_\s]+'*$)" rx_options.IgnoreCase ).success ) then
+	(
+		@"" + _string -- IS STRING
+	)
+	else
+	(
+		try((execute(_string)))catch(_string) -- IS VARIABLE
+	)
+
 )
 
 
@@ -174,7 +184,7 @@ function testStringArray =
 
 convertStringsToDatatypes()
 
-testStringArray()
+--testStringArray()
 
 
 

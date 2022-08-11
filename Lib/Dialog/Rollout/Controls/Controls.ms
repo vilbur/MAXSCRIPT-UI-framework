@@ -11,7 +11,7 @@ struct Controls_v
 	/* properties */
 	group,
 		
-	list = #(),
+	List = #(),
 
 	/* dependency */
 	DefaultParameters = DefaultParameters_v(),
@@ -31,6 +31,7 @@ struct Controls_v
 	function Control type caption id:undefined params:#() items: value: across: locals:#() add_to_controls:true =
 	(
 		--format "\n"; print "Controls_v.Control()"
+		--format "caption	= % \n" caption
 		_Control = Control_v type:type caption:caption id:id add_locals:locals
 				
 		if( items != unsupplied ) then 
@@ -58,21 +59,21 @@ struct Controls_v
 	 */
 	function add _Control =
 	(
-		append list _Control
+		append List _Control
 	),
 	
 	/** Get
 	 */
 	function get control_id =
 	(
-		(for _Control in list where _Control.id == control_id collect _Control)[1]
+		(for _Control in List where _Control.id == control_id collect _Control)[1]
 	),
 	
 	/** Set controls Default params
 	  * 
 	  * if type match control type, then be applied as default
 	  *  
-	  * @param	#name	type is mask and must match control type E.G.: match #listbox|#multilistbox|#dropdownlist if type==#list
+	  * @param	#name	type is mask and must match control type E.G.: match #listbox|#multilistbox|#dropdownlist if type==#List
 	  * 
 	 */
 	function Default key val type:#global =
@@ -141,9 +142,16 @@ struct Controls_v
 		rx	= dotNetClass "System.Text.RegularExpressions.RegEx"
 		rx_options	= dotNetClass "System.Text.RegularExpressions.RegexOptions"
 		
-		known_class  = (rx.match _string "^\s*(\d+|true|false|undefined|unsupplied|\(\s*color\s+\d+\s+\d+\s+\d+\s*\))\s*$" rx_options.IgnoreCase ).success
-		
-		if known_class == false and (is_string = ( rx.match _string "(^'*[A-Za-z0-1_]+'*$)" rx_options.IgnoreCase ).success ) then (@"" + _string )else (try((execute(_string)))catch(_string))
+		is_variable = (rx.match _string "^\s*(\d+|true|false|undefined|unsupplied|\(\s*color\s+\d+\s+\d+\s+\d+\s*\))\s*$" rx_options.IgnoreCase ).success
+	
+		if not is_variable and (is_string = ( rx.match _string "(^'*[A-Za-z0-1_\s]+'*$)" rx_options.IgnoreCase ).success ) then
+		(
+			@"" + _string -- IS STRING
+		)
+		else
+		(
+			try((execute(_string)))catch(_string) -- IS VARIABLE
+		)
 	),
 	
 	/**  
