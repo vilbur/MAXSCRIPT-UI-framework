@@ -97,11 +97,20 @@ struct RolloutCreator_v
 
 	/** New
 	 */
-	function new title id: =
+	function Roll title id: =
 	(
 		Rollout_v title:title id:id --return
 	),
+	
+	/** Get new Rollout
+	 */
+	function new title id: =
+	(
+		format "\n"; print "!!!!!!!! DEPRECATED METHOD Subrollouts_v.Roll() please use Subrollouts_v.roll() "
 
+		this.Roll title id:id --return
+	),
+	
 	/** Get definition
 	 */
 	function getDefinition _Rollout =

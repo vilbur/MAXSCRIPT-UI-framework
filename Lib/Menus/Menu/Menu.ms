@@ -15,14 +15,14 @@ struct Menu_v
 	 */
 	function addItem category macro_script_name title: group: =
 	(
-		format "\n"; print "Menu_v.addItem()"
-		format "category	= % \n" category
-		format "macro_script_name	= % \n" macro_script_name
-		format "title	= % \n" title
+		--format "\n"; print "Menu_v.addItem()"
+		--format "category	= % \n" category
+		--format "macro_script_name	= % \n" macro_script_name
+		--format "title	= % \n" title
 
 		item = if( group == unsupplied ) then menuMan.createActionItem (macro_script_name) (category) else menuMan.createMenuItemFromAction (group) (macro_script_name) category:(category)
 		
-		format "item	= % \n" item
+		--format "item	= % \n" item
 		
 		if item == undefined then 
 			return false
@@ -116,9 +116,9 @@ struct Menu_v
 	 */
 	function _setTitle &item title =
 	(
-		format "\n"; print "Menu_v._setTitle()"
-		format "item	= % \n" item
-		format "title	= % \n" title
+		--format "\n"; print "Menu_v._setTitle()"
+		--format "item	= % \n" item
+		--format "title	= % \n" title
 		item.setTitle title
 
 		item.setUseCustomTitle true

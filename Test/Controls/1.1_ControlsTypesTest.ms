@@ -33,7 +33,7 @@ control_types = #(
 	--#CheckButton,
 	--#Pickbutton,
 	--#Spinner,
-	--#Edittext,
+	--#EditText,
 	--#BrowsePath,
 	--
 	--#Listbox,

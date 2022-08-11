@@ -23,8 +23,8 @@ struct SubolloutsCreator_v
 		--format "rollout_height	= % \n" rollout_height
 		Subrollouts_all = this._getSubrollouts(_Rollout)
 		
-		Subrollouts_with_height = this._getSubrolloutWithHeightDefined()
-
+		Subrollouts_with_height = (this._getSubrolloutWithHeightDefined())
+		format "Subrollouts_with_height	= % \n" Subrollouts_with_height
 		empty_space = rollout_height - (this._getDefinedHeights(Subrollouts_with_height))
 
 		slot_height = this._getSlotHeight(empty_space)(Subrollouts_all.count - Subrollouts_with_height.count)
@@ -39,7 +39,7 @@ struct SubolloutsCreator_v
 	 function addSubrolloutSlots Subrollouts =
 	 (
 		format "\n\n=====================================	SubolloutsCreator_v.addSubrolloutSlots() %.%	=====================================\n" ( _Rollout.id as string ) ( Subrollouts.slot as string );
-		
+		--format "Subrollouts.height	= % \n" Subrollouts.height
 		_Rollout._RolloutCreator.addText ("subRollout "+Subrollouts.slot as string +" \"slot_name\" height:"+Subrollouts.height as string )
 	 ),
 	

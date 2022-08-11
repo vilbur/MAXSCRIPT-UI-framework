@@ -28,8 +28,8 @@ _Controls.control #browsePath "_SavePath" -- #Mode:#getSavePath is default
 _Controls.control #browsePath "_SaveFileName" params:#( #mode,#getSaveFileName )
  
 --/* OPEN FILE PATH */ 
-_OpenFileName = _Controls.control #browsePath "_OpenFileName" params:#( #mode,#getOpenFileName, #tooltip, "Test Tooltip" )
-_OpenFileName.Events.add #changed ("testCallback")
+_OpenFileName = _Controls.control #browsePath "_OpenFileName" params:#( #mode,#getOpenFileName, #tooltip, "Control Tooltip" )
+_OpenFileName.Events.add #changed ("testCallback") tooltip:"Event Tooltip"
 
 
 /* DIALOG CREATE */ 

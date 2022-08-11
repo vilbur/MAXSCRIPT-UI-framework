@@ -12,9 +12,11 @@ _Controls   = Dialog.Controls group:"Main Controls"
 
 --_Controls.control #checkbox "Checkbox"
 
-_Controls.control #Dropdownlist "Dropdownlist"
+--_Controls.control #Dropdownlist "Dropdownlist"
 
---_Controls.control #browsePath "browsePath"
+_Controls.control #Edittext "Edittext"
+
+_Controls.control #browsePath "browsePath"
 
 /* DIALOG CREATE */ 
 Dialog.create()

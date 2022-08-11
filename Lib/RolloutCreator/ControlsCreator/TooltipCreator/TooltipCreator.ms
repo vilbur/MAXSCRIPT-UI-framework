@@ -32,8 +32,7 @@ struct TooltipCreator_v
 		for Event in Events where Event.tooltip != "" do
 			tooltip += this._getEventPrefix(Event.type) + Event.tooltip + "\n"
 		
-		----trimRight tooltip "\n" --return
-		tooltip --return
+		trimRight tooltip "\n" --return
 	),
 	
 	/** Get event type
@@ -44,8 +43,9 @@ struct TooltipCreator_v
 		case event_type of
 		(
 			(#pressed):	"LMB: "	
-			(#rightclick):	"RMB: "	
-			default:	"On " + this._capitalize(event_type as string ) + ": "
+			(#rightclick):	"RMB: "
+			default:	""
+			--default:	"On " + this._capitalize(event_type as string ) + ": "
 		)
 	),
 	

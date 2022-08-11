@@ -57,7 +57,7 @@ struct ControlParamsParser_v
 	 */
 	function _splitKeyAndValue key_value_string =
 	(
-		format "\n"; print "ControlParamsParser_v.splitKeyAndValue()"
+		--format "\n"; print "ControlParamsParser_v.splitKeyAndValue()"
 		--format "key_value_string	= % \n" key_value_string
 		colon_index = findString key_value_string ":" -- split string by firt occurencce of ":"
 		
