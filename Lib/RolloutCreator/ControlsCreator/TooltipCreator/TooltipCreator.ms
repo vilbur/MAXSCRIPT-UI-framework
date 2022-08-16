@@ -42,7 +42,7 @@ struct TooltipCreator_v
 		--format "\n"; print "TooltipCreator_v.getEventType()"
 		case event_type of
 		(
-			(#pressed):	"LMB: "	
+			(#pressed):	"LMB:  "	
 			(#rightclick):	"RMB: "
 			default:	""
 			--default:	"On " + this._capitalize(event_type as string ) + ": "
