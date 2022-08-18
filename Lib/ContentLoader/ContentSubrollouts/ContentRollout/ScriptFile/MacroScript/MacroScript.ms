@@ -41,10 +41,10 @@ struct MacroScript_Content_v
 	  *
 	  * @return	#name type of control Default: #button
 	 */
-	function getType =
+	function getControlType =
 	(
 		--print "MacroScript_Content_v.getParamsArray()"
-		if( (control_type = this.getParam(#type)) != undefined ) then
+		if( (control_type = this.getParam(#control)) != undefined ) then
 		(
 			--format "control_type	= % \n" control_type
 			--format "classof control_type	= % \n" (classof control_type)

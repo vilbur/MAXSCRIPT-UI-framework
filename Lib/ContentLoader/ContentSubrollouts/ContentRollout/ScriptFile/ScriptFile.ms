@@ -89,10 +89,10 @@ struct ScriptFile_Content_v
 	(
 		--format "\n"; print "ScriptFile_Content_v.createControlfromMacro()"
 		--format "Macro	= % \n" Macro
-		macro_type   = Macro.getType()
-		macro_params = Macro.getParamsArray()
+		--macro_type   = Macro.getControlType()
+		--macro_params = Macro.getParamsArray()
 		
-		_Control = _Controls.Control (Macro.getType()) Macro.buttontext params:(Macro.getParamsArray())  add_to_controls:false
+		_Control = _Controls.Control (Macro.getControlType()) Macro.buttontext params:(Macro.getParamsArray())  add_to_controls:false
 		
 		this._addToQuadMenu (_Control)(Macro)
 		

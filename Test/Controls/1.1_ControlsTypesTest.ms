@@ -38,10 +38,10 @@ control_types = #(
 	--
 	--#Listbox,
 	--#MultiListBox,
-	--#Dropdownlist,
+	#Dropdownlist,
 	--#Combobox,
 	--#ColorPicker,
-	#RadioButtons,
+	--#RadioButtons,
 	--#Slider,
 	--#Angle,
 	--#hyperlink,
