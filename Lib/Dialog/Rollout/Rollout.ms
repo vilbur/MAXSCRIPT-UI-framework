@@ -250,9 +250,12 @@ struct Rollout_v
 		if matchPattern id pattern:@"rollout" or classof ( executed_id = execute (id) ) != UndefinedClass and classof ( executed_id ) != RolloutClass then
 		(
 			id_prefixed = "ROLLOUT_" + id
-		
-			print ("WARNING: Rollout id \"" + id + "\" is MaxScript variable, Rollout id has been changed to \"" + id_prefixed + "\"\n\n\n")
 			
+			--format "classof executed_id	= % \n" (classof executed_id)
+			--print ("WARNING: Rollout id \"" + id + "\" is MaxScript variable, Rollout id has been changed to \"" + id_prefixed + "\"\n\n\n")
+			format "\n"
+			print ("WARNING: Rollout id \"" + id + "\" is classof "+(classof executed_id) as string+", Rollout id has been changed to \"" + id_prefixed + "\"")
+			format "\n"
 			id  = id_prefixed
 		)
 	),

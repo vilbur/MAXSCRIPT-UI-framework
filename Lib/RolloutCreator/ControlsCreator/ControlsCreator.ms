@@ -31,8 +31,8 @@ struct ControlCreator_v
 	function addControls _Controls =
 	(
 		--format "\n\n--------------	Controls group:%	--------------\n" _Controls.group
-		format "\n\n"
-		print ("--------------	Controls group:"+_Controls.group+"	--------------")
+		--format "\n\n"
+		--print ("--------------	Controls group:"+_Controls.group+"	--------------")
 		--print ("ControlCreator_v.addControls()"  )
 
 		this._Controls = _Controls
@@ -128,7 +128,7 @@ struct ControlCreator_v
 		for _Control in _Controls.list do
 			this._addControlToRollout (_Control) -- add control first before variables, functions and events
 			
-		format "\n" -- send "OK" message to the end of log
+		--format "\n" -- send "OK" message to the end of log
 			
 		this._addControlsGroup #end 
 	),
@@ -140,12 +140,12 @@ struct ControlCreator_v
 		params = ParamsCreator.join(_Control.params)
 
 		/* DEBUG LOG */ 
-		if not matchPattern _Control.id pattern:"LABEL_fake*" then -- DEBUG - don`t print
-		(
-			format "\nControl:%.%" ( _Rollout.id as string ) _Control.id
-			
-			format "	Params: % \n" params
-		)
+		--if not matchPattern _Control.id pattern:"LABEL_fake*" then -- DEBUG - don`t print
+		--(
+		--	format "\nControl:%.%" ( _Rollout.id as string ) _Control.id
+		--	
+		--	format "	Params: % \n" params
+		--)
 		
 		_Rollout._RolloutCreator.addControl (_Control.type) (_Control.id) (this._getCaption(_Control.caption)) paramStr:params filter:true;
 	),

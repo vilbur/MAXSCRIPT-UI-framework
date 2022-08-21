@@ -74,7 +74,7 @@ struct Dialog_v
 	(
 		--format "\n"; print "Dialog_v.create()"
 		
-		height = this._getDialogHeight(height)
+		height = this._getDialogHeight(height) as integer
 		--format "height	= % \n" height
 		_RolloutCreator = RolloutCreator_v Ini:Ini
 
@@ -201,7 +201,7 @@ struct Dialog_v
 	 */
 	function _getDialogHeight height =
 	(
-		--print "Dialog_v._getDialogHeight()"
+		print "Dialog_v._getDialogHeight()"
 		--format "height	= % \n" height
 
 		if( Ini.isDefined() and (dialog_size = Ini.load( RolloutMain.id as string )("size")) != undefined) then
@@ -212,8 +212,6 @@ struct Dialog_v
 		
 		else
 			512 --return
-		
-		--this._getViewportHeight() --return
 	),
 	
 	/** Get height of maximized viewport to find out height of docked dialog

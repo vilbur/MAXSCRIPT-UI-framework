@@ -40,7 +40,7 @@ struct RolloutCreator_v
 	 */
 	function createRollout _Rollout width: height: =
 	(
-		format "\n\n-------------------------------------	RolloutCreator_v.createRollout() %	-------------------------------------\n"  ( _Rollout.id as string );
+		--format "\n\n-------------------------------------	RolloutCreator_v.createRollout() %	-------------------------------------\n"  ( _Rollout.id as string );
 		--format "classOf _Rollout.id	= % \n" (classOf _Rollout.id)
 		
 		ControlsCreator   = ControlCreator_v _Rollout:_Rollout Ini:Ini

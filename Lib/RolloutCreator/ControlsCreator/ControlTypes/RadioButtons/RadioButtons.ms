@@ -126,7 +126,7 @@ struct RadioButtons_v
 			default	= _Control.Params.getVal #default
 
 			init_state = if( default != undefined ) then default else 1
-			format "init_state	= % \n" init_state
+			--format "init_state	= % \n" init_state
 			_Control.addLocal( this._getSaveStateVariableName(_Control.id) as name ) init_state
 			
 			_Control.Params.delete #unselect

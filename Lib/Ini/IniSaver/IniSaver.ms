@@ -54,9 +54,17 @@ struct IniSaver_v
 		--format "\n"; print "IniSaver_v._saveDialog()"
 		--format "_Rollout	= % \n" _Rollout
 
+		dock_state	= (try(cui.getDockState _Rollout )catch())
+		dialog_is_docked		= matchPattern ( dock_state as string ) pattern:"cui_dock_*"
+		
 		this._saveToIni _Rollout.name "position"	(GetDialogPos _Rollout )
-		this._saveToIni _Rollout.name "size"	(GetDialogSize _Rollout )
-		this._saveToIni _Rollout.name "dock_state"	(try(cui.getDockState _Rollout )catch())
+		this._saveToIni _Rollout.name "dock_state"	dock_state
+		
+		--if not dialog_is_docked then
+			this._saveToIni _Rollout.name "size"	(GetDialogSize _Rollout )
+		--
+		--else
+		--	this._delIniSetting  _Rollout.name "size"
 
 		this._saveControlsAndSubrollouts(_Rollout)
 	),
@@ -186,6 +194,17 @@ struct IniSaver_v
 			setINISetting ini_file section key ( val as string )
 	),
 	
+	/** Remove from ini
+	 */
+	function _delIniSetting section key =
+	(
+		format "\n"; print "IniSaver_v._delIniSetting ()"
+		format "section	= % \n" section
+		format "key	= % \n" key
+		
+		delIniSetting  ini_file section key
+	),
+	
 	/** Get subrollouts by order in UI
 	 */
 	function _getOrderedRollouts rollouts =
@@ -201,7 +220,8 @@ struct IniSaver_v
 	 */
 	on create do
 	(
-		--print("IniSaver_v.onCreate()")
+		clearListener()
+		print("IniSaver_v.onCreate()")
 		--ConstructPropeties test:this
 	)	
 )

@@ -38,7 +38,7 @@ struct SubolloutsCreator_v
 	 --function addSubrolloutsSlot _Rollout Subrollouts =
 	 function addSubrolloutSlots Subrollouts =
 	 (
-		format "\n\n=====================================	SubolloutsCreator_v.addSubrolloutSlots() %.%	=====================================\n" ( _Rollout.id as string ) ( Subrollouts.slot as string );
+		--format "\n\n=====================================	SubolloutsCreator_v.addSubrolloutSlots() %.%	=====================================\n" ( _Rollout.id as string ) ( Subrollouts.slot as string );
 		--format "Subrollouts.height	= % \n" Subrollouts.height
 		_Rollout._RolloutCreator.addText ("subRollout "+Subrollouts.slot as string +" \"slot_name\" height:"+Subrollouts.height as string )
 	 ),
