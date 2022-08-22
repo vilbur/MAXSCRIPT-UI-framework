@@ -1,6 +1,7 @@
 clearListener()
 
 filein( getFilenamePath(getSourceFileName()) + "/../../Lib/RolloutCreator/RolloutCreator.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/../../Lib/Ini/Ini.ms" )
 
 try( destroyDialog ROLLOUT_test )catch()
 
@@ -8,7 +9,7 @@ try( destroyDialog ROLLOUT_test )catch()
 /** DEFINE UI 
  *	
  */
-_RolloutCreator = RolloutCreator_v()
+_RolloutCreator = RolloutCreator_v Ini:(Ini_v())
 _Rollout        = _RolloutCreator.new "Test"
 
 
