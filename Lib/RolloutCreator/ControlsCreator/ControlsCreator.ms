@@ -37,7 +37,8 @@ struct ControlCreator_v
 
 		this._Controls = _Controls
 
-		GroupBoxCreator.addGrouboxes (_Rollout.getFullId()) (_Controls.GroupBoxes)
+		if this._ifControlsListIsNotTemporary() then 
+			GroupBoxCreator.addGrouboxes (_Rollout.getFullId()) (_Controls.GroupBoxes)
 
 		/* pass DEFAULT PARAMETERS to params creator */ 
 		ParamsCreator.setDefaultParameters(_Controls.DefaultParameters)
@@ -57,8 +58,9 @@ struct ControlCreator_v
 			this._customizeControlTypes(_Control)
 		)
 
-		/* modify ACROSS PARAMETER */ 
-		(AcrossParameterModifier_v()).addFakeControls(this._Controls)
+		/* modify ACROSS PARAMETER */
+		if this._ifControlsListIsNotTemporary() then 
+			(AcrossParameterModifier_v()).addFakeControls(this._Controls)
 		
 		/* add LOCAL VARIABLES */ 
 		this._addLocalVariablesToRollout()
@@ -79,9 +81,11 @@ struct ControlCreator_v
 			MOVE THIS METHOD TO GroupboxCreator and REFRACT IT
 
 	 */
-	function crateControslInGroupboxAsLast &_Rollout_ =
+	function createControslInGroupboxAsLast &_Rollout_ =
 	(
-		--format "\n"; print ("ControlCreator_v.crateControslInGroupboxAsLast() "+_Rollout_.id as string) 
+		--format "\n"; print ("ControlCreator_v.createControslInGroupboxAsLast() "+_Rollout_.id as string) 
+		Controls_in_all_groupboxes = #()
+		
 		fn diffArray a b =
 		(
 			retArray = #()
@@ -93,23 +97,27 @@ struct ControlCreator_v
 			)
 			return retArray
 		)
-
-		local Controls_in_Groupboxes = #()
+		--format "_Rollout_._Controls.count	= % \n" _Rollout_._Controls.count
 
 		for _Controls in _Rollout_._Controls where this._isControls(_Controls) do
 		(
-				rollout_groupbox_controls = for _Control in _Controls.list where _Control.Params.getVal #GroupBox != undefined and _Control.type != #GroupBox collect _Control
-				_Controls.list = ( diffArray _Controls.list rollout_groupbox_controls)
+			controls_in_groupboxes = for _Control in _Controls.list where _Control.Params.getVal #GroupBox != undefined and _Control.type != #GroupBox collect _Control -- Get controls with defined groupbox in params AND they are not groupbox
+			
+			_Controls.list = ( diffArray _Controls.list controls_in_groupboxes)
 
-				Controls_in_Groupboxes += rollout_groupbox_controls
+			Controls_in_all_groupboxes += controls_in_groupboxes
 		)
 
-		if( Controls_in_Groupboxes.count > 0 ) then
+		/** CREATE CONTROLS LIST WHICH IS NOT RENDERED
+		  *	
+		  */
+		if( Controls_in_all_groupboxes.count > 0 ) then
 		(
-			local _Controls_groupbox = _Rollout_.Controls group:( toUpper _Rollout_.title+" CONTROLS")
+			--local _Controls_groupbox = _Rollout_.Controls group:( toUpper _Rollout_.title+" CONTROLS")
+			local _Controls_groupbox = _Rollout_.Controls group:#controls_in_groupboxes
 
 			--_Controls_groupbox.control #button (_Rollout_.title+" GOOOOOOD") 
-			for Control_in_Groupbox in Controls_in_Groupboxes do
+			for Control_in_Groupbox in Controls_in_all_groupboxes do
 				_Controls_groupbox.add Control_in_Groupbox
 		)
 
@@ -118,19 +126,21 @@ struct ControlCreator_v
 
 	private
 
-	/** _add controls
+	/** Add controls box to UI
 	 */
 	function _addControlsToRollout =
 	(
 		--format "\n"; print "ControlCreator_v._addControlsToRollout()"
-		this._addControlsGroup #start
+		if this._ifControlsListIsNotTemporary() then 
+			this._addControlsGroup #start
 
 		for _Control in _Controls.list do
 			this._addControlToRollout (_Control) -- add control first before variables, functions and events
 			
 		--format "\n" -- send "OK" message to the end of log
 			
-		this._addControlsGroup #end 
+		if this._ifControlsListIsNotTemporary() then 
+			this._addControlsGroup #end 
 	),
 
 	/* Add control to RolloutCreator
@@ -247,6 +257,14 @@ struct ControlCreator_v
 		toLower (( filterString( classof _Struct as string ) "_*(:" )[2]) == "controls"  --return		
 	),
 
+
+	/** If controls list is not temporary
+	 */
+	function _ifControlsListIsNotTemporary =
+	(
+		--format "\n"; print "ControlCreator_v._ifControlsListIsNotTemporary()"
+		this._Controls.group != #controls_in_groupboxes
+	),
 	/**  
 	 */
 	on create do
