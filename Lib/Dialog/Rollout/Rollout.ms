@@ -154,6 +154,12 @@ struct Rollout_v
 		for _Control in _Controls where hasProperty _Control "slot" collect _Control --return
 	),
 	
+	/** Test if Rollout has any subrollouts
+	 */
+	function hasSubrollouts =
+	(
+		(this.getSubrollouts()).count > 0
+	),
 	
 	private
 
