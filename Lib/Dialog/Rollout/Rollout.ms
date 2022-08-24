@@ -10,11 +10,11 @@ struct Rollout_v
 
 	/* construct */
 	title,
+	width	= 512,
+	height	= 512,
 	
 	/* properties */
 	id,
-	width,
-	height,
 	parent_rollout_id,
 	
 	/* dependency */
@@ -34,7 +34,7 @@ struct Rollout_v
 	 */
 	function Roll title id: =
 	(
-		format "\n"; print "Rollout_v.Roll()"
+		--format "\n"; print "Rollout_v.Roll()"
 		Subrollouts = if (Subrollout_slots = this.getSubrollouts()).count > 0 then Subrollout_slots[1] else this.Rollouts()
 		
 		Subrollouts.Roll title id:id --return

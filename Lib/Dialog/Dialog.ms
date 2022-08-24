@@ -16,8 +16,6 @@ filein( getFilenamePath(getSourceFileName()) + "/../Ini/Ini.ms" )
  */
 struct Dialog_v
 (
-	__construct = #( #title ),
-
 	/* required */
 	title,
 	
@@ -66,28 +64,34 @@ struct Dialog_v
 		--#cui_max_sized,	-- When this flag is specified, docking the dialogbar on the top causes the dialogbar to expand to the full window width, docked to bottom it expands to full window width minus command panel width.
 	),
 	
-	/** Create
-	  *
+	/** Create dialog
+	  * NOTE: width and height of dialog must be defined on init
+	  * 
+	  * 
+	  * TODO IMPORTANT: remove width & height params
+	  * 
 	  * TODO add params for max 2022
 	 */
-	function create pos: width:512 height: bgcolor: fgcolor: bitmap: style: modal: escapeEnable: lockHeight:false lockWidth:true parent: =
+	function create pos: bgcolor: fgcolor: bitmap: style: modal: escapeEnable: lockHeight:false lockWidth:true parent: =
 	(
 		--format "\n"; print "Dialog_v.create()"
 		
-		height = this._getDialogHeight(height) as integer
-		--format "height	= % \n" height
+		--height = this._getDialogHeight(height) as integer
+
 		_RolloutCreator = RolloutCreator_v Ini:Ini
 
-		_RolloutCreator.createRollout (RolloutMain) width:width height:height
+		_RolloutCreator.createRollout (RolloutMain) width:RolloutMain.width height:RolloutMain.height
 
-		CreateDialog (_RolloutCreator.getDefinition(RolloutMain)) pos:(this._getPositionRelativeToWindow(pos)) autoLayoutOnResize:true  width:width height:height bgcolor:bgcolor fgcolor:fgcolor bitmap:bitmap style:(if( style == unsupplied ) then this.style else style) modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
 		--CreateDialog (_RolloutCreator.getDefinition(RolloutMain)) 
+		--CreateDialog (_RolloutCreator.getDefinition(RolloutMain))  width:RolloutMain.width height:RolloutMain.height 
+		CreateDialog (_RolloutCreator.getDefinition(RolloutMain)) pos:(this._getPositionRelativeToWindow(pos)) autoLayoutOnResize:true  width:RolloutMain.width height:RolloutMain.height bgcolor:bgcolor fgcolor:fgcolor bitmap:bitmap style:(if( style == unsupplied ) then this.style else style) modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
 		
 		_RolloutCreator.SubolloutsCreator.addSubRollouts (RolloutMain)
 		
 		this._setPositionOrDockByIni()
 		
 		AutoRunEvents.executeMacros()
+		format "\n\nDIALOG CREATED\n\n" 
 	),
     
 	/** Register dialog bar
@@ -201,7 +205,7 @@ struct Dialog_v
 	 */
 	function _getDialogHeight height =
 	(
-		print "Dialog_v._getDialogHeight()"
+		--print "Dialog_v._getDialogHeight()"
 		--format "height	= % \n" height
 
 		if( Ini.isDefined() and (dialog_size = Ini.load( RolloutMain.id as string )("size")) != undefined) then
@@ -211,7 +215,7 @@ struct Dialog_v
 			height --return 
 		
 		else
-			512 --return
+			512 --return TODO: MOVE THIS TO DEFAULT
 	),
 	
 	/** Get height of maximized viewport to find out height of docked dialog
@@ -295,7 +299,7 @@ struct Dialog_v
 	/** Check if required properties are defined when an instance of the struct is created.
 	 * @example __construct = #( #property_name ) 
 	 */
-	function _checkConstctructProperties =
+	function _checkConstctructProperties __construct =
 	(
 		for prop in __construct where getProperty this prop == undefined do
 			messageBox ("SaveIniControlEvents\nUndefined construct property !\n\n"+ ((filterString( classof this as string )"(:")[2]) +"."+ prop )
@@ -306,7 +310,7 @@ struct Dialog_v
 	on create do
 	(
 		--print("Dialog_v.onCreate()")
-		ConstructPropeties test:this
+		this._checkConstctructProperties #(#title)
 		
 		Ini	= Ini_v _path:Ini
 		

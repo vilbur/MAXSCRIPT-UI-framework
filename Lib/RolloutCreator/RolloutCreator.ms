@@ -34,11 +34,11 @@ struct RolloutCreator_v
 	/* properties */
 
 	/* store */
-	width,
+	--width,
 
 	/** Create dialog
 	 */
-	function createRollout _Rollout width: height: =
+	function createRollout _Rollout =
 	(
 		--format "\n\n-------------------------------------	RolloutCreator_v.createRollout() %	-------------------------------------\n"  ( _Rollout.id as string );
 		--format "classOf _Rollout.id	= % \n" (classOf _Rollout.id)
@@ -46,13 +46,12 @@ struct RolloutCreator_v
 		ControlsCreator   = ControlCreator_v _Rollout:_Rollout Ini:Ini
 		
 		SubolloutsCreator._Rollout = _Rollout
-
-		this._setWidth(width)
+		--this._setWidth(width)
 
 		/* EDIT start */ 
-		_Rollout.rolloutCreatorBegin(this.width)
+		_Rollout.rolloutCreatorBegin(_Rollout.width)
 
-		ControlsCreator.crateControslInGroupboxAsLast(_Rollout)
+		ControlsCreator.createControslInGroupboxAsLast(_Rollout)
 
 		/* add LOCAL VARIABLES */ 
 		this._addLocalVariablesToRollout (_Rollout)
@@ -61,15 +60,13 @@ struct RolloutCreator_v
 		this._addTextToRollout (_Rollout)
 		
 		
-		
 		if _Rollout.height != undefined and _Rollout.height != unsupplied then
 			height =  _Rollout.height
 			
-		if _Rollout.width == undefined or _Rollout.width == unsupplied then
-			_Rollout.width = width 
+		--if _Rollout.width == undefined or _Rollout.width == unsupplied then
+		--	_Rollout.width = width 
 		
 		
-				
 		/* set height of SUBROLLOUTS slot */ 
 		if( height != unsupplied ) then
 			SubolloutsCreator.setSubrolloutsSlotHeight(height)
@@ -122,13 +119,13 @@ struct RolloutCreator_v
 	private
 
 	
-	/** _setup creation
-	 */
-	function _setWidth width =
-	(
-		if( width != unsupplied ) then
-			this.width = width
-	),
+	--/** _setup creation
+	-- */
+	--function _setWidth width =
+	--(
+	--	if( width != unsupplied ) then
+	--		this.width = width
+	--),
 
 	/** Add controls or subrolloutes
 	 */
