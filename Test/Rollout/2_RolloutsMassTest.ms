@@ -2,41 +2,82 @@ clearListener()
 
 filein( "$userscripts\Library\MAXSCRIPT-UI-framework\Lib\Dialog\Dialog.ms" )
 
-
-
 /** Add sub rollouts
  */
-function addRollouts _Rollouts title count slot:slot =
+function addSubRolloutSlots _Rollouts number_of_slots: number_of_rollouts: =
 (
-	_Rollout_new = #()
+	Subollout_slots = #()
 
-	for i = 1 to count do 
-		append _Rollout_new (_Rollouts.new title )
+	for r = 1 to _Rollouts.count do 
+	(
+		_Rollout = _Rollouts[r]
 
-	_Rollout_new --return
+		for s = 1 to number_of_slots do 
+		(
+			slot = ("Slot_"+ s as string )
+		
+			Subollout_slot = _Rollout.Rollouts slot:slot
+		
+			append Subollout_slots Subollout_slot
+		)
+	)
+
+	Subollout_slots --return
 )
 
-
-/* DIALOG */ 
-
-Dialog 	= Dialog_v title:(getFilenameFile(getSourceFileName())) 
-
-/* ROLLOUTS */ 	
-
-_Rollouts = addRollouts ( Dialog.Rollouts slot:#rollouts_A height:1024 )	("Rollout A")(1)
-
-height = 512
-
-/* SUB ROLLOUTS */ 	
-
-for i = 1 to 6 do
+/** Add subrollouts
+ */
+function addSubrollouts Subollout_slots number_of_rollouts: level: =
 (
-	title = ("subrollout_"+ i as string )
+	SubRollouts = #()
 
-	_Rollouts = addRollouts (_Rollouts[1].Rollouts height:(height -= 48 ) ) title 1 slot:( title as name)
+	
+	for s = 1 to Subollout_slots.count collect 
+	(
+		Subollout_slot = Subollout_slots[s]
+		
+		for r = 1 to number_of_rollouts do 
+		(
+			
+			title = ( Subollout_slot.slot as string + " Rollout:"+ s as string + " Level:" + level as string )
+			--title = ( Subollout_slot.slot as string  + " Level:" + level as string )
+	
+			_SubRollout = Subollout_slot.Roll title
+	
+			append SubRollouts _SubRollout
+		)
+		
+	)
+	
+	SubRollouts --return
 )
 
+/* DIALOG */
 
-/* CREATE DIALOG */ 
- -- Dialog.create()
-Dialog.create width:720 height:640 
+/** Create dialog
+ */
+function createDialogWithSubrollouts number_of_slots: nested_level: slot_height: =
+(
+	--format "\n"; print ".createDialog()"
+	Dialog 	= Dialog_v title:(getFilenameFile(getSourceFileName())) width:512 height:1024 
+	--Dialog 	= Dialog_v title:("Subrollouts Mass Test height " + height as string ) width:512 height:height
+
+	--_Rollouts = #(Dialog.RolloutMain)
+	_Rollout = Dialog
+
+	Subollout_slots = addSubRolloutSlots #(_Rollout) number_of_slots:number_of_slots 
+	--format "Subollout_slots	= % \n" Subollout_slots
+
+	SubRollouts = addSubrollouts Subollout_slots number_of_rollouts:5 level:1
+
+	--Subollout_slots_nested = addSubRolloutSlots (SubRollouts) number_of_slots:number_of_slots number_of_rollouts:5
+
+	--_SubRollouts_nested = addSubrollouts Subollout_slots_nested level:2
+
+	/* CREATE DIALOG */ 
+	Dialog.create()
+)
+
+--createDialogWithSubrollouts number_of_slots:2 slot_height:512
+--createDialogWithSubrollouts number_of_slots:1 nested_level:3
+createDialogWithSubrollouts number_of_slots:2 nested_level:2
