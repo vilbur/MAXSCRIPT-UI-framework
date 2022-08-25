@@ -1,5 +1,5 @@
 /**  
- *	
+ *	TODO: Rename this to FilesLoader_v
  *	
  */
 struct PathsLoader_v
@@ -16,7 +16,18 @@ struct PathsLoader_v
 	
 	maxscript_files	= #(),
 
-
+	ini_files	= #(),
+		
+	/** Get full paths of directories and files in this.dir
+	  *
+	  * @return	array of paths	sorted alphabetically
+	 */
+	function getSubrolloutsAndControlsPaths =
+	(
+		--format "\n"; print "PathsLoader_v.getSubrolloutsAndControlsPaths()"
+		sort ( join rollout_dirs macro_files ) --return
+	),
+	
 	/** File in files
 	 */
 	function fileInMaxscriptFiles =
@@ -32,15 +43,7 @@ struct PathsLoader_v
 		--format "PathsLoader_v.fileIn % \n" file
 		filein file
 	),
-		
-	/** Get full paths of directories and files in this.dir
-	  *
-	  * @return	array of paths	sorted alphabetically
-	 */
-	function getSubrolloutsAndControlsPaths =
-	(
-		sort ( join rollout_dirs macro_files ) --return
-	),
+
 
 	private
 	
@@ -67,7 +70,6 @@ struct PathsLoader_v
 		for dir in (getDirectories (path + "/*")) where not ( this._isSubrolloutsSlot dir ) collect dir --return
 	),
 	
-	
 	/** Get *.mcr files
 	 */
 	function _getMacroFiles =
@@ -80,13 +82,19 @@ struct PathsLoader_v
 	function _getMaxscriptFiles =
 	(
 		sort ( getFiles (path + "/*.ms")) --return
-	),	
+	),
+	
+	/** Get *.ini files
+	 */
+	function _getIniFiles =
+	(
+		sort ( getFiles (path + "/*.ini")) --return
+	),
 	
 	
 	on create do
 	(
 		--format "PathsLoader_v.onCreate	% \n" path
-		
 		dirs            = this._getDirs()
 		
 		rollout_dirs    = this._getRolloutDirs()
@@ -94,7 +102,9 @@ struct PathsLoader_v
 		macro_files     = this._getMacroFiles()
 
 		maxscript_files = this._getMaxscriptFiles()
+
+		ini_files       = this._getIniFiles()
 		
-		--format "macro_files = % \nmaxscript_files = % \nrollout_dirs = % \ndirs = % \n\n" macro_files maxscript_files rollout_dirs dirs
+		--format "ini_files	= % \n" ini_files
 	)
 )

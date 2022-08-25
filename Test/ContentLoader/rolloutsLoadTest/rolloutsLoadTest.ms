@@ -5,6 +5,18 @@ clearListener()
 filein( getFilenamePath(getSourceFileName()) + "/../../../Lib/ContentLoader/ContentLoader.ms" )
 
 /** Load content from file tree
+  *
+  * MACRO FILES:
+  * 	.mcr files are loaded as controls
+  * 
+  * INI FILES:
+  * 	.ini file can be placed in subrollout and rollout folder
+  * 	Properties of subrollouts slots and rollouts will be loaded from these ini files
+  *	
+  *	FORMAT OF INI FILE:
+  *	
+  *  		[SECTION NAME CAN BE WHATEVER]
+  *  		prop_name=value
  */
 function loadContentTest dir_name =
 (
@@ -16,6 +28,9 @@ function loadContentTest dir_name =
 	/* CHANGE DIALOG PROPERTIES */ 
 	ContentLoader.Dialog.width  = 720
 	ContentLoader.Dialog.height = 1024
+	
+
+		
 	
 	/* CREATE DIALOG */ 
 	ContentLoader.create() --return 
