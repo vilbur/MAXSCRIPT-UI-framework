@@ -1,13 +1,12 @@
-/** Group box creator
-  
-  1) Controls in group box are created as last on position [0,0], it will not break across layout
-  
-  2 ) On rollout created call GroupBoxCreator_v._sortControlsInGroupBox()
-  
-  
-  
-  
-  
+/** This class sorts controls in groupbox
+  * 
+  * It`s called after dialog is created and move controls to its groupboxes
+  * 
+  * Controls in group box are created as last on position [0,0]
+  * It will not break across layout of other controls in this way
+  * 
+  * When dialog is created, then method GroupBoxCreator_v._sortControlsInGroupBox() is called
+  * 
  */
 struct GroupBoxCreator_v
 (
@@ -15,7 +14,8 @@ struct GroupBoxCreator_v
 	/* dependency */
 	/* reference */
 	/* properties */
-
+	
+	layout	= #horizintal,
 	groupbox_margin	= 16,
 	margin	= 8,
 	padding	= [32, 8],
@@ -100,6 +100,28 @@ struct GroupBoxCreator_v
 		this._setGroupBoxSize (rollout_id_full) (groupbox_controls) (_groupbox)(groupbox_id)
 	),
 
+	/** _move control to groupbox
+	 */
+	function _moveControlToGroupbox _control &control_position =
+	(
+		--format "\n"; print "GroupBoxCreator_v._moveControlToGroupbox()"
+		_control.pos = next_control_position = control_position
+
+		if layout == #horizintal then 
+		(
+			format "_control.width	= % \n" _control.width
+			next_control_position.x +=  _control.width
+			next_control_position.x +=  margin 
+		)
+		else
+		(
+			next_control_position.y +=  try( _control.height ) catch(_control_default_height)
+			next_control_position.y +=  margin 
+		)
+		
+		next_control_position --return
+	),
+	
 	/** _set group box dimensions
 	 */
 	function _setGroupBoxSize rollout_id groupbox_controls _groupbox groupbox_id =
@@ -181,22 +203,20 @@ struct GroupBoxCreator_v
 		control_position -- return
 	),
 
-	/** _move control to groupbox
-	 */
-	function _moveControlToGroupbox _control &control_position =
-	(
-		--format "\n"; print "GroupBoxCreator_v._moveControlToGroupbox()"
-		_control.pos = next_control_position = control_position
-
-		next_control_position.y +=  try( _control.height ) catch(_control_default_height)
-		next_control_position.y +=  margin 
-
-		next_control_position --return
-	),
 
 	/** Get ntrol size
 	 */
-	function _getControlSize _control =
+	function _getControlWidth _control =
+	(
+		--format "\n"; print "GroupBoxCreator_v._getControlSize()"
+		--format "_control	= % \n" _control
+
+		_control.width --return
+	),
+	
+	/** Get ntrol size
+	 */
+	function _getControlHeight _control =
 	(
 		--format "\n"; print "GroupBoxCreator_v._getControlSize()"
 		--format "_control	= % \n" _control
@@ -209,8 +229,8 @@ struct GroupBoxCreator_v
 		(
 			(#GroupboxControl):	control_height
 			(#buttonControl):	_control_default_height
-			(#ListBoxControl):	this. _getListboxHeight(_control)
-			(#MultiListBoxControl):	this. _getListboxHeight(_control)
+			(#ListBoxControl):	this._getListboxHeight(_control)
+			(#MultiListBoxControl):	this._getListboxHeight(_control)
 
 			default:	control_height +  groupbox_margin
 		)

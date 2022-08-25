@@ -17,8 +17,8 @@ struct ControlParamsCreator_v
 	/** Get params for control
 	  * 
 	  * Priority of params
-	  * 	1) User Defined param
-	  * 	2) Global per control type E.g.:  #(#multiListBox, #listbox, #list) 
+	  * 	1) User Defined parameters
+	  * 	2) Global per control type E.g.:  #(#multiListBox, #listbox, #list) // DEFINED IN DefaultParameters_v._getDefaultParamsList() in FILE:  "./../../../Dialog/Rollout/Controls/DefaultParameters/DefaultParameters.ms" 
 	  * 	3) Global for all controls
 	  * 
 	 */
@@ -29,8 +29,9 @@ struct ControlParamsCreator_v
 		for control_type_key in DefaultParameters.getKeysForControlType(_Control.type) do
 			_Control.Params.merge ( DefaultParameters.getParametersForControlType(control_type_key) )
 		
-		/* MERGE Defaults.keys.#global */ 
-		_Control.Params.merge ( DefaultParameters.getVal(#global) )
+		/* MERGE Defaults.keys.#global */
+		if _Control.type != #Groupbox then -- DO NOT USE GLOBAL PARAMETERS ON #groupbox control
+			_Control.Params.merge ( DefaultParameters.getVal(#global) )
 		
 		_Control --return
 	),

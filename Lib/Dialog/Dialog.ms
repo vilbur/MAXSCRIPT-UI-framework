@@ -21,7 +21,9 @@ struct Dialog_v
 	
 	/* construct */
 	Ini,
-
+	width,
+	height,
+	
 	/* options */
 	id,
 	
@@ -82,6 +84,8 @@ struct Dialog_v
 
 		_RolloutCreator.createRollout (RolloutMain) width:RolloutMain.width height:RolloutMain.height
 
+		format "RolloutMain.width	= % \n" RolloutMain.width
+		format "RolloutMain.height	= % \n" RolloutMain.height
 		--CreateDialog (_RolloutCreator.getDefinition(RolloutMain)) 
 		--CreateDialog (_RolloutCreator.getDefinition(RolloutMain))  width:RolloutMain.width height:RolloutMain.height 
 		CreateDialog (_RolloutCreator.getDefinition(RolloutMain)) pos:(this._getPositionRelativeToWindow(pos)) autoLayoutOnResize:true  width:RolloutMain.width height:RolloutMain.height bgcolor:bgcolor fgcolor:fgcolor bitmap:bitmap style:(if( style == unsupplied ) then this.style else style) modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
@@ -155,7 +159,12 @@ struct Dialog_v
 		Subrollouts.Roll title id:id --return
 	),
 	
-	/** rollouts
+	/** Get new subrollouts slot
+	  * 
+	  * @param	name	slot	id of subrollouts slot
+	  * @param	integer	height	of slot
+	  * 
+	  * @return	struct Subrollouts_v 	
      */
     function Rollouts slot: height: =
     (
@@ -266,8 +275,14 @@ struct Dialog_v
 	function _setMainRollout =
 	(
 		--print "Dialog_v._setMainRollout()"
-		RolloutMain	= Rollout_v title:title id:id Layout:Layout
+		RolloutMain	= Rollout_v title:title id:id Layout:Layout 
 
+		if width != undefined then 
+			RolloutMain.width = width
+			
+		if height != undefined then 
+			RolloutMain.height = height
+			
 		Events = RolloutMain.Events
 	),
 	
