@@ -16,7 +16,7 @@ filein( getFilenamePath(getSourceFileName()) + "/../../../Lib/ContentLoader/Cont
   *	FORMAT OF INI FILE:
   *	
   *  		[SECTION NAME CAN BE WHATEVER]
-  *  		prop_name=value
+  *  		prop_name=integer|float|string
  */
 function loadContentTest dir_name =
 (
@@ -29,8 +29,6 @@ function loadContentTest dir_name =
 	ContentLoader.Dialog.width  = 720
 	ContentLoader.Dialog.height = 1024
 	
-
-		
 	
 	/* CREATE DIALOG */ 
 	ContentLoader.create() --return 
@@ -47,7 +45,6 @@ function loadContentTest dir_name =
 --	_controls_A.button ("button by code")
 --	_controls_B.button ("button by code B")
 --)
-
 
 /*---------------------------------------
 	RUN TESTR

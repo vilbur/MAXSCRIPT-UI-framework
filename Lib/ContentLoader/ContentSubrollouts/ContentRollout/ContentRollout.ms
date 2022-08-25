@@ -17,8 +17,10 @@ struct ContentRollout_v
 	
 	/*  properties */
 	title,
-	
+
 	Subrollouts_and_Controls = #(), -- store groupboxes and rollouts
+	
+	ini_file, -- path to ini file in Rollout folder
 
 	PathsLoader,
 	
@@ -28,6 +30,8 @@ struct ContentRollout_v
 	(
 		--print ( "ContentRollout_v.addToUi Subrollouts:" + Subrollouts.slot as string  )
 		Rollout_new	= Subrollouts.Roll title -- get new rollout
+		
+		this._setPropsFromIniFile(Rollout_new)
 		
 		for Subrollouts_or_Controls in Subrollouts_and_Controls do
 			Subrollouts_or_Controls.addToUi Rollout_new
@@ -42,6 +46,28 @@ struct ContentRollout_v
 	
 	private
 
+	/** Get props from ini file
+	 */
+	function _setPropsFromIniFile &_Rollout =
+	(
+		format "\n"; print "ContentRollout_v._getPropsFromIniFile()"
+		
+		if ini_file != undefined then
+		(
+			section = (getINISetting ini_file)[1]
+			
+			for key in (getINISetting ini_file section) do
+			(
+				val_ini = getINISetting ini_file section key
+				
+				val = if val_ini as number != undefined then val_ini as number else val_ini
+				
+				setProperty _Rollout ( key as name ) val 
+			)
+		)
+		_Rollout --return
+	),
+	
 		/** _get controls and rollouts
 	 */
 	function _initLoadContentFromDir =
@@ -119,6 +145,8 @@ struct ContentRollout_v
 		
 		PathsLoader.fileInMaxscriptFiles()
 		
+		ini_file = PathsLoader.ini_files[1]
+
 		this._initLoadContentFromDir()
 	)
 )

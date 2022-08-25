@@ -51,7 +51,7 @@ struct ContentSubrollouts_v
 			
 	),
 	
-	/** Get props from ini le
+	/** Get props from ini file
 	 */
 	function _setPropsFromIniFile &Subrollouts =
 	(
@@ -61,7 +61,13 @@ struct ContentSubrollouts_v
 			section = (getINISetting ini_file)[1]
 			
 			for key in (getINISetting ini_file section) do
-				setProperty Subrollouts (key as name) ( execute(getINISetting ini_file section key) )
+			(
+				val_ini = getINISetting ini_file section key
+				
+				val = if val_ini as number != undefined then val_ini as number else val_ini
+				
+				setProperty Subrollouts ( key as name ) val 
+			)
 		)
 		
 		Subrollouts --return
