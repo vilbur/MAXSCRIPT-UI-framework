@@ -77,18 +77,16 @@ struct Dialog_v
 	function create pos: bgcolor: fgcolor: bitmap: style: modal: escapeEnable: lockHeight:false lockWidth:true parent: =
 	(
 		--format "\n"; print "Dialog_v.create()"
-		
-		--height = this._getDialogHeight(height) as integer
+		dialog_width  = this._getDialogSize( #width )
+		dialog_height = this._getDialogSize( #height)
 
 		_RolloutCreator = RolloutCreator_v Ini:Ini
 
-		_RolloutCreator.createRollout (RolloutMain) width:RolloutMain.width height:RolloutMain.height
+		_RolloutCreator.createRollout (RolloutMain) width:dialog_width height:dialog_height
 
-		format "RolloutMain.width	= % \n" RolloutMain.width
-		format "RolloutMain.height	= % \n" RolloutMain.height
 		--CreateDialog (_RolloutCreator.getDefinition(RolloutMain)) 
 		--CreateDialog (_RolloutCreator.getDefinition(RolloutMain))  width:RolloutMain.width height:RolloutMain.height 
-		CreateDialog (_RolloutCreator.getDefinition(RolloutMain)) pos:(this._getPositionRelativeToWindow(pos)) autoLayoutOnResize:true  width:RolloutMain.width height:RolloutMain.height bgcolor:bgcolor fgcolor:fgcolor bitmap:bitmap style:(if( style == unsupplied ) then this.style else style) modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
+		CreateDialog (_RolloutCreator.getDefinition(RolloutMain)) pos:(this._getPositionRelativeToWindow(pos)) autoLayoutOnResize:true  width:dialog_width height:dialog_height bgcolor:bgcolor fgcolor:fgcolor bitmap:bitmap style:(if( style == unsupplied ) then this.style else style) modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
 		
 		_RolloutCreator.SubolloutsCreator.addSubRollouts (RolloutMain)
 		
@@ -97,7 +95,7 @@ struct Dialog_v
 		AutoRunEvents.executeMacros()
 		format "\n\nDIALOG CREATED\n\n" 
 	),
-    
+
 	/** Register dialog bar
 	 */
 	function register =
@@ -205,28 +203,32 @@ struct Dialog_v
 		execute("global "+RolloutMain.id)
 	),
 	
-	/** Get height of dialog 
+
+	
+	/** Get size of dialog 
 	  *
 	  * 1. get from ini
 	  * 2. use defined height
-	  * 3. get default height
+	  * 3. get default height from RolloutMain.height
 	  *
+	  * @param	name	dimension	#width|#height
 	 */
-	function _getDialogHeight height =
+	function _getDialogSize dimension =
 	(
-		--print "Dialog_v._getDialogHeight()"
-		--format "height	= % \n" height
+		--print "Dialog_v._getDialogSize()"
 
 		if( Ini.isDefined() and (dialog_size = Ini.load( RolloutMain.id as string )("size")) != undefined) then
-			dialog_size.y --return
-		
-		else if( height != unsupplied ) then
-			height --return 
-		
+		(
+			if dimension == #width then dialog_size.x  as integer else dialog_size.y  as integer --return ini value
+		)
+		else if( size = getProperty this dimension ) != undefined then
+			size --return defined height
+			
 		else
-			512 --return TODO: MOVE THIS TO DEFAULT
+			getProperty RolloutMain dimension --return default height
 	),
 	
+
 	/** Get height of maximized viewport to find out height of docked dialog
 	 */
 	function _getViewportHeight =

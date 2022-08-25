@@ -8,10 +8,16 @@ filein( getFilenamePath(getSourceFileName()) + "/../../../Lib/ContentLoader/Cont
  */
 function loadContentTest dir_name =
 (
+	/* LOAD CONTENT */ 
 	current_dir	= getFilenamePath(getSourceFileName())
 
 	ContentLoader	= ContentLoader_v path:(current_dir+"/"+dir_name)
-
+	
+	/* CHANGE DIALOG PROPERTIES */ 
+	ContentLoader.Dialog.width  = 720
+	ContentLoader.Dialog.height = 1024
+	
+	/* CREATE DIALOG */ 
 	ContentLoader.create() --return 
 )
 
@@ -31,7 +37,7 @@ function loadContentTest dir_name =
 /*---------------------------------------
 	RUN TESTR
 -----------------------------------------*/
- Dialog = loadContentTest("Dialog-level")
--- Dialog = loadContentTest("Nested-Rollouts")
+ --Dialog = loadContentTest("Dialog-level")
+ Dialog = loadContentTest("Nested-Rollouts")
 
 
