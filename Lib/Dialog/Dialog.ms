@@ -93,10 +93,10 @@ struct Dialog_v
 		CreateDialog (_RolloutCreator.getDefinition(RolloutMain)) pos:(this._getPositionRelativeToWindow(pos)) autoLayoutOnResize:true  width:dialog_width height:dialog_height bgcolor:bgcolor fgcolor:fgcolor bitmap:bitmap style:(if( style == unsupplied ) then this.style else style) modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
 		--
 		_RolloutCreator.SubolloutsCreator.addSubRollouts (RolloutMain)
-		--
-		--this._setPositionOrDockByIni()
-		--
-		--AutoRunEvents.executeMacros()
+		
+		this._setPositionOrDockByIni()
+		
+		AutoRunEvents.executeMacros()
 		format "\n\nDIALOG CREATED\n\n" 
 	),
 

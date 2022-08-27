@@ -143,7 +143,7 @@ struct RolloutCreator_v
 				  */
 				--ControlsCreator.AcrossModifier.fakeControlsOnEndofGroup(_Rollout._RolloutCreator) --fake_control_caption:"SUBROLLOUTS"
 
-				SubolloutsCreator.addSubrolloutSlots(ControlsBox_or_Subrollouts)
+				SubolloutsCreator.addSubrolloutSlot(ControlsBox_or_Subrollouts)
 			)
 		)
 	),

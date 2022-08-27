@@ -47,9 +47,9 @@ struct SubolloutsCreator_v
 	 /** _create subrollouts
 	  */
 	 --function addSubrolloutsSlot _Rollout Subrollouts =
-	 function addSubrolloutSlots Subrollouts =
+	 function addSubrolloutSlot Subrollouts =
 	 (
-		format "\n\n=====================================	SubolloutsCreator_v.addSubrolloutSlots() %.%	=====================================\n" ( _Rollout.id as string ) ( Subrollouts.slot as string );
+		format "\n\n=====================================	SubolloutsCreator_v.addSubrolloutSlot() %.%	=====================================\n" ( _Rollout.id as string ) ( Subrollouts.slot as string );
 		format "Subrollouts.height	= % \n" Subrollouts.height
 		
 		--if Subrollouts.height == unsupplied then 

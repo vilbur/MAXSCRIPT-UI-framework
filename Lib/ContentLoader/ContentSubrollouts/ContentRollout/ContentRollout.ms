@@ -28,7 +28,7 @@ struct ContentRollout_v
 	 */
 	function addToUi Subrollouts =
 	(
-		print ( "ContentRollout_v.addToUi (Subrollouts:" + Subrollouts.slot as string +")"  )
+		--print ( "ContentRollout_v.addToUi (Subrollouts:" + Subrollouts.slot as string +")"  )
 		--format "ini_file	= % \n" ini_file
 		Rollout_new	= Subrollouts.Roll title -- get new rollout
 
@@ -145,8 +145,8 @@ struct ContentRollout_v
 
 	on create do
 	(
-		format "\n"; print "ContentRollout_v.onCreate()"
-		format "ini_file	= % \n" ini_file
+		--format "\n"; print "ContentRollout_v.onCreate()"
+		--format "ini_file	= % \n" ini_file
 		ConstructPropeties test:this
 
 		this._setName()
