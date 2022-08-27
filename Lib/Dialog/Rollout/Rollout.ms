@@ -58,8 +58,8 @@ struct Rollout_v
 	 */
 	function Subrollouts slot: height: =
 	(
-		format "\n"; print "Rollout_v.Subrollouts()"
-		format "height	= % \n" height 
+		--format "\n"; print "Rollout_v.Subrollouts()"
+		--format "height	= % \n" height 
 		local Subrollouts = Subrollouts_v parent_rollout_id:id slot:(this._getSubrolloutsSlotName(slot)) height:height 
 
 		append _Controls Subrollouts
@@ -73,8 +73,8 @@ struct Rollout_v
 	 */
 	function Rollouts slot: height: =
 	(
-		print "Rollout_v.Rollouts()"
-		format "height	= % \n" height
+		--print "Rollout_v.Rollouts()"
+		--format "height	= % \n" height
 		this.Subrollouts slot:slot height:height --return
 	),
 	

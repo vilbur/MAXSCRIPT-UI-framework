@@ -28,10 +28,11 @@ struct ContentRollout_v
 	 */
 	function addToUi Subrollouts =
 	(
-		--print ( "ContentRollout_v.addToUi Subrollouts:" + Subrollouts.slot as string  )
+		print ( "ContentRollout_v.addToUi (Subrollouts:" + Subrollouts.slot as string +")"  )
+		--format "ini_file	= % \n" ini_file
 		Rollout_new	= Subrollouts.Roll title -- get new rollout
-		
-		this._setPropsFromIniFile(Rollout_new)
+
+		this._setRolloutPropertiesFromIniFile(Rollout_new)
 		
 		for Subrollouts_or_Controls in Subrollouts_and_Controls do
 			Subrollouts_or_Controls.addToUi Rollout_new
@@ -39,41 +40,19 @@ struct ContentRollout_v
 	
 	/** Get new instance of This
 	 */
-	function new path =
+	function createNewRollout path ini_file =
 	(
-		ContentRollout_v path:path --return
+		ContentRollout_v path:path ini_file:ini_file --return
 	),
 	
 	private
-
-	/** Get props from ini file
-	 */
-	function _setPropsFromIniFile &_Rollout =
-	(
-		format "\n"; print "ContentRollout_v._getPropsFromIniFile()"
-		
-		if ini_file != undefined then
-		(
-			section = (getINISetting ini_file)[1]
-			
-			for key in (getINISetting ini_file section) do
-			(
-				val_ini = getINISetting ini_file section key
-				
-				val = if val_ini as number != undefined then val_ini as number else val_ini
-				
-				setProperty _Rollout ( key as name ) val 
-			)
-		)
-		_Rollout --return
-	),
 	
-		/** _get controls and rollouts
+	
+	/** _get controls and rollouts
 	 */
 	function _initLoadContentFromDir =
 	(
 		--print ("ContentRollout_v._initLoadContentFromDir() " + title)
-		
 		for path in (PathsLoader.getSubrolloutsAndControlsPaths()) do
 			append Subrollouts_and_Controls	(this._addSubrolloutOrControlBox path)
 	),
@@ -83,24 +62,18 @@ struct ContentRollout_v
 	function _addSubrolloutOrControlBox path =
 	(
 		if (this._isDir path) then
-			this._createSubrollouts path
+			this._createSubrolloutsSlots path
 		else
 			this._getFileContent path
 	),
 	
-	/** _is dir
-	 */
-	function _isDir path =
-	(
-		getFilenameType path == "" --return
-	),
-	
 	/** _if path is dir
 	 */
-	function _createSubrollouts path =
+	function _createSubrolloutsSlots path =
 	(
-		--if( this._isSubrolloutsSlot path == true  ) then
-			ContentSubrollouts_v path:path RolloutParrent:this     -- return
+		--format "\n"; print "ContentRollout_v._createSubrolloutsSlots()"
+		--format "ini_file	= % \n" ini_file
+		ContentSubrollouts_v path:path RolloutParrent:this ini_file:ini_file    -- return
 	),
 	
 	/** If path is file
@@ -110,6 +83,39 @@ struct ContentRollout_v
 		--filein path
 		
 		ScriptFile_Content_v path:path	-- return
+	),
+	
+
+	/** Set props for Rollout from ini file
+	 */
+	function _setRolloutPropertiesFromIniFile &_Rollout =
+	(
+		--format "\n"; print "ContentRollout_v._setRolloutPropertiesFromIniFile()"
+		if ini_file != undefined and (ROLLOUT_PROPS_EXISTS = hasINISetting ini_file ( SECTION = _Rollout.id as string )) then
+		(
+			for key in (getINISetting ini_file section) do
+			(
+				prop_name = key as name
+				
+				val_ini = getINISetting ini_file section key
+				
+				val = if val_ini as number != undefined then val_ini as number else val_ini
+				
+				if hasProperty _Rollout prop_name  then 
+					setProperty _Rollout prop_name val
+				else
+					format "-----------------\n\nERROR: Set property with ini file %\n\nRollout has not property: %\n\n-----------------" ini_file prop_name
+			)
+		)
+		
+		_Rollout --return
+	),
+	
+	/** _is dir
+	 */
+	function _isDir path =
+	(
+		getFilenameType path == "" --return
 	),
 	
 	/** Set rollout title by folder title E.g.: "Rollout-1" >> "Rollout 1"
@@ -134,8 +140,13 @@ struct ContentRollout_v
 		title = substituteString title "xWHITESPACEx" " " -- put whitespace back
 	),
 	
+
+
+
 	on create do
 	(
+		format "\n"; print "ContentRollout_v.onCreate()"
+		format "ini_file	= % \n" ini_file
 		ConstructPropeties test:this
 
 		this._setName()
@@ -145,7 +156,8 @@ struct ContentRollout_v
 		
 		PathsLoader.fileInMaxscriptFiles()
 		
-		ini_file = PathsLoader.ini_files[1]
+		if ini_file == undefined then 
+			ini_file = PathsLoader.ini_files[1]
 
 		this._initLoadContentFromDir()
 	)

@@ -39,7 +39,7 @@ struct SubolloutsCreator_v
 		--format "heights_of_slots.count     = % \n" heights_of_slots.count
 		format "undefined_space_in_rollout = % \n" undefined_space_in_rollout
 		slot_height = this._getSlotHeight(undefined_space_in_rollout)(all_Subrollouts.count - heights_of_slots.count)
-		format "slot_height	= % \n" slot_height
+		--format "slot_height	= % \n" slot_height
 		for Subrollout in all_Subrollouts where Subrollout.height == undefined or Subrollout.height == unsupplied do
 			Subrollout.height = slot_height
 	),

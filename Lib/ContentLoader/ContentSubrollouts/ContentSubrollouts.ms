@@ -20,9 +20,9 @@ struct ContentSubrollouts_v
 	(
 		--print ("ContentSubrollouts_v.addToUi() " + (filenameFromPath path) )
 		--format "ini_file	= % \n" ini_file
-		local Subrollouts = _Rollout.subrollouts slot:slot
+		local Subrollouts = _Rollout.subrollouts slot:slot ini_file:ini_file
 
-		this._setPropsFromIniFile(Subrollouts)
+		this._setSlotPropertiesFromIniFile(Subrollouts)
 		
 		for ContentRollout in Rollouts do
 			ContentRollout.addToUi Subrollouts
@@ -30,7 +30,7 @@ struct ContentSubrollouts_v
 
 	private
 	
-	/** Set slot name
+	/** Set slot name by name of folder without prefix: "rollouts-"
 	 */
 	function _setSlot =
 	(
@@ -44,29 +44,35 @@ struct ContentSubrollouts_v
 
 	/** _set rollouts
 	 */
-	function _setRollouts paths =
+	function _createRollouts paths ini_file =
 	(
+		format "\n"; print ("ContentSubrollouts_v._createRollouts()")
+		format "paths	= % \n" paths
+		format "ini_file	= % \n" ini_file
+		
 		for path in paths do 
-			append Rollouts ( RolloutParrent.new path )
-			
+			append Rollouts ( RolloutParrent.createNewRollout (path)(ini_file) )
 	),
 	
-	/** Get props from ini file
+	/** Set props for Subrollouts slot from ini file
 	 */
-	function _setPropsFromIniFile &Subrollouts =
+	function _setSlotPropertiesFromIniFile &Subrollouts =
 	(
-		--format "\n"; print "ContentSubrollouts_v._getPropsFromIniFile()"
-		if ini_file != undefined then
+		--format "\n"; print "ContentSubrollouts_v._setSlotPropertiesFromIniFile()"
+		if ini_file != undefined and (SLOT_PROPS_EXISTS = hasINISetting ini_file ( SECTION = slot as string )) then
 		(
-			section = (getINISetting ini_file)[1]
-			
 			for key in (getINISetting ini_file section) do
 			(
+				prop_name = key as name
+				
 				val_ini = getINISetting ini_file section key
 				
 				val = if val_ini as number != undefined then val_ini as number else val_ini
 				
-				setProperty Subrollouts ( key as name ) val 
+				if hasProperty Subrollouts prop_name  then 
+					setProperty Subrollouts prop_name val
+				else
+					format "-----------------\n\nERROR: Set property with ini file %\n\nSubrollout has not property: %\n\n-----------------" ini_file prop_name
 			)
 		)
 		
@@ -76,14 +82,13 @@ struct ContentSubrollouts_v
 	on create do
 	(
 		--print ("ContentSubrollouts_v.onCreate	" + path )
-		this._setSlot()
 
 		PathsLoader = PathsLoader_v path:path
 
 		PathsLoader.fileInMaxscriptFiles()
-
-		ini_file = PathsLoader.ini_files[1]
 		
-		this._setRollouts( PathsLoader.rollout_dirs )
+		this._setSlot()
+
+		this._createRollouts( PathsLoader.rollout_dirs ) (PathsLoader.ini_files[1])
 	)
 )
