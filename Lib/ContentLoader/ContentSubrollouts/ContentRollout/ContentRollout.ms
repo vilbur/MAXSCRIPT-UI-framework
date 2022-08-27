@@ -31,7 +31,7 @@ struct ContentRollout_v
 		--print ( "ContentRollout_v.addToUi Subrollouts:" + Subrollouts.slot as string  )
 		Rollout_new	= Subrollouts.Roll title -- get new rollout
 		
-		this._setPropsFromIniFile(Rollout_new)
+		--this._setPropsFromIniFile(Rollout_new)
 		
 		for Subrollouts_or_Controls in Subrollouts_and_Controls do
 			Subrollouts_or_Controls.addToUi Rollout_new

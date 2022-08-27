@@ -31,24 +31,29 @@ function addSubrollouts Subollout_slots number_of_rollouts: level: =
 (
 	SubRollouts = #()
 
-	
 	for s = 1 to Subollout_slots.count collect 
 	(
 		Subollout_slot = Subollout_slots[s]
-		
+
 		for r = 1 to number_of_rollouts do 
 		(
-			
-			title = ( Subollout_slot.slot as string + " Rollout:"+ s as string + " Level:" + level as string )
+
+			title = ("Level: " + level as string +" "+ Subollout_slot.slot as string + " Rollout:"+ r as string )
 			--title = ( Subollout_slot.slot as string  + " Level:" + level as string )
 	
 			_SubRollout = Subollout_slot.Roll title
 	
+			_Controls    = _SubRollout.Controls group:"Subrollout Controls"
+
+			for i = 1 to 5 do 
+				_Controls.control #button ( Subollout_slot.slot as string +" "+ i as string ) across:1
+
+	
 			append SubRollouts _SubRollout
 		)
-		
+
 	)
-	
+
 	SubRollouts --return
 )
 
@@ -65,15 +70,15 @@ function createDialogWithSubrollouts number_of_slots: nested_level: slot_height:
 	--_Rollouts = #(Dialog.RolloutMain)
 	_Rollout = Dialog
 
-	Subollout_slots = addSubRolloutSlots #(_Rollout) number_of_slots:number_of_slots 
-	--format "Subollout_slots	= % \n" Subollout_slots
+	Subollout_slots	= addSubRolloutSlots #(_Rollout) number_of_slots:1 
+	SubRollouts	= addSubrollouts Subollout_slots number_of_rollouts:1 level:1
+	
+	Subollout_slots	= addSubRolloutSlots SubRollouts number_of_slots:1 
+	SubRollouts	= addSubrollouts Subollout_slots number_of_rollouts:2 level:2
 
-	SubRollouts = addSubrollouts Subollout_slots number_of_rollouts:5 level:1
-
-	--Subollout_slots_nested = addSubRolloutSlots (SubRollouts) number_of_slots:number_of_slots number_of_rollouts:5
-
-	--_SubRollouts_nested = addSubrollouts Subollout_slots_nested level:2
-
+	Subollout_slots	= addSubRolloutSlots SubRollouts number_of_slots:number_of_slots 
+	SubRollouts	= addSubrollouts Subollout_slots number_of_rollouts:1 level:3
+	
 	/* CREATE DIALOG */ 
 	Dialog.create()
 )

@@ -117,8 +117,9 @@ struct DefaultParameters_v
 		keys_values = case control_type of
 		(
 			#Global:	#( #across,4 )
-			#Groupbox:	#( #height,128 )
-			#Button:	#( #width,96 )
+			--#Groupbox:	#( )
+			--#Groupbox:	#( #across,1,	#height,128 )
+			--#Button:	#( #width,96 )
 			--#Checkbox:	#( #across,4 )
 			#List:	#( #across,1 )
 			#Edittext:	#( #across,1 )

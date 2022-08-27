@@ -15,9 +15,9 @@ Dialog 	= Dialog_v title:(getFilenameFile(getSourceFileName()))
 
 _Rollout = Dialog.roll "Rollout in first slot"
 
-_Rollout.roll "SubRollout in first slot"
+-- _Rollout.roll "SubRollout in first slot"
 
-_Rollout.roll "SubRollout in first slot"
+-- _Rollout.roll "SubRollout in first slot"
 
 
 /*------------------------------------------------------------------------------

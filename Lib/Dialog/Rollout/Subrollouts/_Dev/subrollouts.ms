@@ -26,7 +26,7 @@ rollout rollout_main "rollout_main" height:200
 
 rollout subrollout_1 "Subrollout 1"
 (
-	subRollout nested_slot_1 "slot"
+	subRollout nested_slot_1 "slot" 
 	
 	on subrollout_1 rolledUp val do
 	(

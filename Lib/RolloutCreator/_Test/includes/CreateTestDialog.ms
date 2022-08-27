@@ -2,14 +2,12 @@
  */
 
 
-if( dialog_width == undefined ) then
-	dialog_width  = unsupplied
-	
-if( dialog_height == undefined ) then
-	dialog_height = unsupplied
 
-_RolloutCreator.createRollout _Rollout height:dialog_height
 
-CreateDialog (_RolloutCreator.getDefinition _Rollout) width:dialog_width height:dialog_height autoLayoutOnResize:true
+--_RolloutCreator.createRollout _Rollout height:dialog_height
+_RolloutCreator.createRollout _Rollout
 
-_RolloutCreator.SubolloutsCreator.addSubRollouts _Rollout
+--CreateDialog (_RolloutCreator.getDefinition _Rollout) width:1024 height:1024 autoLayoutOnResize:true
+CreateDialog (_RolloutCreator.getDefinition _Rollout) autoLayoutOnResize:true
+
+--_RolloutCreator.SubolloutsCreator.addSubRollouts _Rollout

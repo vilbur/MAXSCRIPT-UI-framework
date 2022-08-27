@@ -18,7 +18,7 @@ struct Subrollouts_v
 	(
 		--format "\n"; print "Subrollouts_v.Roll()"
 		--format "title	= % \n" title
-		local _Rollout = Rollout_v title:title id:id parent_rollout_id:( parent_rollout_id as string +"."+slot as string) height:height
+		local _Rollout = Rollout_v title:title id:id parent_rollout_id:( parent_rollout_id as string +"."+slot as string ) height:height
 
 		append Rollouts _Rollout
 

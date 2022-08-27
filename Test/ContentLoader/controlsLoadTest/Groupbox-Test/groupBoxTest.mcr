@@ -7,14 +7,17 @@
 --------------------------------------------------------------------------------*/
 /* GROUPBOX LEFT COLUMN
 */ 
-macroscript macroFileTest_group_box
+macroscript macroFileTest_group_box_control_1
 	category:	"MacroFileTest"
-	buttontext:	"Selfmade Groupbox"
-	icon:	"type:Groupbox|id:test_groupbox_x|across:2|height:32"
+	buttontext:	"First Control"
+	--icon:	"type:Groupbox|id:test_groupbox_x|across:2|height:32|tooltip:Selfmade Groupbox"
+	--icon:	"Groupbox:Defined by control|across:2|height:32|tooltip:Selfmade Groupbox"
+	--icon:	"Groupbox:Defined by control|across:2"
+	icon:	"Groupbox:Defined by control"
 (
 )
 	
---
+
 --macroscript MacroFileTest_groupbox_test1
 --	category:	"MacroFileTest"
 --	--buttontext:	"This control \nCREATED\nthis groupbox"
@@ -23,13 +26,14 @@ macroscript macroFileTest_group_box
 --(
 --)
 	
-macroscript MacroFileTest_groupbox_test2
-	category:	"MacroFileTest"
-	buttontext:	"Next control"
-	icon:	"Groupbox:Selfmade Groupbox|width:128"
-(
-)	
-	
+--macroscript macroFileTest_group_box_control_2
+--	category:	"MacroFileTest"
+--	buttontext:	"Second Control"
+--	--icon:	"Groupbox:Defined by control|width:128"
+--	icon:	"Groupbox:Defined by control"
+--(
+--)
+
 
 /*------------------------------------------------------------------------------
 	
@@ -37,16 +41,15 @@ macroscript MacroFileTest_groupbox_test2
 	
 --------------------------------------------------------------------------------*/
 
-/* GROUPBOX LEFT COLUMN
-*/ 
-macroscript macroFileTest_group_box
-	category:	"MacroFileTest"
-	buttontext:	"This groupbox define height of previous"
-	icon:	"type:Groupbox|id:test_groupbox_x|across:2|height:32"
-(
-)
-	
-	
+--/* GROUPBOX RIGHT COLUMN
+--*/ 
+--macroscript macroFileTest_group_box
+--	category:	"MacroFileTest"
+--	buttontext:	"This is groupbox"
+--	--tooltip:	"This groupbox define height of previous"
+--	icon:	"control:Groupbox|id:test_groupbox_x|across:2|height:32"
+--(
+--)
 --	
 --/* button 2 */ 
 --macroscript MacroFileTest_groupbox_test2
@@ -64,6 +67,8 @@ macroscript macroFileTest_group_box
 --	format "EventFired	= % \n" EventFired
 --
 --)
+
+
 /*------------------------------------------------------------------------------
   
   VERTICAL ALIGN IN GROUPBOX

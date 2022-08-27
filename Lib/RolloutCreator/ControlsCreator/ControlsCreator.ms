@@ -40,6 +40,7 @@ struct ControlCreator_v
 		if this._ifControlsListIsNotTemporary() then 
 			GroupBoxCreator.addGrouboxes (_Rollout.getFullId()) (_Controls.GroupBoxes)
 
+		--format "_Rollout.width	= % \n" _Rollout.width
 		/* pass DEFAULT PARAMETERS to params creator */ 
 		ParamsCreator.setDefaultParameters(_Controls.DefaultParameters)
 
@@ -151,6 +152,8 @@ struct ControlCreator_v
 
 		/* DEBUG LOG */ 
 		--if not matchPattern _Control.id pattern:"LABEL_fake*" then -- DEBUG - don`t print
+		--format "_Control.type	= % \n" _Control.type
+		--if _Control.type == #GroupBox then -- DEBUG - don`t print
 		--(
 		--	format "\nControl:%.%" ( _Rollout.id as string ) _Control.id
 		--	

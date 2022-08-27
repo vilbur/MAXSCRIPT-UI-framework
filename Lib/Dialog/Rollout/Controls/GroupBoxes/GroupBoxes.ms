@@ -25,7 +25,6 @@ struct GroupBoxes_v
 		_controls --return
 	),
 	
-	
 	/** Set group box
 	 */
 	function tryAddGroupbox _Controls _Control =
@@ -66,7 +65,7 @@ struct GroupBoxes_v
 	private
 	
 	
-	/** _get group box
+	/**
 	 */
 	function _createOrGetGroupBoxControl _Controls _Control groupbox_caption =
 	(
@@ -78,12 +77,12 @@ struct GroupBoxes_v
 		_GroupBox --return
 	),
 	
-	/** _create groupbox by control
+	/** 
 	 */
 	function _createGroupboxByControl _GroupBox _Control =
 	(		
-		if( ( control_across = _Control.Params.getVal #across ) != undefined ) then 
-			_GroupBox.Params.setVal #across control_across
+		--if( ( control_across = _Control.Params.getVal #across ) != undefined ) then 
+			--_GroupBox.Params.setVal #across control_across
 		
 		this._setDefaultHeight(_GroupBox)
 		this._saveGroupBox(_GroupBox.id)

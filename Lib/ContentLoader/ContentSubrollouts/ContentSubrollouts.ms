@@ -22,7 +22,7 @@ struct ContentSubrollouts_v
 		--format "ini_file	= % \n" ini_file
 		local Subrollouts = _Rollout.subrollouts slot:slot
 
-		this._setPropsFromIniFile(Subrollouts)
+		--this._setPropsFromIniFile(Subrollouts)
 		
 		for ContentRollout in Rollouts do
 			ContentRollout.addToUi Subrollouts

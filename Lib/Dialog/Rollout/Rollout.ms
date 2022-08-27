@@ -10,8 +10,10 @@ struct Rollout_v
 
 	/* construct */
 	title,
-	width	= 512,
-	height	= 512,
+	--width	= 512,
+	width,
+	--height	= 512,
+	height,
 	
 	/* properties */
 	id,
@@ -54,9 +56,10 @@ struct Rollout_v
 
 	/** Get new slot of subrollouts
 	 */
-	function Subrollouts slot: height:height =
+	function Subrollouts slot: height: =
 	(
-		--format "\n"; print "Rollout_v.Subrollouts()"
+		format "\n"; print "Rollout_v.Subrollouts()"
+		format "height	= % \n" height 
 		local Subrollouts = Subrollouts_v parent_rollout_id:id slot:(this._getSubrolloutsSlotName(slot)) height:height 
 
 		append _Controls Subrollouts
@@ -71,7 +74,7 @@ struct Rollout_v
 	function Rollouts slot: height: =
 	(
 		print "Rollout_v.Rollouts()"
-		
+		format "height	= % \n" height
 		this.Subrollouts slot:slot height:height --return
 	),
 	
@@ -85,10 +88,12 @@ struct Rollout_v
 	function get id =
 	(
 		--format "\n"; print "Rollout_v.get()"
-		--format "this.id	= % \n" this.id
-
+		--format "this.id	= % \n" this.id 
+		--format "id	= % \n" id
+		--format "this.getSubrollouts()	= % \n" (this.getSubrollouts())
 		if id == this.id then
 			return this --return
+			
 		else
 			for _Subrollouts in this.getSubrollouts() where (found_rollout = _Subrollouts.get (id)) != undefined do
 				return found_rollout
@@ -151,6 +156,7 @@ struct Rollout_v
 	function getSubrollouts =
 	(
 		--format "\n"; print "Rollout_v._getSubrolouts()"
+		--format "_Controls	= % \n" _Controls
 		for _Control in _Controls where hasProperty _Control "slot" collect _Control --return
 	),
 	
@@ -158,6 +164,9 @@ struct Rollout_v
 	 */
 	function hasSubrollouts =
 	(
+		--format "\n"; print "Rollout_v.hasSubrollouts()"
+		--subrollouts_count = (this.getSubrollouts()).count
+		
 		(this.getSubrollouts()).count > 0
 	),
 	

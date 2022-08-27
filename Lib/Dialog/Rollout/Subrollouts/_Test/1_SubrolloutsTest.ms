@@ -16,9 +16,9 @@ Subrollouts_2 = _Rollout.Subrollouts()
 Subrollout_1 = Subrollouts_1.Roll "Subrollout1" id:#subrollout_1
 Subrollout_2 = Subrollouts_2.Roll "Subrollout2" id:#subrollout_2
 
-format "_Rollout     = % \n" _Rollout
-format "Subrollouts_1  = % \n" Subrollouts_1
-format "Subrollout_1 = % \n" Subrollout_1
+format "_Rollout     = % \n"	_Rollout
+format "Subrollouts_1  = % \n"	Subrollouts_1
+format "Subrollout_1 = % \n"	Subrollout_1
 
 
 /** CREATE MAIN ROLLOUT 

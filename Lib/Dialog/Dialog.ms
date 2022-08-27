@@ -21,8 +21,11 @@ struct Dialog_v
 	
 	/* construct */
 	Ini,
-	width,
-	height,
+	
+	width	= 512,
+	--width,
+	height	= 512,
+	--height,
 	
 	/* options */
 	id,
@@ -76,23 +79,24 @@ struct Dialog_v
 	 */
 	function create pos: bgcolor: fgcolor: bitmap: style: modal: escapeEnable: lockHeight:false lockWidth:true parent: =
 	(
-		--format "\n"; print "Dialog_v.create()"
+		format "\n"; print "Dialog_v.create()"
 		dialog_width  = this._getDialogSize( #width )
 		dialog_height = this._getDialogSize( #height)
-
+		format "dialog_width	= % \n" dialog_width
+		format "dialog_height	= % \n" dialog_height
 		_RolloutCreator = RolloutCreator_v Ini:Ini
 
 		_RolloutCreator.createRollout (RolloutMain) width:dialog_width height:dialog_height
 
 		--CreateDialog (_RolloutCreator.getDefinition(RolloutMain)) 
-		--CreateDialog (_RolloutCreator.getDefinition(RolloutMain))  width:RolloutMain.width height:RolloutMain.height 
-		CreateDialog (_RolloutCreator.getDefinition(RolloutMain)) pos:(this._getPositionRelativeToWindow(pos)) autoLayoutOnResize:true  width:dialog_width height:dialog_height bgcolor:bgcolor fgcolor:fgcolor bitmap:bitmap style:(if( style == unsupplied ) then this.style else style) modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
-		
+		CreateDialog (_RolloutCreator.getDefinition(RolloutMain))  width:RolloutMain.width height:RolloutMain.height 
+		--CreateDialog (_RolloutCreator.getDefinition(RolloutMain)) pos:(this._getPositionRelativeToWindow(pos)) autoLayoutOnResize:true  width:dialog_width height:dialog_height bgcolor:bgcolor fgcolor:fgcolor bitmap:bitmap style:(if( style == unsupplied ) then this.style else style) modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
+		--
 		_RolloutCreator.SubolloutsCreator.addSubRollouts (RolloutMain)
-		
-		this._setPositionOrDockByIni()
-		
-		AutoRunEvents.executeMacros()
+		--
+		--this._setPositionOrDockByIni()
+		--
+		--AutoRunEvents.executeMacros()
 		format "\n\nDIALOG CREATED\n\n" 
 	),
 
@@ -276,16 +280,24 @@ struct Dialog_v
 	 */
 	function _setMainRollout =
 	(
-		--print "Dialog_v._setMainRollout()"
+		print "Dialog_v._setMainRollout()"
 		RolloutMain	= Rollout_v title:title id:id Layout:Layout 
 
+		Events = RolloutMain.Events
+	),
+	
+	/** Set main rollout
+	 */
+	function _setMainRolloutWidthAndHeight =
+	(
+		print "Dialog_v._setMainRolloutWidthAndHeight()"
+		format "width	= % \n" width
+		format "height	= % \n" height
 		if width != undefined then 
 			RolloutMain.width = width
 			
 		if height != undefined then 
 			RolloutMain.height = height
-			
-		Events = RolloutMain.Events
 	),
 	
 	/** _load ini position
@@ -332,6 +344,8 @@ struct Dialog_v
 		Ini	= Ini_v _path:Ini
 		
 		this._setMainRollout()
+		
+		this._setMainRolloutWidthAndHeight()
 		
 		this._setDialogGlobal()
 		

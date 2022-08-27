@@ -20,8 +20,7 @@ struct SubolloutsCreator_v
 	function setSubrolloutsSlotHeight rollout_height =
 	(
 		format "\n"; print "SubolloutsCreator_v.setSubrolloutsHeight()"
-		format "rollout_height	= % \n" rollout_height
-		format "_Rollout.hasSubrollouts()	= % \n" (_Rollout.hasSubrollouts())
+		--format "_Rollout.hasSubrollouts()	= % \n" (_Rollout.hasSubrollouts())
 		if not _Rollout.hasSubrollouts()  then 
 			return false
 		
@@ -29,16 +28,18 @@ struct SubolloutsCreator_v
 			return slot_height
 		
 		all_Subrollouts	= this._getSubrollouts(_Rollout)
-		heights_of_slots	= (this._getHeightsOfsubrollouts())
-		defined_heights	= sum=0;for val in heights_of_slots do sum += val;sum;
+		heights_of_slots	= (this._getHeightsOfSubrollouts())
+		defined_height	= sum=0;for val in heights_of_slots do sum += val;sum;
 
-		undefined_space_in_rollout = rollout_height - defined_heights
-		format "all_Subrollouts.count	= % \n" all_Subrollouts.count
-		format "heights_of_slots	= % \n" heights_of_slots
-		----format "heights_of_slots.count	= % \n" heights_of_slots.count
-		format "undefined_space_in_rollout	= % \n" undefined_space_in_rollout
+		undefined_space_in_rollout = rollout_height - defined_height
+		format "rollout_height             = % \n" rollout_height
+		--format "all_Subrollouts.count      = % \n" all_Subrollouts.count
+		format "heights_of_slots           = % \n" heights_of_slots
+		format "defined_height             = % \n" defined_height           
+		format "heights_of_slots.count     = % \n" heights_of_slots.count
+		format "undefined_space_in_rollout = % \n" undefined_space_in_rollout
 		slot_height = this._getSlotHeight(undefined_space_in_rollout)(all_Subrollouts.count - heights_of_slots.count)
-		
+		format "slot_height	= % \n" slot_height
 		for Subrollout in all_Subrollouts where Subrollout.height == undefined or Subrollout.height == unsupplied do
 			Subrollout.height = slot_height
 	),
@@ -51,8 +52,8 @@ struct SubolloutsCreator_v
 		format "\n\n=====================================	SubolloutsCreator_v.addSubrolloutSlots() %.%	=====================================\n" ( _Rollout.id as string ) ( Subrollouts.slot as string );
 		format "Subrollouts.height	= % \n" Subrollouts.height
 		
-		if Subrollouts.height == unsupplied then 
-			Subrollouts.height = 256 --dev
+		--if Subrollouts.height == unsupplied then 
+			--Subrollouts.height = 256 --dev
 		
 		_Rollout._RolloutCreator.addText ("subRollout "+Subrollouts.slot as string +" \"slot_name\" height:"+Subrollouts.height as string )
 	 ),
@@ -95,9 +96,13 @@ struct SubolloutsCreator_v
 	
 	/** Get subrollout with height defined
 	 */
-	function _getHeightsOfsubrollouts =
+	function _getHeightsOfSubrollouts =
 	(
 		--format "\n"; print "SubolloutsCreator_v.getSubrolloutWithHeightDefined()"
+		for Subrollout in this._getSubrollouts(_Rollout) do
+			format "Subrollout.%.height	= % \n" (Subrollout.slot as string) Subrollout.height
+		
+		
 		for Subrollout in this._getSubrollouts(_Rollout) where Subrollout.height != undefined and Subrollout.height != unsupplied collect Subrollout.height --return
 	),
 
