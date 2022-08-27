@@ -29,14 +29,14 @@ struct SubolloutsCreator_v
 		
 		all_Subrollouts	= this._getSubrollouts(_Rollout)
 		heights_of_slots	= (this._getHeightsOfSubrollouts())
-		defined_height	= sum=0;for val in heights_of_slots do sum += val;sum;
+		defined_height_sum	= 0;for val in heights_of_slots do defined_height_sum += val;
 
-		undefined_space_in_rollout = rollout_height - defined_height
+		undefined_space_in_rollout = rollout_height - defined_height_sum
 		format "rollout_height             = % \n" rollout_height
 		--format "all_Subrollouts.count      = % \n" all_Subrollouts.count
 		format "heights_of_slots           = % \n" heights_of_slots
-		format "defined_height             = % \n" defined_height           
-		format "heights_of_slots.count     = % \n" heights_of_slots.count
+		format "defined_height_sum         = % \n" defined_height_sum           
+		--format "heights_of_slots.count     = % \n" heights_of_slots.count
 		format "undefined_space_in_rollout = % \n" undefined_space_in_rollout
 		slot_height = this._getSlotHeight(undefined_space_in_rollout)(all_Subrollouts.count - heights_of_slots.count)
 		format "slot_height	= % \n" slot_height

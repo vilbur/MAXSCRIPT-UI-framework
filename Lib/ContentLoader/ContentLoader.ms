@@ -32,8 +32,7 @@ struct ContentLoader_v
 	function create pos: menu: bgcolor: fgcolor: bitmap: style: modal: escapeEnable: lockHeight: lockWidth: parent: =
 	(
 		--print("ContentLoader_v.create()")
-		for Subrollouts_or_Controls in ContentRollout.Subrollouts_and_Controls do
-			Subrollouts_or_Controls.addToUi Dialog.RolloutMain
+
 		
 		Dialog.create pos:pos menu:menu bgcolor:bgcolor fgcolor:fgcolor bitmap:bitmap style:style modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
 	
@@ -55,6 +54,7 @@ struct ContentLoader_v
 		
 		Dialog	= Dialog_v title:ContentRollout.title id:ContentRollout.title ini:ini
 		
-
+		for Subrollouts_or_Controls in ContentRollout.Subrollouts_and_Controls do
+			Subrollouts_or_Controls.addToUi Dialog.RolloutMain
 	)
 )

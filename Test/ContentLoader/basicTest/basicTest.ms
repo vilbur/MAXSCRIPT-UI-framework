@@ -12,6 +12,10 @@ function loadContentTest dir_name =
 
 	ContentLoader	= ContentLoader_v path:(current_dir+"/"+dir_name)
 
+	ContentLoader.Dialog.height = 1024
+	
+	(ContentLoader.Dialog.get (#test)).title = "Title changed" -- change property of rollout
+	
 	ContentLoader.create() --return 
 )
 
@@ -33,7 +37,4 @@ function loadContentTest dir_name =
 -----------------------------------------*/
 
  Dialog = loadContentTest("Test-Content")
- 
--- Dialog = loadContentTest("Nested-Rollouts")
-
 
