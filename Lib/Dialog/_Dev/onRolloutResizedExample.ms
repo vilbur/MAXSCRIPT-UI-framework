@@ -26,7 +26,7 @@ rollout MainRollout "Main Rollout" width:325 height:200
 
 global GLOBAL_DIALOG_RESIZED
 
-Dialog = createDialog MainRollout 
+Dialog = CreateDialog MainRollout 
 
 
 cui.RegisterDialogBar	MainRollout style:#(#cui_dock_left,#cui_dock_right,#cui_floatable,#cui_handles)

@@ -1,6 +1,7 @@
 global DIALOG_PREVIOUS_STATE = undefined -- this should be in struct
 
-global EVENT_DOCKED_ENABLED = true -- prevent crash on destroying  of dialog // RENAME THIS TO DIALOG_ENABLE_DOCKED_EVENT
+if EVENT_DOCKED_ENABLED == undefined then 
+	global EVENT_DOCKED_ENABLED = true -- prevent crash on destroying  of dialog // RENAME THIS TO DIALOG_ENABLE_DOCKED_EVENT
 
 global AUTORUN_EVENTS = #()
 
@@ -81,17 +82,19 @@ struct Dialog_v
 	 */
 	function create pos: bgcolor: fgcolor: bitmap: style: modal: escapeEnable: lockHeight:false lockWidth:true parent: =
 	(
-		this._setMainRolloutWidthAndHeight()
+		--format "\n"; print "Dialog_v.create()"
 
-		
-		format "\n"; print "Dialog_v.create()"
 		dialog_width  = this._getDialogSize( #width )
 		dialog_height = this._getDialogSize( #height)
-		format "dialog_width	= % \n" dialog_width
-		format "dialog_height	= % \n" dialog_height
+		--format "dialog_width	= % \n" dialog_width
+		--format "dialog_height	= % \n" dialog_height
+		
+		RolloutMain.width  = dialog_width
+		RolloutMain.height = dialog_height
+		
 		_RolloutCreator = RolloutCreator_v Ini:Ini
 
-		_RolloutCreator.createRollout (RolloutMain) width:dialog_width height:dialog_height
+		_RolloutCreator.createRollout (RolloutMain)
 
 
 		--CreateDialog (_RolloutCreator.getDefinition(RolloutMain)) 
@@ -104,18 +107,18 @@ struct Dialog_v
 		this._setPositionOrDockByIni()
 		
 		AutoRunEvents.executeMacros()
-		format "\n\nDIALOG CREATED\n\n" 
+		--format "\n\nDIALOG CREATED\n\n" 
 	),
 
 	/** Register dialog bar
 	 */
 	function register =
 	(
-		print "Dialog_v.register()"
+		--print "Dialog_v.register()"
 		--execute ("cui.RegisterDialogBar "+ RolloutMain.id +" style:"+style_registred_dialog as string )
 		
 		min_size = if width != unsupplied and height != unsupplied  then " minSize:["+width as string +","+height as string +"] " else ""
-		format "min_size	= % \n" min_size
+		--format "min_size	= % \n" min_size
 		execute ("cui.RegisterDialogBar "+ RolloutMain.id +" "+min_size+" style:"+style_registred_dialog as string )
 		--execute ("cui.RegisterDialogBar "+ RolloutMain.id +" "+min_size+" style:"+style_registred_dialog as string )
 		
@@ -125,7 +128,7 @@ struct Dialog_v
 	 */
 	function unregister =
 	(
-		--print "Dialog_v.unregister()"
+		--format "\n"; print "Dialog_v.unregister()"
 		execute ("try(cui.UnRegisterDialogBar "+ RolloutMain.id +")catch()")
 	),
 	
@@ -153,10 +156,12 @@ struct Dialog_v
 	(
 		--print "Dialog_v.destroy()"
 		--format "RolloutMain.id	= % \n" RolloutMain.id
-		EVENT_DOCKED_ENABLED = false
+		(IniSaver_v(Ini.getPath())).saveDialogDockState(id)
 		
 		this.unregister()
-		--sleep 1
+		
+		EVENT_DOCKED_ENABLED = false
+		
 		execute ( "try( destroyDialog "+ RolloutMain.id +" )catch()" )
 		
 		EVENT_DOCKED_ENABLED = true
@@ -220,8 +225,6 @@ struct Dialog_v
 		--format "\n"; print "global._setDialogGlobal()"
 		execute("global "+RolloutMain.id)
 	),
-	
-
 	
 	/** Get size of dialog 
 	  *
@@ -299,21 +302,21 @@ struct Dialog_v
 
 		Events = RolloutMain.Events
 	),
-	
-	/** Set main rollout
-	 */
-	function _setMainRolloutWidthAndHeight =
-	(
-		print "Dialog_v._setMainRolloutWidthAndHeight()"
-		format "width	= % \n" width
-		format "height	= % \n" height
-		if width != unsupplied then 
-			RolloutMain.width = width
-			
-		if height != unsupplied then 
-			RolloutMain.height = height
-	),
-	
+	--
+	--/** Set main rollout
+	-- */
+	--function _setMainRolloutWidthAndHeight =
+	--(
+	--	print "Dialog_v._setMainRolloutWidthAndHeight()"
+	--	--format "width	= % \n" width
+	--	--format "height	= % \n" height
+	--	if width != unsupplied then 
+	--		RolloutMain.width = width
+	--		
+	--	if height != unsupplied then 
+	--		RolloutMain.height = height
+	--),
+	--
 	/** _load ini position
 	 */
 	function _setPositionOrDockByIni =
@@ -353,15 +356,15 @@ struct Dialog_v
 	on create do
 	(
 		--print("Dialog_v.onCreate()")
+		--format "EVENT_DOCKED_ENABLED	= % \n" EVENT_DOCKED_ENABLED
 		this._checkConstctructProperties #(#title)
 		
 		Ini	= Ini_v _path:Ini
 		
 		this._setMainRollout()
 		
+		this.destroy()
 		
 		this._setDialogGlobal()
-		
-		this.destroy()
 	)
 )

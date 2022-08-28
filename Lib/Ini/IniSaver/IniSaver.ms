@@ -2,8 +2,6 @@
  */
 struct IniSaver_v
 (
-	--__construct = #( #property_name ),
-
 	/* construct */
 	ini_file,
 
@@ -34,40 +32,37 @@ struct IniSaver_v
 		--format "\n"; print "IniSaver_v.saveRollout()"
 		--format "rollout_id	= % \n" rollout_id
 		--format "ini_file	= % \n" ini_file
-		--_Rollout = execute(rollout_id)
 
-		--if _Rollout.inDialog == true then
-			this._saveDialog (execute(rollout_id))
-
-		--else
-			--this._saveRollout (_Rollout)
-
+		if (_Rollout = execute(rollout_id)) != undefined then
+		(
+			if EVENT_DOCKED_ENABLED then
+				this.saveDialogDockState (rollout_id)
+		
+			this._saveControlsAndSubrollouts (_Rollout)
+		)
+		
 		true --return
 	),
 
+	/** Save dialog dock state
+	 */
+	function saveDialogDockState rollout_id =
+	(
+		--format "\n"; print "IniSaver_v.saveDialogDockState()"
+		--format "rollout_id	= % \n" rollout_id
+		
+		if (_Rollout = execute(rollout_id)) != undefined then
+		(
+			this._saveToIni _Rollout.name "position"	(GetDialogPos _Rollout )
+			
+			this._saveToIni _Rollout.name "dock_state"	(try(cui.getDockState _Rollout )catch())
+		
+			this._saveToIni _Rollout.name "size"	(GetDialogSize _Rollout )
+		)
+	),
+	
 	private
 
-	/** _save rollout
-	 */
-	function _saveDialog _Rollout =
-	(
-		--format "\n"; print "IniSaver_v._saveDialog()"
-		--format "_Rollout	= % \n" _Rollout
-
-		dock_state	= (try(cui.getDockState _Rollout )catch())
-		dialog_is_docked		= matchPattern ( dock_state as string ) pattern:"cui_dock_*"
-		
-		this._saveToIni _Rollout.name "position"	(GetDialogPos _Rollout )
-		this._saveToIni _Rollout.name "dock_state"	dock_state
-		
-		--if not dialog_is_docked then
-			this._saveToIni _Rollout.name "size"	(GetDialogSize _Rollout )
-		--
-		--else
-		--	this._delIniSetting  _Rollout.name "size"
-
-		this._saveControlsAndSubrollouts(_Rollout)
-	),
 
 	/** _save controls and subrollouts
 	 */
@@ -187,10 +182,11 @@ struct IniSaver_v
 	function _saveToIni section key val =
 	(
 		--format "\n"; print "IniSaver_v._saveToIni()"
+		--format "ini_file	= % \n" ini_file
 		--format "section	= % \n" section
 		--format "key	= % \n" key
 		--format "val	= % \n" val
-		if( val != undefined ) then 
+		if( ini_file != undefined  and val != undefined ) then 
 			setINISetting ini_file section key ( val as string )
 	),
 	
@@ -198,10 +194,7 @@ struct IniSaver_v
 	 */
 	function _delIniSetting section key =
 	(
-		format "\n"; print "IniSaver_v._delIniSetting ()"
-		format "section	= % \n" section
-		format "key	= % \n" key
-		
+		--format "\n"; print "IniSaver_v._delIniSetting ()"
 		delIniSetting  ini_file section key
 	),
 	
@@ -220,8 +213,7 @@ struct IniSaver_v
 	 */
 	on create do
 	(
-		clearListener()
-		print("IniSaver_v.onCreate()")
-		--ConstructPropeties test:this
+		--clearListener()
+		--format "\n"; print("IniSaver_v.onCreate()")
 	)	
 )
