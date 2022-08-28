@@ -22,10 +22,12 @@ struct Dialog_v
 	/* construct */
 	Ini,
 	
-	width	= 512,
+	--width	= 512,
+	width	= unsupplied,
 	--width,
-	height	= 512,
+	--height	= 512,
 	--height,
+	height = unsupplied,
 	
 	/* options */
 	id,
@@ -54,14 +56,14 @@ struct Dialog_v
 		--#style_sunkenedge, 	-- Specifies that a window has a 3D look in the form of a border with a sunken edge.
 	),
 
-	style_dialog = #(
+	style_registred_dialog = #(
 		#cui_floatable,	-- Dialogbar can float
-		#cui_dock_all,	-- Dialog bar can dock on all 4 edges of the frame.
-		#cui_handles	-- Show gripper handles when docked
+		#cui_handles,	-- Show gripper handles when docked
+		#cui_dock_vert	-- Can dock vertically (left and right)
 
 		/* ALLOWED but not DEFAULT styles */ 
+		--#cui_dock_all,	-- Dialog bar can dock on all 4 edges of the frame.
 		--#cui_dock_horz,	-- Can dock horizontally (top and bottom)
-		--#cui_dock_vert,	-- Can dock vertically (left and right)
 		--#cui_dock_left ,	-- Can dock to the left
 		--#cui_dock_top,	-- Can dock to the top
 		--#cui_dock_right,	-- Can dock to the right
@@ -79,6 +81,9 @@ struct Dialog_v
 	 */
 	function create pos: bgcolor: fgcolor: bitmap: style: modal: escapeEnable: lockHeight:false lockWidth:true parent: =
 	(
+		this._setMainRolloutWidthAndHeight()
+
+		
 		format "\n"; print "Dialog_v.create()"
 		dialog_width  = this._getDialogSize( #width )
 		dialog_height = this._getDialogSize( #height)
@@ -88,8 +93,10 @@ struct Dialog_v
 
 		_RolloutCreator.createRollout (RolloutMain) width:dialog_width height:dialog_height
 
+
 		--CreateDialog (_RolloutCreator.getDefinition(RolloutMain)) 
-		--CreateDialog (_RolloutCreator.getDefinition(RolloutMain))  width:RolloutMain.width height:RolloutMain.height 
+		--CreateDialog (_RolloutCreator.getDefinition(RolloutMain))  width:dialog_width height:dialog_height style:this.style
+		--CreateDialog (_RolloutCreator.getDefinition(RolloutMain)) width:unsupplied height:unsupplied style:this.style
 		CreateDialog (_RolloutCreator.getDefinition(RolloutMain)) pos:(this._getPositionRelativeToWindow(pos)) autoLayoutOnResize:true  width:dialog_width height:dialog_height bgcolor:bgcolor fgcolor:fgcolor bitmap:bitmap style:(if( style == unsupplied ) then this.style else style) modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
 		--
 		_RolloutCreator.SubolloutsCreator.addSubRollouts (RolloutMain)
@@ -104,7 +111,14 @@ struct Dialog_v
 	 */
 	function register =
 	(
-		execute ("cui.RegisterDialogBar "+ RolloutMain.id +" style:"+style_dialog as string )
+		print "Dialog_v.register()"
+		--execute ("cui.RegisterDialogBar "+ RolloutMain.id +" style:"+style_registred_dialog as string )
+		
+		min_size = if width != unsupplied and height != unsupplied  then " minSize:["+width as string +","+height as string +"] " else ""
+		format "min_size	= % \n" min_size
+		execute ("cui.RegisterDialogBar "+ RolloutMain.id +" "+min_size+" style:"+style_registred_dialog as string )
+		--execute ("cui.RegisterDialogBar "+ RolloutMain.id +" "+min_size+" style:"+style_registred_dialog as string )
+		
 	),
 	
 	/** Unregister dialog bar
@@ -219,7 +233,7 @@ struct Dialog_v
 	 */
 	function _getDialogSize dimension =
 	(
-		--print "Dialog_v._getDialogSize()"
+		print "Dialog_v._getDialogSize()"
 
 		if( Ini.isDefined() and (dialog_size = Ini.load( RolloutMain.id as string )("size")) != undefined) then
 		(
@@ -293,10 +307,10 @@ struct Dialog_v
 		print "Dialog_v._setMainRolloutWidthAndHeight()"
 		format "width	= % \n" width
 		format "height	= % \n" height
-		if width != undefined then 
+		if width != unsupplied then 
 			RolloutMain.width = width
 			
-		if height != undefined then 
+		if height != unsupplied then 
 			RolloutMain.height = height
 	),
 	
@@ -345,7 +359,6 @@ struct Dialog_v
 		
 		this._setMainRollout()
 		
-		this._setMainRolloutWidthAndHeight()
 		
 		this._setDialogGlobal()
 		

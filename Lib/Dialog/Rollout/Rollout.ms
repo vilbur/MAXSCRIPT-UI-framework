@@ -182,7 +182,7 @@ struct Rollout_v
 		prefix = ""
 		dashes = ""
 
-	if( width != undefined  and (max_version = (maxVersion())[8] )!= undefined and max_version > 2020  ) then
+	if( (width != undefined and width != unsupplied ) and (max_version = (maxVersion())[8] )!= undefined and max_version > 2020  ) then
 	(
 		prefix = ""
 
