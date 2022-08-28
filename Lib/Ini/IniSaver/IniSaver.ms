@@ -53,11 +53,16 @@ struct IniSaver_v
 		
 		if (_Rollout = execute(rollout_id)) != undefined then
 		(
-			this._saveToIni _Rollout.name "position"	(GetDialogPos _Rollout )
-			
-			this._saveToIni _Rollout.name "dock_state"	(try(cui.getDockState _Rollout )catch())
+			if( dialog_is_not_closed = GetDialogSize _Rollout) != [0,0] then -- if dialog is closed by user, exists but it is not displayed , then it`s size is [0,0,]
+			(
+				
+				this._saveToIni _Rollout.name "size"	(GetDialogSize _Rollout )
+				
+				this._saveToIni _Rollout.name "position"	(GetDialogPos _Rollout )
+				
+				this._saveToIni _Rollout.name "dock_state"	(try(cui.getDockState _Rollout )catch())
+			)
 		
-			this._saveToIni _Rollout.name "size"	(GetDialogSize _Rollout )
 		)
 	),
 	
@@ -182,7 +187,7 @@ struct IniSaver_v
 	function _saveToIni section key val =
 	(
 		--format "\n"; print "IniSaver_v._saveToIni()"
-		--format "ini_file	= % \n" ini_file
+		----format "ini_file	= % \n" ini_file
 		--format "section	= % \n" section
 		--format "key	= % \n" key
 		--format "val	= % \n" val

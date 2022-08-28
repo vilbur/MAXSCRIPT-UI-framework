@@ -121,7 +121,6 @@ struct Dialog_v
 		--format "min_size	= % \n" min_size
 		execute ("cui.RegisterDialogBar "+ RolloutMain.id +" "+min_size+" style:"+style_registred_dialog as string )
 		--execute ("cui.RegisterDialogBar "+ RolloutMain.id +" "+min_size+" style:"+style_registred_dialog as string )
-		
 	),
 	
 	/** Unregister dialog bar
@@ -236,8 +235,10 @@ struct Dialog_v
 	 */
 	function _getDialogSize dimension =
 	(
-		print "Dialog_v._getDialogSize()"
-
+		--print "Dialog_v._getDialogSize()"
+		--format "Ini.isDefined()	= % \n" (Ini.isDefined())
+		dialog_size = Ini.load( RolloutMain.id as string )("size")
+		--format "dialog_size	= % \n" dialog_size
 		if( Ini.isDefined() and (dialog_size = Ini.load( RolloutMain.id as string )("size")) != undefined) then
 		(
 			if dimension == #width then dialog_size.x  as integer else dialog_size.y  as integer --return ini value
@@ -297,7 +298,7 @@ struct Dialog_v
 	 */
 	function _setMainRollout =
 	(
-		print "Dialog_v._setMainRollout()"
+		--print "Dialog_v._setMainRollout()"
 		RolloutMain	= Rollout_v title:title id:id Layout:Layout 
 
 		Events = RolloutMain.Events

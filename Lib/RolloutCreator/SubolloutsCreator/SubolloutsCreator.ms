@@ -99,8 +99,8 @@ struct SubolloutsCreator_v
 	function _getHeightsOfSubrollouts =
 	(
 		--format "\n"; print "SubolloutsCreator_v.getSubrolloutWithHeightDefined()"
-		for Subrollout in this._getSubrollouts(_Rollout) do
-			format "Subrollout.%.height	= % \n" (Subrollout.slot as string) Subrollout.height
+		--for Subrollout in this._getSubrollouts(_Rollout) do --DEBUG
+			--format "Subrollout.%.height	= % \n" (Subrollout.slot as string) Subrollout.height
 		
 		
 		for Subrollout in this._getSubrollouts(_Rollout) where Subrollout.height != undefined and Subrollout.height != unsupplied collect Subrollout.height --return
