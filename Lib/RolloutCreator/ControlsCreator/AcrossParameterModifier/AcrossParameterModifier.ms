@@ -17,6 +17,9 @@ struct AcrossParameterModifier_v
 	across_last	= 0,
 	position_in_row	= 0,
 	
+	--DEBUG = true,
+	--DEBUG = false,
+	
 	/** Fill end of row with fake controls to keep layout
 	 */
 	function addFakeControls &_Controls =
@@ -75,11 +78,8 @@ struct AcrossParameterModifier_v
 		--format "\n"; print "AcrossParameterModifier_v._fillEndOfRowBeforeControl()"
 		across_changed = this._acrossChanged()
 		
-		--format "across_changed	= % \n" across_changed
-		
 		if( across_changed and controls_left > 0 ) then
-			this._addFakeControl(controls_left)
-			--this._addFakeControl( controls_left  ) fake_control_caption:("ROW END left: "+ (controls_left) as string ) -- DEBUG PARAM
+			this._addFakeControl( controls_left  ) fake_control_caption:(if DEBUG then "ROW END left: "+ (controls_left) as string else "")
 	),
 	
 	/** If control is last in group, then add fake controls to fill group
@@ -88,8 +88,7 @@ struct AcrossParameterModifier_v
 	function _fillEndOfGroup =
 	(
 		--format "\n"; print "AcrossParameterModifier_v._fillEndOfGroup()"
-		this._addFakeControl(across_current - position_in_row )
-		--this._addFakeControl(across_current - position_in_row ) fake_control_caption:("GROUP END left: "+ (across_current - position_in_row) as string ) -- DEBUG PARAM
+		this._addFakeControl(across_current - position_in_row ) fake_control_caption:(if DEBUG then "GROUP END left: "+ (across_current - position_in_row) as string else "")
 	),
 
 	/** Find out if control is last in list

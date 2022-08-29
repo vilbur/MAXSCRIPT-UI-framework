@@ -1,12 +1,9 @@
-/** This class sorts controls in groupbox
-  * 
-  * It`s called after dialog is created and move controls to its groupboxes
-  * 
-  * Controls in group box are created as last on position [0,0]
-  * It will not break across layout of other controls in this way
-  * 
-  * When dialog is created, then method GroupBoxCreator_v._sortControlsInGroupBox() is called
-  * 
+/** Group box creator
+  
+  1) Controls in group box are created as last on position [0,0], it will not break across layout
+  
+  2 ) On rollout created call GroupBoxCreator_v._sortControlsInGroupBox()
+  
  */
 struct GroupBoxCreator_v
 (
@@ -14,8 +11,7 @@ struct GroupBoxCreator_v
 	/* dependency */
 	/* reference */
 	/* properties */
-	
-	layout	= #horizintal,
+
 	groupbox_margin	= 16,
 	margin	= 8,
 	padding	= [32, 8],
@@ -100,28 +96,6 @@ struct GroupBoxCreator_v
 		this._setGroupBoxSize (rollout_id_full) (groupbox_controls) (_groupbox)(groupbox_id)
 	),
 
-	/** _move control to groupbox
-	 */
-	function _moveControlToGroupbox _control &control_position =
-	(
-		--format "\n"; print "GroupBoxCreator_v._moveControlToGroupbox()"
-		_control.pos = next_control_position = control_position
-
-		if layout == #horizintal then 
-		(
-			format "_control.width	= % \n" _control.width
-			next_control_position.x +=  _control.width
-			next_control_position.x +=  margin 
-		)
-		else
-		(
-			next_control_position.y +=  try( _control.height ) catch(_control_default_height)
-			next_control_position.y +=  margin 
-		)
-		
-		next_control_position --return
-	),
-	
 	/** _set group box dimensions
 	 */
 	function _setGroupBoxSize rollout_id groupbox_controls _groupbox groupbox_id =
@@ -163,21 +137,26 @@ struct GroupBoxCreator_v
 	function _setGroupboxHeight _rollout _groupbox next_control is_next_control_in_same_row =
 	(
 		--format "\n"; print ("GroupBoxCreator_v._setGroupboxHeight() " + _groupbox as string )
-		--format "NEXT_CONTROL	= % \n" next_control
-		--format "_groupbox.height	= % \n" _groupbox.height
-		if height_is_default = _groupbox.height == GROUPBOX_DEFAULT_HEIGHT do -- 90px is default width of groupbox
-		
-			if next_control == undefined then -- if control is last
-				_groupbox.height = _rollout.height - _groupbox.pos.y - groupbox_margin
-				--format "next_control	= % \n" next_control
-				
-			if is_next_control_in_same_row then
-				_groupbox.height	=  (this._getControlSize (next_control))
-				--format "is_next_control_in_same_row	= % \n" is_next_control_in_same_row
+		if height_is_default = (_groupbox.height == GROUPBOX_DEFAULT_HEIGHT) do -- 90px is default width of groupbox
+		(
+			is_next_fake_control = next_control != undefined and matchPattern next_control.name pattern:"LABEL_fake*"
 			
-			else if next_control != undefined then -- if next control is on next row
+			if is_next_control_in_same_row and is_next_fake_control == false then(
+				--print "next is control in same row" 
+				_groupbox.height	=  (this._getControlSize (next_control))
+			
+			)else if next_control != undefined and is_next_fake_control == false then( -- if next control is on next row
+				--print "next control is on next row"
 				_groupbox.height = next_control.pos.y - _groupbox.pos.y - groupbox_margin
-				--format "next_control	= % \n" next_control
+			)
+			
+			
+			if  next_control == undefined or is_next_fake_control then (-- if control is last
+				--print "control is last"	
+				_groupbox.height = _rollout.height - _groupbox.pos.y - groupbox_margin
+			)
+
+		)
 	),
 	
 	/** _is next control in same row
@@ -203,20 +182,22 @@ struct GroupBoxCreator_v
 		control_position -- return
 	),
 
-
-	/** Get ntrol size
+	/** _move control to groupbox
 	 */
-	function _getControlWidth _control =
+	function _moveControlToGroupbox _control &control_position =
 	(
-		--format "\n"; print "GroupBoxCreator_v._getControlSize()"
-		--format "_control	= % \n" _control
+		--format "\n"; print "GroupBoxCreator_v._moveControlToGroupbox()"
+		_control.pos = next_control_position = control_position
 
-		_control.width --return
+		next_control_position.y +=  try( _control.height ) catch(_control_default_height)
+		next_control_position.y +=  margin 
+
+		next_control_position --return
 	),
-	
+
 	/** Get ntrol size
 	 */
-	function _getControlHeight _control =
+	function _getControlSize _control =
 	(
 		--format "\n"; print "GroupBoxCreator_v._getControlSize()"
 		--format "_control	= % \n" _control
@@ -229,14 +210,15 @@ struct GroupBoxCreator_v
 		(
 			(#GroupboxControl):	control_height
 			(#buttonControl):	_control_default_height
-			(#ListBoxControl):	this._getListboxHeight(_control)
-			(#MultiListBoxControl):	this._getListboxHeight(_control)
+			(#ListBoxControl):	this. _getListboxHeight(_control)
+			(#MultiListBoxControl):	this. _getListboxHeight(_control)
 
 			default:	control_height +  groupbox_margin
 		)
 	),
 
-	/** listbox without caption is shifted up
+	/** Get true height of listbox
+	  * listbox  without caption is shifted up
 	 */
 	function _getListboxHeight _control =
 	(

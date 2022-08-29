@@ -43,26 +43,19 @@ function createControls control_type:#button groupbox_name:"" =
 
 
 
---_GroupBox = _Controls.control #GroupBox "Groupbox A" params:#(#across, 2, #height, 128)
---groupbox_name = "Groupbox default params"
 
 _GroupBox = _Controls.control #GroupBox "Groupbox default params"
 
---_Controls.control #button "Button A1" across:1 --params:#(#groupbox, "Groupbox default params" )
 _Controls.control #button "Button A1" across:2	params:#(#groupbox, "Groupbox default params" )
 _Controls.control #button "Button A2"	params:#(#groupbox, "Groupbox default params" )
 _Controls.control #button "Button A3"	params:#(#groupbox, "Groupbox default params" )
---_Controls.control #button "Button A2" params:#(#groupbox, "Groupbox default params" )
---_Controls.control #button "Button A2" params:#(#groupbox, "Groupbox default params" )
 
---groupboxesWithHeight count:1
 
---heightbyNextControl()
 
---selfdefinedGroupboxes count:2
 
---lastGroupboxSizeByRollout()
+_GroupBox = _Controls.control #GroupBox "Groupbox offset" params:#( #offset, [ 0, 256] )
 
+_Controls.control #button "Button B"	params:#(#groupbox, "Groupbox offset" )
 
 
 
@@ -74,10 +67,10 @@ _Controls.control #button "Button A3"	params:#(#groupbox, "Groupbox default para
 
 /** Create dialog from _Rollout
   */
---dialog_width = 420
+dialog_width = 420
 --dialog_width = undefined
 
 --dialog_height = 256
---dialog_height = 720
+dialog_height = 720
 --dialog_height = undefined
 include "Library/MAXSCRIPT-UI-framework/Lib/RolloutCreator/_Test/includes/CreateTestDialog.ms"

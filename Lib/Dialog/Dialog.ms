@@ -303,26 +303,15 @@ struct Dialog_v
 
 		Events = RolloutMain.Events
 	),
-	--
-	--/** Set main rollout
-	-- */
-	--function _setMainRolloutWidthAndHeight =
-	--(
-	--	print "Dialog_v._setMainRolloutWidthAndHeight()"
-	--	--format "width	= % \n" width
-	--	--format "height	= % \n" height
-	--	if width != unsupplied then 
-	--		RolloutMain.width = width
-	--		
-	--	if height != unsupplied then 
-	--		RolloutMain.height = height
-	--),
-	--
+
 	/** _load ini position
 	 */
 	function _setPositionOrDockByIni =
 	(
 		--format "\n"; print "global._setPositionOrDockByIni()"
+		
+		position_offset_fix = [0,30] -- FIX y position of dialog, for some reason is saved position about 30 pixels more then postion of created dialog
+		
 		if Ini.isDefined() then
 		(
 			dock_state	= Ini.load( RolloutMain.id as string )("dock_state")
@@ -337,7 +326,7 @@ struct Dialog_v
 			else if( position != undefined ) then
 			(
 				--print "Set Dialog Float"
-				execute("SetDialogPos "+ RolloutMain.id +" "+ position as string )
+				execute("SetDialogPos "+ RolloutMain.id +" "+ (position - position_offset_fix) as string )
 				this.register()
 			)
 		)
