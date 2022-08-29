@@ -76,16 +76,14 @@ struct Dialog_v
 	  * NOTE: width and height of dialog must be defined on init
 	  * 
 	  * 
-	  * TODO IMPORTANT: remove width & height params
 	  * 
 	  * TODO add params for max 2022
 	 */
-	function create pos: bgcolor: fgcolor: bitmap: style: modal: escapeEnable: lockHeight:false lockWidth:true parent: =
+	function create width: height: pos: bgcolor: fgcolor: bitmap: style: modal: escapeEnable: lockHeight:false lockWidth:true parent: =
 	(
 		--format "\n"; print "Dialog_v.create()"
-
-		dialog_width  = this._getDialogSize( #width )
-		dialog_height = this._getDialogSize( #height)
+		dialog_width  = this._getDialogSize( #width ) width
+		dialog_height = this._getDialogSize( #height) height
 		--format "dialog_width	= % \n" dialog_width
 		--format "dialog_height	= % \n" dialog_height
 		
@@ -153,9 +151,11 @@ struct Dialog_v
 	 */
 	function destroy =
 	(
-		--print "Dialog_v.destroy()"
+		print "Dialog_v.destroy()"
 		--format "RolloutMain.id	= % \n" RolloutMain.id
-		(IniSaver_v(Ini.getPath())).saveDialogDockState(id)
+		format "Ini.isDefined()	= % \n" (Ini.isDefined())
+		if  Ini.isDefined() then 
+			(IniSaver_v(Ini.getPath())).saveDialogDockState(id)
 		
 		this.unregister()
 		
@@ -233,13 +233,17 @@ struct Dialog_v
 	  *
 	  * @param	name	dimension	#width|#height
 	 */
-	function _getDialogSize dimension =
+	function _getDialogSize dimension size  =
 	(
 		--print "Dialog_v._getDialogSize()"
 		--format "Ini.isDefined()	= % \n" (Ini.isDefined())
-		dialog_size = Ini.load( RolloutMain.id as string )("size")
+		--dialog_size = Ini.load( RolloutMain.id as string )("size")
 		--format "dialog_size	= % \n" dialog_size
-		if( Ini.isDefined() and (dialog_size = Ini.load( RolloutMain.id as string )("size")) != undefined) then
+		
+		if size != unsupplied then
+			size --return defineed size on creation
+		
+		else if( Ini.isDefined() and (dialog_size = Ini.load( RolloutMain.id as string )("size")) != undefined) then
 		(
 			if dimension == #width then dialog_size.x  as integer else dialog_size.y  as integer --return ini value
 		)
