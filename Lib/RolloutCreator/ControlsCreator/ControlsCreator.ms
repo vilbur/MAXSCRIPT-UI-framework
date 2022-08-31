@@ -17,7 +17,11 @@ struct ControlCreator_v
 	/* construct */ 
 	_Rollout,
 	Ini,
-
+	
+	/* properties */
+	--DEBUG = true,
+	DEBUG = false,
+	
 	/* dependency */
 	_Controls,
 
@@ -26,11 +30,12 @@ struct ControlCreator_v
 	TooltipCreator	= TooltipCreator_v(),
 	EventBinder	= ControlEventBinder_v _Rollout:_Rollout,
 
+	
 	/** Add controls to rollout
 	 */
 	function addControls _Controls =
 	(
-		--format "\n\n--------------	Controls group:%	--------------\n" _Controls.group
+		format "\n\n--------------	Controls group:%	--------------\n" _Controls.group
 		--format "\n\n"
 		--print ("--------------	Controls group:"+_Controls.group+"	--------------")
 		--print ("ControlCreator_v.addControls()"  )
@@ -135,6 +140,7 @@ struct ControlCreator_v
 		if this._ifControlsListIsNotTemporary() then 
 			this._addControlsGroup #start
 
+			
 		for _Control in _Controls.list do
 			this._addControlToRollout (_Control) -- add control first before variables, functions and events
 			
@@ -154,11 +160,12 @@ struct ControlCreator_v
 		--if not matchPattern _Control.id pattern:"LABEL_fake*" then -- DEBUG - don`t print
 		--format "_Control.type	= % \n" _Control.type
 		--if _Control.type == #GroupBox then -- DEBUG - don`t print
-		--(
-		--	format "\nControl:%.%" ( _Rollout.id as string ) _Control.id
-		--	
-		--	format "	Params: % \n" params
-		--)
+		if DEBUG then 
+		(
+			format "\nControl:%.%" ( _Rollout.id as string ) _Control.id
+			
+			format "	Params: % \n" params
+		)
 		
 		_Rollout._RolloutCreator.addControl (_Control.type) (_Control.id) (this._getCaption(_Control.caption)) paramStr:params filter:true;
 	),

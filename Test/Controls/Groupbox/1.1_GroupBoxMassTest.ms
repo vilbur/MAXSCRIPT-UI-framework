@@ -119,19 +119,20 @@ function lastGroupboxSizeByRollout =
 	RUN TESTS 
 --------------------------------------------------------------------------------*/
 
---selfdefinedGroupboxes count:1 
+selfdefinedGroupboxes count:1 
 
-heightbyNextGroupBox()
-heightbyNextControl()
-heightToNextRow()
-
-
-groupboxesWithHeight count:1 
---groupboxesWithHeight count:2
---groupboxesWithHeight count:3
+--heightbyNextGroupBox()
+--heightbyNextControl()
+--heightToNextRow()
 
 
-lastGroupboxSizeByRollout()
+group_box_count = 1
+group_box_count = 2
+group_box_count = 3
+--groupboxesWithHeight count:group_box_count
+
+
+--lastGroupboxSizeByRollout()
 
 
 

@@ -9,55 +9,52 @@ filein( getFilenamePath(getSourceFileName()) + "/../../../Lib/RolloutCreator/Rol
   */
 include "Library/MAXSCRIPT-UI-framework/Lib/RolloutCreator/_Test/includes/CreateTestRollout.ms" -- "../../../_Test/includes/CreateTestRollout.ms"
 
-
-/*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-	
-	
-	DEFAULT HEIGHT OF GROUPBOX IS USED
-	
-	IF
-		GROUPBOX HAS NOT NEXT CONTROL TO FIT SIZE
-	AND
-		HEIGHT IS NOT DEFINED
-	
-	
---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-
-
-/*
-	TESTS DEFINITION
-*/ 
-function createControls control_type:#button groupbox_name:"" =
+/** Create groupbox with default params
+ */
+function createGroupbox controls_count =
 (
-	for i = 1 to 3 do 
-		_Button1    = _Controls.control control_type ( groupbox_name + " "+i as string ) params:#(#groupbox, groupbox_name, #across, 2)
+	--format "\n"; print ".createGroupbox()"
+	groupbox_name = "Groupbox defined"
+
+	_GroupBox = _Controls.control #GroupBox groupbox_name params:#( #height, 128 )
+
+	createControls groupbox_name:groupbox_name count:controls_count
 )
 
+/** Create groupbox defined by control
+ */
+function createGroupboxDefinedByControl controls_count =
+(
+	--format "\n"; print ".createGroupboxDefinedByControl()"
+	groupbox_name = "By control"
 
+	createControls groupbox_name:groupbox_name count:controls_count
+)
 
+/*
 
+*/ 
+function createControls control_type:#button groupbox_name:"" count:1 =
+(
+	for i = 1 to count do 
+		_Controls.control control_type ( groupbox_name + " "+i as string ) params:#(#groupbox, groupbox_name, #across, 2)
+)
 
 /*------------------------------------------------------------------------------
 	RUN TESTS 
 --------------------------------------------------------------------------------*/
 
+/* SET DEFAULT PARAMS FOR GROUPBOX */ 
+_Controls.Default #across 2 type:#groupbox
 
+/* CREATE CONTROL BEFORE GROUPBOX */ 
+_Controls.control #button "Before groupbox" across:1
 
+createGroupbox(1)
+--createGroupbox(5)
 
-_GroupBox = _Controls.control #GroupBox "Groupbox default params"
-
-_Controls.control #button "Button A1" across:2	params:#(#groupbox, "Groupbox default params" )
-_Controls.control #button "Button A2"	params:#(#groupbox, "Groupbox default params" )
-_Controls.control #button "Button A3"	params:#(#groupbox, "Groupbox default params" )
-
-
-
-
-_GroupBox = _Controls.control #GroupBox "Groupbox offset" params:#( #offset, [ 0, 256] )
-
-_Controls.control #button "Button B"	params:#(#groupbox, "Groupbox offset" )
-
-
+createGroupboxDefinedByControl(1)
+--createGroupboxDefinedByControl(3)
 
 
 

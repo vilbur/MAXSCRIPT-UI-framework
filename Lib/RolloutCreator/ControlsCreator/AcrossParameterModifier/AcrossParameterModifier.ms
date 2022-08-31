@@ -18,7 +18,7 @@ struct AcrossParameterModifier_v
 	position_in_row	= 0,
 	
 	--DEBUG = true,
-	--DEBUG = false,
+	DEBUG = false,
 	
 	/** Fill end of row with fake controls to keep layout
 	 */

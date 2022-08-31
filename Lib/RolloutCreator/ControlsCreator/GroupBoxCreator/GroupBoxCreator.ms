@@ -76,8 +76,6 @@ struct GroupBoxCreator_v
 	function _sortControlsInGroupBox rollout_id_full groupbox_id control_ids_in_groupbox =
 	(
 		--format "\n---------------------------------------\n\n"; print ("GroupBoxCreator_v._sortControlsInGroupBox() " +groupbox_id)
-
-		
 		--format "rollout_id_full	= % \n" rollout_id_full
 		--format "groupbox_id	= % \n" groupbox_id
 		--format "control_ids_in_groupbox	= % \n" control_ids_in_groupbox
@@ -96,7 +94,7 @@ struct GroupBoxCreator_v
 		this._setGroupBoxSize (rollout_id_full) (groupbox_controls) (_groupbox)(groupbox_id)
 	),
 
-	/** _set group box dimensions
+	/** Set group box width & height
 	 */
 	function _setGroupBoxSize rollout_id groupbox_controls _groupbox groupbox_id =
 	(
@@ -231,21 +229,22 @@ struct GroupBoxCreator_v
 	  * 	This control MUST NOT be in another groupbox
 	 */
 	function _getNextControlToGroupBox controls_in_rollout groupbox_id =
-	(--
+	(
 		--format "\n"; print "GroupBoxCreator_v._getNextControlToGroupBox()"
-		local next_control_index
 		--format "controls_in_rollout	= % \n" controls_in_rollout
+		local next_control_index
+
 		current_control_index = this._currentControlIndex (controls_in_rollout) (groupbox_id)
-		                                          
+		
 		for i = 1 to controls_in_rollout.count
-		 where	(i		>= current_control_index)	and -- start loop up current control
-			(control_next	= controls_in_rollout[i+1])	!= undefined	and -- if next ccontrol exist
-			(not_in_groupbox	= this._isInGroupbox(control_next))	== false	and -- if control is not in groupbox
-			(control_type	= this._controlType (control_next))	!= #GroupStartControl 	and -- if control is not  #group control
-			(control_type		!= #GroupEndControl )         -- if control is not  #group end control
-		 do
-			if( next_control_index == undefined ) then -- get only first occurence
-				next_control_index = i+1
+			where	(i		>= current_control_index)	and -- start loop up current control
+			   (control_next	= controls_in_rollout[i+1])	!= undefined	and -- if next ccontrol exist
+			   (not_in_groupbox	= this._isInGroupbox(control_next))	== false	and -- if control is not in groupbox
+			   (control_type	= this._controlType (control_next))	!= #GroupStartControl 	and -- if control is not  #group control
+			   (control_type		!= #GroupEndControl )         -- if control is not  #group end control
+			do
+			   if( next_control_index == undefined ) then -- get only first occurence
+				   next_control_index = i+1
 
 		if( next_control_index != undefined ) then
 			controls_in_rollout[next_control_index] --return 
@@ -255,9 +254,10 @@ struct GroupBoxCreator_v
 	 */
 	function _currentControlIndex controls_in_rollout groupbox_id =
 	(
+		--format "\n"; print "GroupBoxCreator_v._currentControlIndex()"
 		local current_control_index
 
-		for i = 1 to controls_in_rollout.count where this._getControlId(controls_in_rollout[i]) == groupbox_id do current_control_index = i
+		for i = 1 to controls_in_rollout.count where matchPattern (this._getControlId(controls_in_rollout[i]) ) pattern:groupbox_id do current_control_index = i
 
 		current_control_index --return
 	),
@@ -283,7 +283,7 @@ struct GroupBoxCreator_v
 		--format "\n"; print "GroupBoxCreator_v._getControlId()"
 		control_id = (filterString ( _control as string) ":")[2]
 		--format "control_id	= % \n" control_id
-		control_id --return
+		toLower control_id --return
 	),
 
 	/** _get control id

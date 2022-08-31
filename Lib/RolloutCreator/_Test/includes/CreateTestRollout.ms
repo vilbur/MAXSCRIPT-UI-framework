@@ -11,17 +11,12 @@ if( RolloutCreator_v == undefined ) then
 if( group_name == undefined ) then
 	group_name = ""
 	
-if( width == undefined ) then
-	width  = unsupplied
-	
-if( height == undefined ) then
-	height = unsupplied
 
 /** DEFINE ROLLOUT 
  *	
  */
-_RolloutCreator 	= RolloutCreator_v Ini:(Ini_v()) width:width
+_RolloutCreator 	= RolloutCreator_v Ini:(Ini_v())
 
 _Rollout = _RolloutCreator.Roll "Test"
 
---_Controls = _Rollout.Controls group:group_name 
+_Controls = _Rollout.Controls group:group_name 

@@ -84,8 +84,9 @@ struct Control_v
 	 */
 	function _setIdByCaption =
 	(
-		id  = caption
-		
+		--print "Control_v._setIdByCaption()"
+		id  = toLower caption
+
 		id	= trimRight ( trimLeft id )
 		
 		id = substituteString id " " "_" -- replace whitespace with underscore
