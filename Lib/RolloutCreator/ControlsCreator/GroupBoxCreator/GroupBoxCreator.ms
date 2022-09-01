@@ -1,3 +1,6 @@
+filein( getFilenamePath(getSourceFileName()) + "/GroupBoxControlsSorter/GroupBoxControlsSorter.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/GroupboxResizer/GroupboxResizer.ms" )
+
 /** Group box creator
   
   1) Controls in group box are created as last on position [0,0], it will not break across layout
@@ -7,17 +10,16 @@
  */
 struct GroupBoxCreator_v
 (
-	/* required */
-	/* dependency */
-	/* reference */
 	/* properties */
 
-	groupbox_margin	= 16,
-	margin	= 8,
-	padding	= [32, 8],
-	_first_control_offset_y	= 16,
-	_control_default_height	= 24,
 
+
+	/* required */
+	/* dependency */
+	GroupboxSorter 	= GroupBoxControlsSorter_v(),
+	GroupboxResizer 	= GroupboxResizer_v(),
+	
+	/* reference */
 	/* ListBody is defining these variables
 	   
 		this.keys	= #() 
@@ -25,7 +27,7 @@ struct GroupBoxCreator_v
 	*/
 	include "Library/MAXSCRIPT-UI-framework/Lib/List/ListBody.ms"
 	
-	GroupBoxes,
+	GroupBoxes, -- List of groupboxes where key is groupbox id and value is list of control ids in groupbox
 	rollouts	= keys,
 
 	/** Add grouboxes for rollout
@@ -51,7 +53,8 @@ struct GroupBoxCreator_v
 		this.setVal (rollout_id_full) (GroupBoxes)
 	),
 	
-	/** Test
+	/** Sort controls in group box callback.
+	  * Called when rollout is created.
 	  *
 	  * @param	string	rollout_id_full is used to get controls from ui
 	  *
@@ -62,239 +65,76 @@ struct GroupBoxCreator_v
 		--format "this.rollouts	= % \n" this.rollouts
 		GroupBoxes = this.getVal (rollout_id_full)
 
+		format "GroupBoxes	= % \n" GroupBoxes
 		if( GroupBoxes != undefined ) then 
 			for i = GroupBoxes.keys.count to 1 by -1 do
-				this._sortControlsInGroupBox(rollout_id_full)(GroupBoxes.keys[i])(GroupBoxes.values[i])
+			(
+				
+				groupbox = execute (rollout_id_full+"."+ GroupBoxes.keys[i] as string ) -- rollout_id.groupbox_id
+				
+				groupbox_controls = this._getControlsInGroupbox(execute(rollout_id_full+".controls")) (GroupBoxes.values[i])
+
+				GroupboxSorter.sortControlsInGroupBox(groupbox)(groupbox_controls)
+				
+				GroupboxResizer.setGroupBoxSize (rollout_id_full) (groupbox)(GroupBoxes.keys[i])
+				
+			)
+				--this._sortControlsInGroupBox(rollout_id_full)(GroupBoxes.keys[i])(GroupBoxes.values[i])
 	),
 
 	private
 
-	/** Sort controls in group box callback
+	/** Filter controls in rollout and return only controls in groupbox
+	  * 
+	  * @return	array of ids	
+	 */
+	function _getControlsInGroupbox control_ids_in_rollout controls_ids_in_groupbox =
+	(
+		format "\n"; print "GroupBoxCreator_v._getControlsInGroupbox()"
+
+		for i = 1 to control_ids_in_rollout.count where findItem controls_ids_in_groupbox (this._getControlId(control_ids_in_rollout[i])) > 0 collect control_ids_in_rollout[i]
+	),
+
+	/** Split control identifier
 	  *
-	  * called when rollout is created
-	 */
-	function _sortControlsInGroupBox rollout_id_full groupbox_id control_ids_in_groupbox =
-	(
-		--format "\n---------------------------------------\n\n"; print ("GroupBoxCreator_v._sortControlsInGroupBox() " +groupbox_id)
-		--format "rollout_id_full	= % \n" rollout_id_full
-		--format "groupbox_id	= % \n" groupbox_id
-		--format "control_ids_in_groupbox	= % \n" control_ids_in_groupbox
-		
-		_groupbox = execute (rollout_id_full+"."+groupbox_id as string )
-		--format "_groupbox	= % \n" _groupbox
-		controls_in_rollout = execute(rollout_id_full+".controls")
-		--format "controls_in_rollout	= % \n" controls_in_rollout
-		control_position = this._getControlBoxPosition(_groupbox.pos)
-		
-		groupbox_controls = for i = 1 to controls_in_rollout.count where findItem control_ids_in_groupbox (this._getControlId(controls_in_rollout[i])) > 0 collect controls_in_rollout[i]
-		--format "groupbox_controls	= % \n" groupbox_controls
-		for groupbox_control in groupbox_controls do
-			this._moveControlToGroupbox (groupbox_control)(control_position)
-		
-		this._setGroupBoxSize (rollout_id_full) (groupbox_controls) (_groupbox)(groupbox_id)
-	),
-
-	/** Set group box width & height
-	 */
-	function _setGroupBoxSize rollout_id groupbox_controls _groupbox groupbox_id =
-	(
-		--format "\n"; print "GroupBoxCreator_v._setGroupBoxSize()"
-		local _rollout  = execute(rollout_id as string )
-		local _groupbox = execute(rollout_id+"."+groupbox_id as string )
-
-		next_control = this._getNextControlToGroupBox(_rollout.controls)(groupbox_id)
-		--format "NEXT_CONTROL	= % \n" next_control
-		is_next_control_in_same_row = this._isNextControlInSameRow (next_control) ( _groupbox.pos.y)
-		
-		this._setGroupboxWidth  (_rollout) (_groupbox) (next_control) (is_next_control_in_same_row)
-		this._setGroupboxHeight (_rollout) (_groupbox) (next_control) (is_next_control_in_same_row)
-	),
-	
-	/** _set groupbox width
-	 */
-	function _setGroupboxWidth _rollout _groupbox next_control is_next_control_in_same_row =
-	(
-		--format "\n"; print "GroupBoxCreator_v._setGroupboxWidth()"
-		--format "is_next_control_in_same_row	= % \n" is_next_control_in_same_row
-
-		if (width_is_default = _groupbox.width) == 90 do -- 90px is default width of groupbox
-
-			if is_next_control_in_same_row then
-
-				_groupbox.width	= next_control.pos.x - _groupbox.pos.x -- set width up to next control in row
-		
-			else
-				_groupbox.width = _rollout.width - _groupbox.pos.x  -- set width up to rollout border
-		
-		
-		_groupbox.width -= groupbox_margin
-	),
-	
-	/** _set groupbox height
-	 */
-	function _setGroupboxHeight _rollout _groupbox next_control is_next_control_in_same_row =
-	(
-		--format "\n"; print ("GroupBoxCreator_v._setGroupboxHeight() " + _groupbox as string )
-		if height_is_default = (_groupbox.height == GROUPBOX_DEFAULT_HEIGHT) do -- 90px is default width of groupbox
-		(
-			is_next_fake_control = next_control != undefined and matchPattern next_control.name pattern:"LABEL_fake*"
-			
-			if is_next_control_in_same_row and is_next_fake_control == false then(
-				--print "next is control in same row" 
-				_groupbox.height	=  (this._getControlSize (next_control))
-			
-			)else if next_control != undefined and is_next_fake_control == false then( -- if next control is on next row
-				--print "next control is on next row"
-				_groupbox.height = next_control.pos.y - _groupbox.pos.y - groupbox_margin
-			)
-			
-			
-			if  next_control == undefined or is_next_fake_control then (-- if control is last
-				--print "control is last"	
-				_groupbox.height = _rollout.height - _groupbox.pos.y - groupbox_margin
-			)
-
-		)
-	),
-	
-	/** _is next control in same row
-	 */
-	function _isNextControlInSameRow next_control groupbox_pos_y =
-	(
-		--format "\n"; print "GroupBoxCreator_v._isNextControlInSameRow()"
-		--format "next_control	= % \n" next_control
-		--format "groupbox_pos_y	= % \n" groupbox_pos_y
-		if next_control != undefined then
-			next_control_pos_y	= next_control.pos.y
-		
-		next_control != undefined and (next_control_pos_y <= groupbox_pos_y +20 and next_control_pos_y >= groupbox_pos_y - 20) -- return 
-	),
-	/** _get group box position
-	 */
-	function _getControlBoxPosition control_position =
-	(
-		--format "\n"; print "GroupBoxCreator_v._getControlBoxPosition()"
-		control_position.x += padding.x
-		control_position.y += _first_control_offset_y + padding.y
-
-		control_position -- return
-	),
-
-	/** _move control to groupbox
-	 */
-	function _moveControlToGroupbox _control &control_position =
-	(
-		--format "\n"; print "GroupBoxCreator_v._moveControlToGroupbox()"
-		_control.pos = next_control_position = control_position
-
-		next_control_position.y +=  try( _control.height ) catch(_control_default_height)
-		next_control_position.y +=  margin 
-
-		next_control_position --return
-	),
-
-	/** Get ntrol size
-	 */
-	function _getControlSize _control =
-	(
-		--format "\n"; print "GroupBoxCreator_v._getControlSize()"
-		--format "_control	= % \n" _control
-
-		if( (control_height = try( _control.height ) catch()) == undefined ) then 
-			control_height = _control_default_height
-		
-		--format "control_height	= % \n" control_height
-		case this._controlType(_control) of
-		(
-			(#GroupboxControl):	control_height
-			(#buttonControl):	_control_default_height
-			(#ListBoxControl):	this. _getListboxHeight(_control)
-			(#MultiListBoxControl):	this. _getListboxHeight(_control)
-
-			default:	control_height +  groupbox_margin
-		)
-	),
-
-	/** Get true height of listbox
-	  * listbox  without caption is shifted up
-	 */
-	function _getListboxHeight _control =
-	(
-		--format "\n"; print "GroupBoxCreator_v._getListboxHeight()"
-		if _control.caption == "" then _control.height else _control.height + 16
-	),
-
-	/** Find next control after groupbox
+	  * @param	RolloutControl _control	E.G.: ButtonControl:button_test_gb_1
 	  *
-	  * 	This control MUST NOT be in another groupbox
-	 */
-	function _getNextControlToGroupBox controls_in_rollout groupbox_id =
-	(
-		--format "\n"; print "GroupBoxCreator_v._getNextControlToGroupBox()"
-		--format "controls_in_rollout	= % \n" controls_in_rollout
-		local next_control_index
-
-		current_control_index = this._currentControlIndex (controls_in_rollout) (groupbox_id)
-		
-		for i = 1 to controls_in_rollout.count
-			where	(i		>= current_control_index)	and -- start loop up current control
-			   (control_next	= controls_in_rollout[i+1])	!= undefined	and -- if next ccontrol exist
-			   (not_in_groupbox	= this._isInGroupbox(control_next))	== false	and -- if control is not in groupbox
-			   (control_type	= this._controlType (control_next))	!= #GroupStartControl 	and -- if control is not  #group control
-			   (control_type		!= #GroupEndControl )         -- if control is not  #group end control
-			do
-			   if( next_control_index == undefined ) then -- get only first occurence
-				   next_control_index = i+1
-
-		if( next_control_index != undefined ) then
-			controls_in_rollout[next_control_index] --return 
-	),
-
-	/** _current control index
-	 */
-	function _currentControlIndex controls_in_rollout groupbox_id =
-	(
-		--format "\n"; print "GroupBoxCreator_v._currentControlIndex()"
-		local current_control_index
-
-		for i = 1 to controls_in_rollout.count where matchPattern (this._getControlId(controls_in_rollout[i]) ) pattern:groupbox_id do current_control_index = i
-
-		current_control_index --return
-	),
-
-	/** _is controlin groupbox
-	 */
-	function _isInGroupbox next_control =
-	(
-		--format "\n"; print "GroupBoxCreator_v._isInGroupbox()"
-		
-		is_in_groupbox = false
-
-		for control_ids_in_groupbox in groupboxes.values where findItem control_ids_in_groupbox (this._getControlId(next_control)) > 0 do is_in_groupbox = true
-
-		if( next_control != undefined ) then
-			is_in_groupbox --return
-	),
-
-	/** _get control id
+	  * @return	name id of control	E.G.: #button_test_gb_1
 	 */
 	function _getControlId _control =
 	(
-		--format "\n"; print "GroupBoxCreator_v._getControlId()"
+		format "\n"; print "GroupBoxCreator_v._getControlId()"
 		control_id = (filterString ( _control as string) ":")[2]
-		--format "control_id	= % \n" control_id
-		toLower control_id --return
-	),
 
-	/** _get control id
-	 */
-	function _controlType _control =
-	(
-		--format "\n"; print "GroupBoxCreator_v._getControlId()"
-		control_type = (filterString ( _control as string) ":")[1]
-		--format "control_type	= #% \n" control_type
-		control_type as name --return
+		( toLower control_id) as name --return
 	),
+	
+	--/** _get group box position
+	-- */
+	--function _getControlBoxPosition control_position =
+	--(
+	--	--format "\n"; print "GroupBoxCreator_v._getControlBoxPosition()"
+	--	control_position.x += padding.x
+	--	control_position.y += _first_control_offset_y + padding.y
+	--
+	--	control_position -- return
+	--),
+
+	--/** _move control to groupbox
+	-- */
+	--function _moveControlToGroupbox _control &control_position =
+	--(
+	--	--format "\n"; print "GroupBoxCreator_v._moveControlToGroupbox()"
+	--	_control.pos = next_control_position = control_position
+	--
+	--	next_control_position.y +=  try( _control.height ) catch(_control_default_height)
+	--	next_control_position.y +=  margin 
+	--
+	--	next_control_position --return
+	--),
+
+
+
 
 	--/** _get bbox width
 	-- */

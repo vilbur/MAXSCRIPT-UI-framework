@@ -9,12 +9,12 @@ struct GroupBoxes_v
 		this.keys	= #() 
 		this.values	= #()
 	*/
+	
 	include "Library/MAXSCRIPT-UI-framework/Lib/List/ListBody.ms"
 
-	ids	= keys,
-	controls	= values,
-
-		
+	ids	= keys,	-- #( #groupbox_1,	#groupbox_2 )	-- ids of groupboxes
+	controls	= values,	-- #( #( ctrl1_gb_1, ctrl2_gb_1),	#( ctrl1_gb_1, ctrl2_gb_1) )	-- 2D matrix of ids of controls per groupbox
+	
 	/** Get controlcount in groupbox
 	 */
 	function getControlsInGroupbox groupbox_id =
@@ -36,7 +36,7 @@ struct GroupBoxes_v
 		(
 			this._setDefaultHeight(_Control)
 			
-			this._saveGroupBox(_Control.id)
+			this._saveGroupBox(_Control.id as name )
 		)
 	),
 	
@@ -56,7 +56,7 @@ struct GroupBoxes_v
 
 			_Control.Params.setVal #Groupbox _GroupBox.id
 
-			this._addControlToGroupboxList (_GroupBox.id) (_Control.id)
+			this._addControlToGroupboxList (_GroupBox.id as name ) (_Control.id as name )
 		)
 		--format "groupbox_caption	= % \n" groupbox_caption
 	),
@@ -108,7 +108,8 @@ struct GroupBoxes_v
 		_GroupBox --return
 	),
 	
-	/** _save group box
+	/** Set groupbox id as key and empty array as value, array will store ids of controls in groupbox
+	  *
 	 */
 	function _saveGroupBox groupbox_id =
 	(
