@@ -119,7 +119,7 @@ struct DefaultParameters_v
 			#Global:	#( #across,4 )
 			--#Groupbox:	#( )
 			--#Groupbox:	#( #across,1,	#height,128 )
-			--#Button:	#( #width,96 )
+			#Button:	#( #width,96 )
 			--#Checkbox:	#( #across,4 )
 			#List:	#( #across,1 )
 			#Edittext:	#( #across,1 )

@@ -13,7 +13,11 @@ filein( getFilenamePath(getSourceFileName()) + "/AutoRunEvents/AutoRunEvents.ms"
 filein( getFilenamePath(getSourceFileName()) + "/../Ini/Ini.ms" )
 
 
-/** https://help.autodesk.com/view/MAXDEV/2021/ENU/?guid=GUID-816D257C-CD2D-4753-A792-6E7AEFAFA6A7
+/** Create dialog [Maxscript help](https://help.autodesk.com/view/MAXDEV/2021/ENU/?guid=GUID-816D257C-CD2D-4753-A792-6E7AEFAFA6A7)
+  * 
+  * INHERETING OF WIDTH PROPERTY
+  *  Dialog.width >>> Dialog.RolloutMain >>> Subrollouts.width >>> Rollout.width >>> Subrollouts.width >>> Rollout.width ....
+  * 
  */
 struct Dialog_v
 (
@@ -98,6 +102,7 @@ struct Dialog_v
 		--CreateDialog (_RolloutCreator.getDefinition(RolloutMain)) 
 		--CreateDialog (_RolloutCreator.getDefinition(RolloutMain))  width:dialog_width height:dialog_height style:this.style
 		--CreateDialog (_RolloutCreator.getDefinition(RolloutMain)) width:unsupplied height:unsupplied style:this.style
+		
 		CreateDialog (_RolloutCreator.getDefinition(RolloutMain)) pos:(this._getPositionRelativeToWindow(pos)) autoLayoutOnResize:true  width:dialog_width height:dialog_height bgcolor:bgcolor fgcolor:fgcolor bitmap:bitmap style:(if( style == unsupplied ) then this.style else style) modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
 		--
 		_RolloutCreator.SubolloutsCreator.addSubRollouts (RolloutMain)
@@ -151,9 +156,9 @@ struct Dialog_v
 	 */
 	function destroy =
 	(
-		print "Dialog_v.destroy()"
+		--print "Dialog_v.destroy()"
 		--format "RolloutMain.id	= % \n" RolloutMain.id
-		format "Ini.isDefined()	= % \n" (Ini.isDefined())
+		--format "Ini.isDefined()	= % \n" (Ini.isDefined())
 		if  Ini.isDefined() then 
 			(IniSaver_v(Ini.getPath())).saveDialogDockState(id)
 		
@@ -199,8 +204,6 @@ struct Dialog_v
 		RolloutMain.Controls group:group
 	),
 	
-
-
 	/** Get Subrollouts_v or Rollout_v 
 	  * 
 	  * @param	name	id	id of rollout or subrollout slot
@@ -303,7 +306,8 @@ struct Dialog_v
 	function _setMainRollout =
 	(
 		--print "Dialog_v._setMainRollout()"
-		RolloutMain	= Rollout_v title:title id:id Layout:Layout 
+		
+		RolloutMain	= Rollout_v title:title id:id Layout:Layout width:width
 
 		Events = RolloutMain.Events
 	),
@@ -349,7 +353,9 @@ struct Dialog_v
 	 */
 	on create do
 	(
-		--print("Dialog_v.onCreate()")
+		--format "\n"; print "Dialog_v.onCreate()"
+		--format "width	= % \n" width
+		
 		--format "EVENT_DOCKED_ENABLED	= % \n" EVENT_DOCKED_ENABLED
 		this._checkConstctructProperties #(#title)
 		

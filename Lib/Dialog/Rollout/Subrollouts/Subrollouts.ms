@@ -7,6 +7,8 @@ struct Subrollouts_v
 	/* properties */
 	parent_rollout_id,
 	slot,
+	
+	width,
 	height,
 	--height = 128, -- DEV
 
@@ -14,11 +16,11 @@ struct Subrollouts_v
 	
 	/** Create new Rollout
 	 */
-	function Roll title id: =
+	function Roll title id: width: height: =
 	(
 		--format "\n"; print "Subrollouts_v.Roll()"
 		--format "title	= % \n" title
-		local _Rollout = Rollout_v title:title id:id parent_rollout_id:( parent_rollout_id as string +"."+slot as string ) height:height
+		local _Rollout = Rollout_v title:title id:id parent_rollout_id:( parent_rollout_id as string +"."+slot as string ) width:(if width != unsupplied then width else this.width)
 
 		append Rollouts _Rollout
 
@@ -29,7 +31,7 @@ struct Subrollouts_v
 	 */
 	function new title id: =
 	(
-		format "\n"; print "!!!!!!!! DEPRECATED METHOD Subrollouts_v.Roll() please use Subrollouts_v.roll() "
+		format "\n"; print "!!!!!!!! DEPRECATED METHOD Subrollouts_v.Roll() please use Subrollouts_v.roll() "/
 
 		this.Roll title id:id --return
 	),
@@ -61,6 +63,8 @@ struct Subrollouts_v
 	 */
 	on create do
 	(
-		--print("Subrollouts_v.onCreate()")
+		--format "\n"; print "Subrollouts_v.onCreate()"
+		--format "width	= % \n" width
+		
 	)
 )

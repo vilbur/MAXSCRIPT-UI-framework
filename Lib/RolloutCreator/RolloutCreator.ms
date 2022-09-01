@@ -42,6 +42,7 @@ struct RolloutCreator_v
 	(
 		format "\n\n-------------------------------------	RolloutCreator_v.createRollout() id:#%	-------------------------------------\n"  ( _Rollout.id as string );
 		--format "classOf _Rollout.id	= % \n" (classOf _Rollout.id)
+		--format "_Rollout.width	= % \n" _Rollout.width
 		--format "_Rollout.height	= % \n" _Rollout.height
 		ControlsCreator   = ControlCreator_v _Rollout:_Rollout Ini:Ini
 		

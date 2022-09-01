@@ -32,7 +32,7 @@ struct Rollout_v
 	/* inhered */ 
 	Layout,
 
-	/** Create new rollout in first slot
+	/** SHORTCUT: Create new rollout in first slot
 	 */
 	function Roll title id: =
 	(
@@ -56,11 +56,12 @@ struct Rollout_v
 
 	/** Get new slot of subrollouts
 	 */
-	function Subrollouts slot: height: =
+	function Subrollouts slot: width: height: =
 	(
 		--format "\n"; print "Rollout_v.Subrollouts()"
 		--format "height	= % \n" height 
-		local Subrollouts = Subrollouts_v parent_rollout_id:id slot:(this._getSubrolloutsSlotName(slot)) height:height 
+		local Subrollouts = Subrollouts_v parent_rollout_id:id slot:(this._getSubrolloutsSlotName(slot)) width:(if width != unsupplied then width else this.width) height:height 
+		--local Subrollouts = Subrollouts_v parent_rollout_id:id slot:(this._getSubrolloutsSlotName(slot)) width:width height:height 
 
 		append _Controls Subrollouts
 
@@ -286,9 +287,13 @@ struct Rollout_v
 	 */
 	on create do
 	(
-		--print "Rollout_v.onOpen()"
+		--format "\n"; print "Rollout_v.onCreate()"
 		ConstructPropeties test:this
 
 		this._setId()
+		
+		--format "id	= % \n" id
+		--format "width	= % \n" width
+		
 	)
 )
