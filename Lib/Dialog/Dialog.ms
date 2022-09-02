@@ -28,11 +28,11 @@ struct Dialog_v
 	Ini,
 	
 	--width	= 512,
-	width	= unsupplied,
+	--width	= unsupplied,
 	--width,
 	--height	= 512,
 	--height,
-	height = unsupplied,
+	--height = unsupplied,
 	
 	/* options */
 	id,
@@ -83,13 +83,13 @@ struct Dialog_v
 	  * 
 	  * TODO add params for max 2022
 	 */
-	function create width: height: pos: bgcolor: fgcolor: bitmap: style: modal: escapeEnable: lockHeight:false lockWidth:true parent: =
+	function create width:256 height: pos: bgcolor: fgcolor: bitmap: style: modal: escapeEnable: lockHeight:false lockWidth:true parent: =
 	(
 		--format "\n"; print "Dialog_v.create()"
 		dialog_width  = this._getDialogSize( #width ) width
 		dialog_height = this._getDialogSize( #height) height
-		--format "dialog_width	= % \n" dialog_width
-		--format "dialog_height	= % \n" dialog_height
+		format "dialog_width	= % \n" dialog_width
+		format "dialog_height	= % \n" dialog_height
 		
 		RolloutMain.width  = dialog_width
 		RolloutMain.height = dialog_height
@@ -174,16 +174,7 @@ struct Dialog_v
 	/*------------------------------------------------------------------------------
 		Extend RolloutMain
 	--------------------------------------------------------------------------------*/
-	/** Create new rollout in first slot
-	 */
-	function Roll title id: =
-	(
-		--format "\n"; print "Rollout_v.rollout()"
-		Subrollouts = if (Subrollout_slots = RolloutMain.getSubrollouts()).count > 0 then Subrollout_slots[1] else this.Rollouts()
-		
-		Subrollouts.Roll title id:id --return
-	),
-	
+
 	/** Get new subrollouts slot
 	  * 
 	  * @param	name	slot	id of subrollouts slot
@@ -195,6 +186,16 @@ struct Dialog_v
     (
         RolloutMain.rollouts slot:slot height:height --return
     ),
+	
+	/** Create new rollout in first slot
+	 */
+	function Roll title id: width: height: =
+	(
+		--format "\n"; print "Rollout_v.rollout()"
+		Subrollouts = if (Subrollout_slots = RolloutMain.getSubrollouts()).count > 0 then Subrollout_slots[1] else this.Rollouts()
+		
+		Subrollouts.Roll title id:id width:width height:height --return
+	),
 
 	/** Controls
 	 */
@@ -243,15 +244,15 @@ struct Dialog_v
 		--dialog_size = Ini.load( RolloutMain.id as string )("size")
 		--format "dialog_size	= % \n" dialog_size
 		
-		if size != unsupplied then
+		if size != undefined then
 			size --return defineed size on creation
 		
 		else if( Ini.isDefined() and (dialog_size = Ini.load( RolloutMain.id as string )("size")) != undefined) then
 		(
 			if dimension == #width then dialog_size.x  as integer else dialog_size.y  as integer --return ini value
 		)
-		else if( size = getProperty this dimension ) != undefined then
-			size --return defined height
+		--else if( size = getProperty this dimension ) != undefined then
+			--size --return defined height
 			
 		else
 			getProperty RolloutMain dimension --return default height
@@ -307,7 +308,7 @@ struct Dialog_v
 	(
 		--print "Dialog_v._setMainRollout()"
 		
-		RolloutMain	= Rollout_v title:title id:id Layout:Layout width:width
+		RolloutMain	= Rollout_v title:title id:id Layout:Layout
 
 		Events = RolloutMain.Events
 	),

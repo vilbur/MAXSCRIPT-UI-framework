@@ -74,7 +74,8 @@ struct Rollout_v
 	 */
 	function Rollouts slot: height: =
 	(
-		--print "Rollout_v.Rollouts()"
+		print "Rollout_v.Rollouts()"
+		--format "width	= % \n" width
 		--format "height	= % \n" height
 		this.Subrollouts slot:slot height:height --return
 	),
@@ -120,7 +121,7 @@ struct Rollout_v
 	(
 		--print "Rollout_v.rolloutcreatorBegin()"
 		_RolloutCreator = rolloutCreator id (this._setTitleCenter(rollout_width))
-
+		--format "_RolloutCreator.caption	= % \n" _RolloutCreator.caption
 		_RolloutCreator.begin()
 	),
 
@@ -178,33 +179,41 @@ struct Rollout_v
 	 */
 	function _setTitleCenter width =
 	(
-		--print "Rollout_v._setTitleCenter()"
+		print "Rollout_v._setTitleCenter()"
 		--format "width	= % \n" width
+		--format "parent_rollout_id	= % \n" parent_rollout_id
 		prefix = ""
-		dashes = ""
+		empty_space = ""
 
-	if( (width != undefined and width != unsupplied ) and (max_version = (maxVersion())[8] )!= undefined and max_version > 2020  ) then
+	if( parent_rollout_id != undefined and (width != undefined and width != unsupplied ) and (max_version = (maxVersion())[8] )!= undefined and max_version > 2020  ) then
 	(
-		prefix = ""
-
+		print "Set title auto"
 		total_length = 20
 
-		/**
-				KEEP TITTLE IN THE MIDDLE IS MAGIC ROCKET SCIENCE
-
-				VALUEs aRE lonG TIME TUNED ;)
+		/** Count length of title and put empty space before
+			
 		  */
 		difference = ceil((total_length - title.count)/2) -- get difference in length of characters, longer title has shorter prefix and vice versa
 
-		width_divider = if( width >= 600  ) then 9  -- divide rollout of each length by different divider
-					else if( width >= 400  ) then 12
-					else if( width <= 250  ) then 40
-					else 20
-
-		for i = 1 to floor (width/width_divider) + difference * 2.5 do -- too width 200px
+		--width_divider = if( width >= 600  ) then 9  -- divide rollout of each length by different divider
+		--			else if( width >= 400  ) then 12
+		--			else if( width <= 250  ) then 40
+		--			else 20
+	
+		width_divider = if( width >= 512 ) then 24  -- divide rollout of each length by different divider
+					else if( width >= 320 ) then 12
+					else if( width >= 256 ) then 8
+					else if( width >= 128 ) then 4
+					--else if( width > 128 ) then 6
+					else 0
+	
+		format "width_divider	= % \n" width_divider
+		--for i = 1 to floor (width/width_divider) + difference * 2.5 do -- too width 200px
+		--	prefix +=" "
+		for i = 1 to width_divider * 2.5 do -- too width 200px
 			prefix +=" "
 
-		prefix + dashes +""+ title +"" +dashes--return
+		prefix + empty_space +""+ title --return
 	)
 	else		
 		title

@@ -65,8 +65,8 @@ struct ControlCreator_v
 		)
 
 		/* modify ACROSS PARAMETER */
-		if this._ifControlsListIsNotTemporary() then 
-			(AcrossParameterModifier_v()).addFakeControls(this._Controls)
+		--if this._ifControlsListIsNotTemporary() then 
+			--(AcrossParameterModifier_v()).addFakeControls(this._Controls)
 		
 		/* add LOCAL VARIABLES */ 
 		this._addLocalVariablesToRollout()

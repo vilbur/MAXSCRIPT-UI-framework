@@ -42,11 +42,12 @@ struct RolloutCreator_v
 	(
 		format "\n\n-------------------------------------	RolloutCreator_v.createRollout() id:#%	-------------------------------------\n"  ( _Rollout.id as string );
 		--format "classOf _Rollout.id	= % \n" (classOf _Rollout.id)
-		--format "_Rollout.width	= % \n" _Rollout.width
+		format "_Rollout.title	= % \n" _Rollout.title
+		format "_Rollout.width	= % \n" _Rollout.width
 		--format "_Rollout.height	= % \n" _Rollout.height
 		ControlsCreator   = ControlCreator_v _Rollout:_Rollout Ini:Ini
 		
-		SubolloutsCreator._Rollout = _Rollout
+		--SubolloutsCreator._Rollout = _Rollout
 		--this._setWidth(width)
 
 		/* EDIT start */ 
@@ -68,7 +69,7 @@ struct RolloutCreator_v
 		--	_Rollout.width = width 
 		
 		/* set height of SUBROLLOUTS slot */ 
-		SubolloutsCreator.setSubrolloutsSlotHeight(_Rollout.height)
+		SubolloutsCreator.setSubrolloutsSlotHeight(_Rollout)
 
 		/* add CONTROLS and SUBROLLOUTS SLOTS */ 
 		this._addControlsAndSubrolloutesSlots (_Rollout)
@@ -144,7 +145,7 @@ struct RolloutCreator_v
 				  */
 				--ControlsCreator.AcrossModifier.fakeControlsOnEndofGroup(_Rollout._RolloutCreator) --fake_control_caption:"SUBROLLOUTS"
 
-				SubolloutsCreator.addSubrolloutSlot(ControlsBox_or_Subrollouts)
+				SubolloutsCreator.addSubrolloutSlot(_Rollout)(ControlsBox_or_Subrollouts)
 			)
 		)
 	),
