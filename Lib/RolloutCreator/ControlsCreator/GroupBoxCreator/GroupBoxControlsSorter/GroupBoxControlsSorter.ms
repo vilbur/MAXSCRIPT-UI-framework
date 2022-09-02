@@ -5,7 +5,6 @@ struct GroupBoxControlsSorter_v
 	--__construct = #( #property_name ),
 	/* properties */
 	padding	= [32, 8],
-	--groupbox_margin	= 16,
 	margin	= 8,
 	_first_control_offset_y	= 16,
 	--_control_default_height	= 24,
@@ -22,11 +21,11 @@ struct GroupBoxControlsSorter_v
 	 */
 	function sortControlsInGroupBox _groupbox groupbox_controls =
 	(
-		format "\n"; print "GroupBoxControlsSorter_v._sortControlsInGroupBox()"
-		format "groupbox_controls	= % \n" groupbox_controls
+		--format "\n"; print "GroupBoxControlsSorter_v._sortControlsInGroupBox()"
+		--format "groupbox_controls	= % \n" groupbox_controls
 
 		control_position = this._getControlBoxPosition(_groupbox.pos) -- get position of first control in groupbox
-		format "control_position	= % \n" control_position
+		--format "control_position	= % \n" control_position
 		for groupbox_control in groupbox_controls do
 			this._moveControlToGroupbox (groupbox_control)(control_position)
 		
@@ -40,7 +39,7 @@ struct GroupBoxControlsSorter_v
 	 */
 	function _getControlBoxPosition control_position =
 	(
-		format "\n"; print "GroupBoxCreator_v._getControlBoxPosition()"
+		--format "\n"; print "GroupBoxCreator_v._getControlBoxPosition()"
 		control_position.x += padding.x
 		control_position.y += _first_control_offset_y + padding.y
 		
@@ -51,8 +50,8 @@ struct GroupBoxControlsSorter_v
 	 */
 	function _moveControlToGroupbox _control &control_position =
 	(
-		format "\n"; print "GroupBoxCreator_v._moveControlToGroupbox()"
-		format "_control	= % \n" _control
+		--format "\n"; print "GroupBoxCreator_v._moveControlToGroupbox()"
+		--format "_control	= % \n" _control
 		_control.pos = next_control_position = control_position
 		
 		next_control_position.y +=  try( _control.height ) catch(_control_default_height)

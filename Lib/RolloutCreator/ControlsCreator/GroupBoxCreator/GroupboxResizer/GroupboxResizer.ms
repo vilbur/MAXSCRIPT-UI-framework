@@ -4,6 +4,7 @@
 struct GroupboxResizer_v
 (
 	/* properties */
+	groupbox_margin	= 16,
 
 	/* required */
 	/* dependency */
@@ -14,7 +15,7 @@ struct GroupboxResizer_v
 	 */
 	function setGroupBoxSize rollout_id groupbox groupbox_id next_control =
 	(
-		format "\n"; print "GroupBoxCreator_v._setGroupBoxSize()"
+		--format "\n"; print "GroupBoxCreator_v._setGroupBoxSize()"
 		/** _is next control in same row
 		 */
 		function _isNextControlInSameRow next_control groupbox_pos_y =
@@ -63,7 +64,7 @@ struct GroupboxResizer_v
 	 */
 	function _setGroupboxHeight _rollout groupbox next_control is_next_control_in_same_row =
 	(
-		format "\n"; print ("GroupBoxCreator_v._setGroupboxHeight() " + groupbox as string )
+		--format "\n"; print ("GroupBoxCreator_v._setGroupboxHeight() " + groupbox as string )
 		--format "next_control	= % \n" next_control
 		--format "is_next_control_in_same_row	= % \n" is_next_control_in_same_row
 		--format "groupbox.height	= % \n" groupbox.height
@@ -118,7 +119,7 @@ struct GroupboxResizer_v
 			)
 			
 			if  next_control == undefined or is_next_fake_control then (-- if control is last
-				--print "control is last"	
+				--print "control is last"
 				groupbox.height = _rollout.height - groupbox.pos.y - groupbox_margin
 			)
 		)

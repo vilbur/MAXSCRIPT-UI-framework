@@ -89,7 +89,7 @@ struct GroupBoxCreator_v
 			 */
 			function _isNotGroupbox _control =
 			(
-				format "\n"; print "GroupBoxCreator_v._isNotGroupbox()"
+				--format "\n"; print "GroupBoxCreator_v._isNotGroupbox()"
 				control_type = (filterString ( _control as string) ":")[1] as name
 	
 				control_type != #GroupStartControl and control_type != #GroupEndControl --return
@@ -125,7 +125,7 @@ struct GroupBoxCreator_v
 		
 		controls_in_rollout = execute(rollout_id_full+".controls")
 
-		format "GroupBoxes	= % \n" GroupBoxes
+		--format "GroupBoxes	= % \n" GroupBoxes
 		if( GroupBoxes != undefined ) then 
 			for i = GroupBoxes.keys.count to 1 by -1 do
 			(
@@ -136,26 +136,14 @@ struct GroupBoxCreator_v
 				groupbox_controls	= _getControlsInGroupbox(controls_in_rollout) (GroupBoxes.values[i])
 				next_control	= _getNextControlToGroupBox(controls_in_rollout)(groupbox_id)
 				
-				
 				GroupboxSorter.sortControlsInGroupBox(groupbox)(groupbox_controls)
 				
 				GroupboxResizer.setGroupBoxSize (rollout_id_full)(groupbox)(groupbox_id)(next_control)
-				
 			)
 	),
 
+	
 	private
-	--
-	--/** Filter controls in rollout and return only controls in groupbox
-	--  * 
-	--  * @return	array of ids	
-	-- */
-	--function _getControlsInGroupbox control_ids_in_rollout controls_ids_in_groupbox =
-	--(
-	--	--format "\n"; print "GroupBoxCreator_v._getControlsInGroupbox()"
-	--	for i = 1 to control_ids_in_rollout.count where findItem controls_ids_in_groupbox (this._getControlId(control_ids_in_rollout[i])) > 0 collect control_ids_in_rollout[i]
-	--),
-
 		
 	/** Find next control after groupbox
 	  *
@@ -177,7 +165,7 @@ struct GroupBoxCreator_v
 		 */
 		function _isNotGroupbox _control =
 		(
-			format "\n"; print "GroupBoxCreator_v._isNotGroupbox()"
+			--format "\n"; print "GroupBoxCreator_v._isNotGroupbox()"
 			control_type = (filterString ( _control as string) ":")[1] as name
 
 			control_type != #GroupStartControl and control_type != #GroupEndControl --return
