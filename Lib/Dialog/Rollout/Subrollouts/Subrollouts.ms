@@ -31,7 +31,7 @@ struct Subrollouts_v
 	 */
 	function new title id: =
 	(
-		format "\n"; print "!!!!!!!! DEPRECATED METHOD Subrollouts_v.Roll() please use Subrollouts_v.roll() "/
+		format "\n"; print "!!!!!!!! DEPRECATED METHOD Subrollouts_v.new() please use Subrollouts_v.roll() "/
 
 		this.Roll title id:id --return
 	),

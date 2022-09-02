@@ -3,26 +3,25 @@
 struct SubolloutsCreator_v
 (
 	--__construct = #( #property_name ),
-	--_Rollout,
-	
 	/* construct */
+	/* properties */
+	_Rollout,
+	
+	ini_path,
+	
+	padding_bottom	= 16,
+	slot_height	= 64, -- default minimal height of slot
+	
+	
 	/* dependency */
 	/* reference */
 	/* inhered */
-	/* properties */
-	ini_path,
-	
-	padding_bottom 	= 16,
-	slot_height	= 64, -- default minimal height of slot
-	
 	/** Add sub rollouts
 	 */
 	function addSubRollouts _Rollout =
 	(
 		format "\n"; print "SubolloutsCreator_v._addSubRollouts()"
-		format "_Rollout.title	= % \n" _Rollout.title
-		format "_Rollout.width	= % \n" _Rollout.width
-		--this._Rollout = _Rollout
+		this._Rollout = _Rollout
 
 		for Subrollouts in this._getSubrollouts(_Rollout) do
 		(
@@ -33,8 +32,6 @@ struct SubolloutsCreator_v
 			for subrollout_id in rollouts_order where ( index = findItem subrollout_ids subrollout_id ) > 0 do
 			(
 				Subrollout = Subrollouts.Rollouts[index]
-				
-				Subrollout.width = _Rollout.width
 				
 				execute  ( "AddSubRollout "+_Rollout.id+"." + Subrollouts.slot +" "+ Subrollout.id + " rolledUp:"+(this._getRolledStateFromIni(Subrollout.id)) )
 
@@ -108,7 +105,6 @@ struct SubolloutsCreator_v
 		--format "\n"; print "SubolloutsCreator_v.getSubrolloutWithHeightDefined()"
 		--for Subrollout in this._getSubrollouts(_Rollout) do --DEBUG
 			--format "Subrollout.%.height	= % \n" (Subrollout.slot as string) Subrollout.height
-		
 		
 		for Subrollout in this._getSubrollouts(_Rollout) where Subrollout.height != undefined and Subrollout.height != unsupplied collect Subrollout.height --return
 	),

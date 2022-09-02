@@ -27,15 +27,11 @@ struct Dialog_v
 	/* construct */
 	Ini,
 	
-	--width	= 512,
-	--width	= unsupplied,
-	--width,
-	--height	= 512,
-	--height,
-	--height = unsupplied,
+	width	= 512,
+	height	= 256,
 	
 	/* options */
-	id,
+	--id,
 	
 	/* dependency */
 	AutoRunEvents 	= AutoRunEvents_v(),
@@ -83,7 +79,7 @@ struct Dialog_v
 	  * 
 	  * TODO add params for max 2022
 	 */
-	function create width:256 height: pos: bgcolor: fgcolor: bitmap: style: modal: escapeEnable: lockHeight:false lockWidth:true parent: =
+	function create width: height: pos: bgcolor: fgcolor: bitmap: style: modal: escapeEnable: lockHeight:false lockWidth:true parent: =
 	(
 		--format "\n"; print "Dialog_v.create()"
 		dialog_width  = this._getDialogSize( #width ) width
@@ -102,9 +98,8 @@ struct Dialog_v
 		--CreateDialog (_RolloutCreator.getDefinition(RolloutMain)) 
 		--CreateDialog (_RolloutCreator.getDefinition(RolloutMain))  width:dialog_width height:dialog_height style:this.style
 		--CreateDialog (_RolloutCreator.getDefinition(RolloutMain)) width:unsupplied height:unsupplied style:this.style
-		
 		CreateDialog (_RolloutCreator.getDefinition(RolloutMain)) pos:(this._getPositionRelativeToWindow(pos)) autoLayoutOnResize:true  width:dialog_width height:dialog_height bgcolor:bgcolor fgcolor:fgcolor bitmap:bitmap style:(if( style == unsupplied ) then this.style else style) modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
-		--
+		
 		_RolloutCreator.SubolloutsCreator.addSubRollouts (RolloutMain)
 		
 		this._setPositionOrDockByIni()
@@ -156,11 +151,11 @@ struct Dialog_v
 	 */
 	function destroy =
 	(
-		--print "Dialog_v.destroy()"
+		print "Dialog_v.destroy()"
 		--format "RolloutMain.id	= % \n" RolloutMain.id
-		--format "Ini.isDefined()	= % \n" (Ini.isDefined())
+
 		if  Ini.isDefined() then 
-			(IniSaver_v(Ini.getPath())).saveDialogDockState(id)
+			(IniSaver_v(Ini.getPath())).saveDialogDockState(RolloutMain.id)
 		
 		this.unregister()
 		
@@ -232,30 +227,26 @@ struct Dialog_v
 	/** Get size of dialog 
 	  *
 	  * 1. get from ini
-	  * 2. use defined height
-	  * 3. get default height from RolloutMain.height
+	  * 2. use defined width|height
+	  * 3. get default width|height from RolloutMain
 	  *
 	  * @param	name	dimension	#width|#height
+	  * @param	integer	val	size in pixels
 	 */
-	function _getDialogSize dimension size  =
+	function _getDialogSize dimension val  =
 	(
 		--print "Dialog_v._getDialogSize()"
-		--format "Ini.isDefined()	= % \n" (Ini.isDefined())
-		--dialog_size = Ini.load( RolloutMain.id as string )("size")
-		--format "dialog_size	= % \n" dialog_size
+		if( Ini.isDefined() and (dialog_size = Ini.load( RolloutMain.id as string )("size")) != undefined) then
+			case dimension of
+			(
+				(#width):  dialog_size.x  as integer
+				(#height): dialog_size.y  as integer
+			)
+		else if val != unsupplied then
+			val --return defined val on creation
 		
-		if size != undefined then
-			size --return defineed size on creation
-		
-		else if( Ini.isDefined() and (dialog_size = Ini.load( RolloutMain.id as string )("size")) != undefined) then
-		(
-			if dimension == #width then dialog_size.x  as integer else dialog_size.y  as integer --return ini value
-		)
-		--else if( size = getProperty this dimension ) != undefined then
-			--size --return defined height
-			
-		else
-			getProperty RolloutMain dimension --return default height
+		else if( val = getProperty this dimension ) != undefined then
+			val --return defined height
 	),
 	
 
@@ -308,7 +299,7 @@ struct Dialog_v
 	(
 		--print "Dialog_v._setMainRollout()"
 		
-		RolloutMain	= Rollout_v title:title id:id Layout:Layout
+		RolloutMain	= Rollout_v title:title id:id Layout:Layout width:width
 
 		Events = RolloutMain.Events
 	),
@@ -354,7 +345,8 @@ struct Dialog_v
 	 */
 	on create do
 	(
-		--format "\n"; print "Dialog_v.onCreate()"
+		format "\n"; print "Dialog_v.onCreate()"
+		format "Ini	= % \n" Ini
 		--format "width	= % \n" width
 		
 		--format "EVENT_DOCKED_ENABLED	= % \n" EVENT_DOCKED_ENABLED

@@ -48,10 +48,10 @@ struct IniSaver_v
 	 */
 	function saveDialogDockState rollout_id =
 	(
-		--format "\n"; print "IniSaver_v.saveDialogDockState()"
-		--format "rollout_id	= % \n" rollout_id
+		format "\n"; print "IniSaver_v.saveDialogDockState()"
+		format "rollout_id	= % \n" rollout_id
 		
-		if (_Rollout = execute(rollout_id)) != undefined then
+		if ( _Rollout = execute( rollout_id as string )) != undefined then
 		(
 			if( dialog_is_not_closed = GetDialogSize _Rollout) != [0,0] then -- if dialog is closed by user, exists but it is not displayed , then it`s size is [0,0,]
 			(

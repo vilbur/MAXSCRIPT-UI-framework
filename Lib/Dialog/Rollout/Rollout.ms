@@ -10,9 +10,7 @@ struct Rollout_v
 
 	/* construct */
 	title,
-	--width	= 512,
 	width,
-	--height	= 512,
 	height,
 	
 	/* properties */

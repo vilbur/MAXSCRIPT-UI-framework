@@ -1,5 +1,3 @@
-filein( getFilenamePath(getSourceFileName()) + "/../ConstructPropeties/ConstructPropeties.ms" )
-
 filein( getFilenamePath(getSourceFileName()) + "/../List/List.ms" )
 
 --filein( getFilenamePath(getSourceFileName()) + "/../Ini/Ini.ms" )
@@ -19,10 +17,10 @@ filein( getFilenamePath(getSourceFileName()) + "/SubolloutsCreator/SubolloutsCre
  */
 struct RolloutCreator_v
 (
-	__construct = #( ),
-
 	/* construct option */ 
 	Ini,
+	
+	/* properties */
 	
 	/* dependency */ 
 	EventBinder	= RolloutEventBinder_v ini_path:(Ini.getPath()),
@@ -30,9 +28,8 @@ struct RolloutCreator_v
 	ControlsCreator,
 	SubolloutsCreator = SubolloutsCreator_v ini_path:(Ini.getPath()),
 
-	
-	/* properties */
 
+	
 	/* store */
 	--width,
 
@@ -44,12 +41,11 @@ struct RolloutCreator_v
 		--format "classOf _Rollout.id	= % \n" (classOf _Rollout.id)
 		format "_Rollout.title	= % \n" _Rollout.title
 		format "_Rollout.width	= % \n" _Rollout.width
-		--format "_Rollout.height	= % \n" _Rollout.height
+
 		ControlsCreator   = ControlCreator_v _Rollout:_Rollout Ini:Ini
 		
-		--SubolloutsCreator._Rollout = _Rollout
-		--this._setWidth(width)
-
+		SubolloutsCreator._Rollout = _Rollout
+		
 		/* EDIT start */ 
 		_Rollout.rolloutCreatorBegin(_Rollout.width)
 
@@ -60,13 +56,6 @@ struct RolloutCreator_v
 
 		/* add TEXT */ 
 		this._addTextToRollout (_Rollout)
-		
-		
-		--if _Rollout.height != undefined and _Rollout.height != unsupplied then
-			--height =  _Rollout.height
-			
-		--if _Rollout.width == undefined or _Rollout.width == unsupplied then
-		--	_Rollout.width = width 
 		
 		/* set height of SUBROLLOUTS slot */ 
 		SubolloutsCreator.setSubrolloutsSlotHeight(_Rollout)
@@ -118,14 +107,6 @@ struct RolloutCreator_v
 	
 	private
 
-	
-	--/** _setup creation
-	-- */
-	--function _setWidth width =
-	--(
-	--	if( width != unsupplied ) then
-	--		this.width = width
-	--),
 
 	/** Add controls or subrolloutes
 	 */
@@ -204,6 +185,5 @@ struct RolloutCreator_v
 	(
 		--format "\n"; print("RolloutCreator_v.onCreate()")
 		--format "Ini	= % \n" Ini
-		ConstructPropeties test:this
 	)	
 )
