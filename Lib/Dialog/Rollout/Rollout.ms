@@ -58,7 +58,8 @@ struct Rollout_v
 	(
 		--format "\n"; print "Rollout_v.Subrollouts()"
 		--format "height	= % \n" height 
-		local Subrollouts = Subrollouts_v parent_rollout_id:id slot:(this._getSubrolloutsSlotName(slot)) width:(if width != unsupplied then width else this.width) height:height 
+		--local Subrollouts = Subrollouts_v parent_rollout_id:id slot:(this._getSubrolloutsSlotName(slot)) width:(if width != unsupplied then width else this.width) height:height 
+		local Subrollouts = Subrollouts_v parent_rollout_id:(this.getFullId()) slot:(this._getSubrolloutsSlotName(slot)) width:(if width != unsupplied then width else this.width) height:height 
 		--local Subrollouts = Subrollouts_v parent_rollout_id:id slot:(this._getSubrolloutsSlotName(slot)) width:width height:height 
 
 		append _Controls Subrollouts
@@ -72,7 +73,7 @@ struct Rollout_v
 	 */
 	function Rollouts slot: height: =
 	(
-		print "Rollout_v.Rollouts()"
+		--print "Rollout_v.Rollouts()"
 		--format "width	= % \n" width
 		--format "height	= % \n" height
 		this.Subrollouts slot:slot height:height --return
@@ -140,7 +141,9 @@ struct Rollout_v
 		add_text += text
 	),
 
-	/** Get full id to roll 
+	/** Get full path id to rollout
+	  *
+	  * @return	string E.G.: dialog_rolllout.Subrollouts.rollout_a.Subrollouts.subrollout_a
 	 */
 	function getFullId =
 	(
@@ -170,48 +173,51 @@ struct Rollout_v
 		(this.getSubrollouts()).count > 0
 	),
 	
+	/** Get nested level of rollout
+	  * 
+	  * 1) Split full id by "."
+	  * 2) Divide by 2 to remove subrollouts slots
+	  * 3) Minus 1 to remove DialogRollout level
+	 */
+	function getNestedLevel = -- split parent_rollout_id and slot id E.G.: ROLLOUT_Parent.children 
+	(
+		--format "\n"; print "Rollout_v.getNestedLevel()"
+		--format "this.GETFULLID()	= % \n" (this.getFullId())
+		--format "parent_rollout_id	= % \n" parent_rollout_id
+		--if( parent_rollout_id == undefined ) then 0 else ((filterString (this.getFullId()) ".").count - 1 ) / 2 --return
+		if( parent_rollout_id == undefined ) then 0 else floor ((filterString (this.getFullId()) ".").count  / 2) - 1 --return
+	),
+	
 	private
 
 	
 	/** Center rollout title with empty space prefix
+	  * 
+	  * if rollout is wider then 320
 	 */
 	function _setTitleCenter width =
 	(
-		print "Rollout_v._setTitleCenter()"
-		--format "width	= % \n" width
-		--format "parent_rollout_id	= % \n" parent_rollout_id
-		prefix = ""
-		empty_space = ""
-
-	if( parent_rollout_id != undefined and (width != undefined and width != unsupplied ) and (max_version = (maxVersion())[8] )!= undefined and max_version > 2020  ) then
+		--print "Rollout_v._setTitleCenter()"
+		prefix	= ""
+				
+		px_per_character = 5 -- width in pixels of character in title
+		
+		px_per_space = 3 -- width in pixels of empty character: " "
+		
+		rollout_padding = 96 -- with of dialog border or subrallout arrow for open rollout
+		
+		subrollout_padding = 24 -- each subrollout is narrower then parent rollout
+		
+	if( width > 320 and parent_rollout_id != undefined and (width != undefined and width != unsupplied ) and (max_version = (maxVersion())[8] )!= undefined and max_version > 2020  ) then
 	(
-		print "Set title auto"
-		total_length = 20
-
-		/** Count length of title and put empty space before
+		title_width	= title.count * px_per_character -- get difference in length of characters, longer title has shorter prefix and vice versa
+		rollout_width	= width - rollout_padding - ( this.getNestedLevel() * subrollout_padding )
+		prefix_lenght	= ((rollout_width - title_width) / 2) / px_per_space
+		
+		for i = 1 to prefix_lenght do -- too width 200px
+			prefix += " "
 			
-		  */
-		difference = ceil((total_length - title.count)/2) -- get difference in length of characters, longer title has shorter prefix and vice versa
-
-		--width_divider = if( width >= 600  ) then 9  -- divide rollout of each length by different divider
-		--			else if( width >= 400  ) then 12
-		--			else if( width <= 250  ) then 40
-		--			else 20
-	
-		width_divider = if( width >= 512 ) then 24  -- divide rollout of each length by different divider
-					else if( width >= 320 ) then 12
-					else if( width >= 256 ) then 8
-					else if( width >= 128 ) then 4
-					--else if( width > 128 ) then 6
-					else 0
-	
-		format "width_divider	= % \n" width_divider
-		--for i = 1 to floor (width/width_divider) + difference * 2.5 do -- too width 200px
-		--	prefix +=" "
-		for i = 1 to width_divider * 2.5 do -- too width 200px
-			prefix +=" "
-
-		prefix + empty_space +""+ title --return
+		prefix + title --return
 	)
 	else		
 		title
@@ -290,6 +296,7 @@ struct Rollout_v
 		( dotNetObject "System.Text.RegularExpressions.Regex" search ).Replace ( id ) replace  --return 
 	),
 	
+
 	/**  
 	 */
 	on create do
@@ -298,9 +305,6 @@ struct Rollout_v
 		ConstructPropeties test:this
 
 		this._setId()
-		
-		--format "id	= % \n" id
-		--format "width	= % \n" width
-		
+		--title = (title + " nested: " + (this.getNestedLevel()) as string )
 	)
 )
