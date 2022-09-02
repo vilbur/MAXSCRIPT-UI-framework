@@ -14,12 +14,11 @@ struct GroupboxResizer_v
 
 	/** Set group box width & height
 	 */
-	function setGroupBoxSize rollout_id groupbox groupbox_id =
+	function setGroupBoxSize rollout_id groupbox groupbox_id next_control =
 	(
 		format "\n"; print "GroupBoxCreator_v._setGroupBoxSize()"
 		local _rollout  = execute(rollout_id as string )
 		
-		next_control = this._getNextControlToGroupBox(_rollout.controls)(groupbox_id)
 		--format "NEXT_CONTROL	= % \n" next_control
 		is_next_control_in_same_row = this._isNextControlInSameRow (next_control) ( groupbox.pos.y)
 		--this._setGroupboxWidth  (_rollout) (groupbox) (next_control) (is_next_control_in_same_row)
@@ -28,36 +27,7 @@ struct GroupboxResizer_v
 	
 	
 	private
-	
-	/** Find next control after groupbox
-	  *
-	  * 	This control MUST NOT be in another groupbox
-	 */
-	function _getNextControlToGroupBox controls_in_rollout groupbox_id =
-	(
-		--format "\n"; print "GroupBoxCreator_v._getNextControlToGroupBox()"
-		--format "controls_in_rollout	= % \n" controls_in_rollout
-		local next_control_index
-	
-	
-	
-	
-		current_control_index = this._currentControlIndex (controls_in_rollout) (groupbox_id)
-		
-		for i = 1 to controls_in_rollout.count
-			where	(i		>= current_control_index)	and -- start loop up current control
-			   (control_next	= controls_in_rollout[i+1])	!= undefined	and -- if next control exist
-			   --(not_in_groupbox	= this._isInGroupbox(control_next))	== false	and -- if control is not in groupbox
-			   (control_type	= this._controlType (control_next))	!= #GroupStartControl 	and -- if control is not  #group control
-			   (control_type		!= #GroupEndControl )         -- if control is not  #group end control
-			do
-			   if( next_control_index == undefined ) then -- get only first occurence
-				   next_control_index = i+1
-	
-		if( next_control_index != undefined ) then
-			controls_in_rollout[next_control_index] --return 
-	),
-	
+
 	/** Split control identifier
 	  *
 	  * @param	RolloutControl _control	E.G.: ButtonControl:button_test_gb_1
@@ -71,19 +41,7 @@ struct GroupboxResizer_v
 
 		( toLower control_id) as name --return
 	),
-	
-	/** _current control index
-	 */
-	function _currentControlIndex controls_in_rollout groupbox_id =
-	(
-		--format "\n"; print "GroupBoxCreator_v._currentControlIndex()"
-		local current_control_index
-	
-		for i = 1 to controls_in_rollout.count where matchPattern (this._getControlId(controls_in_rollout[i]) ) pattern:groupbox_id do current_control_index = i
-	
-		current_control_index --return
-	),
-	
+
 	/** _is next control in same row
 	 */
 	function _isNextControlInSameRow next_control groupbox_pos_y =
@@ -97,30 +55,6 @@ struct GroupboxResizer_v
 		next_control != undefined and (next_control_pos_y <= groupbox_pos_y +20 and next_control_pos_y >= groupbox_pos_y - 20) -- return 
 	),
 
-	/** _is controlin groupbox
-	 */
-	function _isInGroupbox next_control =
-	(
-		--format "\n"; print "GroupBoxCreator_v._isInGroupbox()"
-		
-		is_in_groupbox = false
-	
-		for control_ids_in_groupbox in groupboxes.values where findItem control_ids_in_groupbox (this._getControlId(next_control)) > 0 do is_in_groupbox = true
-	
-		if( next_control != undefined ) then
-			is_in_groupbox --return
-	),
-	
-	/** _get control id
-	 */
-	function _controlType _control =
-	(
-		--format "\n"; print "GroupBoxCreator_v._getControlId()"
-		control_type = (filterString ( _control as string) ":")[1]
-		--format "control_type	= #% \n" control_type
-		control_type as name --return
-	),
-	
 	/** _set groupbox width
 	 */
 	function _setGroupboxWidth _rollout groupbox next_control is_next_control_in_same_row =
@@ -192,6 +126,16 @@ struct GroupboxResizer_v
 	
 			default:	control_height +  groupbox_margin
 		)
+	),
+	
+	/** _get control id
+	 */
+	function _controlType _control =
+	(
+		--format "\n"; print "GroupBoxCreator_v._getControlId()"
+		control_type = (filterString ( _control as string) ":")[1]
+		--format "control_type	= #% \n" control_type
+		control_type as name --return
 	),
 	
 	/** Get true height of listbox
