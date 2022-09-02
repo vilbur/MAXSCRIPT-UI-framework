@@ -20,7 +20,7 @@ struct SubolloutsCreator_v
 	 */
 	function addSubRollouts _Rollout =
 	(
-		format "\n"; print "SubolloutsCreator_v._addSubRollouts()"
+		--format "\n"; print "SubolloutsCreator_v._addSubRollouts()"
 		this._Rollout = _Rollout
 
 		for Subrollouts in this._getSubrollouts(_Rollout) do
@@ -88,15 +88,7 @@ struct SubolloutsCreator_v
 	
 
 	private
-	
 
-	/** Get nested level
-	 */
-	function _getNestedLevel = -- split parent_rollout_id and slot id E.G.: ROLLOUT_Parent.children 
-	(
-		--format "\n"; print "SubolloutsCreator_v._getNestedLevel()"
-		if( _Rollout.parent_rollout_id == undefined ) then 0 else (filterString _Rollout.parent_rollout_id ".").count/2 --return
-	),
 	
 	/** Get subrollout with height defined
 	 */
@@ -117,7 +109,7 @@ struct SubolloutsCreator_v
 		if( subrollouts_count > 0 ) then
 			slot_height = (undefined_space_in_rollout - padding_bottom) / subrollouts_count
 
-		slot_height -= 34*(this._getNestedLevel())
+		slot_height -= 34*(_Rollout.getNestedLevel())
 
 		slot_height --return
 	),

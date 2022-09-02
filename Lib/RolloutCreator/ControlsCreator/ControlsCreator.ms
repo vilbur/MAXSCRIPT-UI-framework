@@ -35,10 +35,7 @@ struct ControlCreator_v
 	 */
 	function addControls _Controls =
 	(
-		format "\n\n--------------	Controls group:%	--------------\n" _Controls.group
-		--format "\n\n"
-		--print ("--------------	Controls group:"+_Controls.group+"	--------------")
-		--print ("ControlCreator_v.addControls()"  )
+		--format "\n\n--------------	Controls group:%	--------------\n" _Controls.group
 
 		this._Controls = _Controls
 

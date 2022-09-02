@@ -1,6 +1,6 @@
 clearListener()
 
-filein( getFilenamePath(getSourceFileName()) + "/../../../RolloutCreator.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/../../../Lib/RolloutCreator/RolloutCreator.ms" )
 
 /** Create variables:
   *		_RolloutCreator
@@ -17,18 +17,18 @@ function createGroupBox count prefix:"" control_type:#button =
 	groupbox_id = ("groupbox_" + prefix) as name 
 	_Controls.control #GroupBox ("LEFT HALF " + prefix ) id:groupbox_id params:#(#across, 2)
 	--_Controls.control #listbox ("RIGHT HALF " + prefix ) params:#(#across, 2)
+	format "groupbox_id	= % \n" groupbox_id
 	
-	
-	_Controls.Default #across 2 type:#dropdownlist
+	--_Controls.Default #across 2 type:#dropdownlist
 	
 	for i = 1 to count do 
 	(
-	
-	
-		_Control    = _Controls.control #button ( prefix + i as string ) params:#(#groupbox, groupbox_id)
+		--_Control    = _Controls.control #button ( prefix + i as string ) params:#(#groupbox, groupbox_id)
+		_Control    = _Controls.control #button ( prefix + i as string ) --params:#(#groupbox, groupbox_id)
 		--_Control    = _Controls.control control_type ( prefix + i as string ) params:#(#groupbox, groupbox_id)
-	
+
 	)
+	
 	--_Controls.control #dropdownlist ("FULL WIDTH " + prefix) params:#(#across, 3)
 	
 	-- 

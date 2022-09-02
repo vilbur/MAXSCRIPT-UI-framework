@@ -28,10 +28,7 @@ struct RolloutCreator_v
 	ControlsCreator,
 	SubolloutsCreator = SubolloutsCreator_v ini_path:(Ini.getPath()),
 
-
-	
 	/* store */
-	--width,
 
 	/** Create dialog
 	 */
@@ -39,9 +36,10 @@ struct RolloutCreator_v
 	(
 		format "\n\n-------------------------------------	RolloutCreator_v.createRollout() id:#%	-------------------------------------\n"  ( _Rollout.id as string );
 		--format "classOf _Rollout.id	= % \n" (classOf _Rollout.id)
-		format "_Rollout.title	= % \n" _Rollout.title
-		format "_Rollout.width	= % \n" _Rollout.width
-
+		--format "_Rollout.getFullId()	= % \n" (_Rollout.getFullId())
+		--format "_Rollout.getNestedLevel()	= % \n" (_Rollout.getNestedLevel())
+		--format "_Rollout.title	= % \n" _Rollout.title
+		
 		ControlsCreator   = ControlCreator_v _Rollout:_Rollout Ini:Ini
 		
 		SubolloutsCreator._Rollout = _Rollout
@@ -179,6 +177,8 @@ struct RolloutCreator_v
 		matchPattern (classOf _Struct  as string ) pattern:@"*subrollouts_v*" 
 	),
 
+
+	
 	/**  
 	 */
 	on create do

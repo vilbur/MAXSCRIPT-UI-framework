@@ -73,8 +73,9 @@ struct Dialog_v
 	),
 	
 	/** Create dialog
-	  * NOTE: width and height of dialog must be defined on init
-	  * 
+	  *
+	  * @param	integer	width	of dialog, minimal size of dialog also
+	  * @param	integer	height	of dialog, minimal size of dialog also
 	  * 
 	  * 
 	  * TODO add params for max 2022
@@ -84,8 +85,8 @@ struct Dialog_v
 		--format "\n"; print "Dialog_v.create()"
 		dialog_width  = this._getDialogSize( #width ) width
 		dialog_height = this._getDialogSize( #height) height
-		format "dialog_width	= % \n" dialog_width
-		format "dialog_height	= % \n" dialog_height
+		--format "dialog_width	= % \n" dialog_width
+		--format "dialog_height	= % \n" dialog_height
 		
 		RolloutMain.width  = dialog_width
 		RolloutMain.height = dialog_height
@@ -151,7 +152,7 @@ struct Dialog_v
 	 */
 	function destroy =
 	(
-		print "Dialog_v.destroy()"
+		--print "Dialog_v.destroy()"
 		--format "RolloutMain.id	= % \n" RolloutMain.id
 
 		if  Ini.isDefined() then 

@@ -10,7 +10,6 @@ struct Subrollouts_v
 	
 	width,
 	height,
-	--height = 128, -- DEV
 
 	Rollouts	= #(),
 	
@@ -20,6 +19,7 @@ struct Subrollouts_v
 	(
 		--format "\n"; print "Subrollouts_v.Roll()"
 		--format "title	= % \n" title
+		
 		local _Rollout = Rollout_v title:title id:id parent_rollout_id:( parent_rollout_id as string +"."+slot as string ) width:(if width != unsupplied then width else this.width)
 
 		append Rollouts _Rollout

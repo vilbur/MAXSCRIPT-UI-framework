@@ -48,8 +48,8 @@ struct IniSaver_v
 	 */
 	function saveDialogDockState rollout_id =
 	(
-		format "\n"; print "IniSaver_v.saveDialogDockState()"
-		format "rollout_id	= % \n" rollout_id
+		--format "\n"; print "IniSaver_v.saveDialogDockState()"
+		--format "rollout_id	= % \n" rollout_id
 		
 		if ( _Rollout = execute( rollout_id as string )) != undefined then
 		(
