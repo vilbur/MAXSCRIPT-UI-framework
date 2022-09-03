@@ -70,7 +70,7 @@ struct Menu_v
 	
 	/** Remove given item or by title
 	  *
-	  * @param	<MixinInterface:menuItem>|string	menu_item	menu item or item title
+	  * @param	<MixinInterface:menuItem>|string|integer	menu_item|title|index
 	  *
 	 */
 	function removeItem menu_item =
@@ -94,17 +94,23 @@ struct Menu_v
 	
 	/** Get existing item from menu
 	  *
-	  *
+	  * @param	string|integer	title|index
+	  
 	  * @return	<MixinInterface:menuItem>|undefined
 	 */
-	function getItem title =
+	function getItem menu_item =
 	(
 		--format "\n"; print "Menu_v.getItem()"
-		menu_items = for i = 1 to menu.numItems() collect menu.getItem(i)
-
-		menu_item_found = for menu_item in menu_items where menu_item.getTitle() == title collect menu_item
-
-		menu_item_found[1] --return
+		if classOf menu_item == string then 
+		(
+			menu_items = for i = 1 to menu.numItems() collect menu.getItem(i)
+	
+			menu_item_found = for item in menu_items where item.getTitle() == menu_item collect item
+	
+			menu_item_found[1] --return
+		)
+		else
+			menu.getItem(menu_item) --return
 	),
 	
 	/** Set title

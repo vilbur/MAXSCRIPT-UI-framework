@@ -16,16 +16,14 @@ mcr_title	= "Context Menu Test"
 mcr_name	= "context_menu_test"
 
 
-
 /*------------------------------------------------------------------------------
 	DEFINE TESTS
 --------------------------------------------------------------------------------*/
 
-/**  Create test macroscript
+/**  CREATE TEST MACROSCRIPT
  */
 execute ("macroscript	"+mcr_name+" category:	\"_Test\" buttontext:	\""+mcr_title+"\" toolTip:	\""+mcr_title+"\" ( on execute do ( messageBox \""+mcr_title+"\"	))")
   
-
 /** CREATE MENU 
   */
 function createMenu =
@@ -64,8 +62,33 @@ function addItems =
 	Menu.addItem (mcr_category) (mcr_name) title:"Item added via QuadMenuTest" --add item to menu
 )
 
+/** Get item
+ */
+function getItems =
+(
+	--format "\n"; print ".getItem()"
+	
+	/* By title */ 
+	found_by_title =  Quad_1.getItem (mcr_title) 
+	format "found_by_title	= % \n" (found_by_title.getTitle() )
+	/* By index */
+	found_by_index =  Quad_1.getItem (3) 
+	format "found_by_index	= % \n" (found_by_index.getTitle() )
+)
 
-
+/** Remove item
+ */
+function removeItems =
+(
+	--format "\n"; print "removeItems()"
+	menu_item = QuadMenuTest.Quads[1].addItem (mcr_category) (mcr_name) title:"Item to remove"
+	
+	QuadMenuTest.Quads[1].addItem (mcr_category) (mcr_name) title:"Item to remove by title"
+	
+	--format "MENU_ITEM	= % \n" menu_item
+	QuadMenuTest.Quads[1].removeItem menu_item
+	QuadMenuTest.Quads[1].removeItem "Item to remove by title"
+)
 
 /** Set menu options
  */
@@ -77,19 +100,6 @@ function setMenuOptions =
 )
 
 
-/** Remove item
- */
-function removeItem =
-(
-	--format "\n"; print "removeItem()"
-	menu_item = QuadMenuTest.Quads[1].addItem (mcr_category) (mcr_name) title:"Item to remove"
-	
-	QuadMenuTest.Quads[1].addItem (mcr_category) (mcr_name) title:"Item to remove by title"
-	
-	--format "MENU_ITEM	= % \n" menu_item
-	QuadMenuTest.Quads[1].removeItem menu_item
-	QuadMenuTest.Quads[1].removeItem "Item to remove by title"
-)
 
 /*------------------------------------------------------------------------------
 	RUN TESTS
@@ -100,7 +110,9 @@ createQuadMenu()
 
 addItems()
 
-removeItem()
+getItems()
+
+removeItems()
 
 setMenuOptions()
 
