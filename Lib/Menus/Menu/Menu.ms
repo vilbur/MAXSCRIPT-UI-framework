@@ -84,14 +84,6 @@ struct Menu_v
 			menu.removeItem menu_item 
 	),
 	
-	/** Add separator
-	 */
-	function addSeparator =
-	(
-		--format "\n"; print "Menu_v.addSeparator()"
-		menu.addItem (menuMan.createSeparatorItem()) (menu.numItems() +1)
-	),
-	
 	/** Get existing item from menu
 	  *
 	  * @param	string|integer	title|index
@@ -111,6 +103,36 @@ struct Menu_v
 		)
 		else
 			menu.getItem(menu_item) --return
+	),
+		
+	/** Add separator
+	  *
+	  * If separator on this index exists already, then will not be added
+	 */
+	function addSeparator index: =
+	(
+		if index == unsupplied then
+		(
+			index_test	= menu.numItems()
+			index	= index_test +1
+		)
+		else
+			index_test = index
+
+		if (menu.getItem(index_test)).getIsSeparator() == false then 
+			menu.addItem (menuMan.createSeparatorItem()) (index)		
+	),
+	
+	/** Remove separator on index
+	  * 
+	  * @return	false if separator has not been deleted	
+	 */
+	function removeSeparator index =
+	(
+		if index <= (menu.numItems()) and (menu.getItem(index)).getIsSeparator() then
+			menu.removeItemByPosition(index)
+		else
+			false --return
 	),
 	
 	/** Set title

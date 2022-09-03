@@ -62,12 +62,32 @@ function addItems =
 	Menu.addItem (mcr_category) (mcr_name) title:"Item added via QuadMenuTest" --add item to menu
 )
 
+/** Add separator
+ */
+function addSeparator =
+(
+	/* ADD AS LAST */ 
+	Quad_1.addSeparator()
+	
+	Quad_1.addItem (mcr_category) (mcr_name) title:"Item after separator"
+	
+	/* ADD ON INDEX */ 
+	Quad_1.addSeparator index:2
+	Quad_1.addSeparator index:3
+)
+/** Remove separator
+ */
+function removeSeparator =
+(
+	Quad_1.removeSeparator(2)
+
+)
+
+
 /** Get item
  */
 function getItems =
 (
-	--format "\n"; print ".getItem()"
-	
 	/* By title */ 
 	found_by_title =  Quad_1.getItem (mcr_title) 
 	format "found_by_title	= % \n" (found_by_title.getTitle() )
@@ -83,11 +103,11 @@ function removeItems =
 	--format "\n"; print "removeItems()"
 	menu_item = QuadMenuTest.Quads[1].addItem (mcr_category) (mcr_name) title:"Item to remove"
 	
-	QuadMenuTest.Quads[1].addItem (mcr_category) (mcr_name) title:"Item to remove by title"
+	Quad_1.addItem (mcr_category) (mcr_name) title:"Item to remove by title"
 	
 	--format "MENU_ITEM	= % \n" menu_item
-	QuadMenuTest.Quads[1].removeItem menu_item
-	QuadMenuTest.Quads[1].removeItem "Item to remove by title"
+	Quad_1.removeItem menu_item
+	Quad_1.removeItem "Item to remove by title"
 )
 
 /** Set menu options
@@ -104,13 +124,17 @@ function setMenuOptions =
 /*------------------------------------------------------------------------------
 	RUN TESTS
 --------------------------------------------------------------------------------*/
-createMenu()
-
 createQuadMenu()
+
+createMenu()
 
 addItems()
 
 getItems()
+
+addSeparator()
+
+removeSeparator()
 
 removeItems()
 
