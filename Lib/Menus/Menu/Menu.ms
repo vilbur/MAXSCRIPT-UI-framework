@@ -12,17 +12,17 @@ struct Menu_v
 	menu,
 	
 	/** Add menu item
+	 *
+	 * @return	<MixinInterface:menuItem>|false false if adding fails
 	 */
 	function addItem category macro_script_name title: group: =
 	(
-		--format "\n"; print "Menu_v.addItem()"
+		format "\n"; print "Menu_v.addItem()"
 		--format "category	= % \n" category
 		--format "macro_script_name	= % \n" macro_script_name
 		--format "title	= % \n" title
 
 		item = if( group == unsupplied ) then menuMan.createActionItem (macro_script_name) (category) else menuMan.createMenuItemFromAction (group) (macro_script_name) category:(category)
-		
-		--format "item	= % \n" item
 		
 		if item == undefined then 
 			return false
@@ -32,10 +32,10 @@ struct Menu_v
 		else
 			title = item.getTitle()
 		
-		exists = this._itemExists(title)
-		--format "exists	= % \n" exists
-		if not this._itemExists(title) then
+		if this.getItem(title) == undefined then
 			menu.addItem item (menu.numItems() +1)
+			
+		item --return
 	),
 	
 	/** Add quad from 'menus' to quad
@@ -45,9 +45,9 @@ struct Menu_v
 	function addMenu menu_name flat:false =
 	(
 		--format "\n"; print "Menu_v.addMenu()"
-		submenu = this._getMenu(menu_name)
+		submenu = this._getOrCreateMenu(menu_name)
 
-		if not this._itemExists(menu_name) then
+		if this.getItem(menu_name) == undefined then
 		(
 			menu_item = menuMan.createSubMenuItem (menu_name) (submenu)
 			
@@ -59,12 +59,43 @@ struct Menu_v
 		Menu_v menu:submenu --return
 	),
 	
+	/** Remove given item or by title
+	  *
+	  * @param	<MixinInterface:menuItem>|string	menu_item	menu item or item title
+	  *
+	 */
+	function removeItem menu_item =
+	(
+		--format "\n"; print "Menu_v.removeItem()"
+		
+		if classOf menu_item == string then
+			menu_item = this.getItem(menu_item)
+		
+		if menu_item != undefined then 
+			menu.removeItem menu_item 
+	),
+	
 	/** Add separator
 	 */
 	function addSeparator =
 	(
 		--format "\n"; print "Menu_v.addSeparator()"
 		menu.addItem (menuMan.createSeparatorItem()) (menu.numItems() +1)
+	),
+	
+	/** Get existing item from menu
+	  *
+	  *
+	  * @return	<MixinInterface:menuItem>|undefined
+	 */
+	function getItem title =
+	(
+		--format "\n"; print "Menu_v.getItem()"
+		menu_items = for i = 1 to menu.numItems() collect menu.getItem(i)
+
+		menu_item_found = for menu_item in menu_items where menu_item.getTitle() == title collect menu_item
+
+		menu_item_found[1] --return
 	),
 	
 	/** Set title
@@ -78,11 +109,11 @@ struct Menu_v
 	private
 	
 	
-	/** Get existing item from menu
+	/** DEPRECATED 
 	 */
 	function _itemExists title =
 	(
-		--format "\n"; print "Menu_v._itemExists()"
+		format "\n"; print "Menu_v._itemExists() DEPRECATED: use Menu_v.getItem() instead "
 		--format "menu	= % \n" menu
 		--format "title	= % \n" title
 		menu_items = for i = 1 to menu.numItems() collect menu.getItem(i)
@@ -99,9 +130,9 @@ struct Menu_v
 
 	/** Set menu
 	 */
-	function _getMenu menu_name =
+	function _getOrCreateMenu menu_name =
 	(
-		--format "\n"; print "Menu_v._getMenu()"
+		--format "\n"; print "Menu_v._getOrCreateMenu()"
 		--format "menu_name	= % \n" menu_name
 		--if( this.name != undefined  and ( menu = menuMan.findMenu this.name ) == undefined ) then
 		local menu
@@ -133,6 +164,6 @@ struct Menu_v
 		--print("Menu_v.onCreate()")
 		
 		if menu == undefined then 
-			menu = this._getMenu(this.name)
+			menu = this._getOrCreateMenu(this.name)
 	)
 )
