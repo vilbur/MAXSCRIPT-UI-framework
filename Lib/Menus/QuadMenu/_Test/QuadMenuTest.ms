@@ -4,6 +4,9 @@ filein( getFilenamePath(getSourceFileName()) + "/../QuadMenu.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/../../Menu/Menu.ms" )
 
 global QuadMenuTest
+global Quad_1
+global Quad_2
+
 
 quad_menu_name	= "_Test Quad"
 menu_name 	= "_Test Menu"
@@ -37,14 +40,21 @@ function createMenu =
   */
 function createQuadMenu =
 (
-	--QuadMenuTest 	= (QuadMenu_v (quad_menu_name)).create()
 	QuadMenuTest 	= QuadMenu_v (quad_menu_name)
 	
 	Quad_1 = QuadMenuTest.Quads[1]
 	Quad_2 = QuadMenuTest.Quads[2]
+)
 
+/** CREATE QUAD MENU 
+  *	
+  */
+function addItems =
+(
 	/* ADD ITEM TO QUAD 1 */ 
 	Quad_1.addItem (mcr_category) (mcr_name) -- add item to qaud
+	Quad_1.addItem (mcr_category) (mcr_name) title:"Item added to index 1" index:1 --add item to menu
+	Quad_1.addItem (mcr_category) (mcr_name) title:"Item added to index 2" index:2 --add item to menu
 	
 	
 	/* ADD SUBMENU TO QUAD 2 */ 
@@ -53,6 +63,9 @@ function createQuadMenu =
 	/* ADD ITEM TO SUBMENU*/ 
 	Menu.addItem (mcr_category) (mcr_name) title:"Item added via QuadMenuTest" --add item to menu
 )
+
+
+
 
 /** Set menu options
  */
@@ -84,6 +97,8 @@ function removeItem =
 createMenu()
 
 createQuadMenu()
+
+addItems()
 
 removeItem()
 

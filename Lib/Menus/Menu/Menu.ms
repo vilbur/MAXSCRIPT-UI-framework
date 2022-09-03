@@ -15,9 +15,9 @@ struct Menu_v
 	 *
 	 * @return	<MixinInterface:menuItem>|false false if adding fails
 	 */
-	function addItem category macro_script_name title: group: =
+	function addItem category macro_script_name title: group: index: =
 	(
-		format "\n"; print "Menu_v.addItem()"
+		--format "\n"; print "Menu_v.addItem()"
 		--format "category	= % \n" category
 		--format "macro_script_name	= % \n" macro_script_name
 		--format "title	= % \n" title
@@ -27,13 +27,22 @@ struct Menu_v
 		if item == undefined then 
 			return false
 		
+		
+		/* SET TITLE */ 
 		if( title != unsupplied ) then 
-			this._setTitle(item)(title)
+			this._setTitleToItem(item)(title)
 		else
 			title = item.getTitle()
 		
+		
+		/* GET INDEX */ 
+		if index == unsupplied then 
+			index = menu.numItems() +1
+		
+		
+		/* ADD ITEM TO MENU */ 
 		if this.getItem(title) == undefined then
-			menu.addItem item (menu.numItems() +1)
+			menu.addItem (item) (index)
 			
 		item --return
 	),
@@ -145,9 +154,9 @@ struct Menu_v
 		
 	/** Set title
 	 */
-	function _setTitle &item title =
+	function _setTitleToItem &item title =
 	(
-		--format "\n"; print "Menu_v._setTitle()"
+		--format "\n"; print "Menu_v._setTitleToItem()"
 		--format "item	= % \n" item
 		--format "title	= % \n" title
 		item.setTitle title
