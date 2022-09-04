@@ -24,14 +24,6 @@ mcr_name	= "context_menu_test"
  */
 execute ("macroscript	"+mcr_name+" category:	\"_Test\" buttontext:	\""+mcr_title+"\" toolTip:	\""+mcr_title+"\" ( on execute do ( messageBox \""+mcr_title+"\"	))")
   
-/** CREATE MENU 
-  */
-function createMenu =
-(
-	Menu 	= Menu_v (menu_name)
-
-	Menu.addItem (mcr_category) (mcr_name) title:"Item in submenu" --add item to menu
-)
 
 /** CREATE QUAD MENU 
   *	
@@ -44,8 +36,29 @@ function createQuadMenu =
 	Quad_2 = QuadMenuTest.Quads[2]
 )
 
-/** CREATE QUAD MENU 
-  *	
+/** CREATE MENU 
+  */
+function createMenu =
+(
+	Menu 	= Menu_v (menu_name)
+	
+	Menu.addItem (mcr_category) (mcr_name) title:"Item on in menu" --add item to menu
+)
+
+/** ADD MENU AS SUBMENU TO QUAD
+  */
+function addMenu =
+(
+	/* ADD SUBMENU TO QUAD 2 */ 	
+	Menu = Quad_2.addMenu (menu_name) title:"_Title changed"
+
+	/* ADD ITEM TO SUBMENU*/ 
+	Menu.addItem (mcr_category) (mcr_name) title:"Item added to submenu" --add item to menu when menu is added already
+	
+)
+
+
+/** ADD ITEM TO QUAD MENU
   */
 function addItems =
 (
@@ -53,13 +66,6 @@ function addItems =
 	Quad_1.addItem (mcr_category) (mcr_name) -- add item to qaud
 	Quad_1.addItem (mcr_category) (mcr_name) title:"Item added to index 1" index:1 --add item to menu
 	Quad_1.addItem (mcr_category) (mcr_name) title:"Item added to index 2" index:2 --add item to menu
-	
-	
-	/* ADD SUBMENU TO QUAD 2 */ 
-	Menu = Quad_2.addMenu (menu_name)
-	
-	/* ADD ITEM TO SUBMENU*/ 
-	Menu.addItem (mcr_category) (mcr_name) title:"Item added via QuadMenuTest" --add item to menu
 )
 
 /** Add separator
@@ -127,18 +133,19 @@ function setMenuOptions =
 createQuadMenu()
 
 createMenu()
+addMenu()
 
-addItems()
+--addItems()
+--
+--getItems()
+--
+--addSeparator()
+--
+--removeSeparator()
+--
+--removeItems()
 
-getItems()
-
-addSeparator()
-
-removeSeparator()
-
-removeItems()
-
-setMenuOptions()
+setMenuOptions() -- set open on rightclick 
 
 
 

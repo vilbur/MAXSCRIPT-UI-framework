@@ -5,11 +5,12 @@ struct Menu_v
 (	
 	/* construct */
 	name,
+	
 	/* dependency */
 	/* reference */
 	/* inhered */
 	/* properties */
-	menu,
+	menu, -- <MixinInterface:menu> HELP: https://help.autodesk.com/view/MAXDEV/2021/ENU/?guid=GUID-1374EDCA-CC8B-4B43-81A5-6ED98DBE01D3#mixin-interface-menuman-getmenu-
 	
 	/** Add menu item
 	 *
@@ -48,23 +49,38 @@ struct Menu_v
 	),
 	
 	/** Add quad from 'menus' to quad
-	  *
-	  * return Menu_v
+	  * 
+	  * @param	string	menu_name	name of menu which will be added as sub menu
+	  * @param	string	title	custom title of menu displayed in quad
+	  * @param	boolean	flat	menu will be flat or not
+	  * 
+	  * @return Menu_v
 	 */
-	function addMenu menu_name flat:false =
+	function addMenu menu_name title: flat:false =
 	(
 		--format "\n"; print "Menu_v.addMenu()"
 		submenu = this._getOrCreateMenu(menu_name)
-
-		if this.getItem(menu_name) == undefined then
+		--format "submenu	= % \n" submenu
+		--format "title	= % \n" title
+		
+		if this.getItem(menu_name) == undefined then -- search for menu in quad
 		(
-			menu_item = menuMan.createSubMenuItem (menu_name) (submenu)
+			submenu = menuMan.createSubMenuItem (menu_name) (submenu)
+			--format "add submenu	= % \n" submenu
 			
+			if title != unsupplied then
+			(
+				submenu.setUseCustomTitle(true)
+				
+				submenu.setTitle(title)
+			)
+			--format "submenu.getUseCustomTitle() = % \n" (submenu.getUseCustomTitle() )
 			if flat then 
-				menu_item.setDisplayFlat(true)
+				submenu.setDisplayFlat(true)
 			
-			menu.addItem menu_item (menu.numItems() +1)
+			menu.addItem submenu (menu.numItems() +1)
 		)
+		
 		Menu_v menu:submenu --return
 	),
 	
@@ -135,7 +151,7 @@ struct Menu_v
 			false --return
 	),
 	
-	/** Set title
+	/** Set title to menu
 	 */
 	function setTitle title =
 	(
@@ -200,7 +216,10 @@ struct Menu_v
 	(
 		--print("Menu_v.onCreate()")
 		
-		if menu == undefined then 
-			menu = this._getOrCreateMenu(this.name)
+		if this.menu == undefined then 
+			this.menu = this._getOrCreateMenu(this.name)
+		
+		if this.menu != undefined  and this.name == undefined then 
+			this.name = this.menu.getTitle()
 	)
 )
