@@ -1,5 +1,6 @@
-/**  
-  *	HELP: https://help.autodesk.com/view/MAXDEV/2021/ENU/?guid=GUID-1374EDCA-CC8B-4B43-81A5-6ED98DBE01D3
+/** Wrapper for <MixinInterface:menu>
+  *
+  *	HELP: https://help.autodesk.com/view/MAXDEV/2021/ENU/?guid=GUID-1374EDCA-CC8B-4B43-81A5-6ED98DBE01D3#GUID-1374EDCA-CC8B-4B43-81A5-6ED98DBE01D3__GUID-550885E9-1A73-423C-A837-865E96CF7824
   */
 struct Menu_v
 (	
@@ -10,7 +11,16 @@ struct Menu_v
 	/* reference */
 	/* inhered */
 	/* properties */
-	menu, -- <MixinInterface:menu> HELP: https://help.autodesk.com/view/MAXDEV/2021/ENU/?guid=GUID-1374EDCA-CC8B-4B43-81A5-6ED98DBE01D3#mixin-interface-menuman-getmenu-
+	menu, -- <MixinInterface:menu> 
+	
+	
+	/** Get menu from menus list HELP:https://help.autodesk.com/view/3DSMAX/2022/ENU/?guid=GUID-F8993D95-943E-4031-B1C6-6B2BADE4DB9E#GUID-F8993D95-943E-4031-B1C6-6B2BADE4DB9E__WS73099CC142F4875546792D6511E39D97277-15A5
+	 */
+	function getMenu menu_name =
+	(
+		--format "\n"; print "Menu_v.getMenu()"
+		menuMan.findMenu menu_name --return
+	),
 	
 	/** Add menu item
 	 *
@@ -23,7 +33,7 @@ struct Menu_v
 		--format "macro_script_name	= % \n" macro_script_name
 		--format "title	= % \n" title
 
-		item = if( group == unsupplied ) then menuMan.createActionItem (macro_script_name) (category) else menuMan.createMenuItemFromAction (group) (macro_script_name) category:(category)
+		item = if( group == unsupplied ) then menuMan.createActionItem (macro_script_name) (category) else menuMan.createMenuItemFromAction ( group ) (macro_script_name) category:(category)
 		
 		if item == undefined then 
 			return false
@@ -49,6 +59,7 @@ struct Menu_v
 	),
 	
 	/** Add quad from 'menus' to quad
+	  * IMPORTANT: Menu does not show, if does not contain any items
 	  * 
 	  * @param	string	menu_name	name of menu which will be added as sub menu
 	  * @param	string	title	custom title of menu displayed in quad
@@ -56,29 +67,30 @@ struct Menu_v
 	  * 
 	  * @return Menu_v
 	 */
-	function addMenu menu_name title: flat:false =
+	function addMenu menu_name index: title: flat:false =
 	(
 		--format "\n"; print "Menu_v.addMenu()"
+		 if index == unsupplied then
+			index = menu.numItems() + 1
+		
 		submenu = this._getOrCreateMenu(menu_name)
 		--format "submenu	= % \n" submenu
 		--format "title	= % \n" title
+		--format "this.getItem(title)	= % \n" (this.getItem(title))
+		--format "this.getItem(menu_name)	= % \n" (this.getItem(menu_name))
 		
-		if this.getItem(menu_name) == undefined then -- search for menu in quad
+		if this.getItem( if title == unsupplied then menu_name else title ) == undefined then -- if item with title does not exists yet
 		(
-			submenu = menuMan.createSubMenuItem (menu_name) (submenu)
+			menu_item = menuMan.createSubMenuItem (menu_name) (submenu)
 			--format "add submenu	= % \n" submenu
 			
-			if title != unsupplied then
-			(
-				submenu.setUseCustomTitle(true)
-				
-				submenu.setTitle(title)
-			)
-			--format "submenu.getUseCustomTitle() = % \n" (submenu.getUseCustomTitle() )
+			if( title != unsupplied ) then 
+				this._setTitleToItem(menu_item)(title)
+
 			if flat then 
-				submenu.setDisplayFlat(true)
+				menu_item.setDisplayFlat(true)
 			
-			menu.addItem submenu (menu.numItems() +1)
+			menu.addItem menu_item (index)
 		)
 		
 		Menu_v menu:submenu --return
@@ -88,6 +100,7 @@ struct Menu_v
 	  *
 	  * @param	<MixinInterface:menuItem>|string|integer	menu_item|title|index
 	  *
+	  * @return	menu_item	
 	 */
 	function removeItem menu_item =
 	(
@@ -97,7 +110,9 @@ struct Menu_v
 			menu_item = this.getItem(menu_item)
 		
 		if menu_item != undefined then 
-			menu.removeItem menu_item 
+			menu.removeItem menu_item
+			
+		menu_item --return
 	),
 	
 	/** Get existing item from menu
@@ -120,7 +135,19 @@ struct Menu_v
 		else
 			menu.getItem(menu_item) --return
 	),
+	
+	/** Move item in menu
+	 */
+	function moveItem menu_item index =
+	(
+		format "\n"; print "Menu_v.moveItem()"
 		
+		menu_item = this.removeItem (menu_item)
+		
+		if menu_item != undefined then 
+			menu.addItem (menu_item) (index)
+	),
+	
 	/** Add separator
 	  *
 	  * If separator on this index exists already, then will not be added
@@ -158,28 +185,10 @@ struct Menu_v
 		--format "\n"; print "Menu_v.setTitle()"
 		menu.setTitle title
 	),
+
 	
 	private
-	
-	
-	/** DEPRECATED 
-	 */
-	function _itemExists title =
-	(
-		format "\n"; print "Menu_v._itemExists() DEPRECATED: use Menu_v.getItem() instead "
-		--format "menu	= % \n" menu
-		--format "title	= % \n" title
-		menu_items = for i = 1 to menu.numItems() collect menu.getItem(i)
-		--format "menu_items	= % \n" menu_items
-		
-		for menu_item in menu_items do
-		(
-			--format "menu_item.getTitle()	= % \n" (menu_item.getTitle())
-		)
-		menu_item_found = for menu_item in menu_items where menu_item.getTitle() == title collect menu_item
-		--format "menu_item_found	= % \n" menu_item_found
-		menu_item_found[1] != undefined --return
-	),
+
 
 	/** Set menu
 	 */
@@ -196,7 +205,7 @@ struct Menu_v
 		menu --return
 	),
 		
-	/** Set title
+	/** Set title to item
 	 */
 	function _setTitleToItem &item title =
 	(
@@ -215,7 +224,6 @@ struct Menu_v
 	on create do
 	(
 		--print("Menu_v.onCreate()")
-		
 		if this.menu == undefined then 
 			this.menu = this._getOrCreateMenu(this.name)
 		

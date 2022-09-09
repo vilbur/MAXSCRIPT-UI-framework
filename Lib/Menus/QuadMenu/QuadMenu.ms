@@ -1,9 +1,9 @@
-filein( getFilenamePath(getSourceFileName()) + "/../Menu/Menu.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/Menu/Menu.ms" )
 
-/** Quad menu
-  
-  https://forums.cgsociety.org/t/mxs-adding-custom-item-to-convert-to-quadMenu-menu/1870495
-  https://help.autodesk.com/view/MAXDEV/2021/ENU/?guid=GUID-6E21C768-7256-4500-AB1F-B144F492F055
+/** Wrapper for <MixinInterface:quadMenu>
+  *
+  * HELP: https://help.autodesk.com/view/MAXDEV/2021/ENU/?guid=GUID-1374EDCA-CC8B-4B43-81A5-6ED98DBE01D3#GUID-1374EDCA-CC8B-4B43-81A5-6ED98DBE01D3__GUID-B997CD35-721D-41F9-B011-304446C3F482
+  *
  */
 struct QuadMenu_v
 (	
@@ -14,38 +14,11 @@ struct QuadMenu_v
 	/* reference */
 	/* inhered */
 	/* properties */
-	quadMenu, -- <MixinInterface:quadMenu> HELP: https://help.autodesk.com/view/MAXDEV/2021/ENU/?guid=GUID-1374EDCA-CC8B-4B43-81A5-6ED98DBE01D3#mixin-interface-menuman-getquadmenu-
+	quadMenu, -- <MixinInterface:quadMenu> 
 	Quads	= #(),
 	
 	macroscripts = #(),	
 
-	/** Create quadMenu menu
-	  * 
-	  * @return	this	 
-	 */
-	function _setQuad =
-	(
-		--format "\n"; print "QuadMenu_v._setQuad()"
-		----format "name	= % \n" name
-		if (quadMenu = menuMan.findQuadMenu this.name) == undefined then 
-			quadMenu = menuMan.createQuadMenu this.name (this.name+"_"+1 as string )(this.name+"_"+2 as string )(this.name+"_"+3 as string )(this.name+"_"+4 as string )
-			
-		this --return
-	),
-	
-	/** Create quadMenu menu
-	  * 
-	  * @return	this	 
-	 */
-	function _setQuads =
-	(
-		--format "\n"; print "QuadMenu_v._setQuad()"
-		----format "name	= % \n" name
-		if quadMenu != undefined then
-			for i = 1 to 4 do
-				append Quads (Menu_v menu:(quadMenu.getMenu(i)))
-	),
-	
 	/** Add menu
 	 */
 	function addMenu menu_name quad_index =
@@ -88,10 +61,36 @@ struct QuadMenu_v
 	),
 	
 	
-	
 	private
 
 
+	/** Create quadMenu menu
+	  * 
+	  * @return	this	 
+	 */
+	function _setQuad =
+	(
+		--format "\n"; print "QuadMenu_v._setQuad()"
+		----format "name	= % \n" name
+		if (quadMenu = menuMan.findQuadMenu this.name) == undefined then 
+			quadMenu = menuMan.createQuadMenu this.name (this.name+"_"+1 as string )(this.name+"_"+2 as string )(this.name+"_"+3 as string )(this.name+"_"+4 as string )
+			
+		this --return
+	),
+	
+	/** Create quadMenu menu
+	  * 
+	  * @return	this	 
+	 */
+	function _setQuads =
+	(
+		--format "\n"; print "QuadMenu_v._setQuad()"
+		----format "name	= % \n" name
+		if quadMenu != undefined then
+			for i = 1 to 4 do
+				append Quads (Menu_v menu:(quadMenu.getMenu(i)))
+	),
+	
 	/**  
 	 */
 	on create do

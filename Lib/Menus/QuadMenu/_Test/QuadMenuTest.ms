@@ -1,7 +1,7 @@
 clearListener()
 
 filein( getFilenamePath(getSourceFileName()) + "/../QuadMenu.ms" )
-filein( getFilenamePath(getSourceFileName()) + "/../../Menu/Menu.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/../Menu/Menu.ms" )
 
 global QuadMenuTest
 global Quad_1
@@ -36,36 +36,73 @@ function createQuadMenu =
 	Quad_2 = QuadMenuTest.Quads[2]
 )
 
-/** CREATE MENU 
-  */
-function createMenu =
-(
-	Menu 	= Menu_v (menu_name)
-	
-	Menu.addItem (mcr_category) (mcr_name) title:"Item on in menu" --add item to menu
-)
-
-/** ADD MENU AS SUBMENU TO QUAD
-  */
-function addMenu =
-(
-	/* ADD SUBMENU TO QUAD 2 */ 	
-	Menu = Quad_2.addMenu (menu_name) title:"_Title changed"
-
-	/* ADD ITEM TO SUBMENU*/ 
-	Menu.addItem (mcr_category) (mcr_name) title:"Item added to submenu" --add item to menu when menu is added already
-	
-)
-
-
 /** ADD ITEM TO QUAD MENU
   */
-function addItems =
+function addItemsToQuad =
 (
 	/* ADD ITEM TO QUAD 1 */ 
 	Quad_1.addItem (mcr_category) (mcr_name) -- add item to qaud
 	Quad_1.addItem (mcr_category) (mcr_name) title:"Item added to index 1" index:1 --add item to menu
 	Quad_1.addItem (mcr_category) (mcr_name) title:"Item added to index 2" index:2 --add item to menu
+)
+
+/** Move items
+ */
+function moveItemInQuad =
+(
+	--format "\n"; print ".moveItems()"
+	
+	Quad_1.addItem (mcr_category) (mcr_name) title:"Item moved" -- add item to qaud
+
+	Quad_1.moveItem ("Item moved") 1
+)
+
+/** CREATE MENU 
+  */
+function createMenuInMenuList =
+(
+	Menu 	= Menu_v (menu_name)
+	
+	Menu.addItem (mcr_category) (mcr_name) title:"Item in menu" --add item to menu
+)
+
+/** ADD MENU AS SUBMENU TO QUAD
+  */
+function addMenuToQuad2 =
+(
+	--format "\n"; print "addMenu()"
+	/* ADD SUBMENU TO QUAD 2 */ 	
+	Menu = Quad_2.addMenu (menu_name) title:"Custom Title" index:1 flat:true -- flat:false is default
+
+	/* ADD ITEM TO SUBMENU - Menu does not show, if does not contain any items */ 
+	Menu.addItem (mcr_category) (mcr_name) title:"Item with custom title" --add item to menu when menu is added already
+)
+
+/** Move items
+ */
+function moveItemsInMenu =
+(
+	format "\n"; print ".moveItems()"
+
+	Menu = Menu_v (menu_name)
+	format "Menu	= % \n" Menu
+	Menu.addItem (mcr_category) (mcr_name) title:"Item moved to index:1"
+	
+	Menu.moveItem ("Item moved to index:1") 1
+)
+
+/** Add submenu
+ */
+function addSubmenu =
+(
+	--format "\n"; print "addSubmenu()"
+	Menu 	= Menu_v (menu_name)
+	
+	SubMenu = Menu_v ("_Test Submenu")
+	SubMenu.addItem (mcr_category) (mcr_name) title:"Item in submenu 1" --add item to menu when menu is added already
+	SubMenu.addItem (mcr_category) (mcr_name) title:"Item in submenu 2" --add item to menu when menu is added already
+
+	Menu.addMenu("_Test Submenu")
 )
 
 /** Add separator
@@ -130,21 +167,40 @@ function setMenuOptions =
 /*------------------------------------------------------------------------------
 	RUN TESTS
 --------------------------------------------------------------------------------*/
+
+/* QUAD MENU */ 
 createQuadMenu()
 
-createMenu()
-addMenu()
+addItemsToQuad()
 
---addItems()
---
---getItems()
---
---addSeparator()
---
---removeSeparator()
---
---removeItems()
+moveItemInQuad()
 
+
+/* MENU */ 
+createMenuInMenuList()
+
+addMenuToQuad2()
+
+moveItemsInMenu()
+
+
+/* SUBMENU */ 
+addSubmenu()
+
+
+/* SEPARATOR */ 
+addSeparator()
+
+removeSeparator()
+
+
+/* ITEMS OPERATIONS */ 
+getItems()
+
+removeItems()
+
+
+/* QUAD MEMU OPTIONS */ 
 setMenuOptions() -- set open on rightclick 
 
 
