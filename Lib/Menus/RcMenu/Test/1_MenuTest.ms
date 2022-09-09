@@ -1,12 +1,12 @@
 clearListener()
 
-filein ( getFilenamePath(getSourceFileName()) + "/../Menu.ms" );
+filein ( getFilenamePath(getSourceFileName()) + "/../RcMenu.ms" )
 
 
 try( DestroyDialog rollout_test )catch()
 
 /* DEFINE MAIN MENU */
-Menu = Menu_v name:"TestMenu"
+Menu = RcMenu_v name:"TestMenu"
 
 /* DEFINE MENU */
 menu_1	= Menu.menu "Menu 1"

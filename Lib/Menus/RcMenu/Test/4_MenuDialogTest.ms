@@ -1,7 +1,6 @@
 clearListener()
 
-filein ( getFilenamePath(getSourceFileName()) + "/../Menu.ms" );
-
+filein ( getFilenamePath(getSourceFileName()) + "/../RcMenu.ms" )
 /** CREATE MENU 
  */
 

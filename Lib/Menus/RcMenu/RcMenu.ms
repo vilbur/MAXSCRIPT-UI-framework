@@ -1,6 +1,6 @@
 filein( getFilenamePath(getSourceFileName()) + "/MenuItem.ms" )
 
-/** Menu
+/** Menu for rollout
  */
 struct RcMenu_v
 (

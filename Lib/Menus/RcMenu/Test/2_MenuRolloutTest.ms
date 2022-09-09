@@ -1,7 +1,7 @@
 clearListener()
 
-filein( getFilenamePath(getSourceFileName()) + "/../Menu.ms" )
-filein( getFilenamePath(getSourceFileName()) + "/../../Dialog/Rollout/Rollout.ms" )
+filein ( getFilenamePath(getSourceFileName()) + "/../RcMenu.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/../../../Dialog/Rollout/Rollout.ms" )
 
 
 /* ROLLOUT DEFINITION */

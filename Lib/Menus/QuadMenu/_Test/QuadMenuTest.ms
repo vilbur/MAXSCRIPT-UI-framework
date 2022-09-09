@@ -82,10 +82,10 @@ function addMenuToQuad2 =
  */
 function moveItemsInMenu =
 (
-	format "\n"; print ".moveItems()"
+	--format "\n"; print ".moveItems()"
 
 	Menu = Menu_v (menu_name)
-	format "Menu	= % \n" Menu
+	--format "Menu	= % \n" Menu
 	Menu.addItem (mcr_category) (mcr_name) title:"Item moved to index:1"
 	
 	Menu.moveItem ("Item moved to index:1") 1
