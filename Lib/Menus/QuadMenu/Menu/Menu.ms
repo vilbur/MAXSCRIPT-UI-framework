@@ -96,52 +96,75 @@ struct Menu_v
 		Menu_v menu:submenu --return
 	),
 	
+	
+	/** Get item from menu
+	  * 
+	  * @param	string|integer	index_or_title
+	  *
+	  * @return	<MixinInterface:menuItem>|undefined
+	 */
+	function getItem index_or_title =
+	(
+		--format "\n"; print "Menu_v.getItem()"
+		if classOf index_or_title == string then 
+		(
+			menu_items = for i = 1 to menu.numItems() collect menu.getItem(i)
+	
+			menu_item_found = for item in menu_items where item.getTitle() == index_or_title collect item
+	
+			menu_item = menu_item_found[1] --return
+		)
+		else
+			menu_item = menu.getItem(index_or_title) --return
+	),
+	
+	/** Get submenu from menu item
+	  *
+	  * Return:
+	  *		1) Return menuItem 
+	  * 		2) Return Menu_v with submenu if menu item is submenu
+	  *		3) Return undefined if item with goven title or index does not exist
+	  *
+	  * @return	<MixinInterface:menuItem>|Menu_v menu:submenu|undefined
+	 */
+	function getSubMenu index_or_title =
+	(
+		--format "\n"; print "Menu_v.getSubMenu()"
+		menuItem = this.getItem index_or_title 
+		
+		if menuItem != undefined then
+		(
+			if( submenu = menuItem.getSubMenu() ) != undefined then
+				(Menu_v menu:submenu) --return
+			else
+				menuItem --return <MixinInterface:menuItem>
+		)
+	),
+	
 	/** Remove given item or by title
 	  *
-	  * @param	<MixinInterface:menuItem>|string|integer	menu_item|title|index
+	  * @param	<MixinInterface:menuItem>|string|integer	index_or_title|title|index
 	  *
-	  * @return	menu_item	
+	  * @return	menuItem	
 	 */
-	function removeItem menu_item =
+	function removeItem index_or_title =
 	(
-		--format "\n"; print "Menu_v.removeItem()"
+		format "\n"; print "Menu_v.removeItem()"
 		
-		if classOf menu_item == string then
-			menu_item = this.getItem(menu_item)
-		
+		if classOf index_or_title == string then
+			menu_item = this.getItem(index_or_title)
+
 		if menu_item != undefined then 
 			menu.removeItem menu_item
 			
 		menu_item --return
 	),
 	
-	/** Get existing item from menu
-	  *
-	  * @param	string|integer	title|index
-	  
-	  * @return	<MixinInterface:menuItem>|undefined
-	 */
-	function getItem menu_item =
-	(
-		--format "\n"; print "Menu_v.getItem()"
-		if classOf menu_item == string then 
-		(
-			menu_items = for i = 1 to menu.numItems() collect menu.getItem(i)
-	
-			menu_item_found = for item in menu_items where item.getTitle() == menu_item collect item
-	
-			menu_item_found[1] --return
-		)
-		else
-			menu.getItem(menu_item) --return
-	),
-	
 	/** Move item in menu
 	 */
 	function moveItem menu_item index =
 	(
-		format "\n"; print "Menu_v.moveItem()"
-		
+		--format "\n"; print "Menu_v.moveItem()"
 		menu_item = this.removeItem (menu_item)
 		
 		if menu_item != undefined then 
@@ -205,6 +228,7 @@ struct Menu_v
 		menu --return
 	),
 		
+	
 	/** Set title to item
 	 */
 	function _setTitleToItem &item title =
