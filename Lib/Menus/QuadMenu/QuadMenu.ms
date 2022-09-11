@@ -23,7 +23,7 @@ struct QuadMenu_v
 	 */
 	function addMenu menu_name quad_index =
 	(
-		format "\n"; print "QuadMenu_v.addMenu()"
+		--format "\n"; print "QuadMenu_v.addMenu()"
 		Quads[quad_index].addMenu (menu_name)
 	),
 

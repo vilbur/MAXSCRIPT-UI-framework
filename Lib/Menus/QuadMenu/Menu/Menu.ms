@@ -160,11 +160,16 @@ struct Menu_v
 	),
 	
 	/** Move item in menu
+	  * 
+	  * @param	integer|-1	index desired position of item, i -1 then item is moved on end of menu
 	 */
-	function moveItem menu_item index =
+	function moveItem index_or_title index =
 	(
 		--format "\n"; print "Menu_v.moveItem()"
-		menu_item = this.removeItem (menu_item)
+		menu_item = this.removeItem (index_or_title)
+		
+		 if index == -1 then
+			index = menu.numItems() + 1		
 		
 		if menu_item != undefined then 
 			menu.addItem (menu_item) (index)
