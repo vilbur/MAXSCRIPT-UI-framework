@@ -35,8 +35,8 @@ struct ControlCreator_v
 	 */
 	function addControls _Controls =
 	(
-		format "\n\n--------------	Controls group:%	--------------\n" _Controls.group
-		format "_Controls.list.count	= % \n" _Controls.list.count
+		--format "\n\n--------------	Controls group:%	--------------\n" _Controls.group
+		--format "_Controls.list.count	= % \n" _Controls.list.count
 		this._Controls = _Controls
 
 		if this._ifControlsListIsNotTemporary() then 

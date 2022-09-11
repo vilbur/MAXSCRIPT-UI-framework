@@ -6,8 +6,6 @@ filein( getFilenamePath(getSourceFileName()) + "/Subrollouts/Subrollouts.ms" )
  */
 struct Rollout_v
 (
-	__construct = #( #title ),
-
 	/* construct */
 	title,
 	width,
@@ -199,19 +197,16 @@ struct Rollout_v
 	(
 		--print "Rollout_v._setTitleCenter()"
 		prefix	= ""
-				
-		px_per_character = 5 -- width in pixels of character in title
 		
-		px_per_space = 3 -- width in pixels of empty character: " "
-		
-		rollout_padding = 96 -- with of dialog border or subrallout arrow for open rollout
-		
-		subrollout_padding = 24 -- each subrollout is narrower then parent rollout
+		rollout_padding	= 64 -- with of dialog border or subrallout arrow for open rollout -- HIGHER VALUE MOVES WHOLE TITLE TO LEFT, LOWER TO RIGHT
+		px_per_character	= 5 -- width in pixels of character in title
+		px_per_space	= 3 -- width in pixels of empty character: " "
+		slot_padding	= 24 -- each subrollout is narrower then parent rollout
 		
 	if( width > 320 and parent_rollout_id != undefined and (width != undefined and width != unsupplied ) and (max_version = (maxVersion())[8] )!= undefined and max_version > 2020  ) then
 	(
 		title_width	= title.count * px_per_character -- get difference in length of characters, longer title has shorter prefix and vice versa
-		rollout_width	= width - rollout_padding - ( this.getNestedLevel() * subrollout_padding )
+		rollout_width	= width - rollout_padding - ( this.getNestedLevel() * slot_padding )
 		prefix_lenght	= ((rollout_width - title_width) / 2) / px_per_space
 		
 		for i = 1 to prefix_lenght do -- too width 200px
@@ -302,8 +297,11 @@ struct Rollout_v
 	on create do
 	(
 		--format "\n"; print "Rollout_v.onCreate()"
-		ConstructPropeties test:this
+		
+		for prop in #( #title ) where getProperty this prop == undefined do -- CHECK CONSTRUCT PROPERTIES -- Array of this struct properties necessary to run
+			throw ("\n\n\nUNDEFINED CONSTRUCT PROPERTY\n\n\nSTRUCT:\n\n"+ ((filterString( classof this as string )"(:")[2]) +"\n\n\nPROPERTY:\n\n"+ prop ) 
 
+		
 		this._setId()
 		--title = (title + " nested: " + (this.getNestedLevel()) as string )
 	)

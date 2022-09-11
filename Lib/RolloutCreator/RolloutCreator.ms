@@ -83,6 +83,7 @@ struct RolloutCreator_v
 	 */
 	function Roll title id: =
 	(
+		format "\n"; print "!!!!!!!! DEPRECATED METHOD RolloutCreator_v.Roll() DO NOT USE THIS !!! "
 		Rollout_v title:title id:id --return
 	),
 	
@@ -90,7 +91,7 @@ struct RolloutCreator_v
 	 */
 	function new title id: =
 	(
-		format "\n"; print "!!!!!!!! DEPRECATED METHOD Subrollouts_v.Roll() please use Subrollouts_v.roll() "
+		format "\n"; print "!!!!!!!! DEPRECATED METHOD RolloutCreator_v.new() DO NOT USE THIS !!! "
 
 		this.Roll title id:id --return
 	),

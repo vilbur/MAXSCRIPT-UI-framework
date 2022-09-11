@@ -9,6 +9,15 @@ filein( getFilenamePath(getSourceFileName()) + "/../../../Lib/RolloutCreator/Rol
   */
 include "Library/MAXSCRIPT-UI-framework/Lib/RolloutCreator/_Test/includes/CreateTestRollout.ms" -- "../../../_Test/includes/CreateTestRollout.ms"
 
+/*
+
+*/ 
+function createControls control_type:#button groupbox_name:"" count:1 =
+(
+	for i = 1 to count do 
+		_Controls.control control_type ( groupbox_name + " "+i as string ) params:#(#groupbox, groupbox_name, #across, 2)
+)
+
 /** Create groupbox with default params
  */
 function createGroupbox controls_count =
@@ -29,15 +38,6 @@ function createGroupboxDefinedByControl controls_count =
 	groupbox_name = "By control"
 
 	createControls groupbox_name:groupbox_name count:controls_count
-)
-
-/*
-
-*/ 
-function createControls control_type:#button groupbox_name:"" count:1 =
-(
-	for i = 1 to count do 
-		_Controls.control control_type ( groupbox_name + " "+i as string ) params:#(#groupbox, groupbox_name, #across, 2)
 )
 
 /*------------------------------------------------------------------------------

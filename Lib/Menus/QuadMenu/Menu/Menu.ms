@@ -149,8 +149,7 @@ struct Menu_v
 	 */
 	function removeItem index_or_title =
 	(
-		format "\n"; print "Menu_v.removeItem()"
-		
+		--format "\n"; print "Menu_v.removeItem()"
 		if classOf index_or_title == string then
 			menu_item = this.getItem(index_or_title)
 

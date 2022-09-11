@@ -213,7 +213,7 @@ struct ControlEventBinder_v
 	(
 		--print("ControlEventBinder_v.onCreate()")
 		--format "_ROLLOUT	= % \n" _Rollout
-		ConstructPropeties test:this
+		--ConstructPropeties test:this
 	)
 
 )
