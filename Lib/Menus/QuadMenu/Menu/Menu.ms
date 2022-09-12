@@ -58,6 +58,27 @@ struct Menu_v
 		item --return
 	),
 	
+	/** Get item from menu
+	  * 
+	  * @param	string|integer	index_or_title
+	  *
+	  * @return	<MixinInterface:menuItem>|undefined
+	 */
+	function getItem index_or_title =
+	(
+		--format "\n"; print "Menu_v.getItem()"
+		if classOf index_or_title == string then 
+		(
+			--menu_items = for i = 1 to menu.numItems() collect menu.getItem(i)
+			menu_item_found = for item in (this._getMenuItems()) where item.getTitle() == index_or_title collect item
+	
+			menu_item = menu_item_found[1] --return
+		)
+		else
+			menu_item = menu.getItem(index_or_title) --return
+	),
+
+
 	/** Add quad from 'menus' to quad
 	  * IMPORTANT: Menu does not show, if does not contain any items
 	  * 
@@ -82,7 +103,6 @@ struct Menu_v
 		if this.getItem( if title == unsupplied then menu_name else title ) == undefined then -- if item with title does not exists yet
 		(
 			menu_item = menuMan.createSubMenuItem (menu_name) (submenu)
-			--format "add submenu	= % \n" submenu
 			
 			if( title != unsupplied ) then 
 				this._setTitleToItem(menu_item)(title)
@@ -96,48 +116,15 @@ struct Menu_v
 		Menu_v menu:submenu --return
 	),
 	
-	
-	/** Get item from menu
-	  * 
-	  * @param	string|integer	index_or_title
-	  *
-	  * @return	<MixinInterface:menuItem>|undefined
-	 */
-	function getItem index_or_title =
-	(
-		--format "\n"; print "Menu_v.getItem()"
-		if classOf index_or_title == string then 
-		(
-			--menu_items = for i = 1 to menu.numItems() collect menu.getItem(i)
-			menu_item_found = for item in (this._getMenuItems()) where item.getTitle() == index_or_title collect item
-	
-			menu_item = menu_item_found[1] --return
-		)
-		else
-			menu_item = menu.getItem(index_or_title) --return
-	),
-	
 	/** Get submenu from menu item
 	  *
-	  * Return:
-	  *		1) Return menuItem 
-	  * 		2) Return Menu_v with submenu if menu item is submenu
-	  *		3) Return undefined if item with goven title or index does not exist
-	  *
-	  * @return	<MixinInterface:menuItem>|Menu_v menu:submenu|undefined
+	  * @return	Menu_v menu:submenu|undefined
 	 */
 	function getSubMenu index_or_title =
 	(
 		--format "\n"; print "Menu_v.getSubMenu()"
-		menuItem = this.getItem index_or_title 
-		
-		if menuItem != undefined then
-		(
-			if( submenu = menuItem.getSubMenu() ) != undefined then
-				(Menu_v menu:submenu) --return
-			else
-				menuItem --return <MixinInterface:menuItem>
-		)
+		if (menuItem = this.getItem index_or_title) != undefined and ( submenu = menuItem.getSubMenu() ) != undefined then
+			(Menu_v menu:submenu) --return
 	),
 	
 	/** Remove given item or by title
@@ -180,6 +167,7 @@ struct Menu_v
 	 */
 	function addSeparator index: =
 	(
+		--format "\n"; print "Menu_v.addSeparator()"
 		if index == unsupplied then
 		(
 			index_test	= menu.numItems()
@@ -187,8 +175,8 @@ struct Menu_v
 		)
 		else
 			index_test = index
-			
-		if (menu.getItem(index_test)).getIsSeparator() == false then 
+
+		if (menu.getItem(index_test)).getIsSeparator() == false then
 			menu.addItem (menuMan.createSeparatorItem()) (index)
 	),
 	
@@ -242,6 +230,32 @@ struct Menu_v
 		menu.setTitle title
 	),
 
+	/** Set submenu item flat 
+	 */
+	function setFlat index_or_title state =
+	(
+		if( submenu = this.getItem(index_or_title) ) != undefined then
+			submenu.setDisplayFlat (state)
+	),
+	
+	/** Print menu items to script listener
+	  * Useful to look into hidden subemnus
+	 */
+	function showItems =
+	(
+		--format "\n"; print "Menu_v.showItems()"
+		menu_items = this._getMenuItems()
+		--format "menu_items.count	= % \n" menu_items.count
+		for i = 1 to menu_items.count do 
+		(
+			item = menu_items[i]
+			
+			format "\nitem %:	" i
+
+			format "%" ( if item.getIsSeparator() then "--------" else item.getTitle() )
+		)
+		format "\n"
+	),
 	
 	private
 	

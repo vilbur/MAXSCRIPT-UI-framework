@@ -63,7 +63,7 @@ function createMenuInMenuList =
 (
 	Menu 	= Menu_v (menu_name)
 	
-	Menu.addItem (mcr_category) (mcr_name) title:"Item in menu" --add item to menu
+	Menu.addItem (mcr_category) (mcr_name) title:"Item in menu" --add item to menu, otherwise menu is not dispalyed
 )
 
 /** ADD MENU AS SUBMENU TO QUAD
@@ -71,11 +71,16 @@ function createMenuInMenuList =
 function addMenuToQuad2 =
 (
 	--format "\n"; print "addMenu()"
-	/* ADD SUBMENU TO QUAD 2 */ 	
-	Menu = Quad_2.addMenu (menu_name) title:"Custom Title" index:1 flat:true -- flat:false is default
+	/* ADD MENU TO QUAD 2 */ 	
+	Menu = Quad_2.addMenu (menu_name) title:"Custom Menu Title" 
 
-	/* ADD ITEM TO SUBMENU - Menu does not show, if does not contain any items */ 
-	Menu.addItem (mcr_category) (mcr_name) title:"Item with custom title" --add item to menu when menu is added already
+
+	/* ADD FLAT MENU TO QUAD 2 */ 	
+	Menu_flat = Menu_v ("Menu Flat")
+	
+	Menu_flat.addItem (mcr_category) (mcr_name) title:"Item in flat menu" --add item to menu, otherwise menu is not displayed
+
+	Quad_2.addMenu ("Menu Flat") index:1 flat:true -- flat:false is default
 )
 
 /** Move items
@@ -98,11 +103,13 @@ function addSubmenu =
 	--format "\n"; print "addSubmenu()"
 	Menu 	= Menu_v (menu_name)
 	
-	SubMenu = Menu_v ("_Test Submenu")
-	SubMenu.addItem (mcr_category) (mcr_name) title:"Item in submenu 1" --add item to menu when menu is added already
-	SubMenu.addItem (mcr_category) (mcr_name) title:"Item in submenu 2" --add item to menu when menu is added already
-
+	SubMenu = Menu.addMenu("_Test Submenu")
+	
+	SubMenu.addItem (mcr_category) (mcr_name) title:"Item in submenu"
+	
 	Menu.addMenu("_Test Submenu")
+	
+	Menu.setFlat("_Test Submenu")(true) -- Set submenu item flat
 )
 
 /** Add separator
