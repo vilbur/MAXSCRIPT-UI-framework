@@ -111,11 +111,12 @@ function addSeparator =
 (
 	/* ADD AS LAST */ 
 	Quad_1.addSeparator()
+	Quad_1.addSeparator() -- this separator is not added, because of exists already
 	
 	Quad_1.addItem (mcr_category) (mcr_name) title:"Item after separator"
 	
 	/* ADD ON INDEX */ 
-	Quad_1.addSeparator index:2
+	Quad_1.addSeparator index:1
 	Quad_1.addSeparator index:3
 )
 /** Remove separator
@@ -123,9 +124,18 @@ function addSeparator =
 function removeSeparator =
 (
 	Quad_1.removeSeparator(2)
-
 )
 
+/** Remove double separators and separators on start or end of menu
+ */
+function cleanSeparator =
+(
+	--format "\n"; print ".cleanSeparator()"
+	Quad_1.addSeparator index:4 -- add double separator
+	Quad_1.addSeparator() 
+
+	Quad_1.cleanSeparators() 
+)
 
 /** Get item
  */
@@ -192,7 +202,7 @@ addSubmenu()
 addSeparator()
 
 removeSeparator()
-
+cleanSeparator()
 
 /* ITEMS OPERATIONS */ 
 getItems()

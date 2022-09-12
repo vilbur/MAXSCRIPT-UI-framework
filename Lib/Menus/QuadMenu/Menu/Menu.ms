@@ -108,9 +108,8 @@ struct Menu_v
 		--format "\n"; print "Menu_v.getItem()"
 		if classOf index_or_title == string then 
 		(
-			menu_items = for i = 1 to menu.numItems() collect menu.getItem(i)
-	
-			menu_item_found = for item in menu_items where item.getTitle() == index_or_title collect item
+			--menu_items = for i = 1 to menu.numItems() collect menu.getItem(i)
+			menu_item_found = for item in (this._getMenuItems()) where item.getTitle() == index_or_title collect item
 	
 			menu_item = menu_item_found[1] --return
 		)
@@ -143,16 +142,16 @@ struct Menu_v
 	
 	/** Remove given item or by title
 	  *
-	  * @param	<MixinInterface:menuItem>|string|integer	index_or_title|title|index
+	  * @param	<MixinInterface:menuItem>|string|integer	index_title_item MenuItem, title string or index of item
 	  *
 	  * @return	menuItem	
 	 */
-	function removeItem index_or_title =
+	function removeItem index_title_item =
 	(
 		--format "\n"; print "Menu_v.removeItem()"
-		if classOf index_or_title == string then
-			menu_item = this.getItem(index_or_title)
-
+		
+		menu_item = if classOf index_title_item != MixinInterface then this.getItem(index_title_item) else index_title_item
+			
 		if menu_item != undefined then 
 			menu.removeItem menu_item
 			
@@ -188,9 +187,9 @@ struct Menu_v
 		)
 		else
 			index_test = index
-
+			
 		if (menu.getItem(index_test)).getIsSeparator() == false then 
-			menu.addItem (menuMan.createSeparatorItem()) (index)		
+			menu.addItem (menuMan.createSeparatorItem()) (index)
 	),
 	
 	/** Remove separator on index
@@ -205,6 +204,36 @@ struct Menu_v
 			false --return
 	),
 	
+
+	/** Remove double separators and separators on start or end of menu
+	 */
+	function cleanSeparators =
+	(
+		--format "\n"; print "Menu_v.cleanSeparators()"
+		indexes_to_remove 	= #()
+		next_item_is_separator	= false
+		
+		menu_items = this._getMenuItems()
+		--format "menu_items.count	= % \n" menu_items.count
+		for i = 1 to menu_items.count do 
+		(
+			item = menu_items[i]
+			
+			item_is_separator = item.getIsSeparator()
+			
+			next_item_is_separator = i < menu_items.count and (menu_items[i + 1]).getIsSeparator() 
+			
+			if (SEPARATOR_IS_FIRST = (item_is_separator and i==1 ) or
+			  (SEPARATOR_IS_LAST  = (item_is_separator and i==menu_items.count) )) or
+			  (SEPARATOR_IS_TWICE = (item_is_separator and next_item_is_separator )) then 
+				append indexes_to_remove i
+
+		)
+		
+		for i = indexes_to_remove.count to 1 by -1 do
+			menu.removeItemByPosition (indexes_to_remove[i])
+	),
+
 	/** Set title to menu
 	 */
 	function setTitle title =
@@ -215,7 +244,14 @@ struct Menu_v
 
 	
 	private
-
+	
+	/** Get menu items
+	 */
+	function _getMenuItems =
+	(
+		--format "\n"; print "Menu_v._getMenuItems()"
+		for i = 1 to menu.numItems() collect menu.getItem(i)
+	),
 
 	/** Set menu
 	 */
