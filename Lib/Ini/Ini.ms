@@ -22,7 +22,7 @@ struct Ini_v
 		if( matchPattern ini_path pattern:@"*.ini" ) then
 			_path = ini_path
 			
-		else if( matchPattern ini_path pattern:@"*.ms" ) then
+		else if( matchPattern ini_path pattern:@"*.ms" or matchPattern ini_path pattern:@"*.mcr" ) then
 			_path =  (getFilenamePath(ini_path) + getFilenameFile(ini_path) + ".ini")
 		
 		else

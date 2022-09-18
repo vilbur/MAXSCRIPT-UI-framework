@@ -47,7 +47,7 @@ struct Menu_v
 		
 		
 		/* GET INDEX */ 
-		if index == unsupplied then 
+		if index == unsupplied or index == undefined then 
 			index = menu.numItems() +1
 		
 		

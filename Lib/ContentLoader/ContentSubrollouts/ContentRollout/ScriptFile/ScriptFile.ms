@@ -108,7 +108,7 @@ struct ScriptFile_Content_v
 			_Controls.add _Control
 	),
 	
-	/** Add to quad menu
+	/** Add to quad menu or menu
 	 */
 	function _addToQuadMenu _Control Macro =
 	(
@@ -117,11 +117,12 @@ struct ScriptFile_Content_v
 		quad_name	= _Control.Params.getVal #quad 
 		menu_name	= _Control.Params.getVal #menu
 		title	= _Control.Params.getVal #title
+		index	= _Control.Params.getVal #index
 		
 		if title == undefined then 
 			title = Macro.buttontext
 		
-		if quad_name != undefined then
+		if quad_name != undefined then /* QUAD MENU */ 
 		(
 			quad_name_split	= filterString quad_name "."
 
@@ -130,10 +131,10 @@ struct ScriptFile_Content_v
 			if quad_index == undefined then
 				quad_index = 1
 
-			(QuadMenu_v(quad_name_split[1])).Quads[quad_index as integer ].addItem (Macro.category)(Macro.macro_name) title:title
+			(QuadMenu_v(quad_name_split[1])).Quads[quad_index as integer ].addItem (Macro.category)(Macro.macro_name) title:title index:index
 		)
-		else if menu_name != undefined then
-			(Menu_v (menu_name)).addItem (Macro.category) (Macro.macro_name) title:title
+		else if menu_name != undefined then /* MENU */ 
+			(Menu_v (menu_name)).addItem (Macro.category) (Macro.macro_name) title:title index:index
 
 	),
 	

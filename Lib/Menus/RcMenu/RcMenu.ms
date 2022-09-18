@@ -3,9 +3,7 @@ filein( getFilenamePath(getSourceFileName()) + "/MenuItem.ms" )
 /** Menu for rollout
  */
 struct RcMenu_v
-(
-	__construct = #( ),
-	
+(	
 	/* properties */
 	name = "MainMenu",
 	
@@ -30,9 +28,11 @@ struct RcMenu_v
 	  * @param	string	command	Command of item
 	  * @param	string	[id]	Id of item, if empoty, then sanitized title is used
 	 */
-	function item title command id:"" =
+	function item title command id: =
 	(
 		--print "RcMenu_v.item()"
+		--format "title	= % \n" title
+		--format "command	= % \n" command
 		this._addItem (MenuItem_v title:(title as string) command:command id:id)
 	),
 
@@ -116,24 +116,10 @@ struct RcMenu_v
 			
 		commands --return 
 	),
-
-	/*------------------------------------------------------------------------------
-		CONSTRUCT
-	--------------------------------------------------------------------------------*/
-	
-	/** Check if properties in __construct are defined when an instance of the struct is created.
-	  * @example __construct = #( #property_name ) 
-	 */
-	function _checkConstctructProperties =
-	(
-		for prop in __construct where getProperty this prop == undefined do
-			messageBox ("Undefined construct property !\n\n"+ ((filterString( classof this as string )"(:")[2]) +"."+ prop )
-	),
 	
 	/**  
 	 */
 	on create do
 	(
-		this._checkConstctructProperties()
 	)
 )

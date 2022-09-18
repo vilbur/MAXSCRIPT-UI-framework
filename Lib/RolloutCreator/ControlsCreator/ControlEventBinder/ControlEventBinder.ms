@@ -91,6 +91,7 @@ struct ControlEventBinder_v
 		if( Event.code == "" ) then
 			return false
 		--format "\nEVENT = % \n" Event
+		--format "\nEVENT.type = % \n" Event.type
 		--format "\nEVENT.code = % \n" Event.code
 		_Rollout._RolloutCreator.addHandler _Control.id Event.type codeStr:( "("+Event.code+")" ) paramStr:Event.params filter:on
 	),
@@ -147,7 +148,8 @@ struct ControlEventBinder_v
 	function _addParametersToCallback =
 	(
 		--print "ControlEvents._addParametersToCallback()"
-		for Event in this._Control.Events.list where not matchPattern Event.code pattern:"*macros.run*" do
+		--for Event in this._Control.Events.list where not (matchPattern Event.code pattern:"*macros.run*" or matchPattern Event.code pattern:"*()" ) do
+		for Event in this._Control.Events.list where not matchPattern Event.code pattern:"* *" do
 		(
 			if ( params = this._paramsOfEvent(Event.type) ) != undefined then 
 				for param in params_split = filterString params " " where ( PARAM_IS_NOT_ADDED = matchPattern Event.code pattern:("*"+param+"*")) == false do 

@@ -28,12 +28,18 @@ struct Controls_v
 	  *
 	  * @return Object _Control	"./Control/Control.ms"
 	 */
-	function Control type caption id:undefined params:#() items: value: across: locals:#() add_to_controls:true =
+	function Control type caption id:undefined params:#() width: height: items: value: across: locals:#() add_to_controls:true =
 	(
 		--format "\n"; print "Controls_v.Control()"
 		--format "caption	= % \n" caption
 		_Control = Control_v type:type caption:caption id:id add_locals:locals
-				
+			
+		if( width != unsupplied ) then 
+			_Control.Param (#width) (width)
+		
+		if( height != unsupplied ) then 
+			_Control.Param (#height) (height)
+		
 		if( items != unsupplied ) then 
 			_Control.Param (#items) (items)
 

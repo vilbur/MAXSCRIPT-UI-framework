@@ -28,10 +28,11 @@ struct Dialog_v
 	Ini,
 	
 	width	= 512,
-	height	= 256,
+	--height	= 256,
+	height = unsupplied,
 	
 	/* options */
-	--id,
+	id,
 	
 	/* dependency */
 	AutoRunEvents 	= AutoRunEvents_v(),
@@ -99,6 +100,7 @@ struct Dialog_v
 		--CreateDialog (_RolloutCreator.getDefinition(RolloutMain)) 
 		--CreateDialog (_RolloutCreator.getDefinition(RolloutMain))  width:dialog_width height:dialog_height style:this.style
 		--CreateDialog (_RolloutCreator.getDefinition(RolloutMain)) width:unsupplied height:unsupplied style:this.style
+		--CreateDialog (_RolloutCreator.getDefinition(RolloutMain)) pos:(this._getPositionRelativeToWindow(pos)) autoLayoutOnResize:true  width:dialog_width height:dialog_height bgcolor:bgcolor fgcolor:fgcolor bitmap:bitmap style:(if( style == unsupplied ) then this.style else style) modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
 		CreateDialog (_RolloutCreator.getDefinition(RolloutMain)) pos:(this._getPositionRelativeToWindow(pos)) autoLayoutOnResize:true  width:dialog_width height:dialog_height bgcolor:bgcolor fgcolor:fgcolor bitmap:bitmap style:(if( style == unsupplied ) then this.style else style) modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
 		
 		_RolloutCreator.SubolloutsCreator.addSubRollouts (RolloutMain)
@@ -246,8 +248,10 @@ struct Dialog_v
 		else if val != unsupplied then
 			val --return defined val on creation
 		
-		else if( val = getProperty this dimension ) != undefined then
-			val --return defined height
+		--else if( val = getProperty this dimension ) == undefined then
+		else
+			getProperty this dimension
+			
 	),
 	
 
@@ -328,7 +332,7 @@ struct Dialog_v
 			(
 				--print "Set Dialog Float"
 				execute("SetDialogPos "+ RolloutMain.id +" "+ (position - position_offset_fix) as string )
-				this.register()
+				--this.register()
 			)
 		)
 	),

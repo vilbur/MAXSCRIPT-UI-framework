@@ -16,10 +16,12 @@ struct DefaultEvents_v
 		--format "rollout_id_full	= % \n" rollout_id_full
 		append Events ( Event_v type:#open	code:("GroupBoxCreator.sortControlsToGroupBoxes(\""+rollout_id_full+"\")") )
 		
-		--append Events ( Event_v type:#okToClose	code:("print(\"okToClose "+rollout_id_full+"\"); true") )
-		
-		if( ini_path != undefined ) then 
-			append Events ( Event_v type:#okToClose	code:("(IniSaver_v ini_file:\""+ini_path+"\").saveRollout(\""+rollout_id_full+"\")") )
+		if( ini_path != undefined ) then
+		(
+			ini_path	= ( dotNetObject "System.Text.RegularExpressions.Regex" @"[\\/]+" ).Replace ini_path "/"
+			
+			append Events ( Event_v type:#okToClose code:("(IniSaver_v ini_file:\""+ini_path+"\").saveRollout(\""+rollout_id_full+"\")") )
+		)
 		
 		
 		Events --return
