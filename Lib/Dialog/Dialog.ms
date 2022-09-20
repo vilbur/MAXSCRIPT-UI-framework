@@ -77,11 +77,12 @@ struct Dialog_v
 	  *
 	  * @param	integer	width	of dialog, minimal size of dialog also
 	  * @param	integer	height	of dialog, minimal size of dialog also
-	  * 
+	  * @param	[x,y]|#moue	name	description
+	  * @param	name	origin	#WINDOW|#SCREEN origin of dialog position: Relative to 3Ds Max window|Absolute to screen
 	  * 
 	  * TODO add params for max 2022
 	 */
-	function create width: height: pos: bgcolor: fgcolor: bitmap: style: modal: escapeEnable: lockHeight:false lockWidth:true parent: =
+	function create width: height: pos: origin:#SCREEN bgcolor: fgcolor: bitmap: style: modal: escapeEnable: lockHeight:false lockWidth:true parent: =
 	(
 		--format "\n"; print "Dialog_v.create()"
 		dialog_width  = this._getDialogSize( #width ) width
@@ -96,16 +97,12 @@ struct Dialog_v
 
 		_RolloutCreator.createRollout (RolloutMain)
 
-
 		--CreateDialog (_RolloutCreator.getDefinition(RolloutMain)) 
-		--CreateDialog (_RolloutCreator.getDefinition(RolloutMain))  width:dialog_width height:dialog_height style:this.style
-		--CreateDialog (_RolloutCreator.getDefinition(RolloutMain)) width:unsupplied height:unsupplied style:this.style
-		--CreateDialog (_RolloutCreator.getDefinition(RolloutMain)) pos:(this._getPositionRelativeToWindow(pos)) autoLayoutOnResize:true  width:dialog_width height:dialog_height bgcolor:bgcolor fgcolor:fgcolor bitmap:bitmap style:(if( style == unsupplied ) then this.style else style) modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
-		CreateDialog (_RolloutCreator.getDefinition(RolloutMain)) pos:(this._getPositionRelativeToWindow(pos)) autoLayoutOnResize:true  width:dialog_width height:dialog_height bgcolor:bgcolor fgcolor:fgcolor bitmap:bitmap style:(if( style == unsupplied ) then this.style else style) modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
+		CreateDialog (_RolloutCreator.getDefinition(RolloutMain)) pos:(this._getPosition(pos)(origin)) autoLayoutOnResize:true  width:dialog_width height:dialog_height bgcolor:bgcolor fgcolor:fgcolor bitmap:bitmap style:(if( style == unsupplied ) then this.style else style) modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
 		
 		_RolloutCreator.SubolloutsCreator.addSubRollouts (RolloutMain)
 		
-		this._setPositionOrDockByIni()
+		this._setDockState()
 		
 		AutoRunEvents.executeMacros()
 		--format "\n\nDIALOG CREATED\n\n" 
@@ -282,19 +279,42 @@ struct Dialog_v
 		(viewport_area_size[2] as integer) + height_of_ui - dialog_title_height --return
 	),
 	
+	
+	/** Get position
+	  * 
+	  * 	1) Use Defined pos
+	  * 	2) Use Ini position if exists and position is NOT DEFINED
+	 */
+	function _getPosition pos origin =
+	(
+		--format "\n"; print "if._getPosition()"
+		--format "pos	= % \n" pos
+		if pos != unsupplied then 
+		(
+			if pos == #mouse then 
+				pos = mouse.screenpos - [-1,0] -- offset postion of -1px, otherwise resize cursor is dispalyed on creation
+			
+			else if origin == #window then 
+				pos = this._getPositionRelativeToWindow(pos)
+			
+		)  else if Ini.isDefined() and (position_ini = Ini.load( RolloutMain.id as string )("position")) != undefined  then
+			pos = position_ini
+		
+		pos --return
+	),
+	
 	/** Get position relative to Max window
 	 */
 	function _getPositionRelativeToWindow pos =
 	(
-		--print "Dialog_v.getPosition()"
-		
+		--print "Dialog_v._getPositionRelativeToWindow()"
 		toolbar_height = 92
 		
 		if( pos == unsupplied ) then 
 			return pos
 		
 		win_pos = windows.getWindowPos (windows.getMAXHWND())
-
+		
 		[ win_pos.x+pos.x, win_pos.y+pos.y + toolbar_height]  --return
 	),
 	
@@ -309,31 +329,21 @@ struct Dialog_v
 		Events = RolloutMain.Events
 	),
 
-	/** _load ini position
+	/** Load dock state from ini
+	  * Ini postion is not used, if position of dialog is defined in this.create()
 	 */
-	function _setPositionOrDockByIni =
+	function _setDockState =
 	(
-		--format "\n"; print "global._setPositionOrDockByIni()"
-		
-		position_offset_fix = [0,30] -- FIX y position of dialog, for some reason is saved position about 30 pixels more then postion of created dialog
+		format "\n"; print "global._setDockState()"
 		
 		if Ini.isDefined() then
 		(
-			dock_state	= Ini.load( RolloutMain.id as string )("dock_state")
-			position	= Ini.load( RolloutMain.id as string )("position")
+			if( (dock_state = Ini.load( RolloutMain.id as string )("dock_state")) == undefined or dock_state == "cui_floatable" ) then
+				return false
+		format "dock_state	= % \n" dock_state
+			this.register()
 			
-			if( dock_state != undefined and dock_state != "cui_floatable" ) then
-			(
-				--print "Set Dialog Dock"
-				this.register()
-				execute("cui.DockDialogBar "+ RolloutMain.id +" #"+ dock_state )
-			)
-			else if( position != undefined ) then
-			(
-				--print "Set Dialog Float"
-				execute("SetDialogPos "+ RolloutMain.id +" "+ (position - position_offset_fix) as string )
-				--this.register()
-			)
+			execute("cui.DockDialogBar "+ RolloutMain.id +" #"+ dock_state )
 		)
 	),
 	
