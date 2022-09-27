@@ -19,8 +19,8 @@ struct ControlCreator_v
 	Ini,
 	
 	/* properties */
-	--DEBUG = true,
-	DEBUG = false,
+	DEBUG = true,
+	--DEBUG = false,
 	
 	/* dependency */
 	_Controls,
@@ -41,11 +41,11 @@ struct ControlCreator_v
 
 		if this._ifControlsListIsNotTemporary() then 
 			GroupBoxCreator.addGrouboxes (_Rollout.getFullId()) (_Controls.GroupBoxes)
-
-		--format "_Rollout.width	= % \n" _Rollout.width
+		
 		/* pass DEFAULT PARAMETERS to params creator */ 
 		ParamsCreator.setDefaultParameters(_Controls.DefaultParameters)
-
+		
+		
 		for _Control in _Controls.list do
 		(
 			ParamsCreator.mergeParams(_Control)
@@ -54,13 +54,14 @@ struct ControlCreator_v
 
 			TooltipCreator.addTooltips(_Control)
 
-			this.addToAutoRunEvents(_Control) -- MUST RUN BEFORE combineEvents(), because only custom events are used to autorun
+			this.addToAutoRunEvents(_Control) -- MUST RUN BEFORE EventBinder.combineEvents(), because only custom events are used to autorun
 
 			EventBinder.combineEvents(_Control)
 
 			this._customizeControlTypes(_Control)
 		)
-
+		
+		
 		/* modify ACROSS PARAMETER */
 		if this._ifControlsListIsNotTemporary() then 
 			(AcrossParameterModifier_v()).addFakeControls(this._Controls)
@@ -141,7 +142,6 @@ struct ControlCreator_v
 		for _Control in _Controls.list do
 			this._addControlToRollout (_Control) -- add control first before variables, functions and events
 			
-		--format "\n" -- send "OK" message to the end of log
 			
 		if this._ifControlsListIsNotTemporary() then 
 			this._addControlsGroup #end 
@@ -270,7 +270,7 @@ struct ControlCreator_v
 	function _ifControlsListIsNotTemporary =
 	(
 		--format "\n"; print "ControlCreator_v._ifControlsListIsNotTemporary()"
-		this._Controls.group != #controls_in_groupboxes
+		this._Controls.group != #controls_in_groupboxes and this._Controls.group != #timer
 	),
 	/**  
 	 */

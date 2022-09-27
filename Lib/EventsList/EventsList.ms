@@ -1,3 +1,5 @@
+filein( getFilenamePath(getSourceFileName()) + "/Event/Event.ms" )
+
 /** Event
  */
 struct EventsList_v

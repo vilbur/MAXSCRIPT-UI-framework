@@ -1,9 +1,5 @@
 filein( getFilenamePath(getSourceFileName()) + "/../List/List.ms" )
 
---filein( getFilenamePath(getSourceFileName()) + "/../Ini/Ini.ms" )
-
-filein( getFilenamePath(getSourceFileName()) + "/Event/Event.ms" )
-
 filein( getFilenamePath(getSourceFileName()) + "/../Dialog/Rollout/Rollout.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/../Dialog/Rollout/Subrollouts/Subrollouts.ms" )
 
@@ -57,9 +53,11 @@ struct RolloutCreator_v
 		
 		/* set height of SUBROLLOUTS slot */ 
 		SubolloutsCreator.setSubrolloutsSlotHeight(_Rollout)
-
+		
+		
 		/* add CONTROLS and SUBROLLOUTS SLOTS */ 
 		this._addControlsAndSubrolloutesSlots (_Rollout)
+		
 
 		/* create SUBROLLOUTS */ 
 		this._createSubrollouts (_Rollout)
@@ -83,7 +81,7 @@ struct RolloutCreator_v
 	 */
 	function Roll title id: =
 	(
-		format "\n"; print "!!!!!!!! DEPRECATED METHOD RolloutCreator_v.Roll() DO NOT USE THIS !!! "
+		--format "\n"; print "RolloutCreator_v.Roll()"
 		Rollout_v title:title id:id --return
 	),
 	
@@ -178,13 +176,10 @@ struct RolloutCreator_v
 		matchPattern (classOf _Struct  as string ) pattern:@"*subrollouts_v*" 
 	),
 
-
-	
 	/**  
 	 */
 	on create do
 	(
 		--format "\n"; print("RolloutCreator_v.onCreate()")
-		--format "Ini	= % \n" Ini
 	)	
 )

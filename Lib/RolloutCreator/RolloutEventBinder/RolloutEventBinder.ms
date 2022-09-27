@@ -31,7 +31,8 @@ struct RolloutEventBinder_v
 	 * 
 	 * Event #docled IS NOT NATIVE maxscript event, it is binded to #moved event
 	*/	
-	events_dialog = #(
+	events_dialog =
+	#(
 		#open, #close, #moved, #resized, #oktoclose, #help,
 		
 		/* Mouse button events */ 

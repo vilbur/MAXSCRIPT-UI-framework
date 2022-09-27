@@ -11,7 +11,7 @@ filein( getFilenamePath(getSourceFileName()) + "/../RolloutCreator/RolloutCreato
 filein( getFilenamePath(getSourceFileName()) + "/Layout/Layout.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/AutoRunEvents/AutoRunEvents.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/../Ini/Ini.ms" )
-
+filein( getFilenamePath(getSourceFileName()) + "/../EventsList/EventsList.ms" )
 
 /** Create dialog [Maxscript help](https://help.autodesk.com/view/MAXDEV/2021/ENU/?guid=GUID-816D257C-CD2D-4753-A792-6E7AEFAFA6A7)
   * 
@@ -82,7 +82,7 @@ struct Dialog_v
 	  * 
 	  * TODO add params for max 2022
 	 */
-	function create width: height: pos: origin:#SCREEN bgcolor: fgcolor: bitmap: style: modal: escapeEnable: lockHeight:false lockWidth:true parent: =
+	function create width: height: pos: origin:#SCREEN bgcolor: fgcolor: bitmap: style: modal: escapeEnable:true lockHeight:false lockWidth:true parent: =
 	(
 		--format "\n"; print "Dialog_v.create()"
 		dialog_width  = this._getDialogSize( #width ) width
@@ -95,8 +95,9 @@ struct Dialog_v
 		
 		_RolloutCreator = RolloutCreator_v Ini:Ini
 
+		this._addKeyPress()
 		_RolloutCreator.createRollout (RolloutMain)
-
+		
 		--CreateDialog (_RolloutCreator.getDefinition(RolloutMain)) 
 		CreateDialog (_RolloutCreator.getDefinition(RolloutMain)) pos:(this._getPosition(pos)(origin)) autoLayoutOnResize:true  width:dialog_width height:dialog_height bgcolor:bgcolor fgcolor:fgcolor bitmap:bitmap style:(if( style == unsupplied ) then this.style else style) modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
 		
@@ -108,6 +109,23 @@ struct Dialog_v
 		--format "\n\nDIALOG CREATED\n\n" 
 	),
 
+	/** Add key press
+	 */
+	function _addKeyPress =
+	(
+		format "\n"; print "Dialog_v._addKeyPress()"
+		
+		_Controls   = RolloutMain.Controls()
+		--_Controls   = RolloutMain.Controls group:#timer
+		Clock     = _Controls.control #timer "Clock" params:#(#interval, 100)
+		
+		--Clock.Events.add #tick "print \"Tick\""
+		--Clock.Events.add #tick "CheckKeys()"
+		--Clock.Events.add #tick "if  keyboard.escPressed then try( destroyDialog test )catch()"
+
+		
+	),
+	
 	/** Register dialog bar
 	 */
 	function register =
@@ -220,7 +238,8 @@ struct Dialog_v
 	 */
 	function _setDialogGlobal =
 	(
-		--format "\n"; print "global._setDialogGlobal()"
+		format "\n"; print "global._setDialogGlobal()"
+		format "RolloutMain.id	= % \n" RolloutMain.id
 		execute("global "+RolloutMain.id)
 	),
 	
@@ -334,13 +353,12 @@ struct Dialog_v
 	 */
 	function _setDockState =
 	(
-		format "\n"; print "global._setDockState()"
-		
+		--format "\n"; print "global._setDockState()"
 		if Ini.isDefined() then
 		(
 			if( (dock_state = Ini.load( RolloutMain.id as string )("dock_state")) == undefined or dock_state == "cui_floatable" ) then
 				return false
-		format "dock_state	= % \n" dock_state
+				
 			this.register()
 			
 			execute("cui.DockDialogBar "+ RolloutMain.id +" #"+ dock_state )
@@ -360,8 +378,8 @@ struct Dialog_v
 	 */
 	on create do
 	(
-		format "\n"; print "Dialog_v.onCreate()"
-		format "Ini	= % \n" Ini
+		--format "\n"; print "Dialog_v.onCreate()"
+		--format "Ini	= % \n" Ini
 		--format "width	= % \n" width
 		
 		--format "EVENT_DOCKED_ENABLED	= % \n" EVENT_DOCKED_ENABLED

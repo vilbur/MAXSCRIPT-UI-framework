@@ -1,4 +1,3 @@
-filein( getFilenamePath(getSourceFileName()) + "/EventsList/EventsList.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/Controls/Controls.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/Subrollouts/Subrollouts.ms" )
 
@@ -191,6 +190,8 @@ struct Rollout_v
 	
 	/** Center rollout title with empty space prefix
 	  * 
+	  * TODO: move this method to RolloutCreator_v
+	  * 
 	  * if rollout is wider then 320
 	 */
 	function _setTitleCenter width =
@@ -198,7 +199,7 @@ struct Rollout_v
 		--print "Rollout_v._setTitleCenter()"
 		prefix	= ""
 		
-		rollout_padding	= 64 -- with of dialog border or subrallout arrow for open rollout -- HIGHER VALUE MOVES WHOLE TITLE TO LEFT, LOWER TO RIGHT
+		rollout_padding	= 164 -- with of dialog border or subrallout arrow for open rollout -- HIGHER VALUE MOVES WHOLE TITLE TO LEFT, LOWER TO RIGHT
 		px_per_character	= 5 -- width in pixels of character in title
 		px_per_space	= 3 -- width in pixels of empty character: " "
 		slot_padding	= 24 -- each subrollout is narrower then parent rollout

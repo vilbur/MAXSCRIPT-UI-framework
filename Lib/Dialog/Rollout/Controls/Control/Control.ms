@@ -76,8 +76,8 @@ struct Control_v
 		if( id == undefined ) then
 			this._setIdByCaption()
 		
-		else
-			id = toUpper ( type as string ) + "_" + id
+		--else
+			--id = toUpper ( type as string ) + "_" + id
 	),	
 	
 	/** Set id by control caption
