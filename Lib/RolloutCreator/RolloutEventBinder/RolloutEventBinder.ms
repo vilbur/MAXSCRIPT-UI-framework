@@ -104,7 +104,7 @@ struct RolloutEventBinder_v
 		handler = "on "+(_Rollout.id)+" "+ event_type as string +" "+this._getParams(event_type)+" do  \n(" +Event.code+ "\n)"
 		
 		--format "handler	= % \n" handler
-		_Rollout._RolloutCreator.addText(handler)
+		_Rollout.RCI.addText(handler)
 	),
 	
 	--/** Get callback on rollout open\close

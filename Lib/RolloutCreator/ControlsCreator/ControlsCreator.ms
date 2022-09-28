@@ -19,8 +19,8 @@ struct ControlCreator_v
 	Ini,
 	
 	/* properties */
-	DEBUG = true,
-	--DEBUG = false,
+	--DEBUG = true,
+	DEBUG = false,
 	
 	/* dependency */
 	_Controls,
@@ -164,7 +164,7 @@ struct ControlCreator_v
 			format "	Params: % \n" params
 		)
 		
-		_Rollout._RolloutCreator.addControl (_Control.type) (_Control.id) (this._getCaption(_Control.caption)) paramStr:params filter:true;
+		_Rollout.RCI.addControl (_Control.type) (_Control.id) (this._getCaption(_Control.caption)) paramStr:params filter:true;
 	),
 
 	/** Add Handlers of Events
@@ -187,7 +187,7 @@ struct ControlCreator_v
 
 		start_or_end_string = if( start_or_end == #start ) then "group @"+_Controls.group+"@ (" else ")"
 
-		_Rollout._RolloutCreator.addText ( start_or_end_string ) filter:on
+		_Rollout.RCI.addText ( start_or_end_string ) filter:on
 	),
 
 	/** Empty caption if caption is in square brackets
@@ -216,7 +216,7 @@ struct ControlCreator_v
 		--print "ControlCreator_v._addLocalVariablesToRollout()"
 		for _Control in _Controls.list where _Control.add_locals != unsupplied do
 			for i = 1 to _Control.add_locals.count by 2 do
-				_Rollout._RolloutCreator.addLocal ( _Control.add_locals[i] as string )  init:_Control.add_locals[i+1]
+				_Rollout.RCI.addLocal ( _Control.add_locals[i] as string )  init:_Control.add_locals[i+1]
 
 	),
 
@@ -227,7 +227,7 @@ struct ControlCreator_v
 	(
 		--print "ControlCreator_v._addTextToRollout()"
 		for _Control in _Controls.list where _Control.add_text != undefined do
-			_Rollout._RolloutCreator.addText  _Control.add_text filter:true
+			_Rollout.RCI.addText  _Control.add_text filter:true
 	),
 
 	/** Convert custom controls to native maxscript controls

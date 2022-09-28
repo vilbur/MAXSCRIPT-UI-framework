@@ -40,13 +40,31 @@ struct SubolloutsCreator_v
 		)
 	),
 	
+	 /** _create subrollouts
+	  */
+	 --function addSubrolloutsSlot _Rollout Subrollouts =
+	 function addSubrolloutSlot _Rollout Subrollouts =
+	 (
+		--format "\n\n=====================================	SubolloutsCreator_v.addSubrolloutSlot() %.%	=====================================\n" ( _Rollout.id as string ) ( Subrollouts.slot as string );
+		this._Rollout = _Rollout
+		
+		this.setSubrolloutsSlotHeight()
+		--format "Subrollouts.height	        = % \n" Subrollouts.height
+		
+		--if Subrollouts.height == unsupplied then 
+			--Subrollouts.height = 256 --dev
+		
+		_Rollout.RCI.addText ("subRollout "+Subrollouts.slot as string +" \"slot_name\" height:"+Subrollouts.height as string )
+	 ),
+	
 	/** Get height of subrollouts slot
 	 */
-	function setSubrolloutsSlotHeight _Rollout =
+	function setSubrolloutsSlotHeight =
 	(
 		--format "\n"; print "SubolloutsCreator_v.setSubrolloutsHeight()"
 		--format "_Rollout.hasSubrollouts()	= % \n" (_Rollout.hasSubrollouts())
 		
+
 		--rollout_height = _Rollout.height
 		
 		if not _Rollout.hasSubrollouts()  then 
@@ -62,9 +80,9 @@ struct SubolloutsCreator_v
 		undefined_space_in_rollout = _Rollout.height - defined_height_sum
 		--format "_Rollout.height             = % \n" _Rollout.height
 		--format "all_Subrollouts.count      = % \n" all_Subrollouts.count
-		----format "heights_of_slots           = % \n" heights_of_slots
+		--format "heights_of_slots           = % \n" heights_of_slots
 		--format "defined_height_sum         = % \n" defined_height_sum           
-		----format "heights_of_slots.count     = % \n" heights_of_slots.count
+		--format "heights_of_slots.count     = % \n" heights_of_slots.count
 		--format "undefined_space_in_rollout = % \n" undefined_space_in_rollout
 		slot_height = this._getSlotHeight(undefined_space_in_rollout)(all_Subrollouts.count - heights_of_slots.count)
 		--format "slot_height	= % \n" slot_height
@@ -72,21 +90,7 @@ struct SubolloutsCreator_v
 			Subrollout.height = slot_height
 	),
 	
-	 /** _create subrollouts
-	  */
-	 --function addSubrolloutsSlot _Rollout Subrollouts =
-	 function addSubrolloutSlot _Rollout Subrollouts =
-	 (
-		format "\n\n=====================================	SubolloutsCreator_v.addSubrolloutSlot() %.%	=====================================\n" ( _Rollout.id as string ) ( Subrollouts.slot as string );
-		--format "Subrollouts.height	= % \n" Subrollouts.height
-		
-		--if Subrollouts.height == unsupplied then 
-			--Subrollouts.height = 256 --dev
-		
-		_Rollout._RolloutCreator.addText ("subRollout "+Subrollouts.slot as string +" \"slot_name\" height:"+Subrollouts.height as string )
-	 ),
 	
-
 	private
 
 	

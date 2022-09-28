@@ -93,7 +93,7 @@ struct ControlEventBinder_v
 		--format "\nEVENT = % \n" Event
 		--format "\nEVENT.type = % \n" Event.type
 		--format "\nEVENT.code = % \n" Event.code
-		_Rollout._RolloutCreator.addHandler _Control.id Event.type codeStr:( "("+Event.code+")" ) paramStr:Event.params filter:on
+		_Rollout.RCI.addHandler _Control.id Event.type codeStr:( "("+Event.code+")" ) paramStr:Event.params filter:on
 	),
 	
 	/** _combine all event types

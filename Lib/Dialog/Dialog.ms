@@ -93,15 +93,15 @@ struct Dialog_v
 		RolloutMain.width  = dialog_width
 		RolloutMain.height = dialog_height
 		
-		_RolloutCreator = RolloutCreator_v Ini:Ini
+		RCI = RolloutCreator_v Ini:Ini
 
-		this._addKeyPress()
-		_RolloutCreator.createRollout (RolloutMain)
+		--this._addKeyPress()
+		RCI.createRollout (RolloutMain)
 		
-		--CreateDialog (_RolloutCreator.getDefinition(RolloutMain)) 
-		CreateDialog (_RolloutCreator.getDefinition(RolloutMain)) pos:(this._getPosition(pos)(origin)) autoLayoutOnResize:true  width:dialog_width height:dialog_height bgcolor:bgcolor fgcolor:fgcolor bitmap:bitmap style:(if( style == unsupplied ) then this.style else style) modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
+		--CreateDialog (RCI.getDefinition(RolloutMain)) 
+		CreateDialog (RCI.getDefinition(RolloutMain)) pos:(this._getPosition(pos)(origin)) autoLayoutOnResize:true  width:dialog_width height:dialog_height bgcolor:bgcolor fgcolor:fgcolor bitmap:bitmap style:(if( style == unsupplied ) then this.style else style) modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
 		
-		_RolloutCreator.SubolloutsCreator.addSubRollouts (RolloutMain)
+		RCI.SubolloutsCreator.addSubRollouts (RolloutMain)
 		
 		this._setDockState()
 		

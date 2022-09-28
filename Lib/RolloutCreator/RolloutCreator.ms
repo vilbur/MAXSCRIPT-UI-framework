@@ -36,29 +36,37 @@ struct RolloutCreator_v
 		--format "_Rollout.getNestedLevel()	= % \n" (_Rollout.getNestedLevel())
 		--format "_Rollout.title	= % \n" _Rollout.title
 		
-		ControlsCreator   = ControlCreator_v _Rollout:_Rollout Ini:Ini
-		
-		SubolloutsCreator._Rollout = _Rollout
-		
-		/* EDIT start */ 
-		_Rollout.rolloutCreatorBegin(_Rollout.width)
+		ControlsCreator	= ControlCreator_v _Rollout:_Rollout Ini:Ini
 
+		_Rollout.RCI	= rolloutCreator (_Rollout.id) ( _Rollout.title )
+		
+		/* EDIT start */
+		_Rollout.RCI.begin()
+		
 		ControlsCreator.createControslInGroupboxAsLast(_Rollout)
-
+		
+		
 		/* add LOCAL VARIABLES */ 
 		this._addLocalVariablesToRollout (_Rollout)
 
 		/* add TEXT */ 
 		this._addTextToRollout (_Rollout)
 		
-		/* set height of SUBROLLOUTS slot */ 
-		SubolloutsCreator.setSubrolloutsSlotHeight(_Rollout)
 		
 		
 		/* add CONTROLS and SUBROLLOUTS SLOTS */ 
-		this._addControlsAndSubrolloutesSlots (_Rollout)
-		
-
+		--this._addControlsAndSubrolloutesSlots (_Rollout)
+		for _Controls in _Rollout._Controls do
+			if( this._isControls(_Controls) )
+			then
+				ControlsCreator.addControls(_Controls)
+			
+			else
+				SubolloutsCreator.addSubrolloutSlot(_Rollout)(_Controls)
+				
+				
+				
+				
 		/* create SUBROLLOUTS */ 
 		this._createSubrollouts (_Rollout)
 		
@@ -67,11 +75,11 @@ struct RolloutCreator_v
 			EventBinder.combineEventsAndAddHandlers(_Rollout)
 
 		/* EDIT end */ 
-		_Rollout._RolloutCreator.end()
+		_Rollout.RCI.end()
 		
 		--format "%\n\n" "------------------------------------------------------------"
 		--
-		--format "%\n" _Rollout._RolloutCreator.def
+		--format "%\n" _Rollout.RCI.def
 		--format "%\n" _Rollout
 		--
 		--format "%\n\n" "------------------------------------------------------------"
@@ -98,7 +106,7 @@ struct RolloutCreator_v
 	 */
 	function getDefinition _Rollout =
 	(
-		_Rollout._RolloutCreator.def
+		_Rollout.RCI.def
 	),
 	
 	
@@ -121,7 +129,7 @@ struct RolloutCreator_v
 			(
 				/**  DISABLE ADDING SUBROLLOUTS SLOT INTO ACROSS LAYOUT
 				  */
-				--ControlsCreator.AcrossModifier.fakeControlsOnEndofGroup(_Rollout._RolloutCreator) --fake_control_caption:"SUBROLLOUTS"
+				--ControlsCreator.AcrossModifier.fakeControlsOnEndofGroup(_Rollout.RCI) --fake_control_caption:"SUBROLLOUTS"
 
 				SubolloutsCreator.addSubrolloutSlot(_Rollout)(ControlsBox_or_Subrollouts)
 			)
@@ -147,7 +155,7 @@ struct RolloutCreator_v
 		--format "_Rollout.add_locals	= % \n" _Rollout.add_locals
 		if( _Rollout.add_locals != unsupplied ) then
 			for i = 1 to _Rollout.add_locals.count by 2 do
-				_Rollout._RolloutCreator.addLocal ( _Rollout.add_locals[i] as string )  init:_Rollout.add_locals[i+1]
+				_Rollout.RCI.addLocal ( _Rollout.add_locals[i] as string )  init:_Rollout.add_locals[i+1]
 	),
 
 	/** Add functions variables to rollout
@@ -157,7 +165,7 @@ struct RolloutCreator_v
 		--print "ControlCreator_v._addTextToRollout()"
 		--format "_Rollout.add_text	= % \n" _Rollout.add_text
 		if( _Rollout.add_text != undefined ) then
-			_Rollout._RolloutCreator.addText  _Rollout.add_text filter:true
+			_Rollout.RCI.addText  _Rollout.add_text filter:true
 	),
 
 	/** _is control box
