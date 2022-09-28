@@ -37,13 +37,15 @@ struct RolloutCreator_v
 		--format "_Rollout.title	= % \n" _Rollout.title
 		
 		ControlsCreator	= ControlCreator_v _Rollout:_Rollout Ini:Ini
-
-		_Rollout.RCI	= rolloutCreator (_Rollout.id) ( _Rollout.title )
+		
+		ControlsCreator.moveGrouboxControlsToEnd(_Rollout)
+		
+		
+		_Rollout.RCI	= rolloutCreator (_Rollout.id) ( this._getTitleCentered(_Rollout ) )
 		
 		/* EDIT start */
 		_Rollout.RCI.begin()
 		
-		ControlsCreator.createControslInGroupboxAsLast(_Rollout)
 		
 		
 		/* add LOCAL VARIABLES */ 
@@ -57,13 +59,12 @@ struct RolloutCreator_v
 		/* add CONTROLS and SUBROLLOUTS SLOTS */ 
 		--this._addControlsAndSubrolloutesSlots (_Rollout)
 		for _Controls in _Rollout._Controls do
-			if( this._isControls(_Controls) )
+			if( this._is(_Controls)("Controls") )
 			then
 				ControlsCreator.addControls(_Controls)
 			
 			else
 				SubolloutsCreator.addSubrolloutSlot(_Rollout)(_Controls)
-				
 				
 				
 				
@@ -77,12 +78,7 @@ struct RolloutCreator_v
 		/* EDIT end */ 
 		_Rollout.RCI.end()
 		
-		--format "%\n\n" "------------------------------------------------------------"
-		--
-		--format "%\n" _Rollout.RCI.def
-		--format "%\n" _Rollout
-		--
-		--format "%\n\n" "------------------------------------------------------------"
+		--format "%\n\n%\n%\n%\n\n" "------------------------------------------------------------" _Rollout.RCI.def _Rollout  "------------------------------------------------------------"
 	),
 
 	/** New
@@ -102,45 +98,15 @@ struct RolloutCreator_v
 		this.Roll title id:id --return
 	),
 	
-	/** Get definition
-	 */
-	function getDefinition _Rollout =
-	(
-		_Rollout.RCI.def
-	),
-	
 	
 	private
 
-
-	/** Add controls or subrolloutes
-	 */
-	function _addControlsAndSubrolloutesSlots _Rollout =
-	(
-		--print "RolloutCreator_v._addControlsAndSubrolloutesSlots()"
-		
-		for ControlsBox_or_Subrollouts in _Rollout._Controls do
-		(
-			--format "CONTROLSBOX_OR_SUBROLLOUTS	= % \n" ControlsBox_or_Subrollouts
-			if( this._isControls(ControlsBox_or_Subrollouts) ) then
-				ControlsCreator.addControls(ControlsBox_or_Subrollouts)
-			
-			else
-			(
-				/**  DISABLE ADDING SUBROLLOUTS SLOT INTO ACROSS LAYOUT
-				  */
-				--ControlsCreator.AcrossModifier.fakeControlsOnEndofGroup(_Rollout.RCI) --fake_control_caption:"SUBROLLOUTS"
-
-				SubolloutsCreator.addSubrolloutSlot(_Rollout)(ControlsBox_or_Subrollouts)
-			)
-		)
-	),
 
 	 /** _create subrollouts
 	  */
 	 function _createSubrollouts _Rollout =
 	 (
-		for Subrollouts in _Rollout._Controls where this._isSubrollouts(Subrollouts) do
+		for Subrollouts in _Rollout._Controls where this._is(Subrollouts)("Subrollouts") do
 			for _Subrollout in Subrollouts.Rollouts do
 				this.createRollout (_Subrollout)
 	 ),
@@ -167,23 +133,46 @@ struct RolloutCreator_v
 		if( _Rollout.add_text != undefined ) then
 			_Rollout.RCI.addText  _Rollout.add_text filter:true
 	),
-
-	/** _is control box
+	
+	/** get name of strct
 	 */
-	function _isControls _Struct =
-	(
-		--this._getType _Struct == "controls"
-		matchPattern (classOf _Struct  as string ) pattern:@"*controls_v*" 
-	),
-
-	/** _is subrollouts
-	 */
-	function _isSubrollouts _Struct =
+	function _is _Struct pattern =
 	(
 		--print "RolloutCreator_v._getSubrolloutsCount()"
-		matchPattern (classOf _Struct  as string ) pattern:@"*subrollouts_v*" 
+		matchPattern (classOf _Struct  as string ) pattern:(@"*"+pattern+"_v*" )
 	),
-
+	
+	/** Center rollout title with empty space prefix
+	  * 
+	  * TODO: move this method to RolloutCreator_v
+	  * 
+	  * if rollout is wider then 320
+	 */
+	function _getTitleCentered _Rollout  =
+	(
+		--print "Rollout_v._setTitleCenter()"
+		prefix	= ""
+		
+		rollout_padding	= 164 -- with of dialog border or subrallout arrow for open rollout -- HIGHER VALUE MOVES WHOLE TITLE TO LEFT, LOWER TO RIGHT
+		px_per_character	= 5 -- width in pixels of character in title
+		px_per_space	= 3 -- width in pixels of empty character: " "
+		slot_padding	= 24 -- each subrollout is narrower then parent rollout
+		
+		if( _Rollout.width > 320 and ( IS_NOT_MAIN_ROLLOUT = _Rollout.parent_rollout_id) != undefined and (_Rollout.width != undefined and _Rollout.width != unsupplied ) and (max_version = (maxVersion())[8] )!= undefined and max_version > 2020  ) then
+		(
+			title_width	= _Rollout.title.count * px_per_character -- get difference in length of characters, longer title has shorter prefix and vice versa
+			rollout_width	= _Rollout.width - rollout_padding - ( _Rollout.getNestedLevel() * slot_padding )
+			prefix_lenght	= ((rollout_width - title_width) / 2) / px_per_space
+			
+			for i = 1 to prefix_lenght do -- too width 200px
+				prefix += " "
+				
+			prefix + _Rollout.title --return
+		)
+		else		
+			_Rollout.title
+	),
+	
 	/**  
 	 */
 	on create do

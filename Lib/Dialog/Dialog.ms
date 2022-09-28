@@ -93,15 +93,15 @@ struct Dialog_v
 		RolloutMain.width  = dialog_width
 		RolloutMain.height = dialog_height
 		
-		RCI = RolloutCreator_v Ini:Ini
+		_RolloutCreator = RolloutCreator_v Ini:Ini
 
 		--this._addKeyPress()
-		RCI.createRollout (RolloutMain)
+		_RolloutCreator.createRollout (RolloutMain)
 		
-		--CreateDialog (RCI.getDefinition(RolloutMain)) 
-		CreateDialog (RCI.getDefinition(RolloutMain)) pos:(this._getPosition(pos)(origin)) autoLayoutOnResize:true  width:dialog_width height:dialog_height bgcolor:bgcolor fgcolor:fgcolor bitmap:bitmap style:(if( style == unsupplied ) then this.style else style) modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
+		--CreateDialog (_RolloutCreator.getDefinition(RolloutMain)) 
+		CreateDialog (RolloutMain.RCI.def) pos:(this._getPosition(pos)(origin)) autoLayoutOnResize:true  width:dialog_width height:dialog_height bgcolor:bgcolor fgcolor:fgcolor bitmap:bitmap style:(if( style == unsupplied ) then this.style else style) modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
 		
-		RCI.SubolloutsCreator.addSubRollouts (RolloutMain)
+		_RolloutCreator.SubolloutsCreator.addSubRollouts (RolloutMain)
 		
 		this._setDockState()
 		
@@ -122,8 +122,6 @@ struct Dialog_v
 		--Clock.Events.add #tick "print \"Tick\""
 		--Clock.Events.add #tick "CheckKeys()"
 		--Clock.Events.add #tick "if  keyboard.escPressed then try( destroyDialog test )catch()"
-
-		
 	),
 	
 	/** Register dialog bar

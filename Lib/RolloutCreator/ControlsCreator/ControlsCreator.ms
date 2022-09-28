@@ -39,7 +39,7 @@ struct ControlCreator_v
 		--format "_Controls.list.count	= % \n" _Controls.list.count
 		this._Controls = _Controls
 
-		if this._ifControlsListIsNotTemporary() then 
+		if this.isNotGroupboxControls() then 
 			GroupBoxCreator.addGrouboxes (_Rollout.getFullId()) (_Controls.GroupBoxes)
 		
 		/* pass DEFAULT PARAMETERS to params creator */ 
@@ -63,7 +63,7 @@ struct ControlCreator_v
 		
 		
 		/* modify ACROSS PARAMETER */
-		if this._ifControlsListIsNotTemporary() then 
+		if this.isNotGroupboxControls() then 
 			(AcrossParameterModifier_v()).addFakeControls(this._Controls)
 		
 		/* add LOCAL VARIABLES */ 
@@ -85,7 +85,7 @@ struct ControlCreator_v
 			MOVE THIS METHOD TO GroupboxCreator and REFRACT IT
 
 	 */
-	function createControslInGroupboxAsLast &_Rollout_ =
+	function moveGrouboxControlsToEnd &_Rollout_ =
 	(
 		--format "\n"; print ("ControlCreator_v.createControslInGroupboxAsLast() "+_Rollout_.id as string) 
 		Controls_in_all_groupboxes = #()
@@ -135,7 +135,7 @@ struct ControlCreator_v
 	function _addControlsToRollout =
 	(
 		--format "\n"; print "ControlCreator_v._addControlsToRollout()"
-		if this._ifControlsListIsNotTemporary() then 
+		if this.isNotGroupboxControls() then 
 			this._addControlsGroup #start
 
 			
@@ -143,7 +143,7 @@ struct ControlCreator_v
 			this._addControlToRollout (_Control) -- add control first before variables, functions and events
 			
 			
-		if this._ifControlsListIsNotTemporary() then 
+		if this.isNotGroupboxControls() then 
 			this._addControlsGroup #end 
 	),
 
@@ -267,10 +267,10 @@ struct ControlCreator_v
 
 	/** If controls list is not temporary
 	 */
-	function _ifControlsListIsNotTemporary =
+	function isNotGroupboxControls =
 	(
-		--format "\n"; print "ControlCreator_v._ifControlsListIsNotTemporary()"
-		this._Controls.group != #controls_in_groupboxes and this._Controls.group != #timer
+		--format "\n"; print "ControlCreator_v.isNotGroupboxControls()"
+		this._Controls.group != #controls_in_groupboxes
 	),
 	/**  
 	 */
