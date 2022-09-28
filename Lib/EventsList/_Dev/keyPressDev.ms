@@ -1,4 +1,4 @@
-try(DestroyDialog ::test)catch()
+try(DestroyDialog test)catch()
 
 rollout test "Detect Key Press" width:214
 (
@@ -36,3 +36,4 @@ rollout test "Detect Key Press" width:214
 )
 
 CreateDialog test
+

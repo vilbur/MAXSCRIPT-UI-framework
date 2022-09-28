@@ -3,13 +3,11 @@ clearListener()
 
 filein( "$userscripts\Library\MAXSCRIPT-UI-framework\Lib\Dialog\Dialog.ms" )
 
-try( destroyDialog ROLLOUT_test )catch()
+
+Dialog 	= Dialog_v "Escape key disabled"
+Dialog_escape 	= Dialog_v "Escape key to quit"
 
 
-Dialog 	= Dialog_v "Test"
+Dialog_escape.create()
 
-
-Dialog.create()
---Dialog.create bgcolor:(color 32 255 32 ) escapeEnable:false
-
-----Dialog.register()
+Dialog.create escapekey:false

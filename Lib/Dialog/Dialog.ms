@@ -5,13 +5,15 @@ if EVENT_DOCKED_ENABLED == undefined then
 
 global AUTORUN_EVENTS = #()
 
-
 filein( getFilenamePath(getSourceFileName()) + "/../ConstructPropeties/ConstructPropeties.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/../EventsList/EventsList.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/../RolloutCreator/RolloutCreator.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/Layout/Layout.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/AutoRunEvents/AutoRunEvents.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/../Ini/Ini.ms" )
-filein( getFilenamePath(getSourceFileName()) + "/../EventsList/EventsList.ms" )
+
+filein( getFilenamePath(getSourceFileName()) + "/getForegroundWindow.ms" )
+
 
 /** Create dialog [Maxscript help](https://help.autodesk.com/view/MAXDEV/2021/ENU/?guid=GUID-816D257C-CD2D-4753-A792-6E7AEFAFA6A7)
   * 
@@ -82,24 +84,21 @@ struct Dialog_v
 	  * 
 	  * TODO add params for max 2022
 	 */
-	function create width: height: pos: origin:#SCREEN bgcolor: fgcolor: bitmap: style: modal: escapeEnable:true lockHeight:false lockWidth:true parent: =
+	function create width: height: pos: origin:#SCREEN bgcolor: fgcolor: bitmap: style: modal: escapeEnable:false escapekey:true lockHeight:false lockWidth:true parent: =
 	(
-		--format "\n"; print "Dialog_v.create()"
-		dialog_width  = this._getDialogSize( #width ) width
-		dialog_height = this._getDialogSize( #height) height
-		--format "dialog_width	= % \n" dialog_width
-		--format "dialog_height	= % \n" dialog_height
-		
-		RolloutMain.width  = dialog_width
-		RolloutMain.height = dialog_height
-		
 		_RolloutCreator = RolloutCreator_v Ini:Ini
-
-		--this._addKeyPress()
+		
+		--format "\n"; print "Dialog_v.create()"
+		this._setMainRolloutSize (width)(height)
+		
+		--format "ESCAPEENABLE	= % \n" escapeEnable
+		if escapekey then 
+			this._addKeyPress()
+		
 		_RolloutCreator.createRollout (RolloutMain)
 		
 		--CreateDialog (_RolloutCreator.getDefinition(RolloutMain)) 
-		CreateDialog (RolloutMain.RCI.def) pos:(this._getPosition(pos)(origin)) autoLayoutOnResize:true  width:dialog_width height:dialog_height bgcolor:bgcolor fgcolor:fgcolor bitmap:bitmap style:(if( style == unsupplied ) then this.style else style) modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
+		CreateDialog (RolloutMain.RCI.def) pos:(this._getPosition(pos)(origin)) autoLayoutOnResize:true  width:RolloutMain.width height:RolloutMain.height bgcolor:bgcolor fgcolor:fgcolor bitmap:bitmap style:(if( style == unsupplied ) then this.style else style) modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
 		
 		_RolloutCreator.SubolloutsCreator.addSubRollouts (RolloutMain)
 		
@@ -110,18 +109,19 @@ struct Dialog_v
 	),
 
 	/** Add key press
+	  *
+	  * Currently supports only escape key for close dialog, works only for unregistered dialog
 	 */
 	function _addKeyPress =
 	(
-		format "\n"; print "Dialog_v._addKeyPress()"
-		
+		--format "\n"; print "Dialog_v._addKeyPress()"
 		_Controls   = RolloutMain.Controls()
-		--_Controls   = RolloutMain.Controls group:#timer
+		--_Controls   = RolloutMain.Controls group:"on_key_press_controls"
+
 		Clock     = _Controls.control #timer "Clock" params:#(#interval, 100)
 		
-		--Clock.Events.add #tick "print \"Tick\""
-		--Clock.Events.add #tick "CheckKeys()"
-		--Clock.Events.add #tick "if  keyboard.escPressed then try( destroyDialog test )catch()"
+		--Clock.Events.add #tick  ("if "+RolloutMain.id+".hwnd == (window.getForegroundWindow()) then print \"IN FOCUS\" else print \"OUT OF FOCUS\"")
+		Clock.Events.add #tick  ("if "+RolloutMain.id+".hwnd == ( window.getForegroundWindow() ) then if keyboard.escPressed then try( destroyDialog "+RolloutMain.id+" )catch()")
 	),
 	
 	/** Register dialog bar
@@ -239,6 +239,16 @@ struct Dialog_v
 		format "\n"; print "global._setDialogGlobal()"
 		format "RolloutMain.id	= % \n" RolloutMain.id
 		execute("global "+RolloutMain.id)
+	),
+	
+	
+	/** Set main rollout size
+	 */
+	function _setMainRolloutSize width height =
+	(
+		--format "\n"; print "if._setMainRolloutSize()"
+		RolloutMain.width  = this._getDialogSize( #width ) width
+		RolloutMain.height = this._getDialogSize( #height) height
 	),
 	
 	/** Get size of dialog 
