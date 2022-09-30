@@ -14,7 +14,6 @@ filein( getFilenamePath(getSourceFileName()) + "/../Ini/Ini.ms" )
 
 filein( getFilenamePath(getSourceFileName()) + "/getForegroundWindow.ms" )
 
-
 /** Create dialog [Maxscript help](https://help.autodesk.com/view/MAXDEV/2021/ENU/?guid=GUID-816D257C-CD2D-4753-A792-6E7AEFAFA6A7)
   * 
   * INHERETING OF WIDTH PROPERTY
@@ -39,6 +38,7 @@ struct Dialog_v
 	/* dependency */
 	AutoRunEvents 	= AutoRunEvents_v(),
 	Layout 	= Layout_v(),
+	--_KeyPress 	= KeyPress_v(),
 	--Menu	= DialogMenu_v Dialog:this,
 	
 	RolloutMain, --RENAME TO DialogRollout ???,
@@ -92,8 +92,10 @@ struct Dialog_v
 		this._setMainRolloutSize (width)(height)
 		
 		--format "ESCAPEENABLE	= % \n" escapeEnable
-		if escapekey then 
-			this._addKeyPress()
+		--if escapekey then
+		
+		this.addKeyPressEvents()
+
 		
 		_RolloutCreator.createRollout (RolloutMain)
 		
@@ -107,21 +109,52 @@ struct Dialog_v
 		AutoRunEvents.executeMacros()
 		--format "\n\nDIALOG CREATED\n\n" 
 	),
-
+	
+	/** Key press
+	 */
+	function keyPress key control:false =
+	(
+		--format "\n"; print "if.keyPress()"
+		
+	),
+	
 	/** Add key press
 	  *
 	  * Currently supports only escape key for close dialog, works only for unregistered dialog
 	 */
-	function _addKeyPress =
+	function addKeyPressEvents =
 	(
 		--format "\n"; print "Dialog_v._addKeyPress()"
-		_Controls   = RolloutMain.Controls()
-		--_Controls   = RolloutMain.Controls group:"on_key_press_controls"
+		--_Controls   = RolloutMain.Controls()
+		_Controls   = RolloutMain.Controls group:"on_key_press_controls"
 
-		Clock     = _Controls.control #timer "Clock" params:#(#interval, 100)
+		Clock_pressed	= _Controls.control #timer "clock_pressed" params:#(#interval, 100)
+		Clock_released	= _Controls.control #timer "clock_released" params:#(#interval, 100)
 		
 		--Clock.Events.add #tick  ("if "+RolloutMain.id+".hwnd == (window.getForegroundWindow()) then print \"IN FOCUS\" else print \"OUT OF FOCUS\"")
-		Clock.Events.add #tick  ("if "+RolloutMain.id+".hwnd == ( window.getForegroundWindow() ) then if keyboard.escPressed then try( destroyDialog "+RolloutMain.id+" )catch()")
+		--Clock.Events.add #tick  ("if "+RolloutMain.id+".hwnd == ( window.getForegroundWindow() ) then if keyboard.escPressed then try( destroyDialog "+RolloutMain.id+" )catch()")
+		--Clock.Events.add #tick  ("if "+RolloutMain.id+".hwnd == ( window.getForegroundWindow() ) and (( dotNetClass \"managedservices.keyboard\" ).isKeyDown ( dotNetClass \"system.windows.forms.keys\").R) then print \"KEY PRESSED\" " )
+		if_is_window_active = "if "+RolloutMain.id+".hwnd == ( window.getForegroundWindow() ) then "
+		
+		
+		fn_keypress = "function keyPress state = 
+		(
+			if keyboard.controlPressed == state do
+			(
+				"+RolloutMain.id+".clock_released.active = state
+				
+				if state == false then 
+					print \"KEY RELESEAD\"
+			)
+		)"
+		
+		RolloutMain.addText fn_keypress
+		
+		--Clock.Events.add #tick  ("if "+RolloutMain.id+".hwnd == ( window.getForegroundWindow() ) and (( dotNetClass \"managedservices.keyboard\" ).isKeyDown ( dotNetClass \"system.windows.forms.keys\").R) then print (timeStamp())" )
+		Clock_pressed.Events.add #tick  (if_is_window_active + "keyPress(true)" )
+		Clock_released.Events.add #tick (if_is_window_active + "keyPress(false)" )
+		
+		
 	),
 	
 	/** Register dialog bar

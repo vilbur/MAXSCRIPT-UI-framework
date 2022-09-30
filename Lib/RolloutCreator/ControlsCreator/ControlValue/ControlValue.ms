@@ -19,6 +19,7 @@ struct ControlValue_v
 		#( #TEXT,  	#Edittext,	#BrowsePath		),
 		#( #DEFAULT,  	#RadioButtons			),
 		#( #MATERIAL,  	#Materialbutton			),
+		#( #COLOR,  	#ColorPicker			),
 		#( #ADDRESS,  	#hyperlink			)
 	),
 
@@ -111,7 +112,10 @@ struct ControlValue_v
 
 		if( _value != undefined ) then
 		(
-			if (this._isRangeControlType()) then
+			if _Control.type  == #ColorPicker and classOf _value == color then 
+				_value as point3
+				
+			else if (this._isRangeControlType()) then
 				_value = this._setValueIntoRange(_value)
 	
 			_Control.Params.setVal (value_param_name) (_value)
@@ -143,7 +147,9 @@ struct ControlValue_v
 	function _isRangeControlType =
 	(
 		--format "\n"; print "ControlValue_v._isRangeControlType()"
-		findItem names_of_value_param[3] _Control.type > 0
+		--format "\n"; print "ControlValue_v._isRangeControlType() REVIEW THIS METHOD"
+		--findItem names_of_value_param[3] _Control.type > 0
+		 _Control.type == #Spinner or _Control.type == #Slider or _Control.type == #Angle
 	),
 	
 	/**  
