@@ -5,15 +5,9 @@ try(DestroyDialog test)catch()
 
 rollout test "Detect Key Press" width:214
 (
-
 	timer clock_pressed  "clock_pressed"	interval:100
 	timer clock_released "clock_released"	interval:100 active:false
 
-	
-	checkbutton ctrl	"Ctrl"
-	
-	local last_press = 0
- 
  	fn keyPress state = 
 	(
 		if keyboard.controlPressed == state do
@@ -26,7 +20,6 @@ rollout test "Detect Key Press" width:214
 	)
 
 	on clock_pressed tick do keyPress(true)		
-	
 	
 	on clock_released tick do keyPress(false)
 )
