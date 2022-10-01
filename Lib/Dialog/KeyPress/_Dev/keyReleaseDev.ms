@@ -14,7 +14,7 @@ rollout test "Detect Key Release" width:214
 	
 	local keys_state        = #(
 		#( #(true,  false, false, false), #CTRL  ), 
-		#( #(false,s true , false, false), #SHIFT ), 
+		#( #(false, true , false, false), #SHIFT ), 
 		#( #(true,  true,  false, false), #CTRL_SHIFT )
 	)
 	
@@ -24,8 +24,6 @@ rollout test "Detect Key Release" width:214
 	  */
  	fn keyPress = 
 	(
-		clock_released.active = false
-
 		for i = 1 to keys_state.count do 
 		(			
 			if ( (modKeysCurrentState()) as string ) == keys_state[i][1]  as string  then 
