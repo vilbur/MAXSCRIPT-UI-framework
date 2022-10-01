@@ -36,22 +36,22 @@ rollout test "Detect Key Release" width:214
 		
 		for i = 1 to keys_state_setups.count do 
 		(
-			mod_keys_current_state = modKeysCurrentState()
+			mod_key_pressed = false
+			hot_key_pressed = false
 			
 			keys_state_setup = keys_state_setups[i]
 			
-			mod_key_pressed = false
-			hot_key_pressed = false
-
 			is_mod_key_defined = (for state in keys_state_setup[1] where state collect state).count != 0
 			is_hot_key_defined = keys_state_setup[2] != undefined 
 			
-			format "\n\n"
-			format "keys_state_setup       = % \n" keys_state_setup
-			format "mod_keys_current_state =   % \n" mod_keys_current_state
-
-			format "is_mod_key_defined	= % \n" is_mod_key_defined
-			format "is_hot_key_defined	= % \n" is_hot_key_defined
+			mod_keys_current_state = modKeysCurrentState()
+			
+			--format "\n\n"
+			--format "keys_state_setup       = % \n" keys_state_setup
+			--format "mod_keys_current_state =   % \n" mod_keys_current_state
+			--
+			--format "is_mod_key_defined	= % \n" is_mod_key_defined
+			--format "is_hot_key_defined	= % \n" is_hot_key_defined
 
 			any_mod_key_pressed = (for state in mod_keys_current_state where state collect state).count != 0
 
@@ -68,13 +68,9 @@ rollout test "Detect Key Release" width:214
 			if is_hot_key_defined then 
 				hot_key_pressed = ( dotNetClass "managedservices.keyboard" ).isKeyDown (execute("( dotNetClass \"system.windows.forms.keys\")."+ keys_state_setup[2] as string ))
 				
-			--if mod_key_pressed then
-			--	format "keys_state_setup[1]	= % \n" keys_state_setup[1]
-			--if hot_key_pressed then
-			--	format "keys_state_setup[2]	= % \n" keys_state_setup[2]
-			
-			format "mod_key_pressed	= % \n" mod_key_pressed
-			format "hot_key_pressed	= % \n" hot_key_pressed
+	
+			--format "mod_key_pressed	= % \n" mod_key_pressed
+			--format "hot_key_pressed	= % \n" hot_key_pressed
 			
 			if is_hot_key_defined and is_mod_key_defined and mod_key_pressed and hot_key_pressed then
 			(
