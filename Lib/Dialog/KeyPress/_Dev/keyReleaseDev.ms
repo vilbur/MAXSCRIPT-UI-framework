@@ -26,17 +26,17 @@ rollout test "Detect Key Release" width:214
 
 	local waiting_for_release
 
-	/** test if combination of        has been preesed
+	/** test if combination of has been pressed
 	  */
  	function keyPress = 
 	(		
 		for i = 1 to keys_state_setups.count do 
 		(
+			keys_state_setup = keys_state_setups[i]
+
 			modkey_pressed = false
 			hotkey_pressed = false
 			combo_pressed   = false
-
-			keys_state_setup = keys_state_setups[i]
 
 			is_modkey_defined = (for state in keys_state_setup[2] where state collect state).count != 0
 			is_hotkey_defined = keys_state_setup[3] != undefined
@@ -54,9 +54,9 @@ rollout test "Detect Key Release" width:214
 
 			combo_pressed = is_hotkey_defined	and	is_modkey_defined	and	modkey_pressed and hotkey_pressed
 
-			if (	combo_pressed ) or						-- MOD + HOT KEY PRESSED
-			  (	hotkey_pressed and not	is_modkey_defined	and not	any_modkey_pressed ) or			-- ONLY HOT KEY PRESSED
-			  (	modkey_pressed and not	is_hotkey_defined	and not	hotkey_pressed  )			-- ONLY MOD KEY PRESSED
+			if (	combo_pressed ) or				-- MOD + HOT KEY PRESSED
+			  (	hotkey_pressed and not	is_modkey_defined	and not	any_modkey_pressed ) or	-- ONLY HOT KEY PRESSED
+			  (	modkey_pressed and not	is_hotkey_defined	and not	hotkey_pressed  )	-- ONLY MOD KEY PRESSED
 			then
 				waiting_for_release = keys_state_setups[i]
 
