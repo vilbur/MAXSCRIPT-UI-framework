@@ -7,8 +7,8 @@ try(DestroyDialog test)catch()
 
 rollout test "Detect Key Release" width:214
 (
-	--timer clock_pressed  "clock_pressed"		interval:100
-	timer clock_pressed  "clock_pressed"		interval:3000
+	timer clock_pressed  "clock_pressed"		interval:100
+	--timer clock_pressed  "clock_pressed"		interval:3000
 	timer clock_released "clock_released"	interval:100 active:false
  
 	local IsKeyDown	= ( dotNetClass "managedservices.keyboard" ).isKeyDown
@@ -32,12 +32,13 @@ rollout test "Detect Key Release" width:214
 	  */
  	function keyPress = 
 	(		
-		clearListener()
+		--clearListener()
 		
 		for i = 1 to keys_state_setups.count do 
 		(
 			mod_key_pressed = false
 			hot_key_pressed = false
+			combo_pressed   = false
 			
 			keys_state_setup = keys_state_setups[i]
 			
@@ -46,63 +47,52 @@ rollout test "Detect Key Release" width:214
 			
 			mod_keys_current_state = modKeysCurrentState()
 			
-			--format "\n\n"
-			--format "keys_state_setup       = % \n" keys_state_setup
-			--format "mod_keys_current_state =   % \n" mod_keys_current_state
-			--
-			--format "is_mod_key_defined	= % \n" is_mod_key_defined
-			--format "is_hot_key_defined	= % \n" is_hot_key_defined
-
 			any_mod_key_pressed = (for state in mod_keys_current_state where state collect state).count != 0
-
+			
 			
 			/* TEST MODIFIER KEYS */ 
 			if ( mod_keys_current_state as string ) == keys_state_setup[1] as string  then
 				mod_key_pressed = true
-				--(
-				--	keys_pressed = keys_state_setups[i]
-				--	
-				--	clock_released.active = true
-				--)
+
 			
 			if is_hot_key_defined then 
 				hot_key_pressed = ( dotNetClass "managedservices.keyboard" ).isKeyDown (execute("( dotNetClass \"system.windows.forms.keys\")."+ keys_state_setup[2] as string ))
-				
-	
-			--format "mod_key_pressed	= % \n" mod_key_pressed
-			--format "hot_key_pressed	= % \n" hot_key_pressed
 			
-			if is_hot_key_defined and is_mod_key_defined and mod_key_pressed and hot_key_pressed then
-			(
-				format "ONLY MOD + HOT KEY PRESSED %\n\n" keys_state_setup
+			combo_pressed = is_hot_key_defined	and	is_mod_key_defined	and	mod_key_pressed and hot_key_pressed
+			
+			if (	combo_pressed ) or						-- MOD + HOT KEY PRESSED
+			  (	hot_key_pressed and not	is_mod_key_defined	and not	any_mod_key_pressed ) or			-- ONLY HOT KEY PRESSED
+			  (	mod_key_pressed and not	is_hot_key_defined	and not	hot_key_pressed  )			-- ONLY MOD KEY PRESSED
+			then
+				keys_pressed = keys_state_setups[i]
+			
+			if combo_pressed then 
 				exit
-			)
-			else if hot_key_pressed and not is_mod_key_defined and not any_mod_key_pressed then
-				format "ONLY HOT KEY PRESSED %\n\n" keys_state_setup
-
-			else if mod_key_pressed and not is_hot_key_defined and not hot_key_pressed then
-				format "ONLY MOD KEYS PRESSED %\n\n" keys_state_setup
-				
-			
-			
 		)
 		
+		--format "keys_pressed	= % \n" keys_pressed
 		
-		
-		
+		if keys_pressed != undefined then 
+			clock_released.active = true
 	)
 	
  	function keyRelease = 
 	(
-		--if (for state in (modKeysCurrentState()) where state collect state).count == 0 then -- test if all keys are released
-		--(
-		--	clock_released.active = false
-		--	print ("KEY "+keys_pressed[2] as string +" RELESEAD")
-		--)
-	)
-	
+		--format "keys_pressed	= % \n" keys_pressed
 
-	
+		any_mod_key_pressed = (for state in (modKeysCurrentState()) where state collect state).count != 0;
+		any_hot_key_pressed = keys_pressed[2] != undefined and ( dotNetClass "managedservices.keyboard" ).isKeyDown (execute("( dotNetClass \"system.windows.forms.keys\")."+ keys_pressed[2] as string ))
+		
+		
+		if not any_mod_key_pressed and not any_hot_key_pressed then -- test if all keys are released
+		(
+			print "RELESEAD"
+			format "keys_pressed	= % \n" keys_pressed
+			keys_pressed = undefined 
+			clock_released.active = false
+			--print ("KEY "+keys_pressed[2] as string +" RELESEAD")
+		)
+	)
 	
 	on clock_pressed tick do keyPress()		
 	
