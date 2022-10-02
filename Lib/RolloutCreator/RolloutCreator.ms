@@ -50,14 +50,13 @@ struct RolloutCreator_v
 		
 		/* add LOCAL VARIABLES */ 
 		this._addLocalVariablesToRollout (_Rollout)
-
+		
 		/* add TEXT */ 
 		this._addTextToRollout (_Rollout)
 		
 		
 		
 		/* add CONTROLS and SUBROLLOUTS SLOTS */ 
-		--this._addControlsAndSubrolloutesSlots (_Rollout)
 		for _Controls in _Rollout._Controls do
 			if( this._is(_Controls)("Controls") )
 			then
@@ -74,7 +73,7 @@ struct RolloutCreator_v
 		/* add EVENTS */
 		if( ini != undefined ) then 
 			EventBinder.combineEventsAndAddHandlers(_Rollout)
-
+		
 		/* EDIT end */ 
 		_Rollout.RCI.end()
 		
@@ -118,10 +117,14 @@ struct RolloutCreator_v
 	function _addLocalVariablesToRollout _Rollout =
 	(
 		--print "ControlCreator_v._addLocalVariablesToRollout()"
-		--format "_Rollout.add_locals	= % \n" _Rollout.add_locals
+		
 		if( _Rollout.add_locals != unsupplied ) then
 			for i = 1 to _Rollout.add_locals.count by 2 do
-				_Rollout.RCI.addLocal ( _Rollout.add_locals[i] as string )  init:_Rollout.add_locals[i+1]
+			(
+				_value = if classOf _Rollout.add_locals[i+1] == string then "\""+_Rollout.add_locals[i+1] +"\"" else _Rollout.add_locals[i+1] 
+				--format "_value	= % \n" _value
+				_Rollout.RCI.addLocal ( _Rollout.add_locals[i] as string )  init:_value
+			)
 	),
 
 	/** Add functions variables to rollout
@@ -130,7 +133,7 @@ struct RolloutCreator_v
 	(
 		--print "ControlCreator_v._addTextToRollout()"
 		--format "_Rollout.add_text	= % \n" _Rollout.add_text
-		if( _Rollout.add_text != undefined ) then
+		if( _Rollout.add_text != "" ) then
 			_Rollout.RCI.addText  _Rollout.add_text filter:true
 	),
 	

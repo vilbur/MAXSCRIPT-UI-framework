@@ -109,11 +109,11 @@ struct Dialog_v
 	 */
 	function HotKey hot_keys callback =
 	(
-		--format "\n"; print "Dialog_v.keyPress()"
+		--format "\n"; print "Dialog_v.HotKey()"
 
 		indexes	= #( #ctrl, #shift, #alt, #esc )
-
-		hotkeys_setup = #( substituteString callback "\\" "\\\\", #( false, false, false, false)) 
+		
+		hotkeys_setup = #( substituteString callback "'" "\\\"" , #( false, false, false, false) )
 		
 		if hot_keys.count > 0 then
 		(
@@ -134,21 +134,22 @@ struct Dialog_v
 	function _addKeyPressEvents =
 	(
 		--format "\n"; print "Dialog_v._addKeyPressEvents()"
-
-		RolloutMain.addlocal ("keys_state_setups") HotKeys.keys_state_setups
+		--format "HotKeys.keys_state_setups	= % \n" HotKeys.keys_state_setups
 		
-		RolloutMain.addlocal ("waiting_for_release") (undefined)
+		if HotKeys.keys_state_setups.count == 0 then
+			return false
 		
+		RolloutMain.addlocal (#keys_state_setups) HotKeys.keys_state_setups
 		
-		_Controls   = RolloutMain.Controls group:"on_key_press_controls"
+		RolloutMain.addlocal (#waiting_for_release) (undefined)
+		
+		_Controls   = RolloutMain.Controls group:#hotkeys_timers
 		
 		Clock_pressed	= _Controls.control #timer "clock_pressed" params:#(#interval, 100)
 		Clock_released	= _Controls.control #timer "clock_released" params:#(#interval, 100,  #active,false)
 		
-		
-		Clock_pressed.Events.add   #tick  ( "(HotKeys_v()).keyPress(\""+RolloutMain.id as string +"\")"  )
-		Clock_released.Events.add  #tick  ( "(HotKeys_v()).keyRelease(\""+RolloutMain.id as string+"\")"  )
-
+		Clock_pressed.Events.add   #tick  ( "(HotKeys_v()).keyPress(\""  + RolloutMain.id as string +"\")"  )
+		Clock_released.Events.add  #tick  ( "(HotKeys_v()).keyRelease(\""+ RolloutMain.id as string +"\")"  )
 	),
 	
 	/** Register dialog bar
@@ -267,7 +268,6 @@ struct Dialog_v
 		--format "RolloutMain.id	= % \n" RolloutMain.id
 		execute("global "+RolloutMain.id)
 	),
-	
 	
 	/** Set main rollout size
 	 */

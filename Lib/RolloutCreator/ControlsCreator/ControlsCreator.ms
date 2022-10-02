@@ -19,8 +19,8 @@ struct ControlCreator_v
 	Ini,
 	
 	/* properties */
-	--DEBUG = true,
-	DEBUG = false,
+	DEBUG = true,
+	--DEBUG = false,
 	
 	/* dependency */
 	_Controls,
@@ -35,11 +35,15 @@ struct ControlCreator_v
 	 */
 	function addControls _Controls =
 	(
-		format "\n\n--------------	Controls group:%	--------------\n" _Controls.group
+		format "\n\n-------------- Controls group:% --------------\n" _Controls.group
 		--format "_Controls.list.count	= % \n" _Controls.list.count
+		
+		if _Controls.list.count == 0 then
+			return false
+		
 		this._Controls = _Controls
 
-		if this.isNotGroupboxControls() then 
+		if not this.isGroupboxControls() then 
 			GroupBoxCreator.addGrouboxes (_Rollout.getFullId()) (_Controls.GroupBoxes)
 		
 		/* pass DEFAULT PARAMETERS to params creator */ 
@@ -63,7 +67,7 @@ struct ControlCreator_v
 		
 		
 		/* modify ACROSS PARAMETER */
-		if this.isNotGroupboxControls() then 
+		if not this.isGroupboxControls() then 
 			(AcrossParameterModifier_v()).addFakeControls(this._Controls)
 		
 		/* add LOCAL VARIABLES */ 
@@ -135,7 +139,7 @@ struct ControlCreator_v
 	function _addControlsToRollout =
 	(
 		--format "\n"; print "ControlCreator_v._addControlsToRollout()"
-		if this.isNotGroupboxControls() then 
+		if not this.isGroupboxControls() then 
 			this._addControlsGroup #start
 
 			
@@ -143,7 +147,7 @@ struct ControlCreator_v
 			this._addControlToRollout (_Control) -- add control first before variables, functions and events
 			
 			
-		if this.isNotGroupboxControls() then 
+		if not this.isGroupboxControls() then 
 			this._addControlsGroup #end 
 	),
 
@@ -217,7 +221,6 @@ struct ControlCreator_v
 		for _Control in _Controls.list where _Control.add_locals != unsupplied do
 			for i = 1 to _Control.add_locals.count by 2 do
 				_Rollout.RCI.addLocal ( _Control.add_locals[i] as string )  init:_Control.add_locals[i+1]
-
 	),
 
 	/** Add functions to rollout
@@ -235,18 +238,12 @@ struct ControlCreator_v
 	function _customizeControlTypes _Control =
 	(
 		--print "ControlCreator_v._customizeControlTypes()"
-		
-		--format "_Rollout.width	= % \n" _Rollout.width
-
-		
 		if _Control.type == #browsePath then
 			(BrowsePath_v()).convertToEditText(_Control)
 		
 		else if _Control.type == #Radiobuttons then
 			(RadioButtons_v()).setParams(_Control)
 	),
-
-
 	/** Add to auto run
 	 */
 	function addToAutoRunEvents _Control =
@@ -264,14 +261,14 @@ struct ControlCreator_v
 		toLower (( filterString( classof _Struct as string ) "_*(:" )[2]) == "controls"  --return		
 	),
 
-
 	/** If controls list is not temporary
 	 */
-	function isNotGroupboxControls =
+	function isGroupboxControls =
 	(
-		--format "\n"; print "ControlCreator_v.isNotGroupboxControls()"
-		this._Controls.group != #controls_in_groupboxes
+		format "\n"; print "ControlCreator_v.isNotGroupboxControls()"
+		this._Controls.group != #controls_in_groupboxes or this._Controls.group != #hotkeys_timers
 	),
+	
 	/**  
 	 */
 	on create do
