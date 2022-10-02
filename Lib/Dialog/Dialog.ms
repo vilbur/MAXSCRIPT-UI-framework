@@ -38,7 +38,7 @@ struct Dialog_v
 	/* dependency */
 	AutoRunEvents 	= AutoRunEvents_v(),
 	Layout 	= Layout_v(),
-	--_KeyPress 	= KeyPress_v(),
+	HotKeys 	= HotKeys_v(),
 	--Menu	= DialogMenu_v Dialog:this,
 	
 	RolloutMain, --RENAME TO DialogRollout ???,
@@ -88,20 +88,14 @@ struct Dialog_v
 	(
 		_RolloutCreator = RolloutCreator_v Ini:Ini
 		
-		--format "\n"; print "Dialog_v.create()"
 		this._setMainRolloutSize (width)(height)
 		
-		--format "ESCAPEENABLE	= % \n" escapeEnable
-		--if escapekey then
-		
-		--format "RolloutMain.id	= % \n" RolloutMain.id
-		this.addKeyPressEvents()
-		--format "RolloutMain.id	= % \n" RolloutMain.id
+		this._addKeyPressEvents()
 		
 		_RolloutCreator.createRollout (RolloutMain)
 		
-		CreateDialog (RolloutMain.RCI.def) 
-		--CreateDialog (RolloutMain.RCI.def) pos:(this._getPosition(pos)(origin)) autoLayoutOnResize:true  width:RolloutMain.width height:RolloutMain.height bgcolor:bgcolor fgcolor:fgcolor bitmap:bitmap style:(if( style == unsupplied ) then this.style else style) modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
+		--CreateDialog (RolloutMain.RCI.def) 
+		CreateDialog (RolloutMain.RCI.def) pos:(this._getPosition(pos)(origin)) autoLayoutOnResize:true  width:RolloutMain.width height:RolloutMain.height bgcolor:bgcolor fgcolor:fgcolor bitmap:bitmap style:(if( style == unsupplied ) then this.style else style) modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
 		
 		_RolloutCreator.SubolloutsCreator.addSubRollouts (RolloutMain)
 		
@@ -113,26 +107,35 @@ struct Dialog_v
 	
 	/** Key press
 	 */
-	function keyPress key: control:false =
+	function HotKey hot_keys callback =
 	(
-		--format "\n"; print "if.keyPress()"
-		mod_keys = #( #( keyboard.controlPressed ), #(true) )
+		--format "\n"; print "Dialog_v.keyPress()"
+
+		indexes	= #( #ctrl, #shift, #alt, #esc )
+
+		hotkeys_setup = #( substituteString callback "\\" "\\\\", #( false, false, false, false)) 
 		
-		
-		
+		if hot_keys.count > 0 then
+		(
+			for hot_key in hot_keys do
+				if (index = findItem indexes hot_key ) > 0  then 
+					hotkeys_setup[2][index] = true -- assign modifier key
+				else
+					append hotkeys_setup hot_key -- add hotkey
+			
+			append HotKeys.keys_state_setups hotkeys_setup
+		)
 	),
 	
 	/** Add key press
 	  *
 	  * Currently supports only escape key for close dialog, works only for unregistered dialog
 	 */
-	function addKeyPressEvents =
+	function _addKeyPressEvents =
 	(
-		--format "\n"; print "Dialog_v.addKeyPressEvents()"
-		--format "RolloutMain.id	= % \n" RolloutMain.id
+		--format "\n"; print "Dialog_v._addKeyPressEvents()"
 
-		RolloutMain.addlocal ("keys_state_setups") #(#( "print \\\"CTRL\\\"",	#(true,  false, false, false ) ))
-		--RolloutMain.addlocal ("keys_state_setups") #(#( "testCallback()",	#(true,  false, false, false ) ))
+		RolloutMain.addlocal ("keys_state_setups") HotKeys.keys_state_setups
 		
 		RolloutMain.addlocal ("waiting_for_release") (undefined)
 		
@@ -141,9 +144,6 @@ struct Dialog_v
 		
 		Clock_pressed	= _Controls.control #timer "clock_pressed" params:#(#interval, 100)
 		Clock_released	= _Controls.control #timer "clock_released" params:#(#interval, 100,  #active,false)
-		
-		
-		--Clock_pressed.Events.add   #tick  ( "(HotKeys_v()).keyPress(\""+RolloutMain.id as string +"\")"  )
 		
 		
 		Clock_pressed.Events.add   #tick  ( "(HotKeys_v()).keyPress(\""+RolloutMain.id as string +"\")"  )

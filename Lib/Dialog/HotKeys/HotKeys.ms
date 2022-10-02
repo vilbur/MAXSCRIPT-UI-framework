@@ -3,10 +3,8 @@
 struct HotKeys_v
 (
 	/* construct */
-	
-	
 	/* properties */
-	
+	keys_state_setups = #(),
 	
 	/* dependency */
 	/* reference */

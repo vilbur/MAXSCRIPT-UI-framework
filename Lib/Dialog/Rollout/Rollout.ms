@@ -106,6 +106,7 @@ struct Rollout_v
 	(
 		--print "Rollout_v.addlocal()"
 		append add_locals key
+		
 		append add_locals val
 	),
 
@@ -203,9 +204,9 @@ struct Rollout_v
 			
 			id = substituteString ( trimRight ( trimLeft id )) " " "_" -- replace whitespace with underscore
 
-			id = this._repleaceCharacters "^([^A-Za-z]*)" "" -- remove any character except letters from start of sring, variable MUST NOT starts with number E.G.: "1_FooDialog|_FooDialog" >>> "FooDialog"
+			id = this._repleaceCharacters "^([^A-Za-z]*)" "" -- remove any character except letters from start of string, variable MUST NOT starts with number E.G.: "1_FooDialog|_FooDialog" >>> "FooDialog"
 
-			id = this._repleaceCharacters "[^A-Za-z0-9_]" "_" -- remove invalid characters E.G.: "Butt@n_&_1" >>> "Button_1"
+			id = this._repleaceCharacters "[^A-Za-z0-9_]" "_" -- remove invalid characters from whole string E.G.: "Butt@n_&_1" >>> "Button_1"
 
 			id = this._repleaceCharacters "[_]+" "_" -- remove multiple underscores E.G.: "button___1" >>> "button_1"
 
