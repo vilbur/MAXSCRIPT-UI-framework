@@ -198,13 +198,12 @@ struct Rollout_v
 		--print "Rollout_v._setId()"
 		if ( id == undefined or id == unsupplied ) then
 			id = toLower title
-			
 			--id = substituteString title "Rollout" "" -- remove "rollout" from title to avoid id like: "ROLLOUT_Rollout_A" if title is "Rollout A'
 			--id  = "ROLLOUT_" + id -- add prefix
 			
 			id = substituteString ( trimRight ( trimLeft id )) " " "_" -- replace whitespace with underscore
 
-			id = this._repleaceCharacters "^(\d*[_-]*)" "" -- remove number as first letter, global variable MUST NOT starts with number E.G.: "1_FooDialog|_FooDialog" >>> "FooDialog"
+			id = this._repleaceCharacters "^([^A-Za-z]*)" "" -- remove any character except letters from start of sring, variable MUST NOT starts with number E.G.: "1_FooDialog|_FooDialog" >>> "FooDialog"
 
 			id = this._repleaceCharacters "[^A-Za-z0-9_]" "_" -- remove invalid characters E.G.: "Butt@n_&_1" >>> "Button_1"
 
