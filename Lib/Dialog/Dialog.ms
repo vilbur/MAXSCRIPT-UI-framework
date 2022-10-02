@@ -90,7 +90,7 @@ struct Dialog_v
 		
 		this._setMainRolloutSize (width)(height)
 		
-		this._addKeyPressEvents()
+		HotKeys.addKeyPressEvents(RolloutMain)
 		
 		_RolloutCreator.createRollout (RolloutMain)
 		
@@ -109,47 +109,7 @@ struct Dialog_v
 	 */
 	function HotKey hot_keys callback =
 	(
-		--format "\n"; print "Dialog_v.HotKey()"
-
-		indexes	= #( #ctrl, #shift, #alt, #esc )
-		
-		hotkeys_setup = #( substituteString callback "'" "\\\"" , #( false, false, false, false) )
-		
-		if hot_keys.count > 0 then
-		(
-			for hot_key in hot_keys do
-				if (index = findItem indexes hot_key ) > 0  then 
-					hotkeys_setup[2][index] = true -- assign modifier key
-				else
-					append hotkeys_setup hot_key -- add hotkey
-			
-			append HotKeys.keys_state_setups hotkeys_setup
-		)
-	),
-	
-	/** Add key press
-	  *
-	  * Currently supports only escape key for close dialog, works only for unregistered dialog
-	 */
-	function _addKeyPressEvents =
-	(
-		--format "\n"; print "Dialog_v._addKeyPressEvents()"
-		--format "HotKeys.keys_state_setups	= % \n" HotKeys.keys_state_setups
-		
-		if HotKeys.keys_state_setups.count == 0 then
-			return false
-		
-		RolloutMain.addlocal (#keys_state_setups) HotKeys.keys_state_setups
-		
-		RolloutMain.addlocal (#waiting_for_release) (undefined)
-		
-		_Controls   = RolloutMain.Controls group:#hotkeys_timers
-		
-		Clock_pressed	= _Controls.control #timer "clock_pressed" params:#(#interval, 100)
-		Clock_released	= _Controls.control #timer "clock_released" params:#(#interval, 100,  #active,false)
-		
-		Clock_pressed.Events.add   #tick  ( "(HotKeys_v()).keyPress(\""  + RolloutMain.id as string +"\")"  )
-		Clock_released.Events.add  #tick  ( "(HotKeys_v()).keyRelease(\""+ RolloutMain.id as string +"\")"  )
+		HotKeys.add hot_keys callback 
 	),
 	
 	/** Register dialog bar
