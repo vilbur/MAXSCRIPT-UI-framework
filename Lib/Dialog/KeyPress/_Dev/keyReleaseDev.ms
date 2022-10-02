@@ -4,35 +4,41 @@ filein( getFilenamePath(getSourceFileName()) + "/../KeyPress.ms" )
 
 /*
 */ 
+function modKeysCurrentState = #( keyboard.controlPressed, keyboard.shiftPressed, keyboard.altPressed, keyboard.escPressed )
 
-fn getForegroundWindow =
+/** Test if Dialog is active
+ */
+function dialogIsActive dialog =
 (
-	local source  = "using System;
-			using System.Runtime.InteropServices;
-			public class Window
-			{
-				[DllImport(\"user32.dll\")]
-				public static extern IntPtr GetForegroundWindow();
-			}"
+	--format "\n"; print ".dialogIsActive()"
+	function getForegroundWindow =
+	(
+		local source  = "using System;
+				using System.Runtime.InteropServices;
+				public class Window
+				{
+					[DllImport(\"user32.dll\")]
+					public static extern IntPtr GetForegroundWindow();
+				}"
+		
+		local CsharpProvider = dotNetObject "Microsoft.CSharp.CSharpCodeProvider"
+		local CompilerParams = dotNetObject "System.CodeDom.Compiler.CompilerParameters"
+		
+		CompilerParams.GenerateInMemory = true
+		CompilerParams.ReferencedAssemblies.Add "System.dll"
+		
+		local CompilerResults = CsharpProvider.CompileAssemblyFromSource CompilerParams #(source)
+		
+		
+		CompilerResults.CompiledAssembly.CreateInstance "Window"
+	)
 	
-	local CsharpProvider = dotNetObject "Microsoft.CSharp.CSharpCodeProvider"
-	local CompilerParams = dotNetObject "System.CodeDom.Compiler.CompilerParameters"
-	
-	CompilerParams.GenerateInMemory = true
-	CompilerParams.ReferencedAssemblies.Add "System.dll"
-	
-	local CompilerResults = CsharpProvider.CompileAssemblyFromSource CompilerParams #(source)
-	
-	
-	CompilerResults.CompiledAssembly.CreateInstance "Window"
+	if not isKindOf ::dialogWindow dotNetObject do dialogWindow = getForegroundWindow()
+
+	 dialog.hwnd == ( dialogWindow.getForegroundWindow() )  --return
 )
 
-if not isKindOf ::dialogWindow dotNetObject do dialogWindow = getForegroundWindow()
 
-
-/*
-*/ 
-function modKeysCurrentState = #( keyboard.controlPressed, keyboard.shiftPressed, keyboard.altPressed, keyboard.escPressed )
 
 /** test if combination of has been pressed
  */
@@ -40,7 +46,7 @@ function keyPress dialog =
 (
 	local waiting_for_release
 
-	if test_dialog.hwnd == ( dialogWindow.getForegroundWindow() ) then
+	if dialogIsActive(dialog) then
 	(
 		for i = 1 to dialog.keys_state_setups.count do 
 		(
@@ -48,7 +54,7 @@ function keyPress dialog =
 			
 			modkey_pressed = false
 			hotkey_pressed = false
-			combo_pressed   = false
+			combo_pressed  = false
 	
 			is_modkey_defined = (for state in keys_state_setup[2] where state collect state).count != 0
 			is_hotkey_defined = keys_state_setup[3] != undefined
@@ -86,11 +92,13 @@ function keyPress dialog =
 	)
 )
 
-/*
+/* Test if keys has been released
+ * Then fire callback
 */ 
 function keyRelease dialog = 
 (
-	if test_dialog.hwnd == ( dialogWindow.getForegroundWindow() ) then
+	--if test_dialog.hwnd == ( dialogWindow.getForegroundWindow() ) then
+	if dialogIsActive(dialog) then
 	(
 		any_modkey_pressed = (for state in (modKeysCurrentState()) where state collect state).count != 0;
 		any_hotkey_pressed = dialog.waiting_for_release[3] != undefined and ( dotNetClass "managedservices.keyboard" ).isKeyDown (execute("( dotNetClass \"system.windows.forms.keys\")."+ dialog.waiting_for_release[3] as string ))
