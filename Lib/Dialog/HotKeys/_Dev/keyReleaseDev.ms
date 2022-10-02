@@ -1,7 +1,5 @@
 clearListener()
 
-filein( getFilenamePath(getSourceFileName()) + "/../KeyPress.ms" )
-
 /*
 */ 
 function modKeysCurrentState = #( keyboard.controlPressed, keyboard.shiftPressed, keyboard.altPressed, keyboard.escPressed )
