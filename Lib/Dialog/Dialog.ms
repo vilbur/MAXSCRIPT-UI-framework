@@ -12,7 +12,7 @@ filein( getFilenamePath(getSourceFileName()) + "/Layout/Layout.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/AutoRunEvents/AutoRunEvents.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/../Ini/Ini.ms" )
 
-filein( getFilenamePath(getSourceFileName()) + "/getForegroundWindow.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/HotKeys/HotKeys.ms" )
 
 /** Create dialog [Maxscript help](https://help.autodesk.com/view/MAXDEV/2021/ENU/?guid=GUID-816D257C-CD2D-4753-A792-6E7AEFAFA6A7)
   * 
@@ -94,13 +94,14 @@ struct Dialog_v
 		--format "ESCAPEENABLE	= % \n" escapeEnable
 		--if escapekey then
 		
+		--format "RolloutMain.id	= % \n" RolloutMain.id
 		this.addKeyPressEvents()
-
+		--format "RolloutMain.id	= % \n" RolloutMain.id
 		
 		_RolloutCreator.createRollout (RolloutMain)
 		
-		--CreateDialog (_RolloutCreator.getDefinition(RolloutMain)) 
-		CreateDialog (RolloutMain.RCI.def) pos:(this._getPosition(pos)(origin)) autoLayoutOnResize:true  width:RolloutMain.width height:RolloutMain.height bgcolor:bgcolor fgcolor:fgcolor bitmap:bitmap style:(if( style == unsupplied ) then this.style else style) modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
+		CreateDialog (RolloutMain.RCI.def) 
+		--CreateDialog (RolloutMain.RCI.def) pos:(this._getPosition(pos)(origin)) autoLayoutOnResize:true  width:RolloutMain.width height:RolloutMain.height bgcolor:bgcolor fgcolor:fgcolor bitmap:bitmap style:(if( style == unsupplied ) then this.style else style) modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
 		
 		_RolloutCreator.SubolloutsCreator.addSubRollouts (RolloutMain)
 		
@@ -112,9 +113,12 @@ struct Dialog_v
 	
 	/** Key press
 	 */
-	function keyPress key control:false =
+	function keyPress key: control:false =
 	(
 		--format "\n"; print "if.keyPress()"
+		mod_keys = #( #( keyboard.controlPressed ), #(true) )
+		
+		
 		
 	),
 	
@@ -124,37 +128,27 @@ struct Dialog_v
 	 */
 	function addKeyPressEvents =
 	(
-		--format "\n"; print "Dialog_v._addKeyPress()"
-		--_Controls   = RolloutMain.Controls()
-		_Controls   = RolloutMain.Controls group:"on_key_press_controls"
+		--format "\n"; print "Dialog_v.addKeyPressEvents()"
+		--format "RolloutMain.id	= % \n" RolloutMain.id
 
+		RolloutMain.addlocal ("keys_state_setups") #(#( "print \\\"CTRL\\\"",	#(true,  false, false, false ) ))
+		--RolloutMain.addlocal ("keys_state_setups") #(#( "testCallback()",	#(true,  false, false, false ) ))
+		
+		RolloutMain.addlocal ("waiting_for_release") (undefined)
+		
+		
+		_Controls   = RolloutMain.Controls group:"on_key_press_controls"
+		
 		Clock_pressed	= _Controls.control #timer "clock_pressed" params:#(#interval, 100)
-		Clock_released	= _Controls.control #timer "clock_released" params:#(#interval, 100)
-		
-		--Clock.Events.add #tick  ("if "+RolloutMain.id+".hwnd == (window.getForegroundWindow()) then print \"IN FOCUS\" else print \"OUT OF FOCUS\"")
-		--Clock.Events.add #tick  ("if "+RolloutMain.id+".hwnd == ( window.getForegroundWindow() ) then if keyboard.escPressed then try( destroyDialog "+RolloutMain.id+" )catch()")
-		--Clock.Events.add #tick  ("if "+RolloutMain.id+".hwnd == ( window.getForegroundWindow() ) and (( dotNetClass \"managedservices.keyboard\" ).isKeyDown ( dotNetClass \"system.windows.forms.keys\").R) then print \"KEY PRESSED\" " )
-		if_is_window_active = "if "+RolloutMain.id+".hwnd == ( window.getForegroundWindow() ) then "
+		Clock_released	= _Controls.control #timer "clock_released" params:#(#interval, 100,  #active,false)
 		
 		
-		fn_keypress = "function keyPress state = 
-		(
-			if keyboard.controlPressed == state do
-			(
-				"+RolloutMain.id+".clock_released.active = state
-				
-				if state == false then 
-					print \"KEY RELESEAD\"
-			)
-		)"
-		
-		RolloutMain.addText fn_keypress
-		
-		--Clock.Events.add #tick  ("if "+RolloutMain.id+".hwnd == ( window.getForegroundWindow() ) and (( dotNetClass \"managedservices.keyboard\" ).isKeyDown ( dotNetClass \"system.windows.forms.keys\").R) then print (timeStamp())" )
-		Clock_pressed.Events.add #tick  (if_is_window_active + "keyPress(true)" )
-		Clock_released.Events.add #tick (if_is_window_active + "keyPress(false)" )
+		--Clock_pressed.Events.add   #tick  ( "(HotKeys_v()).keyPress(\""+RolloutMain.id as string +"\")"  )
 		
 		
+		Clock_pressed.Events.add   #tick  ( "(HotKeys_v()).keyPress(\""+RolloutMain.id as string +"\")"  )
+		Clock_released.Events.add  #tick  ( "(HotKeys_v()).keyRelease(\""+RolloutMain.id as string+"\")"  )
+
 	),
 	
 	/** Register dialog bar
@@ -269,8 +263,8 @@ struct Dialog_v
 	 */
 	function _setDialogGlobal =
 	(
-		format "\n"; print "global._setDialogGlobal()"
-		format "RolloutMain.id	= % \n" RolloutMain.id
+		--format "\n"; print "global._setDialogGlobal()"
+		--format "RolloutMain.id	= % \n" RolloutMain.id
 		execute("global "+RolloutMain.id)
 	),
 	
