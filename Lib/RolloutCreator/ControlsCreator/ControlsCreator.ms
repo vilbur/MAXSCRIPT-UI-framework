@@ -19,8 +19,8 @@ struct ControlCreator_v
 	Ini,
 	
 	/* properties */
-	DEBUG = true,
-	--DEBUG = false,
+	--DEBUG = true,
+	DEBUG = false,
 	
 	/* dependency */
 	_Controls,
@@ -265,8 +265,9 @@ struct ControlCreator_v
 	 */
 	function isGroupboxControls =
 	(
-		format "\n"; print "ControlCreator_v.isNotGroupboxControls()"
-		this._Controls.group != #controls_in_groupboxes or this._Controls.group != #hotkeys_timers
+		--format "\n"; print "ControlCreator_v.isNotGroupboxControls()"
+		this._Controls.group == #controls_in_groupboxes or this._Controls.group == #hotkeys_timers
+		--this._Controls.group == #controls_in_groupboxes
 	),
 	
 	/**  
