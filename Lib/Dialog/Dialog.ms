@@ -96,6 +96,7 @@ struct Dialog_v
 		
 		--CreateDialog (RolloutMain.RCI.def) 
 		CreateDialog (RolloutMain.RCI.def) pos:(this._getPosition(pos)(origin)) autoLayoutOnResize:true  width:RolloutMain.width height:RolloutMain.height bgcolor:bgcolor fgcolor:fgcolor bitmap:bitmap style:(if( style == unsupplied ) then this.style else style) modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
+		--CreateDialog (RolloutMain.RCI.def) pos:(this._getPosition(pos)(origin)) autoLayoutOnResize:true  width:RolloutMain.width height:unsupplied bgcolor:bgcolor fgcolor:fgcolor bitmap:bitmap style:(if( style == unsupplied ) then this.style else style) modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
 		
 		_RolloutCreator.SubolloutsCreator.addSubRollouts (RolloutMain)
 		

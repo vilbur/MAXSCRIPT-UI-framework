@@ -38,9 +38,9 @@ control_types = #(
 	--
 	--#Listbox,
 	--#MultiListBox,
-	#Dropdownlist,
+	--#Dropdownlist,
 	--#Combobox,
-	--#ColorPicker,
+	#ColorPicker,
 	--#RadioButtons,
 	--#Slider,
 	--#Angle,
