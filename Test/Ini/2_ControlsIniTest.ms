@@ -6,12 +6,9 @@ Dialog 	= Dialog_v title:(getFilenameFile(getSourceFileName()))  ini:( getSource
 
 --Dialog.ini.delete()
 
-/* ROLLOUTS */ 
-_Rollouts  = Dialog.Rollouts()
+/* CONTROLS */ 
 
-_Rollout_1 = _Rollouts.roll "Rollout 1"
-
-_Controls = _Rollout_1.Controls group:"Test"
+_Controls = Dialog.Controls group:"Test"
 
 _Controls.control #button "Button 1" id:#button_1 params:#( #tooltip, "Test Tooltip", #across, 1)
 

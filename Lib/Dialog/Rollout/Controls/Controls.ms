@@ -28,35 +28,22 @@ struct Controls_v
 	  *
 	  * @return Object _Control	"./Control/Control.ms"
 	 */
-	function Control type caption id:undefined params:#() width: height: offset: items: value: ini:true across: locals:#() add_to_controls:true =
+	function Control type caption id:undefined params:#() width: height: offset: items: value: ini:true tooltip: across: locals:#() add_to_controls:true =
 	(
 		--format "\n"; print "Controls_v.Control()"
 		--format "caption	= % \n" caption
 		_Control = Control_v type:type caption:caption id:id add_locals:locals
-			
-		if( width != unsupplied ) then 
-			_Control.Param (#width) (width)
 		
-		if( height != unsupplied ) then 
-			_Control.Param (#height) (height)
-			
-		if( offset != unsupplied ) then 
-			_Control.Param (#offset) (offset)
-			
-		if( items != unsupplied ) then 
-			_Control.Param (#items) (items)
-
-		if( value != unsupplied ) then 
-			_Control.Param (#value) (value)
-			
-		if( ini != unsupplied ) then 
-			_Control.Param (#ini) (ini)
-			
-		if( across != unsupplied ) then 
-			_Control.Param (#across) (across)
+		_param_names  = #(#width, #height, #offset, #items, #value, #ini, #tooltip, #across)
+		_param_values = #( width,  height,  offset,  items,  value,  ini,  tooltip,  across)
 		
 		
+		for i = 1 to _param_values.count where _param_values[i]!= unsupplied do
+			_Control.Param (_param_names[i]) (_param_values[i])
+			
+			
 		this._setParamsToControl(_Control)(params)
+		
 
 		GroupBoxes.tryAddGroupbox(this)(_Control)
 		GroupBoxes.tryAddControlToGroupbox (this)(_Control)
