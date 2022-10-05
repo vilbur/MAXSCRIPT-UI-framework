@@ -41,7 +41,8 @@ struct RolloutCreator_v
 		ControlsCreator.moveGrouboxControlsToEnd(_Rollout)
 		
 		
-		_Rollout.RCI	= rolloutCreator (_Rollout.id) ( this._getTitleCentered(_Rollout ) )
+		--_Rollout.RCI	= rolloutCreator (_Rollout.id) ( this._getTitleCentered(_Rollout ) )
+		_Rollout.RCI	= rolloutCreator (_Rollout.id) ( _Rollout.title ) --DEV
 		
 		/* EDIT start */
 		_Rollout.RCI.begin()

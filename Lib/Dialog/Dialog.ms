@@ -22,30 +22,22 @@ filein( getFilenamePath(getSourceFileName()) + "/HotKeys/HotKeys.ms" )
  */
 struct Dialog_v
 (
-	/* required */
-	title,
 	
 	/* construct */
 	Ini,
 	
-	width	= 512,
-	--height	= 256,
-	height = unsupplied,
+	--height = unsupplied,
 	
 	/* options */
-	id,
 	
 	/* dependency */
 	AutoRunEvents 	= AutoRunEvents_v(),
-	Layout 	= Layout_v(),
 	HotKeys 	= HotKeys_v(),
 	--Menu	= DialogMenu_v Dialog:this,
 	
-	RolloutMain, --RENAME TO DialogRollout ???,
+	--RolloutMain, --RENAME TO DialogRollout ???,
 	
-	/* inherit */
-	Events, -- RolloutMain.Events
-	
+	/* inherit */	
 	/* properties */
 	style = #(
 		#style_border, 	-- Creates a window with a double border, but no title.
@@ -75,6 +67,12 @@ struct Dialog_v
 		--#cui_max_sized,	-- When this flag is specified, docking the dialogbar on the top causes the dialogbar to expand to the full window width, docked to bottom it expands to full window width minus command panel width.
 	),
 	
+
+
+	include "Library/MAXSCRIPT-UI-framework/Lib/Dialog/Rollout/RolloutBody.ms"
+
+	public
+
 	/** Create dialog
 	  *
 	  * @param	integer	width	of dialog, minimal size of dialog also
@@ -86,24 +84,26 @@ struct Dialog_v
 	 */
 	function create width: height: pos: origin:#SCREEN bgcolor: fgcolor: bitmap: style: modal: escapeEnable:false escapekey:true lockHeight:false lockWidth:true parent: =
 	(
+		print "Dialog_v.create()"
+		
 		_RolloutCreator = RolloutCreator_v Ini:Ini
 		
 		this._setMainRolloutSize (width)(height)
 		
 		HotKeys.addKeyPressEvents(RolloutMain)
 		
-		_RolloutCreator.createRollout (RolloutMain)
+		_RolloutCreator.createRollout (this)
 		
-		--CreateDialog (RolloutMain.RCI.def) 
-		CreateDialog (RolloutMain.RCI.def) pos:(this._getPosition(pos)(origin)) autoLayoutOnResize:true  width:RolloutMain.width height:RolloutMain.height bgcolor:bgcolor fgcolor:fgcolor bitmap:bitmap style:(if( style == unsupplied ) then this.style else style) modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
-		--CreateDialog (RolloutMain.RCI.def) pos:(this._getPosition(pos)(origin)) autoLayoutOnResize:true  width:RolloutMain.width height:unsupplied bgcolor:bgcolor fgcolor:fgcolor bitmap:bitmap style:(if( style == unsupplied ) then this.style else style) modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
+		--CreateDialog (this.RCI.def) 
+		CreateDialog (this.RCI.def) pos:(this._getPosition(pos)(origin)) autoLayoutOnResize:true  width:this.width height:this.height bgcolor:bgcolor fgcolor:fgcolor bitmap:bitmap style:(if( style == unsupplied ) then this.style else style) modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
+		----CreateDialog (this.RCI.def) pos:(this._getPosition(pos)(origin)) autoLayoutOnResize:true  width:this.width height:unsupplied bgcolor:bgcolor fgcolor:fgcolor bitmap:bitmap style:(if( style == unsupplied ) then this.style else style) modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
 		
-		_RolloutCreator.SubolloutsCreator.addSubRollouts (RolloutMain)
+		_RolloutCreator.SubolloutsCreator.addSubRollouts (this)
 		
 		this._setDockState()
 		
-		AutoRunEvents.executeMacros()
-		--format "\n\nDIALOG CREATED\n\n" 
+		--AutoRunEvents.executeMacros()
+		format "\n\nDIALOG CREATED\n\n" 
 	),
 	
 	/** Key press
@@ -118,12 +118,13 @@ struct Dialog_v
 	function register =
 	(
 		--print "Dialog_v.register()"
-		--execute ("cui.RegisterDialogBar "+ RolloutMain.id +" style:"+style_registred_dialog as string )
+		--execute ("cui.RegisterDialogBar "+ this.id +" style:"+style_registred_dialog as string )
 		
-		min_size = if width != unsupplied and height != unsupplied  then " minSize:["+width as string +","+height as string +"] " else ""
-		--format "min_size	= % \n" min_size
-		execute ("cui.RegisterDialogBar "+ RolloutMain.id +" "+min_size+" style:"+style_registred_dialog as string )
-		--execute ("cui.RegisterDialogBar "+ RolloutMain.id +" "+min_size+" style:"+style_registred_dialog as string )
+		--min_size = if width != unsupplied and height != unsupplied  then " minSize:["+width as string +","+height as string +"] " else ""
+		min_size = ""
+
+		execute ("cui.RegisterDialogBar "+ this.id +" "+min_size+" style:"+style_registred_dialog as string )
+		--execute ("cui.RegisterDialogBar "+ this.id +" "+min_size+" style:"+style_registred_dialog as string )
 	),
 	
 	/** Unregister dialog bar
@@ -131,7 +132,7 @@ struct Dialog_v
 	function unregister =
 	(
 		--format "\n"; print "Dialog_v.unregister()"
-		execute ("try(cui.UnRegisterDialogBar "+ RolloutMain.id +")catch()")
+		execute ("try(cui.UnRegisterDialogBar "+ id +")catch()")
 	),
 	
 	/** Dock\Undock dialog
@@ -145,9 +146,9 @@ struct Dialog_v
 		this.register()
 
 		if ( state != #float ) then
-			execute ("cui.DockDialogBar "+ RolloutMain.id +" #cui_dock_"+ state as string )
+			execute ("cui.DockDialogBar "+ id +" #cui_dock_"+ state as string )
 		else
-			execute ("cui.floatDialogBar "+ RolloutMain.id )
+			execute ("cui.floatDialogBar "+ id )
 		
 		EVENT_DOCKED_ENABLED = true
 	),
@@ -156,67 +157,24 @@ struct Dialog_v
 	 */
 	function destroy =
 	(
-		--print "Dialog_v.destroy()"
-		--format "RolloutMain.id	= % \n" RolloutMain.id
+		print "Dialog_v.destroy()"
+		format "id	= % \n" id
 
 		if  Ini.isDefined() then 
-			(IniSaver_v(Ini.getPath())).saveDialogDockState(RolloutMain.id)
+			(IniSaver_v(Ini.getPath())).saveDialogDockState(id)
 		
 		this.unregister()
 		
 		EVENT_DOCKED_ENABLED = false
 		
-		execute ( "try( destroyDialog "+ RolloutMain.id +" )catch()" )
+		execute ( "try( destroyDialog "+ id +" )catch()" )
 		
 		EVENT_DOCKED_ENABLED = true
 	),
 	
-	/*------------------------------------------------------------------------------
-		Extend RolloutMain
-	--------------------------------------------------------------------------------*/
-
-	/** Get new subrollouts slot
-	  * 
-	  * @param	name	slot	id of subrollouts slot
-	  * @param	integer	height	of slot
-	  * 
-	  * @return	struct Subrollouts_v 	
-     */
-    function Rollouts slot: height: =
-    (
-        RolloutMain.rollouts slot:slot height:height --return
-    ),
 	
-	/** Create new rollout in first slot
-	 */
-	function Roll title id: width: height: =
-	(
-		--format "\n"; print "Rollout_v.rollout()"
-		Subrollouts = if (Subrollout_slots = RolloutMain.getSubrollouts()).count > 0 then Subrollout_slots[1] else this.Rollouts()
-		
-		Subrollouts.Roll title id:id width:width height:height --return
-	),
-
-	/** Controls
-	 */
-	function Controls group:undefined =
-	(
-		--print "Dialog_v.Controls()"
-		RolloutMain.Controls group:group
-	),
-	
-	/** Get Subrollouts_v or Rollout_v 
-	  * 
-	  * @param	name	id	id of rollout or subrollout slot
-	  * 
-	  * @return	object Subrollouts_v|Rollout_v
-	 */
-	function get id =
-	(
-		RolloutMain.get (id)--return
-	),
-
 	private
+	
 	
 	/** Set dialog id as global variable
 	  *
@@ -226,8 +184,8 @@ struct Dialog_v
 	function _setDialogGlobal =
 	(
 		--format "\n"; print "global._setDialogGlobal()"
-		--format "RolloutMain.id	= % \n" RolloutMain.id
-		execute("global "+RolloutMain.id)
+		--format "id	= % \n" id
+		execute("global "+id)
 	),
 	
 	/** Set main rollout size
@@ -235,8 +193,8 @@ struct Dialog_v
 	function _setMainRolloutSize width height =
 	(
 		--format "\n"; print "if._setMainRolloutSize()"
-		RolloutMain.width  = this._getDialogSize( #width ) width
-		RolloutMain.height = this._getDialogSize( #height) height
+		width  = this._getDialogSize( #width ) width
+		height = this._getDialogSize( #height) height
 	),
 	
 	/** Get size of dialog 
@@ -251,7 +209,7 @@ struct Dialog_v
 	function _getDialogSize dimension val  =
 	(
 		--print "Dialog_v._getDialogSize()"
-		if( Ini.isDefined() and (dialog_size = Ini.load( RolloutMain.id as string )("size")) != undefined) then
+		if( Ini.isDefined() and (dialog_size = Ini.load( id as string )("size")) != undefined) then
 			case dimension of
 			(
 				(#width):  dialog_size.x  as integer
@@ -312,7 +270,7 @@ struct Dialog_v
 			else if origin == #window then 
 				pos = this._getPositionRelativeToWindow(pos)
 			
-		)  else if Ini.isDefined() and (position_ini = Ini.load( RolloutMain.id as string )("position")) != undefined  then
+		)  else if Ini.isDefined() and (position_ini = Ini.load( id as string )("position")) != undefined  then
 			pos = position_ini
 		
 		pos --return
@@ -333,16 +291,6 @@ struct Dialog_v
 		[ win_pos.x+pos.x, win_pos.y+pos.y + toolbar_height]  --return
 	),
 	
-	/** Set main rollout
-	 */
-	function _setMainRollout =
-	(
-		--print "Dialog_v._setMainRollout()"
-		
-		RolloutMain	= Rollout_v title:title id:id Layout:Layout width:width
-
-		Events = RolloutMain.Events
-	),
 
 	/** Load dock state from ini
 	  * Ini postion is not used, if position of dialog is defined in this.create()
@@ -352,12 +300,12 @@ struct Dialog_v
 		--format "\n"; print "global._setDockState()"
 		if Ini.isDefined() then
 		(
-			if( (dock_state = Ini.load( RolloutMain.id as string )("dock_state")) == undefined or dock_state == "cui_floatable" ) then
+			if( (dock_state = Ini.load( id as string )("dock_state")) == undefined or dock_state == "cui_floatable" ) then
 				return false
 				
 			this.register()
 			
-			execute("cui.DockDialogBar "+ RolloutMain.id +" #"+ dock_state )
+			execute("cui.DockDialogBar "+ this.id +" #"+ dock_state )
 		)
 	),
 	
@@ -375,15 +323,11 @@ struct Dialog_v
 	on create do
 	(
 		--format "\n"; print "Dialog_v.onCreate()"
-		--format "Ini	= % \n" Ini
-		--format "width	= % \n" width
-		
-		--format "EVENT_DOCKED_ENABLED	= % \n" EVENT_DOCKED_ENABLED
 		this._checkConstctructProperties #(#title)
 		
 		Ini	= Ini_v _path:Ini
-		
-		this._setMainRollout()
+
+		this._setId()
 		
 		this.destroy()
 		

@@ -16,6 +16,8 @@ struct SubolloutsCreator_v
 	/* dependency */
 	/* reference */
 	/* inhered */
+	
+	
 	/** Add sub rollouts
 	 */
 	function addSubRollouts _Rollout =
@@ -26,15 +28,19 @@ struct SubolloutsCreator_v
 		for Subrollouts in this._getSubrollouts(_Rollout) do
 		(
 			subrollout_ids	= for Subrollout in Subrollouts.Rollouts collect Subrollout.id			
-
+		
 			rollouts_order	= this._getOrderOfsubrollouts(Subrollouts)
-			
+
 			for subrollout_id in rollouts_order where ( index = findItem subrollout_ids subrollout_id ) > 0 do
 			(
 				Subrollout = Subrollouts.Rollouts[index]
-				
+				--format "_Rollout.id	= % \n" _Rollout.id
+				--format "Subrollouts.slot	= % \n" Subrollouts.slot
+				--format "Subrollout.id	= % \n" Subrollout.id
+			
 				execute  ( "AddSubRollout "+_Rollout.id+"." + Subrollouts.slot +" "+ Subrollout.id + " rolledUp:"+(this._getRolledStateFromIni(Subrollout.id)) )
-
+				--execute  ( "AddSubRollout "+_Rollout.id+"." + Subrollouts.slot +" "+ Subrollout.id )
+		
 				this.addSubRollouts (Subrollout)
 			)	
 		)
@@ -63,8 +69,6 @@ struct SubolloutsCreator_v
 	(
 		--format "\n"; print "SubolloutsCreator_v.setSubrolloutsHeight()"
 		--format "_Rollout.hasSubrollouts()	= % \n" (_Rollout.hasSubrollouts())
-		
-
 		--rollout_height = _Rollout.height
 		
 		if not _Rollout.hasSubrollouts()  then 
@@ -123,6 +127,8 @@ struct SubolloutsCreator_v
 	function _getRolledStateFromIni subrollout_id =
 	(
 		--print "SubolloutsCreator_v._getRolledStateFromIni()"
+		--format "subrollout_id	= % \n" subrollout_id
+		--format "ini_path	= % \n" ini_path
 		rolledup_state = "false"
 
 		if( ini_path != undefined and (rolledup_state_ini = getINISetting (ini_path) subrollout_id "rolledUp") != "" ) then

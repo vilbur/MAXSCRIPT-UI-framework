@@ -59,7 +59,7 @@ _SuperNestedSubRollouts	= addRollouts (_NestedSubRollouts[1].Rollouts())("Super 
 --/* Get via Dialog, Rollout and Subrollouts */ 
 --(Rollouts_A.get (#Subrollout_a1)).height = 320
 --(Dialog.get (#Nested_subrollout_a1)).height = 128
---(Dialog.RolloutMain.get (#Super_nested_subrollout_a1)).height = 128
+--(Dialog.get (#Super_nested_subrollout_a1)).height = 128
 
 
 

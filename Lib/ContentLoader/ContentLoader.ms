@@ -55,6 +55,6 @@ struct ContentLoader_v
 		Dialog	= Dialog_v title:ContentRollout.title ini:ini
 		
 		for Subrollouts_or_Controls in ContentRollout.Subrollouts_and_Controls do
-			Subrollouts_or_Controls.addToUi Dialog.RolloutMain
+			Subrollouts_or_Controls.addToUi Dialog
 	)
 )
