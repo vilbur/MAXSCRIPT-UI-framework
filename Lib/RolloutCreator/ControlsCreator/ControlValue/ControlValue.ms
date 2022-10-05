@@ -26,9 +26,8 @@ struct ControlValue_v
 	/** Add value parameter
 	  * 
 	  * Priority of value definition
-	  * 	1) value from ini file
+	  * 	1) value from ini file - if control`s parameter ini: is not false
 	  * 	2) user defined value
-	  * 	3) default value
 	 */
 	function setControlValue _Control rollout_id = 
 	(
@@ -39,19 +38,19 @@ struct ControlValue_v
 		if (value_param_name = this._getNameOfValueParameter() ) == undefined  then 
 			return false		
 		
-		/* Get value from ini */ 
-		--if Ini.isDefined() and (ini_value = Ini.load(rollout_id)(_Control.id)) != undefined then
-		if (ini_value = this._getIniValue (rollout_id)) != undefined then
-			this._setValueByIni value_param_name ini_value
+		ini_allowed = _Control.Params.getVal (#ini)
+
+		 if ini_allowed and ( ini_value = this._getIniValue (rollout_id)) != undefined then
+			this._setValueByIni (value_param_name) (ini_value)
 			
-		else
-			this._setValueByParameter(value_param_name)
+		else if( _value = this._getValueParameter (value_param_name) ) != undefined then 
+			this._setValue(value_param_name)(_value)
 			
 		_Control.Params.delete (#value)
+		_Control.Params.delete (#ini)
 	),
 	
-	
-	
+
 	/** Each control type has different name of parameter for default value
 	  * 
 	  * E.G.: 
@@ -84,6 +83,37 @@ struct ControlValue_v
 		--)
 	),
 	
+	
+	/** Get value parameter
+	 */
+	function _getValueParameter value_param_name =
+	(
+		--format "\n"; print "ControlValue_v.getValueParameter()"
+
+		if( ( _value = _Control.Params.getVal (#value) ) == undefined ) then --try get parameter #value  e.g.: params:#(#value, true)
+			_value = _Control.Params.getVal (value_param_name)	            --try get parameter by name e.g.: params:#(#checked, true)
+		
+		_value --return
+	),
+	
+	/** Set parameter of value with correct name for control type
+	  * 	then remove #value paramater
+	  *
+ 	  * E.G.: set #checked parameter and delete #value
+	  *
+	 */
+	function _setValue value_param_name _value =
+	(
+		--format "\n"; print "ControlValue_v._setValue()"
+		if _Control.type  == #ColorPicker and classOf _value == color then 
+			_value as point3
+			
+		else if (this._isRangeControlType()) then
+			_value = this._setValueIntoRange(_value)
+
+		_Control.Params.setVal (value_param_name) (_value)
+	),
+	
 	/** Set value by ini
 	 */
 	function _setValueByIni value_param_name _value =
@@ -94,32 +124,6 @@ struct ControlValue_v
 		
 		--format "_value	= % \n" _value
 		_Control.Params.setVal value_param_name _value
-	),
-
-	/** Set parameter of value with correct name for control type
-	  * 	then remove #value paramater
-	  *
- 	  * E.G.: set #checked parameter and delete #value
-	  *
-	 */
-	function _setValueByParameter value_param_name =
-	(
-		--format "\n"; print "ControlValue_v._setValueByParameter()"
-
-		if( ( _value = _Control.Params.getVal (#value) ) == undefined ) then --try get parameter #value  e.g.: params:#(#value, true)
-			_value = _Control.Params.getVal (value_param_name)	            --try get parameter by name e.g.: params:#(#checked, true)
-			--format "_VALUE	= % \n" _value
-
-		if( _value != undefined ) then
-		(
-			if _Control.type  == #ColorPicker and classOf _value == color then 
-				_value as point3
-				
-			else if (this._isRangeControlType()) then
-				_value = this._setValueIntoRange(_value)
-	
-			_Control.Params.setVal (value_param_name) (_value)
-		)
 	),
 	
 	/** Format string value to valid datatype
