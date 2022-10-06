@@ -66,10 +66,7 @@ struct Dialog_v
 		--#cui_max_sized,	-- When this flag is specified, docking the dialogbar on the top causes the dialogbar to expand to the full window width, docked to bottom it expands to full window width minus command panel width.
 	),
 	
-	
 	min_size,
-
-
 
 	/** Create dialog
 	  *
@@ -91,15 +88,10 @@ struct Dialog_v
 		
 		this._setDialogSize(width)(height)
 		
-		
 		_RolloutCreator.createRollout (this) width:width
 
-		--test_width = (this._getDialogSize( #width ) width) 
-		--format "test_width	= % \n" test_width
 		--CreateDialog (this.RCI.def) 
-		--CreateDialog (this.RCI.def) pos:(this._getPosition(pos)(origin)) width:(this._getDialogSize( #width ) width) height:(this._getDialogSize( #height) height) 
 		CreateDialog (this.RCI.def) pos:(this._getPosition(pos)(origin)) autoLayoutOnResize:true width:this.width height:this.height bgcolor:bgcolor fgcolor:fgcolor bitmap:bitmap style:(if( style == unsupplied ) then this.style else style) modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
-		--CreateDialog (this.RCI.def) pos:(this._getPosition(pos)(origin)) autoLayoutOnResize:true  width:this.width height:this.height bgcolor:bgcolor fgcolor:fgcolor bitmap:bitmap style:(if( style == unsupplied ) then this.style else style) modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
 		
 		_RolloutCreator.SubolloutsCreator.addSubRollouts (this)
 		
@@ -115,7 +107,7 @@ struct Dialog_v
 	(
 		HotKeys.add hot_keys callback 
 	),
-	
+
 	/** Register dialog bar
 	 */
 	function register =
@@ -172,6 +164,35 @@ struct Dialog_v
 	),
 	
 	
+	
+	/** Focus control
+	 */
+	function focus control_id =
+	(
+		--format "\n"; print "Dialog_v.focus()"
+		setFocus (execute( id as string + "." + control_id as string )) 
+	),
+	/** Send keys to rollout
+	  * List of keys: https://learn.microsoft.com/en-us/dotnet/api/system.windows.forms.sendkeys?view=windowsdesktop-6.0#remarks
+	  * 
+	  * @param	string	keys	to send E.G.: "^A" for Ctrl+A
+	 */
+	function sendKey keys =
+	(
+		--format "\n"; print "Dialog_v.sendKey()"
+		( dotNetClass "System.Windows.Forms.SendKeys").sendWait keys
+	),
+		
+	/** Get Hwnd of rollout
+	 */
+	function hwnd =
+	(
+		--format "\n"; print "Dialog_v.hwnd()"
+		for win in ( windows.getChildrenHWND 0 parent:#max) where win[5] == title do
+			return win[1] 
+	),
+	
+	
 	private
 	
 	
@@ -203,6 +224,7 @@ struct Dialog_v
 			min_size = [ min_width, min_height ]
 		)
 	),
+	
 	/** Set main rollout size
 	 */
 	function _setDialogSize width height =
@@ -279,7 +301,7 @@ struct Dialog_v
 	 */
 	function _getPosition pos origin =
 	(
-		--format "\n"; print "if._getPosition()"
+		--format "\n"; print "Dialog_v._getPosition()"
 		--format "pos	= % \n" pos
 		if pos != unsupplied then 
 		(
@@ -290,7 +312,8 @@ struct Dialog_v
 				pos = this._getPositionRelativeToWindow(pos)
 			
 		)  else if Ini.isDefined() and (position_ini = Ini.load( id as string )("position")) != undefined  then
-			pos = position_ini - [6,29] -- FIX y position of dialog, for some reason is saved position about few pixels more then postion of created dialog
+			pos = position_ini
+			--pos = position_ini - [6,29] -- FIX y position of dialog, for some reason is saved position about few pixels more then postion of created dialog
 		
 		pos --return
 	),

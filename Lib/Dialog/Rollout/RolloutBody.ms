@@ -123,15 +123,6 @@
 			id as string --return
 	),
 	
-
-	/** Focus control
-	 */
-	function focus control_id =
-	(
-		--format "\n"; print "if.focus()"
-		setFocus (execute( id as string + "." + control_id as string )) 
-	),
-	
 	/*------------------------------------------------------------------------------
 		RENAME METHODS BELOW TO PRIVATE
 	--------------------------------------------------------------------------------*/
