@@ -23,9 +23,17 @@ struct Control_v
 	add_locals	= #(),	-- #(#variable_name1, init_value1, #variable_name2, init_value2)	// used in ControlCreator_v._addLocalVariablesToRollout 	"../../../RolloutCreator/ControlCreator/ControlCreator.ms"
 	add_text,		-- string added to rollout	// used in ControlCreator_v._addFunctionsVariablesToRollout	"../../../RolloutCreator/ControlCreator/ControlCreator.ms"
 
-	
+	rollout_id,
+
 	public
 	
+	/** Focus control
+	 */
+	function focus =
+	(
+		--format "\n"; print "Control_v.focus()"
+		setFocus (execute( rollout_id as string + "." + id as string )) 
+	),
 	
 	/** Add param
 	  *

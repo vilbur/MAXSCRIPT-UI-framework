@@ -37,7 +37,7 @@
 	function Controls group:undefined =
 	(
 		--print "RolloutBody.controls()"
-		local Controls = Controls_v group:group
+		local Controls = Controls_v group:group rollout_id:id
 
 		append _Controls Controls
 

@@ -18,6 +18,7 @@ struct Controls_v
 	
 	GroupBoxes 	= GroupBoxes_v(),
 	
+	rollout_id,
 	
 	/** Create new control
 	  *
@@ -32,7 +33,7 @@ struct Controls_v
 	(
 		--format "\n"; print "Controls_v.Control()"
 		--format "caption	= % \n" caption
-		_Control = Control_v type:type caption:caption id:id add_locals:locals
+		_Control = Control_v type:type caption:caption id:id add_locals:locals rollout_id:rollout_id
 		
 		_param_names  = #(#width, #height, #offset, #items, #value, #ini, #tooltip, #across)
 		_param_values = #( width,  height,  offset,  items,  value,  ini,  tooltip,  across)
