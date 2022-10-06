@@ -41,8 +41,8 @@ struct RolloutCreator_v
 		ControlsCreator.moveGrouboxControlsToEnd(_Rollout)
 		
 		
-		--_Rollout.RCI	= rolloutCreator (_Rollout.id) ( this._getTitleCentered(_Rollout ) )
-		_Rollout.RCI	= rolloutCreator (_Rollout.id) ( _Rollout.title ) --DEV
+		_Rollout.RCI	= rolloutCreator (_Rollout.id) ( this._getTitleCentered(_Rollout) )
+		--_Rollout.RCI	= rolloutCreator (_Rollout.id) ( _Rollout.title ) --DEV
 		
 		/* EDIT start */
 		_Rollout.RCI.begin()
@@ -155,6 +155,7 @@ struct RolloutCreator_v
 	function _getTitleCentered _Rollout  =
 	(
 		--print "Rollout_v._setTitleCenter()"
+		--format "_Rollout.width	= % \n" _Rollout.width
 		prefix	= ""
 		
 		rollout_padding	= 164 -- with of dialog border or subrallout arrow for open rollout -- HIGHER VALUE MOVES WHOLE TITLE TO LEFT, LOWER TO RIGHT
@@ -162,7 +163,7 @@ struct RolloutCreator_v
 		px_per_space	= 3 -- width in pixels of empty character: " "
 		slot_padding	= 24 -- each subrollout is narrower then parent rollout
 		
-		if( _Rollout.width > 320 and ( IS_NOT_MAIN_ROLLOUT = _Rollout.parent_rollout_id) != undefined and (_Rollout.width != undefined and _Rollout.width != unsupplied ) and (max_version = (maxVersion())[8] )!= undefined and max_version > 2020  ) then
+		if( _Rollout.width != unsupplied and _Rollout.width > 320 and ( IS_NOT_MAIN_ROLLOUT = _Rollout.parent_rollout_id) != undefined and (_Rollout.width != undefined and _Rollout.width != unsupplied ) and (max_version = (maxVersion())[8] )!= undefined and max_version > 2020  ) then
 		(
 			title_width	= _Rollout.title.count * px_per_character -- get difference in length of characters, longer title has shorter prefix and vice versa
 			rollout_width	= _Rollout.width - rollout_padding - ( _Rollout.getNestedLevel() * slot_padding )

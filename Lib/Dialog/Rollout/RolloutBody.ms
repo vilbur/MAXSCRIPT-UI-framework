@@ -1,8 +1,8 @@
 
 	/* construct */
 	title,
-	width,
-	height,
+	width  = unsupplied, -- unsupplied for compatibility with CreateDialog()
+	height = unsupplied,
 
 	
 	/* properties */
@@ -188,7 +188,7 @@
 	 */
 	function _setId =
 	(
-		print "RolloutBody._setId()"
+		--print "RolloutBody._setId()"
 		if ( id == undefined or id == unsupplied ) then
 			id = toLower title
 			--id = substituteString title "Rollout" "" -- remove "rollout" from title to avoid id like: "ROLLOUT_Rollout_A" if title is "Rollout A'
@@ -211,7 +211,7 @@
 	function validateid =
 	(
 		--format "\n"; print "Subrollouts_v.validateTitle()"
-		if matchPattern id pattern:@"rollout" or classof ( executed_id = execute (id) ) != UndefinedClass and classof ( executed_id ) != RolloutClass then
+		if matchPattern id pattern:@"rollout" or classof ( executed_id = execute (id) ) != UndefinedClass and classof ( executed_id ) != RolloutClass and classof ( executed_id ) != RolloutClass then
 		(
 			id_prefixed = "ROLLOUT_" + id
 			

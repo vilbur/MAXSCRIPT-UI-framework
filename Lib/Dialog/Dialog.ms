@@ -17,25 +17,24 @@ filein( getFilenamePath(getSourceFileName()) + "/HotKeys/HotKeys.ms" )
 /** Create dialog [Maxscript help](https://help.autodesk.com/view/MAXDEV/2021/ENU/?guid=GUID-816D257C-CD2D-4753-A792-6E7AEFAFA6A7)
   * 
   * INHERETING OF WIDTH PROPERTY
-  *  Dialog.width >>> Dialog.RolloutMain >>> Subrollouts.width >>> Rollout.width >>> Subrollouts.width >>> Rollout.width ....
+  *  Dialog.width >>> Subrollouts.width >>> Rollout.width >>> Subrollouts.width >>> Rollout.width ....
   * 
  */
 struct Dialog_v
 (
+	include "Library/MAXSCRIPT-UI-framework/Lib/Dialog/Rollout/RolloutBody.ms" --"./Rollout/RolloutBody.ms"
 	
+	public
+
 	/* construct */
 	Ini,
-	
-	--height = unsupplied,
-	
+		
 	/* options */
 	
 	/* dependency */
 	AutoRunEvents 	= AutoRunEvents_v(),
 	HotKeys 	= HotKeys_v(),
 	--Menu	= DialogMenu_v Dialog:this,
-	
-	--RolloutMain, --RENAME TO DialogRollout ???,
 	
 	/* inherit */	
 	/* properties */
@@ -69,9 +68,7 @@ struct Dialog_v
 	
 
 
-	include "Library/MAXSCRIPT-UI-framework/Lib/Dialog/Rollout/RolloutBody.ms"
 
-	public
 
 	/** Create dialog
 	  *
@@ -88,15 +85,15 @@ struct Dialog_v
 		
 		_RolloutCreator = RolloutCreator_v Ini:Ini
 		
-		this._setMainRolloutSize (width)(height)
+		this._setDialogSize (width)(height)
 		
 		HotKeys.addKeyPressEvents(RolloutMain)
 		
 		_RolloutCreator.createRollout (this)
 		
 		--CreateDialog (this.RCI.def) 
+		--CreateDialog (this.RCI.def) pos:(this._getPosition(pos)(origin)) width:this.width height:this.height 
 		CreateDialog (this.RCI.def) pos:(this._getPosition(pos)(origin)) autoLayoutOnResize:true  width:this.width height:this.height bgcolor:bgcolor fgcolor:fgcolor bitmap:bitmap style:(if( style == unsupplied ) then this.style else style) modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
-		----CreateDialog (this.RCI.def) pos:(this._getPosition(pos)(origin)) autoLayoutOnResize:true  width:this.width height:unsupplied bgcolor:bgcolor fgcolor:fgcolor bitmap:bitmap style:(if( style == unsupplied ) then this.style else style) modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
 		
 		_RolloutCreator.SubolloutsCreator.addSubRollouts (this)
 		
@@ -117,14 +114,10 @@ struct Dialog_v
 	 */
 	function register =
 	(
-		--print "Dialog_v.register()"
-		--execute ("cui.RegisterDialogBar "+ this.id +" style:"+style_registred_dialog as string )
-		
-		--min_size = if width != unsupplied and height != unsupplied  then " minSize:["+width as string +","+height as string +"] " else ""
-		min_size = ""
+		--print "Dialog_v.register()"		
+		min_size = if width != unsupplied and height != unsupplied  then " minSize:["+width as string +","+height as string +"] " else ""
 
 		execute ("cui.RegisterDialogBar "+ this.id +" "+min_size+" style:"+style_registred_dialog as string )
-		--execute ("cui.RegisterDialogBar "+ this.id +" "+min_size+" style:"+style_registred_dialog as string )
 	),
 	
 	/** Unregister dialog bar
@@ -157,8 +150,8 @@ struct Dialog_v
 	 */
 	function destroy =
 	(
-		print "Dialog_v.destroy()"
-		format "id	= % \n" id
+		--print "Dialog_v.destroy()"
+		--format "id	= % \n" id
 
 		if  Ini.isDefined() then 
 			(IniSaver_v(Ini.getPath())).saveDialogDockState(id)
@@ -183,24 +176,25 @@ struct Dialog_v
 	 */
 	function _setDialogGlobal =
 	(
-		--format "\n"; print "global._setDialogGlobal()"
+		--format "\n"; print "Dialog_v._setDialogGlobal()"
 		--format "id	= % \n" id
 		execute("global "+id)
 	),
 	
 	/** Set main rollout size
 	 */
-	function _setMainRolloutSize width height =
+	function _setDialogSize width height =
 	(
-		--format "\n"; print "if._setMainRolloutSize()"
-		width  = this._getDialogSize( #width ) width
-		height = this._getDialogSize( #height) height
+		format "\n"; print "Dialog_v._setDialogSize()"
+		this.width  = this._getDialogSize( #width ) width
+
+		this.height = this._getDialogSize( #height) height
 	),
 	
 	/** Get size of dialog 
 	  *
 	  * 1. get from ini
-	  * 2. use defined width|height
+	  * 2. use defined width|height from this.create()
 	  * 3. get default width|height from RolloutMain
 	  *
 	  * @param	name	dimension	#width|#height
@@ -208,20 +202,30 @@ struct Dialog_v
 	 */
 	function _getDialogSize dimension val  =
 	(
-		--print "Dialog_v._getDialogSize()"
+		print "Dialog_v._getDialogSize()"
+		format "Ini.isDefined()	= % \n" (Ini.isDefined())
+		
+		if( Ini.isDefined() ) then
+		(
+			dialog_size = Ini.load( id as string )("size")
+			format "dialog_size	= % \n" dialog_size
+		)
+
+		--format "this.width	= % \n" this.width
+		--format "this.height	= % \n" this.height
+
 		if( Ini.isDefined() and (dialog_size = Ini.load( id as string )("size")) != undefined) then
 			case dimension of
 			(
 				(#width):  dialog_size.x  as integer
 				(#height): dialog_size.y  as integer
 			)
+			
 		else if val != unsupplied then
 			val --return defined val on creation
 		
-		--else if( val = getProperty this dimension ) == undefined then
-		else
+		else 
 			getProperty this dimension
-			
 	),
 	
 
@@ -271,7 +275,7 @@ struct Dialog_v
 				pos = this._getPositionRelativeToWindow(pos)
 			
 		)  else if Ini.isDefined() and (position_ini = Ini.load( id as string )("position")) != undefined  then
-			pos = position_ini
+			pos = position_ini - [6,29] -- FIX y position of dialog, for some reason is saved position about few pixels more then postion of created dialog
 		
 		pos --return
 	),
