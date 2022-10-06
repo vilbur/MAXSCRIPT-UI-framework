@@ -163,10 +163,8 @@ struct RolloutCreator_v
 	function _getTitleCentered _Rollout  =
 	(
 		--print "Rollout_v._setTitleCenter()"
-		--format "_Rollout.width	= % \n" _Rollout.width
 		prefix	= ""
-		
-		rollout_padding	= 164 -- with of dialog border or subrallout arrow for open rollout -- HIGHER VALUE MOVES WHOLE TITLE TO LEFT, LOWER TO RIGHT
+		rollout_padding	= 100 -- with of dialog border or subrallout arrow for open rollout -- HIGHER VALUE MOVES WHOLE TITLE TO LEFT, LOWER TO RIGHT
 		px_per_character	= 5 -- width in pixels of character in title
 		px_per_space	= 3 -- width in pixels of empty character: " "
 		slot_padding	= 24 -- each subrollout is narrower then parent rollout

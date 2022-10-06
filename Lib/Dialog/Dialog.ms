@@ -80,19 +80,17 @@ struct Dialog_v
 	  * 
 	  * TODO add params for max 2022
 	 */
-	function create width: height: pos: origin:#SCREEN bgcolor: fgcolor: bitmap: style: modal: escapeEnable:false escapekey:true lockHeight:false lockWidth:false parent: =
+	function create width: height: pos: origin:#SCREEN bgcolor: fgcolor: bitmap: style: modal: escapeEnable:false escapekey:true lockHeight:false lockWidth:true parent: =
 	(
-		print "Dialog_v.create()"
-		format "lockWidth	= % \n" lockWidth
+		--print "Dialog_v.create()"
 		_RolloutCreator = RolloutCreator_v Ini:Ini
 		
 		HotKeys.addKeyPressEvents(this)
 
-		this._setDialogMinimalSize (width)(height)
+		this._setDialogMinimalSize(width)(height)
 		
+		this._setDialogSize(width)(height)
 		
-		this.height = this._getDialogSize( #height) height
-
 		
 		_RolloutCreator.createRollout (this) width:width
 
@@ -100,7 +98,7 @@ struct Dialog_v
 		--format "test_width	= % \n" test_width
 		--CreateDialog (this.RCI.def) 
 		--CreateDialog (this.RCI.def) pos:(this._getPosition(pos)(origin)) width:(this._getDialogSize( #width ) width) height:(this._getDialogSize( #height) height) 
-		CreateDialog (this.RCI.def) pos:(this._getPosition(pos)(origin)) autoLayoutOnResize:true  width:(this._getDialogSize( #width ) width) height:(this._getDialogSize( #height) height) bgcolor:bgcolor fgcolor:fgcolor bitmap:bitmap style:(if( style == unsupplied ) then this.style else style) modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
+		CreateDialog (this.RCI.def) pos:(this._getPosition(pos)(origin)) autoLayoutOnResize:true width:this.width height:this.height bgcolor:bgcolor fgcolor:fgcolor bitmap:bitmap style:(if( style == unsupplied ) then this.style else style) modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
 		--CreateDialog (this.RCI.def) pos:(this._getPosition(pos)(origin)) autoLayoutOnResize:true  width:this.width height:this.height bgcolor:bgcolor fgcolor:fgcolor bitmap:bitmap style:(if( style == unsupplied ) then this.style else style) modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
 		
 		_RolloutCreator.SubolloutsCreator.addSubRollouts (this)
@@ -123,10 +121,9 @@ struct Dialog_v
 	function register =
 	(
 		--print "Dialog_v.register()"		
-		--min_size = if width != unsupplied and height != unsupplied  then " minSize:["+width as string +","+height as string +"] " else ""
-		min_size = if min_size != undefined then " minSize:"+min_size as string +" " else ""
-		--format "min_size	= % \n" min_size
-		execute ("cui.RegisterDialogBar "+ this.id +" "+min_size+" style:"+style_registred_dialog as string )
+		min_size_string = if min_size != undefined then " minSize:"+min_size as string +" " else ""
+
+		execute ("cui.RegisterDialogBar "+ this.id +" "+min_size_string+" style:"+style_registred_dialog as string )
 	),
 	
 	/** Unregister dialog bar
@@ -197,7 +194,7 @@ struct Dialog_v
 	 */
 	function _setDialogMinimalSize width height =
 	(
-		format "\n"; print "Dialog_v._setDialogSize()"
+		--format "\n"; print "Dialog_v._setDialogSize()"
 		if min_size == undefined then
 		(
 			min_width	= if this.width  != unsupplied then this.width  else (if width  != unsupplied then width else -1)
@@ -206,7 +203,14 @@ struct Dialog_v
 			min_size = [ min_width, min_height ]
 		)
 	),
-	
+	/** Set main rollout size
+	 */
+	function _setDialogSize width height =
+	(
+		--format "\n"; print "Dialog_v._setDialogSize()"
+		this.width  = this._getDialogSize( #width ) width
+		this.height = this._getDialogSize( #height) height
+	),
 	/** Get size of dialog 
 	  *
 	  * 1. get from ini
@@ -218,7 +222,7 @@ struct Dialog_v
 	 */
 	function _getDialogSize dimension val  =
 	(
-		print "Dialog_v._getDialogSize()"
+		--print "Dialog_v._getDialogSize()"
 		--format "this.width	= % \n" this.width
 		--format "this.height	= % \n" this.height
 
