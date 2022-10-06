@@ -29,7 +29,8 @@ struct ContentLoader_v
 
 	/** Create Dialog
 	 */
-	function create width: height: pos: menu: bgcolor: fgcolor: bitmap: style: modal: escapeEnable: lockHeight: lockWidth: parent: =
+	--function create width: height: pos: menu: bgcolor: fgcolor: bitmap: style: modal: escapeEnable: lockHeight: lockWidth: parent: =
+	function create width: height: pos: origin:#SCREEN bgcolor: fgcolor: bitmap: style: modal: escapeEnable:false escapekey:true lockHeight:false lockWidth:false parent: =
 	(
 		--print("ContentLoader_v.create()")
 		

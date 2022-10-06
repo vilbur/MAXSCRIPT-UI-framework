@@ -14,7 +14,7 @@ _Controls.control #button "Button" id:#button_1
 
 --_Controls.control #Dropdownlist "Dropdownlist"
 
---_Controls.control #Edittext "Edittext"
+_Controls.control #Edittext "Edittext"
 
 --_Controls.control #browsePath "browsePath"
 

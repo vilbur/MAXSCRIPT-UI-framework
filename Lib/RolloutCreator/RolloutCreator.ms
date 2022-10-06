@@ -27,14 +27,20 @@ struct RolloutCreator_v
 	/* store */
 
 	/** Create dialog
+	  * 
+	  * @param	integer	width	for centered title
 	 */
-	function createRollout _Rollout =
+	function createRollout _Rollout width: =
 	(
 		format "\n\n-------------------------------------	RolloutCreator_v.createRollout() id:#%	-------------------------------------\n"  ( _Rollout.id as string );
 		--format "classOf _Rollout.id	= % \n" (classOf _Rollout.id)
 		--format "_Rollout.getFullId()	= % \n" (_Rollout.getFullId())
 		--format "_Rollout.getNestedLevel()	= % \n" (_Rollout.getNestedLevel())
 		--format "_Rollout.title	= % \n" _Rollout.title
+		--format "width	= % \n" width
+
+		if _Rollout.width == unsupplied and width != unsupplied then 
+			_Rollout.width = width
 		
 		ControlsCreator	= ControlCreator_v _Rollout:_Rollout Ini:Ini
 		
@@ -106,9 +112,11 @@ struct RolloutCreator_v
 	  */
 	 function _createSubrollouts _Rollout =
 	 (
+		--format "\n"; print "RolloutCreator_v._createSubrollouts()"
+
 		for Subrollouts in _Rollout._Controls where this._is(Subrollouts)("Subrollouts") do
 			for _Subrollout in Subrollouts.Rollouts do
-				this.createRollout (_Subrollout)
+				this.createRollout (_Subrollout) width:_Rollout.width
 	 ),
 	
 	/** Add local variables from Control_v to rollout
