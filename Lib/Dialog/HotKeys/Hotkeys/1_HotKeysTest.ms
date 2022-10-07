@@ -1,7 +1,6 @@
 clearListener()
 
-filein( getFilenamePath(getSourceFileName()) + "/../HotKeys.ms" )
-
+filein( getFilenamePath(getSourceFileName()) + "/../../Lib/Dialog/HotKeys/HotKeys.ms" )
 
 try(DestroyDialog test_dialog)catch()
 
@@ -27,7 +26,7 @@ rollout test_dialog "Detect Key Release" width:214
 	
 	on clock_pressed tick do (HotKeys_v()).keyPress(#test_dialog)
 	
-	on clock_released tick do (HotKeys_v()).keyRelease(#test_dialog)
+	--on clock_released tick do (HotKeys_v()).keyRelease(#test_dialog)
 
 )
 

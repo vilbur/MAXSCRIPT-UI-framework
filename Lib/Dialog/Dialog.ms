@@ -1,9 +1,3 @@
-global DIALOG_PREVIOUS_STATE = undefined -- this should be in struct
-
-if EVENT_DOCKED_ENABLED == undefined then 
-	global EVENT_DOCKED_ENABLED = true -- prevent crash on destroying  of dialog // RENAME THIS TO DIALOG_ENABLE_DOCKED_EVENT
-
-global AUTORUN_EVENTS = #()
 
 filein( getFilenamePath(getSourceFileName()) + "/../ConstructPropeties/ConstructPropeties.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/../EventsList/EventsList.ms" )
@@ -14,6 +8,16 @@ filein( getFilenamePath(getSourceFileName()) + "/../Ini/Ini.ms" )
 
 filein( getFilenamePath(getSourceFileName()) + "/HotKeys/HotKeys.ms" )
 
+global DIALOG_PREVIOUS_STATE = undefined -- this should be in struct
+
+if EVENT_DOCKED_ENABLED == undefined then 
+	global EVENT_DOCKED_ENABLED = true -- prevent crash on destroying  of dialog // RENAME THIS TO DIALOG_ENABLE_DOCKED_EVENT
+
+global AUTORUN_EVENTS = #()
+
+if HOTKEYS_GLOBAL == undefined then 
+	global HOTKEYS_GLOBAL = List_v()
+		
 /** Create dialog [Maxscript help](https://help.autodesk.com/view/MAXDEV/2021/ENU/?guid=GUID-816D257C-CD2D-4753-A792-6E7AEFAFA6A7)
   * 
   * INHERETING OF WIDTH PROPERTY
@@ -33,7 +37,7 @@ struct Dialog_v
 	
 	/* dependency */
 	AutoRunEvents 	= AutoRunEvents_v(),
-	HotKeys 	= HotKeys_v(),
+	_HotKeys,
 	--Menu	= DialogMenu_v Dialog:this,
 	
 	/* inherit */	
@@ -82,7 +86,7 @@ struct Dialog_v
 		--print "Dialog_v.create()"
 		_RolloutCreator = RolloutCreator_v Ini:Ini
 		
-		HotKeys.addKeyPressEvents(this)
+		--_HotKeys.addKeyPressEvents(this)
 
 		this._setDialogMinimalSize(width)(height)
 		
@@ -103,8 +107,14 @@ struct Dialog_v
 	
 	/** Key press
 	 */
-	function HotKey hot_keys callback =
+	function hotKey hot_keys callback =
 	(
+		format "\n"; print "Dialog_v.hotKey()"
+		--format "HOTKEYS_GLOBAL.keys	= % \n" HOTKEYS_GLOBAL.keys
+		--format "HOTKEYS_GLOBAL.values	= % \n" HOTKEYS_GLOBAL.values
+		HotKeys = HOTKEYS_GLOBAL.getVal(title)
+
+		if HotKeys != undefined then -- DEV IF
 		HotKeys.add hot_keys callback 
 	),
 
@@ -374,5 +384,20 @@ struct Dialog_v
 		this.destroy()
 		
 		this._setDialogGlobal()
+		
+		format "HOTKEYS_GLOBAL	= % \n" HOTKEYS_GLOBAL
+		format "HOTKEYS_GLOBAL.keys	= % \n" HOTKEYS_GLOBAL.keys
+
+		
+		if (HOTKEYS_GLOBAL.getVal (this.title)) == undefined then
+		(
+			this._HotKeys	= HotKeys_v()
+						
+			HOTKEYS_GLOBAL.setVal (this.title)(this._HotKeys)
+		)
+		else
+			this._HotKeys	= HOTKEYS_GLOBAL.getVal (this.title)
+
+		
 	)
 )

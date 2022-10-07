@@ -1,62 +1,96 @@
 /** Hot keys
   * 
   * HOTKEY LIST: https://learn.microsoft.com/en-us/dotnet/api/system.windows.forms.keys?view=windowsdesktop-6.0#fields
+  
+  IMPROVMENT? https://forums.cgsociety.org/t/is-while-keyboard-button-pressed-held-do-possible/1482952/18
+  
  */
 struct HotKeys_v
 (
 	/* construct */
 	/* properties */
-	keys_state_setups = #(),
+	
+	_shortcuts = #(),
+	_callbacks = #(),
+	
+	_timer,
 
 	/* dependency */
 	/* reference */
 	/* inhered */
-
+	
 	/** Key press
 	 */
 	function add hot_keys callback =
 	(
-		--format "\n"; print "HotKeys_v.HotKey()"
-
-		indexes	= #( #ctrl, #shift, #alt, #esc )
-
-		hotkeys_setup = #( substituteString callback "'" "\\\"" , #( false, false, false, false) )
-
-		if hot_keys.count > 0 then
-		(
-			for hot_key in hot_keys do
-				if (index = findItem indexes hot_key ) > 0  then 
-					hotkeys_setup[2][index] = true -- assign modifier key
-				else
-					append hotkeys_setup hot_key -- add hotkey
-					
-			append keys_state_setups hotkeys_setup
-		)
+		format "\n"; print "HotKeys_v.HotKey()"
+		--format "hot_keys	= % \n" hot_keys
+		
+		hot_keys = ( sort hot_keys ) as string
+		
+		appendIfUnique _shortcuts hot_keys
+		
+		callback_escaped = substituteString callback "'" "\\\""
+		
+		_callbacks[(findItem _shortcuts hot_keys)] = #( callback_escaped )
 	),
 
+	/** Start tmer
+	 */
+	function startTmer =
+	(
+		--format "\n"; print "HotKeys_v.startTmer()"
+		dotNet.addEventHandler _timer "tick" this.checkKeys
+		
+		_timer.interval = 1000
+
+		_timer.start()
+	),
+	
+	/** Stop timer
+	  
+	  TODO: REMOVE HANDLER ON DIALOG CLOSE: https://help.autodesk.com/view/MAXDEV/2021/ENU/?guid=GUID-9BE82D70-1869-46D7-9501-E5453E25AC68
+	 */
+	function stopTimer =
+	(
+		format "\n"; print "HotKeys_v.stopTimer()"
+		_timer.stop()
+	),
+	
+	/** Check keys
+	 */
+	function checkKeys =
+	(
+		format "\n"; print "HotKeys_v.checkKeys()"
+	),
+	
 	/** Add key press
 	  *
 	  * Currently supports only escape key for close dialog, works only for unregistered dialog
 	 */
 	function addKeyPressEvents RolloutMain =
 	(
-		--format "\n"; print "HotKeys_v._addKeyPressEvents()"
+		format "\n"; print "HotKeys_v._addKeyPressEvents()"
+		
+
+		
+		
 		--format "HotKeys.keys_state_setups	= % \n" HotKeys.keys_state_setups
 
-		if this.keys_state_setups.count == 0 then
-			return false
+		--if this.keys_state_setups.count == 0 then
+		--	return false
+		--
+		--RolloutMain.addlocal (#keys_state_setups) this.keys_state_setups
+		--
+		--RolloutMain.addlocal (#waiting_for_release) (undefined)
+		--
+		--_Controls   = RolloutMain.Controls group:#hotkeys_timers
 
-		RolloutMain.addlocal (#keys_state_setups) this.keys_state_setups
+		--Clock_pressed	= _Controls.control #timer "clock_pressed" params:#(#interval, 100)
+		--Clock_released	= _Controls.control #timer "clock_released" params:#(#interval, 100,  #active,false)
 
-		RolloutMain.addlocal (#waiting_for_release) (undefined)
-
-		_Controls   = RolloutMain.Controls group:#hotkeys_timers
-
-		Clock_pressed	= _Controls.control #timer "clock_pressed" params:#(#interval, 100)
-		Clock_released	= _Controls.control #timer "clock_released" params:#(#interval, 100,  #active,false)
-
-		Clock_pressed.Events.add   #tick  ( "(HotKeys_v()).keyPress(\""  + RolloutMain.id as string +"\")"  )
-		Clock_released.Events.add  #tick  ( "(HotKeys_v()).keyRelease(\""+ RolloutMain.id as string +"\")"  )
+		--Clock_pressed.Events.add   #tick  ( "(HotKeys_v()).keyPress(\""  + RolloutMain.id as string +"\")"  )
+		--Clock_released.Events.add  #tick  ( "(HotKeys_v()).keyRelease(\""+ RolloutMain.id as string +"\")"  )
 	),
 
 	/* Get state of modifier keys: Ctrl, Shift, Alt, Esc
@@ -107,47 +141,65 @@ struct HotKeys_v
 		--print "dialogIsActive"
 
 		local waiting_for_release
+		
+		local hotkey_pressed =#()
 
-		for i = 1 to dialog.keys_state_setups.count do 
+		isKeyDown = ( dotNetClass "managedservices.keyboard").isKeyDown
+		keys = dotNetClass "system.windows.forms.keys"
+		
+		for key in (getPropNames keys) do 		
 		(
-			keys_state_setup =  dialog.keys_state_setups[i]
-
-			modkey_pressed = false
-			hotkey_pressed = false
-			combo_pressed  = false
-
-			is_modkey_defined = (for state in keys_state_setup[2] where state collect state).count != 0
-			is_hotkey_defined = keys_state_setup[3] != undefined
-
-			modkeys_current_state = modKeysCurrentState()
-
-			any_modkey_pressed = (for state in modkeys_current_state where state collect state).count != 0
-
-			/* TEST MODIFIER KEYS */ 
-			if ( modkeys_current_state as string ) == keys_state_setup[2] as string  then
-				modkey_pressed = true
-
-			if is_hotkey_defined then 
-				hotkey_pressed = ( dotNetClass "managedservices.keyboard" ).isKeyDown (execute("( dotNetClass \"system.windows.forms.keys\")."+ keys_state_setup[3] as string ))
-
-			combo_pressed = is_hotkey_defined	and	is_modkey_defined	and	modkey_pressed and hotkey_pressed
-
-			if (	combo_pressed ) or				-- MOD + HOT KEY PRESSED
-			  (	hotkey_pressed and not	is_modkey_defined	and not	any_modkey_pressed ) or	-- ONLY HOT KEY PRESSED
-			  (	modkey_pressed and not	is_hotkey_defined	and not	hotkey_pressed  )	-- ONLY MOD KEY PRESSED
-			then
-				waiting_for_release =  dialog.keys_state_setups[i]
-
-			if combo_pressed then 
-				exit
+			if isKeyDown (execute("( dotNetClass \"system.windows.forms.keys\")."+ key as string )) then
+				append hotkey_pressed key
+			
+			--format "key	= % \nhotkey_pressed	= % \n\n" key hotkey_pressed
 		)
-
-		if waiting_for_release != undefined then
-		(
-			dialog.waiting_for_release = waiting_for_release
-
-			dialog.clock_released.active = true
-		)
+		
+		format "hotkey_pressed	= % \n" hotkey_pressed
+		
+		
+		--for i = 1 to dialog.keys_state_setups.count do 
+		--(
+		--	keys_state_setup =  dialog.keys_state_setups[i]
+		--
+		--	modkey_pressed = false
+		--	hotkey_pressed = false
+		--	combo_pressed  = false
+		--
+		--	is_modkey_defined = (for state in keys_state_setup[2] where state collect state).count != 0
+		--	is_hotkey_defined = keys_state_setup[3] != undefined
+		--
+		--	modkeys_current_state = modKeysCurrentState()
+		--
+		--	any_modkey_pressed = (for state in modkeys_current_state where state collect state).count != 0
+		--
+		--	/* TEST MODIFIER KEYS */ 
+		--	if ( modkeys_current_state as string ) == keys_state_setup[2] as string  then
+		--		modkey_pressed = true
+		--
+		--	if is_hotkey_defined then 
+		--		----hotkey_pressed = ( dotNetClass "managedservices.keyboard" ).isKeyDown (execute("( dotNetClass \"system.windows.forms.keys\")."+ keys_state_setup[3] as string ))
+		--
+		--	combo_pressed = is_hotkey_defined	and	is_modkey_defined	and	modkey_pressed and hotkey_pressed
+		--
+		--	if (	combo_pressed ) or				-- MOD + HOT KEY PRESSED
+		--	  (	hotkey_pressed and not	is_modkey_defined	and not	any_modkey_pressed ) or	-- ONLY HOT KEY PRESSED
+		--	  (	modkey_pressed and not	is_hotkey_defined	and not	hotkey_pressed  )	-- ONLY MOD KEY PRESSED
+		--	then
+		--		waiting_for_release =  dialog.keys_state_setups[i]
+		--
+		--	if combo_pressed then 
+		--		exit
+		--)
+		--
+		----format "waiting_for_release	= % \n" waiting_for_release[2]
+		--
+		--if waiting_for_release != undefined then
+		--(
+		--	dialog.waiting_for_release = waiting_for_release
+		--
+		--	dialog.clock_released.active = true
+		--)
 
 	),
 
@@ -182,6 +234,9 @@ struct HotKeys_v
 	 */
 	on create do
 	(
-		--format "\n"; print "HotKeys.onCreate()"
+		format "\n"; print "HotKeys.onCreate()"
+		_timer = dotNetObject "System.Windows.Forms.Timer"
+		
+		this.startTmer()
 	)
 )
