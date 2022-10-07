@@ -14,49 +14,24 @@ struct HotKeys_v
 	_callbacks = #(),
 	
 	_timer,
+	waiting_for_release = #(),
 
 	/* dependency */
 	/* reference */
 	/* inhered */
 	
-	/** Remove modifier keys specified by side
+	/** Remove modifier keys
 	  *
-	  * @param	array	hot_keys	dotNet hotkeys E.G.:  #(#ControlKey, #LControlKey) 
+	  * @param	array	hot_keys	dotNet hotkeys E.G.:  #(#ControlKey, #LControlKey, #Q) 
 	  *
-	  * @return	array	E.G.: #(#Control) 
+	  * @return	array	E.G.: #(#Q) 
 	 */
-	function _simplifyModifierKeys hot_keys =
+	function _removeModifierKeys hot_keys =
 	(
-		--format "\n"; print "HotKeys_v._simplifyModifierKeys()"
-		--mod_keys_side	= #(#LControlKey, #RControlKey, #LShiftKey, #RShiftKey )
-		mod_keys_side	= #(#ControlKey, #LControlKey, #RControlKey, #ShiftKey, #LShiftKey, #RShiftKey, #Alt )
-		
-		result = #()
-		--modkeys = #()
-		--hotkeys = #()
-		
-		--for i = 1 to hot_keys.count do 
-		--(
-		--	hot_key = hot_keys[i] 
-		--	
-		--	if hot_key == #ControlKey then 
-		--		append modkeys #Control
-		--		
-		--	else if hot_key == #ShiftKey then 
-		--		append modkeys #Shift
-		--		
-		--	else if hot_key == #Alt then 
-		--		append modkeys #Alt
-		--	
-		--	else if( findItem mod_keys_side hot_key ) == 0 then
-		--		append hotkeys hot_key
-		--)
-		
-		for hot_key in hot_keys where findItem mod_keys_side hot_key == 0 do 
-			append result hot_key
-		
-		--sort modkeys + sort hotkeys --return
-		sort result --return
+		--format "\n"; print "HotKeys_v._removeModifierKeys()"
+		mod_keys	= #(#ControlKey, #LControlKey, #RControlKey, #ShiftKey, #LShiftKey, #RShiftKey, #Alt )
+
+		for hot_key in hot_keys where findItem mod_keys hot_key == 0 collect hot_key
 	),
 	
 	/** Key press
@@ -109,36 +84,18 @@ struct HotKeys_v
 		--	return false
 				
 		--local waiting_for_release
-		--
-		modkeys_pressed = #()
-		hotkeys_pressed =#()
-		
+
 		modkeys	= #(#Alt, #Control, #Shift)
 		modkeys_test	= #( keyboard.altPressed, keyboard.controlPressed, keyboard.shiftPressed )
 		
-		for i = 1 to modkeys_test.count where modkeys_test[i] do 
-			append modkeys_pressed modkeys[i]
+		modkeys_pressed = for i = 1 to modkeys_test.count where modkeys_test[i] collect modkeys[i] 		
 		
 		
-		--format "modkeys_pressed	= % \n" modkeys_pressed
+		hotkeys_pressed = for key in (getPropNames ( dotNetClass "system.windows.forms.keys")) where  ( dotNetClass "managedservices.keyboard").isKeyDown (execute("( dotNetClass \"system.windows.forms.keys\")."+ key as string ))  collect key
+
+		waiting_for_release = modkeys_pressed + (this._removeModifierKeys(hotkeys_pressed))
 		
-		isKeyDown = ( dotNetClass "managedservices.keyboard").isKeyDown
-		keys = dotNetClass "system.windows.forms.keys"
-		
-		for key in (getPropNames keys) do 		
-		(
-			if isKeyDown (execute("( dotNetClass \"system.windows.forms.keys\")."+ key as string )) then
-				append hotkeys_pressed key
-			
-			--format "key	= % \nhotkey_pressed	= % \n\n" key hotkeys_pressed
-		)
-		
-		sort hotkeys_pressed
-		
-		shortcut_pressed = modkeys_pressed + (this._simplifyModifierKeys(hotkeys_pressed))
-		
-		format "shortcut_pressed	= % \n" shortcut_pressed
-		
+		format "waiting_for_release	= % \n" waiting_for_release
 	),
 	
 	/** Add key press
