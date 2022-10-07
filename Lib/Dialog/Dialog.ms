@@ -198,8 +198,9 @@ struct Dialog_v
 	function hwnd =
 	(
 		--format "\n"; print "Dialog_v.hwnd()"
-		for win in ( windows.getChildrenHWND 0 parent:#max) where win[5] == title do
-			return win[1] 
+		--for win in ( windows.getChildrenHWND 0 parent:#max) where win[5] == title do
+			--return win[1]
+		execute(dialog_id as string + ".hwnd" )
 	),
 	
 	
@@ -389,11 +390,26 @@ struct Dialog_v
 		format "HOTKEYS_GLOBAL.keys	= % \n" HOTKEYS_GLOBAL.keys
 
 		
+		/*------ DEV remove timer ------*/
+		if (HOTKEYS_GLOBAL.getVal (this.title)) != undefined then
+		(
+			_HotKeys_old	= HOTKEYS_GLOBAL.getVal (this.title)
+			_HotKeys_old.stopTimer()
+			HOTKEYS_GLOBAL = undefined
+			global HOTKEYS_GLOBAL = List_v()
+
+		)
+
+		/*------ ADD THIS TO SOMEWHERE ------*/
 		if (HOTKEYS_GLOBAL.getVal (this.title)) == undefined then
 		(
 			this._HotKeys	= HotKeys_v()
-						
+			
+			this._HotKeys.startTmer()
+	
 			HOTKEYS_GLOBAL.setVal (this.title)(this._HotKeys)
+			
+			
 		)
 		else
 			this._HotKeys	= HOTKEYS_GLOBAL.getVal (this.title)

@@ -19,6 +19,46 @@ struct HotKeys_v
 	/* reference */
 	/* inhered */
 	
+	/** Remove modifier keys specified by side
+	  *
+	  * @param	array	hot_keys	dotNet hotkeys E.G.:  #(#ControlKey, #LControlKey) 
+	  *
+	  * @return	array	E.G.: #(#Control) 
+	 */
+	function _simplifyModifierKeys hot_keys =
+	(
+		--format "\n"; print "HotKeys_v._simplifyModifierKeys()"
+		--mod_keys_side	= #(#LControlKey, #RControlKey, #LShiftKey, #RShiftKey )
+		mod_keys_side	= #(#ControlKey, #LControlKey, #RControlKey, #ShiftKey, #LShiftKey, #RShiftKey, #Alt )
+		
+		result = #()
+		--modkeys = #()
+		--hotkeys = #()
+		
+		--for i = 1 to hot_keys.count do 
+		--(
+		--	hot_key = hot_keys[i] 
+		--	
+		--	if hot_key == #ControlKey then 
+		--		append modkeys #Control
+		--		
+		--	else if hot_key == #ShiftKey then 
+		--		append modkeys #Shift
+		--		
+		--	else if hot_key == #Alt then 
+		--		append modkeys #Alt
+		--	
+		--	else if( findItem mod_keys_side hot_key ) == 0 then
+		--		append hotkeys hot_key
+		--)
+		
+		for hot_key in hot_keys where findItem mod_keys_side hot_key == 0 do 
+			append result hot_key
+		
+		--sort modkeys + sort hotkeys --return
+		sort result --return
+	),
+	
 	/** Key press
 	 */
 	function add hot_keys callback =
@@ -39,7 +79,7 @@ struct HotKeys_v
 	 */
 	function startTmer =
 	(
-		--format "\n"; print "HotKeys_v.startTmer()"
+		format "\n"; print "HotKeys_v.startTmer()"
 		dotNet.addEventHandler _timer "tick" this.checkKeys
 		
 		_timer.interval = 1000
@@ -61,7 +101,44 @@ struct HotKeys_v
 	 */
 	function checkKeys =
 	(
-		format "\n"; print "HotKeys_v.checkKeys()"
+		--format "\n"; print "HotKeys_v.checkKeys()"
+		
+		--dialog = execute(dialog_id as string )
+		--format "dialog	= % \n" dialog
+		--if not this.dialogIsActive(dialog) then
+		--	return false
+				
+		--local waiting_for_release
+		--
+		modkeys_pressed = #()
+		hotkeys_pressed =#()
+		
+		modkeys	= #(#Alt, #Control, #Shift)
+		modkeys_test	= #( keyboard.altPressed, keyboard.controlPressed, keyboard.shiftPressed )
+		
+		for i = 1 to modkeys_test.count where modkeys_test[i] do 
+			append modkeys_pressed modkeys[i]
+		
+		
+		--format "modkeys_pressed	= % \n" modkeys_pressed
+		
+		isKeyDown = ( dotNetClass "managedservices.keyboard").isKeyDown
+		keys = dotNetClass "system.windows.forms.keys"
+		
+		for key in (getPropNames keys) do 		
+		(
+			if isKeyDown (execute("( dotNetClass \"system.windows.forms.keys\")."+ key as string )) then
+				append hotkeys_pressed key
+			
+			--format "key	= % \nhotkey_pressed	= % \n\n" key hotkeys_pressed
+		)
+		
+		sort hotkeys_pressed
+		
+		shortcut_pressed = modkeys_pressed + (this._simplifyModifierKeys(hotkeys_pressed))
+		
+		format "shortcut_pressed	= % \n" shortcut_pressed
+		
 	),
 	
 	/** Add key press
@@ -93,9 +170,11 @@ struct HotKeys_v
 		--Clock_released.Events.add  #tick  ( "(HotKeys_v()).keyRelease(\""+ RolloutMain.id as string +"\")"  )
 	),
 
-	/* Get state of modifier keys: Ctrl, Shift, Alt, Esc
+	/* Get state of modifier keys: Ctrl, Shift, Alt
 	*/ 
-	function modKeysCurrentState = #( keyboard.controlPressed, keyboard.shiftPressed, keyboard.altPressed, keyboard.escPressed ),
+	function modKeysCurrentState = #( keyboard.altPressed, keyboard.controlPressed, keyboard.shift ),
+
+
 
 	/** Test if Dialog is active
 	 */
@@ -140,22 +219,22 @@ struct HotKeys_v
 
 		--print "dialogIsActive"
 
-		local waiting_for_release
-		
-		local hotkey_pressed =#()
-
-		isKeyDown = ( dotNetClass "managedservices.keyboard").isKeyDown
-		keys = dotNetClass "system.windows.forms.keys"
-		
-		for key in (getPropNames keys) do 		
-		(
-			if isKeyDown (execute("( dotNetClass \"system.windows.forms.keys\")."+ key as string )) then
-				append hotkey_pressed key
-			
-			--format "key	= % \nhotkey_pressed	= % \n\n" key hotkey_pressed
-		)
-		
-		format "hotkey_pressed	= % \n" hotkey_pressed
+		--local waiting_for_release
+		--
+		--local hotkey_pressed =#()
+		--
+		--isKeyDown = ( dotNetClass "managedservices.keyboard").isKeyDown
+		--keys = dotNetClass "system.windows.forms.keys"
+		--
+		--for key in (getPropNames keys) do 		
+		--(
+		--	if isKeyDown (execute("( dotNetClass \"system.windows.forms.keys\")."+ key as string )) then
+		--		append hotkey_pressed key
+		--	
+		--	--format "key	= % \nhotkey_pressed	= % \n\n" key hotkey_pressed
+		--)
+		--
+		--format "hotkey_pressed	= % \n" hotkey_pressed
 		
 		
 		--for i = 1 to dialog.keys_state_setups.count do 
@@ -237,6 +316,5 @@ struct HotKeys_v
 		format "\n"; print "HotKeys.onCreate()"
 		_timer = dotNetObject "System.Windows.Forms.Timer"
 		
-		this.startTmer()
 	)
 )
