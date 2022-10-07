@@ -394,7 +394,7 @@ struct Dialog_v
 		if (HOTKEYS_GLOBAL.getVal (this.title)) != undefined then
 		(
 			_HotKeys_old	= HOTKEYS_GLOBAL.getVal (this.title)
-			_HotKeys_old.stopTimer()
+			_HotKeys_old.stopTimer(_HotKeys_old.timer_keydown)
 			HOTKEYS_GLOBAL = undefined
 			global HOTKEYS_GLOBAL = List_v()
 
@@ -405,7 +405,7 @@ struct Dialog_v
 		(
 			this._HotKeys	= HotKeys_v()
 			
-			this._HotKeys.startTmer()
+			this._HotKeys.startTimer(this._HotKeys.timer_keydown)
 	
 			HOTKEYS_GLOBAL.setVal (this.title)(this._HotKeys)
 			

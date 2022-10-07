@@ -13,7 +13,8 @@ struct HotKeys_v
 	_shortcuts = #(),
 	_callbacks = #(),
 	
-	_timer,
+	timer_keydown,
+	timer_keyup,
 	waiting_for_release = #(),
 
 	/* dependency */
@@ -52,9 +53,9 @@ struct HotKeys_v
 
 	/** Start tmer
 	 */
-	function startTmer =
+	function startTimer _timer =
 	(
-		format "\n"; print "HotKeys_v.startTmer()"
+		format "\n"; print "HotKeys_v.startKeyDownTimer()"
 		dotNet.addEventHandler _timer "tick" this.checkKeys
 		
 		_timer.interval = 1000
@@ -66,7 +67,7 @@ struct HotKeys_v
 	  
 	  TODO: REMOVE HANDLER ON DIALOG CLOSE: https://help.autodesk.com/view/MAXDEV/2021/ENU/?guid=GUID-9BE82D70-1869-46D7-9501-E5453E25AC68
 	 */
-	function stopTimer =
+	function stopTimer _timer =
 	(
 		format "\n"; print "HotKeys_v.stopTimer()"
 		_timer.stop()
@@ -271,7 +272,8 @@ struct HotKeys_v
 	on create do
 	(
 		format "\n"; print "HotKeys.onCreate()"
-		_timer = dotNetObject "System.Windows.Forms.Timer"
+		timer_keydown	= dotNetObject "System.Windows.Forms.Timer"
+		timer_keyup	= dotNetObject "System.Windows.Forms.Timer"
 		
 	)
 )
