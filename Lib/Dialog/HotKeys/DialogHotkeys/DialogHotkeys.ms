@@ -30,7 +30,7 @@ struct DialogHotkeys_v
 		
 		appendIfUnique this.hot_keys hot_keys
 		
-		callback_escaped = substituteString callback "'" "\\\""
+		callback_escaped = substituteString callback "'" "\""
 		
 		_callbacks[(findItem this.hot_keys hot_keys)] = callback_escaped
 	),
