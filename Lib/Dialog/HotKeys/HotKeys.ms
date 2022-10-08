@@ -1,3 +1,5 @@
+filein( getFilenamePath(getSourceFileName()) + "/DialogHotkeys/DialogHotkeys.ms" )
+
 /** Hot keys
   * 
   * HOTKEY LIST: https://learn.microsoft.com/en-us/dotnet/api/system.windows.forms.keys?view=windowsdesktop-6.0#fields
@@ -9,17 +11,46 @@ struct HotKeys_v
 (
 	/* construct */
 	/* properties */
+	private
 	
-	_shortcuts = #(),
-	_callbacks = #(),
+	dialogs = #(),	-- keys:	titles of dialogs
+	DialogHoteys = #(),	-- values:	arary of DialogHotkeys_v
 	
-	timer_keydown,
-	timer_keyup,
+	_timer = dotNetObject "System.Windows.Forms.Timer",
+	
 	waiting_for_release = #(),
 
 	/* dependency */
 	/* reference */
 	/* inhered */
+	
+	public
+	
+	/** Add dialog
+	 */
+	function addDialog title =
+	(
+		format "\n"; print "HotKeys_v.addDialog()"
+		if appendIfUnique dialogs title then
+			DialogHoteys[findItem dialogs title] = DialogHotkeys_v()
+		
+		DialogHoteys[findItem dialogs title] --return
+	),
+	
+	/** Test dialog
+	 */
+	function testActiveDialog =
+	(
+		format "\n"; print "HotKeys_v.testActiveDialog()"
+		if (index = findItem dialogs (this.getActiveWindowTitle()) ) > 0 then
+			--format "DialogHoteys[index]	= % \n" DialogHoteys[index]
+			this.checkKeys(DialogHoteys[index])
+		(
+			
+			--_DialogHoteys = DialogHoteys[index]
+			
+		)
+	),
 	
 	/** Remove modifier keys
 	  *
@@ -53,10 +84,10 @@ struct HotKeys_v
 
 	/** Start tmer
 	 */
-	function startTimer _timer =
+	function startTmer =
 	(
-		format "\n"; print "HotKeys_v.startKeyDownTimer()"
-		dotNet.addEventHandler _timer "tick" this.checkKeys
+		--format "\n"; print "HotKeys_v.startTmer()"
+		dotNet.addEventHandler _timer "tick" this.testActiveDialog
 		
 		_timer.interval = 1000
 
@@ -67,24 +98,61 @@ struct HotKeys_v
 	  
 	  TODO: REMOVE HANDLER ON DIALOG CLOSE: https://help.autodesk.com/view/MAXDEV/2021/ENU/?guid=GUID-9BE82D70-1869-46D7-9501-E5453E25AC68
 	 */
-	function stopTimer _timer =
+	function stopTimer =
 	(
 		format "\n"; print "HotKeys_v.stopTimer()"
 		_timer.stop()
 	),
+
+	/** Test if Dialog is active
+	 */
+	function getActiveWindowTitle =
+	(
+		--format "\n"; print "HotKeys_v.getActiveWindowTitle()"
+		function getForegroundWindow =
+		(
+			source  = "using System;
+					using System.Runtime.InteropServices;
+					public class Window
+					{
+						[DllImport(\"user32.dll\")]
+						public static extern IntPtr GetForegroundWindow();
+					}"
+	
+			CsharpProvider = dotNetObject "Microsoft.CSharp.CSharpCodeProvider"
+			CompilerParams = dotNetObject "System.CodeDom.Compiler.CompilerParameters"
+	
+			CompilerParams.GenerateInMemory = true
+			CompilerParams.ReferencedAssemblies.Add "System.dll"
+	
+			CompilerResults = CsharpProvider.CompileAssemblyFromSource CompilerParams #(source)
+	
+			CompilerResults.CompiledAssembly.CreateInstance "Window"
+		)
+	
+		if not isKindOf ::dialogWindow dotNetObject do dialogWindow = getForegroundWindow()
+	
+		--dialog.hwnd == ( dialogWindow.getForegroundWindow() )  --return
+		active_hwnd = dialogWindow.getForegroundWindow() --return		
+		
+		UIAccessor.getWindowText active_hwnd
+	),
 	
 	/** Check keys
 	 */
-	function checkKeys =
+	function checkKeys DialogHotkeys =
 	(
-		--format "\n"; print "HotKeys_v.checkKeys()"
+		format "\n"; print "HotKeys_v.checkKeys()"
+		--format "DialogHotkeys	= % \n" DialogHotkeys
+		--active_dialog = getActiveWindowTitle()
 		
-		--dialog = execute(dialog_id as string )
+		--format "active_dialog	= % \n" active_dialog
+		----dialog = execute(dialog_id as string )
 		--format "dialog	= % \n" dialog
 		--if not this.dialogIsActive(dialog) then
 		--	return false
 				
-		--local waiting_for_release
+		local waiting_for_release
 
 		modkeys	= #(#Alt, #Control, #Shift)
 		modkeys_test	= #( keyboard.altPressed, keyboard.controlPressed, keyboard.shiftPressed )
@@ -93,12 +161,16 @@ struct HotKeys_v
 		
 		
 		hotkeys_pressed = for key in (getPropNames ( dotNetClass "system.windows.forms.keys")) where  ( dotNetClass "managedservices.keyboard").isKeyDown (execute("( dotNetClass \"system.windows.forms.keys\")."+ key as string ))  collect key
-
+		
 		waiting_for_release = modkeys_pressed + (this._removeModifierKeys(hotkeys_pressed))
 		
 		format "waiting_for_release	= % \n" waiting_for_release
 	),
 	
+
+
+
+
 	/** Add key press
 	  *
 	  * Currently supports only escape key for close dialog, works only for unregistered dialog
@@ -131,39 +203,6 @@ struct HotKeys_v
 	/* Get state of modifier keys: Ctrl, Shift, Alt
 	*/ 
 	function modKeysCurrentState = #( keyboard.altPressed, keyboard.controlPressed, keyboard.shift ),
-
-
-
-	/** Test if Dialog is active
-	 */
-	function dialogIsActive dialog =
-	(
-		--format "\n"; print ".dialogIsActive()"
-		function getForegroundWindow =
-		(
-			source  = "using System;
-					using System.Runtime.InteropServices;
-					public class Window
-					{
-						[DllImport(\"user32.dll\")]
-						public static extern IntPtr GetForegroundWindow();
-					}"
-
-			CsharpProvider = dotNetObject "Microsoft.CSharp.CSharpCodeProvider"
-			CompilerParams = dotNetObject "System.CodeDom.Compiler.CompilerParameters"
-
-			CompilerParams.GenerateInMemory = true
-			CompilerParams.ReferencedAssemblies.Add "System.dll"
-
-			CompilerResults = CsharpProvider.CompileAssemblyFromSource CompilerParams #(source)
-
-			CompilerResults.CompiledAssembly.CreateInstance "Window"
-		)
-
-		if not isKindOf ::dialogWindow dotNetObject do dialogWindow = getForegroundWindow()
-
-		dialog.hwnd == ( dialogWindow.getForegroundWindow() )  --return
-	),
 
 	/** test if combination of has been pressed
 	 */
@@ -272,8 +311,7 @@ struct HotKeys_v
 	on create do
 	(
 		format "\n"; print "HotKeys.onCreate()"
-		timer_keydown	= dotNetObject "System.Windows.Forms.Timer"
-		timer_keyup	= dotNetObject "System.Windows.Forms.Timer"
 		
+		this.startTmer()
 	)
 )

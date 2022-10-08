@@ -16,7 +16,7 @@ if EVENT_DOCKED_ENABLED == undefined then
 global AUTORUN_EVENTS = #()
 
 if HOTKEYS_GLOBAL == undefined then 
-	global HOTKEYS_GLOBAL = List_v()
+	global HOTKEYS_GLOBAL = HotKeys_v()
 		
 /** Create dialog [Maxscript help](https://help.autodesk.com/view/MAXDEV/2021/ENU/?guid=GUID-816D257C-CD2D-4753-A792-6E7AEFAFA6A7)
   * 
@@ -37,7 +37,7 @@ struct Dialog_v
 	
 	/* dependency */
 	AutoRunEvents 	= AutoRunEvents_v(),
-	_HotKeys,
+	HotKeys,
 	--Menu	= DialogMenu_v Dialog:this,
 	
 	/* inherit */	
@@ -109,12 +109,7 @@ struct Dialog_v
 	 */
 	function hotKey hot_keys callback =
 	(
-		format "\n"; print "Dialog_v.hotKey()"
-		--format "HOTKEYS_GLOBAL.keys	= % \n" HOTKEYS_GLOBAL.keys
-		--format "HOTKEYS_GLOBAL.values	= % \n" HOTKEYS_GLOBAL.values
-		HotKeys = HOTKEYS_GLOBAL.getVal(title)
-
-		if HotKeys != undefined then -- DEV IF
+		--format "\n"; print "Dialog_v.hotKey()"
 		HotKeys.add hot_keys callback 
 	),
 
@@ -386,34 +381,15 @@ struct Dialog_v
 		
 		this._setDialogGlobal()
 		
-		format "HOTKEYS_GLOBAL	= % \n" HOTKEYS_GLOBAL
-		format "HOTKEYS_GLOBAL.keys	= % \n" HOTKEYS_GLOBAL.keys
-
-		
 		/*------ DEV remove timer ------*/
-		if (HOTKEYS_GLOBAL.getVal (this.title)) != undefined then
+		if HOTKEYS_GLOBAL != undefined then
 		(
-			_HotKeys_old	= HOTKEYS_GLOBAL.getVal (this.title)
-			_HotKeys_old.stopTimer(_HotKeys_old.timer_keydown)
-			HOTKEYS_GLOBAL = undefined
-			global HOTKEYS_GLOBAL = List_v()
-
+			HOTKEYS_GLOBAL.stopTimer()
+			global HOTKEYS_GLOBAL = HotKeys_v()
 		)
 
 		/*------ ADD THIS TO SOMEWHERE ------*/
-		if (HOTKEYS_GLOBAL.getVal (this.title)) == undefined then
-		(
-			this._HotKeys	= HotKeys_v()
-			
-			this._HotKeys.startTimer(this._HotKeys.timer_keydown)
-	
-			HOTKEYS_GLOBAL.setVal (this.title)(this._HotKeys)
-			
-			
-		)
-		else
-			this._HotKeys	= HOTKEYS_GLOBAL.getVal (this.title)
-
+		HotKeys = HOTKEYS_GLOBAL.addDialog(title)
 		
 	)
 )
