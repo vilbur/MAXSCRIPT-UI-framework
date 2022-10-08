@@ -10,7 +10,7 @@ struct DialogHotkeys_v
 	/* construct */
 	/* properties */
 	
-	_shortcuts = #(),
+	hot_keys = #(),
 	_callbacks = #(),
 	
 
@@ -28,37 +28,41 @@ struct DialogHotkeys_v
 		
 		hot_keys = ( sort hot_keys ) as string
 		
-		appendIfUnique _shortcuts hot_keys
+		appendIfUnique this.hot_keys hot_keys
 		
 		callback_escaped = substituteString callback "'" "\\\""
 		
-		_callbacks[(findItem _shortcuts hot_keys)] = #( callback_escaped )
+		_callbacks[(findItem this.hot_keys hot_keys)] = callback_escaped
 	),
-
-	/** Remove modifier keys
-	  *
-	  * @param	array	hot_keys	dotNet hotkeys E.G.:  #(#ControlKey, #LControlKey, #Q) 
-	  *
-	  * @return	array	E.G.: #(#Q) 
+	
+	/** Fire callback
 	 */
-	function _removeModifierKeys hot_keys =
+	function fireCallback hot_keys_pressed =
 	(
-		--format "\n"; print "DialogHotkeys_v._removeModifierKeys()"
-		mod_keys	= #(#ControlKey, #LControlKey, #RControlKey, #ShiftKey, #LShiftKey, #RShiftKey, #Alt )
-
-		for hot_key in hot_keys where findItem mod_keys hot_key == 0 collect hot_key
+		format "\n"; print "DialogHotkeys_v.fireCallback()"
+		
+		if ( callback = this._getCallback(hot_keys_pressed) ) != undefined then
+			execute (callback)
 	),
 
-
-
-
+	
 	private
 
+	
+	/** Get callback
+	 */
+	function _getCallback hot_keys_pressed =
+	(
+		--format "\n"; print "DialogHotkeys_v._getCallback()"
+		
+		if ( index = findItem this.hot_keys ( hot_keys_pressed as string ) ) > 0 then
+			_callbacks[index] --return
+	),
+	
 	/**  
 	 */
 	on create do
 	(
-		format "\n"; print "DialogHotkeys_v.onCreate()"
-
+		--format "\n"; print "DialogHotkeys_v.onCreate()"
 	)
 )
