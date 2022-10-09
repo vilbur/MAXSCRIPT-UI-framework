@@ -17,7 +17,7 @@ global AUTORUN_EVENTS = #()
 
 if HOTKEYS_GLOBAL == undefined then 
 	global HOTKEYS_GLOBAL = HotKeys_v()
-		
+
 /** Create dialog [Maxscript help](https://help.autodesk.com/view/MAXDEV/2021/ENU/?guid=GUID-816D257C-CD2D-4753-A792-6E7AEFAFA6A7)
   * 
   * INHERETING OF WIDTH PROPERTY
@@ -95,10 +95,12 @@ struct Dialog_v
 		--CreateDialog (this.RCI.def) 
 		CreateDialog (this.RCI.def) pos:(this._getPosition(pos)(origin)) autoLayoutOnResize:true width:this.width height:this.height bgcolor:bgcolor fgcolor:fgcolor bitmap:bitmap style:(if( style == unsupplied ) then this.style else style) modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
 		
+		--this._setDialogGlobal()
 		_RolloutCreator.SubolloutsCreator.addSubRollouts (this)
 		
 		this._setDockState()
 		
+
 		--AutoRunEvents.executeMacros()
 		format ("\n\nDIALOG "+title+" CREATED\n\n" )
 	),
@@ -200,17 +202,22 @@ struct Dialog_v
 	private
 	
 	
-	/** Set dialog id as global variable
-	  *
-	  * It is for unnecessary for make EverntFired working
-	  *
-	 */
-	function _setDialogGlobal =
-	(
-		--format "\n"; print "Dialog_v._setDialogGlobal()"
-		--format "id	= % \n" id
-		execute("global "+id)
-	),
+	--/** Set dialog id as global variable
+	--  *
+	--  * It is for unnecessary for make EverntFired working
+	--  *
+	-- */
+	--function _setDialogGlobal =
+	--(
+	--	format "\n"; print "Dialog_v._setDialogGlobal()"
+	--	format "id	= % \n" id
+	--	--format "id	= % \n" (toUpper (id as string ))
+	--	--execute("global "+ (toUpper (id as string )) )
+	--	--execute("global GLOBAL_"+( id as string ) )
+	--	execute("global "+( id as string ) )
+	--	--execute("global GLOBAL_"+( id as string ) + this.RCI.def  )
+	--	--format "GLOBAL_group_options	= % \n" GLOBAL_group_options
+	--),
 	
 	/** Set minimal size of registered dialog
 	  * 1) Use rollout size if defined
@@ -376,12 +383,10 @@ struct Dialog_v
 		this._setId()
 		
 		this.destroy()
-		
-		this._setDialogGlobal()
-		
+				
 		--/*------ DEV restart timer ------*/
-		--if HOTKEYS_GLOBAL != undefined then
-			--global HOTKEYS_GLOBAL = HotKeys_v()
+		if HOTKEYS_GLOBAL != undefined then
+			global HOTKEYS_GLOBAL = HotKeys_v()
 		
 		/*------ ADD THIS TO SOMEWHERE ------*/
 		DialogHotkeys = HOTKEYS_GLOBAL.addDialog(title)

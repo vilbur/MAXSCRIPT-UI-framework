@@ -49,19 +49,19 @@ struct HotKeys_v
 		
 		modkeys	= #(#Alt, #Control, #Shift)
 		modkeys	= #(#Alt, #Control, #Esc, #Shift)
-		mod_keys_filter	= #(#ControlKey, #LControlKey, #RControlKey, #ShiftKey, #LShiftKey, #RShiftKey, #Alt, #Escape )
+		keys_filter	= #(#ControlKey, #LControlKey, #RControlKey, #ShiftKey, #LShiftKey, #RShiftKey, #Alt, #Escape, #Return )
 
 		modkeys_test	= #( keyboard.altPressed, keyboard.controlPressed, keyboard.escPressed, keyboard.shiftPressed )
 		
 		modkeys_pressed = for i = 1 to modkeys_test.count where modkeys_test[i] collect modkeys[i] 		
 		
-		keys = for key in (getPropNames ( dotNetClass "system.windows.forms.keys")) where findItem mod_keys_filter key == 0 collect key
+		keys = for key in (getPropNames ( dotNetClass "system.windows.forms.keys")) where findItem keys_filter key == 0 collect key
 		
 		hotkeys_pressed = for key in keys where  ( dotNetClass "managedservices.keyboard").isKeyDown (execute("( dotNetClass \"system.windows.forms.keys\")."+ key as string ))  collect key
 		
 		--format "modkeys_pressed	= % \n" modkeys_pressed
 		--format "hotkeys_pressed	= % \n" hotkeys_pressed
-		
+		--format "waiting_for_release	= % \n" waiting_for_release
 		if modkeys_pressed.count > 0 or hotkeys_pressed.count > 0 then
 			--waiting_for_release = modkeys_pressed + (this._removeModifierKeys(hotkeys_pressed))
 			waiting_for_release = modkeys_pressed + hotkeys_pressed

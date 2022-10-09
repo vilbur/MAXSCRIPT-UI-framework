@@ -29,13 +29,14 @@ struct IniSaver_v
 	 */
 	function saveRollout rollout_id =
 	(
-		--format "\n"; print "IniSaver_v.saveRollout()"
+		format "\n"; print "IniSaver_v.saveRollout()"
+		format "EVENT_DOCKED_ENABLED	= % \n" EVENT_DOCKED_ENABLED
 		--format "rollout_id	= % \n" rollout_id
 		--format "ini_file	= % \n" ini_file
 
 		if (_Rollout = execute(rollout_id)) != undefined then
 		(
-			if EVENT_DOCKED_ENABLED then
+			if EVENT_DOCKED_ENABLED != undefined and EVENT_DOCKED_ENABLED then
 				this.saveDialogDockState (rollout_id)
 		
 			this._saveControlsAndSubrollouts (_Rollout)

@@ -52,7 +52,8 @@ struct DialogHotkeys_v
 	(
 		--format "\n"; print "DialogHotkeys_v.fireCallback()"
 		if ( callback = this._getCallback(hot_keys_pressed) ) != undefined then
-			execute (callback)
+			try( execute (callback) )catch( format "callback	= % \n" callback )
+			--execute (callback)
 	),
 
 	
@@ -64,6 +65,12 @@ struct DialogHotkeys_v
 	function _getCallback hot_keys_pressed =
 	(
 		--format "\n"; print "DialogHotkeys_v._getCallback()"
+		--format "this.hot_keys	= % \n" this.hot_keys
+		--format "hot_keys_pressed	= % \n" hot_keys_pressed
+		--format "_callbacks	= % \n" _callbacks
+		--test = findItem this.hot_keys ( hot_keys_pressed as string )
+		--format "_callbacks[test]	= % \n" _callbacks[test]
+		--format "test	= % \n" test
 		
 		if ( index = findItem this.hot_keys ( hot_keys_pressed as string ) ) > 0 then
 			_callbacks[index] --return
