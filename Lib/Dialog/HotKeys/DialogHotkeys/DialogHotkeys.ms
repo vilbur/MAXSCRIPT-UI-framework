@@ -19,14 +19,14 @@ struct DialogHotkeys_v
 	/* inhered */
 	
 	
-	/** Add key press
+	/** Add timer to rollout
 	  *
 	  * Currently supports only escape key for close dialog, works only for unregistered dialog
 	 */
 	function addHotkeyTimer _Rollout =
 	(
-		format "\n"; print "HotKeys_v.addHotkeyTimer()"
-		_Rollout.RCI.addControl timer #timer_shortcuts "" paramStr:"interval:1000"
+		--format "\n"; print "HotKeys_v.addHotkeyTimer()"
+		_Rollout.RCI.addControl timer #timer_shortcuts "" paramStr:"interval:100"
 
 		_Rollout.RCI.addHandler #timer_shortcuts #tick codeStr:("HOTKEYS_GLOBAL.checkKeys @"+_Rollout.title+"@") filter:on
 	),
@@ -35,7 +35,7 @@ struct DialogHotkeys_v
 	 */
 	function add hot_keys callback =
 	(
-		format "\n"; print "DialogHotkeys_v.add()"
+		--format "\n"; print "DialogHotkeys_v.add()"
 		
 		hot_keys = ( sort hot_keys ) as string
 		
@@ -53,7 +53,6 @@ struct DialogHotkeys_v
 		--format "\n"; print "DialogHotkeys_v.fireCallback()"
 		if ( callback = this._getCallback(hot_keys_pressed) ) != undefined then
 			execute (callback)
-			try( execute (callback) )catch()
 	),
 
 	

@@ -14,12 +14,8 @@ struct HotKeys_v
 	/* properties */
 	private
 	
-	--HotKeysList 	= HotKeysList_v(),
-	
-	dialogs = #(),	-- keys:	titles of dialogs
-	DialogHotkeys = #(),	-- values:	arary of DialogHotkeys_v
-	
-	--_timer = dotNetObject "System.Windows.Forms.Timer",
+	dialogs 	= #(),	-- keys:	titles of dialogs
+	DialogHotkeys	= #(),	-- values:	arary of DialogHotkeys_v
 	
 	waiting_for_release = #(),
 
@@ -34,18 +30,15 @@ struct HotKeys_v
 	function addDialog title =
 	(
 		--format "\n"; print "HotKeys_v.addDialog()"
-		--format "title	= % \n" title
 		if appendIfUnique dialogs title then
 			DialogHotkeys[findItem dialogs title] = DialogHotkeys_v()
 		
-		--format "dialogs	= % \n" dialogs
-		--format "DialogHotkeys	= % \n" DialogHotkeys
 		DialogHotkeys[findItem dialogs title] --return
 	),
 	
 	/** Check keys
 	  * 
-	  * @
+	  * @param	string	title	title of dialog
 	 */
 	function checkKeys title =
 	(
@@ -61,7 +54,6 @@ struct HotKeys_v
 		
 		keys = for key in (getPropNames ( dotNetClass "system.windows.forms.keys")) where findItem mod_keys_filter key == 0 collect key
 		
-		
 		hotkeys_pressed = for key in keys where  ( dotNetClass "managedservices.keyboard").isKeyDown (execute("( dotNetClass \"system.windows.forms.keys\")."+ key as string ))  collect key
 		
 		--format "modkeys_pressed	= % \n" modkeys_pressed
@@ -72,7 +64,7 @@ struct HotKeys_v
 			waiting_for_release = modkeys_pressed + hotkeys_pressed
 		
 		--format "waiting_for_release	= % \n" waiting_for_release
-		if hotkeys_pressed.count == 0 and waiting_for_release.count > 0 then
+		if hotkeys_pressed.count == 0 and  modkeys_pressed.count == 0 and waiting_for_release.count > 0 then
 		(
 			DialogHotkeys[findItem dialogs title].fireCallback(waiting_for_release)
 			
@@ -160,6 +152,5 @@ struct HotKeys_v
 	on create do
 	(
 		--format "\n"; print "HotKeys.onCreate()"
-		--this._startTmer()
 	)
 )

@@ -38,7 +38,6 @@ struct Dialog_v
 	/* dependency */
 	AutoRunEvents 	= AutoRunEvents_v(),
 	DialogHotkeys,
-	--HotKeys	= HotKeys_v(),
 	--Menu	= DialogMenu_v Dialog:this,
 	
 	/* inherit */	
@@ -87,15 +86,12 @@ struct Dialog_v
 		--print "Dialog_v.create()"
 		_RolloutCreator = RolloutCreator_v Ini:Ini
 		
-		--HOTKEYS_GLOBAL.addKeyPressEvents(this)
-
 		this._setDialogMinimalSize(width)(height)
 		
 		this._setDialogSize(width)(height)
 		
 		_RolloutCreator.createRollout (this) width:width
 		
-
 		--CreateDialog (this.RCI.def) 
 		CreateDialog (this.RCI.def) pos:(this._getPosition(pos)(origin)) autoLayoutOnResize:true width:this.width height:this.height bgcolor:bgcolor fgcolor:fgcolor bitmap:bitmap style:(if( style == unsupplied ) then this.style else style) modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
 		
@@ -104,7 +100,7 @@ struct Dialog_v
 		this._setDockState()
 		
 		--AutoRunEvents.executeMacros()
-		format "\n\nDIALOG CREATED\n\n" 
+		format ("\n\nDIALOG "+title+" CREATED\n\n" )
 	),
 	
 	/** Key press
@@ -372,7 +368,7 @@ struct Dialog_v
 	 */
 	on create do
 	(
-		format "\n"; print "Dialog_v.onCreate()"
+		--format "\n"; print "Dialog_v.onCreate()"
 		this._checkConstctructProperties #(#title)
 		
 		Ini	= Ini_v _path:Ini
@@ -384,16 +380,11 @@ struct Dialog_v
 		this._setDialogGlobal()
 		
 		--/*------ DEV restart timer ------*/
-		if HOTKEYS_GLOBAL != undefined then
-		(
-			--HOTKEYS_GLOBAL.stopTimer()
-			global HOTKEYS_GLOBAL = HotKeys_v()
-		)
-
+		--if HOTKEYS_GLOBAL != undefined then
+			--global HOTKEYS_GLOBAL = HotKeys_v()
 		
 		/*------ ADD THIS TO SOMEWHERE ------*/
 		DialogHotkeys = HOTKEYS_GLOBAL.addDialog(title)
-		--format "DialogHoteys	= % \n" DialogHoteys
 		
 	)
 )
