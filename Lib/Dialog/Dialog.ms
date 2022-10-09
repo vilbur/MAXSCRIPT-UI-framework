@@ -381,7 +381,7 @@ struct Dialog_v
 		
 		this._setDialogGlobal()
 		
-		/*------ DEV remove timer ------*/
+		--/*------ DEV restart timer ------*/
 		if HOTKEYS_GLOBAL != undefined then
 		(
 			HOTKEYS_GLOBAL.stopTimer()

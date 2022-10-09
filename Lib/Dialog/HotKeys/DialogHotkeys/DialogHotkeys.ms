@@ -10,8 +10,8 @@ struct DialogHotkeys_v
 	/* construct */
 	/* properties */
 	
-	hot_keys = #(),
-	_callbacks = #(),
+	hot_keys	= #(),
+	_callbacks	= #(),
 	
 
 	/* dependency */
@@ -23,8 +23,7 @@ struct DialogHotkeys_v
 	 */
 	function add hot_keys callback =
 	(
-		format "\n"; print "DialogHotkeys_v.add()"
-		--format "hot_keys	= % \n" hot_keys
+		--format "\n"; print "DialogHotkeys_v.add()"
 		
 		hot_keys = ( sort hot_keys ) as string
 		
@@ -39,10 +38,10 @@ struct DialogHotkeys_v
 	 */
 	function fireCallback hot_keys_pressed =
 	(
-		format "\n"; print "DialogHotkeys_v.fireCallback()"
-		
+		--format "\n"; print "DialogHotkeys_v.fireCallback()"
 		if ( callback = this._getCallback(hot_keys_pressed) ) != undefined then
-			execute (callback)
+			--execute (callback)
+			try( execute (callback) )catch()
 	),
 
 	
