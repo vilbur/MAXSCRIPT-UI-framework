@@ -44,6 +44,9 @@ struct HotKeys_v
 	(
 		--format "\n"; print "HotKeys_v._checkKeys()"
 		--format "title	= % \n" title
+		if ( index = findItem dialogs title ) ==  0 then
+			return false
+		
 		modkeys	= #(#Alt, #Control, #Shift)
 		modkeys	= #(#Alt, #Control, #Esc, #Shift)
 		mod_keys_filter	= #(#ControlKey, #LControlKey, #RControlKey, #ShiftKey, #LShiftKey, #RShiftKey, #Alt, #Escape )
@@ -66,7 +69,7 @@ struct HotKeys_v
 		--format "waiting_for_release	= % \n" waiting_for_release
 		if hotkeys_pressed.count == 0 and  modkeys_pressed.count == 0 and waiting_for_release.count > 0 then
 		(
-			DialogHotkeys[findItem dialogs title].fireCallback(waiting_for_release)
+			DialogHotkeys[index].fireCallback(waiting_for_release)
 			
 			waiting_for_release = #()
 		)
