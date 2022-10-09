@@ -53,7 +53,8 @@ struct RolloutCreator_v
 		/* EDIT start */
 		_Rollout.RCI.begin()
 		
-		
+		if hasProperty _Rollout #DialogHotkeys then
+			_Rollout.DialogHotkeys.addHotkeyTimer(_Rollout)
 		
 		/* add LOCAL VARIABLES */ 
 		this._addLocalVariablesToRollout (_Rollout)

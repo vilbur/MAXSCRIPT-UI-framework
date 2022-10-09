@@ -6,7 +6,7 @@ filein( getFilenamePath(getSourceFileName()) + "/Layout/Layout.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/AutoRunEvents/AutoRunEvents.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/../Ini/Ini.ms" )
 
-filein( getFilenamePath(getSourceFileName()) + "/HotKeys/HotKeys.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/Hotkeys/Hotkeys.ms" )
 
 global DIALOG_PREVIOUS_STATE = undefined -- this should be in struct
 
@@ -37,7 +37,8 @@ struct Dialog_v
 	
 	/* dependency */
 	AutoRunEvents 	= AutoRunEvents_v(),
-	HotKeys,
+	DialogHotkeys,
+	--HotKeys	= HotKeys_v(),
 	--Menu	= DialogMenu_v Dialog:this,
 	
 	/* inherit */	
@@ -86,13 +87,14 @@ struct Dialog_v
 		--print "Dialog_v.create()"
 		_RolloutCreator = RolloutCreator_v Ini:Ini
 		
-		--_HotKeys.addKeyPressEvents(this)
+		--HOTKEYS_GLOBAL.addKeyPressEvents(this)
 
 		this._setDialogMinimalSize(width)(height)
 		
 		this._setDialogSize(width)(height)
 		
 		_RolloutCreator.createRollout (this) width:width
+		
 
 		--CreateDialog (this.RCI.def) 
 		CreateDialog (this.RCI.def) pos:(this._getPosition(pos)(origin)) autoLayoutOnResize:true width:this.width height:this.height bgcolor:bgcolor fgcolor:fgcolor bitmap:bitmap style:(if( style == unsupplied ) then this.style else style) modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
@@ -110,7 +112,7 @@ struct Dialog_v
 	function hotKey hot_keys callback =
 	(
 		--format "\n"; print "Dialog_v.hotKey()"
-		HotKeys.add hot_keys callback 
+		DialogHotkeys.add hot_keys callback 
 	),
 
 	/** Register dialog bar
@@ -204,7 +206,7 @@ struct Dialog_v
 	
 	/** Set dialog id as global variable
 	  *
-	  * It is for unnecessary for make EventFired working
+	  * It is for unnecessary for make EverntFired working
 	  *
 	 */
 	function _setDialogGlobal =
@@ -370,7 +372,7 @@ struct Dialog_v
 	 */
 	on create do
 	(
-		--format "\n"; print "Dialog_v.onCreate()"
+		format "\n"; print "Dialog_v.onCreate()"
 		this._checkConstctructProperties #(#title)
 		
 		Ini	= Ini_v _path:Ini
@@ -384,12 +386,14 @@ struct Dialog_v
 		--/*------ DEV restart timer ------*/
 		if HOTKEYS_GLOBAL != undefined then
 		(
-			HOTKEYS_GLOBAL.stopTimer()
+			--HOTKEYS_GLOBAL.stopTimer()
 			global HOTKEYS_GLOBAL = HotKeys_v()
 		)
 
+		
 		/*------ ADD THIS TO SOMEWHERE ------*/
-		HotKeys = HOTKEYS_GLOBAL.addDialog(title)
+		DialogHotkeys = HOTKEYS_GLOBAL.addDialog(title)
+		--format "DialogHoteys	= % \n" DialogHoteys
 		
 	)
 )

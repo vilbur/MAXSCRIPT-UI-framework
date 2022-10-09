@@ -266,8 +266,8 @@ struct ControlCreator_v
 	function isGroupboxControls =
 	(
 		--format "\n"; print "ControlCreator_v.isNotGroupboxControls()"
-		this._Controls.group == #controls_in_groupboxes or this._Controls.group == #hotkeys_timers
-		--this._Controls.group == #controls_in_groupboxes
+		--this._Controls.group == #controls_in_groupboxes or this._Controls.group == #hotkeys_timers
+		this._Controls.group == #controls_in_groupboxes
 	),
 	
 	/**  
