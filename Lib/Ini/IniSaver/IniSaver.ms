@@ -29,8 +29,8 @@ struct IniSaver_v
 	 */
 	function saveRollout rollout_id =
 	(
-		format "\n"; print "IniSaver_v.saveRollout()"
-		format "EVENT_DOCKED_ENABLED	= % \n" EVENT_DOCKED_ENABLED
+		--format "\n"; print "IniSaver_v.saveRollout()"
+		--format "EVENT_DOCKED_ENABLED	= % \n" EVENT_DOCKED_ENABLED
 		--format "rollout_id	= % \n" rollout_id
 		--format "ini_file	= % \n" ini_file
 
@@ -75,21 +75,14 @@ struct IniSaver_v
 	function _saveControlsAndSubrollouts _RolloutClass =
 	(
 		--format "\n"; print "IniSaver_v._saveControlsAndSubrollouts()"
-
 		for control in _RolloutClass.controls do
 		(
-			--format "control	= % \n" control
-			--format "( classOf control )	= % \n" ( classOf control)
-
 			if classOf control == SubRollout then
 				this._saveSubRollouts(control)(_RolloutClass.name)
 
 			else
-			--else if findItem save_classes (classOf control) > 0 then 
 				this._saveControl(_RolloutClass)(control)
-
 		)
-
 	),
 
 	/** _save rollout
@@ -97,8 +90,6 @@ struct IniSaver_v
 	function _saveSubRollouts _SubRolloutClass rollout_id =
 	(
 		--format "\n"; print "IniSaver_v._saveSubRollouts()"
-		--format "_SubRolloutClass	= % \n" _SubRolloutClass;
-
 		rollout_ids = for _rollout in (this._getOrderedRollouts(_SubRolloutClass.Rollouts)) collect _rollout.name as name
 
 		this._saveToIni (rollout_id) (_SubRolloutClass.name) (rollout_ids as string )
@@ -109,9 +100,7 @@ struct IniSaver_v
 
 			if classOf control == RolloutClass then
 				this._saveRollout(control)
-
 		)
-
 	),
 
 	/** _save rollout
@@ -119,9 +108,7 @@ struct IniSaver_v
 	function _saveRollout _RolloutClass =
 	(
 		--format "\n"; print "IniSaver_v._saveRollout()"
-		--format "_RolloutClass	= % \n" _RolloutClass.name
-
-		this._saveToIni (_RolloutClass.name) ("rolledUp") ( (not _RolloutClass.open) as string )
+		this._saveToIni (_RolloutClass.name) ("rolledUp") ( (_RolloutClass.open == false) as string )
 
 		this._saveControlsAndSubrollouts(_RolloutClass)
 	),
@@ -131,8 +118,6 @@ struct IniSaver_v
 	function _saveControl _RolloutClass Ctrl =
 	(
 		--format "\n"; print "IniSaver_v._saveControl()"
-		--format "ClassOf Ctrl	= % \n" (classOf Ctrl)
-		--format "Ctrl.name 	= % \n" Ctrl.name
 
 		local val
 
