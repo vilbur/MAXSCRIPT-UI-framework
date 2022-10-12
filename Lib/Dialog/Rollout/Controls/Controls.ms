@@ -29,14 +29,14 @@ struct Controls_v
 	  *
 	  * @return Object _Control	"./Control/Control.ms"
 	 */
-	function Control type caption id:undefined params:#() width: height: offset: items: value: ini:true tooltip: across: locals:#() add_to_controls:true =
+	function Control type caption id:undefined params:#() width: height: offset: align: items: value: ini:true tooltip: across: locals:#() add_to_controls:true =
 	(
 		--format "\n"; print "Controls_v.Control()"
 		--format "caption	= % \n" caption
 		_Control = Control_v type:type caption:caption id:id add_locals:locals rollout_id:rollout_id
 		
-		_param_names  = #(#width, #height, #offset, #items, #value, #ini, #tooltip, #across)
-		_param_values = #( width,  height,  offset,  items,  value,  ini,  tooltip,  across)
+		_param_names  = #(#width, #height, #offset, #align, #items, #value, #ini, #tooltip, #across)
+		_param_values = #( width,  height,  offset,  align, items,  value,  ini,  tooltip,  across)
 		
 		
 		for i = 1 to _param_values.count where _param_values[i]!= unsupplied do
