@@ -226,15 +226,14 @@ struct ScriptFile_Content_v
 
 
 	/** Get filename of groupbox by file filename
-	  * 
-	  * @return	string	Name of groupbox, If filename starts with underscore "_", then return undefined and controls are placed to new controls box without groupbox
+	  *  
+	  *  Remove numbers, empty space and characters like "-_" from start of string E.G.: "1_Filename" >> "Filename"
+	  *  
+	  * @return	string	Name of groupbox
 	 */
 	function _getGroupName =
 	(
-		--if ( this.hasGroupbox() ) then
-			( dotNetObject "System.Text.RegularExpressions.Regex" @"[_]+" ).Replace ( trimLeft ( trimRight (getFilenameFile path) "_" )  "_" ) " "
-		--else
-		--	undefined
+		( dotNetObject "System.Text.RegularExpressions.Regex" @"^\d*\s*_*" ).Replace ( trimLeft ( trimRight (getFilenameFile path) "_ " )  "_ " ) " "
 	),
 
 	--/** If filename starts with underscore "_"
