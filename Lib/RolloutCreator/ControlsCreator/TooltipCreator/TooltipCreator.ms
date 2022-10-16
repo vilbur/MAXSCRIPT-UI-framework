@@ -43,7 +43,7 @@ struct TooltipCreator_v
 		case event_type of
 		(
 			(#pressed):	"LMB:  "	
-			(#rightclick):	"RMB: "
+			(#rightclick):	"\nRMB: "
 			default:	""
 			--default:	"On " + this._capitalize(event_type as string ) + ": "
 		)

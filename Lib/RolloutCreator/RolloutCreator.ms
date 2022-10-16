@@ -47,7 +47,8 @@ struct RolloutCreator_v
 		ControlsCreator.moveGrouboxControlsToEnd(_Rollout)
 		
 		
-		_Rollout.RCI	= rolloutCreator (_Rollout.id) ( this._getTitleCentered(_Rollout) )
+		--_Rollout.RCI	= rolloutCreator (_Rollout.id) ( this._getTitleCentered(_Rollout) )
+		_Rollout.RCI	= rolloutCreator (_Rollout.id) ( this._getTitleString(_Rollout) )
 		--_Rollout.RCI	= rolloutCreator (_Rollout.id) ( _Rollout.title ) --DEV
 		
 		/* EDIT start */
@@ -164,8 +165,10 @@ struct RolloutCreator_v
 	function _getTitleCentered _Rollout  =
 	(
 		--print "Rollout_v._setTitleCenter()"
+		
 		prefix	= ""
-		rollout_padding	= 100 -- with of dialog border or subrallout arrow for open rollout -- HIGHER VALUE MOVES WHOLE TITLE TO LEFT, LOWER TO RIGHT
+		prefix_cahracter	= " "
+		rollout_padding	= 124 -- with of dialog border or subrallout arrow for open rollout -- HIGHER VALUE MOVES WHOLE TITLE TO LEFT, LOWER TO RIGHT
 		px_per_character	= 5 -- width in pixels of character in title
 		px_per_space	= 3 -- width in pixels of empty character: " "
 		slot_padding	= 24 -- each subrollout is narrower then parent rollout
@@ -177,13 +180,29 @@ struct RolloutCreator_v
 			prefix_lenght	= ((rollout_width - title_width) / 2) / px_per_space
 			
 			for i = 1 to prefix_lenght do -- too width 200px
-				prefix += " "
+				prefix += prefix_cahracter
 				
-			prefix + _Rollout.title --return
+			--prefix + _Rollout.title --return
+			prefix + this._getTitleString(_Rollout) --return
 		)
 		else		
 			_Rollout.title
 	),
+	
+	/** Get title string
+	 */
+	function _getTitleString _Rollout =
+	(
+		--format "\n"; print "RolloutCreator_v._getTitleString()"
+		
+		title = ""
+	
+		for i = 1 to _Rollout.title.count do 
+			title += _Rollout.title[i] + " "
+		
+		title --return
+	),
+	
 	
 	/**  
 	 */
