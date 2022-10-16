@@ -20,6 +20,8 @@ filein( getFilenamePath(getSourceFileName()) + "/../../../../Menus/QuadMenu/Quad
   * 2) Create by macroscripts
   * 3) Filein ".mcr" files
   * 
+  * NOTICE: files can be ordered with prefixes like "_Filename|-Filename|1_Filename|1-Filename"
+  * 
   * 
   * @property	string	file	Path to file
   *
