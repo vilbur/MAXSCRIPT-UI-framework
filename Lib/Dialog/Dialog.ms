@@ -81,7 +81,7 @@ struct Dialog_v
 	  * 
 	  * TODO add params for max 2022
 	 */
-	function create width: height: pos: origin:#SCREEN bgcolor: fgcolor: bitmap: style: modal: escapeEnable:false escapekey:true lockHeight:false lockWidth:true parent: =
+	function create width: height: pos: origin:#SCREEN bgcolor: fgcolor: bitmap: bmpstyle:#bmp_tile  style: modal: escapeEnable:false escapekey:true lockHeight:false lockWidth:true parent: =
 	(
 		--print "Dialog_v.create()"
 		_RolloutCreator = RolloutCreator_v Ini:Ini
@@ -93,7 +93,7 @@ struct Dialog_v
 		_RolloutCreator.createRollout (this) width:width
 		
 		--CreateDialog (this.RCI.def) 
-		CreateDialog (this.RCI.def) pos:(this._getPosition(pos)(origin)) autoLayoutOnResize:true width:this.width height:this.height bgcolor:bgcolor fgcolor:fgcolor bitmap:bitmap style:(if( style == unsupplied ) then this.style else style) modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
+		CreateDialog (this.RCI.def) pos:(this._getPosition(pos)(origin)) autoLayoutOnResize:true width:this.width height:this.height bgcolor:bgcolor fgcolor:fgcolor bitmap:bitmap bmpstyle:bmpstyle style:(if( style == unsupplied ) then this.style else style) modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
 		
 		--this._setDialogGlobal()
 		_RolloutCreator.SubolloutsCreator.addSubRollouts (this)

@@ -14,8 +14,13 @@ struct BagroundGenerator_v
 	/* properties */
 	
 	/** Draw UVW
+	  * 
+	  * @param	#( #( rollout_pos_y, rollout_height, rollout_color)) rollout_dimensions 2D matrix
+	  *		1 = POSITION of subrollout in dialog
+	  *		2 = HEIGHT of subrollout 
+	  *		3 = COLOR of subrollout, if undefined then white is used
 	 */
-	function createBackground rollout_positions =
+	function createBackground rollout_dimensions =
 	(
 		format "\n"; print "BagroundGenerator_v.createBackground()"
 		--obj = selection[1]
@@ -27,16 +32,25 @@ struct BagroundGenerator_v
 		
 		--format "face_count	= % \n" face_count
 		global bg_bitmap = bitmap bitmap_size.x bitmap_size.y color:( color 0 0 0 )
-		
-		pos_y = 32
-		height = 128
-		
-		pixels = for i = 1 to bitmap_size.x collect white
-		
-		for y = pos_y to pos_y + height do 
-			setPixels bg_bitmap [ 0, y ] pixels
+				
+		for rollout_dimension in rollout_dimensions do
+		(
+			--rollout_dimension = 32
+			rollout_position	= rollout_dimension[1]
+			rollout_height	= rollout_dimension[2]
+			rollout_color	= if rollout_dimension.count == 3 then rollout_dimension[3] else white
+			--rollout_color	=  white
+
+			--_line = for i = 1 to bitmap_size.x collect rollout_color
+			_line = for i = 1 to 32 collect rollout_color
 			
-		display bg_bitmap
+			for y = rollout_position to rollout_position + rollout_height  do 
+				setPixels bg_bitmap [ 0, y ] _line
+				
+			
+		)
+		
+		--display bg_bitmap
 		bg_bitmap --return
 	),
 
