@@ -24,12 +24,12 @@
 
 	/** SHORTCUT: Create new rollout in first slot
 	 */
-	function Roll title id: =
+	function Roll title id: height: =
 	(
 		--format "\n"; print "RolloutBody.Roll()"
 		Subrollouts = if (Subrollout_slots = this.getSubrollouts()).count > 0 then Subrollout_slots[1] else this.Rollouts()
 		
-		Subrollouts.Roll title id:id --return
+		Subrollouts.Roll title id:id height:height --return
 	),
 	
 	/** Controls

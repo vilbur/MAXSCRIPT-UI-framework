@@ -3,10 +3,8 @@
  */
 struct BagroundGenerator_v
 (
-	--__construct = #( #property_name ),
-
 	/* construct */
-	bitmap_size = [256,256],
+	bitmap_size = [32,256],
 
 	/* dependency */
 	/* reference */
@@ -31,7 +29,7 @@ struct BagroundGenerator_v
 		--face_count = polyop.getNumMapFaces obj map_channel
 		
 		--format "face_count	= % \n" face_count
-		global bg_bitmap = bitmap bitmap_size.x bitmap_size.y color:( color 0 0 0 )
+		global bg_bitmap = bitmap bitmap_size.x bitmap_size.y color:( color 13 13 13 ) -- NOTICE: 13 -> is value 68 in photoshop, 
 				
 		for rollout_dimension in rollout_dimensions do
 		(
@@ -39,18 +37,18 @@ struct BagroundGenerator_v
 			rollout_position	= rollout_dimension[1]
 			rollout_height	= rollout_dimension[2]
 			rollout_color	= if rollout_dimension.count == 3 then rollout_dimension[3] else white
-			--rollout_color	=  white
 
-			--_line = for i = 1 to bitmap_size.x collect rollout_color
-			_line = for i = 1 to 32 collect rollout_color
+			format "rollout_position	= % \n" rollout_position
+			
+			_line = for i = 1 to 16 collect rollout_color
 			
 			for y = rollout_position to rollout_position + rollout_height  do 
 				setPixels bg_bitmap [ 0, y ] _line
 				
 			
 		)
-		
-		--display bg_bitmap
+		format "bg_bitmap	= % \n" bg_bitmap
+		--display bg_bitmap+
 		bg_bitmap --return
 	),
 
@@ -61,3 +59,5 @@ struct BagroundGenerator_v
 		--print("BagroundGenerator_v.onCreate()")
 	)
 )
+
+getDir #userScripts

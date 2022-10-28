@@ -22,7 +22,7 @@ struct SubolloutsCreator_v
 	 */
 	function addSubRollouts _Rollout =
 	(
-		--format "\n"; print "SubolloutsCreator_v._addSubRollouts()"
+		format "\n"; print "SubolloutsCreator_v._addSubRollouts()"
 		this._Rollout = _Rollout
 
 		for Subrollouts in this._getSubrollouts(_Rollout) do
@@ -37,9 +37,14 @@ struct SubolloutsCreator_v
 				--format "_Rollout.id	= % \n" _Rollout.id
 				--format "Subrollouts.slot	= % \n" Subrollouts.slot
 				--format "Subrollout.id	= % \n" Subrollout.id
+				format "Subrollouts.height	= % \n" Subrollouts.height
 			
 				execute  ( "AddSubRollout "+_Rollout.id+"." + Subrollouts.slot +" "+ Subrollout.id + " rolledUp:"+(this._getRolledStateFromIni(Subrollout.id)) )
 				--execute  ( "AddSubRollout "+_Rollout.id+"." + Subrollouts.slot +" "+ Subrollout.id )
+		
+		
+				--execute ( Subrollout.id as string + ".height = " + Subrollouts.height as string  )
+
 		
 				this.addSubRollouts (Subrollout)
 			)	
@@ -51,7 +56,7 @@ struct SubolloutsCreator_v
 	 --function addSubrolloutsSlot _Rollout Subrollouts =
 	 function addSubrolloutSlot _Rollout Subrollouts =
 	 (
-		--format "\n\n=====================================	SubolloutsCreator_v.addSubrolloutSlot() %.%	=====================================\n" ( _Rollout.id as string ) ( Subrollouts.slot as string );
+		format "\n\n=====================================	SubolloutsCreator_v.addSubrolloutSlot() %.%	=====================================\n" ( _Rollout.id as string ) ( Subrollouts.slot as string );
 		this._Rollout = _Rollout
 		
 		this.setSubrolloutsSlotHeight()

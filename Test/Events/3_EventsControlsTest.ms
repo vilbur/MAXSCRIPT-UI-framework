@@ -1,9 +1,13 @@
 clearListener()
 
 
-filein( getFilenamePath(getSourceFileName()) + "/../../Lib/RolloutCreator/RolloutCreator.ms" )
+--filein( getFilenamePath(getSourceFileName()) + "/../../Lib/Ini/Ini.ms" )
+--filein( getFilenamePath(getSourceFileName()) + "/../../Lib/RolloutCreator/RolloutCreator.ms" )
+filein( "$userscripts\Library\MAXSCRIPT-UI-framework\Lib\Dialog\Dialog.ms" )
 
-try( destroyDialog ROLLOUT_test )catch()
+
+
+--try( destroyDialog ROLLOUT_test )catch()
 
 
 /** Button test
@@ -51,9 +55,12 @@ function CallbackWith2Params arg_1 arg_2 =
 /** DEFINE UI 
  *	
  */
-_RolloutCreator 	= RolloutCreator_v()
+Dialog 	= Dialog_v title:(getFilenameFile(getSourceFileName()))  ini:( getSourceFileName())
 
-_Rollout = _RolloutCreator.new "Test"
+--_RolloutCreator 	= RolloutCreator_v Ini:(Ini_v( getSourceFileName()))
+
+_Rollouts  = Dialog.Rollouts height:512
+_Rollout = _Rollouts.Roll "Rollout 1"
 
 _Controls = _Rollout.Controls group:"Test"
 
@@ -62,11 +69,11 @@ _Controls = _Rollout.Controls group:"Test"
 --_Button_1.Event #rightclick	"print \"Button Rightclick\""
 
 
--- _EditText = _Controls.control #EditText "EditText 1"
+ --_EditText = _Controls.control #EditText "EditText 1"
 -- _EditText.Event #entered  "CallbackWithValue(val)"
 -- _EditText.Event #changed "CallbackWithValue(val)"
 
-_BrowsePath = _Controls.control #browsePath "EditText 1"
+--_BrowsePath = _Controls.control #browsePath "EditText 1"
 --_BrowsePath.Event #entered  "CallbackWithValue(val)"
 --_BrowsePath.Event #changed "CallbackWithValue(val)"
 
@@ -75,9 +82,14 @@ _BrowsePath = _Controls.control #browsePath "EditText 1"
 
 --_BrowsePath = _Controls.control #BrowsePath "BrowsePath 1"
 
+_Multilistbox = _Controls.control #Multilistbox "Multilistbox 1" across:1 items:#("A", "B" )
+
 /** CREATE UI 
  *	
  */
-_RolloutCreator.createRollout _Rollout
+--_RolloutCreator.createRollout _Rollout
 
-CreateDialog (_RolloutCreator.getDefinition _Rollout)
+--CreateDialog (_RolloutCreator.getDefinition _Rollout)
+Dialog.create width:256 
+
+--Dialog.register()

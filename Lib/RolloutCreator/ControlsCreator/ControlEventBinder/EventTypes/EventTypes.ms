@@ -71,7 +71,7 @@ struct EventTypes_v
 			#Listbox:	#( #(#selected, "val"),	#(#doubleClicked, "val"),	#(#rightClick, "val"))
 			#Slider:	#( #(#changed,  "val"),	#rightclick,	#buttondown,	#buttonup  )
 			#Spinner:	#( #(#changed,  "val inSpin"),	#(#entered, "inSpin inCancel"),	#(#buttonup, "inCancel"),	#buttondown )
-			#MultiListBox:	#( #(#selected, "val"),	#(#doubleClicked, "val"),	#rightClick,	#selectionEnd )
+			#MultiListBox:	#( #(#selected, "val"),	#(#doubleClicked, "val"),	#(#rightClick, "val"),	#selectionEnd )
 			#Combobox:	#( #(#selected, "val"),	#(#doubleClicked, "val"),	#(#entered , "val"),	#(#changed , "val"),	#rightClick)
 			#Dropdownlist:	#( #(#selected, "val"),	#rightClick )
 			--default:	undefined
