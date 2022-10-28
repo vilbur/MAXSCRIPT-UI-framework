@@ -20,6 +20,7 @@ struct ControlValue_v
 		#( #DEFAULT,  	#RadioButtons			),
 		#( #MATERIAL,  	#Materialbutton			),
 		#( #COLOR,  	#ColorPicker			),
+		#( #BITMAP,  	#Bitmap			),
 		#( #ADDRESS,  	#hyperlink			)
 	),
 

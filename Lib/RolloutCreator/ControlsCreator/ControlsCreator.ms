@@ -20,7 +20,7 @@ struct ControlCreator_v
 	
 	/* properties */
 	--DEBUG = true,
-	DEBUG = false,
+	----DEBUG = false,
 	
 	/* dependency */
 	_Controls,
@@ -155,12 +155,10 @@ struct ControlCreator_v
 	 */
 	function _addControlToRollout _Control =
 	(
+		--format "\n"; print "ControlCreator_v._addControlToRollout()"
 		params = ParamsCreator.join(_Control.params)
 
 		/* DEBUG LOG */ 
-		--if not matchPattern _Control.id pattern:"LABEL_fake*" then -- DEBUG - don`t print
-		--format "_Control.type	= % \n" _Control.type
-		--if _Control.type == #GroupBox then -- DEBUG - don`t print
 		if DEBUG then 
 		(
 			format "\nControl:%.%" ( _Rollout.id as string ) _Control.id

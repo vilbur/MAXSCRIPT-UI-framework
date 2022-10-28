@@ -10,6 +10,8 @@ filein( getFilenamePath(getSourceFileName()) + "/ControlsCreator/ControlsCreator
 filein( getFilenamePath(getSourceFileName()) + "/SubolloutsCreator/SubolloutsCreator.ms" )
 
 /** RolloutCreator_v
+  *
+  * https://help.autodesk.com/view/3DSMAX/2016/ENU/?guid=__files_GUID_5FC5036F_E2D7_46C9_9AFA_7B3550B9F254_htm
  */
 struct RolloutCreator_v
 (
@@ -33,10 +35,11 @@ struct RolloutCreator_v
 	function createRollout _Rollout width: =
 	(
 		format "\n\n-------------------------------------	RolloutCreator_v.createRollout() id:#%	-------------------------------------\n"  ( _Rollout.id as string );
-		--format "classOf _Rollout.id	= % \n" (classOf _Rollout.id)
+		--format "_Rollout.id	= % \n" (_Rollout.id)
 		--format "_Rollout.getFullId()	= % \n" (_Rollout.getFullId())
 		--format "_Rollout.getNestedLevel()	= % \n" (_Rollout.getNestedLevel())
 		--format "_Rollout.title	= % \n" _Rollout.title
+		format "_Rollout.height	= % \n" _Rollout.height
 		--format "width	= % \n" width
 
 		if _Rollout.width == unsupplied and width != unsupplied then 
@@ -86,6 +89,7 @@ struct RolloutCreator_v
 		/* EDIT end */ 
 		_Rollout.RCI.end()
 		
+			
 		--format "%\n\n%\n%\n%\n\n" "------------------------------------------------------------" _Rollout.RCI.def _Rollout  "------------------------------------------------------------"
 	),
 
