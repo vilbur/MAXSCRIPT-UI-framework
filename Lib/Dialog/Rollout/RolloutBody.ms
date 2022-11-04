@@ -22,7 +22,7 @@
 	/* inhered */ 
 	--Layout,
 
-	/** SHORTCUT: Create new rollout in first slot
+	/** Create new rollout in first slot
 	 */
 	function Roll title id: height: =
 	(
@@ -59,7 +59,7 @@
 		Subrollouts --return
 	),
 
-	/** Front end alias for user this.Subrollouts()
+	/** FRONT END ALIAS for user this.Subrollouts()
 	 */
 	function Rollouts slot: height: =
 	(
@@ -195,7 +195,8 @@
 	(
 		--print "RolloutBody._setId()"
 		if ( id == undefined or id == unsupplied ) then
-			id = toLower title
+			id = toLower title 
+			--id = toLower title
 			--id = substituteString title "Rollout" "" -- remove "rollout" from title to avoid id like: "ROLLOUT_Rollout_A" if title is "Rollout A'
 			--id  = "ROLLOUT_" + id -- add prefix
 			id = substituteString ( trimRight ( trimLeft id )) " " "_" -- replace whitespace with underscore
@@ -209,6 +210,9 @@
 		this.validateid()
 
 		id = id as name
+		
+		if ALL_ROLlOUTS_IDS != undefined and not appendIfUnique ALL_ROLlOUTS_IDS id then 
+			messageBox ("ROLLOUT ID EXISTS ALREADY\n\nid: #"+ id as string +" \n\nFirst rollout will be overridden by second rollout") title:"DUPLICATED ID OF ROLLUOT"  beep:false
 	),
 
 	/** Validate title

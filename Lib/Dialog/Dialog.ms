@@ -8,6 +8,9 @@ filein( getFilenamePath(getSourceFileName()) + "/../Ini/Ini.ms" )
 
 filein( getFilenamePath(getSourceFileName()) + "/Hotkeys/Hotkeys.ms" )
 
+
+global ALL_ROLlOUTS_IDS = #() -- store ids of rollouts to avoid duplicated ids of subrollouts
+
 global DIALOG_PREVIOUS_STATE = undefined -- this should be in struct
 
 if EVENT_DOCKED_ENABLED == undefined then 
@@ -26,6 +29,9 @@ if HOTKEYS_GLOBAL == undefined then
  */
 struct Dialog_v
 (
+	
+	/*------ EXTEND ROLLOUT ------*/
+	
 	include "Library/MAXSCRIPT-UI-framework/Lib/Dialog/Rollout/RolloutBody.ms" --"./Rollout/RolloutBody.ms"
 	
 	public
@@ -103,6 +109,9 @@ struct Dialog_v
 
 		--AutoRunEvents.executeMacros()
 		format ("\n\nDIALOG "+title+" CREATED\n\n" )
+		CONTROL_BITMAPS_STORE = #() -- reset buffer array
+
+		
 	),
 	
 	/** Key press
