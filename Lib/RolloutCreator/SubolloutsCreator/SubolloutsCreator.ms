@@ -22,7 +22,7 @@ struct SubolloutsCreator_v
 	 */
 	function addSubRollouts _Rollout =
 	(
-		format "\n"; print "SubolloutsCreator_v._addSubRollouts()"
+		--format "\n"; print "SubolloutsCreator_v._addSubRollouts()"
 		this._Rollout = _Rollout
 
 		for Subrollouts in this._getSubrollouts(_Rollout) do
@@ -37,14 +37,10 @@ struct SubolloutsCreator_v
 				--format "_Rollout.id	= % \n" _Rollout.id
 				--format "Subrollouts.slot	= % \n" Subrollouts.slot
 				--format "Subrollout.id	= % \n" Subrollout.id
-				format "Subrollouts.height	= % \n" Subrollouts.height
+				--format "Subrollouts.height	= % \n" Subrollouts.height
+				--print  ( "AddSubRollout "+_Rollout.id+"." + Subrollouts.slot +" "+ Subrollout.id + "	rolledUp:"+(this._getRolledStateFromIni(Subrollout.id)) )
 			
 				execute  ( "AddSubRollout "+_Rollout.id+"." + Subrollouts.slot +" "+ Subrollout.id + " rolledUp:"+(this._getRolledStateFromIni(Subrollout.id)) )
-				--execute  ( "AddSubRollout "+_Rollout.id+"." + Subrollouts.slot +" "+ Subrollout.id )
-		
-		
-				--execute ( Subrollout.id as string + ".height = " + Subrollouts.height as string  )
-
 		
 				this.addSubRollouts (Subrollout)
 			)	
@@ -56,14 +52,18 @@ struct SubolloutsCreator_v
 	 --function addSubrolloutsSlot _Rollout Subrollouts =
 	 function addSubrolloutSlot _Rollout Subrollouts =
 	 (
-		format "\n\n=====================================	SubolloutsCreator_v.addSubrolloutSlot() %.%	=====================================\n" ( _Rollout.id as string ) ( Subrollouts.slot as string );
+		if Subrollouts.Rollouts.count == 0 then
+			return false
+		
+		format "\n\n\n\n=====================================	SubolloutsCreator_v.addSubrolloutSlot() %.%	=====================================\n" ( _Rollout.id as string ) ( Subrollouts.slot as string );
+		--format "Subrollouts	= % \n" Subrollouts
 		this._Rollout = _Rollout
 		
 		this.setSubrolloutsSlotHeight()
 		--format "Subrollouts.height	        = % \n" Subrollouts.height
 		
 		--if Subrollouts.height == unsupplied then 
-			--Subrollouts.height = 256 --dev
+			--Subrollouts.height = 256 --DEV
 		
 		_Rollout.RCI.addText ("subRollout "+Subrollouts.slot as string +" \"slot_name\" height:"+Subrollouts.height as string )
 	 ),
