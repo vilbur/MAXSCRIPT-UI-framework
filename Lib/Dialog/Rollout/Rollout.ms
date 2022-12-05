@@ -6,7 +6,7 @@ filein( getFilenamePath(getSourceFileName()) + "/Subrollouts/Subrollouts.ms" )
 struct Rollout_v
 (
 	
-	include "Library/MAXSCRIPT-UI-framework/Lib/Dialog/Rollout/RolloutBody.ms"
+	include "MAXSCRIPT-UI-framework/Lib/Dialog/Rollout/RolloutBody.ms"
 
 	/**  
 	 */

@@ -5,7 +5,7 @@
  */
 struct EventsCombiner_v
 (
-	include "Library/MAXSCRIPT-UI-framework/Lib/List/ListBody.ms"
+	include "MAXSCRIPT-UI-framework/Lib/List/ListBody.ms"
 	/*
 	   change variable names of keys and values
 		

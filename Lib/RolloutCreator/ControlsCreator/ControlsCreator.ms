@@ -14,14 +14,14 @@ struct ControlCreator_v
 (
 	__construct = #( #_Rollout, #ini_path ),
 
-	/* construct */ 
+	/* construct */
 	_Rollout,
 	Ini,
-	
+
 	/* properties */
 	--DEBUG = true,
-	----DEBUG = false,
-	
+	DEBUG = false,
+
 	/* dependency */
 	_Controls,
 
@@ -30,26 +30,26 @@ struct ControlCreator_v
 	TooltipCreator	= TooltipCreator_v(),
 	EventBinder	= ControlEventBinder_v _Rollout:_Rollout,
 
-	
+
 	/** Add controls to rollout
 	 */
 	function addControls _Controls =
 	(
 		format "\n\n-------------- Controls group:% --------------\n" _Controls.group
 		--format "_Controls.list.count	= % \n" _Controls.list.count
-		
+
 		if _Controls.list.count == 0 then
 			return false
-		
+
 		this._Controls = _Controls
 
-		if not this.isGroupboxControls() then 
+		if not this.isGroupboxControls() then
 			GroupBoxCreator.addGrouboxes (_Rollout.getFullId()) (_Controls.GroupBoxes)
-		
-		/* pass DEFAULT PARAMETERS to params creator */ 
+
+		/* pass DEFAULT PARAMETERS to params creator */
 		ParamsCreator.setDefaultParameters(_Controls.DefaultParameters)
-		
-		
+
+
 		for _Control in _Controls.list do
 		(
 			ParamsCreator.mergeParams(_Control)
@@ -64,22 +64,22 @@ struct ControlCreator_v
 
 			this._customizeControlTypes(_Control)
 		)
-		
-		
+
+
 		/* modify ACROSS PARAMETER */
-		if not this.isGroupboxControls() then 
+		if not this.isGroupboxControls() then
 			(AcrossParameterModifier_v()).addFakeControls(this._Controls)
-		
-		/* add LOCAL VARIABLES */ 
+
+		/* add LOCAL VARIABLES */
 		this._addLocalVariablesToRollout()
-		
-		/* add TEXT */ 
+
+		/* add TEXT */
 		this._addTextToRollout()
-		
-		/* add CONTROLS */ 
+
+		/* add CONTROLS */
 		this._addControlsToRollout()
-		
-		/* add HANDLERS */ 
+
+		/* add HANDLERS */
 		this._addHandlersToRollout()
 
 	),
@@ -91,9 +91,9 @@ struct ControlCreator_v
 	 */
 	function moveGrouboxControlsToEnd &_Rollout_ =
 	(
-		--format "\n"; print ("ControlCreator_v.createControslInGroupboxAsLast() "+_Rollout_.id as string) 
+		--format "\n"; print ("ControlCreator_v.createControslInGroupboxAsLast() "+_Rollout_.id as string)
 		Controls_in_all_groupboxes = #()
-		
+
 		fn diffArray a b =
 		(
 			retArray = #()
@@ -110,21 +110,21 @@ struct ControlCreator_v
 		for _Controls in _Rollout_._Controls where this._isControls(_Controls) do
 		(
 			controls_in_groupboxes = for _Control in _Controls.list where _Control.Params.getVal #GroupBox != undefined and _Control.type != #GroupBox collect _Control -- Get controls with defined groupbox in params AND they are not groupbox
-			
+
 			_Controls.list = ( diffArray _Controls.list controls_in_groupboxes)
 
 			Controls_in_all_groupboxes += controls_in_groupboxes
 		)
 
 		/** CREATE CONTROLS LIST WHICH IS NOT RENDERED
-		  *	
+		  *
 		  */
 		if( Controls_in_all_groupboxes.count > 0 ) then
 		(
 			--local _Controls_groupbox = _Rollout_.Controls group:( toUpper _Rollout_.title+" CONTROLS")
 			local _Controls_groupbox = _Rollout_.Controls group:#controls_in_groupboxes
 
-			--_Controls_groupbox.control #button (_Rollout_.title+" GOOOOOOD") 
+			--_Controls_groupbox.control #button (_Rollout_.title+" GOOOOOOD")
 			for Control_in_Groupbox in Controls_in_all_groupboxes do
 				_Controls_groupbox.add Control_in_Groupbox
 		)
@@ -139,16 +139,16 @@ struct ControlCreator_v
 	function _addControlsToRollout =
 	(
 		--format "\n"; print "ControlCreator_v._addControlsToRollout()"
-		if not this.isGroupboxControls() then 
+		if not this.isGroupboxControls() then
 			this._addControlsGroup #start
 
-			
+
 		for _Control in _Controls.list do
 			this._addControlToRollout (_Control) -- add control first before variables, functions and events
-			
-			
-		if not this.isGroupboxControls() then 
-			this._addControlsGroup #end 
+
+
+		if not this.isGroupboxControls() then
+			this._addControlsGroup #end
 	),
 
 	/* Add control to RolloutCreator
@@ -158,14 +158,14 @@ struct ControlCreator_v
 		--format "\n"; print "ControlCreator_v._addControlToRollout()"
 		params = ParamsCreator.join(_Control.params)
 
-		/* DEBUG LOG */ 
-		if DEBUG then 
+		/* DEBUG LOG */
+		if DEBUG then
 		(
 			format "\nControl:%.%" ( _Rollout.id as string ) _Control.id
-			
+
 			format "	Params: % \n" params
 		)
-		
+
 		_Rollout.RCI.addControl (_Control.type) (_Control.id) (this._getCaption(_Control.caption)) paramStr:params filter:true;
 	),
 
@@ -176,9 +176,9 @@ struct ControlCreator_v
 		for _Control in _Controls.list do
 			EventBinder.addHandlers(_Control)
 	),
-	
+
 	/** Add controls group
-	  * 
+	  *
 	  * https://help.autodesk.com/view/3DSMAX/2016/ENU/?guid=__files_GUID_1361B847_7878_4C52_98DE_5BC5CA830B40_htm
 	 */
 	function _addControlsGroup start_or_end =
@@ -195,7 +195,7 @@ struct ControlCreator_v
 	/** Empty caption if caption is in square brackets
 	  *
 	  * Mainly used for groupbox control
-	  * 
+	  *
 	  * @property	string	caption	of control
 	  *
 	  * @return	string return empty string if caption is for instance "[Foo Control Caption]"
@@ -209,7 +209,7 @@ struct ControlCreator_v
 	),
 
 	/** Add local variables from Control_v to rollout
-	  * IMPORTANT: local variables must be defined outside group 
+	  * IMPORTANT: local variables must be defined outside group
 	  *
 	  * 	Control_v.rollout_locals =  #(#variable_name1, init_value1, #variable_name2, init_value2)
 	 */
@@ -222,7 +222,7 @@ struct ControlCreator_v
 	),
 
 	/** Add functions to rollout
-	  * IMPORTANT: functions must be defined outside group 
+	  * IMPORTANT: functions must be defined outside group
 	 */
 	function _addTextToRollout =
 	(
@@ -238,7 +238,7 @@ struct ControlCreator_v
 		--print "ControlCreator_v._customizeControlTypes()"
 		if _Control.type == #browsePath then
 			(BrowsePath_v()).convertToEditText(_Control)
-		
+
 		else if _Control.type == #Radiobuttons then
 			(RadioButtons_v()).setParams(_Control)
 	),
@@ -249,14 +249,14 @@ struct ControlCreator_v
 		--format "\n"; print "ControlCreator_v.addToAutoRunEvents()"
 		if( Event = _Control.Events.get #changed ) != undefined and _Control.Params.getVal "checked" == true then
 			append AUTORUN_EVENTS Event.CODE
-	), 
+	),
 
 	/** _is controls
 	 */
 	function _isControls _Struct =
 	(
 		--format "\n"; print "ControlCreator_v._isControls()"
-		toLower (( filterString( classof _Struct as string ) "_*(:" )[2]) == "controls"  --return		
+		toLower (( filterString( classof _Struct as string ) "_*(:" )[2]) == "controls"  --return
 	),
 
 	/** If controls list is not temporary
@@ -267,14 +267,14 @@ struct ControlCreator_v
 		--this._Controls.group == #controls_in_groupboxes or this._Controls.group == #hotkeys_timers
 		this._Controls.group == #controls_in_groupboxes
 	),
-	
-	/**  
+
+	/**
 	 */
 	on create do
 	(
 		--print "ControlCreator_v.onCreate()"
 		ControlValue.Ini = Ini
-		
+
 		EventBinder.ini_path	= Ini.getPath()
-	)	
+	)
 )

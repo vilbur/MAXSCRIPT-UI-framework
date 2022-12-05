@@ -8,7 +8,7 @@ filein( getFilenamePath(getSourceFileName()) + "/../../../RolloutCreator.ms" )
   *		_Rollout
   *		_Controls
   */
-include "Library/MAXSCRIPT-UI-framework/Lib/RolloutCreator/_Test/includes/CreateTestRollout.ms"
+include "MAXSCRIPT-UI-framework/Lib/RolloutCreator/_Test/includes/CreateTestRollout.ms"
 filein( getFilenamePath(getSourceFileName()) + "/../../../../Ini/Ini.ms" )
 
 /** SETUP OF TEST

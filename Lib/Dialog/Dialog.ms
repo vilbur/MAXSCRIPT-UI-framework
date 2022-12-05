@@ -32,7 +32,7 @@ struct Dialog_v
 	
 	/*------ EXTEND ROLLOUT ------*/
 	
-	include "Library/MAXSCRIPT-UI-framework/Lib/Dialog/Rollout/RolloutBody.ms" --"./Rollout/RolloutBody.ms"
+	include "MAXSCRIPT-UI-framework/Lib/Dialog/Rollout/RolloutBody.ms" --"./Rollout/RolloutBody.ms"
 	
 	public
 

@@ -19,7 +19,7 @@ macroscript macrotest_parse_icon_params_system_path
 category:	"_macrotest"
 buttontext:	"System dir icon path"
 
-icon:	"images:#('$userScripts/Library/MAXSCRIPT-UI-framework/Lib/ContentLoader/ContentSubrollouts/ContentRollout/ScriptFile/_Test/Test-files/icons_sprite.bmp',undefined,9,2,3,3,4)"
+icon:	"images:#('$userScripts/MAXSCRIPT-UI-framework/Lib/ContentLoader/ContentSubrollouts/ContentRollout/ScriptFile/_Test/Test-files/icons_sprite.bmp',undefined,9,2,3,3,4)"
 (
 )
 
@@ -32,6 +32,6 @@ macroscript macrotest_parse_icon_params_absolute_path
 category:	"_macrotest"
 buttontext:	"Absolute icon path"
 
-icon:	"images:#('C:/GoogleDrive/Programs/CG/3DsMax/scripts/Library/MAXSCRIPT-UI-framework/Lib/ContentLoader/ContentSubrollouts/ContentRollout/ScriptFile/_Test/Test-files/icons_sprite.bmp',undefined,9,3,4,3,4)"
+icon:	"images:#('C:/GoogleDrive/Programs/CG/3DsMax/scripts/MAXSCRIPT-UI-framework/Lib/ContentLoader/ContentSubrollouts/ContentRollout/ScriptFile/_Test/Test-files/icons_sprite.bmp',undefined,9,3,4,3,4)"
 (
 )

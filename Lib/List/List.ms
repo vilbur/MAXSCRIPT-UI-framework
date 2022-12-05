@@ -5,7 +5,7 @@
 struct List_v
 (
 	
-	include "Library/MAXSCRIPT-UI-framework/Lib/List/ListBody.ms"
+	include "ListBody.ms"
 
 	/**  
 	 */

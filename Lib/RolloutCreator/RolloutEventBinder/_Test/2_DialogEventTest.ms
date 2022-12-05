@@ -10,7 +10,7 @@ filein( getFilenamePath(getSourceFileName()) + "/../../../Dialog/Dialog.ms" )
 */ 
 
 
---include "Library/MAXSCRIPT-UI-framework/Lib/Dialog/Rollout/EventsList/_Test/inlcude_test_callbacks.ms"
+--include "MAXSCRIPT-UI-framework/Lib/Dialog/Rollout/EventsList/_Test/inlcude_test_callbacks.ms"
 
 /*------ CREATE FLOAT    ER DIALOG ------*/
 Dialog	= Dialog_v title:"Test" ini:(getFilenamePath(getSourceFileName()) + "2_DialogEventTest.ini") --load:true

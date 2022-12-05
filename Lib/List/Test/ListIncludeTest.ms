@@ -17,7 +17,7 @@ struct ExtendList_v
 		this.keys	= #() 
 		this.values	= #()
 	*/
-	include "Library/MAXSCRIPT-UI-framework/Lib/List/ListBody.ms"
+	include "MAXSCRIPT-UI-framework/Lib/List/ListBody.ms"
 
 	 
 	on create do

@@ -23,7 +23,7 @@ struct GroupBoxCreator_v
 		this.keys	= #() 
 		this.values	= #()
 	*/
-	include "Library/MAXSCRIPT-UI-framework/Lib/List/ListBody.ms"
+	include "MAXSCRIPT-UI-framework/Lib/List/ListBody.ms"
 	
 	GroupBoxes, -- List of groupboxes where key is groupbox id and value is list of control ids in groupbox
 	rollouts	= keys,

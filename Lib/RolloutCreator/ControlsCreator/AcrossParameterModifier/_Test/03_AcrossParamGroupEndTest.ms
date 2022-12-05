@@ -24,4 +24,4 @@ _Controls_B.control #button "Test B2"params:#(#across, 4)
 dialog_width = 420
 dialog_height = 512
 --dialog_height = 1024
-include "Library/MAXSCRIPT-UI-framework/Lib/RolloutCreator/_Test/includes/CreateTestDialog.ms"
+include "MAXSCRIPT-UI-framework/Lib/RolloutCreator/_Test/includes/CreateTestDialog.ms"

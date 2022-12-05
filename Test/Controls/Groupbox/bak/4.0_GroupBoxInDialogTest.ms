@@ -9,7 +9,7 @@ filein( getFilenamePath(getSourceFileName()) + "/../../../RolloutCreator.ms" )
   */
 --group_name = "This is group"
 --group_name = undefined 
---include "Library/MAXSCRIPT-UI-framework/Lib/RolloutCreator/_Test/includes/CreateTestRollout.ms" -- "../../../_Test/includes/CreateTestRollout.ms"
+--include "MAXSCRIPT-UI-framework/Lib/RolloutCreator/_Test/includes/CreateTestRollout.ms" -- "../../../_Test/includes/CreateTestRollout.ms"
 filein( getFilenamePath(getSourceFileName()) + "/../../../../Dialog/Dialog.ms" )
 
 
@@ -115,4 +115,4 @@ Dialog.create()
 --dialog_height = 256
 --dialog_height = 1280
 ----dialog_height = undefined
---include "Library/MAXSCRIPT-UI-framework/Lib/RolloutCreator/_Test/includes/CreateTestDialog.ms"
+--include "MAXSCRIPT-UI-framework/Lib/RolloutCreator/_Test/includes/CreateTestDialog.ms"

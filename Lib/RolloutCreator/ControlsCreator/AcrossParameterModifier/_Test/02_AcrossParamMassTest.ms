@@ -8,7 +8,7 @@ filein( getFilenamePath(getSourceFileName()) + "/../../../RolloutCreator.ms" )
   *		_Rollout
   *		_Controls
   */
-include "Library/MAXSCRIPT-UI-framework/Lib/RolloutCreator/_Test/includes/CreateTestRollout.ms" -- "../../../_Test/includes/CreateTestRollout.ms"
+include "MAXSCRIPT-UI-framework/Lib/RolloutCreator/_Test/includes/CreateTestRollout.ms" -- "../../../_Test/includes/CreateTestRollout.ms"
 
 /** Multilistbox
  */
@@ -167,4 +167,4 @@ subrolloutsControls()
 dialog_width = 420
 dialog_height = 1600
 --dialog_height = 1024
-include "Library/MAXSCRIPT-UI-framework/Lib/RolloutCreator/_Test/includes/CreateTestDialog.ms"
+include "MAXSCRIPT-UI-framework/Lib/RolloutCreator/_Test/includes/CreateTestDialog.ms"

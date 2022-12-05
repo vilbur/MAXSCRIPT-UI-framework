@@ -19,7 +19,7 @@ struct DefaultParameters_v
 		this.values = #( List,	List,	List,	... ) -- list of parameters and values for each control type
 		
 	*/
-	include "Library/MAXSCRIPT-UI-framework/Lib/List/ListBody.ms"
+	include "MAXSCRIPT-UI-framework/Lib/List/ListBody.ms"
 
 	
 	control_types = (ControlTypes_v()).getAllTypes(),

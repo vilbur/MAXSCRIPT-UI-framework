@@ -8,7 +8,7 @@ filein( getFilenamePath(getSourceFileName()) + "/../../../RolloutCreator.ms" )
   *		_Rollout
   *		_Controls
   */
-include "Library/MAXSCRIPT-UI-framework/Lib/RolloutCreator/_Test/includes/CreateTestRollout.ms"
+include "MAXSCRIPT-UI-framework/Lib/RolloutCreator/_Test/includes/CreateTestRollout.ms"
 
 
 
@@ -25,4 +25,4 @@ for i = 1 to 3 do
 /** Create dialog from _Rollout
   */
 dialog_width = 512
-include "Library/MAXSCRIPT-UI-framework/Lib/RolloutCreator/_Test/includes/CreateTestDialog.ms"
+include "MAXSCRIPT-UI-framework/Lib/RolloutCreator/_Test/includes/CreateTestDialog.ms"

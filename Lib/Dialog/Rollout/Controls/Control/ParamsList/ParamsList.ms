@@ -15,7 +15,7 @@ struct ParamsList_v
 	/* reference */
 	/* properties */
 	
-	include "Library/MAXSCRIPT-UI-framework/Lib/List/ListBody.ms"
+	include "MAXSCRIPT-UI-framework/Lib/List/ListBody.ms"
 
 	--private
 	

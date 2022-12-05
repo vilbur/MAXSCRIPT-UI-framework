@@ -10,7 +10,7 @@ struct GroupBoxes_v
 		this.values	= #()
 	*/
 	
-	include "Library/MAXSCRIPT-UI-framework/Lib/List/ListBody.ms"
+	include "MAXSCRIPT-UI-framework/Lib/List/ListBody.ms"
 
 	ids	= keys,	-- #( #groupbox_1,	#groupbox_2 )	-- ids of groupboxes
 	controls	= values,	-- #( #( ctrl1_gb_1, ctrl2_gb_1),	#( ctrl1_gb_1, ctrl2_gb_1) )	-- 2D matrix of ids of controls per groupbox

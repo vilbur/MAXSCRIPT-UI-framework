@@ -10,7 +10,7 @@ try(destroyDialog buttons_dialog) catch()
  */
 
 
-icon_path = "c:/GoogleDrive/Programs/CG/3DsMax/scripts/Library/MAXSCRIPT-UI-framework/Lib/Dialog/Rollout/Controls/_Dev/icons_sprite.bmp"
+icon_path = "c:/GoogleDrive/Programs/CG/3DsMax/scripts/MAXSCRIPT-UI-framework/Lib/Dialog/Rollout/Controls/_Dev/icons_sprite.bmp"
 --icon_path = (getFilenamePath(getSourceFileName()) + "/icons_sprite.bmp")
 
 
