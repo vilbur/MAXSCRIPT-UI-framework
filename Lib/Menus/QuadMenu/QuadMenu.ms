@@ -6,18 +6,18 @@ filein( getFilenamePath(getSourceFileName()) + "/Menu/Menu.ms" )
   *
  */
 struct QuadMenu_v
-(	
+(
 	/* construct */
 	name,
-	
+
 	/* dependency */
 	/* reference */
 	/* inhered */
 	/* properties */
-	quadMenu, -- <MixinInterface:quadMenu> 
+	quadMenu, -- <MixinInterface:quadMenu>
 	Quads	= #(),
-	
-	macroscripts = #(),	
+
+	macroscripts = #(),
 
 	/** Add menu
 	 */
@@ -25,6 +25,16 @@ struct QuadMenu_v
 	(
 		--format "\n"; print "QuadMenu_v.addMenu()"
 		Quads[quad_index].addMenu (menu_name)
+	),
+
+	/** Get quad menu
+	  *
+	  * @param	int	quad_index	of quad menu
+	 */
+	function getMenu quad_index =
+	(
+		--format "\n"; print "QuadMenu_v.getQuad()"
+		Quads[quad_index] --return
 	),
 
 	/** Show all quad_names
@@ -36,7 +46,7 @@ struct QuadMenu_v
 
 		this --return
 	),
-	
+
 	/** Set right click
 	  *
 	  * @param	name	which	#nonePressed #shiftPressed #altPressed #controlPressed #shiftAndAltPressed #shiftAndControlPressed #controlAndAltPressed #shiftAndAltAndControlPressed
@@ -47,40 +57,40 @@ struct QuadMenu_v
 		--format "\n"; print "QuadMenu_v.setRightClick()"
 		menuMan.setViewportRightClickMenu which quadMenu
 	),
-	
+
 	/** Reset right click to default
-	  * 
+	  *
 	  * Quad Menu "Default Viewport Quad" is set to right click
 	 */
 	function resetRightClick =
 	(
 		----format "\n"; print "QuadMenu_v.resetRightClick()"
 		this.setRightClick("Default Viewport Quad")	which:#nonePressed
-		
+
 		this.setRightClick("Modeling 1 [Cntrl+RMB]")	which:#controlPressed
 	),
-	
-	
+
+
 	private
 
 
 	/** Create quadMenu menu
-	  * 
-	  * @return	this	 
+	  *
+	  * @return	this
 	 */
 	function _setQuad =
 	(
 		--format "\n"; print "QuadMenu_v._setQuad()"
 		----format "name	= % \n" name
-		if (quadMenu = menuMan.findQuadMenu this.name) == undefined then 
+		if (quadMenu = menuMan.findQuadMenu this.name) == undefined then
 			quadMenu = menuMan.createQuadMenu this.name (this.name+"_"+1 as string )(this.name+"_"+2 as string )(this.name+"_"+3 as string )(this.name+"_"+4 as string )
-			
+
 		this --return
 	),
-	
+
 	/** Create quadMenu menu
-	  * 
-	  * @return	this	 
+	  *
+	  * @return	this
 	 */
 	function _setQuads =
 	(
@@ -90,14 +100,14 @@ struct QuadMenu_v
 			for i = 1 to 4 do
 				append Quads (Menu_v menu:(quadMenu.getMenu(i)))
 	),
-	
-	/**  
+
+	/**
 	 */
 	on create do
 	(
 		--print("QuadMenu_v.onCreate()")
 		this._setQuad()
-		
+
 		this._setQuads()
 	)
 )
