@@ -12,7 +12,7 @@ struct IniSaver_v
 	--Dialog,
 
 	--save_classes = #(
-	--	
+	--
 	--	CheckBoxControl ,
 	--	CheckButtonControl ,
 	--	SpinnerControl ,
@@ -38,10 +38,10 @@ struct IniSaver_v
 		(
 			if EVENT_DOCKED_ENABLED != undefined and EVENT_DOCKED_ENABLED then
 				this.saveDialogDockState (rollout_id)
-		
+
 			this._saveControlsAndSubrollouts (_Rollout)
 		)
-		
+
 		true --return
 	),
 
@@ -51,22 +51,22 @@ struct IniSaver_v
 	(
 		--format "\n"; print "IniSaver_v.saveDialogDockState()"
 		--format "rollout_id	= % \n" rollout_id
-		
+
 		if ( _Rollout = execute( rollout_id as string )) != undefined then
 		(
 			if( dialog_is_not_closed = GetDialogSize _Rollout) != [0,0] then -- if dialog is closed by user, exists but it is not displayed , then it`s size is [0,0,]
 			(
-				
+
 				this._saveToIni _Rollout.name "size"	(GetDialogSize _Rollout )
-				
+
 				this._saveToIni _Rollout.name "position"	(GetDialogPos _Rollout )
-				
+
 				this._saveToIni _Rollout.name "dock_state"	(try(cui.getDockState _Rollout )catch())
 			)
-		
+
 		)
 	),
-	
+
 	private
 
 
@@ -125,38 +125,38 @@ struct IniSaver_v
 		(
 			CheckBoxControl:	Ctrl.checked
 			CheckButtonControl:	Ctrl.checked
-			
+
 			SpinnerControl:	Ctrl.value
 			SliderControl:	Ctrl.value
 			AngleControl:	Ctrl.degrees
-			
+
 			ListboxControl:	Ctrl.selection
 			ComboboxControl:	Ctrl.selection -- ComboBox and DropdownList ALSO !!!
 			MultiListBoxControl:	Ctrl.selection
-			
+
 			EdittextControl:	Ctrl.text
-			PickbuttonControl:	Ctrl.object 
+			PickbuttonControl:	Ctrl.object
 			ColorPickerControl:	Ctrl.color
 			RadioControl:	Ctrl.state
-		
-			--BitmapControl:	
-			--hyperlinkControl:	
-			--imgTagControl:	
-			--MapbuttonControl:	
-			--MaterialbuttonControl:	
-			--ProgressBarControl:	
+
+			--BitmapControl:
+			--hyperlinkControl:
+			--imgTagControl:
+			--MapbuttonControl:
+			--MaterialbuttonControl:
+			--ProgressBarControl:
 			--CurveControl:		-- DOES NOT WORK YET
 			--popupMenuControl:		-- DOES NOT WORK YET
-			--TimerControl:	
-			
+			--TimerControl:
+
 		)
 		--format "val	= % \n" val
-		if( val != undefined ) then 
+		if( val != undefined ) then
 			this._saveToIni (_RolloutClass.name) Ctrl.name (val as string )
 	),
 
-	/**  
-	  *	
+	/**
+	  *
 	  */
 	function regexGetMatches string pattern ignorecase:true =
 	(
@@ -172,15 +172,21 @@ struct IniSaver_v
 	 */
 	function _saveToIni section key val =
 	(
-		--format "\n"; print "IniSaver_v._saveToIni()"
+		format "\n"; print "IniSaver_v._saveToIni()"
 		----format "ini_file	= % \n" ini_file
 		--format "section	= % \n" section
 		--format "key	= % \n" key
 		--format "val	= % \n" val
-		if( ini_file != undefined  and val != undefined ) then 
+
+		if( ini_file != undefined  and val != undefined ) then
+		(
+			if classof val == string then
+				val = substituteString val "\\" "\\\\"
+
 			setINISetting ini_file section key ( val as string )
+		)
 	),
-	
+
 	/** Remove from ini
 	 */
 	function _delIniSetting section key =
@@ -188,23 +194,23 @@ struct IniSaver_v
 		--format "\n"; print "IniSaver_v._delIniSetting ()"
 		delIniSetting  ini_file section key
 	),
-	
+
 	/** Get subrollouts by order in UI
 	 */
 	function _getOrderedRollouts rollouts =
 	(
 		fn sortByY A B = (windows.getWindowPos A.hWnd).y - (windows.getWindowPos B.hWnd).y
-		
+
 		qsort rollouts sortByY --> 'rollouts' will now be sorted based on Y
-		
+
 		rollouts --return
 	),
-	
-	/**  
+
+	/**
 	 */
 	on create do
 	(
 		--clearListener()
 		--format "\n"; print("IniSaver_v.onCreate()")
-	)	
+	)
 )
