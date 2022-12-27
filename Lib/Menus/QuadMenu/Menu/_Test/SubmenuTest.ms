@@ -31,10 +31,12 @@ _Submenu	= _ItemInMenu.getSubmenu() -- !!! NOTICE_1: THIS DONES NOT WALK, ALTHOU
 MainQuad 	= QuadMenu_v("Default Viewport Quad")	-- get QuadMenu_v()
 QuadMenu 	= MainQuad.getMenu(3)	-- get Menu_v()
 ItemInQuad	= QuadMenu.getItem("Context Spline Tools 1")	-- get <MixinInterface:menuItem>
-Menu	= QuadMenu.getMenu("Context Spline Tools 1")
-ItemInMenu	= Menu.getItem 1
-Submenu	= Menu.getSubMenu("Edit/Editable Spline Menu") -- NOTICE_2: SAME CASE AS NOTICE_1
+Menu	= QuadMenu.getMenu("Context Spline Tools 1")	-- get Menu_v()
+ItemInMenu	= Menu.getItem("Edit/Editable Spline Menu")	-- get item by index is valid also Menu.getItem 1
+Submenu	= Menu.getSubMenu("Edit/Editable Spline Menu")	-- NOTICE_2: SAME CASE AS NOTICE_1
 
+
+--Menu.removeItem("Edit/Editable Spline Menu") -- REMOVE ITEM TEST
 
 
 clearListener()

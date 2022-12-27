@@ -13,6 +13,7 @@ struct Menu_v
 	/* properties */
 	menu, -- <MixinInterface:menu>
 
+	default_menu_flat = true,
 
 	/** Get menu from menus list HELP:https://help.autodesk.com/view/3DSMAX/2022/ENU/?guid=GUID-F8993D95-943E-4031-B1C6-6B2BADE4DB9E#GUID-F8993D95-943E-4031-B1C6-6B2BADE4DB9E__WS73099CC142F4875546792D6511E39D97277-15A5
 	 */
@@ -89,7 +90,7 @@ struct Menu_v
 	  *
 	  * @return Menu_v
 	 */
-	function addMenu menu_name index: title: flat:false =
+	function addMenu menu_name index: title: flat:default_menu_flat =
 	(
 		--format "\n"; print "Menu_v.addMenu()"
 		 if index == unsupplied then

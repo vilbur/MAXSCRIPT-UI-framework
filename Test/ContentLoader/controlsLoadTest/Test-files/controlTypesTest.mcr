@@ -15,11 +15,11 @@ macroscript MacroFileTest_A
 
 /*------------------------------------------------------------------------------
   CHECKBOX
-------------------------------------------------------------------------------*/	
+------------------------------------------------------------------------------*/
 
 
-/*  
-*/ 
+/*
+*/
 macroscript macroFileTest_checkbox
 	category:	"MacroFileTest"
 	buttontext:	"Checkbox Test"
@@ -36,7 +36,7 @@ macroscript macroFileTest_checkbox
 --	category:	"MacroFileTest"
 --	buttontext:	"Checkbox HERE IS BUG"
 --	toolTip:	"Right click tooltip"
---	icon:	"control:#checkbox" 
+--	icon:	"control:#checkbox"
 --
 --(
 --	print "checkbox #rightclick"
@@ -47,10 +47,10 @@ macroscript macroFileTest_checkbox
 
 /*------------------------------------------------------------------------------
   SPINNER
---------------------------------------------------------------------------*/	
+--------------------------------------------------------------------------*/
 
-/*  
-*/ 
+/*
+*/
 macroscript macroFileTest_spinner
 	category:	"MacroFileTest"
 	buttontext:	"Spinner Test"
@@ -63,10 +63,10 @@ macroscript macroFileTest_spinner
 
 /*------------------------------------------------------------------------------
   EDITTEXT
-----------------------------------------------------------------------------*/	
+----------------------------------------------------------------------------*/
 
-/*  
-*/ 
+/*
+*/
 macroscript macroFileTest_edittext
 	category:	"MacroFileTest"
 	buttontext:	"EditText"
@@ -81,10 +81,10 @@ macroscript macroFileTest_edittext
 
 /*------------------------------------------------------------------------------
   BROWSE PATH
-----------------------------------------------------------------------------*/	
+----------------------------------------------------------------------------*/
 
-/*  
-*/ 
+/*
+*/
 macroscript macroFileTest_browsepath
 	category:	"MacroFileTest"
 	buttontext:	"BrowsePath"
@@ -100,10 +100,10 @@ macroscript macroFileTest_browsepath
 
 /*------------------------------------------------------------------------------
   CHECKBUTTON
-------------------------------------------------------------------------------*/	
+------------------------------------------------------------------------------*/
 
-/*  
-*/ 
+/*
+*/
 macroscript macroFileTest_checkbutton
 	category:	"MacroFileTest"
 	buttontext:	"Checkbutton"
@@ -119,10 +119,10 @@ macroscript macroFileTest_checkbutton
 
 /*------------------------------------------------------------------------------
   LISTBOX
-------------------------------------------------------------------------------*/	
+------------------------------------------------------------------------------*/
 
 /* On item selected
-*/ 
+*/
 macroscript macroFileTest_Listbox
 	category:	"MacroFileTest"
 	buttontext:	"Listbox test"
@@ -135,7 +135,7 @@ macroscript macroFileTest_Listbox
 
 
 /* On item doubleclick
-*/ 
+*/
 macroscript macroFileTest_Listbox_rightclick
 	category:	"MacroFileTest"
 	buttontext:	"Listbox test"
@@ -150,10 +150,10 @@ macroscript macroFileTest_Listbox_rightclick
 
 /*------------------------------------------------------------------------------
   MULTILISTBOX
---------------------------------------------------------------------------------*/	
+--------------------------------------------------------------------------------*/
 
 /* On item selected
-*/ 
+*/
 macroscript macroFileTest_Listbox
 	category:	"MacroFileTest"
 	buttontext:	"Multilistbox test"
@@ -166,7 +166,7 @@ macroscript macroFileTest_Listbox
 
 
 /* On item doubleclick
-*/ 
+*/
 macroscript macroFileTest_Listbox_rightclick
 	category:	"MacroFileTest"
 	buttontext:	"Multilistbox test"
@@ -176,14 +176,14 @@ macroscript macroFileTest_Listbox_rightclick
 	print "Item doubleclicked"
 	format "EventFired	= % \n" EventFired
 )
-	
+
 /*------------------------------------------------------------------------------
   DROPDOWN
-----------------------------------------------------------------------------*/	
+----------------------------------------------------------------------------*/
 
 
-/*  
-*/ 
+/*
+*/
 macroscript macroFileTest_checkbox
 	category:	"MacroFileTest"
 	buttontext:	"Drop down test"
@@ -200,10 +200,10 @@ macroscript macroFileTest_checkbox
 ------------------------------------------------------------------------------*/
 
 /*
-*	
-*/	
+*
+*/
 macroscript	modifiers_activate_modifier
-category:	"_Modifiers"  
+category:	"_Modifiers"
 buttonText:	"Radio test"
 tooltip:	"Radiobutton test"
 --icon:	"items:#( 1,  2,  3 )"
@@ -214,10 +214,9 @@ icon:	"control:RadioButtons|items:#('Edit Poly', 'Unwrap', 'Last Modifier')|unse
 	--if( EventFired.val ) then
 	--(
 	--	--activateFirstEditPoly()
-	--	
+	--
 	--	onModPanelChanged ("activateFirstEditPoly")
 	--)
 	--else
 	--	onModPanelChangedKill ("activateFirstEditPoly")
 )
-

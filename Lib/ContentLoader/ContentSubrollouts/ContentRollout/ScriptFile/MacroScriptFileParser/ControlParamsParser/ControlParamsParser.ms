@@ -6,44 +6,44 @@ struct ControlParamsParser_v
 (
 	/* required */
 	path, -- path to "*.mcr" file
-	
+
 	/* properties */
 	params, -- #( #(), #() ) 2D matrix
-	
+
 	/* dependency */
 	ImagesArrayParser 	= ImagesArrayParser_v(),
-	
+
 	/** Parse params in "icon" param of macroscript
-	  * 
+	  *
 	  * Each param is separated with pipe "|"
-	  * 
-	  * 
-	  * 
-	  * 
+	  *
+	  *
+	  *
+	  *
 	  * @property	string	params_string	E.G.: "event: #rightclick| width:128 | height : 64|border:true|items: #('item1', 'item2')"
-	  * 
-	  * @return	2D matrix E.G.: #( #(param1,param2), #(value1,value2)	 )	
+	  *
+	  * @return	2D matrix E.G.: #( #(param1,param2), #(value1,value2)	 )
 	 */
 	function parse params_string =
 	(
 		--format "\n"; print "ControlParamsParser_v.parse()"
 		--format "params_string	= % \n" params_string
 		params = #( #(), #() )
-		
+
 		params_string = this._escapeSingleQuotes(params_string)
 
-		if not this._isIconArray (params_string) then 
+		if not this._isIconArray (params_string) then
 			for key_value in (filterString params_string "|" splitEmptyTokens:false) do
 				this._splitKeyAndValue (key_value)
 
 		--format "params	= % \n" params
 		params --return
 	),
-	
+
 	private
-	
+
 	/** Test if icon parameter is default icon array E.G.: #("Cameras",1)
-	  * 
+	  *
 	  * Documentation: https://help.autodesk.com/view/MAXDEV/2021/ENU/?guid=GUID-6E21C768-7256-4500-AB1F-B144F492F055#GUID-6E21C768-7256-4500-AB1F-B144F492F055__WS73099CC142F487553098682E12AC2FC2BC7-7281
 	 */
 	function _isIconArray params_string =
@@ -51,25 +51,25 @@ struct ControlParamsParser_v
 		--format "\n"; print "ControlParamsParser_v.isIconArray()"
 		matchPattern params_string pattern:@"#(*" --return
 	),
-	
+
 	/** Split key and value
-	  * 
+	  *
 	 */
 	function _splitKeyAndValue key_value_string =
 	(
 		--format "\n"; print "ControlParamsParser_v.splitKeyAndValue()"
 		--format "key_value_string	= % \n" key_value_string
 		colon_index = findString key_value_string ":" -- split string by firt occurencce of ":"
-		
+
 		key	= substring key_value_string 1 (colon_index-1)
 		val	= substring key_value_string   (colon_index+1)	-1
-				
+
 		if key != "images" then
 		(
 			val = this._convertDatatype( this._trimWhiteSpace(val))
 
 			append params[1] ( this._trimWhiteSpace(key) as name )
-			append params[2] val			
+			append params[2] val
 		)
 		else
 		(
@@ -77,14 +77,14 @@ struct ControlParamsParser_v
 
 			append params[1] ( this._trimWhiteSpace(key) )
 			append params[2] images
-			
+
 			img_size = this._getSpriteSize(images[1])
-			
+
 			append params[1] "width"
 			append params[2] img_size[2]
 		)
 	),
-	
+
 	/** Get size of sprite image
 	 */
 	function _getSpriteSize icon_path =
@@ -98,26 +98,26 @@ struct ControlParamsParser_v
 		img.Dispose()
 		imgSize --return
 	),
-	
+
 	/** Remove leading and trailing white space
 	 */
 	function _trimWhiteSpace _string =
 	(
 		trimLeft ( trimRight _string ) --return
 	),
-	
+
 	/** Replace "'" with "\""
 	 */
 	function _escapeSingleQuotes params_string =
 	(
 		--format "\n"; print "ControlParamsParser_v.escapeQuotes()"
-		
+
 		if matchPattern params_string pattern:"*'*" then
 			params_string = substituteString params_string "'" "\""
-		
+
 		params_string --return
 	),
-	
+
 	/** Format string value to valid datatype
 	 */
 	function _convertDatatype _string =
@@ -125,9 +125,9 @@ struct ControlParamsParser_v
 		--_string = substituteString _string "\\" "\\\\"
 		rx	= dotNetClass "System.Text.RegularExpressions.RegEx"
 		rx_options	= dotNetClass "System.Text.RegularExpressions.RegexOptions"
-		
+
 		is_variable = (rx.match _string "^\s*(\d+|true|false|undefined|unsupplied|\(\s*color\s+\d+\s+\d+\s+\d+\s*\))\s*$" rx_options.IgnoreCase ).success
-	
+
 		if not is_variable and (is_string = ( rx.match _string "(^'*[A-Za-z0-1_\s]+'*$)" rx_options.IgnoreCase ).success ) then
 		(
 			@"" + _string -- IS STRING
@@ -137,8 +137,8 @@ struct ControlParamsParser_v
 			try((execute(_string)))catch(_string) -- IS VARIABLE
 		)
 	),
-	
-	/**  
+
+	/**
 	 */
 	on create do
 	(
