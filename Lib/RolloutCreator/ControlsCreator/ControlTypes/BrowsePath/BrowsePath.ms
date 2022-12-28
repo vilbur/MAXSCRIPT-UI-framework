@@ -35,8 +35,8 @@ struct BrowsePath_v
 	(
 		--print "BrowsePath_v.getControl()"
 		this._Control = _Control
-
-		prev_value_variable = (_Control.id + "_prev_state")
+		--format "_Control.id	= % \n" _Control.id
+		prev_value_variable = (_Control.id as string + "_prev_state")
 
 		tooltip = if( tooltip_param = this._Control.params.getVal #tooltip ) != undefined then tooltip_param else ""
 
@@ -113,7 +113,7 @@ struct BrowsePath_v
 		--print "BrowsePath_v.mutateControl()"
 		this._Control = _Control
 
-		prev_value_variable = (_Control.id + "_prev_state")
+		prev_value_variable = (_Control.id as string + "_prev_state")
 
 		_Control.type = #editText
 
