@@ -52,7 +52,7 @@ struct BrowsePath_v
 	 */
 	function _setChangedEvent tooltip =
 	(
-		format "\n"; print "BrowsePath_v._getChangedEvent()"
+		--format "\n"; print "BrowsePath_v._getChangedEvent()"
 		Event_changed =  Event_v type: #changed
 
 

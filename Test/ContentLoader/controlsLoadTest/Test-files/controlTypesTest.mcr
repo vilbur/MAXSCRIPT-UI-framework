@@ -6,12 +6,22 @@ macroscript MacroFileTest_A
 	category:	"MacroFileTest"
 	buttontext:	"MacroFileTest A"
 	toolTip:	"Tooltip with Colon:\nand new line"
-	--icon:	"#(path, index)"
+	--icon:	"id:CUSTOM_BUTTON_ID"
 (
-	print "Button MacroFileTest A #pressed"
+	print "Button CUSTOM_BUTTON_ID A #pressed"
 	--format "EventFired	= % \n" EventFired
 )
 
+
+macroscript MacroFileTest_A_custom_id
+	category:	"MacroFileTest"
+	buttontext:	"Custom ID"
+	--toolTip:	"Tooltip with Colon:\nand new line"
+	icon:	"id:CUSTOM_BUTTON_ID"
+(
+	print "Custom ID #pressed"
+	format "EventFired	= % \n" EventFired
+)
 
 /*------------------------------------------------------------------------------
   CHECKBOX
@@ -81,7 +91,7 @@ macroscript macroFileTest_edittext
 
 /*------------------------------------------------------------------------------
   BROWSE PATH
-----------------------------------------------------------------------------*/
+--------------------------------------------------------------------------*/
 
 /*
 */
@@ -89,12 +99,11 @@ macroscript macroFileTest_browsepath
 	category:	"MacroFileTest"
 	buttontext:	"BrowsePath"
 	toolTip:	"BrowsePath tooltip"
-	icon:	"control:BrowsePath|width:256 "
-	icon:	"control:BrowsePath"
+	icon:	"control:BrowsePath|width:256"
 (
 	print "BrowsePath test"
 	format "EventFired	= % \n" EventFired
-	format " EventFired.value = % \n"  EventFired.value
+	format " EventFired.val = % \n"  EventFired.val
 )
 
 
@@ -197,7 +206,7 @@ macroscript macroFileTest_checkbox
 
 /*------------------------------------------------------------------------------
 	RADIOBUTTONS
-------------------------------------------------------------------------------*/
+----------------------------------------------------------------------------*/
 
 /*
 *
@@ -206,17 +215,17 @@ macroscript	modifiers_activate_modifier
 category:	"_Modifiers"
 buttonText:	"Radio test"
 tooltip:	"Radiobutton test"
---icon:	"items:#( 1,  2,  3 )"
+icon:	"items:#( 1,  2,  3 )"
 
 icon:	"control:RadioButtons|items:#('Edit Poly', 'Unwrap', 'Last Modifier')|unselect:true|default:3|align:#left"
 (
 	format "EventFired	= % \n" EventFired
-	--if( EventFired.val ) then
-	--(
-	--	--activateFirstEditPoly()
-	--
-	--	onModPanelChanged ("activateFirstEditPoly")
-	--)
-	--else
-	--	onModPanelChangedKill ("activateFirstEditPoly")
+	if( EventFired.val ) then
+	(
+		--activateFirstEditPoly()
+
+		onModPanelChanged ("activateFirstEditPoly")
+	)
+	else
+		onModPanelChangedKill ("activateFirstEditPoly")
 )

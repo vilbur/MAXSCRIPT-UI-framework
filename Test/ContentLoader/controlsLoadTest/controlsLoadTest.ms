@@ -6,7 +6,7 @@ try( destroyDialog Groupbox_test )catch()
 
 current_dir	= getFilenamePath(getSourceFileName())
 
-
+0
 /* LOAD CONTENT FROM FOLDERS */
 ContentLoader	= ContentLoader_v path:(current_dir+"/Test-files")
 --ContentLoader	= ContentLoader_v path:(current_dir+"/Groupbox-Test")

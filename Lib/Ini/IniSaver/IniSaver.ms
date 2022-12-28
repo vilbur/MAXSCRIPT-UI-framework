@@ -172,7 +172,7 @@ struct IniSaver_v
 	 */
 	function _saveToIni section key val =
 	(
-		format "\n"; print "IniSaver_v._saveToIni()"
+		--format "\n"; print "IniSaver_v._saveToIni()"
 		----format "ini_file	= % \n" ini_file
 		--format "section	= % \n" section
 		--format "key	= % \n" key

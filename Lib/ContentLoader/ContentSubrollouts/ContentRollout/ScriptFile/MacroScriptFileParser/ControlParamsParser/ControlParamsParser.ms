@@ -68,14 +68,14 @@ struct ControlParamsParser_v
 		(
 			val = this._convertDatatype( this._trimWhiteSpace(val))
 
-			append params[1] ( this._trimWhiteSpace(key) as name )
+			append params[1] ( this._sanitizeKey(key) as name )
 			append params[2] val
 		)
 		else
 		(
 			images = ImagesArrayParser.getIconPath(execute val)
 
-			append params[1] ( this._trimWhiteSpace(key) )
+			append params[1] ( this._sanitizeKey(key) as name )
 			append params[2] images
 
 			img_size = this._getSpriteSize(images[1])
@@ -97,6 +97,13 @@ struct ControlParamsParser_v
 		imgSize = [ img.Width,img.Height ]
 		img.Dispose()
 		imgSize --return
+	),
+
+	/**  Leading "#" is removed, avoid doubled E.G.: "##id"
+	 */
+	function _sanitizeKey key =
+	(
+		trimLeft ( trimRight key ) "# " --return
 	),
 
 	/** Remove leading and trailing white space

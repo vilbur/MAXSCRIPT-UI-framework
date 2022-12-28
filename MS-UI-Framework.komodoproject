@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Komodo Project File - DO NOT EDIT -->
 <project id="0a2534c0-4e33-4331-9037-9f7d46588d24" kpf_version="5" name="MS-UI-Framework.komodoproject">
+<livefolder id="50356b3b-8359-4a1b-b6c6-6f731f0e9c30" idref="0a2534c0-4e33-4331-9037-9f7d46588d24" name="RolloutCreator" url="Lib/RolloutCreator/">
+</livefolder>
 <livefolder id="6770801d-9e06-4fa1-852d-0217cc87cb78" idref="0a2534c0-4e33-4331-9037-9f7d46588d24" name="rollout-Selection" url="Dialog/rollouts-Tools/rollout-Selection/">
 </livefolder>
 <livefolder id="bc489beb-15bc-439f-b3bd-8b637240cdd3" idref="0a2534c0-4e33-4331-9037-9f7d46588d24" name="rollout-Subobject" url="Dialog/rollouts-Tools/rollout-Subobject/">
