@@ -35,11 +35,13 @@ struct Controls_v
 		--format "caption	= % \n" caption
 		--format "id	= % \n" id
 		--format "params	= % \n" params
+		if ( key_index = findItem params #id ) > 0 then
+			id = params[key_index +1]
+
 
 		_Control = Control_v type:type caption:caption id:id add_locals:locals rollout_id:rollout_id
 
-		if ( index = findItem params #id ) > 0 then
-			_Control.id = params[index +1]
+
 		--format "_Control.id = % \n" _Control.id
 
 		_param_names  = #( #width, #height, #offset, #align, #items, #value, #ini, #tooltip, #across)

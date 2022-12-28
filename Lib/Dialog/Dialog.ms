@@ -8,53 +8,50 @@ filein( getFilenamePath(getSourceFileName()) + "/../Ini/Ini.ms" )
 
 filein( getFilenamePath(getSourceFileName()) + "/Hotkeys/Hotkeys.ms" )
 
-
-global ALL_ROLlOUTS_IDS = #() -- store ids of rollouts to avoid duplicated ids of subrollouts
-
 global DIALOG_PREVIOUS_STATE = undefined -- this should be in struct
 
-if EVENT_DOCKED_ENABLED == undefined then 
+if EVENT_DOCKED_ENABLED == undefined then
 	global EVENT_DOCKED_ENABLED = true -- prevent crash on destroying  of dialog // RENAME THIS TO DIALOG_ENABLE_DOCKED_EVENT
 
 global AUTORUN_EVENTS = #()
 
-if HOTKEYS_GLOBAL == undefined then 
+if HOTKEYS_GLOBAL == undefined then
 	global HOTKEYS_GLOBAL = HotKeys_v()
 
 /** Create dialog [Maxscript help](https://help.autodesk.com/view/MAXDEV/2021/ENU/?guid=GUID-816D257C-CD2D-4753-A792-6E7AEFAFA6A7)
-  * 
+  *
   * INHERETING OF WIDTH PROPERTY
   *  Dialog.width >>> Subrollouts.width >>> Rollout.width >>> Subrollouts.width >>> Rollout.width ....
-  * 
+  *
  */
 struct Dialog_v
 (
-	
+
 	/*------ EXTEND ROLLOUT ------*/
-	
+
 	include "MAXSCRIPT-UI-framework/Lib/Dialog/Rollout/RolloutBody.ms" --"./Rollout/RolloutBody.ms"
-	
+
 	public
 
 	/* construct */
 	Ini,
-		
+
 	/* options */
-	
+
 	/* dependency */
 	AutoRunEvents 	= AutoRunEvents_v(),
 	DialogHotkeys,
 	--Menu	= DialogMenu_v Dialog:this,
-	
-	/* inherit */	
+
+	/* inherit */
 	/* properties */
 	style = #(
 		#style_border, 	-- Creates a window with a double border, but no title.
 		#style_titlebar, 	-- Creates a dialog with a title bar.
 		#style_sysmenu, 	-- Creates a window that has a window menu in its title bar.
 		#style_resizing 	-- Creates a window with a thick frame that can be used to size the window.
-		
-		/* ALLOWED but not DEFAULT styles */ 
+
+		/* ALLOWED but not DEFAULT styles */
 		--#style_toolwindow, 	-- Creates a tool window, which has a title bar and is intended to be used as a floating toolbar. A tool window has a title bar that is shorter than a normal title bar, and the window title is drawn using a smaller font.
 		--#style_minimizebox, 	-- Creates a window that has a minimize button.
 		--#style_maximizebox, 	-- Creates a window that has a maximize button.
@@ -66,7 +63,7 @@ struct Dialog_v
 		#cui_handles,	-- Show gripper handles when docked
 		#cui_dock_vert	-- Can dock vertically (left and right)
 
-		/* ALLOWED but not DEFAULT styles */ 
+		/* ALLOWED but not DEFAULT styles */
 		--#cui_dock_all,	-- Dialog bar can dock on all 4 edges of the frame.
 		--#cui_dock_horz,	-- Can dock horizontally (top and bottom)
 		--#cui_dock_left ,	-- Can dock to the left
@@ -75,7 +72,7 @@ struct Dialog_v
 		--#cui_dock_bottom,	-- Can dock to the bottom
 		--#cui_max_sized,	-- When this flag is specified, docking the dialogbar on the top causes the dialogbar to expand to the full window width, docked to bottom it expands to full window width minus command panel width.
 	),
-	
+
 	min_size,
 
 	/** Create dialog
@@ -84,54 +81,54 @@ struct Dialog_v
 	  * @param	integer	height	of dialog, minimal size of dialog also
 	  * @param	[x,y]|#moue	name	description
 	  * @param	name	origin	#WINDOW|#SCREEN origin of dialog position: Relative to 3Ds Max window|Absolute to screen
-	  * 
+	  *
 	  * TODO add params for max 2022
 	 */
 	function create width: height: pos: origin:#SCREEN bgcolor: fgcolor: bitmap: bmpstyle:#bmp_tile  style: modal: escapeEnable:false escapekey:true lockHeight:false lockWidth:true parent: =
 	(
 		--print "Dialog_v.create()"
 		_RolloutCreator = RolloutCreator_v Ini:Ini
-		
+
 		this._setDialogMinimalSize(width)(height)
-		
+
 		this._setDialogSize(width)(height)
-		
+
 		_RolloutCreator.createRollout (this) width:width
-		
-		--CreateDialog (this.RCI.def) 
+
+		--CreateDialog (this.RCI.def)
 		CreateDialog (this.RCI.def) pos:(this._getPosition(pos)(origin)) autoLayoutOnResize:true width:this.width height:this.height bgcolor:bgcolor fgcolor:fgcolor bitmap:bitmap bmpstyle:bmpstyle style:(if( style == unsupplied ) then this.style else style) modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
-		
+
 		--this._setDialogGlobal()
 		_RolloutCreator.SubolloutsCreator.addSubRollouts (this)
-		
+
 		this._setDockState()
-		
+
 
 		--AutoRunEvents.executeMacros()
 		format ("\n\nDIALOG "+title+" CREATED\n\n" )
 		CONTROL_BITMAPS_STORE = #() -- reset buffer array
 
-		
+
 	),
-	
+
 	/** Key press
 	 */
 	function hotKey hot_keys callback =
 	(
 		--format "\n"; print "Dialog_v.hotKey()"
-		DialogHotkeys.add hot_keys callback 
+		DialogHotkeys.add hot_keys callback
 	),
 
 	/** Register dialog bar
 	 */
 	function register =
 	(
-		--print "Dialog_v.register()"		
+		--print "Dialog_v.register()"
 		min_size_string = if min_size != undefined then " minSize:"+min_size as string +" " else ""
 
 		execute ("cui.RegisterDialogBar "+ this.id +" "+min_size_string+" style:"+style_registred_dialog as string )
 	),
-	
+
 	/** Unregister dialog bar
 	 */
 	function unregister =
@@ -139,9 +136,9 @@ struct Dialog_v
 		--format "\n"; print "Dialog_v.unregister()"
 		execute ("try(cui.UnRegisterDialogBar "+ id +")catch()")
 	),
-	
+
 	/** Dock\Undock dialog
-	  * 
+	  *
 	  * Subrollouts and dialog are resized BEFORE docking
 	  *
 	  * @param	name	state #left|#top|#right|#bottom|#float
@@ -154,10 +151,10 @@ struct Dialog_v
 			execute ("cui.DockDialogBar "+ id +" #cui_dock_"+ state as string )
 		else
 			execute ("cui.floatDialogBar "+ id )
-		
+
 		EVENT_DOCKED_ENABLED = true
 	),
-	
+
 	/** Destroy dialog
 	 */
 	function destroy =
@@ -165,30 +162,30 @@ struct Dialog_v
 		--print "Dialog_v.destroy()"
 		--format "id	= % \n" id
 
-		if  Ini.isDefined() then 
+		if  Ini.isDefined() then
 			(IniSaver_v(Ini.getPath())).saveDialogDockState(id)
-		
+
 		this.unregister()
-		
+
 		EVENT_DOCKED_ENABLED = false
-		
+
 		execute ( "try( destroyDialog "+ id +" )catch()" )
-		
+
 		EVENT_DOCKED_ENABLED = true
 	),
-	
-	
-	
+
+
+
 	/** Focus control
 	 */
 	function focus control_id =
 	(
 		--format "\n"; print "Dialog_v.focus()"
-		setFocus (execute( id as string + "." + control_id as string )) 
+		setFocus (execute( id as string + "." + control_id as string ))
 	),
 	/** Send keys to rollout
 	  * List of keys: https://learn.microsoft.com/en-us/dotnet/api/system.windows.forms.sendkeys?view=windowsdesktop-6.0#remarks
-	  * 
+	  *
 	  * @param	string	keys	to send E.G.: "^A" for Ctrl+A
 	 */
 	function sendKey keys =
@@ -196,7 +193,7 @@ struct Dialog_v
 		--format "\n"; print "Dialog_v.sendKey()"
 		( dotNetClass "System.Windows.Forms.SendKeys").sendWait keys
 	),
-		
+
 	/** Get Hwnd of rollout
 	 */
 	function hwnd =
@@ -206,11 +203,11 @@ struct Dialog_v
 			--return win[1]
 		execute(dialog_id as string + ".hwnd" )
 	),
-	
-	
+
+
 	private
-	
-	
+
+
 	--/** Set dialog id as global variable
 	--  *
 	--  * It is for unnecessary for make EverntFired working
@@ -227,7 +224,7 @@ struct Dialog_v
 	--	--execute("global GLOBAL_"+( id as string ) + this.RCI.def  )
 	--	--format "GLOBAL_group_options	= % \n" GLOBAL_group_options
 	--),
-	
+
 	/** Set minimal size of registered dialog
 	  * 1) Use rollout size if defined
 	  * 2) Use this.create() parameter
@@ -244,7 +241,7 @@ struct Dialog_v
 			min_size = [ min_width, min_height ]
 		)
 	),
-	
+
 	/** Set main rollout size
 	 */
 	function _setDialogSize width height =
@@ -253,7 +250,7 @@ struct Dialog_v
 		this.width  = this._getDialogSize( #width ) width
 		this.height = this._getDialogSize( #height) height
 	),
-	/** Get size of dialog 
+	/** Get size of dialog
 	  *
 	  * 1. get from ini
 	  * 2. use defined width|height from this.create()
@@ -275,16 +272,16 @@ struct Dialog_v
 				(#width):  dialog_size.x  as integer
 				(#height): dialog_size.y  as integer
 			)
-			
+
 			if val != unsupplied and size < val then val else size -- use paramater size, if ini saved size is less then, so dialog will not be smaller then width: parameter in this.create()
 		)
 		else if val != unsupplied then
 			val --return defined val on creation
-		
-		else 
+
+		else
 			getProperty this dimension
 	),
-	
+
 
 	/** Get height of maximized viewport to find out height of docked dialog
 	 */
@@ -292,30 +289,30 @@ struct Dialog_v
 	(
 		--print "Dialog_v._getViewportHeight()"
 		is_maximized	= viewport.numViews == 1
-		
+
 		height_of_ui	= 0 -- Add heigh
 		dialog_title_height	= 30
-		
-		--if( trackbar.visible ) then 
+
+		--if( trackbar.visible ) then
 		--	height_of_ui	+= 27
 		--
-		--if( timeSlider.isVisible() ) then 
+		--if( timeSlider.isVisible() ) then
 		--	height_of_ui	+= 18
-		
-		if not( is_maximized ) then 
+
+		if not( is_maximized ) then
 			actionMan.executeAction 0 "50026"  -- Tools: Maximize Viewport Toggle
-		
+
 		viewport_area_size = getViewSize()
 		--format "viewport_area_size	= % \n" viewport_area_size
-		if not( is_maximized ) then 
+		if not( is_maximized ) then
 			actionMan.executeAction 0 "50026"  -- Tools: Maximize Viewport Toggle
-		
+
 		(viewport_area_size[2] as integer) + height_of_ui - dialog_title_height --return
 	),
-	
-	
+
+
 	/** Get position
-	  * 
+	  *
 	  * 	1) Use Defined pos
 	  * 	2) Use Ini position if exists and position is NOT DEFINED
 	 */
@@ -323,36 +320,36 @@ struct Dialog_v
 	(
 		--format "\n"; print "Dialog_v._getPosition()"
 		--format "pos	= % \n" pos
-		if pos != unsupplied then 
+		if pos != unsupplied then
 		(
-			if pos == #mouse then 
+			if pos == #mouse then
 				pos = mouse.screenpos - [-1,0] -- offset postion of -1px, otherwise resize cursor is dispalyed on creation
-			
-			else if origin == #window then 
+
+			else if origin == #window then
 				pos = this._getPositionRelativeToWindow(pos)
-			
+
 		)  else if Ini.isDefined() and (position_ini = Ini.load( id as string )("position")) != undefined  then
 			pos = position_ini
 			--pos = position_ini - [6,29] -- FIX y position of dialog, for some reason is saved position about few pixels more then postion of created dialog
-		
+
 		pos --return
 	),
-	
+
 	/** Get position relative to Max window
 	 */
 	function _getPositionRelativeToWindow pos =
 	(
 		--print "Dialog_v._getPositionRelativeToWindow()"
 		toolbar_height = 92
-		
-		if( pos == unsupplied ) then 
+
+		if( pos == unsupplied ) then
 			return pos
-		
+
 		win_pos = windows.getWindowPos (windows.getMAXHWND())
-		
+
 		[ win_pos.x+pos.x, win_pos.y+pos.y + toolbar_height]  --return
 	),
-	
+
 
 	/** Load dock state from ini
 	  * Ini postion is not used, if position of dialog is defined in this.create()
@@ -364,15 +361,15 @@ struct Dialog_v
 		(
 			if( (dock_state = Ini.load( id as string )("dock_state")) == undefined or dock_state == "cui_floatable" ) then
 				return false
-				
+
 			this.register()
-			
+
 			execute("cui.DockDialogBar "+ this.id +" #"+ dock_state )
 		)
 	),
-	
+
 	/** Check if required properties are defined when an instance of the struct is created.
-	 * @example __construct = #( #property_name ) 
+	 * @example __construct = #( #property_name )
 	 */
 	function _checkConstctructProperties __construct =
 	(
@@ -380,25 +377,25 @@ struct Dialog_v
 			messageBox ("SaveIniControlEvents\nUndefined construct property !\n\n"+ ((filterString( classof this as string )"(:")[2]) +"."+ prop )
 	),
 
-	/**  
+	/**
 	 */
 	on create do
 	(
 		--format "\n"; print "Dialog_v.onCreate()"
 		this._checkConstctructProperties #(#title)
-		
+
 		Ini	= Ini_v _path:Ini
 
 		this._setId()
-		
+
 		this.destroy()
-				
+
 		--/*------ DEV restart timer ------*/
 		if HOTKEYS_GLOBAL != undefined then
 			global HOTKEYS_GLOBAL = HotKeys_v()
-		
+
 		/*------ ADD THIS TO SOMEWHERE ------*/
 		DialogHotkeys = HOTKEYS_GLOBAL.addDialog(title)
-		
+
 	)
 )
