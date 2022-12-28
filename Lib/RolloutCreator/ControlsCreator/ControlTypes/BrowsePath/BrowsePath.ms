@@ -60,7 +60,7 @@ struct BrowsePath_v
 		Event_changed.code = "
 			function valueIsEmpty _string =
 			(
-				(( dotNetClass @System.Text.RegularExpressions.RegEx@).matches _string @^\s+$|^$@ ).count == 1
+				(( dotNetClass @System.Text.RegularExpressions.RegEx@).match _string @^\s+$|^$@ ).success
 			)
 
 			if( val != "+prev_value_variable+" and valueIsEmpty(val) and valueIsEmpty("+prev_value_variable+") ) then -- IF VALUE HAS CHANGED AND FIELD IS EMPTY
