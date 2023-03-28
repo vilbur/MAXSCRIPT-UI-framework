@@ -1,6 +1,12 @@
 filein( getFilenamePath(getSourceFileName()) + "/ImagesArrayParser/ImagesArrayParser.ms" )
 
-/** Control params parser
+/** Parse parameters in 'icon' parameter of macroscript DOCUMENTATION:https://help.autodesk.com/view/MAXDEV/2021/ENU/?guid=GUID-6E21C768-7256-4500-AB1F-B144F492F055#icons
+  *
+  * Parameters of control is string separated with pipe "|"
+  *		E.G.:  icon:"width:128|height:64"
+  *
+  *
+  *
  */
 struct ControlParamsParser_v
 (
@@ -15,41 +21,59 @@ struct ControlParamsParser_v
 
 	/** Parse params in "icon" param of macroscript
 	  *
-	  * Each param is separated with pipe "|"
-	  *
-	  *
-	  *
 	  *
 	  * @property	string	params_string	E.G.: "event: #rightclick| width:128 | height : 64|border:true|items: #('item1', 'item2')"
 	  *
-	  * @return	2D matrix E.G.: #( #(param1,param2), #(value1,value2)	 )
+	  * @return	2D matrix E.G.: #( #( #param1, #param2), #( 'value1', 123 )	 )
 	 */
 	function parse params_string =
 	(
-		--format "\n"; print "ControlParamsParser_v.parse()"
+		format "\n"; print "ControlParamsParser_v.parse()"
 		--format "params_string	= % \n" params_string
+		--format "classOf execute params_string	= % \n" (classOf (execute params_string))
 		params = #( #(), #() )
 
-		params_string = this._escapeSingleQuotes(params_string)
+		params_string = this._replaceSingleQuotes(params_string)
 
 		if not this._isIconArray (params_string) then
 			for key_value in (filterString params_string "|" splitEmptyTokens:false) do
 				this._splitKeyAndValue (key_value)
 
+		else
+		(
+			params = #( #(#height), #(256) )
+		)
+
 		--format "params	= % \n" params
 		params --return
+
+		--#( #(), #() )
 	),
 
 	private
 
 	/** Test if icon parameter is default icon array E.G.: #("Cameras",1)
 	  *
-	  * Documentation: https://help.autodesk.com/view/MAXDEV/2021/ENU/?guid=GUID-6E21C768-7256-4500-AB1F-B144F492F055#GUID-6E21C768-7256-4500-AB1F-B144F492F055__WS73099CC142F487553098682E12AC2FC2BC7-7281
+	  * IMAGE BUTTON PARAMETER:	https://help.autodesk.com/view/3DSMAX/2017/ENU/?guid=__files_GUID_E03EED5F_E21F_4C2F_AFA9_BA16A6602ACA_htm#WS73099CC142F487553098682E12AC2FC2BC7-7435
 	 */
 	function _isIconArray params_string =
 	(
 		--format "\n"; print "ControlParamsParser_v.isIconArray()"
+		----format "result	= % \n" (matchPattern params_string pattern:@"#(*")
 		matchPattern params_string pattern:@"#(*" --return
+	),
+
+	/** Convert icon:	#("standard", 2) to images:#()
+	  *
+	  *
+	  *
+	 */
+	function _getPathToIcon =
+	(
+		--format "\n"; print "ControlParamsParser_v._getPathToIcon()"
+		icon_array = execute params_string
+
+		getDir(#ui_ln) + "/IconsDark/" icon_array[1] + ".bmp"
 	),
 
 	/** Split key and value
@@ -57,14 +81,14 @@ struct ControlParamsParser_v
 	 */
 	function _splitKeyAndValue key_value_string =
 	(
-		--format "\n"; print "ControlParamsParser_v.splitKeyAndValue()"
-		--format "key_value_string	= % \n" key_value_string
+		format "\n"; print "ControlParamsParser_v.splitKeyAndValue()"
+		format "key_value_string	= % \n" key_value_string
 		colon_index = findString key_value_string ":" -- split string by firt occurencce of ":"
 
 		key	= substring key_value_string 1 (colon_index-1)
 		val	= substring key_value_string   (colon_index+1)	-1
 
-		if key != "images" then
+		if key as name != #images then
 		(
 			val = this._convertDatatype( this._trimWhiteSpace(val))
 
@@ -72,53 +96,8 @@ struct ControlParamsParser_v
 			append params[2] val
 		)
 		else
-		(
-			images = ImagesArrayParser.getIconPath(execute val)
+			ImagesArrayParser.setImageParameter(params)(execute val)
 
-			icon_path	= ( dotNetObject "System.Text.RegularExpressions.Regex" @"[\\/]+" ).Replace images[1] "/"
-
-			if this._iconFileExist(icon_path) then
-			(
-				append params[1] ( this._sanitizeKey(key) as name )
-				append params[2] images
-
-				img_size = this._getSpriteSize(icon_path)
-
-				append params[1] "width"
-				append params[2] img_size[2]
-
-			)
-		)
-	),
-
-	/** Icon file exist
-	 */
-	function _iconFileExist icon_path =
-	(
-		--format "\n"; print "ControlParamsParser_v._iconFileExist()"
-		if not doesFileExist icon_path then
-		(
-			format "\n\n--------------------------------------------------------------------------------\n\n	ICON FILE DOES NOT EXISTS\n\n%\n\n--------------------------------------------------------------------------------" icon_path
-
-			false --return
-		) else
-			true --return
-
-	),
-
-	/** Get size of sprite image
-	 */
-	function _getSpriteSize icon_path =
-	(
-		--format "\n"; print "ControlParamsParser_v.getSpriteSize()"
-		--format "icon_path	= % \n" icon_path
-		--format "icon_path.count	= % \n" icon_path.count
-		img = ( dotNetClass "System.Drawing.Image").FromFile icon_path
-
-		--imgSize = [img.Height / img.VerticalResolution, img.Width / img.HorizontalResolution]
-		imgSize = [ img.Width,img.Height ]
-		img.Dispose()
-		imgSize --return
 	),
 
 	/**  Leading "#" is removed, avoid doubled E.G.: "##id"
@@ -137,7 +116,7 @@ struct ControlParamsParser_v
 
 	/** Replace "'" with "\""
 	 */
-	function _escapeSingleQuotes params_string =
+	function _replaceSingleQuotes params_string =
 	(
 		--format "\n"; print "ControlParamsParser_v.escapeQuotes()"
 
