@@ -80,7 +80,7 @@ struct ImagesArrayParser_v
 			img_size = this._getSpriteSize(icon_path)
 
 			append params[1] #width
-			append params[2] img_size[2]
+			append params[2] (img_size[2] as integer)
 		)
 
 		params --return
@@ -92,14 +92,13 @@ struct ImagesArrayParser_v
 	function _getSpriteSize icon_path =
 	(
 		--format "\n"; print "ControlParamsParser_v.getSpriteSize()"
-		--format "icon_path	= % \n" icon_path
-		--format "icon_path.count	= % \n" icon_path.count
 		img = ( dotNetClass "System.Drawing.Image").FromFile icon_path
 
-		--imgSize = [img.Height / img.VerticalResolution, img.Width / img.HorizontalResolution]
-		imgSize = [ img.Width,img.Height ]
+		img_size = [ img.Width,img.Height ]
+
 		img.Dispose()
-		imgSize --return
+
+		img_size --return
 	),
 
 	/** Repalce salshes "\\" with "/"

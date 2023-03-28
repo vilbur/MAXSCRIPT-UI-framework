@@ -1,4 +1,5 @@
 filein( getFilenamePath(getSourceFileName()) + "/ImagesArrayParser/ImagesArrayParser.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/IconArrayParser/IconArrayParser.ms" )
 
 /** Parse parameters in 'icon' parameter of macroscript DOCUMENTATION:https://help.autodesk.com/view/MAXDEV/2021/ENU/?guid=GUID-6E21C768-7256-4500-AB1F-B144F492F055#icons
   *
@@ -18,6 +19,7 @@ struct ControlParamsParser_v
 
 	/* dependency */
 	ImagesArrayParser 	= ImagesArrayParser_v(),
+	IconArrayParser 	= IconArrayParser_v(),
 
 	/** Parse params in "icon" param of macroscript
 	  *
@@ -28,7 +30,7 @@ struct ControlParamsParser_v
 	 */
 	function parse params_string =
 	(
-		format "\n"; print "ControlParamsParser_v.parse()"
+		--format "\n"; print "ControlParamsParser_v.parse()"
 		--format "params_string	= % \n" params_string
 		--format "classOf execute params_string	= % \n" (classOf (execute params_string))
 		params = #( #(), #() )
@@ -40,14 +42,10 @@ struct ControlParamsParser_v
 				this._splitKeyAndValue (key_value)
 
 		else
-		(
-			params = #( #(#height), #(256) )
-		)
+			IconArrayParser.setIconParameter (params)(execute params_string)
 
 		--format "params	= % \n" params
 		params --return
-
-		--#( #(), #() )
 	),
 
 	private
@@ -63,26 +61,13 @@ struct ControlParamsParser_v
 		matchPattern params_string pattern:@"#(*" --return
 	),
 
-	/** Convert icon:	#("standard", 2) to images:#()
-	  *
-	  *
-	  *
-	 */
-	function _getPathToIcon =
-	(
-		--format "\n"; print "ControlParamsParser_v._getPathToIcon()"
-		icon_array = execute params_string
-
-		getDir(#ui_ln) + "/IconsDark/" icon_array[1] + ".bmp"
-	),
-
 	/** Split key and value
 	  *
 	 */
 	function _splitKeyAndValue key_value_string =
 	(
-		format "\n"; print "ControlParamsParser_v.splitKeyAndValue()"
-		format "key_value_string	= % \n" key_value_string
+		--format "\n"; print "ControlParamsParser_v.splitKeyAndValue()"
+		--format "key_value_string	= % \n" key_value_string
 		colon_index = findString key_value_string ":" -- split string by firt occurencce of ":"
 
 		key	= substring key_value_string 1 (colon_index-1)
