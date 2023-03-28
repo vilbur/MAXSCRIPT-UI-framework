@@ -194,13 +194,14 @@
 	function _setId =
 	(
 		--print "RolloutBody._setId()"
+
 		if ( id == undefined or id == unsupplied ) then
 			id = toLower title
-			--id = toLower title
-			id = substituteString title "Rollout" "" -- remove "rollout" from title to avoid id like: "ROLLOUT_Rollout_A" if title is "Rollout A'
 
-			id  = "ROLLOUT_" + id -- add prefix
-			
+			if not matchPattern id pattern:@"rollout*" then
+				id  = "ROLLOUT_" + id -- add prefix
+			--id = substituteString title "Rollout" "" -- add "Rollout" prefix if does exists yet
+
 			id = substituteString ( trimRight ( trimLeft id )) " " "_" -- replace whitespace with underscore
 
 			id = this._repleaceCharacters "^([^A-Za-z]*)" "" -- remove any character except letters from start of string, variable MUST NOT starts with number E.G.: "1_FooDialog|_FooDialog" >>> "FooDialog"
@@ -212,7 +213,6 @@
 		this.validateid()
 
 		id = id as name
-
 	),
 
 	/** Validate title
