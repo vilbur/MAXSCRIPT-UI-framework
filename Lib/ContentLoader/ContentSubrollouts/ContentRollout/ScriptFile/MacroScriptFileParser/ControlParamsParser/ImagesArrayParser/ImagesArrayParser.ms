@@ -117,7 +117,7 @@ struct ImagesArrayParser_v
 		--format "icon_path	= % \n" icon_path
 		if not doesFileExist icon_path then
 		(
-			format "\n\n--------------------------------------------------------------------------------\n\n	ICON FILE DOES NOT EXISTS\n\n%\n\n--------------------------------------------------------------------------------" icon_path
+			format "\n\n--------------------------------------------------------------------------------\n\n	ICON FILE DOES NOT EXISTS\n\n	%\n\n--------------------------------------------------------------------------------" icon_path
 
 			false --return
 		) else

@@ -23,12 +23,12 @@ struct ControlParamsParser_v
 
 	/** Parse params in "icon" param of macroscript
 	  *
-	  *
 	  * @property	string	params_string	E.G.: "event: #rightclick| width:128 | height : 64|border:true|items: #('item1', 'item2')"
+	  * @property	string	macro_name	just for easier debug if error occures
 	  *
 	  * @return	2D matrix E.G.: #( #( #param1, #param2), #( 'value1', 123 )	 )
 	 */
-	function parse params_string =
+	function parse params_string macro_name =
 	(
 		--format "\n"; print "ControlParamsParser_v.parse()"
 		--format "params_string	= % \n" params_string
@@ -42,7 +42,7 @@ struct ControlParamsParser_v
 				this._splitKeyAndValue (key_value)
 
 		else
-			IconArrayParser.setIconParameter (params)(execute params_string)
+			IconArrayParser.setIconParameter (params)(execute params_string)(macro_name)
 
 		--format "params	= % \n" params
 		params --return

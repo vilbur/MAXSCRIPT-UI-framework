@@ -3,18 +3,18 @@ filein( getFilenamePath(getSourceFileName()) + "/ControlParamsParser/ControlPara
 /** Parese macroscripts in "*.mcr file"
   *
   * https://help.autodesk.com/view/3DSMAX/2015/ENU/?guid=__files_GUID_6E21C768_7256_4500_AB1F_B144F492F055_htm
-  * 
+  *
   */
 struct MacroScriptFileParser_v
 (
 	__construct = #( #path ),
-	
+
 	/* required */
 	path,
-	
+
 	/* properties */
 	file_content = #(),
-	
+
 	MacroScripts	= #(),
 	MacroScript_last, -- store currently parsed Macro file
 
@@ -22,8 +22,8 @@ struct MacroScriptFileParser_v
 	RegEx_options	= dotNetClass "System.Text.RegularExpressions.RegexOptions",
 
 	ControlParamsParser 	= ControlParamsParser_v(),
-	
-	
+
+
 	/** Parse MacroScripts
 	  *
 	  * IMPORTANT: Keep EACH PROPERTY on ON ITS OWN SEPARATED LINE
@@ -49,7 +49,7 @@ struct MacroScriptFileParser_v
 			else
 				this._parseProperties line
 		)
-		
+
 		this._addLastMacroscript()
 	),
 
@@ -63,7 +63,7 @@ struct MacroScriptFileParser_v
 
 		MacroScript_last --return
 	),
-	
+
 	/** _parse macro props
 	 */
 	function _parseProperties line =
@@ -72,7 +72,7 @@ struct MacroScriptFileParser_v
 			this._parseLine line
 			--MacroScript_last.setProp (this._getKeyValuePair line)
 	),
-	
+
 	/** _parse line
 	 */
 	function _parseLine line =
@@ -84,29 +84,29 @@ struct MacroScriptFileParser_v
 
 		val_subs	= substring line (key.count + 2) -1
 		val	= this._stripQuotes ( this._trimWhiteSpace val_subs )
-		
+
 		if key == "icon" then
-			setProperty MacroScript_last ("params") (ControlParamsParser.parse(val))
-		
+			setProperty MacroScript_last ("params") (ControlParamsParser.parse(val)(MacroScript_last.macro_name))
+
 		else
 			setProperty MacroScript_last (key) (val)
-				
+
 	),
-	
+
 	/** Find if line start with "MacroScript <name>"
 	 */
 	function _lineIsMacroName line =
 	(
 		RegEx.isMatch line "^\s*MacroScript\s+.+" RegEx_options.IgnoreCase --return
 	),
-	
+
 	/** _line is property
 	 */
 	function _lineIsProperty line =
 	(
 		RegEx.isMatch line "^\s*(category|buttonText|toolTip|icon|silentErrors|autoUndoEnabled)\s*:\s*" RegEx_options.IgnoreCase  --return
 	),
-	
+
 	/** Get name of macro from line
 	  * remove whitespace and tab
 	  *
@@ -118,24 +118,24 @@ struct MacroScriptFileParser_v
 	(
 		(filterString line " 	")[2] --return
 	),
-	
+
 	/** Remove leading and trailing white space
 	 */
 	function _trimWhiteSpace _string =
 	(
 		trimLeft ( trimRight _string ) --return
 	),
-	
+
 	/** Strip leading and trailing quotes
 	  *
 	  * @property	string	_string	quoted string
-	  * @return	string	
+	  * @return	string
 	 */
 	function _stripQuotes _string =
 	(
 		trimLeft ( trimRight _string "\"" ) "\"" --return
 	),
-	
+
 	/** _add latest parsed macroscript
 	 */
 	function _addLastMacroscript =
@@ -152,13 +152,13 @@ struct MacroScriptFileParser_v
 		counter	= 0
 		--lines	= #()
 
-		while not eof file_opened do 
+		while not eof file_opened do
 		(
 			line =  readLine file_opened
-			
-			if( line.count > 1 ) then 
+
+			if( line.count > 1 ) then
 				append file_content ( this._trimWhiteSpace(line))
-				
+
 			counter += 1
 		)
 
@@ -168,33 +168,33 @@ struct MacroScriptFileParser_v
 
 		file_content --return
 	),
-	
+
 
 	/*------------------------------------------------------------------------------
 		CONSTRUCT
 	--------------------------------------------------------------------------------*/
-	
+
 	/** Check if properties in __construct are defined when an instance of the struct is created.
-	  * @example __construct = #( #property_name ) 
+	  * @example __construct = #( #property_name )
 	 */
 	function _checkConstctructProperties =
 	(
 		for prop in __construct where getProperty this prop == undefined do
 			messageBox ("Undefined construct property !\n\n"+ ((filterString( classof this as string )"(:")[2]) +"."+ prop )
 	),
-	
+
 	on create do
 	(
 		--format "\n"
 		--print ("MacroScriptFileParser_v.onCreate ")
 		this._checkConstctructProperties()
-		
+
 		ControlParamsParser.ImagesArrayParser.path = path
-		
+
 		this._setFileContent()
 		--format "file_content = % \n" file_content
 		this._parseMacros()
-		
-		
+
+
 	)
 )

@@ -22,12 +22,10 @@ struct IconArrayParser_v
 	  *
 	  * @return 2Dmatrix
 	 */
-	function setIconParameter &params icon_array =
+	function setIconParameter &params icon_array macro_name =
 	(
 		--format "\n"; print "ImagesArrayParser_v.setImageParameter()"
-
 		icon_path = this._getIconPath (icon_array[1])
-		--format "icon_path	= % \n" icon_path
 
 		if icon_path != false then
 		(
@@ -44,8 +42,9 @@ struct IconArrayParser_v
 			--format "images_parameter	= % \n" images_parameter
 			append params[1] #images
 			append params[2] images_parameter
-
 		)
+		else
+			format "\n\n--------------------------------------------------------------------------------\n\n	WARNING\n\n 	ICON FILE DOES NOT EXISTS\n\n	ICON PARAMETER OF MAXSCRIPT: %\n\n	icon: %\n\n--------------------------------------------------------------------------------" macro_name icon_array[1]
 
 		params --return
 	),
