@@ -75,14 +75,35 @@ struct ControlParamsParser_v
 		(
 			images = ImagesArrayParser.getIconPath(execute val)
 
-			append params[1] ( this._sanitizeKey(key) as name )
-			append params[2] images
+			icon_path	= ( dotNetObject "System.Text.RegularExpressions.Regex" @"[\\/]+" ).Replace images[1] "/"
 
-			img_size = this._getSpriteSize(images[1])
+			if this._iconFileExist(icon_path) then
+			(
+				append params[1] ( this._sanitizeKey(key) as name )
+				append params[2] images
 
-			append params[1] "width"
-			append params[2] img_size[2]
+				img_size = this._getSpriteSize(icon_path)
+
+				append params[1] "width"
+				append params[2] img_size[2]
+
+			)
 		)
+	),
+
+	/** Icon file exist
+	 */
+	function _iconFileExist icon_path =
+	(
+		--format "\n"; print "ControlParamsParser_v._iconFileExist()"
+		if not doesFileExist icon_path then
+		(
+			format "\n\n--------------------------------------------------------------------------------\n\n	ICON FILE DOES NOT EXISTS\n\n%\n\n--------------------------------------------------------------------------------" icon_path
+
+			false --return
+		) else
+			true --return
+
 	),
 
 	/** Get size of sprite image
@@ -93,6 +114,7 @@ struct ControlParamsParser_v
 		--format "icon_path	= % \n" icon_path
 		--format "icon_path.count	= % \n" icon_path.count
 		img = ( dotNetClass "System.Drawing.Image").FromFile icon_path
+
 		--imgSize = [img.Height / img.VerticalResolution, img.Width / img.HorizontalResolution]
 		imgSize = [ img.Width,img.Height ]
 		img.Dispose()
