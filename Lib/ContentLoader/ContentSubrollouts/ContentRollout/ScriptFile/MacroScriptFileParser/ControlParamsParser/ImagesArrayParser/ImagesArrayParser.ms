@@ -58,7 +58,7 @@ struct ImagesArrayParser_v
 
 			this._setButtonWidthByIcon (params)
 		)
-		format "PARAMS	= % \n" params
+		--format "PARAMS	= % \n" params
 		params --return
 	),
 
