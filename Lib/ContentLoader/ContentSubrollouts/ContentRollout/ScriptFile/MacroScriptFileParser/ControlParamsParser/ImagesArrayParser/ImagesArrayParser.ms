@@ -1,32 +1,64 @@
-/** ImagesArrayParser
+/** Set images array of button
+  *
+  * Only icon path is required, other values can be autofilled E.G.: "#('Icons.bmp')" >>> "#('Icons.bmp',undefined,3,1,1,1,1)"
+  *
+  * If button width is undefined, then HEIGHT of sprite is used as button WIDTH, it creates SQUARE image button
+  *
+  *		images: #(
+  *			<image>,	REQUIRED
+  *			<maskImage>,	-- if UNDEFINED
+  *			<count_integer>,	-- if UNDEFINED, count of icons in sprite, if undefined then: image width / image height = count of sqaure icons
+  *			<enabled_out_image_index>,	-- if UNDEFINED, then 1 is used
+  *			<enabled_in_image_index>,	-- if UNDEFINED, then icon index is used
+  *			<disabled_out_image_index>,	-- if UNDEFINED, then icon index is used
+  *			<disabled_in_image_index>,	-- if UNDEFINED, then icon index is used
+  *			<invert_boolean>,	-- optionable
+  *			<colortheme_boolean>	-- optionable
+  *		)
+  *
  */
 struct ImagesArrayParser_v
 (
 	/* properties */
 	path, -- path to "*.mcr" file
+	images,
 
+	icon_path,
+	img_size,
 
 	/** Set image parameter
 	  *
+	  * DOCUMENTATION:https://help.autodesk.com/view/3DSMAX/2017/ENU/?guid=__files_GUID_63E016F3_250E_4C93_B213_2C1AB51710F7_htm#WS73099CC142F487553098682E12AC2FC2BC7-72E0
+	  *
 	  * @param 2Dmatrix	params from ControlParamsParser_v
-	  * @param array 	images E.G.: #('/icons/sprite.bmp',undefined,9,1,2,3,4) DOCUMENTATION:https://help.autodesk.com/view/3DSMAX/2017/ENU/?guid=__files_GUID_E03EED5F_E21F_4C2F_AFA9_BA16A6602ACA_htm
+	  * @param array 	images E.G.: #('/icons/sprite.bmp',undefined, 9, 1, 2, 3, 4)
 	  *
 	  * @return 2Dmatrix
 	 */
 	function setImageParameter &params images =
 	(
 		--format "\n"; print "ImagesArrayParser_v.setImageParameter()"
+		this.images	= images
 
-		icon_path = images[1] = this._getIconPath (images[1])
+		this._setIconPath()
 
-		if this._iconFileExist(icon_path) then
+		if this._iconFileExist() then
 		(
+			images[1] = icon_path
+
+			if images[3] == undefined then images[3] = this._getIconsCountInSprite()
+			if images[4] == undefined then images[4] = 1
+			if images[5] == undefined then images[5] = images[4]
+			if images[6] == undefined then images[6] = images[4]
+			if images[7] == undefined then images[7] = images[4]
+
+
 			append params[1] #images
 			append params[2] images
 
-			this._setButtonWidthByIcon (params) (icon_path)
+			this._setButtonWidthByIcon (params)
 		)
-
+		format "PARAMS	= % \n" params
 		params --return
 	),
 
@@ -37,18 +69,16 @@ struct ImagesArrayParser_v
 	  * 3) Absolute path
 	  *
 	 */
-	function _getIconPath icon_path =
+	function _setIconPath =
 	(
-		--format "\n"; print "ImagesArrayParser_v._getIconPath()"
-		--format "path	= % \n" path
+		--format "\n"; print "ImagesArrayParser_v._setIconPath()"
+		if matchPattern images[1] pattern:"$*" then
+			icon_path = this._replaceSystemDir(images[1])
 
-		if matchPattern icon_path pattern:"$*" then
-			icon_path = this._replaceSystemDir(icon_path)
+		else if matchPattern images[1] pattern:"/*" then
+			icon_path = getFilenamePath(path) +"/"+ images[1]
 
-		else if matchPattern icon_path pattern:"/*" then
-			icon_path = getFilenamePath(path) +"/"+ icon_path --return
-
-		this._sanitizePath(icon_path) --return
+		this._sanitizePath()
 	),
 
 	/** Replace system dir
@@ -67,51 +97,64 @@ struct ImagesArrayParser_v
 		substituteString icon_path system_dir system_dir_pah --return
 	),
 
+	/** Set icon count
+	 */
+	function _getIconsCountInSprite =
+	(
+		--format "\n"; print "ImagesArrayParser_v._getIconsCountInSprite()"
+
+		this._setSpriteSize()
+
+		img_size[1] / img_size[2] -- return
+	),
+
 	/** Set button width by icon height, if width is not defined
 	  *
 	  * result is square button
 	 */
-	function _setButtonWidthByIcon  &params icon_path =
+	function _setButtonWidthByIcon &params =
 	(
 		--format "\n"; print "ImagesArrayParser_v._setButtonWidthByIcon()"
 
 		if findItem params[1] #width == 0 then
 		(
-			img_size = this._getSpriteSize(icon_path)
+			this._setSpriteSize()
 
 			append params[1] #width
-			append params[2] (img_size[2] as integer)
+			append params[2] (img_size[2] as integer )
 		)
 
 		params --return
 	),
 
-
 	/** Get size of sprite image
 	 */
-	function _getSpriteSize icon_path =
+	function _setSpriteSize =
 	(
 		--format "\n"; print "ControlParamsParser_v.getSpriteSize()"
-		img = ( dotNetClass "System.Drawing.Image").FromFile icon_path
+		if img_size == undefined then
+		(
+			img = ( dotNetClass "System.Drawing.Image").FromFile icon_path
 
-		img_size = [ img.Width,img.Height ]
+			img_size = [ img.Width,img.Height ]
 
-		img.Dispose()
+			img.Dispose()
+		)
 
 		img_size --return
 	),
 
 	/** Repalce salshes "\\" with "/"
 	 */
-	function _sanitizePath icon_path =
+	function _sanitizePath =
 	(
 		--format "\n"; print "ImagesArrayParser_v.sanitizePath()"
-		( dotNetObject "System.Text.RegularExpressions.Regex" @"[\\/]+" ).Replace icon_path "/" --return
+		icon_path = ( dotNetObject "System.Text.RegularExpressions.Regex" @"[\\/]+" ).Replace icon_path "/" --return
 	),
 
 	/** Test if icon file exist
 	 */
-	function _iconFileExist icon_path =
+	function _iconFileExist =
 	(
 		--format "\n"; print "ControlParamsParser_v._iconFileExist()"
 		--format "icon_path	= % \n" icon_path
