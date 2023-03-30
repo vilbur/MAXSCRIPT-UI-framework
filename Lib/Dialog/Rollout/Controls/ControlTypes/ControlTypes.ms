@@ -26,12 +26,12 @@ struct ControlTypes_v
 		#PickButton,
 		#ProgressBar,
 		#Slider,
+		#RadioButtons,
 		#Curve,	-- DOES NOT WORK YET
 		#popupMenu,	-- DOES NOT WORK YET
-		#RadioButtons,	-- DOES NOT WORK YET
 		#Timer,
-		
-		/* CUSTOM CONTROL TYPES */ 
+
+		/* CUSTOM CONTROL TYPES */
 		#browsePath
 	),
 
@@ -43,8 +43,8 @@ struct ControlTypes_v
 	),
 
 	private
-	
-	/**;  
+
+	/**;
 	 */
 	on create do
 	(
