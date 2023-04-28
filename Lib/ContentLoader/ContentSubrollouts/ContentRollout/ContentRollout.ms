@@ -3,7 +3,7 @@ filein( getFilenamePath(getSourceFileName()) + "/ScriptFile/ScriptFile.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/../ContentSubrollouts.ms" )
 
 /** Create rollout from dir containing ".ms" & ".mcr" files
- * 
+ *
  * @property	string	dir	Path to dir
  * @property	string	title	Name of rollout
  *
@@ -14,16 +14,16 @@ struct ContentRollout_v
 
 	/* construct */
 	path,
-	
+
 	/*  properties */
 	title,
 
 	Subrollouts_and_Controls = #(), -- store groupboxes and rollouts
-	
+
 	ini_file, -- path to ini file in Rollout folder
 
 	PathsLoader,
-	
+
 	/** Create and add Rollouts and Controls to UI
 	 */
 	function addToUi Subrollouts =
@@ -33,21 +33,21 @@ struct ContentRollout_v
 		Rollout_new	= Subrollouts.Roll title -- get new rollout
 
 		this._setRolloutPropertiesFromIniFile(Rollout_new)
-		
+
 		for Subrollouts_or_Controls in Subrollouts_and_Controls do
 			Subrollouts_or_Controls.addToUi Rollout_new
 	),
-	
+
 	/** Get new instance of This
 	 */
 	function createNewRollout path ini_file =
 	(
 		ContentRollout_v path:path ini_file:ini_file --return
 	),
-	
+
 	private
-	
-	
+
+
 	/** _get controls and rollouts
 	 */
 	function _initLoadContentFromDir =
@@ -56,7 +56,7 @@ struct ContentRollout_v
 		for path in (PathsLoader.getSubrolloutsAndControlsPaths()) do
 			append Subrollouts_and_Controls	(this._addSubrolloutOrControlBox path)
 	),
-	
+
 	/** _add subrollout or control box
 	 */
 	function _addSubrolloutOrControlBox path =
@@ -66,7 +66,7 @@ struct ContentRollout_v
 		else
 			this._getFileContent path
 	),
-	
+
 	/** _if path is dir
 	 */
 	function _createSubrolloutsSlots path =
@@ -75,49 +75,51 @@ struct ContentRollout_v
 		--format "ini_file	= % \n" ini_file
 		ContentSubrollouts_v path:path RolloutParrent:this ini_file:ini_file    -- return
 	),
-	
+
 	/** If path is file
 	 */
 	function _getFileContent path =
 	(
 		--filein path
-		
+
 		ScriptFile_Content_v path:path	-- return
 	),
-	
+
 
 	/** Set props for Rollout from ini file
 	 */
 	function _setRolloutPropertiesFromIniFile &_Rollout =
 	(
-		--format "\n"; print "ContentRollout_v._setRolloutPropertiesFromIniFile()"
-		if ini_file != undefined and (ROLLOUT_PROPS_EXISTS = hasINISetting ini_file ( SECTION = _Rollout.id as string )) then
+		format "\n"; print "ContentRollout_v._setRolloutPropertiesFromIniFile()"
+		format "_Rollout.id	= % \n" _Rollout.id
+
+		if ini_file != undefined and (hasINISetting ini_file ( _SECTION = _Rollout.id as string )) then
 		(
-			for key in (getINISetting ini_file section) do
+			for key in (getINISetting ini_file _SECTION ) do
 			(
 				prop_name = key as name
-				
-				val_ini = getINISetting ini_file section key
-				
+
+				val_ini = getINISetting ini_file _SECTION key
+
 				val = if val_ini as number != undefined then val_ini as number else val_ini
-				
-				if hasProperty _Rollout prop_name  then 
+
+				if hasProperty _Rollout prop_name  then
 					setProperty _Rollout prop_name val
 				else
 					format "-----------------\n\nERROR: Set property with ini file %\n\nRollout has not property: %\n\n-----------------" ini_file prop_name
 			)
 		)
-		
+
 		_Rollout --return
 	),
-	
+
 	/** _is dir
 	 */
 	function _isDir path =
 	(
 		getFilenameType path == "" --return
 	),
-	
+
 	/** Set rollout title by folder title E.g.: "Rollout-1" >> "Rollout 1"
 	 */
 	function _setName =
@@ -139,7 +141,7 @@ struct ContentRollout_v
 
 		title = substituteString title "xWHITESPACEx" " " -- put whitespace back
 	),
-	
+
 
 
 
@@ -151,12 +153,12 @@ struct ContentRollout_v
 
 		this._setName()
 		this._sanitizeTitle()
-		
+
 		PathsLoader = PathsLoader_v path:path
-		
+
 		PathsLoader.fileInMaxscriptFiles()
-		
-		if ini_file == undefined then 
+
+		if ini_file == undefined then
 			ini_file = PathsLoader.ini_files[1]
 
 		this._initLoadContentFromDir()

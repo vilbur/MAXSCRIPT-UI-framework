@@ -23,4 +23,4 @@ rollout rollout_main "Game Utilities"
 )
 
 
-CreateDialog rollout_main height:256 width:512
+CreateDialog rollout_main width:512

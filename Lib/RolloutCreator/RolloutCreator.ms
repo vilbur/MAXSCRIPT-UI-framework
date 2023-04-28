@@ -1,26 +1,27 @@
 filein( getFilenamePath(getSourceFileName()) + "/../List/List.ms" )
 
-filein( getFilenamePath(getSourceFileName()) + "/../Dialog/Rollout/Rollout.ms" )
-filein( getFilenamePath(getSourceFileName()) + "/../Dialog/Rollout/Subrollouts/Subrollouts.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/../Dialog/Rollout/Rollout.ms" ) 	-- "./../Dialog/Rollout/Rollout.ms"
+filein( getFilenamePath(getSourceFileName()) + "/../Dialog/Rollout/Subrollouts/Subrollouts.ms" )	-- "./../Dialog/Rollout/Subrollouts/Subrollouts.ms"
 
-filein( getFilenamePath(getSourceFileName()) + "/RolloutEventBinder/RolloutEventBinder.ms" )
+
+filein( getFilenamePath(getSourceFileName()) + "/RolloutEventBinder/RolloutEventBinder.ms" )	-- "./RolloutEventBinder/RolloutEventBinder.ms"
 
 filein( getFilenamePath(getSourceFileName()) + "/ControlsCreator/ControlsCreator.ms" )
 
-filein( getFilenamePath(getSourceFileName()) + "/SubolloutsCreator/SubolloutsCreator.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/SubolloutsCreator/SubolloutsCreator.ms" ) -- "./SubolloutsCreator/SubolloutsCreator.ms"
 
 /** RolloutCreator_v
   *
-  * https://help.autodesk.com/view/3DSMAX/2016/ENU/?guid=__files_GUID_5FC5036F_E2D7_46C9_9AFA_7B3550B9F254_htm
+  * RolloutCreator: https://help.autodesk.com/view/3DSMAX/2016/ENU/?guid=__files_GUID_5FC5036F_E2D7_46C9_9AFA_7B3550B9F254_htm
  */
 struct RolloutCreator_v
 (
-	/* construct option */ 
+	/* construct option */
 	Ini,
-	
+
 	/* properties */
-	
-	/* dependency */ 
+
+	/* dependency */
 	EventBinder	= RolloutEventBinder_v ini_path:(Ini.getPath()),
 
 	ControlsCreator,
@@ -29,7 +30,7 @@ struct RolloutCreator_v
 	/* store */
 
 	/** Create dialog
-	  * 
+	  *
 	  * @param	integer	width	for centered title
 	 */
 	function createRollout _Rollout width: =
@@ -39,57 +40,171 @@ struct RolloutCreator_v
 		--format "_Rollout.getFullId()	= % \n" (_Rollout.getFullId())
 		--format "_Rollout.getNestedLevel()	= % \n" (_Rollout.getNestedLevel())
 		--format "_Rollout.title	= % \n" _Rollout.title
-		format "_Rollout.height	= % \n" _Rollout.height
+		--format "_Rollout.height	= % \n" _Rollout.height
 		--format "width	= % \n" width
 
-		if _Rollout.width == unsupplied and width != unsupplied then 
+
+		--local ROLLOUT_MAX_HEIGHT = 0
+
+		for Subrollouts in _Rollout.getSubrollouts() do
+		(
+
+			for _RolloutSub in Subrollouts.Rollouts do
+			(
+				execute( "try( destroyDialog "+_RolloutSub.id as string +" )catch()" )
+
+				rci_def = this.createRollout (_RolloutSub) width:_Rollout.width
+
+				--try CreateDialog ( rci_def ) width:_Rollout.width catch()
+				CreateDialog ( rci_def ) width:320
+
+				format "CREATED DIALOG OF: % \n" _RolloutSub.id
+
+				--format "_RolloutSub	= % \n" _RolloutSub
+				--format "_RolloutSub.parent_rollout_id	= % \n" _RolloutSub.parent_rollout_id
+				--format "_RolloutSub.id	= % \n" _RolloutSub.id
+				--format "_RolloutSub.getFullId()	= % \n" (_RolloutSub.getFullId())
+
+				rollout_height = execute( _RolloutSub.id as string + ".height" )
+
+				--format "SUBROLLOUTS	= % \n" SUBROLLOUTS
+
+				if Subrollouts.height == unsupplied or rollout_height > Subrollouts.height then
+					Subrollouts.height = rollout_height + 32
+
+				--format "ROLLOUT_MAX_HEIGHT	= % \n" ROLLOUT_MAX_HEIGHT
+				--format "rci_def	= % \n" rci_def
+			)
+
+			--Subrollouts.height = 256
+			--format "_Rollout.parent_rollout_id	= % \n" _Rollout.parent_rollout_id
+			if _Rollout.parent_rollout_id == undefined then
+				Subrollouts.height = _Rollout.height
+
+
+		)
+
+
+		--format "_Rollout.id	= % \n" (_Rollout.id)
+		--format "_Rollout.getFullId()	= % \n" (_Rollout.getFullId())
+		--format "_Rollout.getNestedLevel()	= % \n" (_Rollout.getNestedLevel())
+
+
+
+		if _Rollout.width == unsupplied and width != unsupplied then
 			_Rollout.width = width
-		
+
 		ControlsCreator	= ControlCreator_v _Rollout:_Rollout Ini:Ini
-		
+
 		ControlsCreator.moveGrouboxControlsToEnd(_Rollout)
-		
-		
+
 		--_Rollout.RCI	= rolloutCreator (_Rollout.id) ( this._getTitleCentered(_Rollout) )
 		_Rollout.RCI	= rolloutCreator (_Rollout.id) ( this._getTitleString(_Rollout) )
 		--_Rollout.RCI	= rolloutCreator (_Rollout.id) ( _Rollout.title ) --DEV
-		
+
 		/* EDIT start */
 		_Rollout.RCI.begin()
-		
+
+
 		if hasProperty _Rollout #DialogHotkeys and _Rollout.DialogHotkeys.hot_keys.count > 0 then
 			_Rollout.DialogHotkeys.addHotkeyTimer(_Rollout)
-		
-		/* add LOCAL VARIABLES */ 
+
+
+		/* add LOCAL VARIABLES */
 		this._addLocalVariablesToRollout (_Rollout)
-		
-		/* add TEXT */ 
+
+
+		/* add TEXT */
 		this._addTextToRollout (_Rollout)
-		
-		
-		
-		/* add CONTROLS and SUBROLLOUTS SLOTS */ 
-		for _Controls in _Rollout._Controls do
-			if( this._is(_Controls)("Controls") )
-			then
-				ControlsCreator.addControls(_Controls)
-			
-			else
-				SubolloutsCreator.addSubrolloutSlot(_Rollout)(_Controls)
-				
-				
-				
-		/* create SUBROLLOUTS */ 
-		this._createSubrollouts (_Rollout)
-		
+
+
+		/* add CONTROLS and SUBROLLOUTS SLOTS */
+		for Controls_or_Subrollouts in _Rollout._Controls do
+			if( this._is(Controls_or_Subrollouts)("Controls") ) then
+				ControlsCreator.addControls(Controls_or_Subrollouts)
+
+			else if _Rollout.hasSubrollouts() then
+				SubolloutsCreator.addSubrolloutSlot(_Rollout)(Controls_or_Subrollouts)
+
+
+
 		/* add EVENTS */
-		if( ini != undefined ) then 
+		if( ini != undefined ) then
 			EventBinder.combineEventsAndAddHandlers(_Rollout)
-		
-		/* EDIT end */ 
+
+
+		/* EDIT end */
 		_Rollout.RCI.end()
-		
-			
+
+
+		--format "%\n\n%\n%\n%\n\n" "------------------------------------------------------------" _Rollout.RCI.def _Rollout  "------------------------------------------------------------"
+	),
+
+	/** Create dialog
+	  *
+	  * @param	integer	width	for centered title
+	 */
+	function XcreateRollout _Rollout width: =
+	(
+		format "\n\n-------------------------------------	RolloutCreator_v.createRollout() id:#%	-------------------------------------\n"  ( _Rollout.id as string );
+		--format "_Rollout.id	= % \n" (_Rollout.id)
+		--format "_Rollout.getFullId()	= % \n" (_Rollout.getFullId())
+		--format "_Rollout.getNestedLevel()	= % \n" (_Rollout.getNestedLevel())
+		--format "_Rollout.title	= % \n" _Rollout.title
+		--format "_Rollout.height	= % \n" _Rollout.height
+		--format "width	= % \n" width
+
+		if _Rollout.width == unsupplied and width != unsupplied then
+			_Rollout.width = width
+
+		ControlsCreator	= ControlCreator_v _Rollout:_Rollout Ini:Ini
+
+		ControlsCreator.moveGrouboxControlsToEnd(_Rollout)
+
+		--_Rollout.RCI	= rolloutCreator (_Rollout.id) ( this._getTitleCentered(_Rollout) )
+		_Rollout.RCI	= rolloutCreator (_Rollout.id) ( this._getTitleString(_Rollout) )
+		--_Rollout.RCI	= rolloutCreator (_Rollout.id) ( _Rollout.title ) --DEV
+
+		/* EDIT start */
+		_Rollout.RCI.begin()
+
+
+		if hasProperty _Rollout #DialogHotkeys and _Rollout.DialogHotkeys.hot_keys.count > 0 then
+			_Rollout.DialogHotkeys.addHotkeyTimer(_Rollout)
+
+
+		/* add LOCAL VARIABLES */
+		this._addLocalVariablesToRollout (_Rollout)
+
+
+		/* add TEXT */
+		this._addTextToRollout (_Rollout)
+
+
+
+		/* add CONTROLS and SUBROLLOUTS SLOTS */
+		for _Controls in _Rollout._Controls do
+			if( this._is(_Controls)("Controls") ) then
+				ControlsCreator.addControls(_Controls)
+
+			else if _Rollout.hasSubrollouts() then
+				SubolloutsCreator.addSubrolloutSlot(_Rollout)(_Controls)
+
+
+
+		/* create SUBROLLOUTS */
+		this._createSubrollouts (_Rollout)
+
+
+		/* add EVENTS */
+		if( ini != undefined ) then
+			EventBinder.combineEventsAndAddHandlers(_Rollout)
+
+
+		/* EDIT end */
+		_Rollout.RCI.end()
+
+
 		--format "%\n\n%\n%\n%\n\n" "------------------------------------------------------------" _Rollout.RCI.def _Rollout  "------------------------------------------------------------"
 	),
 
@@ -100,17 +215,17 @@ struct RolloutCreator_v
 		--format "\n"; print "RolloutCreator_v.Roll()"
 		Rollout_v title:title id:id --return
 	),
-	
+
 	/** Get new Rollout
 	 */
 	function new title id: =
 	(
-		format "\n"; print "!!!!!!!! DEPRECATED METHOD RolloutCreator_v.new() DO NOT USE THIS !!! "
+		format "\n"; print "!!!!!!!! DEPRECATED METHOD RolloutCreator_v.new() DO NOT USE THIS !!!!!!!!"
 
 		this.Roll title id:id --return
 	),
-	
-	
+
+
 	private
 
 
@@ -119,12 +234,11 @@ struct RolloutCreator_v
 	 function _createSubrollouts _Rollout =
 	 (
 		--format "\n"; print "RolloutCreator_v._createSubrollouts()"
-
-		for Subrollouts in _Rollout._Controls where this._is(Subrollouts)("Subrollouts") do
-			for _Subrollout in Subrollouts.Rollouts do
-				this.createRollout (_Subrollout) width:_Rollout.width
+		for Subrollouts in _Rollout.getSubrollouts() do
+			for _RolloutSub in Subrollouts.Rollouts do
+				this.createRollout (_RolloutSub) width:_Rollout.width
 	 ),
-	
+
 	/** Add local variables from Control_v to rollout
 	  *
 	  * 	Control_v.rollout_locals =  #(#variable_name1, init_value1, #variable_name2, init_value2)
@@ -132,11 +246,11 @@ struct RolloutCreator_v
 	function _addLocalVariablesToRollout _Rollout =
 	(
 		--print "ControlCreator_v._addLocalVariablesToRollout()"
-		
+
 		if( _Rollout.add_locals != unsupplied ) then
 			for i = 1 to _Rollout.add_locals.count by 2 do
 			(
-				_value = if classOf _Rollout.add_locals[i+1] == string then "\""+_Rollout.add_locals[i+1] +"\"" else _Rollout.add_locals[i+1] 
+				_value = if classOf _Rollout.add_locals[i+1] == string then "\""+_Rollout.add_locals[i+1] +"\"" else _Rollout.add_locals[i+1]
 				--format "_value	= % \n" _value
 				_Rollout.RCI.addLocal ( _Rollout.add_locals[i] as string )  init:_value
 			)
@@ -151,7 +265,7 @@ struct RolloutCreator_v
 		if( _Rollout.add_text != "" ) then
 			_Rollout.RCI.addText  _Rollout.add_text filter:true
 	),
-	
+
 	/** get name of strct
 	 */
 	function _is _Struct pattern =
@@ -159,59 +273,59 @@ struct RolloutCreator_v
 		--print "RolloutCreator_v._getSubrolloutsCount()"
 		matchPattern (classOf _Struct  as string ) pattern:(@"*"+pattern+"_v*" )
 	),
-	
+
 	/** Center rollout title with empty space prefix
-	  * 
+	  *
 	  * TODO: move this method to RolloutCreator_v
-	  * 
+	  *
 	  * if rollout is wider then 320
 	 */
 	function _getTitleCentered _Rollout  =
 	(
 		--print "Rollout_v._setTitleCenter()"
-		
+
 		prefix	= ""
 		prefix_cahracter	= " "
 		rollout_padding	= 124 -- with of dialog border or subrallout arrow for open rollout -- HIGHER VALUE MOVES WHOLE TITLE TO LEFT, LOWER TO RIGHT
 		px_per_character	= 5 -- width in pixels of character in title
 		px_per_space	= 3 -- width in pixels of empty character: " "
 		slot_padding	= 24 -- each subrollout is narrower then parent rollout
-		
+
 		if( _Rollout.width != unsupplied and _Rollout.width > 320 and ( IS_NOT_MAIN_ROLLOUT = _Rollout.parent_rollout_id) != undefined and (_Rollout.width != undefined and _Rollout.width != unsupplied ) and (max_version = (maxVersion())[8] )!= undefined and max_version > 2020  ) then
 		(
 			title_width	= _Rollout.title.count * px_per_character -- get difference in length of characters, longer title has shorter prefix and vice versa
 			rollout_width	= _Rollout.width - rollout_padding - ( _Rollout.getNestedLevel() * slot_padding )
 			prefix_lenght	= ((rollout_width - title_width) / 2) / px_per_space
-			
+
 			for i = 1 to prefix_lenght do -- too width 200px
 				prefix += prefix_cahracter
-				
+
 			--prefix + _Rollout.title --return
 			prefix + this._getTitleString(_Rollout) --return
 		)
-		else		
+		else
 			_Rollout.title
 	),
-	
+
 	/** Get title string
 	 */
 	function _getTitleString _Rollout =
 	(
 		--format "\n"; print "RolloutCreator_v._getTitleString()"
-		
+
 		title = ""
-	
-		for i = 1 to _Rollout.title.count do 
+
+		for i = 1 to _Rollout.title.count do
 			title += _Rollout.title[i] + " "
-		
+
 		title --return
 	),
-	
-	
-	/**  
+
+
+	/**
 	 */
 	on create do
 	(
 		--format "\n"; print("RolloutCreator_v.onCreate()")
-	)	
+	)
 )

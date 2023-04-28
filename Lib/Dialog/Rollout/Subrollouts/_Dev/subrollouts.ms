@@ -52,8 +52,8 @@ AddSubRollout subrollout_1.nested_slot_1	subrollout_nested
 
 
 
-rollout_main.slot_1.height           += 100
-subrollout_1.height               += 100
+rollout_main.slot_1.height       += 100
+subrollout_1.height             += 100
 subrollout_1.nested_slot_1.height += 100
 
 

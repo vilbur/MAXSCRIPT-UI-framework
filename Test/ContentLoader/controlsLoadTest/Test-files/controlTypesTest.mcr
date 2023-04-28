@@ -23,6 +23,28 @@
 --	format "EventFired	= % \n" EventFired
 --)
 --
+
+--/*------------------------------------------------------------------------------
+--  CHECKBUTTON
+--------------------------------------------------------------------------------*/
+macroscript MacroFileTest_A_custom_id
+	category:	"MacroFileTest"
+	buttontext:	"Custom ID"
+	--toolTip:	"Tooltip with Colon:\nand new line"
+	icon:	"control:checkbutton"
+(
+	format "EventFired	= % \n" EventFired
+
+	if EventFired.val then
+		print "Checkbutton pressed"
+
+	else
+		print "Checkbutton unpressed"
+
+
+)
+--
+
 --/*------------------------------------------------------------------------------
 --  CHECKBOX
 --------------------------------------------------------------------------------*/
@@ -235,15 +257,15 @@
 	COLORPICKER
 ----------------------------------------------------------------------------*/
 
-/*
-*
-*/
-macroscript	macroFileTest_colorpicker
-category:	"MacroFileTest"
-buttonText:	"Color test"
-tooltip:	"Colorpicker test"
-icon:	"control:colorpicker|value: [0,128,0 ]"
-(
-	format "EventFired	= % \n" EventFired
-
-)
+--/*
+--*
+--*/
+--macroscript	macroFileTest_colorpicker
+--category:	"MacroFileTest"
+--buttonText:	"Color test"
+--tooltip:	"Colorpicker test"
+--icon:	"control:colorpicker|value: [0,128,0 ]"
+--(
+--	format "EventFired	= % \n" EventFired
+--
+--)

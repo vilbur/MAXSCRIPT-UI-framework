@@ -6,7 +6,7 @@ filein( getFilenamePath(getSourceFileName()) + "/ControlParamsCreator/ControlPar
 filein( getFilenamePath(getSourceFileName()) + "/TooltipCreator/TooltipCreator.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/ControlEventBinder/ControlEventBinder.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/AcrossParameterModifier/AcrossParameterModifier.ms" )
-filein( getFilenamePath(getSourceFileName()) + "/GroupBoxCreator/GroupBoxCreator.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/GroupBoxCreator/GroupBoxCreator.ms" )	-- "./GroupBoxCreator/GroupBoxCreator.ms"
 
 /** ControlCreator_v
  */

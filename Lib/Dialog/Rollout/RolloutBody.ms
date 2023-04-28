@@ -3,6 +3,7 @@
 	title,
 	width  = unsupplied, -- unsupplied for compatibility with CreateDialog()
 	height = unsupplied,
+	--height = 999,
 
 
 	/* properties */
@@ -10,8 +11,9 @@
 	parent_rollout_id,
 
 	/* dependency */
-	_Controls = #(),
-	Events    = EventsList_v(),
+	_Controls	= #(),
+	Events	= EventsList_v(),
+	RolloutResizer	= RolloutResizer_v(),
 
 	/* extended control params */
 	add_locals	= #(), -- #(#variable_name1, init_value1, #variable_name2, init_value2)	// used in ControlCreator_v._addLocalVariablesToRollout 	"../../../RolloutCreator/ControlCreator/ControlCreator.ms"
@@ -22,14 +24,15 @@
 	/* inhered */
 	--Layout,
 
-	/** Create new rollout in first slot
+	/** Wrapper to create new rollout in first slot
 	 */
-	function Roll title id: height: =
+	function Roll title id: height:111 =
 	(
 		--format "\n"; print "RolloutBody.Roll()"
 		Subrollouts = if (Subrollout_slots = this.getSubrollouts()).count > 0 then Subrollout_slots[1] else this.Rollouts()
 
 		Subrollouts.Roll title id:id height:height --return
+		--Subrollouts.Roll title id:id  --return
 	),
 
 	/** Controls
@@ -116,6 +119,8 @@
 	 */
 	function getFullId =
 	(
+		--format "\n"; print "RolloutBody.getFullId()"
+
 		if ( parent_rollout_id != undefined ) then
 			parent_rollout_id +"."+ id as string --return
 
@@ -127,14 +132,14 @@
 		RENAME METHODS BELOW TO PRIVATE
 	--------------------------------------------------------------------------------*/
 
-
-	/** Get subrollouts
+	/** Get Subrollouts_v from this._Controls
 	 */
 	function getSubrollouts =
 	(
 		--format "\n"; print "RolloutBody._getSubrolouts()"
 		--format "_Controls	= % \n" _Controls
 		for _Control in _Controls where hasProperty _Control "slot" collect _Control --return
+
 	),
 
 	/** Test if Rollout has any subrollouts
@@ -161,6 +166,16 @@
 		--if( parent_rollout_id == undefined ) then 0 else ((filterString (this.getFullId()) ".").count - 1 ) / 2 --return
 		if( parent_rollout_id == undefined ) then 0 else floor ((filterString (this.getFullId()) ".").count  / 2) - 1 --return
 	),
+
+	--/** Resize subrollouts
+	-- */
+	--function resizeSubrollouts =
+	--(
+	--	format "\n"; print "RolloutBody.resizeSubrollouts()"
+	--	RolloutResizer.resizeSubrollouts(this)(execute( id as string + ".height" ))
+	--
+	--
+	--),
 
 	private
 
@@ -198,8 +213,9 @@
 		if ( id == undefined or id == unsupplied ) then
 			id = toLower title
 
-			if not matchPattern id pattern:@"rollout*" then
-				id  = "ROLLOUT_" + id -- add prefix
+			--if not matchPattern id pattern:@"rollout*" then
+				--id  = "ROLLOUT_" + id -- add prefix
+
 			--id = substituteString title "Rollout" "" -- add "Rollout" prefix if does exists yet
 
 			id = substituteString ( trimRight ( trimLeft id )) " " "_" -- replace whitespace with underscore

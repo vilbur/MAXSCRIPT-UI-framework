@@ -1,9 +1,8 @@
 clearListener()
 
-filein( "$userscripts\Library\MAXSCRIPT-UI-framework\Lib\Dialog\Dialog.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/../../Lib/Dialog/Dialog.ms" ) -- "./../../Lib/Dialog/Dialog.ms"
 
-
-/* DIALOG */ 
+/* DIALOG */
 Dialog 	= Dialog_v title:(getFilenameFile(getSourceFileName()))
 
 
@@ -29,6 +28,6 @@ _Rollouts_2 = Dialog.Rollouts slot:#optionable_id_of_slot
 _Rollouts_2.roll "Rollout in second slot"
 
 
-/* CREATE DIALOG */ 
+/* CREATE DIALOG */
 -- Dialog.create()
 Dialog.create width:420 height:512

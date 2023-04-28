@@ -20,15 +20,17 @@ if HOTKEYS_GLOBAL == undefined then
 
 /** Create dialog [Maxscript help](https://help.autodesk.com/view/MAXDEV/2021/ENU/?guid=GUID-816D257C-CD2D-4753-A792-6E7AEFAFA6A7)
   *
-  * INHERETING OF WIDTH PROPERTY
-  *  Dialog.width >>> Subrollouts.width >>> Rollout.width >>> Subrollouts.width >>> Rollout.width ....
+  *
+  *
+  * INHERETING OF WIDTH PROPERTY:
+  *
+  * 		Dialog.width >>> Subrollouts.width >>> Rollout.width >>> Subrollouts.width >>> Rollout.width ....
+  *
   *
  */
 struct Dialog_v
 (
-
 	/*------ EXTEND ROLLOUT ------*/
-
 	include "MAXSCRIPT-UI-framework/Lib/Dialog/Rollout/RolloutBody.ms" --"./Rollout/RolloutBody.ms"
 
 	public
@@ -45,6 +47,9 @@ struct Dialog_v
 
 	/* inherit */
 	/* properties */
+
+	min_size,
+
 	style = #(
 		#style_border, 	-- Creates a window with a double border, but no title.
 		#style_titlebar, 	-- Creates a dialog with a title bar.
@@ -73,7 +78,6 @@ struct Dialog_v
 		--#cui_max_sized,	-- When this flag is specified, docking the dialogbar on the top causes the dialogbar to expand to the full window width, docked to bottom it expands to full window width minus command panel width.
 	),
 
-	min_size,
 
 	/** Create dialog
 	  *
@@ -84,7 +88,7 @@ struct Dialog_v
 	  *
 	  * TODO add params for max 2022
 	 */
-	function create width: height: pos: origin:#SCREEN bgcolor: fgcolor: bitmap: bmpstyle:#bmp_tile  style: modal: escapeEnable:false escapekey:true lockHeight:false lockWidth:true parent: =
+	function create width:256 height: pos: origin:#SCREEN bgcolor: fgcolor: bitmap: bmpstyle:#bmp_tile  style: modal: escapeEnable:false escapekey:true lockHeight:false lockWidth:true parent: =
 	(
 		--print "Dialog_v.create()"
 		_RolloutCreator = RolloutCreator_v Ini:Ini
@@ -92,20 +96,26 @@ struct Dialog_v
 		this._setDialogMinimalSize(width)(height)
 
 		this._setDialogSize(width)(height)
+		--format "DIALOG.height	= % \n" this.height
+		_RolloutCreator.createRollout (this) width:width -- create neste rollouts
 
-		_RolloutCreator.createRollout (this) width:width
-
-		--CreateDialog (this.RCI.def)
-		CreateDialog (this.RCI.def) pos:(this._getPosition(pos)(origin)) autoLayoutOnResize:true width:this.width height:this.height bgcolor:bgcolor fgcolor:fgcolor bitmap:bitmap bmpstyle:bmpstyle style:(if( style == unsupplied ) then this.style else style) modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
+		CreateDialog (this.RCI.def) width:this.width height:this.height pos:(this._getPosition(pos)(origin)) autoLayoutOnResize:true bgcolor:bgcolor fgcolor:fgcolor	bitmap:bitmap bmpstyle:bmpstyle style:(if( style == unsupplied ) then this.style else style) modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
 
 		--this._setDialogGlobal()
 		_RolloutCreator.SubolloutsCreator.addSubRollouts (this)
 
 		this._setDockState()
 
+		--this.resizeSubrollouts()
+		--RolloutResizer.resizeSubrollouts(this)(execute( id as string + ".height" ))
+		--RolloutResizer.resizeSubrollouts(this)
 
 		--AutoRunEvents.executeMacros()
-		format ("\n\nDIALOG "+title+" CREATED\n\n" )
+
+		--this._checkDialogHeightIfSubrollouts()
+
+		format ("\n\nDIALOG \""+title+"\" HAS BEEN CREATED\n\n" )
+
 		CONTROL_BITMAPS_STORE = #() -- reset buffer array
 
 
@@ -174,8 +184,6 @@ struct Dialog_v
 		EVENT_DOCKED_ENABLED = true
 	),
 
-
-
 	/** Focus control
 	 */
 	function focus control_id =
@@ -183,6 +191,7 @@ struct Dialog_v
 		--format "\n"; print "Dialog_v.focus()"
 		setFocus (execute( id as string + "." + control_id as string ))
 	),
+
 	/** Send keys to rollout
 	  * List of keys: https://learn.microsoft.com/en-us/dotnet/api/system.windows.forms.sendkeys?view=windowsdesktop-6.0#remarks
 	  *
@@ -201,9 +210,17 @@ struct Dialog_v
 		--format "\n"; print "Dialog_v.hwnd()"
 		--for win in ( windows.getChildrenHWND 0 parent:#max) where win[5] == title do
 			--return win[1]
-		execute(dialog_id as string + ".hwnd" )
+		execute( id as string + ".hwnd" )
 	),
 
+
+	/** Test if dialog is created
+	 */
+	function exists =
+	(
+		--format "\n"; print "Dialog_v.exists()"
+		execute( "GetDialogPos " + id as string ) != [0,0]
+	),
 
 	private
 
@@ -232,7 +249,7 @@ struct Dialog_v
 	 */
 	function _setDialogMinimalSize width height =
 	(
-		--format "\n"; print "Dialog_v._setDialogSize()"
+		--format "\n"; print "Dialog_v._setDialogMinimalSize()"
 		if min_size == undefined then
 		(
 			min_width	= if this.width  != unsupplied then this.width  else (if width  != unsupplied then width else -1)
@@ -242,46 +259,51 @@ struct Dialog_v
 		)
 	),
 
-	/** Set main rollout size
+	/** Set size of dialog
 	 */
 	function _setDialogSize width height =
 	(
 		--format "\n"; print "Dialog_v._setDialogSize()"
-		this.width  = this._getDialogSize( #width ) width
-		this.height = this._getDialogSize( #height) height
+		this.width  = this._getDialogSize( #width ) (width)
+		this.height = this._getDialogSize( #height) (height)
 	),
+
 	/** Get size of dialog
 	  *
-	  * 1. get from ini
-	  * 2. use defined width|height from this.create()
-	  * 3. get default width|height from RolloutMain
 	  *
-	  * @param	name	dimension	#width|#height
-	  * @param	integer	val	size in pixels
+	  * 1. use value from ini file
+	  *
+	  * 2. use defined value from method this.create width: height:
+	  *
+	  * 3. use property value of this.width|this.height
+	  *
+	  *
+	  * @param	name	size_type	#width|#height
+	  * @param	integer	defined_size	size in pixels
 	 */
-	function _getDialogSize dimension val  =
+	function _getDialogSize size_type defined_size  =
 	(
 		--print "Dialog_v._getDialogSize()"
 		--format "this.width	= % \n" this.width
 		--format "this.height	= % \n" this.height
 
-		if( Ini.isDefined() and (dialog_size = Ini.load( id as string )("size")) != undefined) then
+		if( Ini.isDefined() and (ini_size = Ini.load( id as string )("size")) != undefined) then
 		(
-			size = case dimension of
+			ini_size = case size_type of
 			(
-				(#width):  dialog_size.x  as integer
-				(#height): dialog_size.y  as integer
+				(#width):  ini_size.x as integer
+				(#height): ini_size.y as integer
 			)
 
-			if val != unsupplied and size < val then val else size -- use paramater size, if ini saved size is less then, so dialog will not be smaller then width: parameter in this.create()
+			if defined_size != unsupplied and ini_size < defined_size then defined_size else ini_size -- use paramater size, if ini saved size is less then, so dialog will not be smaller then width: parameter in this.create()
+
 		)
-		else if val != unsupplied then
-			val --return defined val on creation
+		else if defined_size != unsupplied then
+			defined_size --return defined val on creation
 
 		else
-			getProperty this dimension
+			getProperty this size_type
 	),
-
 
 	/** Get height of maximized viewport to find out height of docked dialog
 	 */
@@ -309,7 +331,6 @@ struct Dialog_v
 
 		(viewport_area_size[2] as integer) + height_of_ui - dialog_title_height --return
 	),
-
 
 	/** Get position
 	  *
@@ -350,7 +371,6 @@ struct Dialog_v
 		[ win_pos.x+pos.x, win_pos.y+pos.y + toolbar_height]  --return
 	),
 
-
 	/** Load dock state from ini
 	  * Ini postion is not used, if position of dialog is defined in this.create()
 	 */
@@ -368,6 +388,7 @@ struct Dialog_v
 		)
 	),
 
+
 	/** Check if required properties are defined when an instance of the struct is created.
 	 * @example __construct = #( #property_name )
 	 */
@@ -375,6 +396,15 @@ struct Dialog_v
 	(
 		for prop in __construct where getProperty this prop == undefined do
 			messageBox ("SaveIniControlEvents\nUndefined construct property !\n\n"+ ((filterString( classof this as string )"(:")[2]) +"."+ prop )
+	),
+
+	/** If dialog has subrollouts and has not height defined, then throw warning
+	 */
+	function _checkDialogHeightIfSubrollouts =
+	(
+		--format "\n"; print "if._checkDialogHeightIfSubrollouts()"
+		if this.height == unsupplied and this.hasSubrollouts() then
+			format ("\n\n!!!!!!!!!! WARNNING: DIALOG HAS NOT HEIGHT DEFINED !!!!!!!!!!\n\n" )
 	),
 
 	/**

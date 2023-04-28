@@ -7,12 +7,12 @@ struct Subrollouts_v
 	/* properties */
 	parent_rollout_id,
 	slot,
-	
+
 	width,
 	height,
 
 	Rollouts	= #(),
-	
+
 	/** Create new Rollout
 	 */
 	function Roll title id: width: height: =
@@ -25,7 +25,7 @@ struct Subrollouts_v
 
 		_Rollout --return
 	),
-	
+
 	/** Get new Rollout
 	 */
 	function new title id: =
@@ -35,11 +35,11 @@ struct Subrollouts_v
 		this.Roll title id:id --return
 	),
 
-	/** Get Subrollouts_v or Rollout_v 
-	  * 
-	  * 
+	/** Get Subrollouts_v or Rollout_v
+	  *
+	  *
 	  * @param	name	id	id of rollout or subrollout slot
-	  * 
+	  *
 	  * @return	object Subrollouts_v|Rollout_v
 	 */
 	function get id =
@@ -47,19 +47,45 @@ struct Subrollouts_v
 		--format "\n"; print "Subrollouts_v.get()"
 		if id == slot then
 			return this
-			
+
 		else
 			for _Rollout in Rollouts where (found_rollout = _Rollout.get (id)) != undefined do
 				return found_rollout
-		
+
 		undefined --return
 	),
-	
-	
+
+
+	/** Get height
+	 */
+	function getHeight =
+	(
+		--format "\n"; print "Subrollouts_v.getHeight()"
+		execute( this.getSlotId() +".height" ) --return
+	),
+
+
+	/** Set height
+	 */
+	function setHeight val =
+	(
+		--format "\n"; print "Subrollouts_v.setHeight()"
+		execute( this.getSlotId() +".height = " + val as string )
+	),
+
+	/** Get slot id
+	 */
+	function getSlotId =
+	(
+		--format "\n"; print "Subrollouts_v.getSlotId()"
+		 parent_rollout_id +"."+ slot as string --return
+	),
+
 	private
-	
-	
-	/**  
+
+
+
+	/**
 	 */
 	on create do
 	(

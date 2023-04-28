@@ -16,6 +16,8 @@ Controls   = Dialog.Controls group:"Main Controls"
 
 --Controls.control #button "Button" id:#button_1
 
+Controls.control #checkbutton "checkbutton"
+
 --Controls.control #checkbox "Checkbox"
 
 --Controls.control #Dropdownlist "Dropdownlist"
@@ -29,9 +31,9 @@ Controls   = Dialog.Controls group:"Main Controls"
 --Controls.Control #bitmap "_bitmap_test" value: (bitmap 50 50 color:blue)
 
 
-Controls.control #ColorPicker "ColorPicker A" value: [ 64, 128, 0 ]	across:1
-Controls.control #ColorPicker "ColorPicker B"  params:#(#color, ( color 255 0 128 ))	across:1
-Controls.control #ColorPicker "ColorPicker C"  params:#(#color, [0,128,0 ] )	across:1
+-- Controls.control #ColorPicker "ColorPicker A" value: [ 64, 128, 0 ]	across:1
+-- Controls.control #ColorPicker "ColorPicker B"  params:#(#color, ( color 255 0 128 ))	across:1
+-- Controls.control #ColorPicker "ColorPicker C"  params:#(#color, [0,128,0 ] )	across:1
 
 
 
@@ -42,7 +44,7 @@ Controls.control #ColorPicker "ColorPicker C"  params:#(#color, [0,128,0 ] )	acr
  * SOLUTION: Set lower across parameter or wider rollout
  *
 */
-Controls.control #ColorPicker "THERE IS NOT PICKER SHOWN" value: [ 64, 128, 0 ] across:4
+-- Controls.control #ColorPicker "THERE IS NOT PICKER SHOWN" value: [ 64, 128, 0 ] across:4
 
 
 
