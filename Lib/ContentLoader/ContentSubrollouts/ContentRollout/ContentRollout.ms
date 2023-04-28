@@ -90,8 +90,8 @@ struct ContentRollout_v
 	 */
 	function _setRolloutPropertiesFromIniFile &_Rollout =
 	(
-		format "\n"; print "ContentRollout_v._setRolloutPropertiesFromIniFile()"
-		format "_Rollout.id	= % \n" _Rollout.id
+		--format "\n"; print "ContentRollout_v._setRolloutPropertiesFromIniFile()"
+		--format "_Rollout.id	= % \n" _Rollout.id
 
 		if ini_file != undefined and (hasINISetting ini_file ( _SECTION = _Rollout.id as string )) then
 		(

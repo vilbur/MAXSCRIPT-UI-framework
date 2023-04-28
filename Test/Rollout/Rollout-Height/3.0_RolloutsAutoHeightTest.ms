@@ -18,18 +18,24 @@ function addSubRolloutSlots _Rollout prefix:"" nested_levels: controls_count: cu
 
 	if current_level < nested_levels then
 	(
-		rollout_title = prefix + " "+" Level: " + (current_level + 1) as string
 
-		 -- _Rollouts = _Rollout.Rollouts height:128
-		 -- _Rollouts = _Rollout.Rollouts height:256
-	   _Rollouts = _Rollout.Rollouts()
+		--_Rollouts = _Rollout.Rollouts height:256
+		--_Rollouts = _Rollout.Rollouts height:128
+		_Rollouts = _Rollout.Rollouts()
 
-	   _SubRollout = _Rollouts.Roll rollout_title --height:512
+		for r = 1 to 1 do
+		(
+			rollout_title = prefix + " Rollout: "+ r as string + " "+" Level: " + (current_level + 1) as string
 
-	   /* ADD NESTED SUBROLLOUTS */
-		   addSubRolloutSlots _SubRollout prefix:prefix nested_levels:nested_levels current_level:(current_level+1) controls_count:controls_count\
-		   
-		   
+
+		   _SubRollout = _Rollouts.Roll rollout_title --height:512
+
+		   /* ADD NESTED SUBROLLOUTS */
+			   addSubRolloutSlots _SubRollout prefix:prefix nested_levels:nested_levels current_level:(current_level+1) controls_count:controls_count\
+
+		)
+
+
 	)
 
 	/* ADD CONTROLS */
@@ -86,12 +92,12 @@ function controlsRolloutControls nested_levels:0 controls_count:0 =
 	-- addSControls (Dialog) prefix:"Controls A" controls_count:controls_count
 
 	addSubRolloutSlots (Dialog) prefix:("Slot A") nested_levels:nested_levels controls_count:controls_count
-	-- addSubRolloutSlots (Dialog) prefix:("Slot B")	 nested_levels:2 controls_count:controls_count
+	-- addSubRolloutSlots (Dialog) prefix:("Slot B") nested_levels:nested_levels controls_count:controls_count
 
 	-- addSControls (Dialog) prefix:"Controls B" controls_count:controls_count
 
 	--Dialog.create()
-	-- Dialog.create width:512 
+	-- Dialog.create width:512
 	Dialog.create width:512 height:512
 	--Dialog.dock(#right)
 )
@@ -141,9 +147,9 @@ clearListener()
 
 /**
   */
-controlsRolloutControls nested_levels:1 controls_count:0
--- controlsRolloutControls nested_levels:2 controls_count:0
--- controlsRolloutControls nested_levels:3 controls_count:3
+ --controlsRolloutControls nested_levels:1 controls_count:0
+ controlsRolloutControls nested_levels:2 controls_count:2
+--controlsRolloutControls nested_levels:3 controls_count:3
 
 
 /** CASE 3: DILOG WITH SUBROLLOUTS WITHOUT CONTROLS

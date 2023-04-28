@@ -35,7 +35,7 @@ struct ControlCreator_v
 	 */
 	function addControls _Controls =
 	(
-		format "\n\n-------------- Controls group:% --------------\n" _Controls.group
+		--format "\n\n-------------- Controls group:% --------------\n" _Controls.group
 		--format "_Controls.list.count	= % \n" _Controls.list.count
 
 		if _Controls.list.count == 0 then

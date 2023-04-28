@@ -96,19 +96,18 @@ struct Dialog_v
 		this._setDialogMinimalSize(width)(height)
 
 		this._setDialogSize(width)(height)
-		--format "DIALOG.height	= % \n" this.height
+
 		_RolloutCreator.createRollout (this) width:width -- create neste rollouts
 
 		CreateDialog (this.RCI.def) width:this.width height:this.height pos:(this._getPosition(pos)(origin)) autoLayoutOnResize:true bgcolor:bgcolor fgcolor:fgcolor	bitmap:bitmap bmpstyle:bmpstyle style:(if( style == unsupplied ) then this.style else style) modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
 
 		--this._setDialogGlobal()
+
 		_RolloutCreator.SubolloutsCreator.addSubRollouts (this)
 
 		this._setDockState()
 
-		--this.resizeSubrollouts()
-		--RolloutResizer.resizeSubrollouts(this)(execute( id as string + ".height" ))
-		--RolloutResizer.resizeSubrollouts(this)
+		RolloutResizer.resizeSubrollouts(this)
 
 		--AutoRunEvents.executeMacros()
 
@@ -117,8 +116,6 @@ struct Dialog_v
 		format ("\n\nDIALOG \""+title+"\" HAS BEEN CREATED\n\n" )
 
 		CONTROL_BITMAPS_STORE = #() -- reset buffer array
-
-
 	),
 
 	/** Key press

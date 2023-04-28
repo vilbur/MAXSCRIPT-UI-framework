@@ -59,7 +59,7 @@ struct GroupBoxCreator_v
 	 */
 	function sortControlsToGroupBoxes rollout_id_full =
 	(
-		format "\n\n\n******************\n\n\n"; print ("GroupBoxCreator_v.sortControlsToGroupBoxes() Rollout:" + rollout_id_full as string )
+		--format "\n\n\n******************\n\n\n"; print ("GroupBoxCreator_v.sortControlsToGroupBoxes() Rollout:" + rollout_id_full as string )
 
 		/** Filter controls in rollout and return only controls in groupbox
 		  *
@@ -124,7 +124,6 @@ struct GroupBoxCreator_v
 
 		GroupBoxes = this.getVal (rollout_id_full)
 
-		format "ROLLOUT_ID_FULL	= % \n" rollout_id_full
 
 		try(
 

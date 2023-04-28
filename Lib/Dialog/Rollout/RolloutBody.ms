@@ -21,6 +21,9 @@
 
 	RCI, -- Maxscript native RolloutCreator  https://help.autodesk.com/view/3DSMAX/2016/ENU/?guid=__files_GUID_5FC5036F_E2D7_46C9_9AFA_7B3550B9F254_htm
 
+	/* sotore */
+	temporary_created = false,
+
 	/* inhered */
 	--Layout,
 
@@ -213,8 +216,8 @@
 		if ( id == undefined or id == unsupplied ) then
 			id = toLower title
 
-			--if not matchPattern id pattern:@"rollout*" then
-				--id  = "ROLLOUT_" + id -- add prefix
+			if not matchPattern id pattern:@"rollout*" then
+				id  = "ROLLOUT_" + id -- add prefix
 
 			--id = substituteString title "Rollout" "" -- add "Rollout" prefix if does exists yet
 

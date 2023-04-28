@@ -2,7 +2,7 @@ filein( getFilenamePath(getSourceFileName()) + "/../ConstructPropeties/Construct
 
 filein( getFilenamePath(getSourceFileName()) + "/../Dialog/Dialog.ms" )
 
-filein( getFilenamePath(getSourceFileName()) + "/ContentSubrollouts/ContentRollout/ContentRollout.ms" ) 
+filein( getFilenamePath(getSourceFileName()) + "/ContentSubrollouts/ContentRollout/ContentRollout.ms" )	-- "./ContentSubrollouts/ContentRollout/ContentRollout.ms"
 
 /** Load content to UI by file tree
   *
@@ -16,7 +16,7 @@ filein( getFilenamePath(getSourceFileName()) + "/ContentSubrollouts/ContentRollo
 struct ContentLoader_v
 (
 	__construct = #( #path ),
-	
+
 	/* required properties */
 	path, -- source dir of content
 	ini,  -- path to ini file
@@ -24,7 +24,7 @@ struct ContentLoader_v
 	/*  properties */
 	Dialog,
 
-	/* dependency */ 
+	/* dependency */
 	ContentRollout,
 
 	/** Create Dialog
@@ -33,28 +33,28 @@ struct ContentLoader_v
 	function create width: height: pos: origin:#SCREEN bgcolor: fgcolor: bitmap: style: modal: escapeEnable:false escapekey:true lockHeight:false lockWidth:false parent: =
 	(
 		--print("ContentLoader_v.create()")
-		
+
 		--Dialog.create pos:pos menu:menu bgcolor:bgcolor fgcolor:fgcolor bitmap:bitmap style:style modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
 		Dialog.create width:width height:height pos:pos menu:menu bgcolor:bgcolor fgcolor:fgcolor bitmap:bitmap style:style modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
-	
+
 		Dialog --return
 	),
-	
+
 	private
 
-	
-	/**  
+
+	/**
 	 */
 	on create do
 	(
 		--print("ContentLoader_v.onCreate()")
 
 		ConstructPropeties test:this
-		
+
 		ContentRollout =  ContentRollout_v path:path
-		
+
 		Dialog	= Dialog_v title:ContentRollout.title ini:ini
-		
+
 		for Subrollouts_or_Controls in ContentRollout.Subrollouts_and_Controls do
 			Subrollouts_or_Controls.addToUi Dialog
 	)
