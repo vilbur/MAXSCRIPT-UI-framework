@@ -6,7 +6,7 @@ filein( getFilenamePath(getSourceFileName()) + "/../Dialog/Rollout/Subrollouts/S
 
 filein( getFilenamePath(getSourceFileName()) + "/RolloutEventBinder/RolloutEventBinder.ms" )	-- "./RolloutEventBinder/RolloutEventBinder.ms"
 
-filein( getFilenamePath(getSourceFileName()) + "/ControlsCreator/ControlsCreator.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/ControlsCreator/ControlsCreator.ms" )	-- "./ControlsCreator/ControlsCreator.ms"
 
 filein( getFilenamePath(getSourceFileName()) + "/SubolloutsCreator/SubolloutsCreator.ms" ) -- "./SubolloutsCreator/SubolloutsCreator.ms"
 
@@ -37,13 +37,6 @@ struct RolloutCreator_v
 	function createRollout _Rollout width: =
 	(
 		--format "\n\n-------------------------------------	RolloutCreator_v.createRollout() id:#%	-------------------------------------\n"  ( _Rollout.id as string );
-		--format "_Rollout.id	= % \n" (_Rollout.id)
-		--format "_Rollout.getFullId()	= % \n" (_Rollout.getFullId())
-		--format "_Rollout.getNestedLevel()	= % \n" (_Rollout.getNestedLevel())
-		--format "_Rollout.title	= % \n" _Rollout.title
-		--format "_Rollout.height	= % \n" _Rollout.height
-		--format "width	= % \n" width
-
 
 		this._createSubSubrollouts(_Rollout)
 
@@ -82,7 +75,6 @@ struct RolloutCreator_v
 		/* add EVENTS */
 		if( ini != undefined ) then
 			EventBinder.combineEventsAndAddHandlers(_Rollout)
-
 
 		/* EDIT end */
 		_Rollout.RCI.end() --return

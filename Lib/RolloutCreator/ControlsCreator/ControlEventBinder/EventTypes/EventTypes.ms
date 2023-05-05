@@ -10,7 +10,7 @@ struct EventTypes_v
 
 	/**  get events for control type from event_types array
 	  *
-	  * @return	array of event types for control E.G.: return #( #pressed,	#rightclick) if control_type == #button 
+	  * @return	array of event types for control E.G.: return #( #pressed,	#rightclick) if control_type == #button
 	 */
 	function getEventTypesOfControl control_type =
 	(
@@ -21,12 +21,12 @@ struct EventTypes_v
 	),
 
 	/** Get parameters of event defined in this._setEventTypes()
-	  * 
+	  *
 	  * E.G.: For control type #Spinner return
 	  * 			1) return 'val inSpin' if event type #changed
 	  * 			2) return undefined    if event type #buttondown
-	  * 
-	  * @return	string|undefined	
+	  *
+	  * @return	string|undefined
 	 */
 	function getParamsOfEvents control_type =
 	(
@@ -71,14 +71,14 @@ struct EventTypes_v
 			#Listbox:	#( #(#selected, "val"),	#(#doubleClicked, "val"),	#(#rightClick, "val"))
 			#Slider:	#( #(#changed,  "val"),	#rightclick,	#buttondown,	#buttonup  )
 			#Spinner:	#( #(#changed,  "val inSpin"),	#(#entered, "inSpin inCancel"),	#(#buttonup, "inCancel"),	#buttondown )
-			#MultiListBox:	#( #(#selected, "val"),	#(#doubleClicked, "val"),	#(#rightClick, "val"),	#selectionEnd )
+			#MultiListBox:	#( #selectionEnd,	#(#doubleClicked, "val"),	#(#rightClick, "val"),	#(#selected, "val") )
 			#Combobox:	#( #(#selected, "val"),	#(#doubleClicked, "val"),	#(#entered , "val"),	#(#changed , "val"),	#rightClick)
 			#Dropdownlist:	#( #(#selected, "val"),	#rightClick )
 			--default:	undefined
 			default:	#()
 		)
 		--format "control_events	= % \n" control_events
-		if( control_events != undefined ) then 
+		if( control_events != undefined ) then
 			List.setVal (control_type) (control_events)
 		else
 			throw ("\n\nYou are trying create control which has not set event types\n\nAdd event types for #"+control_type as string +" to method\n\nEventTypes_v._setEventTypes()")
@@ -94,7 +94,7 @@ struct EventTypes_v
 		List.getVal (control_type) --return
 	),
 
-	/**  
+	/**
 	 */
 	on create do
 	(

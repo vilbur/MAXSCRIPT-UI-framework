@@ -19,8 +19,7 @@ struct SubolloutsCreator_v
 	function addSubRollouts _Rollout =
 	(
 		--format "\n"; print "SubolloutsCreator_v.addSubRollouts()"
-		--print "!!!!!!!!!!!!!!!!!!!!"
-		--format "_Rollout.id	= % \n" _Rollout.id
+
 		this._Rollout = _Rollout
 
 		for Subrollouts in _Rollout.getSubrollouts() do
@@ -33,17 +32,17 @@ struct SubolloutsCreator_v
 			(
 				_Subrollout = Subrollouts.Rollouts[index]
 
-				if _Subrollout.temporary_created then
-					execute( "destroyDialog "+_Subrollout.id as string  )
+				--if _Subrollout.temporary_created then
 					--execute( "try(destroyDialog "+_Subrollout.id as string +")catch()" ) -- DEVELOP
 
-				--local start_time = timestamp()
 				execute  ( "AddSubRollout "+_Rollout.id+"." + Subrollouts.slot +" "+ _Subrollout.id + " rolledUp:"+(this._getRolledStateFromIni(_Subrollout.id)) )
-				--format "% 	% ms\n"  _Subrollout.id ( ((timestamp()) - start_time)  )
 
 				this.addSubRollouts (_Subrollout)
 			)
+
 		)
+
+
 	),
 
 	 /** _create subrollouts

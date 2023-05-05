@@ -1,7 +1,6 @@
-/** CREATE ROLLOUT & DIALOG 
+/** CREATE ROLLOUT & DIALOG
  */
-_RolloutCreator.createRollout (_Rollout)
 
-CreateDialog (_RolloutCreator.getDefinition _Rollout) width:width height:height
+CreateDialog (_RolloutCreator.createRollout (_Rollout)) width:width height:height
 
-_RolloutCreator.SubolloutsCreator.addSubRollouts _Rollout
+--_RolloutCreator.SubolloutsCreator.addSubRollouts _Rollout

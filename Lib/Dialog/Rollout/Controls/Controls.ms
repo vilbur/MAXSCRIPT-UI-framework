@@ -1,7 +1,6 @@
-filein( getFilenamePath(getSourceFileName()) + "/Control/Control.ms" )
-filein( getFilenamePath(getSourceFileName()) + "/DefaultParameters/DefaultParameters.ms" )	/* DefaultParameters */
-filein( getFilenamePath(getSourceFileName()) + "/GroupBoxes/GroupBoxes.ms" )
-
+filein( getFilenamePath(getSourceFileName()) + "/Control/Control.ms" )	-- "./Control/Control.ms"
+filein( getFilenamePath(getSourceFileName()) + "/DefaultParameters/DefaultParameters.ms" )	-- "./DefaultParameters/DefaultParameters.ms"
+filein( getFilenamePath(getSourceFileName()) + "/GroupBoxes/GroupBoxes.ms" )	-- "./GroupBoxes/GroupBoxes.ms"
 
 
 /** Controls
@@ -41,9 +40,9 @@ struct Controls_v
 
 		_Control = Control_v type:type caption:caption id:id add_locals:locals rollout_id:rollout_id
 
-
+		--
 		--format "_Control.id = % \n" _Control.id
-
+		--format "_Control	= % \n" _Control
 		_param_names  = #( #width, #height, #offset, #align, #items, #value, #ini, #tooltip, #across)
 		_param_values = #(  width,  height,  offset,  align, items,  value,  ini,  tooltip,  across)
 
@@ -55,8 +54,11 @@ struct Controls_v
 		this._setParamsToControl(_Control)(params)
 
 
-		GroupBoxes.tryAddGroupbox(this)(_Control)
-		GroupBoxes.tryAddControlToGroupbox (this)(_Control)
+		if _Control.type == #Groupbox  then
+			GroupBoxes.addGroupbox(this)(_Control)
+		else
+			GroupBoxes.addControlToGroupbox (this)(_Control)
+
 
 		if( add_to_controls ) then
 			this.add _Control

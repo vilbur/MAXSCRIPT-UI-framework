@@ -44,7 +44,7 @@ struct ControlCreator_v
 		this._Controls = _Controls
 
 		if not this.isGroupboxControls() then
-			GroupBoxCreator.addGrouboxes (_Rollout.getFullId()) (_Controls.GroupBoxes)
+			GROUPBOXCREATOR.addGrouboxes (_Rollout.getFullId() as name ) (_Controls.GroupBoxes)
 
 		/* pass DEFAULT PARAMETERS to params creator */
 		ParamsCreator.setDefaultParameters(_Controls.DefaultParameters)
@@ -81,7 +81,6 @@ struct ControlCreator_v
 
 		/* add HANDLERS */
 		this._addHandlersToRollout()
-
 	),
 
 	/** Controls to groupbox will be rendered as last
@@ -139,6 +138,8 @@ struct ControlCreator_v
 	function _addControlsToRollout =
 	(
 		--format "\n"; print "ControlCreator_v._addControlsToRollout()"
+		--format "this.isGroupboxControls()	= % \n" (this.isGroupboxControls())
+		--format "this._Controls	= % \n" this._Controls
 		if not this.isGroupboxControls() then
 			this._addControlsGroup #start
 
@@ -166,7 +167,7 @@ struct ControlCreator_v
 			format "	Params: % \n" params
 		)
 
-		_Rollout.RCI.addControl (_Control.type) (_Control.id) (this._getCaption(_Control.caption)) paramStr:params filter:true;
+		_Rollout.RCI.addControl (_Control.type) (_Control.id) (this._getCaption(_Control)) paramStr:params filter:true;
 	),
 
 	/** Add Handlers of Events
@@ -196,14 +197,25 @@ struct ControlCreator_v
 	  *
 	  * Mainly used for groupbox control
 	  *
-	  * @property	string	caption	of control
 	  *
 	  * @return	string return empty string if caption is for instance "[Foo Control Caption]"
 	 */
-	function _getCaption caption =
+	function _getCaption _Control =
 	(
-		if( matchPattern caption pattern:("[*]")  ) then
-			caption	= ""
+		--format "\n"; print "ControlCreator_v._getCaption()"
+		--format "caption	= % \n" caption
+		--format "_Control.type	= % \n" _Control.type
+
+		caption = _Control.caption
+
+		if( matchPattern _Control.caption pattern:("[*]")  ) then
+			caption	= case _Control.type of
+			(
+				#Groupbox:	" "
+
+				default:	""
+			)
+
 
 		caption --return
 	),
@@ -263,7 +275,8 @@ struct ControlCreator_v
 	 */
 	function isGroupboxControls =
 	(
-		--format "\n"; print "ControlCreator_v.isNotGroupboxControls()"
+		--format "\n"; print "ControlCreator_v.isGroupboxControls()"
+		--format "this._Controls.group	= % \n" (this._Controls.group  == #controls_in_groupboxes)
 		--this._Controls.group == #controls_in_groupboxes or this._Controls.group == #hotkeys_timers
 		this._Controls.group == #controls_in_groupboxes
 	),

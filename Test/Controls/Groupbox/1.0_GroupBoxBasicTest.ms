@@ -2,17 +2,19 @@ clearListener()
 
 filein( getFilenamePath(getSourceFileName()) + "/../../../Lib/Dialog/Dialog.ms" )
 
-/* DIALOG */ 
+/* DIALOG */
 Dialog 	= Dialog_v title:(getFilenameFile(getSourceFileName()))
 
-/* CONTROLS */ 
-_Controls = Dialog.Controls group:"Test Dialog"
- 
-/* GROUPBOX */ 
-_GroupBox = _Controls.control #GroupBox (groupbox_name = "Test groupbox") params:#( #height, 128 )
+/* CONTROLS */
+_Controls = Dialog.Controls group:"Controls Group"
 
-/* BUTTON */ 
+
+/* GROUPBOX */
+_GroupBox = _Controls.control #GroupBox (groupbox_name = "Test groupbox") params:#( #height, 256 )
+
+/* BUTTON */
 _Controls.control #button ("Button 1") across:1 params:#(#groupbox, groupbox_name)
+ 
 
-/* CREATE DIALOG */ 
-Dialog.create()
+/* CREATE DIALOG */
+Dialog.create height:256

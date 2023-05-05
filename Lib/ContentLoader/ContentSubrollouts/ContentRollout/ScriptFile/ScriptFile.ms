@@ -178,7 +178,7 @@ struct ScriptFile_Content_v
 	(
 		--format "\n"; print "ScriptFile_Content_v._setEventCallMacro()"
 		event_type = this._getEventType (_Control) (Macro)
-
+		--format "event_type	= % \n" event_type
 		if( event_type != undefined ) then
 		(
 			callback = "(macros.run \""+Macro.category+"\" \""+Macro.macro_name+"\")"
@@ -198,7 +198,9 @@ struct ScriptFile_Content_v
 	function _getEventType _Control Macro =
 	(
 		--print "ScriptFile_Content_v._getEventType()"
-		if( (event_type = Macro.getParam "event") == undefined ) then
+		--format "event_type	= % \n" (Macro.getParam #event)
+
+		if( (event_type = Macro.getParam #event) == undefined ) then
 			event_type = (ControlEventBinder.EventTypes.getEventTypesOfControl (_Control.type))[ _Control.Events.list.count+1] -- get next event type in list
 
 		--if( event_type != undefined ) then
@@ -237,7 +239,7 @@ struct ScriptFile_Content_v
 	 */
 	function _getGroupName =
 	(
-		( dotNetObject "System.Text.RegularExpressions.Regex" @"^\d*\s*_*" ).Replace ( trimLeft ( trimRight (getFilenameFile path) "_ " )  "_ " ) " "
+		( dotNetObject "System.Text.RegularExpressions.Regex" @"^\d*\s*_-*" ).Replace ( trimLeft ( trimRight (getFilenameFile path) "_ " )  "_ " ) " "
 	),
 
 	--/** If filename starts with underscore "_"

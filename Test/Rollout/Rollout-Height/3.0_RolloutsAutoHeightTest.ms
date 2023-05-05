@@ -10,7 +10,7 @@ filein( getFilenamePath(getSourceFileName()) + "/../../../Lib/Dialog/Dialog.ms" 
 
 /** Add sub rollouts
  */
-function addSubRolloutSlots _Rollout prefix:"" nested_levels: controls_count: current_level:0 =
+function addSubRolloutSlots _Rollout prefix:"" rollouts_count:1 nested_levels: controls_count: current_level:0 =
 (
 	--format "\n"; print ".addSubRolloutSlots()"
 	--format "nested_levels	= % \n" nested_levels
@@ -19,11 +19,11 @@ function addSubRolloutSlots _Rollout prefix:"" nested_levels: controls_count: cu
 	if current_level < nested_levels then
 	(
 
-		--_Rollouts = _Rollout.Rollouts height:256
+		-- _Rollouts = _Rollout.Rollouts height:256
 		--_Rollouts = _Rollout.Rollouts height:128
 		_Rollouts = _Rollout.Rollouts()
 
-		for r = 1 to 1 do
+		for r = 1 to rollouts_count do
 		(
 			rollout_title = prefix + " Rollout: "+ r as string + " "+" Level: " + (current_level + 1) as string
 

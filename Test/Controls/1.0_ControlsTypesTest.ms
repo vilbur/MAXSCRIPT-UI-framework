@@ -11,29 +11,47 @@ import_browse
 Dialog 	    = Dialog_v title:"Test" ini:(getSourceFileName())
 --Dialog 	    = Dialog_v title:"Test"
 
+
+/* CONTROLS */
 Controls   = Dialog.Controls group:"Main Controls"
 
+/*------ GROUPBOX ------*/
+Controls.control #Groupbox "Groupbox Test" height:64
+Controls.control #button "Button in Groupbox" params:#(#groupbox, "Groupbox Test")
 
+
+Controls.control #Groupbox "[Groupbox Hidden Label]" height:64
+Controls.control #button "Group Box without Label" params:#(#groupbox, "[Groupbox Hidden Label]") width:128 offset:[-32,0]
+
+
+/*------ BUTTON ------*/
 --Controls.control #button "Button" id:#button_1
 
-Controls.control #checkbutton "checkbutton"
+/*------ CECKBUTTON ------*/
+--Controls.control #checkbutton "checkbutton"
 
+/*------ CHECKBOX ------*/
 --Controls.control #checkbox "Checkbox"
 
+/*------ DROPDOWN ------*/
 --Controls.control #Dropdownlist "Dropdownlist"
 
+/*------ EDITTEXT ------*/
 --Controls.control #Edittext "Edittext"
 
+/*------ BROWSEATH ------*/
 --Controls.control #browsePath "browsePath"
 
+/*------ COLORPICKER ------*/
+-- Controls.control #ColorPicker "ColorPicker A" value: [ 64, 128, 0 ]	across:1
+-- Controls.control #ColorPicker "ColorPicker B"  params:#(#color, ( color 255 0 128 ))	across:1
+-- Controls.control #ColorPicker "ColorPicker C"  params:#(#color, [0,128,0 ] )	across:1
+
+/*------ BITMAP ------*/
 --Controls.Control #bitmap "_bitmap_test" params:#(#bitmap, "(bitmap 50 50 color:green)" )
 --Controls.Control #bitmap "_bitmap_test" params:#(#bitmap, (bitmap 50 50 color:orange) )
 --Controls.Control #bitmap "_bitmap_test" value: (bitmap 50 50 color:blue)
 
-
--- Controls.control #ColorPicker "ColorPicker A" value: [ 64, 128, 0 ]	across:1
--- Controls.control #ColorPicker "ColorPicker B"  params:#(#color, ( color 255 0 128 ))	across:1
--- Controls.control #ColorPicker "ColorPicker C"  params:#(#color, [0,128,0 ] )	across:1
 
 
 
@@ -50,5 +68,5 @@ Controls.control #checkbutton "checkbutton"
 
 /* DIALOG CREATE */
 --Dialog.create()
-Dialog.create   width:256
+Dialog.create   width:320
 --Dialog.create   width:1024

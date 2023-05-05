@@ -1,11 +1,11 @@
-filein( getFilenamePath(getSourceFileName()) + "/ParamsList/ParamsList.ms" )
-
+filein( getFilenamePath(getSourceFileName()) + "/ParamsList/ParamsList.ms" )	-- "./ParamsList/ParamsList.ms"
+filein( getFilenamePath(getSourceFileName()) + "/../../../../EventsList/EventsList.ms" )	-- "./../../../../EventsList/EventsList.ms"
 
 /** Control
  */
 struct Control_v
 (
-	__construct = #(  ),
+	__construct = #(),
 
 	/* required */
 	type,
@@ -15,7 +15,7 @@ struct Control_v
 	id,
 
 	/* dependency */
-	Events = EventsList_v(), -- "../../EventsList/EventsList.ms"
+	Events = EventsList_v(),
 	Params = ParamsList_v(),
 
 
