@@ -1,7 +1,6 @@
 clearListener()
 
-filein( "$userscripts\MAXSCRIPT-UI-framework\Lib\Dialog\Dialog.ms" )
-import_browse
+filein( getFilenamePath(getSourceFileName()) + "/../../Lib/Dialog/Dialog.ms" )	-- "./../../Lib/Dialog/Dialog.ms"
 
 /**  CONTROL TYPES: https://help.autodesk.com/view/3DSMAX/2017/ENU/?guid=__files_GUID_E421933F_958E_42FD_80A1_D66F2A2C0A06_htm
   *
@@ -13,25 +12,29 @@ Dialog 	    = Dialog_v title:"Test" ini:(getSourceFileName())
 
 
 /* CONTROLS */
-Controls   = Dialog.Controls group:"Main Controls"
+--Controls   = Dialog.Controls group:"Main Controls"
+Controls   = Dialog.Controls()
 
 /*------ GROUPBOX ------*/
-Controls.control #Groupbox "Groupbox Test" height:64
-Controls.control #button "Button in Groupbox" params:#(#groupbox, "Groupbox Test")
-
-
-Controls.control #Groupbox "[Groupbox Hidden Label]" height:64
-Controls.control #button "Group Box without Label" params:#(#groupbox, "[Groupbox Hidden Label]") width:128 offset:[-32,0]
+--Controls.control #Groupbox "Groupbox Test" height:64
+--Controls.control #button "Button in Groupbox" params:#(#groupbox, "Groupbox Test")
+--
+--
+--Controls.control #Groupbox "[Groupbox Hidden Label]" height:64
+--Controls.control #button "Group Box without Label" params:#(#groupbox, "[Groupbox Hidden Label]") width:128 offset:[-32,0]
 
 
 /*------ BUTTON ------*/
---Controls.control #button "Button" id:#button_1
+Controls.control #button "Button" id:#button_1
 
 /*------ CECKBUTTON ------*/
 --Controls.control #checkbutton "checkbutton"
 
 /*------ CHECKBOX ------*/
 --Controls.control #checkbox "Checkbox"
+
+/*------ RADIOBUTTONS ------*/
+Controls.control #radioButtons "RadioButtons"	items:#("Item 1","Item 2")
 
 /*------ DROPDOWN ------*/
 --Controls.control #Dropdownlist "Dropdownlist"

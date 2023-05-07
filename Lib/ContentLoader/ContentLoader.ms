@@ -1,6 +1,7 @@
 filein( getFilenamePath(getSourceFileName()) + "/../ConstructPropeties/ConstructPropeties.ms" )
 
-filein( getFilenamePath(getSourceFileName()) + "/../Dialog/Dialog.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/../Dialog/Dialog.ms" )	-- "./../Dialog/Dialog.ms"
+
 
 filein( getFilenamePath(getSourceFileName()) + "/ContentSubrollouts/ContentRollout/ContentRollout.ms" )	-- "./ContentSubrollouts/ContentRollout/ContentRollout.ms"
 
@@ -22,7 +23,7 @@ struct ContentLoader_v
 	ini,  -- path to ini file
 
 	/*  properties */
-	Dialog,
+	Dialog, -- Dialog_v "./../Dialog/Dialog.ms"
 
 	/* dependency */
 	ContentRollout,

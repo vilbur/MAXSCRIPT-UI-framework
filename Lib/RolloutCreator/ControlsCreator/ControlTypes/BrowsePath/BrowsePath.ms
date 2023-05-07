@@ -149,18 +149,25 @@ struct BrowsePath_v
 
 	/** Get dialog getSaveFileName|getOpenFileName  https://help.autodesk.com/view/MAXDEV/2021/ENU/?guid=GUID-D4B43A33-8342-4BC9-80AB-91460861D37C
 	  *
+	  * Wrap parameters to escaped quotes:@
+	  *
+	  * #initialDir paramter is not wraped if has absolute path
+	  *
 	  * @return	string joined parameters for dialog	e.g.: "getSavePath caption:"my title""
 	 */
 	function _getPathDialog =
 	(
 		--print "BrowsePath_v._getPathDialog()"
-		--if( path_dialog = this._getParam #mode ) == undefined  then
 		path_dialog = (this._getParam #mode) as string
-		--path_dialog = "getSavePath"
 
 		for param in browse_params where (val = this._getParam param ) != undefined and param != #mode do
-			path_dialog += " " + param as string +":@"+ val as string +"@"
-		--format "path_dialog = % \n" path_dialog
+		(
+			if not ( param == #initialDir and pathConfig.isAbsolutePath(val) == false )then
+				val = "@"+ val as string +"@"
+
+			path_dialog += " " + param as string + ":" + val
+		)
+
 		path_dialog --return
 	),
 

@@ -212,12 +212,12 @@
 	function _setId =
 	(
 		--print "RolloutBody._setId()"
-
+		--format "title	= % \n" title
 		if ( id == undefined or id == unsupplied ) then
 			id = toLower title
-
+			
 			if not matchPattern id pattern:@"rollout*" then
-				id  = "ROLLOUT_" + id -- add prefix
+				id  = if parent_rollout_id == undefined then "DIALOG_" + id else "ROLLOUT_" + id -- add prefix
 
 			--id = substituteString title "Rollout" "" -- add "Rollout" prefix if does exists yet
 

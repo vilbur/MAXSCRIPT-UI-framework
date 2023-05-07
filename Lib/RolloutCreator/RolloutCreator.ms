@@ -76,13 +76,29 @@ struct RolloutCreator_v
 		if( ini != undefined ) then
 			EventBinder.combineEventsAndAddHandlers(_Rollout)
 
+		--this._setRolloutGlobal(_Rollout)
 		/* EDIT end */
 		_Rollout.RCI.end() --return
 	),
 
 
 	private
-
+	--/** Set dialog id as global variable
+	--  *
+	--  * It is for unnecessary for make EverntFired working
+	--  *
+	-- */
+	--function _setRolloutGlobal _Rollout =
+	--(
+	--	format "\n"; print "Dialog_v._setRolloutGlobal()"
+	--	format "id	= % \n" _Rollout.id
+	--	--format "id	= % \n" (toUpper (id as string ))
+	--	--execute("global "+ (toUpper (id as string )) )
+	--	--execute("global GLOBAL_"+( id as string ) )
+	--	execute("global "+( _Rollout.id as string ) )
+	--
+	--	--format "GLOBAL_group_options	= % \n" GLOBAL_group_options
+	--),
 
 	/** Create subrollouts recursively from most nested to dialog level
 	  *

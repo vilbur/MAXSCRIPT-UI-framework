@@ -1,12 +1,12 @@
 
-filein( getFilenamePath(getSourceFileName()) + "/../ConstructPropeties/ConstructPropeties.ms" )
-filein( getFilenamePath(getSourceFileName()) + "/../EventsList/EventsList.ms" )
-filein( getFilenamePath(getSourceFileName()) + "/../RolloutCreator/RolloutCreator.ms" )
-filein( getFilenamePath(getSourceFileName()) + "/Layout/Layout.ms" )
-filein( getFilenamePath(getSourceFileName()) + "/AutoRunEvents/AutoRunEvents.ms" )
-filein( getFilenamePath(getSourceFileName()) + "/../Ini/Ini.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/../ConstructPropeties/ConstructPropeties.ms" )	-- "./../ConstructPropeties/ConstructPropeties.ms"
+filein( getFilenamePath(getSourceFileName()) + "/../EventsList/EventsList.ms" )	-- "./../EventsList/EventsList.ms"
+filein( getFilenamePath(getSourceFileName()) + "/../RolloutCreator/RolloutCreator.ms" )	-- "./../RolloutCreator/RolloutCreator.ms"
+filein( getFilenamePath(getSourceFileName()) + "/../Ini/Ini.ms" )	-- "./../Ini/Ini.ms"
 
-filein( getFilenamePath(getSourceFileName()) + "/Hotkeys/Hotkeys.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/Layout/Layout.ms" )	-- "./Layout/Layout.ms"
+filein( getFilenamePath(getSourceFileName()) + "/AutoRunEvents/AutoRunEvents.ms" )	-- "./AutoRunEvents/AutoRunEvents.ms"
+filein( getFilenamePath(getSourceFileName()) + "/Hotkeys/Hotkeys.ms" )	-- "./Hotkeys/Hotkeys.ms"
 
 global DIALOG_PREVIOUS_STATE = undefined -- this should be in struct
 
@@ -101,7 +101,7 @@ struct Dialog_v
 
 		CreateDialog (this.RCI.def) width:this.width height:this.height pos:(this._getPosition(pos)(origin)) autoLayoutOnResize:true bgcolor:bgcolor fgcolor:fgcolor	bitmap:bitmap bmpstyle:bmpstyle style:(if( style == unsupplied ) then this.style else style) modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
 
-		--this._setDialogGlobal()
+		--this._setDialogGlobal() -- this is not required anwhere
 
 		_RolloutCreator.SubolloutsCreator.addSubRollouts (this)
 
@@ -235,7 +235,7 @@ struct Dialog_v
 	--	--execute("global "+ (toUpper (id as string )) )
 	--	--execute("global GLOBAL_"+( id as string ) )
 	--	execute("global "+( id as string ) )
-	--	--execute("global GLOBAL_"+( id as string ) + this.RCI.def  )
+	--
 	--	--format "GLOBAL_group_options	= % \n" GLOBAL_group_options
 	--),
 

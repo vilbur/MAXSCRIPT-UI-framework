@@ -1,5 +1,5 @@
-filein( getFilenamePath(getSourceFileName()) + "/ControlTypes/BrowsePath/BrowsePath.ms" )
-filein( getFilenamePath(getSourceFileName()) + "/ControlTypes/Radiobuttons/Radiobuttons.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/ControlTypes/BrowsePath/BrowsePath.ms" )	-- "./ControlTypes/BrowsePath/BrowsePath.ms"
+filein( getFilenamePath(getSourceFileName()) + "/ControlTypes/Radiobuttons/Radiobuttons.ms" )	-- "./ControlTypes/Radiobuttons/Radiobuttons.ms"
 
 filein( getFilenamePath(getSourceFileName()) + "/ControlValue/ControlValue.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/ControlParamsCreator/ControlParamsCreator.ms" )
@@ -158,7 +158,7 @@ struct ControlCreator_v
 	(
 		--format "\n"; print "ControlCreator_v._addControlToRollout()"
 		params = ParamsCreator.join(_Control.params)
-
+		--format "params	= % \n" params
 		/* DEBUG LOG */
 		if DEBUG then
 		(

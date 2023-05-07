@@ -1,11 +1,11 @@
 /** Changes of defaults 3Ds Max radio buttons
-	
+
 	1) Buttons are set to row in default
-	
+
 	2) Buttons are UNSELECTABLE, choose same button again and buttons will be unselected if parameter #unselect == true E.G.: params:#( #UNSELECT,true )
 
 	3) Parameter #offset can be set only as single Point2 value, not necessary define it for each column E.G.:  params:#(#OFFSETS, [8, 16] )
-	
+
  */
 struct RadioButtons_v
 (
@@ -17,20 +17,20 @@ struct RadioButtons_v
 	/* inhered */
 	/* properties */
 	_Control,
-	
+
 	/** Set params
 	 */
 	function setParams _Control =
 	(
 		--format "\n"; print "RadioButtons_v.setParams()"
 		this._Control = _Control
-		
+
 		this._setLabels()
-		
+
 		this._setButtonsToRow()
-		
+
 		this._setOffsets()
-		
+
 		this._makeUnselectAble()
 	),
 
@@ -39,40 +39,43 @@ struct RadioButtons_v
 	function getEvents _Control =
 	(
 		--format "\n"; print "RadioButtons_v.getEvents()"
+		--format "_Control	= % \n" _Control
 		Events	= #()
 		Event =  Event_v type: #changed
-		
+
 		save_state_var = this._getSaveStateVariableName(_Control.id)
 
-		Event.code = " print \"CHANGED\"
-			if val == "+save_state_var+" then 
-				"+(_Control.id as string) +".state = val = 0
-			
-			EventFired.val     = val
-			"+save_state_var+" = val"
-		
+		_Control.addlocal ( save_state_var as name ) ""
+		--format "_Control	= % \n" _Control
+		--_Control.addlocal ( save_state_var as name ) (  _Control.id as string +".state" )
+
+		Event.code = "if val == "+save_state_var+" then
+				"+ (_Control.id as string) +".state = val = 0
+					"+save_state_var+" = val
+					EventFired.val     = val"
+
 		append Events Event
-		
+
 		Events --return
 	),
-	
+
 	private
-	
+
 	/** 1) Move parameter #items to parameter #labels
-	  * 2) Delete parameter #items 
+	  * 2) Delete parameter #items
 	 */
 	function _setLabels =
 	(
 		--format "\n"; print "RadioButtons_v.setLabels()"
-		if _Control.Params.getVal #labels == undefined then 
+		if _Control.Params.getVal #labels == undefined then
 		(
 			_Control.Params.setVal #labels (_Control.Params.getVal #items)
 
 			_Control.Params.delete #items
 		)
 	),
-	
-	/**  Set columns same count as labels
+
+	/**  Set #columns parameter same count as labels
 	  */
 	function _setButtonsToRow =
 	(
@@ -81,7 +84,7 @@ struct RadioButtons_v
 		if _Control.Params.getVal #columns == undefined then
 			_Control.Params.setVal #columns labels.count
 	),
-		
+
 	/** Set offsets for each button
 	 */
 	function _setOffsets =
@@ -94,7 +97,7 @@ struct RadioButtons_v
 		offsets = _Control.Params.getVal #offsets
 
 		offsets_all = #()
-		
+
 		controls_in_row  = 0
 		row_offset       = 0
 
@@ -103,9 +106,9 @@ struct RadioButtons_v
 			for i = 1 to labels.count do
 			(
 				controls_in_row = if controls_in_row == columns then 1 else controls_in_row + 1
-				
+
 				row_offset = if controls_in_row == 1 then row_offset + offsets.y else row_offset
-				
+
 				append offsets_all [offsets.x, row_offset]
 			 )
 
@@ -114,9 +117,9 @@ struct RadioButtons_v
 	),
 
 	/** Make unselectable radiobuttons
-	  * 
+	  *
 	  * Add variable to store previous state
-	  * 
+	  *
 	  */
 	function _makeUnselectAble =
 	(
@@ -128,19 +131,20 @@ struct RadioButtons_v
 			init_state = if( default != undefined ) then default else 1
 			--format "init_state	= % \n" init_state
 			_Control.addLocal( this._getSaveStateVariableName(_Control.id) as name ) init_state
-			
+
 			_Control.Params.delete #unselect
 		)
 	),
-	
+
 	/** Get save state variable name
 	 */
 	function _getSaveStateVariableName control_id =
 	(
 		--format "\n"; print "RadioButtons_v._getSaveStateVariableName()"
+		--format "control_id	= % \n" control_id
 		control_id as string + "_prev_state" --return
 	),
-	/**  
+	/**
 	 */
 	on create do
 	(

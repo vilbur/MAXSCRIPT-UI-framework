@@ -32,9 +32,10 @@ struct SubolloutsCreator_v
 			(
 				_Subrollout = Subrollouts.Rollouts[index]
 
-				--if _Subrollout.temporary_created then
-					--execute( "try(destroyDialog "+_Subrollout.id as string +")catch()" ) -- DEVELOP
+				if _Subrollout.temporary_created then
+					execute( "destroyDialog "+_Subrollout.id as string  )
 
+					
 				execute  ( "AddSubRollout "+_Rollout.id+"." + Subrollouts.slot +" "+ _Subrollout.id + " rolledUp:"+(this._getRolledStateFromIni(_Subrollout.id)) )
 
 				this.addSubRollouts (_Subrollout)

@@ -1,5 +1,4 @@
-filein( getFilenamePath(getSourceFileName()) + "/../ControlTypes/ControlTypes.ms" )
-
+filein( getFilenamePath(getSourceFileName()) + "/../ControlTypes/ControlTypes.ms" )	-- "./../ControlTypes/ControlTypes.ms"
 
 /** Default parameters for control types
   *
@@ -14,14 +13,14 @@ filein( getFilenamePath(getSourceFileName()) + "/../ControlTypes/ControlTypes.ms
 struct DefaultParameters_v
 (
 	/*
-	  
+
 		this.keys   = #( #global,	#button,	#checkbox,	... ) -- control types
 		this.values = #( List,	List,	List,	... ) -- list of parameters and values for each control type
-		
+
 	*/
 	include "MAXSCRIPT-UI-framework/Lib/List/ListBody.ms"
 
-	
+
 	control_types = (ControlTypes_v()).getAllTypes(),
 
 	/** Set default param
@@ -36,7 +35,7 @@ struct DefaultParameters_v
 
 	/** Set this.keys & this.values
 	  *
-	  * this.keys   = #( #global,	#button )		
+	  * this.keys   = #( #global,	#button )
 	  * this.values = #( #(#width, 96),	#(#across, 4) )
 	  *
 	 */
@@ -44,23 +43,23 @@ struct DefaultParameters_v
 	(
 		--print "DefaultParameters_v._setDefaultsForAllTypes()"
 		this._setControlTypes()
-		
+
 		this._setValuesForEachControlType()
 	),
 
 	/** Get keys for control type
-	  * 
+	  *
 	  * @property	name	control_type	type of control for search
-	  * 
+	  *
 	  * @return	array of matching DefaultParameters.keysto control_type E.G.:  #(#multiListBox, #listbox, #list) if control_type == #multiListBox
 	 */
 	function getKeysForControlType control_type =
 	(
 		--format "\n"; print "DefaultParameters_v._getKeysForControlType()"
-		
+
 		for control_type_key in this._keysSorted() where  matchPattern (control_type as string ) pattern:( "*" + (control_type_key as string ) + "*") collect control_type_key --return
 	),
-	
+
 	/** Get parameters for control type
 	 */
 	function getParametersForControlType control_type =
@@ -69,23 +68,23 @@ struct DefaultParameters_v
 		--format "this.getVal(control_type as name )	= % \n" (this.getVal(control_type as name ))
 		this.getVal(control_type as name )
 	),
-	
+
 	private
-	
+
 
 	/** Merge control types defined by user with all control types
-	  * 
+	  *
 	  * Add #global type if not defined by user
 	  */
 	function _setControlTypes =
 	(
 		--format "\n"; print "DefaultParameters_v.setControlTypes()"
-		
+
 		control_types = control_types + this.keys
-		
+
 		appendIfUnique control_types #global
 	),
-	
+
 	/** Set values of parameters for each control type
 	 */
 	function _setValuesForEachControlType =
@@ -96,16 +95,16 @@ struct DefaultParameters_v
 	),
 
 	/**  Sort array items from longest to shortest one
-	  *	@return	array	 
+	  *	@return	array
 	  */
 	function _keysSorted =
 	(
 		--format "\n"; print "ControlParamsCreator_v._getControlTypesKeys()"'
 		arr = sort (deepCopy keys)
-		
+
 		for i=arr.count to 1 by -1 collect arr[i]
 	),
-	
+
 	/** _get params by control type
 	 */
 	function _getDefaultParamsList control_type =
@@ -130,15 +129,15 @@ struct DefaultParameters_v
 			#Angle:	#( #range,[0,360,0],	#dir,#cw,	#StartDegrees,-90 )
 			--default:	#( ) -- #global
 		)
-		
+
 		if( keys_values != undefined ) then
 			for i = 1 to keys_values.count  by 2  do
 				ParamsList.setVal keys_values[i] keys_values[i+1] unique:true
-		
-		--format "control_type	= % \n" control_type 
+
+		--format "control_type	= % \n" control_type
 		--format "keys_values	= % \n" keys_values
 		--format "ParamsList	= % \n" ParamsList
-		ParamsList --return 
+		ParamsList --return
 	),
 
 	/** Get control class
@@ -156,7 +155,7 @@ struct DefaultParameters_v
 		match_groups = (for matchIdx = 0 to matches.count-1 collect for groupIdx = 0 to matches.item[matchIdx].groups.count-1 collect ( matches.item[matchIdx].groups.item[groupIdx].value )) --return
 		--format "match_groups	= % \n" match_groups
 		if( match_groups.count > 0 ) then
-			match_groups[1][1] as name --return 
+			match_groups[1][1] as name --return
 	),
 
 	/** Get params list
@@ -164,12 +163,12 @@ struct DefaultParameters_v
 	function _getParamsList control_type =
 	(
 		--print "DefaultParameters_v._getParamsList()"
-		if( (ParamsList = this.getval control_type) == undefined ) then 
+		if( (ParamsList = this.getval control_type) == undefined ) then
 			ParamsList = this._setParamsList (control_type)
 
 		ParamsList --return
 	),
-	
+
 	/** _set params list
 	 */
 	function _setParamsList control_type =
@@ -178,11 +177,11 @@ struct DefaultParameters_v
 		ParamsList = List_v()
 
 		this.setVal control_type (ParamsList)
-		
-		ParamsList --return	
+
+		ParamsList --return
 	),
 
-	/**  
+	/**
 	 */
 	on create do
 	(

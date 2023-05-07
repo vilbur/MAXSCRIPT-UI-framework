@@ -1,7 +1,6 @@
-filein( getFilenamePath(getSourceFileName()) + "/PathsLoader/PathsLoader.ms" )
-filein( getFilenamePath(getSourceFileName()) + "/ScriptFile/ScriptFile.ms" )
-filein( getFilenamePath(getSourceFileName()) + "/../ContentSubrollouts.ms" )
-
+filein( getFilenamePath(getSourceFileName()) + "/PathsLoader/PathsLoader.ms" )	-- "./PathsLoader/PathsLoader.ms"
+filein( getFilenamePath(getSourceFileName()) + "/ScriptFile/ScriptFile.ms" )	-- "./ScriptFile/ScriptFile.ms"
+filein( getFilenamePath(getSourceFileName()) + "/../ContentSubrollouts.ms" )	-- "./../ContentSubrollouts.ms"
 /** Create rollout from dir containing ".ms" & ".mcr" files
  *
  * @property	string	dir	Path to dir
@@ -142,12 +141,10 @@ struct ContentRollout_v
 		title = substituteString title "xWHITESPACEx" " " -- put whitespace back
 	),
 
-
-
-
 	on create do
 	(
 		--format "\n"; print "ContentRollout_v.onCreate()"
+		--format "this.path	= % \n" this.path
 		--format "ini_file	= % \n" ini_file
 		ConstructPropeties test:this
 
