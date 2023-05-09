@@ -25,7 +25,7 @@ Controls   = Dialog.Controls()
 
 
 /*------ BUTTON ------*/
-Controls.control #button "Button" id:#button_1
+--Controls.control #button "Button" id:#button_1
 
 /*------ CECKBUTTON ------*/
 --Controls.control #checkbutton "checkbutton"
@@ -34,13 +34,18 @@ Controls.control #button "Button" id:#button_1
 --Controls.control #checkbox "Checkbox"
 
 /*------ RADIOBUTTONS ------*/
-Controls.control #radioButtons "RadioButtons"	items:#("Item 1","Item 2")
+--Controls.control #radioButtons "RadioButtons"	items:#("Item 1","Item 2")
 
 /*------ DROPDOWN ------*/
 --Controls.control #Dropdownlist "Dropdownlist"
 
 /*------ EDITTEXT ------*/
 --Controls.control #Edittext "Edittext"
+
+/*------ SLIDER ------*/
+Controls.control #slider "Slider"
+
+
 
 /*------ BROWSEATH ------*/
 --Controls.control #browsePath "browsePath"

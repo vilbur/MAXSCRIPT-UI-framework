@@ -29,6 +29,10 @@ items = for i = 1 to 3 collect ("item "+ i as string )
 /*------ RADIOBUTTONS ------*/
 --_Controls.control #radioButtons "RadioButtons"	items:items params:#(#columns, 1)
 
+/*------ SLIDER ------*/
+_Controls.control #slider "Slider" range:[0,10,5] width:200 params:#(#type, #integer, #ticks, 20 )
+
+
 /* Browse path parameters: "https://help.autodesk.com/view/MAXDEV/2021/ENU/?guid=GUID-D4B43A33-8342-4BC9-80AB-91460861D37C"
 						--"./../../../Lib/RolloutCreator/ControlsCreator/ControlTypes/BrowsePath/BrowsePath.ms"
 
@@ -40,13 +44,13 @@ items = for i = 1 to 3 collect ("item "+ i as string )
 	#historyCategory
 
 */
-_Controls.control #browsePath "getSavePath" -- browse for directory is default
-
-_Controls.control #browsePath "Brwose in users dir"	params:#( #initialDir, "C:\\Users" )
-_Controls.control #browsePath "Brwose scene path"	params:#( #initialDir, "maxFilePath" )
-_Controls.control #browsePath "Brwose max root"	params:#( #initialDir, "(getDir #maxroot)" )
-
-_Controls.control #browsePath "OpenFileName" params:#( #mode, #getOpenFileName )
+--_Controls.control #browsePath "getSavePath" -- browse for directory is default
+--
+--_Controls.control #browsePath "Brwose in users dir"	params:#( #initialDir, "C:\\Users" )
+--_Controls.control #browsePath "Brwose scene path"	params:#( #initialDir, "maxFilePath" )
+--_Controls.control #browsePath "Brwose max root"	params:#( #initialDir, "(getDir #maxroot)" )
+--
+--_Controls.control #browsePath "OpenFileName" params:#( #mode, #getOpenFileName )
 
 
 

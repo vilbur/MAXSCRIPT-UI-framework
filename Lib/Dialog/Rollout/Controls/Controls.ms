@@ -24,11 +24,12 @@ struct Controls_v
 	  * @property	#name	type	Type of control
 	  * @property	string	caption	Caption of control, caption is hidden if it`s wrapped into brackets "[]" E.G.: "[Browse Path]"
 	  * @property	#name	id	Id of control
+	  * @property	#boolean	ini	Enable Disable save control value to ini
 	  * @property	array	params	Params for control #( #key1, "value1", #key2, "value2" )
 	  *
 	  * @return Object _Control	"./Control/Control.ms"
 	 */
-	function Control type caption id:undefined params:#() width: height: offset: align: items: value: ini:true tooltip: across: locals:#() add_to_controls:true =
+	function Control type caption id:undefined params:#() width: height: offset: align: items: range: value: tooltip: across: locals:#() ini:true add_to_controls:true =
 	(
 		--format "\n"; print "Controls_v.Control()"
 		--format "caption	= % \n" caption
@@ -43,8 +44,8 @@ struct Controls_v
 		--
 		--format "_Control.id = % \n" _Control.id
 		--format "_Control	= % \n" _Control
-		_param_names  = #( #width, #height, #offset, #align, #items, #value, #ini, #tooltip, #across)
-		_param_values = #(  width,  height,  offset,  align, items,  value,  ini,  tooltip,  across)
+		_param_names  = #( #width, #height, #offset, #align, #items, #range, #value, #ini, #tooltip, #across)
+		_param_values = #(  width,  height,  offset,  align, items,  range,   value,  ini,  tooltip,  across)
 
 
 		for i = 1 to _param_values.count where _param_values[i]!= unsupplied do
