@@ -6,7 +6,7 @@
   *
   *		images: #(
   *			<image>,	REQUIRED
-  *			<maskImage>,	-- if UNDEFINED
+  *			<maskImage>,	-- can be UNDEFINED
   *			<count_integer>,	-- if UNDEFINED, count of icons in sprite, if undefined then: image width / image height = count of sqaure icons
   *			<enabled_out_image_index>,	-- if UNDEFINED, then 1 is used
   *			<enabled_in_image_index>,	-- if UNDEFINED, then icon index is used
@@ -15,6 +15,10 @@
   *			<invert_boolean>,	-- optionable
   *			<colortheme_boolean>	-- optionable
   *		)
+  *
+  *
+  *
+  *
   *
  */
 struct ImagesArrayParser_v
@@ -42,7 +46,7 @@ struct ImagesArrayParser_v
 
 		this._setIconPath()
 
-		if this._iconFileExist() then
+		if icon_path !=undefined and this._iconFileExist() then
 		(
 			images[1] = icon_path
 
@@ -58,43 +62,51 @@ struct ImagesArrayParser_v
 
 			this._setButtonWidthByIcon (params)
 		)
-		--format "PARAMS	= % \n" params
+		format "PARAMS	= % \n" params
 		params --return
 	),
 
 	/** Get icon path
 	  *
 	  * 1) Relative path to "*.mcr" file
-	  * 2) $userScripts
+	  * 2) $userScripts|#userScripts|$maxroot|#maxroot...
 	  * 3) Absolute path
 	  *
 	 */
 	function _setIconPath =
 	(
 		--format "\n"; print "ImagesArrayParser_v._setIconPath()"
-		if matchPattern images[1] pattern:"$*" then
-			icon_path = this._replaceSystemDir(images[1])
+		--format "path	= % \n" images[1]
 
-		else if matchPattern images[1] pattern:"/*" then
-			icon_path = getFilenamePath(path) +"/"+ images[1]
+		icon_path =
+			if matchPattern images[1] pattern:"/*" then -- test if path is relative and starts with "/" E.G.: /icons
+				getFilenamePath(path) +"/"+ images[1]
 
+			else if matchPattern images[1] pattern:"$*" or matchPattern images[1] pattern:"#*" then -- test if path starts with "$" E.G.: $userScripts
+				this._replaceSystemDir(images[1])
+
+			else
+				images[1] -- absolute path
+
+		--format "icon_path	= % \n" icon_path
 		this._sanitizePath()
 	),
 
-	/** Replace system dir
+	/** Replace system dir with absolute path
+	  *
+	  * E.G.: $maxroot
+	  *
 	 */
 	function _replaceSystemDir icon_path =
 	(
 		--format "\n"; print "ImagesArrayParser_v._replaceSystemDir()"
-		--format "icon_path	= % \n" icon_path
-
 		string_split	= filterString icon_path "/"
 
-		system_dir = string_split[1]
+		system_dir_name = string_split[1]
 
 		system_dir_pah = getDir (( substring string_split[1] 2 -1 ) as name ) + "/"
 
-		substituteString icon_path system_dir system_dir_pah --return
+		substituteString icon_path system_dir_name system_dir_pah --return
 	),
 
 	/** Set icon count
@@ -105,7 +117,7 @@ struct ImagesArrayParser_v
 
 		this._setSpriteSize()
 
-		img_size[1] / img_size[2] -- return
+		(img_size[1] / img_size[2]) as integer -- return
 	),
 
 	/** Set button width by icon height, if width is not defined
@@ -136,7 +148,7 @@ struct ImagesArrayParser_v
 		(
 			img = ( dotNetClass "System.Drawing.Image").FromFile icon_path
 
-			img_size = [ img.Width,img.Height ]
+			img_size = [ img.Width, img.Height ]
 
 			img.Dispose()
 		)
@@ -149,7 +161,8 @@ struct ImagesArrayParser_v
 	function _sanitizePath =
 	(
 		--format "\n"; print "ImagesArrayParser_v.sanitizePath()"
-		icon_path = ( dotNetObject "System.Text.RegularExpressions.Regex" @"[\\/]+" ).Replace icon_path "/" --return
+		if icon_path != undefined then
+			icon_path = ( dotNetObject "System.Text.RegularExpressions.Regex" @"[\\/]+" ).Replace icon_path "/" --return
 	),
 
 	/** Test if icon file exist

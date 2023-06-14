@@ -27,22 +27,22 @@
 --/*------------------------------------------------------------------------------
 --  CHECKBUTTON
 --------------------------------------------------------------------------------*/
-macroscript MacroFileTest_A_custom_id
-	category:	"MacroFileTest"
-	buttontext:	"Custom ID"
-	--toolTip:	"Tooltip with Colon:\nand new line"
-	icon:	"control:checkbutton"
-(
-	format "EventFired	= % \n" EventFired
-
-	if EventFired.val then
-		print "Checkbutton pressed"
-
-	else
-		print "Checkbutton unpressed"
-
-
-)
+--macroscript MacroFileTest_A_custom_id
+--	category:	"MacroFileTest"
+--	buttontext:	"Custom ID"
+--	--toolTip:	"Tooltip with Colon:\nand new line"
+--	icon:	"control:checkbutton"
+--(
+--	format "EventFired	= % \n" EventFired
+--
+--	if EventFired.val then
+--		print "Checkbutton pressed"
+--
+--	else
+--		print "Checkbutton unpressed"
+--
+--
+--)
 --
 
 --/*------------------------------------------------------------------------------
@@ -114,21 +114,21 @@ macroscript MacroFileTest_A_custom_id
 --/*------------------------------------------------------------------------------
 --  BROWSE PATH
 ----------------------------------------------------------------------------*/
---
---/*
---*/
---macroscript macroFileTest_browsepath
---	category:	"MacroFileTest"
---	buttontext:	"BrowsePath"
---	toolTip:	"BrowsePath tooltip"
---	icon:	"control:BrowsePath|width:256"
---(
---	print "BrowsePath test"
---	format "EventFired	= % \n" EventFired
---	format " EventFired.val = % \n"  EventFired.val
---)
---
---
+
+/*
+*/
+macroscript macroFileTest_browsepath
+	category:	"MacroFileTest"
+	buttontext:	"BrowsePath"
+	toolTip:	"BrowsePath tooltip"
+	icon:	"control:BrowsePath|width:256"
+(
+	print "BrowsePath test"
+	format "EventFired	= % \n" EventFired
+	format " EventFired.val = % \n"  EventFired.val
+)
+
+
 --/*------------------------------------------------------------------------------
 --  CHECKBUTTON
 --------------------------------------------------------------------------------*/
