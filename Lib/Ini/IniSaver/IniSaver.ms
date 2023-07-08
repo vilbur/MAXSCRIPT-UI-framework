@@ -90,9 +90,9 @@ struct IniSaver_v
 	function _saveSubRollouts _SubRolloutClass rollout_id =
 	(
 		--format "\n"; print "IniSaver_v._saveSubRollouts()"
-		rollout_ids = for _rollout in (this._getOrderedRollouts(_SubRolloutClass.Rollouts)) collect _rollout.name as name
 
-		this._saveToIni (rollout_id) (_SubRolloutClass.name) (rollout_ids as string )
+		this._saveSubrolloutsOrder(_SubRolloutClass) (rollout_id)
+
 
 		for control in _SubRolloutClass.Rollouts do
 		(
@@ -153,6 +153,17 @@ struct IniSaver_v
 		--format "val	= % \n" val
 		if( val != undefined ) then
 			this._saveToIni (_RolloutClass.name) Ctrl.name (val as string )
+	),
+
+
+	/** Save subrollouts order
+	 */
+	function _saveSubrolloutsOrder _SubRolloutClass rollout_id =
+	(
+		--format "\n"; print "IniSaver_v._saveSubrolloutsOrder()"
+		rollout_ids = for _rollout in (this._getOrderedRollouts(_SubRolloutClass.Rollouts)) collect _rollout.name as name
+
+		this._saveToIni (rollout_id) (_SubRolloutClass.name) (with printAllElements on (rollout_ids as string )) -- IMPORTANT: without "with printAllElements on" long array formated to ini end with "..." INFO:https://help.autodesk.com/view/MAXDEV/2022/ENU/?guid=GUID-92B98D11-60FF-4742-A1BA-692EE135E085
 	),
 
 	/**
