@@ -212,14 +212,18 @@
 	function _setId =
 	(
 		--print "RolloutBody._setId()"
-		--format "title	= % \n" title
+		--format "id	= % \n" id
+
+		/** Generate id from title
+		 */
 		if ( id == undefined or id == unsupplied ) then
+		(
 			id = toLower title
-			
+
 			if not matchPattern id pattern:@"rollout*" then
 				id  = if parent_rollout_id == undefined then "DIALOG_" + id else "ROLLOUT_" + id -- add prefix
 
-			--id = substituteString title "Rollout" "" -- add "Rollout" prefix if does exists yet
+			--id = substituteString title "Rollout" "" -- add "Rollout" prefix if does exists aleready
 
 			id = substituteString ( trimRight ( trimLeft id )) " " "_" -- replace whitespace with underscore
 
@@ -229,10 +233,12 @@
 
 			id = this._repleaceCharacters "[_]+" "_" -- remove multiple underscores E.G.: "button___1" >>> "button_1"
 
-		this.validateid()
+			this.validateid()
+		)
 
 		id = id as name
 	),
+
 
 	/** Validate title
 	 */
