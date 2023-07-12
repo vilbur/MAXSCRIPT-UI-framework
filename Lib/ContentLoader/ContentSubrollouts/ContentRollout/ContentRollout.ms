@@ -126,17 +126,22 @@ struct ContentRollout_v
 		title = filenameFromPath path
 	),
 
-	/** 1) Remove invalid characters, valid characters: "A-Za-z0-9-_"
-	  * 2) Replace underscore "_" with whitespace " " E.G.: This_is_test" >>> "This is test"
+	/**
+	  * Replace underscore "_" with whitespace " " E.G.: This_is_test" >>> "This is test"
+	  *
+	  *
+	  * Remove invalid characters, valid characters: "A-Za-z0-9-_" WAS DISABLED FOR USE ABILITY TO USEE ASCII CHARACTERS
 	 */
 	function _sanitizeTitle =
 	(
 		--print ("ContentRollout_v._sanitizeTitle() " )
+		title = trimRight title "\\" --remove backslash from directory name
+
 		title = substituteString title " " "xWHITESPACEx" -- preserve whitespace workaround, "[^A-Za-z0-9_-\s]" DOES NOT WORK
 
 		title = ( dotNetObject "System.Text.RegularExpressions.Regex" "^rollout-"    ).Replace title "" -- remove prefix "rolout-" from directory name
 
-		title = ( dotNetObject "System.Text.RegularExpressions.Regex" "[^A-Za-z0-9_-]" ).Replace title ""
+		-----title = ( dotNetObject "System.Text.RegularExpressions.Regex" "[^A-Za-z0-9_-]" ).Replace title "" !!! DISABLED FOR USE OF ASCII IAMAGES
 
 		title = substituteString title "xWHITESPACEx" " " -- put whitespace back
 	),
