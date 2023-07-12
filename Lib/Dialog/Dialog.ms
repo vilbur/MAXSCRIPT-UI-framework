@@ -113,7 +113,8 @@ struct Dialog_v
 
 		--this._checkDialogHeightIfSubrollouts()
 
-		format ("\n\nDIALOG \""+title+"\" HAS BEEN CREATED\n\n" )
+		--format ("\n\nDIALOG \""+title+"\" HAS BEEN CREATED\n\n" )
+		format ("\n\nDIALOG \""+ id as string +"\" HAS BEEN CREATED\n\n" )
 
 		CONTROL_BITMAPS_STORE = #() -- reset buffer array
 	),

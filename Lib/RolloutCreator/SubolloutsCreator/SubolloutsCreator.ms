@@ -35,14 +35,12 @@ struct SubolloutsCreator_v
 				if _Subrollout.temporary_created then
 					execute( "destroyDialog "+_Subrollout.id as string  )
 
-					
 				execute  ( "AddSubRollout "+_Rollout.id+"." + Subrollouts.slot +" "+ _Subrollout.id + " rolledUp:"+(this._getRolledStateFromIni(_Subrollout.id)) )
 
 				this.addSubRollouts (_Subrollout)
 			)
 
 		)
-
 
 	),
 
@@ -91,7 +89,7 @@ struct SubolloutsCreator_v
 
 			result_order --return
 		) else
-		all_rollouts --return
+			all_rollouts --return
 	),
 
 

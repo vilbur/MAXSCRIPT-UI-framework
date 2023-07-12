@@ -27,10 +27,11 @@ items = for i = 1 to 3 collect ("item "+ i as string )
 --_Controls.control #slider "slider"  params:#(#type, #integer, #range,[0,10,5], #across, 1)
 
 /*------ RADIOBUTTONS ------*/
+_Controls.control #radioButtons "RadioButtons"	items:items columns:2
 --_Controls.control #radioButtons "RadioButtons"	items:items params:#(#columns, 1)
 
 /*------ SLIDER ------*/
-_Controls.control #slider "Slider" range:[0,10,5] width:200 params:#(#type, #integer, #ticks, 20 )
+--_Controls.control #slider "Slider" range:[0,10,5] width:200 params:#(#type, #integer, #ticks, 20 )
 
 
 /* Browse path parameters: "https://help.autodesk.com/view/MAXDEV/2021/ENU/?guid=GUID-D4B43A33-8342-4BC9-80AB-91460861D37C"

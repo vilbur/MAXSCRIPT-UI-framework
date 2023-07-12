@@ -26,6 +26,7 @@ Controls   = Dialog.Controls()
 
 /*------ BUTTON ------*/
 --Controls.control #button "Button" id:#button_1
+Controls.control #button "Button ☑✅✓" id:#button_1
 
 /*------ CECKBUTTON ------*/
 --Controls.control #checkbutton "checkbutton"
@@ -43,7 +44,7 @@ Controls   = Dialog.Controls()
 --Controls.control #Edittext "Edittext"
 
 /*------ SLIDER ------*/
-Controls.control #slider "Slider"
+--Controls.control #slider "Slider"
 
 
 
