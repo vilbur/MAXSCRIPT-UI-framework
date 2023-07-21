@@ -1,4 +1,4 @@
-filein( getFilenamePath(getSourceFileName()) + "/Menu/Menu.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/Menu/Menu.ms" ) -- "./Menu/Menu.ms"
 
 /** Wrapper for <MixinInterface:quadMenu>
   *
@@ -61,13 +61,21 @@ struct QuadMenu_v
 	/** Reset right click to default
 	  *
 	  * Quad Menu "Default Viewport Quad" is set to right click
+	  *
+	  * https://help.autodesk.com/view/MAXDEV/2024/ENU/?guid=GUID-258F6015-6B45-4A87-A7F5-BB091A2AE065
 	 */
 	function resetRightClick =
 	(
 		----format "\n"; print "QuadMenu_v.resetRightClick()"
-		this.setRightClick("Default Viewport Quad")	which:#nonePressed
+		--this.setRightClick("Default Viewport Quad")	which:#nonePressed
+		--this.setRightClick("Modeling 1 [Cntrl+RMB]")	which:#controlPressed
 
-		this.setRightClick("Modeling 1 [Cntrl+RMB]")	which:#controlPressed
+		quadmenu = menuMan.findQuadMenu "Default Viewport Quad"
+		if quadmenu != undefined do menuMan.setViewportRightClickMenu #nonePressed quadmenu
+
+		quadmenu = menuMan.findQuadMenu "Modeling 1 [Cntrl+RMB]"
+		if quadmenu != undefined do menuMan.setViewportRightClickMenu #controlPressed quadmenu
+
 	),
 
 

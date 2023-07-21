@@ -2,8 +2,7 @@ filein( getFilenamePath(getSourceFileName()) + "/MacroScript/MacroScript.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/MacroScriptFileParser/MacroScriptFileParser.ms" )
 --filein( getFilenamePath(getSourceFileName()) + "/ContentControlCreator/ContentControlCreator.ms" )
 
-filein( getFilenamePath(getSourceFileName()) + "/../../../../Menus/QuadMenu/QuadMenu.ms" ) -- for adding macroscripts to menus
-
+filein( getFilenamePath(getSourceFileName()) + "/../../../../Menus/QuadMenu/QuadMenu.ms" ) -- "./../../../../Menus/QuadMenu/QuadMenu.ms"
 /*
 		TODO:
 
@@ -123,10 +122,16 @@ struct ScriptFile_Content_v
 		title	= _Control.Params.getVal #title
 		index	= _Control.Params.getVal #index
 
+		if quad_name == undefined and menu_name == undefined and menu_name != false then
+			return false
+
 		if title == undefined then
 			title = Macro.buttontext
 
-		if quad_name != undefined then /* QUAD MENU */
+		/*
+			QUAD MENU
+		*/
+		if quad_name != undefined then
 		(
 			quad_name_split	= filterString quad_name "."
 
@@ -137,9 +142,16 @@ struct ScriptFile_Content_v
 
 			(QuadMenu_v(quad_name_split[1])).Quads[quad_index as integer ].addItem (Macro.category)(Macro.macro_name) title:title index:index
 		)
-		else if menu_name != undefined then /* MENU */
-			(Menu_v (menu_name)).addItem (Macro.category) (Macro.macro_name) title:title index:index
+		/*
+			MENU
+		*/
+		else if menu_name != undefined then
+		(
+			if classOf menu_name == BooleanClass then
+				menu_name = Macro.category
 
+			(Menu_v (menu_name)).addItem (Macro.category) (Macro.macro_name) title:title index:index
+		)
 	),
 
 

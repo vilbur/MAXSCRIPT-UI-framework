@@ -20,6 +20,7 @@ struct Menu_v
 	function getMenu menu_name =
 	(
 		--format "\n"; print "Menu_v.getMenu()"
+		--format "menu_name = % \n" menu_name
 		if (_menu = menuMan.findMenu menu_name) != undefined then
 			(Menu_v menu:_menu) --return
 	),
@@ -30,13 +31,13 @@ struct Menu_v
 	 */
 	function addItem category macro_script_name title: group: index: =
 	(
-		--format "\n"; print "Menu_v.addItem()"
+		format "\n"; print "Menu_v.addItem()"
 		--format "category	= % \n" category
 		--format "macro_script_name	= % \n" macro_script_name
 		--format "title	= % \n" title
 
 		item = if( group == unsupplied ) then menuMan.createActionItem (macro_script_name) (category) else menuMan.createMenuItemFromAction ( group ) (macro_script_name) category:(category)
-
+		format "item = % \n" item
 		if item == undefined then
 			return false
 
@@ -47,7 +48,7 @@ struct Menu_v
 		else
 			title = item.getTitle()
 
-
+		format "TITLE = % \n" title
 		/* GET INDEX */
 		if index == unsupplied or index == undefined then
 			index = menu.numItems() +1
