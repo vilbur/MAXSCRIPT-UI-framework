@@ -80,7 +80,6 @@ struct Menu_v
 			menu.getItem(index_or_title) --return
 	),
 
-
 	/** Add quad from 'menus' to quad
 	  * IMPORTANT: Menu does not show, if does not contain any items
 	  *
@@ -93,7 +92,11 @@ struct Menu_v
 	function addMenu menu_or_name index: title: flat:default_menu_flat =
 	(
 		--format "\n"; print "Menu_v.addMenu()"
-		 if index == unsupplied then
+
+		if menu_or_name == "" then
+			return false
+
+		if index == unsupplied then
 			index = menu.numItems() + 1
 
 		if superClassOf menu_or_name == StructDef then
@@ -116,7 +119,6 @@ struct Menu_v
 
 		Menu_v menu:submenu --return
 	),
-
 
 	/** Get submenu from menu item
 	  *
@@ -235,7 +237,6 @@ struct Menu_v
 	 */
 	function setTitle title =
 	(
-		--format "\n"; print "Menu_v.setTitle()"
 		menu.setTitle title
 	),
 

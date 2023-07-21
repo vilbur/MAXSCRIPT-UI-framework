@@ -54,7 +54,7 @@ struct QuadMenu_v
 	 */
 	function setRightClick which:#nonePressed  =
 	(
-		--format "\n"; print "QuadMenu_v.setRightClick()"
+		format "\n"; print "QuadMenu_v.setRightClick()"
 		menuMan.setViewportRightClickMenu which quadMenu
 	),
 
@@ -110,6 +110,8 @@ struct QuadMenu_v
 	(
 		--print("QuadMenu_v.onCreate()")
 		this._setQuad()
+
+		this.showAllQuads()
 
 		this._setQuads()
 	)

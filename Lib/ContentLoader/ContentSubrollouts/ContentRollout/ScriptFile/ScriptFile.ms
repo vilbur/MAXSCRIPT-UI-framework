@@ -116,17 +116,20 @@ struct ScriptFile_Content_v
 	function _addToQuadMenu _Control Macro =
 	(
 		--format "\n\n"; print "ScriptFile_Content_v.addToQuadMenu()"
-		--format "Macro.macro_name	= % \n" Macro.macro_name
+
 		quad_name	= _Control.Params.getVal #quad
 		menu_name	= _Control.Params.getVal #menu
 		title	= _Control.Params.getVal #title
 		index	= _Control.Params.getVal #index
 		tooltip	= Macro.tooltip
 
-		title_is_tooltip = (menu_name != undefined and classOf menu_name == BooleanClass ) or ( menu_name != undefined and matchPattern menu_name pattern:"tooltip")
-
 		if quad_name == undefined and menu_name == undefined and menu_name != false then
 			return false
+
+		title_is_tooltip = classOf menu_name != BooleanClass and matchPattern menu_name pattern:"tooltip"
+
+		--format "\n\n"; print "ScriptFile_Content_v.addToQuadMenu()"
+		--format "menu_name = % \n" menu_name
 
 		/** SET MENU NAME AND ITEM TITLE
 		  */
@@ -138,6 +141,10 @@ struct ScriptFile_Content_v
 
 		if title == undefined then
 			title = Macro.buttontext
+
+		--format "Macro.category   = % \n" Macro.category
+		--format "Macro.macro_name = % \n" Macro.macro_name
+		--format "title            = % \n" title
 
 		/*
 			QUAD MENU
@@ -158,8 +165,6 @@ struct ScriptFile_Content_v
 		*/
 		else if menu_name != undefined then
 		(
-
-
 			(Menu_v (menu_name)).addItem (Macro.category) (Macro.macro_name) title:title index:index
 		)
 	),
