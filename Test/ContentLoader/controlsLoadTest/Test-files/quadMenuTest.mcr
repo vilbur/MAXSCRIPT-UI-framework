@@ -16,6 +16,7 @@
 --------------------------------------------------------------------------------*
 
 /* ADDED TO MENU AUTOMATICALY BY CATERGORY PRAMATER
+* Title is button text
 */
 macroscript	_test_menu_by_category
 category:	"_Test"
@@ -25,33 +26,49 @@ icon:	"menu:true"
 	on execute do messageBox "Menu created by category" beep:false
 )
 
+/* TITLE IS TOOLTIP
+*/
+macroscript	_test_menu_title_by_tooltip
+category:	"_Test"
+buttontext:	"This is not menu title"
+toolTip:	"Menu title by tooltip"
+icon:	"menu:tooltip"
+(
+	on execute do messageBox "Test" beep:false
+)
+
 
 /* MENU NAME DEFINED EXACTLY
 */
-macroscript	_test_menu_item_with_title
+macroscript	_test_menu_defined
 category:	"_Test"
-buttontext:	"Use custom title in icon parameter"
+buttontext:	"Button text is menu item title"
 icon:	"menu:_Test Menu"
 (
-    on isVisible return selection.count>0
-
-	on execute do messageBox "Custom Title" beep:false
+	on execute do messageBox "Test" beep:false
 )
 
 
-/* CUSTOM TITLE OF MENU ITEM DEFINED
+/* MENU ITEM TITLE DEFINED
 */
-macroscript	_test_menu_item_with_title
+macroscript	_test_menu_title_defined
 category:	"_Test"
-buttontext:	"Use custom title in icon parameter"
-icon:	"title:Custom Title"
+buttontext:	"Title Defined"
+icon:	"title:Menu Title Defined"
 (
-    on isVisible return selection.count>0
-
-	on execute do messageBox "Custom Title" beep:false
+	on execute do messageBox "Test" beep:false
 )
 
 
+/* MENU NAME AND MENU ITEM TITLE DEFINED EXACTLY
+*/
+macroscript	_test_menu_and_title_defined
+category:	"_Test"
+buttontext:	"Menu And Title Defined"
+icon:	"menu:_Test Menu|title:Menu And Title Defined"
+(
+	on execute do messageBox "Test" beep:false
+)
 
 /*------------------------------------------------------------------------------
 
@@ -113,7 +130,7 @@ QuadMenuTest.Quads[1].addItem ("Tools") ("Move")
 
 	MODIFY QUAD MENU OPTIONS
 
---------------------------------------------------------------------------------*/
+------------------------------------------------------------------------------*/
 
 QuadMenuTest.showAllQuads()
 

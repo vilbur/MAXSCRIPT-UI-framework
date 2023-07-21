@@ -66,16 +66,11 @@ struct QuadMenu_v
 	 */
 	function resetRightClick =
 	(
-		----format "\n"; print "QuadMenu_v.resetRightClick()"
-		--this.setRightClick("Default Viewport Quad")	which:#nonePressed
-		--this.setRightClick("Modeling 1 [Cntrl+RMB]")	which:#controlPressed
-
 		quadmenu = menuMan.findQuadMenu "Default Viewport Quad"
 		if quadmenu != undefined do menuMan.setViewportRightClickMenu #nonePressed quadmenu
 
 		quadmenu = menuMan.findQuadMenu "Modeling 1 [Cntrl+RMB]"
 		if quadmenu != undefined do menuMan.setViewportRightClickMenu #controlPressed quadmenu
-
 	),
 
 

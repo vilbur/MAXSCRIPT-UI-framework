@@ -31,13 +31,13 @@ struct Menu_v
 	 */
 	function addItem category macro_script_name title: group: index: =
 	(
-		format "\n"; print "Menu_v.addItem()"
+		--format "\n"; print "Menu_v.addItem()"
 		--format "category	= % \n" category
 		--format "macro_script_name	= % \n" macro_script_name
 		--format "title	= % \n" title
 
 		item = if( group == unsupplied ) then menuMan.createActionItem (macro_script_name) (category) else menuMan.createMenuItemFromAction ( group ) (macro_script_name) category:(category)
-		format "item = % \n" item
+		--format "item = % \n" item
 		if item == undefined then
 			return false
 
@@ -48,7 +48,6 @@ struct Menu_v
 		else
 			title = item.getTitle()
 
-		format "TITLE = % \n" title
 		/* GET INDEX */
 		if index == unsupplied or index == undefined then
 			index = menu.numItems() +1
@@ -85,27 +84,26 @@ struct Menu_v
 	/** Add quad from 'menus' to quad
 	  * IMPORTANT: Menu does not show, if does not contain any items
 	  *
-	  * @param	string	menu_name	name of menu which will be added as sub menu
+	  * @param	struct|string	menu_or_name	menu or name of menu which will be added as sub menu
 	  * @param	string	title	custom title of menu displayed in quad
 	  * @param	boolean	flat	menu will be flat or not
 	  *
 	  * @return Menu_v
 	 */
-	function addMenu menu_name index: title: flat:default_menu_flat =
+	function addMenu menu_or_name index: title: flat:default_menu_flat =
 	(
 		--format "\n"; print "Menu_v.addMenu()"
 		 if index == unsupplied then
 			index = menu.numItems() + 1
 
-		submenu = this._getOrCreateMenu(menu_name)
-		--format "submenu	= % \n" submenu
-		--format "title	= % \n" title
-		--format "this.getItem(title)	= % \n" (this.getItem(title))
-		--format "this.getItem(menu_name)	= % \n" (this.getItem(menu_name))
+		if superClassOf menu_or_name == StructDef then
+			menu_or_name =  menu_or_name.name
 
-		if this.getItem( if title == unsupplied then menu_name else title ) == undefined then -- if item with title does not exists yet
+		submenu = this._getOrCreateMenu(menu_or_name)
+
+		if this.getItem( if title == unsupplied then menu_or_name else title ) == undefined then -- if item with title does not exists yet
 		(
-			menu_item = menuMan.createSubMenuItem (menu_name) (submenu)
+			menu_item = menuMan.createSubMenuItem (menu_or_name) (submenu)
 
 			if( title != unsupplied ) then
 				this._setTitleToItem(menu_item)(title)
@@ -118,6 +116,7 @@ struct Menu_v
 
 		Menu_v menu:submenu --return
 	),
+
 
 	/** Get submenu from menu item
 	  *
@@ -282,13 +281,13 @@ struct Menu_v
 	function _getOrCreateMenu menu_name =
 	(
 		--format "\n"; print "Menu_v._getOrCreateMenu()"
-		--format "menu_name	= % \n" menu_name
-		--if( this.name != undefined  and ( menu = menuMan.findMenu this.name ) == undefined ) then
 		local menu
 
 		if (menu = menuMan.findMenu menu_name) == undefined then
 			menu = menuMan.createMenu menu_name
 
+
+		--format "menu = % \n" menu
 		menu --return
 	),
 
@@ -317,5 +316,7 @@ struct Menu_v
 
 		if this.menu != undefined  and this.name == undefined then
 			this.name = this.menu.getTitle()
+
+		--format "this.name = % \n" this.name
 	)
 )

@@ -121,9 +121,20 @@ struct ScriptFile_Content_v
 		menu_name	= _Control.Params.getVal #menu
 		title	= _Control.Params.getVal #title
 		index	= _Control.Params.getVal #index
+		tooltip	= Macro.tooltip
+
+		title_is_tooltip = (menu_name != undefined and classOf menu_name == BooleanClass ) or ( menu_name != undefined and matchPattern menu_name pattern:"tooltip")
 
 		if quad_name == undefined and menu_name == undefined and menu_name != false then
 			return false
+
+		/** SET MENU NAME AND ITEM TITLE
+		  */
+		if classOf menu_name == BooleanClass or title_is_tooltip then
+			menu_name = Macro.category
+
+		if title_is_tooltip and tooltip != undefined then  -- if icon: "menu:tooltip"
+			title =  tooltip
 
 		if title == undefined then
 			title = Macro.buttontext
@@ -147,8 +158,7 @@ struct ScriptFile_Content_v
 		*/
 		else if menu_name != undefined then
 		(
-			if classOf menu_name == BooleanClass then
-				menu_name = Macro.category
+
 
 			(Menu_v (menu_name)).addItem (Macro.category) (Macro.macro_name) title:title index:index
 		)
