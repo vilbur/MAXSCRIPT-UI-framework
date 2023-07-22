@@ -128,8 +128,6 @@ struct ScriptFile_Content_v
 
 		title_is_tooltip = classOf menu_name != BooleanClass and matchPattern menu_name pattern:"tooltip"
 
-		--format "\n\n"; print "ScriptFile_Content_v.addToQuadMenu()"
-		--format "menu_name = % \n" menu_name
 
 		/** SET MENU NAME AND ITEM TITLE
 		  */
@@ -142,9 +140,16 @@ struct ScriptFile_Content_v
 		if title == undefined then
 			title = Macro.buttontext
 
-		--format "Macro.category   = % \n" Macro.category
-		--format "Macro.macro_name = % \n" Macro.macro_name
-		--format "title            = % \n" title
+	--	if menu_name=="Group" then
+	--(
+		format "\n\n"; print "ScriptFile_Content_v.addToQuadMenu()"
+		format "Macro.category   = % \n" Macro.category
+	--	format "Macro.macro_name = % \n" Macro.macro_name
+	--	format "quad_name = % \n" quad_name
+	--	format "menu_name = % \n" menu_name
+		format "title            = % \n" title
+	--
+	--)
 
 		/*
 			QUAD MENU

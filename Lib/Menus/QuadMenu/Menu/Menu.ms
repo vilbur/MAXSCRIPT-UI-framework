@@ -60,30 +60,10 @@ struct Menu_v
 		item --return
 	),
 
-	/** Get item from menu
-	  *
-	  * @param	string|integer	index_or_title
-	  *
-	  * @return	<MixinInterface:menuItem>|undefined
-	 */
-	function getItem index_or_title =
-	(
-		--format "\n"; print "Menu_v.getItem()"
-		if classOf index_or_title == string then
-		(
-			--menu_items = for i = 1 to menu.numItems() collect menu.getItem(i)
-			menu_item_found = for item in (this._getMenuItems()) where item.getTitle() == index_or_title collect item
-
-			menu_item_found[1] --return
-		)
-		else
-			menu.getItem(index_or_title) --return
-	),
-
 	/** Add quad from 'menus' to quad
 	  * IMPORTANT: Menu does not show, if does not contain any items
 	  *
-	  * @param	struct|string	menu_or_name	menu or name of menu which will be added as sub menu
+	  * @param	Menu_V|string	menu_or_name	menu or name of menu which will be added as sub menu
 	  * @param	string	title	custom title of menu displayed in quad
 	  * @param	boolean	flat	menu will be flat or not
 	  *
@@ -96,20 +76,39 @@ struct Menu_v
 		if menu_or_name == "" then
 			return false
 
+		if classOf menu_or_name == MixinInterface then  -- IF <MixinInterface:menu>
+		(
+			submenu = menu_or_name
+
+			if title == unsupplied then
+				title = menu_or_name.getTitle()
+		)
+		else if classOf menu_or_name == string then  -- IF "Menu Name" is string
+		(
+			submenu = this._getOrCreateMenu(menu_or_name)
+
+			if title == unsupplied then
+				title = menu_or_name
+		)
+
+		else if superClassOf menu_or_name == StructDef then  -- IF Menu_v()
+		(
+			submenu =  menu_or_name.menu
+
+			if title == unsupplied then
+				title = menu_or_name.name
+		)
+
+
 		if index == unsupplied then
 			index = menu.numItems() + 1
 
-		if superClassOf menu_or_name == StructDef then
-			menu_or_name =  menu_or_name.name
 
-		submenu = this._getOrCreateMenu(menu_or_name)
-
-		if this.getItem( if title == unsupplied then menu_or_name else title ) == undefined then -- if item with title does not exists yet
+		if this.getItem( title ) == undefined then -- if item with title does not exists yet
 		(
-			menu_item = menuMan.createSubMenuItem (menu_or_name) (submenu)
+			menu_item = menuMan.createSubMenuItem (title) (submenu)
 
-			if( title != unsupplied ) then
-				this._setTitleToItem(menu_item)(title)
+			this._setTitleToItem(menu_item)(title)
 
 			if flat then
 				menu_item.setDisplayFlat(true)
@@ -117,7 +116,31 @@ struct Menu_v
 			menu.addItem menu_item (index)
 		)
 
+		--format "submenu = % \n" submenu
+
 		Menu_v menu:submenu --return
+	),
+
+	/** Get item from menu
+	  *
+	  * @param	string|integer	index_or_title
+	  *
+	  * @return	<MixinInterface:menuItem>|undefined
+	 */
+	function getItem index_or_title =
+	(
+		--format "\n"; print "Menu_v.getItem()"
+		--format "index_or_title = % \n" index_or_title
+
+		if classOf index_or_title == string then
+		(
+			--menu_items = for i = 1 to menu.numItems() collect menu.getItem(i)
+			menu_item_found = for item in (this._getMenuItems()) where item.getTitle() == index_or_title collect item
+
+			menu_item_found[1] --return
+		)
+		else
+			menu.getItem(index_or_title) --return
 	),
 
 	/** Get submenu from menu item
@@ -174,21 +197,31 @@ struct Menu_v
 
 	/** Add separator
 	  *
+	  * @param integer|#(integer) index or array of indexes where to put separator in menu
+	  *
 	  * If separator on this index exists already, then will not be added
 	 */
 	function addSeparator index: =
 	(
 		--format "\n"; print "Menu_v.addSeparator()"
-		if index == unsupplied then
+		if classOf index == Array then
 		(
-			index_test	= menu.numItems()
-			index	= index_test +1
+			for i in index do
+				this.addSeparator index:i
 		)
 		else
-			index_test = index
+		(
+			if index == unsupplied then
+			(
+				index_test	= menu.numItems()
+				index	= index_test +1
+			)
+			else
+				index_test = index
 
-		if (menu.getItem(index_test)).getIsSeparator() == false then
-			menu.addItem (menuMan.createSeparatorItem()) (index)
+			if (menu.getItem(index_test)).getIsSeparator() == false then
+				menu.addItem (menuMan.createSeparatorItem()) (index)
+		)
 	),
 
 	/** Remove separator on index
@@ -286,7 +319,6 @@ struct Menu_v
 
 		if (menu = menuMan.findMenu menu_name) == undefined then
 			menu = menuMan.createMenu menu_name
-
 
 		--format "menu = % \n" menu
 		menu --return

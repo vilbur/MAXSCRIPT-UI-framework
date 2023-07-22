@@ -19,6 +19,32 @@ struct QuadMenu_v
 
 	macroscripts = #(),
 
+
+	/** Default quads
+	 */
+	default_quad_names =
+	#(
+		--format "\n"; print "QuadMenu_v.defaultQuads()"
+		"Default Viewport Quad",
+        "Snap                     [Shift+RMB]",
+        "Animation                [Alt+RMB]",
+        "Modeling                 [Ctrl+RMB]",
+        "MassFX                   [Shift+Alt+RMB]",
+        "User Defined 1         [Shift+Ctrl+RMB]",
+        "Lighting | Render        [Ctrl+Alt+RMB]",
+        "User Defined 2         [Shift+Ctrl+Alt+RMB]",
+        "Track View Key Quad (Classic)",
+        "Trackbar Quad",
+        "Viewports",
+        "Track View Key Quad",
+        "LayerExplorer Quad",
+        "SceneExplorer Quad",
+        "Lock",
+        "Windows",
+        "Texture Tools"
+	),
+
+
 	/** Add menu
 	 */
 	function addMenu menu_name quad_index =
@@ -54,7 +80,7 @@ struct QuadMenu_v
 	 */
 	function setRightClick which:#nonePressed  =
 	(
-		format "\n"; print "QuadMenu_v.setRightClick()"
+		--format "\n"; print "QuadMenu_v.setRightClick()"
 		menuMan.setViewportRightClickMenu which quadMenu
 	),
 
@@ -84,11 +110,24 @@ struct QuadMenu_v
 	function _setQuad =
 	(
 		--format "\n"; print "QuadMenu_v._setQuad()"
-		----format "name	= % \n" name
+		if ( found_default_quad = this._getDefaultQuad() ) != undefined then
+			this.name = found_default_quad
+
 		if (quadMenu = menuMan.findQuadMenu this.name) == undefined then
 			quadMenu = menuMan.createQuadMenu this.name (this.name+"_"+1 as string )(this.name+"_"+2 as string )(this.name+"_"+3 as string )(this.name+"_"+4 as string )
 
 		this --return
+	),
+
+	/** Get default 3Ds Max quad menu
+	 */
+	function _getDefaultQuad =
+	(
+		--format "\n"; print "QuadMenu_v.getDefaultQuad()"
+		found_default_quad = for default_quad_name in default_quad_names where matchPattern default_quad_name pattern:( this.name + "*") collect default_quad_name
+
+		if found_default_quad.count > 0 then
+			found_default_quad[1] --return
 	),
 
 	/** Create quadMenu menu
@@ -98,7 +137,6 @@ struct QuadMenu_v
 	function _setQuads =
 	(
 		--format "\n"; print "QuadMenu_v._setQuad()"
-		----format "name	= % \n" name
 		if quadMenu != undefined then
 			for i = 1 to 4 do
 				append Quads (Menu_v menu:(quadMenu.getMenu(i)))
