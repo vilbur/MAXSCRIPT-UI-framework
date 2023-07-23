@@ -54,7 +54,6 @@ struct ScriptFile_Content_v
 
 			MacroScripts = (MacroScriptFileParser_v path:path).MacroScripts
 		)
-
 	),
 
 	/** Create controls from ".mcr" file to ui
@@ -70,6 +69,28 @@ struct ScriptFile_Content_v
 			this._createControls (_Rollout)
 
 		_Rollout --return
+	),
+
+	/** Process *.mcr files
+	  *
+	  *  1) Filein macroscript file
+	  *  2) Insert macroscripts to menus
+	 */
+	function importMacroscripts =
+	(
+		--format "\n"; print "ScriptFile_Content_v.importToMenus()"
+
+		_Controls = Controls_v rollout_id:"import_macroscripts"
+
+		for i = 1 to MacroScripts.count do
+		(
+			Macro = MacroScripts[i]
+
+			_Control = _Controls.Control (Macro.getControlType()) Macro.buttontext params:(Macro.getParamsArray()) add_to_controls:false
+
+			this._addToMenu(_Control) (MacroScripts[i])
+		)
+
 	),
 
 	/** _create controls
@@ -97,7 +118,7 @@ struct ScriptFile_Content_v
 		_Control = _Controls.Control (Macro.getControlType()) Macro.buttontext params:(Macro.getParamsArray()) add_to_controls:false
 		--format "_Control.id	= % \n" _Control.id
 
-		this._addToQuadMenu (_Control)(Macro)
+		this._addToMenu (_Control)(Macro)
 
 		if(_Control_Exist = _Controls.get(_Control.id)) != undefined then
 			_Control = _Control_Exist -- update existing control
@@ -113,7 +134,7 @@ struct ScriptFile_Content_v
 
 	/** Add to quad menu or menu
 	 */
-	function _addToQuadMenu _Control Macro =
+	function _addToMenu _Control Macro =
 	(
 		--format "\n\n"; print "ScriptFile_Content_v.addToQuadMenu()"
 
@@ -144,10 +165,10 @@ struct ScriptFile_Content_v
 	--(
 		format "\n\n"; print "ScriptFile_Content_v.addToQuadMenu()"
 		format "Macro.category   = % \n" Macro.category
-	--	format "Macro.macro_name = % \n" Macro.macro_name
-	--	format "quad_name = % \n" quad_name
-	--	format "menu_name = % \n" menu_name
+		format "Macro.macro_name = % \n" Macro.macro_name
 		format "title            = % \n" title
+		--format "quad_name = % \n" quad_name
+		format "menu_name = % \n" menu_name
 	--
 	--)
 
