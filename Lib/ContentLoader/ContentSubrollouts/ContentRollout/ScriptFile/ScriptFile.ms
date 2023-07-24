@@ -1,4 +1,5 @@
-filein( getFilenamePath(getSourceFileName()) + "/MacroScript/MacroScript.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/MacroScript/MacroScript.ms" ) -- "./MacroScript/MacroScript.ms"
+
 filein( getFilenamePath(getSourceFileName()) + "/MacroScriptFileParser/MacroScriptFileParser.ms" )
 --filein( getFilenamePath(getSourceFileName()) + "/ContentControlCreator/ContentControlCreator.ms" )
 
@@ -76,21 +77,11 @@ struct ScriptFile_Content_v
 	  *  1) Filein macroscript file
 	  *  2) Insert macroscripts to menus
 	 */
-	function importMacroscripts =
+	function importMacroscriptsToMenus =
 	(
 		--format "\n"; print "ScriptFile_Content_v.importToMenus()"
-
-		_Controls = Controls_v rollout_id:"import_macroscripts"
-
 		for i = 1 to MacroScripts.count do
-		(
-			Macro = MacroScripts[i]
-
-			_Control = _Controls.Control (Macro.getControlType()) Macro.buttontext params:(Macro.getParamsArray()) add_to_controls:false
-
-			this._addToMenu(_Control) (MacroScripts[i])
-		)
-
+			this._addToMenu(MacroScripts[i]) ( ParamsList_v keys:MacroScripts[i].Params[1] values:MacroScripts[i].Params[2] )
 	),
 
 	/** _create controls
@@ -118,7 +109,7 @@ struct ScriptFile_Content_v
 		_Control = _Controls.Control (Macro.getControlType()) Macro.buttontext params:(Macro.getParamsArray()) add_to_controls:false
 		--format "_Control.id	= % \n" _Control.id
 
-		this._addToMenu (_Control)(Macro)
+		this._addToMenu (Macro)(_Control.Params)
 
 		if(_Control_Exist = _Controls.get(_Control.id)) != undefined then
 			_Control = _Control_Exist -- update existing control
@@ -133,15 +124,18 @@ struct ScriptFile_Content_v
 	),
 
 	/** Add to quad menu or menu
+	  *
+	  * @param MacroScript_Content_v	Macro
+	  * @param ParamsList_v	ParamsList
+	  *
 	 */
-	function _addToMenu _Control Macro =
+	function _addToMenu Macro ParamsList =
 	(
 		--format "\n\n"; print "ScriptFile_Content_v.addToQuadMenu()"
-
-		quad_name	= _Control.Params.getVal #quad
-		menu_name	= _Control.Params.getVal #menu
-		title	= _Control.Params.getVal #title
-		index	= _Control.Params.getVal #index
+		quad_name	= ParamsList.getVal #quad
+		menu_name	= ParamsList.getVal #menu
+		title	= ParamsList.getVal #title
+		index	= ParamsList.getVal #index
 		tooltip	= Macro.tooltip
 
 		if quad_name == undefined and menu_name == undefined and menu_name != false then

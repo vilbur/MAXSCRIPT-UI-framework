@@ -14,7 +14,9 @@ global params_input = #(
     " point3:[1,2,3.0]",
 	"items: #('item1', 2, 3.0, true )",
 	"color: color 128 128 128",
-	"string: Select objects"
+	"string: Select objects",
+	"string_wrapped: 'Select objects\n'"
+
 )
 
 global datatypes = #(
@@ -28,6 +30,7 @@ global datatypes = #(
     [1,2,3],
 	#("A",1),
 	color 128 128 128,
+	"string",
 	"string"
 )
 
