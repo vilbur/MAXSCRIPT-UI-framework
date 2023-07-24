@@ -12,7 +12,6 @@ filein( getFilenamePath(getSourceFileName()) + "/IconArrayParser/IconArrayParser
 struct ControlParamsParser_v
 (
 	/* required */
-	path, -- path to "*.mcr" file
 
 	/* properties */
 	params, -- #( #(), #() ) 2D matrix
@@ -20,6 +19,21 @@ struct ControlParamsParser_v
 	/* dependency */
 	ImagesArrayParser 	= ImagesArrayParser_v(),
 	IconArrayParser 	= IconArrayParser_v(),
+
+	/* private properties */
+	patterns = #(
+		"\d+.*\d*",	-- integer or float
+		"true|false",
+		"undefined|unsupplied",
+		"\[.*\]",	-- point2, point3
+		"\(*color\s+\d+\s+\d+\s+\d+\s*\)*",	-- color E.G.: "color 128 128 128" or "(color 128 128 128)"
+		"#[^\s\(]+",	-- #name but not array
+		"#\(.*\)",	--array
+		""
+	),
+
+	RegEx	= dotNetClass "System.Text.RegularExpressions.RegEx",
+	RegEx_options	= dotNetClass "System.Text.RegularExpressions.RegexOptions",
 
 	/** Parse params in "icon" param of macroscript
 	  *
@@ -115,20 +129,26 @@ struct ControlParamsParser_v
 	 */
 	function _convertDatatype _string =
 	(
-		--_string = substituteString _string "\\" "\\\\"
-		rx	= dotNetClass "System.Text.RegularExpressions.RegEx"
-		rx_options	= dotNetClass "System.Text.RegularExpressions.RegexOptions"
-
-		is_variable = (rx.match _string "^\s*(\d+|true|false|undefined|unsupplied|\(\s*color\s+\d+\s+\d+\s+\d+\s*\))\s*$" rx_options.IgnoreCase ).success
-
-		if not is_variable and (is_string = ( rx.match _string "(^'*[A-Za-z0-1_\s]+'*$)" rx_options.IgnoreCase ).success ) then
+		/** Join array
+		 */
+		function joinPatterns params_input =
 		(
+			--format "\n"; print ".joinArray()"
+			params_string = ""
+
+			for param in params_input do params_string += param + "|"
+
+			trimRight params_string "|"
+		)
+
+		is_variable = (RegEx.match _string ("^("+joinPatterns(patterns)+")$") RegEx_options.IgnoreCase ).success
+
+		if not is_variable  then
 			@"" + _string -- IS STRING
-		)
+
 		else
-		(
-			try((execute(_string)))catch(_string) -- IS VARIABLE
-		)
+			try((execute(_string)))catch(_string) -- IF STRING IS VARIABLE E.G.: "#( 1, 2 ,3 )|[1,2]"
+
 	),
 
 	/**

@@ -163,12 +163,12 @@ struct ScriptFile_Content_v
 
 	--	if menu_name=="Group" then
 	--(
-		format "\n\n"; print "ScriptFile_Content_v.addToQuadMenu()"
-		format "Macro.category   = % \n" Macro.category
-		format "Macro.macro_name = % \n" Macro.macro_name
-		format "title            = % \n" title
-		--format "quad_name = % \n" quad_name
-		format "menu_name = % \n" menu_name
+		--format "\n\n"; print "ScriptFile_Content_v.addToQuadMenu()"
+		--format "Macro.category   = % \n" Macro.category
+		--format "Macro.macro_name = % \n" Macro.macro_name
+		--format "title            = % \n" title
+		----format "quad_name = % \n" quad_name
+		--format "menu_name = % \n" menu_name
 	--
 	--)
 
