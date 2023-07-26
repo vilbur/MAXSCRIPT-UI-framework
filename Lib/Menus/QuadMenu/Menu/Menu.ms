@@ -25,6 +25,7 @@ struct Menu_v
 			(Menu_v menu:_menu) --return
 	),
 
+
 	/** Add menu item
 	 *
 	 * @return	<MixinInterface:menuItem>|false false if adding fails
@@ -59,6 +60,23 @@ struct Menu_v
 
 		item --return
 	),
+
+	/** Add multiple items at once
+	  *
+	  * @param string|#name	category
+	  * @param #("item"|#item)	macro_script_names
+	  *
+	  * return this
+	 */
+	function addItems category macro_script_names =
+	(
+		--format "\n"; print "Menu_v.addItems()"
+		for macro_script_name in macro_script_names do
+			this.addItem (category as string ) (macro_script_name as string )
+
+		this --return
+	),
+
 
 	/** Add quad from 'menus' to quad
 	  * IMPORTANT: Menu does not show, if does not contain any items
@@ -313,7 +331,7 @@ struct Menu_v
 		--format "\n"; print "Menu_v._addSeparator()"
 		add_on_end_of_menu = index == unsupplied or index > menu.numItems()
 
-		if index != unsupplied and index > (menu.numItems() +1 ) then
+		if index != unsupplied and index > (menu.numItems() +1 ) or menu.numItems() == 0 then
 			format "\n\n----------- WARNING -----------\nSEPARATOR IS ADDED ON END OF MENU\nMenu: \"%\"\nindex: % \nitems in menu: %\n\n" this.name index (menu.numItems())
 
 		if add_on_end_of_menu then
