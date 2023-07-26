@@ -147,6 +147,8 @@ struct QuadMenu_v
 	on create do
 	(
 		--print("QuadMenu_v.onCreate()")
+		--format "this.name = % \n" this.name
+
 		this._setQuad()
 
 		this.showAllQuads()

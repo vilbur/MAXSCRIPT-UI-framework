@@ -196,31 +196,31 @@ function setMenuOptions =
 --------------------------------------------------------------------------------*/
 
 /* QUAD MENU */
-getDefaultQuadMenu()
+--getDefaultQuadMenu()
 
 
 --/* QUAD MENU */
---createQuadMenu()
---
---addItemsToQuad()
---
---moveItemInQuad()
---
---
---/* MENU */
---createMenuInMenuList()
---
---addMenuToQuad2()
---
---moveItemsInMenu()
---
---
---/* SUBMENU */
---addSubmenu()
---
---
---/* SEPARATOR */
---addSeparator()
+createQuadMenu()
+
+addItemsToQuad()
+
+moveItemInQuad()
+
+
+/* MENU */
+createMenuInMenuList()
+
+addMenuToQuad2()
+
+moveItemsInMenu()
+
+
+/* SUBMENU */
+addSubmenu()
+
+
+/* SEPARATOR */
+addSeparator()
 --
 --removeSeparator()
 --cleanSeparator()

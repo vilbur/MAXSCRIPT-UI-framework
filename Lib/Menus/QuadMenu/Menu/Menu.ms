@@ -204,24 +204,42 @@ struct Menu_v
 	function addSeparator index: =
 	(
 		--format "\n"; print "Menu_v.addSeparator()"
+		--format "index = % \n" index
+
 		if classOf index == Array then
+			for _index in this._reverseArray(index) do
+				this._addSeparator (_index)
+		else
+			this._addSeparator (index)
+	),
+
+	/**
+	  *
+	  */
+	function _addSeparator index =
+	(
+		--format "\n"; print "Menu_v._addSeparator()"
+		--format "this.name = % \n" this.name
+		--format "index = % \n" index
+
+		if index != unsupplied and index > (menu.numItems() + 1) then
 		(
-			for i in index do
-				this.addSeparator index:i
+			format "% addSeparator() index:% is higher then number of items. SEPARATOR IS NOT ADDED\n\n" this.name index
+
+			return false
+		)
+
+		if index == unsupplied then
+		(
+			index_test	= menu.numItems()
+			index	= index_test +1
 		)
 		else
-		(
-			if index == unsupplied then
-			(
-				index_test	= menu.numItems()
-				index	= index_test +1
-			)
-			else
-				index_test = index
+			index_test = index
 
-			if (menu.getItem(index_test)).getIsSeparator() == false then
-				menu.addItem (menuMan.createSeparatorItem()) (index)
-		)
+		if (menu.getItem(index_test)).getIsSeparator() == false then
+			menu.addItem (menuMan.createSeparatorItem()) (index)
+
 	),
 
 	/** Remove separator on index
@@ -339,17 +357,27 @@ struct Menu_v
 		item --return
 	),
 
+
+	/** Sort, make unique and reverse array
+	 */
+	function _reverseArray arr =
+	(
+		arr = makeUniqueArray ( sort arr)
+
+		for i = arr.count to 1 by -1 collect arr[i]
+	),
+
 	/**
 	 */
 	on create do
 	(
 		--print("Menu_v.onCreate()")
+		--format "this.name = % \n" this.name
+
 		if this.menu == undefined then
 			this.menu = this._getOrCreateMenu(this.name)
 
 		if this.menu != undefined  and this.name == undefined then
 			this.name = this.menu.getTitle()
-
-		--format "this.name = % \n" this.name
 	)
 )
