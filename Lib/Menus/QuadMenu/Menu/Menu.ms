@@ -7,13 +7,14 @@ struct Menu_v
 	/* construct */
 	name,
 
+	flat = true,
+
 	/* dependency */
 	/* reference */
 	/* inhered */
 	/* properties */
 	menu, -- <MixinInterface:menu>
 
-	default_menu_flat = true,
 
 	/** Get menu from menus list HELP:https://help.autodesk.com/view/3DSMAX/2022/ENU/?guid=GUID-F8993D95-943E-4031-B1C6-6B2BADE4DB9E#GUID-F8993D95-943E-4031-B1C6-6B2BADE4DB9E__WS73099CC142F4875546792D6511E39D97277-15A5
 	 */
@@ -87,7 +88,7 @@ struct Menu_v
 	  *
 	  * @return Menu_v
 	 */
-	function addMenu menu_or_name index: title: flat:default_menu_flat =
+	function addMenu menu_or_name title: index: flat:this.flat =
 	(
 		--format "\n"; print "Menu_v.addMenu()"
 
@@ -111,6 +112,8 @@ struct Menu_v
 
 		else if superClassOf menu_or_name == StructDef then  -- IF Menu_v()
 		(
+			flat = menu_or_name.flat
+
 			submenu =  menu_or_name.menu
 
 			if title == unsupplied then
@@ -137,6 +140,25 @@ struct Menu_v
 		--format "submenu = % \n" submenu
 
 		Menu_v menu:submenu --return
+	),
+
+	/** Add menus at once
+	  *
+	  * @param #( "Title", Menu_v )	titles_and_menus	pairs of titles and menus
+	  * @param boolean 	separator between menus
+	  *
+	 */
+	function addMenus titles_and_menus separator:true =
+	(
+		format "\n"; print "QuadMenu_v.addMenus()"
+		--Quads[quad_index].addMenu (menu_name)
+		for i = 1 to titles_and_menus.count by 2 do
+		(
+			this.addMenu (titles_and_menus[i+1]) title:(titles_and_menus[i])  --index:index
+
+			if separator then
+				this.addSeparator()
+		)
 	),
 
 	/** Get item from menu
