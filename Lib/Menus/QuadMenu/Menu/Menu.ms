@@ -195,9 +195,9 @@ struct Menu_v
 			menu.addItem (menu_item) (index)
 	),
 
-	/** Add separator
+	/** Add separator on index or end of menu
 	  *
-	  * @param integer|#(integer) index or array of indexes where to put separator in menu
+	  * @param integer|#(integer) index or array of indexes where add separator, if UNSUPPLIED then add separator on the end of menu
 	  *
 	  * If separator on this index exists already, then will not be added
 	 */
@@ -205,41 +205,11 @@ struct Menu_v
 	(
 		--format "\n"; print "Menu_v.addSeparator()"
 		--format "index = % \n" index
-
 		if classOf index == Array then
 			for _index in this._reverseArray(index) do
 				this._addSeparator (_index)
 		else
 			this._addSeparator (index)
-	),
-
-	/**
-	  *
-	  */
-	function _addSeparator index =
-	(
-		--format "\n"; print "Menu_v._addSeparator()"
-		--format "this.name = % \n" this.name
-		--format "index = % \n" index
-
-		if index != unsupplied and index > (menu.numItems() + 1) then
-		(
-			format "% addSeparator() index:% is higher then number of items. SEPARATOR IS NOT ADDED\n\n" this.name index
-
-			return false
-		)
-
-		if index == unsupplied then
-		(
-			index_test	= menu.numItems()
-			index	= index_test +1
-		)
-		else
-			index_test = index
-
-		if (menu.getItem(index_test)).getIsSeparator() == false then
-			menu.addItem (menuMan.createSeparatorItem()) (index)
-
 	),
 
 	/** Remove separator on index
@@ -320,6 +290,47 @@ struct Menu_v
 
 	private
 
+	--/** Get item
+	-- */
+	--function _getItem index =
+	--(
+	--	--format "\n"; print "Menu_v._getItem()"
+	--	if index > menu.numItems() then
+	--	(
+	--		format "Menu_v._getItem() index:% IS HIGHER THEN NUMBER OF ITEMS\n\n" index
+	--
+	--		undefined  --return
+	--	)
+	--	else
+	--		menu.getItem(index)
+	--),
+
+	/**
+	  *
+	  */
+	function _addSeparator index =
+	(
+		--format "\n"; print "Menu_v._addSeparator()"
+		add_on_end_of_menu = index == unsupplied or index > menu.numItems()
+
+		if index != unsupplied and index > (menu.numItems() +1 ) then
+			format "\n\n----------- WARNING -----------\nSEPARATOR IS ADDED ON END OF MENU\nMenu: \"%\"\nindex: % \nitems in menu: %\n\n" this.name index (menu.numItems())
+
+		if add_on_end_of_menu then
+			index = menu.numItems() +1
+
+		this._isSeparator( if add_on_end_of_menu then menu.numItems() else index  )
+			menu.addItem (menuMan.createSeparatorItem()) (index)
+	),
+
+	/** Is separator
+	 */
+	function _isSeparator index =
+	(
+		--format "\n"; print "Menu_v._isSeparator()"
+		(menu.getItem(index)).getIsSeparator()
+	),
+
 	/** Get menu items
 	 */
 	function _getMenuItems =
@@ -362,6 +373,8 @@ struct Menu_v
 	 */
 	function _reverseArray arr =
 	(
+		--print("Menu_v._reverseArray()")
+		--format "arr = % \n" arr
 		arr = makeUniqueArray ( sort arr)
 
 		for i = arr.count to 1 by -1 collect arr[i]
