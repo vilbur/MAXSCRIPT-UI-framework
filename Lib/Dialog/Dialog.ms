@@ -82,7 +82,8 @@ struct Dialog_v
 	/** Create dialog
 	  *
 	  * @param	integer	width	of dialog, minimal size of dialog also
-	  * @param	integer	height	of dialog, minimal size of dialog also
+	  * @param	integer|#auto	height	of dialog, minimal size of dialog also, if #auto then height is not get from ini file
+	  *
 	  * @param	[x,y]|#moue	name	description
 	  * @param	name	origin	#WINDOW|#SCREEN origin of dialog position: Relative to 3Ds Max window|Absolute to screen
 	  *
@@ -91,6 +92,10 @@ struct Dialog_v
 	function create width:256 height: pos: origin:#SCREEN bgcolor: fgcolor: bitmap: bmpstyle:#bmp_tile  style: modal: escapeEnable:false escapekey:true lockHeight:false lockWidth:true parent: =
 	(
 		--print "Dialog_v.create()"
+
+		if height == #auto then
+			height = -1
+
 		_RolloutCreator = RolloutCreator_v Ini:Ini
 
 		this._setDialogMinimalSize(width)(height)
@@ -177,7 +182,7 @@ struct Dialog_v
 
 		EVENT_DOCKED_ENABLED = false
 
-		execute ( "try( destroyDialog "+ id +" )catch()" )
+		execute ( "try( destroyDialog "+ id as string +" )catch()" )
 
 		EVENT_DOCKED_ENABLED = true
 	),
@@ -250,8 +255,8 @@ struct Dialog_v
 		--format "\n"; print "Dialog_v._setDialogMinimalSize()"
 		if min_size == undefined then
 		(
-			min_width	= if this.width  != unsupplied then this.width  else (if width  != unsupplied then width else -1)
-			min_height	= if this.height != unsupplied then this.height else (if height != unsupplied then height else -1)
+			min_width	= if this.width  != unsupplied then this.width  else ( if width  != unsupplied then width else -1)
+			min_height	= if this.height != unsupplied then this.height else ( if height != unsupplied then height else -1)
 
 			min_size = [ min_width, min_height ]
 		)
@@ -263,7 +268,11 @@ struct Dialog_v
 	(
 		--format "\n"; print "Dialog_v._setDialogSize()"
 		this.width  = this._getDialogSize( #width ) (width)
-		this.height = this._getDialogSize( #height) (height)
+
+		if this.height == #auto then
+			this.height = unsupplied
+		--this.height = this._getDialogSize( #height) (height)
+		--format "this.height	= % \n" this.height
 	),
 
 	/** Get size of dialog
