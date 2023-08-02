@@ -1,3 +1,6 @@
+global EMPTY_QUAD
+
+
 /** Wrapper for <MixinInterface:menu>
   *
   *	HELP: https://help.autodesk.com/view/MAXDEV/2021/ENU/?guid=GUID-1374EDCA-CC8B-4B43-81A5-6ED98DBE01D3#GUID-1374EDCA-CC8B-4B43-81A5-6ED98DBE01D3__GUID-550885E9-1A73-423C-A837-865E96CF7824
@@ -8,6 +11,7 @@ struct Menu_v
 	name,
 
 	flat = true,
+	--quad = false, -- get menu wich is not saved in menus
 
 	/* dependency */
 	/* reference */
@@ -15,7 +19,8 @@ struct Menu_v
 	/* properties */
 	menu, -- <MixinInterface:menu>
 
-
+	quad_index,
+	quad_width = 26, -- width of quad menu in characters
 	/** Get menu from menus list HELP:https://help.autodesk.com/view/3DSMAX/2022/ENU/?guid=GUID-F8993D95-943E-4031-B1C6-6B2BADE4DB9E#GUID-F8993D95-943E-4031-B1C6-6B2BADE4DB9E__WS73099CC142F4875546792D6511E39D97277-15A5
 	 */
 	function getMenu menu_name =
@@ -25,7 +30,6 @@ struct Menu_v
 		if (_menu = menuMan.findMenu menu_name) != undefined then
 			(Menu_v menu:_menu) --return
 	),
-
 
 	/** Add menu item
 	 *
@@ -38,7 +42,7 @@ struct Menu_v
 		--format "macro_script_name	= % \n" macro_script_name
 		--format "title	= % \n" title
 
-		item = if( group == unsupplied ) then menuMan.createActionItem (macro_script_name) (category) else menuMan.createMenuItemFromAction ( group ) (macro_script_name) category:(category)
+		item = if( group == unsupplied ) then menuMan.createActionItem (macro_script_name) (category) else menuMan.createMenuItemFromAction ( group ) (macro_script_name) --category:(category)
 		--format "item = % \n" item
 		if item == undefined then
 			return false
@@ -82,7 +86,7 @@ struct Menu_v
 	/** Add quad from 'menus' to quad
 	  * IMPORTANT: Menu does not show, if does not contain any items
 	  *
-	  * @param	Menu_V|string	menu_or_name	menu or name of menu which will be added as sub menu
+	  * @param	Menu_V|string|<MixinInterface:menu>	menu_or_name	menu or name of menu which will be added as sub menu
 	  * @param	string	title	custom title of menu displayed in quad
 	  * @param	boolean	flat	menu will be flat or not
 	  *
@@ -150,7 +154,7 @@ struct Menu_v
 	 */
 	function addMenus titles_and_menus separator:true =
 	(
-		format "\n"; print "QuadMenu_v.addMenus()"
+		--format "\n"; print "QuadMenu_v.addMenus()"
 		--Quads[quad_index].addMenu (menu_name)
 		for i = 1 to titles_and_menus.count by 2 do
 		(
@@ -171,6 +175,7 @@ struct Menu_v
 	(
 		--format "\n"; print "Menu_v.getItem()"
 		--format "index_or_title = % \n" index_or_title
+		--format "classOf index_or_title	= % \n" (classOf index_or_title)
 
 		if classOf index_or_title == string then
 		(
@@ -180,7 +185,23 @@ struct Menu_v
 			menu_item_found[1] --return
 		)
 		else
-			menu.getItem(index_or_title) --return
+		(
+			index = index_or_title
+			items_count = this.numItems()
+
+			if index > items_count then
+			(
+				format "%.getItem(%) -- WARNING - index % is higher then count of items %\n" this.name index index items_count
+
+				undefined --return
+			)
+			else
+			(
+				menu_item = menu.getItem(index) --return
+
+			)
+
+		)
 	),
 
 	/** Get submenu from menu item
@@ -203,7 +224,7 @@ struct Menu_v
 
 	/** Remove given item or by title
 	  *
-	  * @param	<MixinInterface:menuItem>|string|integer	index_title_item MenuItem, title string or index of item
+	  * @param	#()|<MixinInterface:menuItem>|string|integer|	index_title_item MenuItem, title string or index of item, can be array of these
 	  *
 	  * @return	menuItem
 	 */
@@ -211,12 +232,21 @@ struct Menu_v
 	(
 		--format "\n"; print "Menu_v.removeItem()"
 
-		menu_item = if classOf index_title_item != MixinInterface then this.getItem(index_title_item) else index_title_item
+		if classOf index_title_item != Array then
+		(
+			menu_item = if classOf index_title_item != MixinInterface then this.getItem(index_title_item) else index_title_item
 
-		if menu_item != undefined then
-			menu.removeItem menu_item
+			if menu_item != undefined then
+				menu.removeItem menu_item
 
-		menu_item --return
+			menu_item --return
+
+		)
+		else
+			for single_parameter in this._reverseArray(index_title_item) do
+				this.removeItem (single_parameter)
+
+
 	),
 
 	/** Move item in menu
@@ -225,7 +255,7 @@ struct Menu_v
 	 */
 	function moveItem index_or_title index =
 	(
-		--format "\n"; print "Menu_v.moveItem()"
+		format "\n"; print "Menu_v.moveItem()"
 		menu_item = this.removeItem (index_or_title)
 
 		 if index == -1 then
@@ -298,7 +328,37 @@ struct Menu_v
 	 */
 	function setTitle title =
 	(
+		--format "\n"; print "Menu_v.setTitle()"
+		--format "title	= % \n" title
+		/** Kind of center quad title
+		  *
+		  * Default title is aligned to opposite sides that i like to be ;)
+		 */
+		function flipAlign title =
+		(
+			--format "\n"; print "QuadMenu_v.flipAlign()"
+
+			empty_space = ""
+
+			for i = 1 to ( this.quad_width - title.count) / 2 do
+				empty_space += "   "
+
+			if this.quad_index < 3 then --
+				title += empty_space --return "Title       "
+
+			else
+				empty_space + title --return  "       Title"
+
+			--title --return
+		)
+
+		--format "quad_index	= % \n" quad_index
+		if this.quad_index != undefined then
+			title = flipAlign (title)
+
 		menu.setTitle title
+
+
 	),
 
 	/** Set submenu item flat
@@ -328,6 +388,14 @@ struct Menu_v
 		format "\n"
 	),
 
+	/** Get menu items
+	 */
+	function numItems =
+	(
+		--format "\n"; print "Menu_v._getMenuItems()"
+		menu.numItems()
+	),
+
 	private
 
 	--/** Get item
@@ -343,6 +411,51 @@ struct Menu_v
 	--	)
 	--	else
 	--		menu.getItem(index)
+	--),
+
+	/** Set menu
+	 */
+	function _setMenu =
+	(
+		--format "\n"; print "Menu_v._setMenu()"
+		if this.menu == undefined then
+			this.menu = this._getOrCreateMenu(this.name)
+
+		if this.menu != undefined  and this.name == undefined then
+			this.name = this.menu.getTitle()
+	),
+
+	--/** Create empty menu which ca be add as single quad to QUad Menu
+	--  *
+	--  * Max cannot create <MixinInterface:menu> which is not saved in menus
+	--  * In this way new
+	-- */
+	--function _createEmptyQuad =
+	--(
+	--	format "\n"; print "Menu_v._createEmptyQuad()"
+	--
+	--	function quadTitle index = this.name+"-"+index as string --return
+	--
+	--	temp_menu_file = (GetDir #temp) + "\\temp_menu_save.mnux"
+	--
+	--	menuMan.saveMenuFile(temp_menu_file)
+	--
+	--	quad_menu = menuMan.createQuadMenu "X TEMP QUAD" ( quadTitle 1 ) ( quadTitle 2 ) ( quadTitle 3 ) ( quadTitle 4 )
+	--
+	--	format "quad_menu	= % \n" quad_menu
+	--
+	--	EMPTY_QUAD =  deepCopy (quad_menu.getMenu(1))
+	--
+	--	menuMan.loadMenuFile (temp_menu_file)
+	--
+	--	deleteFile(temp_menu_file)
+	--
+	--	menu = deepCopy EMPTY_QUAD
+	--
+	--
+	--	menu.setTitle (this.name)
+	--
+	--	menu--return
 	--),
 
 	/**
@@ -420,6 +533,7 @@ struct Menu_v
 		for i = arr.count to 1 by -1 collect arr[i]
 	),
 
+
 	/**
 	 */
 	on create do
@@ -427,10 +541,7 @@ struct Menu_v
 		--print("Menu_v.onCreate()")
 		--format "this.name = % \n" this.name
 
-		if this.menu == undefined then
-			this.menu = this._getOrCreateMenu(this.name)
-
-		if this.menu != undefined  and this.name == undefined then
-			this.name = this.menu.getTitle()
+		this._setMenu()
 	)
+
 )

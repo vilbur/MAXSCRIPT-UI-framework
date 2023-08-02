@@ -44,13 +44,27 @@ struct QuadMenu_v
         "Texture Tools"
 	),
 
-
 	/** Add menu
+	  *
+	  * @param	Menu_V|string|<MixinInterface:menu>	menu_or_name	menu or name added as quad
+	  * @param	1|2|3|4|#BOTTOM_LEFT|#BOTTOM_RIGHT|#TOP_LEFT|#TOP_RIGHT	quad_index name or number of quad
+	  *
 	 */
-	function addMenu menu_name quad_index =
+	function addMenu menu_or_name quad_index =
 	(
 		--format "\n"; print "QuadMenu_v.addMenu()"
-		Quads[quad_index].addMenu (menu_name)
+		--format "menu_or_name	= % \n" menu_or_name
+		--format "menu_or_name.name	= % \n" menu_or_name.name
+		--format "classOf quad_index	= % \n" (classOf quad_index)
+		--format "classOf quad_index == name	= % \n" (classOf quad_index == name)
+
+		quad_index = this._getQuadIndex(quad_index)
+
+		Quads[quad_index].addMenu (menu_or_name)
+
+		if superClassOf menu_or_name == StructDef then  -- IF Menu_v()
+			Quads[quad_index].setTitle (menu_or_name.name)
+			--Quads[quad_index].setTitle menu_or_name.name
 	),
 
 	/** Get quad menu
@@ -60,6 +74,8 @@ struct QuadMenu_v
 	function getMenu quad_index =
 	(
 		--format "\n"; print "QuadMenu_v.getQuad()"
+		quad_index = this._getQuadIndex(quad_index)
+
 		Quads[quad_index] --return
 	),
 
@@ -110,11 +126,17 @@ struct QuadMenu_v
 	function _setQuad =
 	(
 		--format "\n"; print "QuadMenu_v._setQuad()"
+
+		function quadTitle index = this.name+"-"+index as string --return
+
 		if ( found_default_quad = this._getDefaultQuad() ) != undefined then
 			this.name = found_default_quad
 
 		if (quadMenu = menuMan.findQuadMenu this.name) == undefined then
-			quadMenu = menuMan.createQuadMenu this.name (this.name+"_"+1 as string )(this.name+"_"+2 as string )(this.name+"_"+3 as string )(this.name+"_"+4 as string )
+			--quadMenu = menuMan.createQuadMenu this.name (this.name+"_"+1 as string )(this.name+"_"+2 as string )(this.name+"_"+3 as string )(this.name+"_"+4 as string )
+			quadMenu = menuMan.createQuadMenu this.name ( quadTitle 1 ) ( quadTitle 2 ) ( quadTitle 3 ) ( quadTitle 4 )
+
+		--format "quadMenu	= % \n" quadMenu
 
 		this --return
 	),
@@ -139,7 +161,26 @@ struct QuadMenu_v
 		--format "\n"; print "QuadMenu_v._setQuad()"
 		if quadMenu != undefined then
 			for i = 1 to 4 do
-				append Quads (Menu_v menu:(quadMenu.getMenu(i)))
+				append Quads (Menu_v menu:(quadMenu.getMenu(i)) quad_index:i)
+	),
+
+
+
+	/** Get quad index
+	 */
+	function _getQuadIndex quad_index =
+	(
+		--format "\n"; print "QuadMenu_v._getQuadIndex()"
+		case quad_index of
+			(
+				#BOTTOM_LEFT:  4
+				#BOTTOM_RIGHT: 1
+
+				#TOP_LEFT:  3
+				#TOP_RIGHT: 2
+
+				default: quad_index
+			)
 	),
 
 	/**
