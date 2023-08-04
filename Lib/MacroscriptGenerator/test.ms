@@ -8,11 +8,10 @@ struct MacroscriptGenerator_v
     /* properties */
     mcr_file,
 
-
     --macroscripts= Dictionary(),
-    macroscripts = #(),
+    macroscripts= #(),
 
-    general_params = Dictionary(),
+    general_params= Dictionary(),
 
     keys_params = #( #category, #buttontext, #toolTip, #icon ),
     keys_filter = #( #IsVisible, #IsChecked, #isEnabled, #isIndeterminate ),
@@ -33,7 +32,7 @@ struct MacroscriptGenerator_v
         this.setGeneralValues(sections)
 
         for macroscript_name in sections do
-			this.parseMacroscript (macroscript_name as string )
+        this.parseMacroscript (macroscript_name as string )
 
         this.writeToFile()
     ),
@@ -49,14 +48,14 @@ struct MacroscriptGenerator_v
         general_keys = if findItem sections #general > 0 then getINISetting ini_file "general" else #()
 
         if (index = findItem sections #general) > 0 then
-			deleteItem sections index
+        deleteItem sections index
 
         for key in general_keys where (general_value = getINISetting ini_file #general key) != "" do
-			general_params[key as name ] = general_value
+        general_params[key as name ] = general_value
 
         /* Add macroscript name */
         if general_params[#macroscript] == undefined then
-			general_params[#macroscript] = ""
+        general_params[#macroscript] = ""
     ),
 
     /** Parse macroscript
@@ -73,13 +72,14 @@ struct MacroscriptGenerator_v
             --format "\n"; print "MacroscriptGenerator_v.getMacroscriptData()"
             macro_data = Dictionary()
 
-            for key in macro_keys where (val = getINISetting ini_file macroscript_name key) != "" do macro_data[key as name] = val
+            for key in macro_keys where (val = getINISetting ini_file macroscript_name key) != "" do
+            macro_data[key as name] = val
 
             macro_data[#macroscript] = macroscript_name
 
             /* ADD BUTTONTEXT */
             if macro_data[#buttontext] == undefined then
-			 macro_data[#buttontext] = substituteString macroscript_name "_" " "
+            macro_data[#buttontext] = substituteString macroscript_name "_" " "
 
             macro_data --return
         )
@@ -203,6 +203,7 @@ struct MacroscriptGenerator_v
         this.writeCloseBracket()
     ),
 
+
     /** Get value
     *
     */
@@ -223,7 +224,7 @@ struct MacroscriptGenerator_v
         for key in this.keys_params do
         (
             general_value = this._getValue (general_params)(key)
-            macro_value   = this._getValue (macro_data)(key)
+            macro_value= this._getValue (macro_data)(key)
 
             format "%:\"%\"\n" (key as string ) (general_value + macro_value ) to:mcr_file
         )
@@ -245,24 +246,24 @@ struct MacroscriptGenerator_v
             matchPattern _string pattern:pattern
         )
 
-        for key in this.keys_filter do
+
+        for key inthis.keys_filter do
         (
             general_value = this._getValue (general_params)(key)
-            macro_value	  = this._getValue (macro_data)(key)
+            macro_value= this._getValue (macro_data)(key)
 
-            --operator = if macro_value != "" and general_value != "" then " and " else ""
+            operator = if macro_value != "" and general_value != "" andthen " and " else ""
 
             condition = case of
             (
-                (macro_value == "" or general_value == ""):	general_value + macro_value
-                (ifContains macro_value   "or *"):		general_value + " " + macro_value
-                (ifContains general_value "or *"):    macro_value + " " + general_value
-                default: general_value + "\tand\t" + macro_value
+                (macro_value == "" or general_value == ""):general_value + macro_value
+                (ifContains macro_valuepattern:"or *"):general_value + " " + macro_value
+                (ifContains general_value pattern:"or *"):macro_value + " " + general_value
+                default: general_value + " and " + macro_value
             )
 
 
-
-            format "\ton %\tdo %\n" (key as string ) (condition) to:mcr_file
+            format "on % do%\n" (key as string ) (condition) to:mcr_file
         )
     ),
 
@@ -271,15 +272,15 @@ struct MacroscriptGenerator_v
     function writeExecute macro_data =
     (
 
-        for key in this.keys_code do
+        for key in this.keys_codedo
         (
 
-			general_value = this._getValue (general_params)(key)
-			macro_value= this._getValue (macro_data)(key)
+        general_value = this._getValue (general_params)(key)
+        macro_value= this._getValue (macro_data)(key)
 
-			onCommand = if key == #altExecute then key as string + " type" else key as string
+        onCommand = if key == #altExecute then key as string + " type" else key as string
 
-			format "\n\ton % do (\n\t\t%\n\t)\n" onCommand (general_value + macro_value ) to:mcr_file
+        format "\non % do (\n%\n)\n" onCommand (general_value + macro_value ) to:mcr_file
         )
     ),
 
