@@ -35,7 +35,7 @@ struct ControlCreator_v
 	 */
 	function addControls _Controls =
 	(
-		format "\n\n-------------- Controls group:% --------------\n" _Controls.group
+		--format "\n\n-------------- Controls group:% --------------\n" _Controls.group
 		--format "_Controls.list.count	= % \n" _Controls.list.count
 
 		if _Controls.list.count == 0 then
@@ -85,7 +85,7 @@ struct ControlCreator_v
 
 	/** Controls to groupbox will be rendered as last
 
-			MOVE THIS METHOD TO GroupboxCreator and REFRACT IT
+			TODO: MOVE moveGrouboxControlsToEnd() TO GroupboxCreator and REFRACT IT
 
 	 */
 	function moveGrouboxControlsToEnd &_Rollout_ =
@@ -140,6 +140,7 @@ struct ControlCreator_v
 		--format "\n"; print "ControlCreator_v._addControlsToRollout()"
 		--format "this.isGroupboxControls()	= % \n" (this.isGroupboxControls())
 		--format "this._Controls	= % \n" this._Controls
+
 		if not this.isGroupboxControls() then
 			this._addControlsGroup #start
 

@@ -18,7 +18,7 @@ struct SubolloutsCreator_v
 	 */
 	function addSubRollouts _Rollout =
 	(
-		format "\n"; print "SubolloutsCreator_v.addSubRollouts()"
+		--format "\n"; print "SubolloutsCreator_v.addSubRollouts()"
 
 		this._Rollout = _Rollout
 
@@ -61,7 +61,9 @@ struct SubolloutsCreator_v
 
 		this._Rollout = _Rollout
 
-		_Rollout.RCI.addText ("subRollout "+Subrollouts.slot as string +" \"slot_name\" height:"+Subrollouts.height as string )
+		slot_id = Subrollouts.slot as string
+
+		_Rollout.RCI.addText ("subRollout "+slot_id +" \""+slot_id+"\" height:"+Subrollouts.height as string )
 	 ),
 
 

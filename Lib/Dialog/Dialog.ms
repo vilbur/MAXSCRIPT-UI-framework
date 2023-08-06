@@ -91,16 +91,13 @@ struct Dialog_v
 	 */
 	function create width:256 height: pos: origin:#SCREEN bgcolor: fgcolor: bitmap: bmpstyle:#bmp_tile  style: modal: escapeEnable:false escapekey:true lockHeight:false lockWidth:true parent: =
 	(
-		--print "Dialog_v.create()"
-
-		if height == #auto then
-			height = -1
+		--format "\n"; print "Dialog_v.create()"
 
 		_RolloutCreator = RolloutCreator_v Ini:Ini
 
-		this._setDialogMinimalSize(width)(height)
-
 		this._setDialogSize(width)(height)
+
+		this._setDialogMinimalSize(width)(height)
 
 		_RolloutCreator.createRollout (this) width:width -- create neste rollouts
 
@@ -110,7 +107,7 @@ struct Dialog_v
 
 		_RolloutCreator.SubolloutsCreator.addSubRollouts (this)
 
-		--this._setDockState()
+		this._setDockState()
 
 		--RolloutResizer.resizeSubrollouts(this)
 
@@ -266,13 +263,10 @@ struct Dialog_v
 	 */
 	function _setDialogSize width height =
 	(
-		--format "\n"; print "Dialog_v._setDialogSize()"
+		--format "\n\n"; print "Dialog_v._setDialogSize()"
 		this.width  = this._getDialogSize( #width ) (width)
 
-		if this.height == #auto then
-			this.height = unsupplied
-		--this.height = this._getDialogSize( #height) (height)
-		--format "this.height	= % \n" this.height
+		this.height = if height != #auto then this._getDialogSize( #height ) (height) else  unsupplied
 	),
 
 	/** Get size of dialog
@@ -291,8 +285,11 @@ struct Dialog_v
 	function _getDialogSize size_type defined_size  =
 	(
 		--print "Dialog_v._getDialogSize()"
+		--format "size_type:	% \n" size_type
 		--format "this.width	= % \n" this.width
 		--format "this.height	= % \n" this.height
+
+		is_size_defined = defined_size != undefined and defined_size != unsupplied
 
 		if( Ini.isDefined() and (ini_size = Ini.load( id as string )("size")) != undefined) then
 		(
@@ -302,10 +299,10 @@ struct Dialog_v
 				(#height): ini_size.y as integer
 			)
 
-			if defined_size != unsupplied and ini_size < defined_size then defined_size else ini_size -- use paramater size, if ini saved size is less then, so dialog will not be smaller then width: parameter in this.create()
+			if is_size_defined and ini_size < defined_size then defined_size else ini_size -- if ini saved size is less then default size, then use default size
 
 		)
-		else if defined_size != unsupplied then
+		else if is_size_defined then
 			defined_size --return defined val on creation
 
 		else

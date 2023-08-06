@@ -135,7 +135,7 @@ struct RolloutCreator_v
 			for _RolloutSub in SubrolloutsSlot.Rollouts do
 			(
 				--format "_RolloutSub:	% \n" _RolloutSub
-				execute( "try(destroyDialog "+_RolloutSub.id as string +")catch()" ) -- DEVELOP
+				--execute( "try(destroyDialog "+_RolloutSub.id as string +")catch()" ) -- DEVELOP
 
 				_RolloutSub_def = this.createRollout (_RolloutSub) --width:_RolloutSub.width height:_RolloutSub.height-- CREATE PARENT ROLLOUTS
 
@@ -143,9 +143,9 @@ struct RolloutCreator_v
 				----if parent_is_dialog == false and SubrolloutsSlot.height == unsupplied then
 				--if parent_is_dialog == false then
 				--(
-					--CreateDialog ( _RolloutSub_def ) width:_Rollout.width pos:[0,-8000]
+					CreateDialog ( _RolloutSub_def ) width:_Rollout.width pos:[0,-8000]
 					--CreateDialog ( _RolloutSub_def ) width:_RolloutSub.width height:_RolloutSub.height -- DEV
-					CreateDialog ( _RolloutSub_def )-- DEV
+					--CreateDialog ( _RolloutSub_def )-- DEV
 
 					--format "_RolloutSub.RCI.def.height:	% \n" (_RolloutSub.RCI.de_RolloutSub.RCI.def).height
 					--format "_RolloutSub_def.height:	% \n" _RolloutSub_def.height
@@ -191,7 +191,7 @@ struct RolloutCreator_v
 	  */
 	 function _addControlsAndSubrollouts _Rollout =
 	 (
-		format "\n"; print "RolloutCreator_v._createSubrollouts()"
+		--format "\n"; print "RolloutCreator_v._createSubrollouts()"
 
 		for Controls_or_Subrollouts in _Rollout._Controls do
 			if( this._is(Controls_or_Subrollouts)("Controls") ) then
