@@ -57,8 +57,10 @@
 		--format "\n"; print "RolloutBody.Subrollouts()"
 		--format "height	= % \n" height
 		--local Subrollouts = Subrollouts_v parent_rollout_id:id slot:(this._getSubrolloutsSlotName(slot)) width:(if width != unsupplied then width else this.width) height:height
-		local Subrollouts = Subrollouts_v parent_rollout_id:(this.getFullId()) slot:(this._getSubrolloutsSlotName(slot)) width:(if width != unsupplied then width else this.width) height:height
 		--local Subrollouts = Subrollouts_v parent_rollout_id:id slot:(this._getSubrolloutsSlotName(slot)) width:width height:height
+
+		--local Subrollouts = Subrollouts_v parent_rollout_id:(this.getFullId()) slot:(this._getSubrolloutsSlotName(slot)) width:(if width != unsupplied then width else this.width) height:height
+		local Subrollouts = Subrollouts_v parent_rollout_id:(this.getFullId()) width:(if width != unsupplied then width else this.width) height:height
 
 		append _Controls Subrollouts
 
@@ -194,7 +196,7 @@
 	(
 		--print "RolloutBody._getSubrolloutsSlotName()"
 		if slot_id == undefined or slot_id == unsupplied then
-			slot_id = if ((subrollouts_count = this._getSubrolloutsCount()) > 1 ) then "subrollouts_" +subrollouts_count as string else "subrollouts"
+			slot_id = if ((subrollouts_count = this._getSubrolloutsCount()) > 1 ) then "subrollouts_" +subrollouts_count as string else "subrollouts_1"
 
 		slot_id as name --return
 	),

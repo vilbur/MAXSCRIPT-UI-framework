@@ -36,9 +36,10 @@ struct RolloutCreator_v
 	 */
 	function createRollout _Rollout width: =
 	(
-		--format "\n\n-------------------------------------	RolloutCreator_v.createRollout() id:#%	-------------------------------------\n"  ( _Rollout.id as string );
 
-		this._createSubSubrollouts(_Rollout)
+		this._createSubrollouts(_Rollout)
+
+		format "\n\n-------------------------------------	RolloutCreator_v.createRollout() id:#%	-------------------------------------\n"  ( _Rollout.id as string );
 
 
 		if _Rollout.width == unsupplied and width != unsupplied then
@@ -47,6 +48,8 @@ struct RolloutCreator_v
 		ControlsCreator	= ControlCreator_v _Rollout:_Rollout Ini:Ini
 
 		ControlsCreator.moveGrouboxControlsToEnd(_Rollout)
+
+		this.setSubrolloutSlotDefaultIds(_Rollout)
 
 		--_Rollout.RCI	= rolloutCreator (_Rollout.id) ( this._getTitleCentered(_Rollout) )
 		_Rollout.RCI	= rolloutCreator (_Rollout.id) ( this._getTitleString(_Rollout) )
@@ -66,6 +69,7 @@ struct RolloutCreator_v
 
 		/* add TEXT */
 		this._addTextToRollout (_Rollout)
+
 
 
 		/* add CONTROLS and SUBROLLOUTS SLOTS */
@@ -117,7 +121,7 @@ struct RolloutCreator_v
 	  *
 	  *
 	 */
-	function _createSubSubrollouts _Rollout =
+	function _createSubrollouts _Rollout =
 	(
 		--format "\n"; print "RolloutCreator_v.createSubrollouts()"
 
@@ -130,24 +134,38 @@ struct RolloutCreator_v
 
 			for _RolloutSub in SubrolloutsSlot.Rollouts do
 			(
-				--execute( "try(destroyDialog "+_RolloutSub.id as string +")catch()" ) -- DEVELOP
+				--format "_RolloutSub:	% \n" _RolloutSub
+				execute( "try(destroyDialog "+_RolloutSub.id as string +")catch()" ) -- DEVELOP
 
-				rci_def = this.createRollout (_RolloutSub) width:_Rollout.width -- CREATE PARENT ROLLOUTS
+				_RolloutSub_def = this.createRollout (_RolloutSub) --width:_RolloutSub.width height:_RolloutSub.height-- CREATE PARENT ROLLOUTS
 
 				/* Dont craete dialogs of "level 1" rollouts */
-				if parent_is_dialog == false and SubrolloutsSlot.height == unsupplied then
-				(
-					CreateDialog ( rci_def ) width:_Rollout.width pos:[0,-8000]
-					--CreateDialog ( rci_def ) width:_Rollout.width
+				----if parent_is_dialog == false and SubrolloutsSlot.height == unsupplied then
+				--if parent_is_dialog == false then
+				--(
+					--CreateDialog ( _RolloutSub_def ) width:_Rollout.width pos:[0,-8000]
+					--CreateDialog ( _RolloutSub_def ) width:_RolloutSub.width height:_RolloutSub.height -- DEV
+					CreateDialog ( _RolloutSub_def )-- DEV
 
-					rollout_height = execute( _RolloutSub.id as string + ".height" )
+					--format "_RolloutSub.RCI.def.height:	% \n" (_RolloutSub.RCI.de_RolloutSub.RCI.def).height
+					--format "_RolloutSub_def.height:	% \n" _RolloutSub_def.height
+					--format "_RolloutSub_def:	% \n" ( classOf _RolloutSub_def)
 
-					/* store height of rollout if is tallest */
-					if rollout_height > max_height_of_subrollout then
-						max_height_of_subrollout = rollout_height
+
+					--rollout_height = execute( _RolloutSub.id as string + ".height" )
+					--
+					--/* store height of rollout if is tallest */
 
 					_RolloutSub.temporary_created = true -- note that dialog msut be destryed before adding as subrollout
-				)
+				--)
+
+				--format "_RolloutSub.height:	% \n" _RolloutSub.height
+				--format "_RolloutSub_def.height:	% \n" _RolloutSub_def.height
+				rollout_height = if _RolloutSub.height == unsupplied then _RolloutSub_def.height else _RolloutSub.height
+
+				if rollout_height > max_height_of_subrollout then
+					max_height_of_subrollout = rollout_height
+
 			)
 
 			/* SET SLOT HEIGHT  */
@@ -157,11 +175,24 @@ struct RolloutCreator_v
 		)
 	),
 
-	 /** _create subrollouts
+	/** Set subrollout slot default ids if not set by user
+	 *
+	 *  Slot id is "Subrollouts" if only 1 slot exist
+	 *  Slot id is "Subrollouts_{number of slot}" if more then 1 slot exist
+	 */
+	function setSubrolloutSlotDefaultIds _Rollout =
+	(
+		--format "\n"; print "RolloutCreator_v.setSubrolloutSlotDefaultIds()"
+		for i = 1 to (Subrollouts_all = _Rollout.getSubrollouts()).count do
+			Subrollouts_all[i].slot = if Subrollouts_all.count == 1 then "Subrollouts" else  "Subrollouts_" + i as string
+	),
+
+	 /** Create controls and subrollout slots
 	  */
 	 function _addControlsAndSubrollouts _Rollout =
 	 (
-		--format "\n"; print "RolloutCreator_v._createSubrollouts()"
+		format "\n"; print "RolloutCreator_v._createSubrollouts()"
+
 		for Controls_or_Subrollouts in _Rollout._Controls do
 			if( this._is(Controls_or_Subrollouts)("Controls") ) then
 				ControlsCreator.addControls(Controls_or_Subrollouts)

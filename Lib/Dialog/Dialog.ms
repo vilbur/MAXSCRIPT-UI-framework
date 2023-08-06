@@ -110,9 +110,9 @@ struct Dialog_v
 
 		_RolloutCreator.SubolloutsCreator.addSubRollouts (this)
 
-		this._setDockState()
+		--this._setDockState()
 
-		RolloutResizer.resizeSubrollouts(this)
+		--RolloutResizer.resizeSubrollouts(this)
 
 		--AutoRunEvents.executeMacros()
 

@@ -18,9 +18,18 @@ struct SubolloutsCreator_v
 	 */
 	function addSubRollouts _Rollout =
 	(
-		--format "\n"; print "SubolloutsCreator_v.addSubRollouts()"
+		format "\n"; print "SubolloutsCreator_v.addSubRollouts()"
 
 		this._Rollout = _Rollout
+
+		/** Get subrollouts slot
+		 *
+		 */
+		function getSubrolloutsSlot slot =
+		(
+			for Subrollouts in  this._Rollout.RCI.Def.controls where classOf Subrollouts == SubRollout and matchPattern (Subrollouts as string ) pattern:( "SubRollout:"+slot as string ) do
+				return Subrollouts
+		)
 
 		for Subrollouts in _Rollout.getSubrollouts() do
 		(
@@ -28,20 +37,20 @@ struct SubolloutsCreator_v
 
 			rollouts_order	= this._getOrderOfsubrollouts(Subrollouts)
 
+			Subrollouts_slot = getSubrolloutsSlot(Subrollouts.slot)
+
 			for subrollout_id in rollouts_order where ( index = findItem subrollout_ids subrollout_id ) > 0 do
 			(
 				_Subrollout = Subrollouts.Rollouts[index]
 
 				if _Subrollout.temporary_created then
-					execute( "destroyDialog "+_Subrollout.id as string  )
+					try(destroyDialog _Subrollout.RCI.def )catch()
 
-				execute  ( "AddSubRollout "+_Rollout.id+"." + Subrollouts.slot +" "+ _Subrollout.id + " rolledUp:"+(this._getRolledStateFromIni(_Subrollout.id)) )
+				AddSubRollout Subrollouts_slot	_Subrollout.RCI.def
 
 				this.addSubRollouts (_Subrollout)
 			)
-
 		)
-
 	),
 
 	 /** _create subrollouts
