@@ -41,7 +41,7 @@ struct Controls_v
 
 		_Control = Control_v type:type caption:caption id:id add_locals:locals rollout_id:rollout_id
 
-		--
+
 		--format "_Control.id = % \n" _Control.id
 		--format "_Control	= % \n" _Control
 		_param_names  = #( #width, #height, #offset, #align, #items, #range, #value, #ini, #tooltip, #across, #columns)
@@ -172,6 +172,6 @@ struct Controls_v
 	(
 		--print "Controls_v.create()"
 		if this.group != undefined then
-			this.group = this.group as name
+			this.group = this.group
 	)
 )
