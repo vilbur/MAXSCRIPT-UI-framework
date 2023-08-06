@@ -56,10 +56,7 @@
 	(
 		--format "\n"; print "RolloutBody.Subrollouts()"
 		--format "height	= % \n" height
-		--local Subrollouts = Subrollouts_v parent_rollout_id:id slot:(this._getSubrolloutsSlotName(slot)) width:(if width != unsupplied then width else this.width) height:height
-		--local Subrollouts = Subrollouts_v parent_rollout_id:id slot:(this._getSubrolloutsSlotName(slot)) width:width height:height
 
-		--local Subrollouts = Subrollouts_v parent_rollout_id:(this.getFullId()) slot:(this._getSubrolloutsSlotName(slot)) width:(if width != unsupplied then width else this.width) height:height
 		local Subrollouts = Subrollouts_v parent_rollout_id:(this.getFullId()) width:(if width != unsupplied then width else this.width) height:height
 
 		append _Controls Subrollouts
@@ -125,6 +122,8 @@
 	function getFullId =
 	(
 		--format "\n"; print "RolloutBody.getFullId()"
+		--format "id:	% \n" id
+		--format "parent_rollout_id:	% \n" parent_rollout_id
 
 		if ( parent_rollout_id != undefined ) then
 			parent_rollout_id +"."+ id as string --return

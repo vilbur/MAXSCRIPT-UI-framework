@@ -23,7 +23,7 @@ struct Subrollouts_v
 	(
 		--format "\n"; print "Subrollouts_v.Roll()"
 		--local _Rollout = Rollout_v title:title id:id parent_rollout_id:( parent_rollout_id as string +"."+slot as string )
-		local _Rollout = Rollout_v title:title id:id parent_rollout_id:( parent_rollout_id as string +"."+slot as string ) width:(if width != unsupplied then width else this.width) height:height
+		local _Rollout = Rollout_v title:title id:id width:(if width != unsupplied then width else this.width) height:height
 
 		append Rollouts _Rollout
 
@@ -93,7 +93,7 @@ struct Subrollouts_v
 	 */
 	on create do
 	(
-		--format "\n"; print "Subrollouts_v.onCreate()"
-		--format "width	= % \n" width
+		format "\n"; print "Subrollouts_v.onCreate()"
+		format "parent_rollout_id: % \n" parent_rollout_id
 	)
 )

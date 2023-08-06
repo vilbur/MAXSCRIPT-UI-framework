@@ -33,6 +33,7 @@ struct SubolloutsCreator_v
 
 		for Subrollouts in _Rollout.getSubrollouts() do
 		(
+
 			subrollout_ids	= for Subrollout in Subrollouts.Rollouts collect Subrollout.id
 
 			rollouts_order	= this._getOrderOfsubrollouts(Subrollouts)
@@ -41,12 +42,15 @@ struct SubolloutsCreator_v
 
 			for subrollout_id in rollouts_order where ( index = findItem subrollout_ids subrollout_id ) > 0 do
 			(
+				start_time = timestamp()
 				_Subrollout = Subrollouts.Rollouts[index]
 
 				if _Subrollout.temporary_created then
 					try(destroyDialog _Subrollout.RCI.def )catch()
 
-				AddSubRollout Subrollouts_slot	_Subrollout.RCI.def
+				AddSubRollout Subrollouts_slot	_Subrollout.RCI.def rolledUp:(this._getRolledUpState(subrollout_id))
+
+				--format "%	% \n"  ((timestamp()) - start_time) _Subrollout.title
 
 				this.addSubRollouts (_Subrollout)
 			)
@@ -72,14 +76,14 @@ struct SubolloutsCreator_v
 
 	/** Get rolled state from ini
 	 */
-	function _getRolledStateFromIni subrollout_id =
+	function _getRolledUpState subrollout_id =
 	(
 		--print "SubolloutsCreator_v._getRolledStateFromIni()"
 
-		rolledup_state = "false"
+		rolledup_state = false
 
 		if( ini_path != undefined and (rolledup_state_ini = getINISetting (ini_path) subrollout_id "rolledUp") != "" ) then
-			rolledup_state = rolledup_state_ini
+			rolledup_state = execute rolledup_state_ini
 
 		rolledup_state --return
 	),

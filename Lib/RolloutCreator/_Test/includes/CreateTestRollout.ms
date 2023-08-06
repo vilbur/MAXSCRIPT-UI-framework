@@ -2,6 +2,8 @@ filein( getFilenamePath(getSourceFileName()) + "/../../../Ini/Ini.ms" )
 
 try(cui.UnRegisterDialogBar Rollout_Test)catch()
 try( destroyDialog          Rollout_Test)catch()
+try(cui.UnRegisterDialogBar Dialog_Test)catch()
+try( destroyDialog          Dialog_Test)catch()
 
 
 if( RolloutCreator_v == undefined ) then

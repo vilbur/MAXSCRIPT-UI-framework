@@ -99,17 +99,21 @@ struct Dialog_v
 
 		this._setDialogMinimalSize(width)(height)
 
-		_RolloutCreator.createRollout (this) width:width -- create neste rollouts
+		--start_time = timestamp()
+		_RolloutCreator.createRollout (this) width:width -- create nested rollouts
+		--format "createRollout % ms\n" ((timestamp()) - start_time)
 
 		CreateDialog (this.RCI.def) width:this.width height:this.height pos:(this._getPosition(pos)(origin)) autoLayoutOnResize:true bgcolor:bgcolor fgcolor:fgcolor	bitmap:bitmap bmpstyle:bmpstyle style:(if( style == unsupplied ) then this.style else style) modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
 
 		--this._setDialogGlobal() -- this is not required anwhere
 
+		--start_time = timestamp()
 		_RolloutCreator.SubolloutsCreator.addSubRollouts (this)
+		--format "addSubRollouts % ms\n" ((timestamp()) - start_time)
 
 		this._setDockState()
 
-		--RolloutResizer.resizeSubrollouts(this)
+		RolloutResizer.resizeSubrollouts(this)
 
 		--AutoRunEvents.executeMacros()
 
