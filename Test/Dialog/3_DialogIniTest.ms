@@ -1,9 +1,9 @@
 clearListener()
 
-filein( "$userscripts\Library\MAXSCRIPT-UI-framework\Lib\Dialog\Dialog.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/../../Lib/Dialog/Dialog.ms" ) -- "./../../Lib/Dialog/Dialog.ms"
 
 
-/* DIALOG */ 
+/* DIALOG */
 Dialog     = Dialog_v title:"Test without ini"
 -- Dialog.create()
 
@@ -12,11 +12,11 @@ Dialog     = Dialog_v title:"Test without ini"
 Dialog_ini = Dialog_v title:"Test with ini"  ini:(getSourceFileName()) width:256 height:128 -- dialog size works as init and minimal size of dialog
 
 
-/* DELETE INI FILE */ 
+/* DELETE INI FILE */
 --Dialog.ini.delete()
 
 
--- /* ROLLOUT */ 
+-- /* ROLLOUT */
 -- _Rollouts	 = Dialog_ini.Rollouts()
 -- _Rollouts	 = Dialog_ini.Rollouts height:512
 -- _Rollout    = _Rollouts.Roll "Subrollout"

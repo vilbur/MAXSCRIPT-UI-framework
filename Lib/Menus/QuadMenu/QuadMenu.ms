@@ -164,8 +164,6 @@ struct QuadMenu_v
 				append Quads (Menu_v menu:(quadMenu.getMenu(i)) quad_index:i)
 	),
 
-
-
 	/** Get quad index
 	 */
 	function _getQuadIndex quad_index =

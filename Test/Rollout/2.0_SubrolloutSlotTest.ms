@@ -2,8 +2,6 @@ clearListener()
 
 filein( getFilenamePath(getSourceFileName()) + "/../../Lib/Dialog/Dialog.ms" ) -- "./../../Lib/Dialog/Dialog.ms"
 
-
-
 /* INIT DIALOG */
 Dialog 	= Dialog_v title:(getFilenameFile(getSourceFileName()))
 

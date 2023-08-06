@@ -33,13 +33,13 @@ function addRollouts _Rollouts title count slot:slot =
 	DEFAULT SIZE - SET BY CONTROLS AND ROLLOUTS IN DIALOG
 
 --------------------------------------------------------------------------------*/
-function defaultSizeDialog =
+function defaultSizeDialog subrollouts_height: =
 (
 	Dialog     = Dialog_v title:"Test default"
 
 	addControls(Dialog) 5
 
-	addRollouts ( Dialog.Rollouts height:256 )("Rollout A")(1)
+	addRollouts ( Dialog.Rollouts height:subrollouts_height )("Rollout A")(1)
 
 	Dialog.create()
 
@@ -53,11 +53,11 @@ function defaultSizeDialog =
 /*------------------------------------------------------------------------------
 	DEFINED SIZE
 --------------------------------------------------------------------------------*/
-function definedSizesDialog =
+function definedSizesDialog width:256 height:256 =
 (
 	Dialog_size     = Dialog_v title:"Defined size"
 
-	Dialog_size.create width:256 height:256 -- given size is minimal size of dialog also
+	Dialog_size.create width:width height:height -- given size is minimal size of dialog also
 
 	--Dialog_size.register()
 )
@@ -69,7 +69,7 @@ function definedSizesDialog =
 
 --------------------------------------------------------------------------------*/
 
-function iniSavedSizeUnlockedWidth height: =
+function iniSavedSizeUnlockedWidth init_height: =
 (
 	Dialog = Dialog_v title:"Ini saved size"  ini:(getSourceFileName())
 
@@ -77,7 +77,7 @@ function iniSavedSizeUnlockedWidth height: =
 
 	addControls(Dialog) 5
 
-	Dialog.create width:512 height:height lockWidth:false
+	Dialog.create width:512 height:init_height lockWidth:false
 
 	--Dialog.register()
 )
@@ -92,8 +92,11 @@ function iniSavedSizeUnlockedWidth height: =
 
 
 ================================================================================*/
---defaultSizeDialog()
---definedSizesDialog()
 
---iniSavedSizeUnlockedWidth height:256
-iniSavedSizeUnlockedWidth height:#auto
+--defaultSizeDialog()
+--defaultSizeDialog subrollouts_height:256
+
+--definedSizesDialog width:256 height:256
+
+iniSavedSizeUnlockedWidth init_height:256
+--iniSavedSizeUnlockedWidth init_height:#auto

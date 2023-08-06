@@ -1,9 +1,9 @@
 clearListener()
 
-filein( "$userscripts\Library\MAXSCRIPT-UI-framework\Lib\Dialog\Dialog.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/../../../Lib/Dialog/Dialog.ms" ) -- "./../../../Lib/Dialog/Dialog.ms"
 
-/* DIALOG */ 
-Dialog 	    = Dialog_v title:"Test" 
+/* DIALOG */
+Dialog 	    = Dialog_v title:"Test"
 
 _Controls   = Dialog.Controls group:"Main Controls"
 
@@ -11,10 +11,10 @@ fn testCallback val = (print val)
 
 
 /* BUTTON  */
- --_Button	= _Controls.control #button "Button" params:#(#border, false )
- 
--- _Button.Events.add #pressed    ("print (\"Button Pressed\")")
--- _Button.Events.add #rightclick ("print \"Button Rightclick\"")
+ _Button	= _Controls.control #button "Button" params:#(#border, false )
+
+ _Button.Events.add #pressed    ("print (\"Button Pressed\")")
+ _Button.Events.add #rightclick ("print \"Button Rightclick\"")
 
 
 /* EDITTEXT  */
@@ -31,5 +31,5 @@ _OpenFileName = _Controls.control #browsePath "OpenFileName" params:#( #mode,#ge
  _OpenFileName.Events.add #entered ("testCallback") -- Called when the user enters text in the edit box and then presses ENTER or TAB to move the cursor out of the field.
 
 
-/* DIALOG CREATE */ 
+/* DIALOG CREATE */
 Dialog.create()

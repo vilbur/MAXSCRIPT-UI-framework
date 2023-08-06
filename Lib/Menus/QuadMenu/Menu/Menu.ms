@@ -158,10 +158,10 @@ struct Menu_v
 		--Quads[quad_index].addMenu (menu_name)
 		for i = 1 to titles_and_menus.count by 2 do
 		(
-			this.addMenu (titles_and_menus[i+1]) title:(titles_and_menus[i])  --index:index
+			Menu_new = this.addMenu (titles_and_menus[i+1]) title:(titles_and_menus[i])  --index:index
 
 			if separator then
-				this.addSeparator()
+				Menu_new.addSeparator index:1
 		)
 	),
 

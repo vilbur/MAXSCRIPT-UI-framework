@@ -28,12 +28,13 @@ struct MacroscriptGenerator_v
     function generateMacroscriptFile =
     (
         --format "\n"; print "MacroscriptGenerator_v.generateMacroscriptFile()"
-        sections = for _section in getINISetting ini_file collect _section as name
+        sections = for _section in getINISetting ini_file collect _section
+		format "sections:	% \n" sections
 
         this.setGeneralValues(sections)
 
         for macroscript_name in sections do
-			this.parseMacroscript (macroscript_name as string )
+			this.parseMacroscript (macroscript_name )
 
         this.writeToFile()
     ),
@@ -46,12 +47,12 @@ struct MacroscriptGenerator_v
     function setGeneralValues sections =
     (
         --format "\n"; print "MacroscriptGenerator_v.setGeneralValues()"
-        general_keys = if findItem sections #general > 0 then getINISetting ini_file "general" else #()
+        general_keys = if findItem sections "general" > 0 then getINISetting ini_file "general" else #()
 
-        if (index = findItem sections #general) > 0 then
+        if (index = findItem sections "general") > 0 then
 			deleteItem sections index
 
-        for key in general_keys where (general_value = getINISetting ini_file #general key) != "" do
+        for key in general_keys where (general_value = getINISetting ini_file "general" key) != "" do
 			general_params[key as name ] = general_value
 
         /* Add macroscript name */
@@ -75,7 +76,10 @@ struct MacroscriptGenerator_v
 
             for key in macro_keys where (val = getINISetting ini_file macroscript_name key) != "" do macro_data[key as name] = val
 
-            macro_data[#macroscript] = macroscript_name
+            /* ADD MACROSCRIPT NAME */
+            if macro_data[#macroscript] == undefined then
+				macro_data[#macroscript] = macroscript_name
+
 
             /* ADD BUTTONTEXT */
             if macro_data[#buttontext] == undefined then
@@ -92,28 +96,6 @@ struct MacroscriptGenerator_v
         append macroscripts (getMacroscriptData(macroscript_name)( macro_keys ))
     ),
 
-
-
-    --/** Merge data
-    -- *
-    -- */
-    --function mergeData macro_data =
-    --(
-    ----format "\n"; print "MacroscriptGenerator_v.mergeData()"
-    --
-    --
-    --for key in general_params.keys where not this.isFilter(key) do
-    --(
-    --macro_value = if macro_data[key] != undefined then macro_data[key] else ""
-    --
-    --space = if key == #macroscript or macro_value == "" then "" else " "
-    --
-    --macro_data[key] = general_params[key] + space + macro_value
-    --)
-    --
-    --macro_data --return
-    --),
-
     /** Write to file
     *
     */
@@ -126,7 +108,7 @@ struct MacroscriptGenerator_v
 
         /* WRITE FILE START */
         if general_params[#filein] != undefined then
-        format "filein %\n\n" general_params[#filein] to:mcr_file
+			format "filein %\n\n" general_params[#filein] to:mcr_file
 
         try(
 
@@ -179,53 +161,61 @@ struct MacroscriptGenerator_v
         macro_filters = getDataType (macro_data) (#filter)
         macro_code = getDataType (macro_data) (#execute)
 
-        --format "PARAMS_DATA:% \n" macro_params
-        --format "FILTERS_DATA:% \n" macro_filters
-        --format "EXECUTE_DATA:% \n" macro_code
-        --/* WRITE COMMENT */
-        format "/** %\n */\n"macro_data[#buttonText] to:mcr_file
+        /* WRITE COMMENT */
+        format "/** %\n */\n" macro_data[#buttonText] to:mcr_file
 
-        --/* WRITE MACROSCRIPT NAME */
-        format "macroscript%\n"macro_data[#macroscript] to:mcr_file
-        --
-        --/* WRITE PARAMS */
-        this.writeParams ( macro_params )
+        /* WRITE MACROSCRIPT NAME */
+        this.writeMacroscriptName( macro_data )
 
-        --/* OPEN MACROSCRIPT BRACKET */
+        /* WRITE PARAMS */
+        this.writeParams( macro_params )
+
+        /* OPEN MACROSCRIPT BRACKET */
         this.writeOpenBracket()
-        --
-        --/* WRITE FILTERS */
-        this.writeFilters ( macro_filters )
+
+        /* WRITE FILTERS */
+        this.writeFilters( macro_filters )
 
         /* WRITE COMMANDS */
-        this.writeExecute ( macro_code )
-        --/* CLOSE MACROSCRIPT BRACKET */
+        this.writeExecute( macro_code )
+
+        /* CLOSE MACROSCRIPT BRACKET */
         this.writeCloseBracket()
     ),
 
-    /** Get value
-    *
-    */
-    function _getValue data key =
-    (
-        --format "\n"; print "MacroscriptGenerator_v.getValue()"
-        if data[key] != undefined then data[key] else ""
-    ),
+	/** Write macroscript name
+	 *
+	 */
+	function writeMacroscriptName macro_data =
+	(
+		--format "\n"; print "MacroscriptGenerator_v.writeMacroscriptName()"
+		macroscript_name = substituteString (general_params[#macroscript] + macro_data[#macroscript]) " " "_"
 
-    /** Write macroscript params
+        format "macroscript %\n" macroscript_name to:mcr_file
+	),
+
+	/** Write macroscript params
      */
     function writeParams macro_data =
     (
-        format "\n"; print "MacroscriptGenerator_v.writeParams()"
-        --format "GENERAL_PARAMS:% \n" general_params
-        --format "GENERAL_PARAMS:% \n" general_params[#buttontext]
+        --format "\n"; print "MacroscriptGenerator_v.writeParams()"
 
         for key in this.keys_params do
         (
             general_value = this._getValue (general_params)(key)
             macro_value   = this._getValue (macro_data)(key)
 
-            format "%:\"%\"\n" (key as string ) (general_value + macro_value ) to:mcr_file
+			if not (general_value == "" and macro_value == "") then
+			(
+				divider = case of
+				(
+					(general_value == "" or macro_value == ""): ""
+					   (general_value != "" and key == #icon ): "|"
+													  default: " "
+				)
+
+				format "%:\t\"%\"\n" (key as string ) (general_value + divider + macro_value ) to:mcr_file
+			)
         )
     ),
 
@@ -233,36 +223,28 @@ struct MacroscriptGenerator_v
      */
      function writeFilters macro_data =
     (
-        format "\n"; print "MacroscriptGenerator_v.writeFilters()"
-
-        format "FILTERS_DATA:% \n" macro_data
-        /** If contains
-         *
-         */
-        function ifContains _string pattern =
-        (
-            --format "\n"; print "MacroscriptGenerator_v.ifContains()"
-            matchPattern _string pattern:pattern
-        )
+        --format "\n"; print "MacroscriptGenerator_v.writeFilters()"
+        function ifContains _string pattern = matchPattern _string pattern:pattern
 
         for key in this.keys_filter do
         (
             general_value = this._getValue (general_params)(key)
-            macro_value	  = this._getValue (macro_data)(key)
+            macro_value   = this._getValue (macro_data)(key)
 
-            --operator = if macro_value != "" and general_value != "" then " and " else ""
+	if not (general_value == "" and macro_value == "") then
+	(
 
-            condition = case of
-            (
-                (macro_value == "" or general_value == ""):	general_value + macro_value
-                (ifContains macro_value   "or *"):		general_value + " " + macro_value
-                (ifContains general_value "or *"):    macro_value + " " + general_value
-                default: general_value + "\tand\t" + macro_value
-            )
+			condition = case of
+					(
+						(macro_value == "" or general_value == ""):	general_value + macro_value
+								(ifContains macro_value   "or *"):	general_value + " " + macro_value
+								(ifContains general_value "or *"):	macro_value + " " + general_value
+														  default:	general_value + "\tand\t" + macro_value
+					)
 
+				format "\ton %\tdo %\n" (key as string ) (condition) to:mcr_file
+			)
 
-
-            format "\ton %\tdo %\n" (key as string ) (condition) to:mcr_file
         )
     ),
 
@@ -270,16 +252,38 @@ struct MacroscriptGenerator_v
      */
     function writeExecute macro_data =
     (
+		/** Wrap command to quotes
+		*/
+		function wrapCommandToQuotes macro_value =
+		(
+			contain_empty_space  = matchPattern macro_value pattern:"* *"
+			wrapped_in_quotes = matchPattern macro_value pattern:"\"*\""
+			--format "contain_empty_space:	% \n" contain_empty_space
+			--format "wrapped_in_quotes:	% \n" wrapped_in_quotes
+		--format "TEST:	% \n" (not contain_empty_space and not wrapped_in_quotes)
+
+			if not contain_empty_space and not wrapped_in_quotes then
+				macro_value = "\"" + macro_value + "\""
+
+			macro_value --return
+		)
 
         for key in this.keys_code do
         (
+			if (macro_value	= this._getValue (macro_data)(key)) != "" then
+			(
+				macro_value = wrapCommandToQuotes(macro_value)
 
-			general_value = this._getValue (general_params)(key)
-			macro_value= this._getValue (macro_data)(key)
+				general_value = this._getValue (general_params)(key)
 
-			onCommand = if key == #altExecute then key as string + " type" else key as string
+				onCommand = if key == #altExecute then key as string + " type" else key as string
 
-			format "\n\ton % do (\n\t\t%\n\t)\n" onCommand (general_value + macro_value ) to:mcr_file
+				/* USE ONLY MACROSCRIPT EXECUTE IF STARTS WITH SAME WORD AS GENERAL EXECUTE */
+				command = if (filterString macro_value " ")[1] == (filterString general_value " ")[1] then macro_value else general_value + " " +  macro_value
+
+				format "\n\ton % do (\n\t\t%\n\t)\n" onCommand command to:mcr_file
+
+			)
         )
     ),
 
@@ -302,6 +306,16 @@ struct MacroscriptGenerator_v
     ),
 
 
+
+    /** Get value
+    *
+    */
+    function _getValue data key =
+    (
+        --format "\n"; print "MacroscriptGenerator_v.getValue()"
+        if data[key] != undefined then data[key] else ""
+    ),
+
     /**
      */
     on create do
@@ -310,6 +324,6 @@ struct MacroscriptGenerator_v
     --for prop in #() where getProperty this prop == undefined do -- CHECK CONSTRUCT PROPERTIES -- Array of this struct properties necessary to run
     --throw ("\n\n\nUNDEFINED CONSTRUCT PROPERTY\n\n\nSTRUCT:\n\n"+ ((filterString( classof this as string )"(:")[2]) +"\n\n\nPROPERTY:\n\n"+ prop )
 
-        this.generateMacroscriptFile()
+        --this.generateMacroscriptFile()
     )
 )

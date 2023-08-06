@@ -46,8 +46,8 @@ struct ContentSubrollouts_v
 	 */
 	function _createRollouts paths ini_file =
 	(
-		format "\n"; print ("ContentSubrollouts_v._createRollouts()")
-		format "ini_file	= % \n" ini_file
+		--format "\n"; print ("ContentSubrollouts_v._createRollouts()")
+		--format "ini_file	= % \n" ini_file
 		for path in paths do
 			append Rollouts ( RolloutParrent.createNewRollout (path)(ini_file) )
 	),

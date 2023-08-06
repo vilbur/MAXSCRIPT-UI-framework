@@ -10,25 +10,25 @@ struct Ini_v
 (
 	/* required */
 	_path,	-- full pah to *.ini file*
-	
+
 	/** Set ini
 	 */
 	function setIni ini_path =
 	(
-		if( ini_path == undefined ) then 
+		if( ini_path == undefined ) then
 			return false
 		--print "Ini_v.setIni()"
-		--format "ini_path	= % \n" ini_path	
+		--format "ini_path	= % \n" ini_path
 		if( matchPattern ini_path pattern:@"*.ini" ) then
 			_path = ini_path
-			
+
 		else if( matchPattern ini_path pattern:@"*.ms" or matchPattern ini_path pattern:@"*.mcr" ) then
 			_path =  (getFilenamePath(ini_path) + getFilenameFile(ini_path) + ".ini")
-		
+
 		else
 			messageBox ("Path to ini file is not valid\n\n"+ini_path) title:"Ini file error"
 	),
-	
+
 	/** Ini save control state
 	  * @property	string|name	_section
 	  * @property	string|name	key
@@ -38,7 +38,7 @@ struct Ini_v
 	(
 		setINISetting _path ( _section as string ) ( key as string ) ( value as string )
 	),
-	
+
 	/** Ini load control state
 	 */
 	function load _section _key default:undefined =
@@ -58,14 +58,14 @@ struct Ini_v
 	/** Format string value to valid datatype
 	 */
 	function _convertDatatype _string =
-	(	
+	(
 		--_string = substituteString _string "\\" "\\\\"
 
 		rx	= dotNetClass "System.Text.RegularExpressions.RegEx"
 		rx_options	= dotNetClass "System.Text.RegularExpressions.RegexOptions"
-		
+
 		is_variable = (rx.match _string "^\s*(\d+|true|false|undefined|unsupplied|\(\s*color\s+\d+\s+\d+\s+\d+\s*\))\s*$" rx_options.IgnoreCase ).success
-	
+
 		if not is_variable and (is_string = ( rx.match _string "(^'*[A-Za-z0-1_\s]+'*$)" rx_options.IgnoreCase ).success ) then
 		(
 			@"" + _string -- IS STRING
@@ -75,14 +75,14 @@ struct Ini_v
 			try((execute(_string)))catch(_string) -- IS VARIABLE
 		)
 	),
-	
+
 	/** Get path
 	 */
 	function getPath =
 	(
 		_path --return
 	),
-	
+
 	/** Open ini file in Notepad++
 	 */
 	function open =
@@ -90,7 +90,7 @@ struct Ini_v
 		--format "\n"; print "Ini_v.open()"
 		ShellLaunch  "Notepad++" ("\""+_path+"\"")
 	),
-	
+
 	/** Delete ini file
 	 */
 	function delete =
@@ -122,7 +122,7 @@ struct Ini_v
 		this.isDefined() and load_values_on_init
 	),
 
-	
+
 	private
 
 	/** Combine path
@@ -142,15 +142,15 @@ struct Ini_v
 	(
 		if( dir #get == undefined ) then
 			dir (( pathConfig.GetDir #temp ) + "\ini-files")
-		
+
 		if( file #get == undefined ) then
 			file ( (getFilenameFile id) + ".ini" )
-			
+
 		this._combinePath()
 	),
-	
-	/** Get\set value of property 
-	  * @param	string|name key	Name  of property E.G.: "foo_key" OR #foo_key 
+
+	/** Get\set value of property
+	  * @param	string|name key	Name  of property E.G.: "foo_key" OR #foo_key
 	  * @param	string|#get value	Value of property
 	  *
 	  * @return	string|self Value or self
@@ -168,7 +168,7 @@ struct Ini_v
 		) else
 			getProperty this ( key as string ) --return
 	),
-	
+
 	/** Escape path
 	 */
 	function _escapePath path_for_escape =
@@ -176,8 +176,8 @@ struct Ini_v
 		--if( path_for_escape != #get ) then ( substituteString ( path_for_escape as string ) "\\" "\\\\" ) else path_for_escape  --return
 		if( path_for_escape != #get ) then ( pathConfig.normalizePath path_for_escape ) else path_for_escape  --return
 	),
-	
-	/**  
+
+	/**
 	 */
 	on create do
 	(

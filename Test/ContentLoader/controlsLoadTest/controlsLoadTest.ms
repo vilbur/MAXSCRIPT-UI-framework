@@ -1,6 +1,6 @@
 clearListener()
 
-filein( getFilenamePath(getSourceFileName()) + "/../../../Lib/ContentLoader/ContentLoader.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/../../../Lib/ContentLoader/ContentLoader.ms" ) -- "./../../../Lib/ContentLoader/ContentLoader.ms"
 
 try( destroyDialog Groupbox_test )catch()
 

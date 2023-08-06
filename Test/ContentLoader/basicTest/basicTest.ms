@@ -1,6 +1,6 @@
 clearListener()
 
-/** INCLUDE UI 
+/** INCLUDE UI
  */
 filein( getFilenamePath(getSourceFileName()) + "/../../../Lib/ContentLoader/ContentLoader.ms" )
 
@@ -12,11 +12,12 @@ function loadContentTest dir_name =
 
 	ContentLoader	= ContentLoader_v path:(current_dir+"/"+dir_name)
 
+	ContentLoader.Dialog.width  = 256
 	ContentLoader.Dialog.height = 1024
-	
-	(ContentLoader.Dialog.get (#test)).title = "Title changed" -- change property of rollout
-	
-	ContentLoader.create() --return 
+
+	(ContentLoader.Dialog.get (#ROLLOUT_test)).title = "Title changed" -- change property of rollout
+
+	ContentLoader.create() --return
 )
 
 --/** Add extra rollout
@@ -24,7 +25,7 @@ function loadContentTest dir_name =
 --function addRolloutByCodeTest name =
 --(
 --	_rollout = DialogsGlobal.get(name)
---	
+--
 --	_controls_A = _rollout.controls groupbox:"Groupbox A" -- get new container for controls
 --	_controls_B = _rollout.controls groupbox:"Groupbox B" -- get new container for controls
 --	_controls_A.button ("button by code")
@@ -36,5 +37,4 @@ function loadContentTest dir_name =
 	RUN TESTR
 -----------------------------------------*/
 
- Dialog = loadContentTest("Test-Content")
-
+Dialog = loadContentTest("Test-Content")
