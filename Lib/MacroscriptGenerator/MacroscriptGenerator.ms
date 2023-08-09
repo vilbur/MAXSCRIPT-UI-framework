@@ -8,15 +8,16 @@ struct MacroscriptGenerator_v
     /* properties */
     mcr_file,
 
-
-    --macroscripts= Dictionary(),
     macroscripts = #(),
 
     general_params = Dictionary(),
 
-    keys_params = #( #category, #buttontext, #toolTip, #icon ),
+    keys_params = #( #category, #buttontext, #tooltip, #icon ),
     keys_filter = #( #IsVisible, #IsChecked, #isEnabled, #isIndeterminate ),
-    keys_code   = #( #execute, #AltExecute ),
+    keys_code   = #( #execute, #altExecute ),
+
+	all_keys = keys_params + keys_filter + keys_code + #(#macroscript),
+
 
     /* dependency */
     /* reference */
@@ -28,15 +29,31 @@ struct MacroscriptGenerator_v
     function generateMacroscriptFile =
     (
         --format "\n"; print "MacroscriptGenerator_v.generateMacroscriptFile()"
+		--format "ini_file:	% \n" (filenameFromPath( ini_file ))
+		--format "all_keys:	% \n" all_keys
+		this._setOutputFile()
+
         sections = for _section in getINISetting ini_file collect _section
-		format "sections:	% \n" sections
 
         this.setGeneralValues(sections)
 
         for macroscript_name in sections do
-			this.parseMacroscript (macroscript_name )
+		(
+			--format "\n\n"
+			--format "MACROSCRIPT_NAME:	% \n" MACROSCRIPT_NAME
+			macro_data = this.parseMacroscript (macroscript_name )
 
-        this.writeToFile()
+			this._autoFillValuesByScriptName (macroscript_name) (macro_data)
+
+			this._mergeMacroAndGeneralData(macro_data)
+
+			this._replacePlaceholders (macro_data)
+
+			append macroscripts (macro_data)
+		)
+
+		this.writeToFile(macro_data)
+
     ),
 
     private
@@ -66,6 +83,7 @@ struct MacroscriptGenerator_v
     function parseMacroscript macroscript_name =
     (
         --format "\n"; print "MacroscriptGenerator_v.parseMacroscript()"
+		--format "MACROSCRIPT_NAME:	% \n" macroscript_name
         /** Get macroscript data
          *
          */
@@ -76,35 +94,182 @@ struct MacroscriptGenerator_v
 
             for key in macro_keys where (val = getINISetting ini_file macroscript_name key) != "" do macro_data[key as name] = val
 
-            /* ADD MACROSCRIPT NAME */
-            if macro_data[#macroscript] == undefined then
-				macro_data[#macroscript] = macroscript_name
-
-
-            /* ADD BUTTONTEXT */
-            if macro_data[#buttontext] == undefined then
-			 macro_data[#buttontext] = substituteString macroscript_name "_" " "
-
             macro_data --return
         )
 
         macro_keys = getINISetting ini_file macroscript_name
 
-        if macro_keys.count == 0 then
-            return undefined
-
-        append macroscripts (getMacroscriptData(macroscript_name)( macro_keys ))
+		getMacroscriptData(macroscript_name)( macro_keys )
     ),
+
+	/** Auto fill values
+	  * Set ButtonText by script name E.G.: "Script_Name" >>> "Script Name"
+	  * Set executed by script name without change
+	  *
+	  */
+	function _autoFillValuesByScriptName macroscript_name &macro_data =
+	(
+		--format "\n"; print "MacroscriptGenerator_v.autoFillValues()"
+		--format "MACRO_DATA IN:	% \n" macro_data
+		/* ADD MACROSCRIPT NAME */
+		if macro_data[#macroscript] == undefined then
+			macro_data[#macroscript] = macroscript_name
+
+
+		/* ADD BUTTONTEXT */
+		if macro_data[#buttontext] == undefined then
+		 macro_data[#buttontext] = substituteString macroscript_name "_" " "
+
+		/* ADD EXECUTED */
+		if macro_data[#execute] == undefined then
+			macro_data[#execute] =  "\"" +(substituteString macroscript_name " " "")+ "\""
+
+		--format "MACRO_DATA:	% \n" macro_data
+		macro_data --return
+	),
+
+	/** Merge macro and general data
+	  *
+	  */
+	function _mergeMacroAndGeneralData &macro_data =
+	(
+		--format "\n"; print "MacroscriptGenerator_v._mergeMacroAndGeneralData()"
+
+		fn isParameter key = findItem this.keys_params key > 0
+		fn isFilter    key = findItem this.keys_filter key > 0
+		fn isCode      key = findItem this.keys_code   key > 0
+
+
+        for key in this.all_keys do
+		(
+            general_value =  if general_params[key] != undefined then general_params[key] else ""
+            macro_value   =  if macro_data[key]    != undefined then macro_data[key] else ""
+
+			if not (general_value == "" and macro_value == "") then
+				merged_value = case of
+				(
+					(isParameter key):	this._mergeParams  (macro_value) (general_value) (key)
+					(isFilter key):	this._mergeFilters (macro_value) (general_value) (key)
+					(isCode key):	this._mergeCode    (macro_value) (general_value)
+				)
+
+			if merged_value != undefined then
+				macro_data[key] = merged_value
+		)
+
+		macro_data --return
+	),
+
+	/** Write macroscript name
+	 *
+	 */
+	function writeMacroscriptName macro_data =
+	(
+		--format "\n"; print "MacroscriptGenerator_v.writeMacroscriptName()"
+		macroscript_name = substituteString (general_params[#macroscript] + macro_data[#macroscript]) " " "_"
+
+        format "macroscript %\n" macroscript_name to:mcr_file
+	),
+
+	/** Merge macroscript params
+     */
+    function _mergeParams macro_value general_value key =
+    (
+        --format "\n"; print "MacroscriptGenerator_v._mergeParams()"
+
+		divider = case of
+		(
+			(general_value == "" or macro_value == ""): ""
+			   (general_value != "" and key == #icon ): "|"
+											  default: " "
+		)
+
+		general_value + divider + macro_value --return
+    ),
+
+    /** Merge macroscript filters
+     */
+     function _mergeFilters macro_value general_value key =
+    (
+        --format "\n"; print "MacroscriptGenerator_v._mergeFilters()"
+        function ifContains _string pattern = matchPattern _string pattern:pattern
+
+		--format "\ton %\tdo %\n" (key as string ) (condition) to:mcr_file
+
+		case of
+		(
+			(macro_value == "" or general_value == ""): general_value + macro_value
+					(ifContains macro_value   "or *"):	general_value + " " + macro_value
+					(ifContains general_value "or *"):	macro_value + " " + general_value
+					default:	general_value + "\tand\t" + macro_value
+		)
+    ),
+
+    /** Merge macroscript code
+     */
+    function _mergeCode macro_value general_value =
+    (
+		--/* USE ONLY MACROSCRIPT EXECUTE IF STARTS WITH SAME WORD AS GENERAL EXECUTE */
+		if macro_value != "" then
+			if (filterString macro_value " ")[1] == (filterString general_value " ")[1] then macro_value else general_value + " " +  macro_value
+    ),
+
+	/** Replace placeholders
+	  *
+	  */
+	function _replacePlaceholders &macro_data  =
+	(
+		--format "\n\n"; print "MacroscriptGenerator_v.replacePlaceholders()"
+		--format "MACRO_DATA IN:	% \n" macro_data
+
+		pattern = this._getPatternForAllKeys()
+
+        for key in this.all_keys where macro_data[key] != undefined do
+		(
+			if (match = this.regexGetMatches macro_data[key] pattern).count > 0 then
+			(
+				replace_with_key = match[1][2] as name
+
+				if macro_data[replace_with_key] != undefined then
+					macro_data[key] = substituteString (macro_data[key]) (match[1][1]) (macro_data[replace_with_key])
+			)
+		)
+
+		macro_data --return
+	),
+
+	function regexGetMatches _string pattern ignorecase:true =
+	(
+		rx         = dotNetClass "System.Text.RegularExpressions.RegEx"
+		rx_options	= dotNetClass "System.Text.RegularExpressions.RegexOptions"
+
+		matches = if (ignorecase) then rx.matches _string pattern rx_options.IgnoreCase else rx.matches _string pattern
+
+		(for matchIdx = 0 to matches.count-1 collect for groupIdx = 0 to matches.item[matchIdx].groups.count-1 collect ( matches.item[matchIdx].groups.item[groupIdx].value )) --return
+	),
+
+	/** Get pattern for all keys
+	  *
+	  */
+	function _getPatternForAllKeys =
+	(
+		--format "\n"; print "MacroscriptGenerator_v._getPatternForAllKeys()"
+		all_keys_string = ""
+
+		for key in this.all_keys do all_keys_string += key as string + "|"
+
+		 "{(" + ( trimRight all_keys_string "|") + ")}"
+	),
 
     /** Write to file
     *
     */
-    function writeToFile =
+    function writeToFile macro_data =
     (
-        format "\n"; print "MacroscriptGenerator_v.writeToFile()"
+        --format "\n"; print "MacroscriptGenerator_v.writeToFile()"
 
         /* CREATE FILE */
-        this.mcr_file = createFile(( trimRight ini_file "ini" ) + "mcr")
+        this.mcr_file = createFile this.mcr_file
 
         /* WRITE FILE START */
         if general_params[#filein] != undefined then
@@ -114,7 +279,7 @@ struct MacroscriptGenerator_v
 
             /* WRITE EACH MACROSCRIPT */
             for macro_data in macroscripts do
-            this.writeSectionsToFile(macro_data)
+				this.writeSectionsToFile(macro_data)
 
         )catch(
 
@@ -130,36 +295,11 @@ struct MacroscriptGenerator_v
         close this.mcr_file
     ),
 
-
     /** Write to file
     *
     */
     function writeSectionsToFile macro_data =
     (
-        format "\n"; print "MacroscriptGenerator_v.writeToFile()"
-        format "MACRO_DATA:% \n" macro_data
-
-        /** Get data type
-        *
-        */
-        function getDataType macro_data type =
-        (
-            --format "\n"; print "MacroscriptGenerator_v.getDataType()"
-            data = Dictionary()
-
-            for data_pair in macro_data where case type of (
-                #param:findItem this.keys_params data_pair.key > 0
-                #filter:matchPattern (data_pair.key as string ) pattern:"IS*"
-                #execute: matchPattern (data_pair.key as string ) pattern:"*EXECUTE"
-             )
-            do data[data_pair.key] = data_pair.value
-
-            data --return
-        )
-
-        macro_params= getDataType (macro_data) (#param)
-        macro_filters = getDataType (macro_data) (#filter)
-        macro_code = getDataType (macro_data) (#execute)
 
         /* WRITE COMMENT */
         format "/** %\n */\n" macro_data[#buttonText] to:mcr_file
@@ -168,124 +308,59 @@ struct MacroscriptGenerator_v
         this.writeMacroscriptName( macro_data )
 
         /* WRITE PARAMS */
-        this.writeParams( macro_params )
+        this._writeParams( macro_data )
 
         /* OPEN MACROSCRIPT BRACKET */
         this.writeOpenBracket()
 
         /* WRITE FILTERS */
-        this.writeFilters( macro_filters )
+        this._writeFilters( macro_data )
 
         /* WRITE COMMANDS */
-        this.writeExecute( macro_code )
+        this._writeCode( macro_data )
 
         /* CLOSE MACROSCRIPT BRACKET */
         this.writeCloseBracket()
     ),
 
-	/** Write macroscript name
-	 *
-	 */
-	function writeMacroscriptName macro_data =
-	(
-		--format "\n"; print "MacroscriptGenerator_v.writeMacroscriptName()"
-		macroscript_name = substituteString (general_params[#macroscript] + macro_data[#macroscript]) " " "_"
 
-        format "macroscript %\n" macroscript_name to:mcr_file
+    /** Merge macroscript code
+     */
+    function _writeParams macro_data =
+    (
+        for key in this.keys_params where macro_data[key] != undefined do
+			format "%:\t\"%\"\n" ( key as string ) (macro_data[key]) to:mcr_file
+    ),
+
+    /** Merge macroscript filters
+     */
+     function _writeFilters macro_data =
+    (
+        for key in this.keys_filter where macro_data[key] != undefined do
+			format "\ton %\tdo %\n" (key as string ) (macro_data[key]) to:mcr_file
+    ),
+
+    /** Merge macroscript code
+     */
+    function _writeCode macro_data =
+    (
+		--format "\n"; print "MacroscriptGenerator_v._writeCode()"
+
+        for key in this.keys_code where macro_data[key] != undefined do
+			format "\n on % do (\n\t\t%\n\t)\n" ( key as string + (if key == #altExecute then " type" else "")) (macro_data[key]) to:mcr_file
+    ),
+
+	/** Set mcr file
+	  *
+	  */
+	function _setOutputFile =
+	(
+		--format "\n"; print "MacroscriptGenerator_v._setOutputFile()"
+		this.mcr_file = ( trimRight this.ini_file ".ini" )
+
+		if not matchPattern  this.mcr_file pattern:"*.mcr" then
+			 this.mcr_file += ".mcr"
 	),
-
-	/** Write macroscript params
-     */
-    function writeParams macro_data =
-    (
-        --format "\n"; print "MacroscriptGenerator_v.writeParams()"
-
-        for key in this.keys_params do
-        (
-            general_value = this._getValue (general_params)(key)
-            macro_value   = this._getValue (macro_data)(key)
-
-			if not (general_value == "" and macro_value == "") then
-			(
-				divider = case of
-				(
-					(general_value == "" or macro_value == ""): ""
-					   (general_value != "" and key == #icon ): "|"
-													  default: " "
-				)
-
-				format "%:\t\"%\"\n" (key as string ) (general_value + divider + macro_value ) to:mcr_file
-			)
-        )
-    ),
-
-    /** Write macroscript filters
-     */
-     function writeFilters macro_data =
-    (
-        --format "\n"; print "MacroscriptGenerator_v.writeFilters()"
-        function ifContains _string pattern = matchPattern _string pattern:pattern
-
-        for key in this.keys_filter do
-        (
-            general_value = this._getValue (general_params)(key)
-            macro_value   = this._getValue (macro_data)(key)
-
-	if not (general_value == "" and macro_value == "") then
-	(
-
-			condition = case of
-					(
-						(macro_value == "" or general_value == ""):	general_value + macro_value
-								(ifContains macro_value   "or *"):	general_value + " " + macro_value
-								(ifContains general_value "or *"):	macro_value + " " + general_value
-														  default:	general_value + "\tand\t" + macro_value
-					)
-
-				format "\ton %\tdo %\n" (key as string ) (condition) to:mcr_file
-			)
-
-        )
-    ),
-
-    /** Write macroscript code
-     */
-    function writeExecute macro_data =
-    (
-		/** Wrap command to quotes
-		*/
-		function wrapCommandToQuotes macro_value =
-		(
-			contain_empty_space  = matchPattern macro_value pattern:"* *"
-			wrapped_in_quotes = matchPattern macro_value pattern:"\"*\""
-			--format "contain_empty_space:	% \n" contain_empty_space
-			--format "wrapped_in_quotes:	% \n" wrapped_in_quotes
-		--format "TEST:	% \n" (not contain_empty_space and not wrapped_in_quotes)
-
-			if not contain_empty_space and not wrapped_in_quotes then
-				macro_value = "\"" + macro_value + "\""
-
-			macro_value --return
-		)
-
-        for key in this.keys_code do
-        (
-			if (macro_value	= this._getValue (macro_data)(key)) != "" then
-			(
-				macro_value = wrapCommandToQuotes(macro_value)
-
-				general_value = this._getValue (general_params)(key)
-
-				onCommand = if key == #altExecute then key as string + " type" else key as string
-
-				/* USE ONLY MACROSCRIPT EXECUTE IF STARTS WITH SAME WORD AS GENERAL EXECUTE */
-				command = if (filterString macro_value " ")[1] == (filterString general_value " ")[1] then macro_value else general_value + " " +  macro_value
-
-				format "\n\ton % do (\n\t\t%\n\t)\n" onCommand command to:mcr_file
-
-			)
-        )
-    ),
 
     /** Write open bracket
      *
@@ -305,8 +380,6 @@ struct MacroscriptGenerator_v
         format ")\n\n"to:mcr_file
     ),
 
-
-
     /** Get value
     *
     */
@@ -324,6 +397,6 @@ struct MacroscriptGenerator_v
     --for prop in #() where getProperty this prop == undefined do -- CHECK CONSTRUCT PROPERTIES -- Array of this struct properties necessary to run
     --throw ("\n\n\nUNDEFINED CONSTRUCT PROPERTY\n\n\nSTRUCT:\n\n"+ ((filterString( classof this as string )"(:")[2]) +"\n\n\nPROPERTY:\n\n"+ prop )
 
-        --this.generateMacroscriptFile()
+        this.generateMacroscriptFile()
     )
 )
