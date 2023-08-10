@@ -17,14 +17,16 @@ struct RolloutResizer_v
 		--format "\n"; print "RolloutResizer_v._resizeSubrollouts()"
 		--print "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
 		--format "_Rollout.id	= % \n" _Rollout.id
-		dialog_height = execute( _Rollout.id as string + ".height" )
+		--format "_Rollout.height:	% \n" _Rollout.height
+		--format "_Rollout.RCI:	% \n" _Rollout.RCI
+		--format "_Rollout.RCI.height:	% \n" _Rollout.RCI.height
+
+		if ( dialog_height = _Rollout.RCI.height ) == undefined then
+			dialog_height = execute( _Rollout.id as string + ".height" )
 
 		dialog_controls = execute( _Rollout.id as string + ".controls" )
 
 		subrollout_slots = for control in dialog_controls where classOf control == subRollout collect control
-
-		--dialog_height = execute( _Rollout.id as string + ".height" )
-		--format "dialog_height	= % \n" dialog_height
 
 		if subrollout_slots.count > 0 then
 		(

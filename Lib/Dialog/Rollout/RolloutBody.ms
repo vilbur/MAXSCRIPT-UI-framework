@@ -57,7 +57,7 @@
 		--format "\n"; print "RolloutBody.Subrollouts()"
 		--format "height	= % \n" height
 
-		local Subrollouts = Subrollouts_v parent_rollout_id:(this.getFullId()) width:(if width != unsupplied then width else this.width) height:height
+		local Subrollouts = Subrollouts_v slot:slot parent_rollout_id:(this.getFullId()) width:(if width != unsupplied then width else this.width) height:height
 
 		append _Controls Subrollouts
 
@@ -236,7 +236,7 @@
 
 			this.validateid()
 		)
-
+		--format "id:	% \n" id
 		id = id as name
 	),
 

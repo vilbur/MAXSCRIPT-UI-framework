@@ -13,7 +13,7 @@ fn testCallback val = (print val)
 /* BUTTON  */
  _Button	= _Controls.control #button "Button" params:#(#border, false )
 
- _Button.Events.add #pressed    ("print (\"Button Pressed\")")
+ _Button.Events.add #pressed    ("format \"EventFired:	% \n\" EventFired")
  _Button.Events.add #rightclick ("print \"Button Rightclick\"")
 
 

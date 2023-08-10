@@ -158,6 +158,7 @@ struct Menu_v
 		--Quads[quad_index].addMenu (menu_name)
 		for i = 1 to titles_and_menus.count by 2 do
 		(
+			--Menu_new = this.addMenu (titles_and_menus[i+1]) title:(titles_and_menus[i])  --index:index
 			Menu_new = this.addMenu (titles_and_menus[i+1]) title:(titles_and_menus[i])  --index:index
 
 			if separator then
@@ -255,7 +256,7 @@ struct Menu_v
 	 */
 	function moveItem index_or_title index =
 	(
-		format "\n"; print "Menu_v.moveItem()"
+		--format "\n"; print "Menu_v.moveItem()"
 		menu_item = this.removeItem (index_or_title)
 
 		 if index == -1 then
@@ -467,7 +468,7 @@ struct Menu_v
 		add_on_end_of_menu = index == unsupplied or index > menu.numItems()
 
 		if index != unsupplied and index > (menu.numItems() +1 ) or menu.numItems() == 0 then
-			format "\n\n----------- WARNING -----------\nSEPARATOR IS ADDED ON END OF MENU\nMenu: \"%\"\nindex: % \nitems in menu: %\n\n" this.name index (menu.numItems())
+			format "\n\n----------- WARNING ----------------------\n\nSEPARATOR IS ADDED ON END OF MENU\n\n\tMenu: \"%\"\n\tindex: % \n\titems in menu: %\n\n" this.name index (menu.numItems())
 
 		if add_on_end_of_menu then
 			index = menu.numItems() +1
@@ -514,7 +515,11 @@ struct Menu_v
 		--format "\n"; print "Menu_v._setTitleToItem()"
 		--format "item	= % \n" item
 		--format "title	= % \n" title
+
+		--title = toUpper title
+
 		item.setTitle title
+
 
 		item.setUseCustomTitle true
 

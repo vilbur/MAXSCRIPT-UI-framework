@@ -19,38 +19,43 @@ struct SubolloutsCreator_v
 	function addSubRollouts _Rollout =
 	(
 		--format "\n"; print "SubolloutsCreator_v.addSubRollouts()"
-
-		this._Rollout = _Rollout
+		--print "============================================================="
+		--format "_ROLLOUT:	% \n" _Rollout.id
 
 		/** Get subrollouts slot
 		 *
 		 */
-		function getSubrolloutsSlot slot =
+		function getSubrolloutsSlot SubrolloutsSlots slot =
 		(
-			for Subrollouts in  this._Rollout.RCI.Def.controls where classOf Subrollouts == SubRollout and matchPattern (Subrollouts as string ) pattern:( "SubRollout:"+slot as string ) do
-				return Subrollouts
+			--format "\n"; print "SubolloutsCreator_v.getSubrolloutsSlot()"
+
+			local SubrolloutsSlot
+
+			for Subrollouts in SubrolloutsSlots where matchPattern (Subrollouts as string ) pattern:( "SubRollout:"+slot as string ) do
+				SubrolloutsSlot = Subrollouts
+
+			SubrolloutsSlot --return
 		)
 
+		SubrolloutsSlots = for Subrollouts in _Rollout.RCI.Def.controls where classOf Subrollouts == SubRollout collect Subrollouts
+
+		/* GET ALL Rollouts from Subrollouts_v.Rollouts */
 		for Subrollouts in _Rollout.getSubrollouts() do
 		(
+			SubrolloutsSlot = getSubrolloutsSlot(SubrolloutsSlots)(Subrollouts.slot)
 
-			subrollout_ids	= for Subrollout in Subrollouts.Rollouts collect Subrollout.id
+			subrollouts_in_slot	= for Subrollout in Subrollouts.Rollouts collect Subrollout.id
 
-			rollouts_order	= this._getOrderOfsubrollouts(Subrollouts)
+			rollouts_order	= this._getOrderOfsubrollouts(_Rollout)(Subrollouts)
 
-			Subrollouts_slot = getSubrolloutsSlot(Subrollouts.slot)
-
-			for subrollout_id in rollouts_order where ( index = findItem subrollout_ids subrollout_id ) > 0 do
+			for subrollout_id in rollouts_order where ( index = findItem subrollouts_in_slot subrollout_id ) > 0 do
 			(
-				start_time = timestamp()
 				_Subrollout = Subrollouts.Rollouts[index]
 
 				if _Subrollout.temporary_created then
 					try(destroyDialog _Subrollout.RCI.def )catch()
 
-				AddSubRollout Subrollouts_slot	_Subrollout.RCI.def rolledUp:(this._getRolledUpState(subrollout_id))
-
-				--format "%	% \n"  ((timestamp()) - start_time) _Subrollout.title
+				AddSubRollout SubrolloutsSlot	_Subrollout.RCI.def rolledUp:(this._getRolledUpState(subrollout_id))
 
 				this.addSubRollouts (_Subrollout)
 			)
@@ -63,7 +68,7 @@ struct SubolloutsCreator_v
 	 (
 		--format "\n\n\n\n=====================================	SubolloutsCreator_v.addSubrolloutSlot() %.%	=====================================\n" ( _Rollout.id as string ) ( Subrollouts.slot as string );
 
-		this._Rollout = _Rollout
+		--this._Rollout = _Rollout
 
 		slot_id = Subrollouts.slot as string
 
@@ -90,7 +95,7 @@ struct SubolloutsCreator_v
 
 	/** Get order ofsubrollouts
 	 */
-	function _getOrderOfsubrollouts Subrollouts =
+	function _getOrderOfsubrollouts _Rollout Subrollouts =
 	(
 		--format "\n"; print "SubolloutsCreator_v._getOrderOfsubrollouts()"
 		result_order = #()

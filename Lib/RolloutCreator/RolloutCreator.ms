@@ -40,7 +40,7 @@ struct RolloutCreator_v
 
 		this._createSubrollouts(_Rollout)
 
-		format "\n\n-------------------------------------	RolloutCreator_v.createRollout() id:#%	-------------------------------------\n"  ( _Rollout.id as string );
+		--format "\n\n-------------------------------------	RolloutCreator_v.createRollout() id:#%	-------------------------------------\n"  ( _Rollout.id as string );
 
 
 		if _Rollout.width == unsupplied and width != unsupplied then
@@ -82,7 +82,12 @@ struct RolloutCreator_v
 
 		--this._setRolloutGlobal(_Rollout)
 		/* EDIT end */
-		_Rollout.RCI.end() --return
+		--_Rollout.RCI.end() --return
+		_Rollout_def =_Rollout.RCI.end() --return
+
+		--format "_ROLLOUT_DEF:---------------------------------------------------------------------\n\n\n% \n"_Rollout.RCI
+
+		_Rollout_def  --return
 	),
 
 
@@ -174,7 +179,7 @@ struct RolloutCreator_v
 	function setSubrolloutDefaultSlots _Rollout =
 	(
 		--format "\n"; print "RolloutCreator_v.setSubrolloutDefaultSlots()"
-		for i = 1 to (Subrollouts_all = _Rollout.getSubrollouts()).count do
+		for i = 1 to (Subrollouts_all = _Rollout.getSubrollouts()).count where Subrollouts_all[i].slot == unsupplied do
 			Subrollouts_all[i].slot = if Subrollouts_all.count == 1 then "Subrollouts" else  "Subrollouts_" + i as string
 	),
 
