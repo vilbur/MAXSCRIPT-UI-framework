@@ -255,13 +255,23 @@ struct ControlCreator_v
 		else if _Control.type == #Radiobuttons then
 			(RadioButtons_v()).setParams(_Control)
 	),
-	/** Add to auto run
+	/** Add to auto run after dialog is created
+	  *
+	  * Auto run is for control types: checkbox|checkbutton|radiobuttons
+	  *
+	  * If control has event #changed and value is true, the it is added to autorun events
+	  *
 	 */
 	function addToAutoRunEvents _Control =
 	(
-		--format "\n"; print "ControlCreator_v.addToAutoRunEvents()"
-		if( Event = _Control.Events.get #changed ) != undefined and _Control.Params.getVal "checked" == true then
-			append AUTORUN_EVENTS Event.CODE
+
+		if _Control.type == #checkbox or _Control.type == #checkbutton or _Control.type == #radiobuttons then
+		(
+			--format "\n"; print "ControlCreator_v.addToAutoRunEvents()"
+			--format "_Control.Params.getVal #checked:	% \n" (_Control.Params.getVal #checked)
+			if( Event = _Control.Events.get #changed ) != undefined and _Control.Params.getVal #checked == true then
+				AUTORUN_EVENTS[_Control.id as name ] = Event.CODE
+		)
 	),
 
 	/** _is controls

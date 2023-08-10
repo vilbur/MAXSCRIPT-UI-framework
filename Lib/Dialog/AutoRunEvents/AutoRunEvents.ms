@@ -7,29 +7,32 @@
 struct AutoRunEvents_v
 (
 
-		
+
 	/** Execute macros
 	 */
 	function executeMacros =
 	(
 		--format "\n"; print "AutoRunEvents_v.executeMacros()"
-		for macro in AUTORUN_EVENTS do
-			execute macro
-			
-		AUTORUN_EVENTS = #()
+
+		for data_pair in AUTORUN_EVENTS do
+		(
+			print ("Autorun: " + data_pair.key as string )
+
+			execute data_pair.value
+		)
+
+		AUTORUN_EVENTS = Dictionary()
 	),
-		
+
 	private
-	
-	
-	/**  
+
+
+	/**
 	 */
 	on create do
 	(
 		--print("AutoRun_v.onCreate()")
 		--ConstructPropeties test:this
 	)
-	
+
 )
-
-

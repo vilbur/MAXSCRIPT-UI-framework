@@ -1,6 +1,6 @@
-filein( getFilenamePath(getSourceFileName()) + "/EventFiredCreator/EventFiredCreator.ms" ) -- "./EventFiredCreator/EventFiredCreator.ms"
-filein( getFilenamePath(getSourceFileName()) + "/DefaultControlEvents/DefaultControlEvents.ms" ) -- "./DefaultControlEvents/DefaultControlEvents.ms"
-filein( getFilenamePath(getSourceFileName()) + "/EventTypes/EventTypes.ms" ) -- "./EventTypes/EventTypes.ms"
+filein( getFilenamePath(getSourceFileName()) + "/EventFiredCreator/EventFiredCreator.ms" )	-- "./EventFiredCreator/EventFiredCreator.ms"
+filein( getFilenamePath(getSourceFileName()) + "/DefaultControlEvents/DefaultControlEvents.ms" )	-- "./DefaultControlEvents/DefaultControlEvents.ms"
+filein( getFilenamePath(getSourceFileName()) + "/EventTypes/EventTypes.ms" )	-- "./EventTypes/EventTypes.ms"
 
 
 global STARTUP_EVENTS = #() -- run callbacks of controls like checkbox, checkbutton on UI start
@@ -206,7 +206,22 @@ struct ControlEventBinder_v
 	(
 		--print "ControlEventBinder_v._validateEvents()"
 		for Event in this._Control.Events.list where findItem event_types Event.type == 0 do
-			throw  ("\n\n-----------------------------------------\n\n\nERROR - You try add unknown type of event for control (vilbur) \n\n\nControl.id: #"+ (this._Control.id) + "\nEvent.type: #"+ Event.type as string + "\n\n\n-----------------------------------------\n\n\n")
+		(
+			print  ("------------------- WARNING ----------------------")
+			print  ("UNKNOWN TYPE OF EVENT FOR CONTROL.")
+			format "\n\n"
+			format "_Rollout: % \n" _Rollout.title
+			format "Control:  #% \n" 	this._Control.id
+			format "Title:    \"%\" \n"	this._Control.caption
+			format "Type:     %\n" 	this._Control.type
+			format "Event:    % \n"	Event.type
+			format "\n"
+			format "AVAILABLE EVENTS FOR THIS TYPE:    % \n" this.event_types
+			format "\n"
+			print  ("------------------------------------------------")
+
+		)
+			--print  ("\n\n-----------------------------------------\n\n\nERROR - You try add unknown type of event for control (vilbur) \n\n\nControl.id: #"+ (this._Control.id) + "\nEvent.type: #"+ Event.type as string + "\n\n\n-----------------------------------------\n\n\n")
 	),
 
 	/*------------------------------------------------------------------------------

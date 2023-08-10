@@ -13,7 +13,7 @@ global DIALOG_PREVIOUS_STATE = undefined -- this should be in struct
 if EVENT_DOCKED_ENABLED == undefined then
 	global EVENT_DOCKED_ENABLED = true -- prevent crash on destroying  of dialog // RENAME THIS TO DIALOG_ENABLE_DOCKED_EVENT
 
-global AUTORUN_EVENTS = #()
+global AUTORUN_EVENTS = Dictionary()
 
 if HOTKEYS_GLOBAL == undefined then
 	global HOTKEYS_GLOBAL = HotKeys_v()
