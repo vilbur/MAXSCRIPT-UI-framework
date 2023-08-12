@@ -132,39 +132,43 @@ struct ScriptFile_Content_v
 	function _addToMenu Macro ParamsList =
 	(
 		--format "\n\n"; print "ScriptFile_Content_v.addToQuadMenu()"
+		function menuIs pattern = matchPattern ( menu_name as string ) pattern:( pattern as string )
+
+
 		quad_name	= ParamsList.getVal #quad
 		menu_name	= ParamsList.getVal #menu
 		title	= ParamsList.getVal #title
 		index	= ParamsList.getVal #index
-		tooltip	= Macro.tooltip
+		--tooltip	= Macro.tooltip
 
 		if quad_name == undefined and menu_name == undefined and menu_name != false then
 			return false
 
-		title_is_tooltip = classOf menu_name != BooleanClass and matchPattern menu_name pattern:"tooltip"
-
-
 		/** SET MENU NAME AND ITEM TITLE
 		  */
-		if classOf menu_name == BooleanClass or title_is_tooltip then
+		if classOf menu_name == BooleanClass and menu_name == true then
 			menu_name = Macro.category
 
-		if title_is_tooltip and tooltip != undefined then  -- if icon: "menu:tooltip"
-			title =  tooltip
+		title =  case of
+		(
+			--(menu_name = true ): if title != undefined then title else
+			(title != undefined ):	title
+			(menuIs #buttontext ):	Macro.buttontext
+			(menuIs #tooltip and Macro.tooltip != undefined ):	Macro.tooltip
+			default: 	Macro.buttontext
+		)
 
-		if title == undefined then
-			title = Macro.buttontext
-
-	--	if menu_name=="Group" then
-	--(
-		--format "\n\n"; print "ScriptFile_Content_v.addToQuadMenu()"
-		--format "Macro.category   = % \n" Macro.category
-		--format "Macro.macro_name = % \n" Macro.macro_name
-		--format "title            = % \n" title
-		----format "quad_name = % \n" quad_name
-		--format "menu_name = % \n" menu_name
-	--
-	--)
+		--	/* DEBUG */
+		--if matchPattern menu_name pattern:"*viewports*" then
+		--(
+		--	format "\n\n"; print "ScriptFile_Content_v.addToQuadMenu()"
+		--	format "Macro.category   = % \n" Macro.category
+		--	format "Macro.macro_name = % \n" Macro.macro_name
+		--	format "title            = % \n" title
+		--	--format "quad_name = % \n" quad_name
+		--	format "menu_name = % \n" menu_name
+		--
+		--)
 
 		/*
 			QUAD MENU
