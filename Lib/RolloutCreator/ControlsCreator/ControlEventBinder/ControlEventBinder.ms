@@ -40,7 +40,7 @@ struct ControlEventBinder_v
 	control_types	= (ControlTypes_v()).getAllTypes(),
 
 	event_types,	-- E.G.: #(#changed, 	#rightClick)	keys
-	events_params,	-- E.G.: #("val",	undefined)	values
+	events_params,	-- E.G.: #("val",	undefined)	values -- default params for defauls events E.G.: on checkbox changed val do ...
 
 	/** Combine events and add handlers
 	 */
@@ -131,15 +131,7 @@ struct ControlEventBinder_v
 			Event.params = params
 	),
 
-	/** Get params for given event type
-	  *
-	  * @return	string
-	 */
-	function _paramsOfEvent event_type =
-	(
-		--format "\n"; print "ControlEventBinder_v.getParamsForEventType()"
-		events_params[findItem event_types event_type]
-	),
+
 
 	/** Add paramters to callback if not set all ready
 	  *
@@ -150,16 +142,53 @@ struct ControlEventBinder_v
 	(
 		--print "ControlEvents._addParametersToCallback()"
 		--for Event in this._Control.Events.list where not (matchPattern Event.code pattern:"*macros.run*" or matchPattern Event.code pattern:"*()" ) do
+		/** Get event params
+		  *
+		  */
+		function getEventParams params_event =
+		(
+			--format "\n"; print "ControlEventBinder_v.getEventParams()"
+			if params_event != "" then
+			(
+				if classOf params_event != Array then
+					params_event = #(params_event)
+
+				for param in params_event collect if classOf param == string then "\"" +param + "\"" else param
+				--format "params_event:	% \n" params_event
+				--params_event --return
+			)
+		)
+
+
 		for Event in this._Control.Events.list where not matchPattern Event.code pattern:"* *" do
 		(
-			if ( params = this._paramsOfEvent(Event.type) ) != undefined then
-				for param in params_split = filterString params " " where ( PARAM_IS_NOT_ADDED = matchPattern Event.code pattern:("*"+param+"*")) == false do
-					Event.code  += " ("+ param + ")" -- add parameters after callback E.G.: "callbackFn" >>>  "callbackFn inSpin inCancel
+			params_default = this._paramsOfEvent(Event.type)
+			params_event    = getEventParams(Event.params)
+
+			params = case of
+			(
+				(params_default != undefined):	filterString params_default " "
+				(params_event   != undefined ):	params_event
+			)
+
+			if params != undefined then
+				for param in params where ( PARAM_IS_NOT_ADDED = matchPattern Event.code pattern:("*"+param as string +"*")) == false do
+					Event.code  += " ("+ param as string + ")" -- add parameters after callback E.G.: "callbackFn" >>>  "callbackFn inSpin inCancel
 
 
 			else if not( matchPattern Event.code pattern:"*(*)" ) and not (  matchPattern Event.code pattern:"*\"*\"" ) then -- if not match E.G.: "print (\"XXX\")" OR "print \"XXX\""
 				Event.code += "()" -- add brackets after callback E.G.: "callbackFn" >>>  "callbackFn()"
 		)
+	),
+
+	/** Get params for given event type
+	  *
+	  * @return	string
+	 */
+	function _paramsOfEvent event_type =
+	(
+		--format "\n"; print "ControlEventBinder_v.getParamsForEventType()"
+		events_params[findItem event_types event_type]
 	),
 
 	/**_type _add event fired

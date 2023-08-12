@@ -7,14 +7,24 @@ Dialog 	    = Dialog_v title:"Test"
 
 _Controls   = Dialog.Controls group:"Main Controls"
 
-fn testCallback val = (print val)
+/**
+  *
+  */
+function testCallback val =
+(
+	format "\n"; print "testCallback()"
+
+	format "EventFired:	% \n" EventFired
+
+	format "val:	% \n" val
+)
 
 
 /* BUTTON  */
- _Button	= _Controls.control #button "Button" params:#(#border, false )
+ _Button	= _Controls.control #button "Button"
 
- _Button.Events.add #pressed    ("format \"EventFired:	% \n\" EventFired")
- _Button.Events.add #rightclick ("print \"Button Rightclick\"")
+ _Button.Events.add #pressed    ("testCallback") params:"Test Param"
+ _Button.Events.add #rightclick ("testCallback") params: #(999)
 
 
 /* EDITTEXT  */

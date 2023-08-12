@@ -1,11 +1,11 @@
-filein( getFilenamePath(getSourceFileName()) + "/Event/Event.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/Event/Event.ms" ) -- "./Event/Event.ms"
 
 /** Event
  */
 struct EventsList_v
 (
 	list	= #(),
-	
+
 	/** Set
 	 */
 	function add type callback params:"" tooltip:"" =
@@ -14,14 +14,14 @@ struct EventsList_v
 		--format "callback	= % \n" callback
 		append list (Event_v type:type code:callback tooltip:tooltip params:params)
 	),
-	
+
 	/** Get
 	 */
 	function get type =
 	(
 		(for Event in List where Event.type == type collect Event)[1]
 	),
-	
+
 	/** replace event by type or add new if does not exist
 	 */
 	function replace Event =
@@ -33,12 +33,12 @@ struct EventsList_v
 		else
 			append list Event
 	),
-	
-	
-	private
-	
 
-	/**  
+
+	private
+
+
+	/**
 	 */
 	on create do
 	(
