@@ -132,8 +132,6 @@ struct ScriptFile_Content_v
 	function _addToMenu Macro ParamsList =
 	(
 		--format "\n\n"; print "ScriptFile_Content_v.addToQuadMenu()"
-		function menuIs pattern = matchPattern ( menu_name as string ) pattern:( pattern as string )
-
 
 		quad_name	= ParamsList.getVal #quad
 		menu_name	= ParamsList.getVal #menu
@@ -144,27 +142,28 @@ struct ScriptFile_Content_v
 		if quad_name == undefined and menu_name == undefined and menu_name != false then
 			return false
 
-		/** SET MENU NAME AND ITEM TITLE
-		  */
-		if classOf menu_name == BooleanClass and menu_name == true then
-			menu_name = Macro.category
-
 		title =  case of
 		(
-			--(menu_name = true ): if title != undefined then title else
+			(menu_name == true ): 	Macro.buttontext
 			(title != undefined ):	title
-			(menuIs #buttontext ):	Macro.buttontext
-			(menuIs #tooltip and Macro.tooltip != undefined ):	Macro.tooltip
+			(menu_name as name == #tooltip and Macro.tooltip != undefined ):	Macro.tooltip
+			(menu_name as name == #buttontext ):	Macro.buttontext
 			default: 	Macro.buttontext
 		)
 
-		--	/* DEBUG */
-		--if matchPattern menu_name pattern:"*viewports*" then
+		/** SET MENU NAME AND ITEM TITLE
+		  */
+		if (classOf menu_name == BooleanClass and menu_name == true ) or menu_name as name == #tooltip or menu_name as name == #buttontext then
+			menu_name = Macro.category
+
+			/* DEBUG */
+		--if matchPattern Macro.macro_name pattern:"*_scene_temp*" then
 		--(
 		--	format "\n\n"; print "ScriptFile_Content_v.addToQuadMenu()"
 		--	format "Macro.category   = % \n" Macro.category
+		--	format "Macro.tooltip   = % \n" Macro.tooltip
 		--	format "Macro.macro_name = % \n" Macro.macro_name
-		--	format "title            = % \n" title
+		--	format "TITLE            = % \n" title
 		--	--format "quad_name = % \n" quad_name
 		--	format "menu_name = % \n" menu_name
 		--
@@ -182,15 +181,14 @@ struct ScriptFile_Content_v
 			if quad_index == undefined then
 				quad_index = 1
 
-			(QuadMenu_v(quad_name_split[1])).Quads[quad_index as integer ].addItem (Macro.category)(Macro.macro_name) title:title index:index
+			(QuadMenu_v(quad_name_split[1])).Quads[quad_index as integer ].addItem (Macro.category)Macro.macro_name title:title index:index
 		)
 		/*
 			MENU
 		*/
 		else if menu_name != undefined then
-		(
-			(Menu_v (menu_name)).addItem (Macro.category) (Macro.macro_name) title:title index:index
-		)
+			(Menu_v (menu_name)).addItem (Macro.category) Macro.macro_name title:title index:index
+
 	),
 
 
