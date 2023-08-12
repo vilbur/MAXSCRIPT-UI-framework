@@ -55,25 +55,12 @@ struct Ini_v
 		if( val_from_ini == "" or val_from_ini == undefined ) then val else this._convertDatatype(val_from_ini) --return
 	),
 
-	/** Format string value to valid datatype
-	 */
-	function _convertDatatype _string =
+	/** Get keys of section
+	  */
+	function keys _section =
 	(
-		--_string = substituteString _string "\\" "\\\\"
-
-		rx	= dotNetClass "System.Text.RegularExpressions.RegEx"
-		rx_options	= dotNetClass "System.Text.RegularExpressions.RegexOptions"
-
-		is_variable = (rx.match _string "^\s*(\d+|true|false|undefined|unsupplied|\(\s*color\s+\d+\s+\d+\s+\d+\s*\))\s*$" rx_options.IgnoreCase ).success
-
-		if not is_variable and (is_string = ( rx.match _string "(^'*[A-Za-z0-1_\s]+'*$)" rx_options.IgnoreCase ).success ) then
-		(
-			@"" + _string -- IS STRING
-		)
-		else
-		(
-			try((execute(_string)))catch(_string) -- IS VARIABLE
-		)
+		--format "\n"; print "Ini_v.keys()"
+		 getINISetting _path ( _section	as string ) --return
 	),
 
 	/** Get path
@@ -91,9 +78,21 @@ struct Ini_v
 		ShellLaunch  "Notepad++" ("\""+_path+"\"")
 	),
 
+	/** Delete ini entry
+	  *
+	  */
+	function delete _section _key: =
+	(
+		--format "\n"; print "Ini_v.delete()"
+		if _key != unsupplied then
+			delINISetting  _path ( _section	as string ) ( _key as string )
+		else
+			delINISetting  _path ( _section	as string )
+	),
+
 	/** Delete ini file
 	 */
-	function delete =
+	function deleteFile =
 	(
 		--format "\n"; print "Ini_v.deleteFile()"
 		deleteFile _path
@@ -167,6 +166,27 @@ struct Ini_v
 			this --return
 		) else
 			getProperty this ( key as string ) --return
+	),
+
+	/** Format string value to valid datatype
+	 */
+	function _convertDatatype _string =
+	(
+		--_string = substituteString _string "\\" "\\\\"
+
+		rx	= dotNetClass "System.Text.RegularExpressions.RegEx"
+		rx_options	= dotNetClass "System.Text.RegularExpressions.RegexOptions"
+
+		is_variable = (rx.match _string "^\s*(\d+|true|false|undefined|unsupplied|\(\s*color\s+\d+\s+\d+\s+\d+\s*\))\s*$" rx_options.IgnoreCase ).success
+
+		if not is_variable and (is_string = ( rx.match _string "(^'*[A-Za-z0-1_\s]+'*$)" rx_options.IgnoreCase ).success ) then
+		(
+			@"" + _string -- IS STRING
+		)
+		else
+		(
+			try((execute(_string)))catch(_string) -- IS VARIABLE
+		)
 	),
 
 	/** Escape path
