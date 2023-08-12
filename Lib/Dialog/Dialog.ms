@@ -109,7 +109,7 @@ struct Dialog_v
 
 		this._setDockState()
 
-		RolloutResizer.resizeSubrollouts(this)
+		RolloutResizer.resizeSubrolloutsSlots(this)
 
 		AutoRunEvents.executeMacros()
 
@@ -285,6 +285,7 @@ struct Dialog_v
 	function _getDialogSize size_type defined_size  =
 	(
 		--print "Dialog_v._getDialogSize()"
+		--format "Ini.isDefined():	% \n" (Ini.isDefined())
 		--format "size_type:	% \n" size_type
 		--format "this.width	= % \n" this.width
 		--format "this.height	= % \n" this.height
@@ -423,6 +424,8 @@ struct Dialog_v
 		this._setId()
 
 		this.destroy()
+
+		this.width  = this._getDialogSize( #width ) (this.width) -- try get dialog width from ini
 
 		--/*------ DEV restart timer ------*/
 		if HOTKEYS_GLOBAL != undefined then
