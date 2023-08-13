@@ -1,4 +1,3 @@
-
 filein( getFilenamePath(getSourceFileName()) + "/../ConstructPropeties/ConstructPropeties.ms" )	-- "./../ConstructPropeties/ConstructPropeties.ms"
 filein( getFilenamePath(getSourceFileName()) + "/../EventsList/EventsList.ms" )	-- "./../EventsList/EventsList.ms"
 filein( getFilenamePath(getSourceFileName()) + "/../RolloutCreator/RolloutCreator.ms" )	-- "./../RolloutCreator/RolloutCreator.ms"
@@ -47,7 +46,6 @@ struct Dialog_v
 
 	/* inherit */
 	/* properties */
-
 	min_size,
 
 	style = #(
@@ -78,7 +76,6 @@ struct Dialog_v
 		--#cui_max_sized,	-- When this flag is specified, docking the dialogbar on the top causes the dialogbar to expand to the full window width, docked to bottom it expands to full window width minus command panel width.
 	),
 
-
 	/** Create dialog
 	  *
 	  * @param	integer	width	of dialog, minimal size of dialog also
@@ -89,7 +86,7 @@ struct Dialog_v
 	  *
 	  * TODO add params for max 2022
 	 */
-	function create width: height: pos: origin:#SCREEN bgcolor: fgcolor: bitmap: bmpstyle:#bmp_tile  style: modal: escapeEnable:false escapekey:true lockHeight:false lockWidth:true parent: =
+	function create width: height: pos: origin:#SCREEN bgcolor: fgcolor: bitmap: bmpstyle:#bmp_tile  style: modal: escapeEnable:false escapekey:true lockHeight:false lockWidth:true min_size:undefined parent: =
 	(
 		--format "\n"; print "Dialog_v.create()"
 
@@ -97,26 +94,22 @@ struct Dialog_v
 
 		this._setDialogSize(width)(height)
 
-		this._setDialogMinimalSize(width)(height)
+		this._setDialogMinimalSize(width)(height)(min_size)
 
 		_RolloutCreator.createRollout (this) width:width -- create nested rollouts
 
-		CreateDialog (this.RCI.def) width:this.width height:this.height pos:(this._getPosition(pos)(origin)) autoLayoutOnResize:true bgcolor:bgcolor fgcolor:fgcolor	bitmap:bitmap bmpstyle:bmpstyle style:(if( style == unsupplied ) then this.style else style) modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
-
-		--this._setDialogGlobal() -- this is not required anwhere
+		CreateDialog (this.RCI.def) width:this.width height:this.height pos:(this._getPosition(pos)(origin)) autoLayoutOnResize:true bgcolor:bgcolor fgcolor:fgcolor	bitmap:bitmap bmpstyle:bmpstyle style:(if( style == unsupplied ) then this.style else style) modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth  parent:parent
 
 		_RolloutCreator.SubolloutsCreator.addSubRollouts (this)
 
-		--this._setDockState()
+		this._setDockState()
 
-		--RolloutResizer.resizeSubrolloutsSlots(this)
+		RolloutResizer.fitSlotsToDialog(this)
 
 		--AutoRunEvents.executeMacros()
 
-		--this._checkDialogHeightIfSubrollouts()
-
 		--format ("\n\nDIALOG \""+title+"\" HAS BEEN CREATED\n\n" )
-		format ("\n\nDIALOG \""+ id as string +"\" HAS BEEN CREATED\n\n" )
+		format ("\n\n\""+ id as string +"\" HAS BEEN CREATED\n\n" )
 
 		CONTROL_BITMAPS_STORE = #() -- reset buffer array
 	),
@@ -224,38 +217,20 @@ struct Dialog_v
 
 	private
 
-
-	--/** Set dialog id as global variable
-	--  *
-	--  * It is for unnecessary for make EverntFired working
-	--  *
-	-- */
-	--function _setDialogGlobal =
-	--(
-	--	format "\n"; print "Dialog_v._setDialogGlobal()"
-	--	format "id	= % \n" id
-	--	--format "id	= % \n" (toUpper (id as string ))
-	--	--execute("global "+ (toUpper (id as string )) )
-	--	--execute("global GLOBAL_"+( id as string ) )
-	--	execute("global "+( id as string ) )
-	--
-	--	--format "GLOBAL_group_options	= % \n" GLOBAL_group_options
-	--),
-
 	/** Set minimal size of registered dialog
 	  * 1) Use rollout size if defined
 	  * 2) Use this.create() parameter
 	  * 3) Use -1 if size is not defined
 	 */
-	function _setDialogMinimalSize width height =
+	function _setDialogMinimalSize width height min_size_param =
 	(
 		--format "\n"; print "Dialog_v._setDialogMinimalSize()"
-		if min_size == undefined then
+		if this.min_size == undefined and min_size_param == undefined then
 		(
-			min_width	= if this.width  != unsupplied then this.width  else ( if width  != unsupplied then width else -1)
-			min_height	= if this.height != unsupplied then this.height else ( if height != unsupplied then height else -1)
+			min_width	= if this.width  != unsupplied then this.width  else -1
+			min_height	= if this.height != unsupplied then this.height else -1
 
-			min_size = [ min_width, min_height ]
+			this.min_size = [ min_width, min_height ]
 		)
 	),
 
@@ -264,9 +239,10 @@ struct Dialog_v
 	function _setDialogSize width height =
 	(
 		--format "\n\n"; print "Dialog_v._setDialogSize()"
-		this.width  = this._getDialogSize( #width ) (width)
+		--this.width  = this._getDialogSize( #width ) (width)
 
-		this.height = if height != #auto then this._getDialogSize( #height ) (height) else  unsupplied
+		this.width  = if width  != #auto then this._getDialogSize( #width ) (width) else  unsupplied
+		this.height = if height != #auto then this._getDialogSize( #height) (height) else  unsupplied
 	),
 
 	/** Get size of dialog
@@ -285,11 +261,6 @@ struct Dialog_v
 	function _getDialogSize size_type defined_size  =
 	(
 		--print "Dialog_v._getDialogSize()"
-		--format "Ini.isDefined():	% \n" (Ini.isDefined())
-		--format "size_type:	% \n" size_type
-		--format "this.width	= % \n" this.width
-		--format "this.height	= % \n" this.height
-
 		is_size_defined = defined_size != undefined and defined_size != unsupplied
 
 		if( Ini.isDefined() and (ini_size = Ini.load( id as string )("size")) != undefined) then
@@ -393,7 +364,6 @@ struct Dialog_v
 		)
 	),
 
-
 	/** Check if required properties are defined when an instance of the struct is created.
 	 * @example __construct = #( #property_name )
 	 */
@@ -403,14 +373,6 @@ struct Dialog_v
 			messageBox ("SaveIniControlEvents\nUndefined construct property !\n\n"+ ((filterString( classof this as string )"(:")[2]) +"."+ prop )
 	),
 
-	/** If dialog has subrollouts and has not height defined, then throw warning
-	 */
-	function _checkDialogHeightIfSubrollouts =
-	(
-		--format "\n"; print "if._checkDialogHeightIfSubrollouts()"
-		if this.height == unsupplied and this.hasSubrollouts() then
-			format ("\n\n!!!!!!!!!! WARNNING: DIALOG HAS NOT HEIGHT DEFINED !!!!!!!!!!\n\n" )
-	),
 
 	/**
 	 */

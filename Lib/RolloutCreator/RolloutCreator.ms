@@ -38,8 +38,8 @@ struct RolloutCreator_v
 	 */
 	function createRollout _Rollout width: =
 	(
-		format "\n\n-------------------------------------	RolloutCreator_v.createRollout() id:#%	-------------------------------------\n"  ( _Rollout.id as string );
-		format "_ROLLOUT: %\n" _Rollout.title
+		--format "\n\n-------------------------------------	RolloutCreator_v.createRollout() id:#%	-------------------------------------\n"  ( _Rollout.id as string );
+		--format "_ROLLOUT: %\n" _Rollout.title
 		--format "_ROLLOUT: %:	% \n" _Rollout.title _Rollout
 
 
@@ -114,8 +114,8 @@ struct RolloutCreator_v
 	 */
 	function _createSubrollouts _RolloutParent =
 	(
-		format "\n"; print "RolloutCreator_v.createSubrollouts()"
-		format "_ROLLOUTPARENT:	% \n" _RolloutParent.title
+		--format "\n"; print "RolloutCreator_v.createSubrollouts()"
+		--format "_ROLLOUTPARENT:	% \n" _RolloutParent.title
 		--format "_ROLLOUTPARENT:	% \n" _RolloutParent
 
 		for Subrollouts in _RolloutParent.getSubrollouts() do -- loop slots where height is not defined by user

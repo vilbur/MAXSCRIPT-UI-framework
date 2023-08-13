@@ -12,7 +12,7 @@ struct RolloutResizer_v
 
 	/** Resize subrollouts
 	 */
-	function resizeSubrollouts _Rollout  =
+	function fitSlotsToDialog _Rollout  =
 	(
 		--format "\n"; print "RolloutResizer_v._resizeSubrollouts()"
 		--print "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
@@ -24,9 +24,11 @@ struct RolloutResizer_v
 		if ( dialog_height = _Rollout.RCI.height ) == undefined then
 			dialog_height = execute( _Rollout.id as string + ".height" )
 
-		dialog_controls = execute( _Rollout.id as string + ".controls" )
+		dialog_controls = _Rollout.RCI.Def.controls
 
+		--format "DIALOG_CONTROLS:	% \n" dialog_controls
 		subrollout_slots = for control in dialog_controls where classOf control == subRollout collect control
+		--format "SUBROLLOUT_SLOTS:	% \n" subrollout_slots
 
 		if subrollout_slots.count > 0 then
 		(
