@@ -89,7 +89,7 @@ struct Dialog_v
 	  *
 	  * TODO add params for max 2022
 	 */
-	function create width:256 height: pos: origin:#SCREEN bgcolor: fgcolor: bitmap: bmpstyle:#bmp_tile  style: modal: escapeEnable:false escapekey:true lockHeight:false lockWidth:true parent: =
+	function create width: height: pos: origin:#SCREEN bgcolor: fgcolor: bitmap: bmpstyle:#bmp_tile  style: modal: escapeEnable:false escapekey:true lockHeight:false lockWidth:true parent: =
 	(
 		--format "\n"; print "Dialog_v.create()"
 
@@ -107,13 +107,13 @@ struct Dialog_v
 
 		_RolloutCreator.SubolloutsCreator.addSubRollouts (this)
 
-		this._setDockState()
+		--this._setDockState()
 
-		RolloutResizer.resizeSubrolloutsSlots(this)
+		--RolloutResizer.resizeSubrolloutsSlots(this)
 
-		AutoRunEvents.executeMacros()
+		--AutoRunEvents.executeMacros()
 
-		this._checkDialogHeightIfSubrollouts()
+		--this._checkDialogHeightIfSubrollouts()
 
 		--format ("\n\nDIALOG \""+title+"\" HAS BEEN CREATED\n\n" )
 		format ("\n\nDIALOG \""+ id as string +"\" HAS BEEN CREATED\n\n" )

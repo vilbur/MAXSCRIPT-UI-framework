@@ -5,7 +5,7 @@ struct SubolloutsCreator_v
 	--__construct = #( #property_name ),
 	/* construct */
 	/* properties */
-	_Rollout,
+	--_Rollout,
 
 	ini_path,
 
@@ -52,8 +52,8 @@ struct SubolloutsCreator_v
 			(
 				_Subrollout = Subrollouts.Rollouts[index]
 
-				if _Subrollout.temporary_created then
-					try(destroyDialog _Subrollout.RCI.def )catch()
+				--if _Subrollout.temporary_created then
+				try(destroyDialog _Subrollout.RCI.def )catch() -- destroy dialog of subrollout created for find of height
 
 				AddSubRollout SubrolloutsSlot	_Subrollout.RCI.def rolledUp:(this._getRolledUpState(subrollout_id))
 
@@ -66,9 +66,9 @@ struct SubolloutsCreator_v
 	  */
 	 function addSubrolloutSlot _Rollout Subrollouts =
 	 (
-		--format "\n\n\n\n=====================================	SubolloutsCreator_v.addSubrolloutSlot() %.%	=====================================\n" ( _Rollout.id as string ) ( Subrollouts.slot as string );
+		format "\n\n\n\n=====================================	SubolloutsCreator_v.addSubrolloutSlot() %.%	=====================================\n" ( _Rollout.id as string ) ( Subrollouts.slot as string );
 
-		--this._Rollout = _Rollout
+		format "Subrollouts.height:	% \n" Subrollouts.height
 
 		slot_id = Subrollouts.slot as string
 

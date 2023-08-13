@@ -21,6 +21,7 @@ struct RolloutCreator_v
 	Ini,
 
 	/* properties */
+	closed_rollout_bar_height = 24,
 
 	/* dependency */
 	EventBinder	= RolloutEventBinder_v ini_path:(Ini.getPath()),
@@ -29,6 +30,7 @@ struct RolloutCreator_v
 	SubolloutsCreator = SubolloutsCreator_v ini_path:(Ini.getPath()),
 
 	/* store */
+	max_height_of_subrollout = 0,
 
 	/** Create dialog
 	  *
@@ -36,23 +38,24 @@ struct RolloutCreator_v
 	 */
 	function createRollout _Rollout width: =
 	(
-		this.setSubrolloutDefaultSlots(_Rollout)
+		format "\n\n-------------------------------------	RolloutCreator_v.createRollout() id:#%	-------------------------------------\n"  ( _Rollout.id as string );
+		format "_ROLLOUT: %\n" _Rollout.title
+		--format "_ROLLOUT: %:	% \n" _Rollout.title _Rollout
+
+
+		this._setSubrolloutDefaultSlots(_Rollout)
 
 		this._createSubrollouts(_Rollout)
 
-		--format "\n\n-------------------------------------	RolloutCreator_v.createRollout() id:#%	-------------------------------------\n"  ( _Rollout.id as string );
-
+		ControlsCreator	= ControlCreator_v _Rollout:_Rollout Ini:Ini -- MUST BE AFTER SUBROLLOUT ARE CREATED
 
 		if _Rollout.width == unsupplied and width != unsupplied then
 			_Rollout.width = width
 
-		ControlsCreator	= ControlCreator_v _Rollout:_Rollout Ini:Ini
 
 		ControlsCreator.moveGrouboxControlsToEnd(_Rollout)
 
-
-		--_Rollout.RCI	= rolloutCreator (_Rollout.id) ( this._getTitleCentered(_Rollout) )
-		_Rollout.RCI	= rolloutCreator (_Rollout.id) ( this._getTitleString(_Rollout) )
+		_Rollout.RCI	= RolloutCreator (_Rollout.id) ( this._getTitleString(_Rollout) )
 
 
 		/* EDIT start */
@@ -69,7 +72,6 @@ struct RolloutCreator_v
 
 		/* add TEXT */
 		this._addTextToRollout (_Rollout)
-
 
 
 		/* add CONTROLS and SUBROLLOUTS SLOTS */
@@ -92,28 +94,12 @@ struct RolloutCreator_v
 
 
 	private
-	--/** Set dialog id as global variable
-	--  *
-	--  * It is for unnecessary for make EverntFired working
-	--  *
-	-- */
-	--function _setRolloutGlobal _Rollout =
-	--(
-	--	format "\n"; print "Dialog_v._setRolloutGlobal()"
-	--	format "id	= % \n" _Rollout.id
-	--	--format "id	= % \n" (toUpper (id as string ))
-	--	--execute("global "+ (toUpper (id as string )) )
-	--	--execute("global GLOBAL_"+( id as string ) )
-	--	execute("global "+( _Rollout.id as string ) )
-	--
-	--	--format "GLOBAL_group_options	= % \n" GLOBAL_group_options
-	--),
 
 	/** Create subrollouts recursively from most nested to dialog level
 	  *
 	  * NESTED ROLLOUTS ARE CREATED AS DIALOGS OUTSIDE OF DISPLAY, TO FIND THEIR HEIGHT FOR SUBROLLOUT SLOT
 	  *
-	  * Rollouts in "Level 1" are not created as temporary dialogs, because slots in dialog are sized by size by dialog
+	  * Rollouts
 	  *
 	  *
 	  *	  STRUCTURE OF DIALOG:
@@ -126,49 +112,68 @@ struct RolloutCreator_v
 	  *
 	  *
 	 */
-	function _createSubrollouts _Rollout =
+	function _createSubrollouts _RolloutParent =
 	(
-		--format "\n"; print "RolloutCreator_v.createSubrollouts()"
+		format "\n"; print "RolloutCreator_v.createSubrollouts()"
+		format "_ROLLOUTPARENT:	% \n" _RolloutParent.title
+		--format "_ROLLOUTPARENT:	% \n" _RolloutParent
 
-		parent_is_dialog = _Rollout.parent_rollout_id == undefined
-
-		--for SubrolloutsSlot in _Rollout.getSubrollouts() where SubrolloutsSlot.height == unsupplied do -- loop slots where height is not defined by user
-		for Subrollouts in _Rollout.getSubrollouts() do -- loop slots where height is not defined by user
+		for Subrollouts in _RolloutParent.getSubrollouts() do -- loop slots where height is not defined by user
 		(
 			local max_height_of_subrollout = 0
 
 			for _RolloutSub in Subrollouts.Rollouts do
 			(
-				--format "_RolloutSub:	% \n" _RolloutSub
-				--execute( "try(destroyDialog "+_RolloutSub.id as string +")catch()" ) -- DEVELOP
-
+				/* SET FULL ID TO SUBROLLOUT */
 				_RolloutSub.parent_rollout_id = Subrollouts.getSlotId()
 
-				--_RolloutSub_def = this.createRollout (_RolloutSub) --width:_RolloutSub.width height:_RolloutSub.height-- CREATE PARENT ROLLOUTS
-				_RolloutSub_def = this.createRollout (_RolloutSub)  --width:_RolloutSub.width height:_RolloutSub.height-- CREATE PARENT ROLLOUTS
+				execute ("try(destroyDialog "+_RolloutSub.id as string+ " )catch()") --DEV DESTROY SUBROLLOUT DIALOG
 
-				/* Dont craete dialogs of "level 1" rollouts */
-				if parent_is_dialog == false and Subrollouts.height == unsupplied then
-				--if parent_is_dialog == false then
+				this.createRollout (_RolloutSub) --width:_RolloutSub.width height:_RolloutSub.height-- CREATE PARENT ROLLOUTS
+
+				/* DONT CREATE ROLOUTS WITH DEFINED HEIGHT */
+				if Subrollouts.height == unsupplied then
 				(
-					CreateDialog ( _RolloutSub_def ) width:_Rollout.width height:_RolloutSub.height pos:[0,-8000]
-					--CreateDialog ( _RolloutSub_def ) width:_RolloutSub.width height:_RolloutSub.height -- DEV
-					--CreateDialog ( _RolloutSub_def )-- DEV
+					--CreateDialog ( _RolloutSub_def ) width:_RolloutParent.width height:_RolloutSub.height pos:[0,-8000]
+					--CreateDialog ( _RolloutSub_def ) width:_RolloutParent.width height:_RolloutSub.height
+					--CreateDialog ( _RolloutSub_def ) width:_RolloutParent.width height:_RolloutSub.height -- DEV
+					CreateDialog ( _RolloutSub.RCI.def )-- DEV
 
-					--/* store height of rollout if is tallest */
-					_RolloutSub.temporary_created = true -- note that dialog msut be destryed before adding as subrollout
+					--_RolloutSub.temporary_created = true -- note that dialog msut be destryed before adding as subrollout
 				)
 
-				rollout_height = if _RolloutSub.height == unsupplied then _RolloutSub_def.height else _RolloutSub.height
-
-				if rollout_height > max_height_of_subrollout then
-					max_height_of_subrollout = rollout_height
+				this._storeSubrolloutHeight(_RolloutSub)
 			)
 
-			/* SET SLOT HEIGHT  */
-			if Subrollouts.height == unsupplied then
-				Subrollouts.height = max_height_of_subrollout + (  Subrollouts.Rollouts.count  * 23) -- Slot height = Biggest subrollout OPEN and other subrollouts CLOSED
+			this._setSlotHeight(Subrollouts)
 		)
+	),
+
+	/** Store height of highest subrollout for auto sized dialog
+	  *
+	  * Height of slot fit all subrollouts closed and biggest rollout open
+	  *
+	  * This is only if slot height is not defined by user
+	  */
+	function _storeSubrolloutHeight _Rollout =
+	(
+		--format "\n"; print "RolloutCreator_v.storeSubrolloutHeight()"
+		rollout_height = if _Rollout.height == unsupplied then _Rollout.RCI.def.height else _RolloutSub.height
+		--format "rollout_height:	% \n" rollout_height
+		if rollout_height > max_height_of_subrollout then
+			this.max_height_of_subrollout = rollout_height
+	),
+
+	/** Set slot height
+	  *
+	  */
+	function _setSlotHeight Subrollouts =
+	(
+		--format "\n"; print "RolloutCreator_v._setSlotHeight()"
+		if Subrollouts.height == unsupplied then
+			Subrollouts.height = this.max_height_of_subrollout + (  Subrollouts.Rollouts.count  * this.closed_rollout_bar_height ) -- Slot height = Biggest subrollout OPEN and other subrollouts CLOSED
+
+		this.max_height_of_subrollout = 0 -- reset for next slot
 	),
 
 	/** Set subrollout slot default ids if not set by user
@@ -176,9 +181,9 @@ struct RolloutCreator_v
 	 *  Slot id is "Subrollouts" if only 1 slot exist
 	 *  Slot id is "Subrollouts_{number of slot}" if more then 1 slot exist
 	 */
-	function setSubrolloutDefaultSlots _Rollout =
+	function _setSubrolloutDefaultSlots _Rollout =
 	(
-		--format "\n"; print "RolloutCreator_v.setSubrolloutDefaultSlots()"
+		--format "\n"; print "RolloutCreator_v._setSubrolloutDefaultSlots()"
 		for i = 1 to (Subrollouts_all = _Rollout.getSubrollouts()).count where Subrollouts_all[i].slot == unsupplied do
 			Subrollouts_all[i].slot = if Subrollouts_all.count == 1 then "Subrollouts" else  "Subrollouts_" + i as string
 	),
@@ -279,6 +284,24 @@ struct RolloutCreator_v
 		title --return
 	),
 
+
+
+	--/** Set dialog id as global variable
+	--  *
+	--  * It is for unnecessary for make EverntFired working
+	--  *
+	-- */
+	--function _setRolloutGlobal _Rollout =
+	--(
+	--	format "\n"; print "Dialog_v._setRolloutGlobal()"
+	--	format "id	= % \n" _Rollout.id
+	--	--format "id	= % \n" (toUpper (id as string ))
+	--	--execute("global "+ (toUpper (id as string )) )
+	--	--execute("global GLOBAL_"+( id as string ) )
+	--	execute("global "+( _Rollout.id as string ) )
+	--
+	--	--format "GLOBAL_group_options	= % \n" GLOBAL_group_options
+	--),
 
 	/**
 	 */

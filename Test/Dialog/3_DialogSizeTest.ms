@@ -19,74 +19,18 @@ function addControls _Rollout count prefix:"Button" =
  */
 function addRollouts SubRollouts title count slot:slot =
 (
-	print "addRollouts()"
-	format "SubRollouts:	% \n" SubRollouts
+	--print "addRollouts()"
+	--format "SubRollouts:	% \n" SubRollouts
 	_Rollout_new = #()
 
 	for i = 1 to count do
 		append _Rollout_new ( SubRollouts.Roll ( title + " Roll:"+ i as string ))
 		--format "TITLE:	% \n"  ( title + " Rollout:"+ i as string )
 
-	format "SubRollouts:	% \n" SubRollouts
+	--format "SubRollouts:	% \n" SubRollouts
 	_Rollout_new --return
 )
 
-
-/*------------------------------------------------------------------------------
-
-	DEFAULT SIZE - SET BY CONTROLS AND ROLLOUTS IN DIALOG
-
---------------------------------------------------------------------------------*/
-function defaultSizeNoRollouts controls_count:5 =
-(
-	Dialog     = Dialog_v title:"Test No Rollouts"
-
-	addControls(Dialog) controls_count
-
-	Dialog.create()
-
-	--Dialog.register()
-)
-
-function dialogWithRollouts slots_count:1 controls_count:0 subrollouts_height: =
-(
-	Dialog     = Dialog_v title:"Test With Rollouts"
-
-	addControls(Dialog) (controls_count)
-
-	for i = 1 to slots_count do
-	(
-		Rollouts = addRollouts ( Dialog.Rollouts height:subrollouts_height )("Rollout A")(controls_count)
-
-		for _Rollout in Rollouts do
-			addControls(_Rollout)(controls_count)
-	)
-
-	Dialog.create()
-
-	--Dialog.register()
-)
-
-
-/*------------------------------------------------------------------------------
-	DEFINED SIZE
---------------------------------------------------------------------------------*/
-function definedSizesDialog controls_count:5 width:256 height:256 =
-(
-	Dialog     = Dialog_v title:"Defined size"
-
-	Rollouts = addRollouts ( Dialog.Rollouts() )("Rollout A")(1)
-
-	addControls(Rollouts[1]) controls_count
-
-	addControls(Dialog) 1
-
-
-	Dialog.create width:width height:height -- given size is minimal size of dialog also
-
-
-	--Dialog.register()
-)
 
 
 /*------------------------------------------------------------------------------
@@ -113,36 +57,34 @@ function iniSavedSizeUnlockedWidth init_height: reset_ini:false =
 
 
 
-function createTestDialog slots:0 nested:0 rollouts:0 controls:0 controls_dialog:0 subrollouts_height: dialog_width: dialog_height: init_height: reset_ini:false =
+function createTestDialog slots:0 nested:0 rollouts:0 controls:0 controls_dialog:#() subrollouts_height: dialog_width:256 dialog_height: init_height: reset_ini:false =
 (
+
 	Dialog     = Dialog_v title:"Height Test"
 
 	/* DIALOG TOP CONTROLS */
-	if controls_dialog > 0 then
-		addControls(Dialog) (controls_dialog) prefix:"Top Control"
-
+	if controls_dialog.count > 0 then
+		addControls(Dialog) (controls_dialog[1]) prefix:"Top"
 
 	for s = 1 to slots do
 	(
 		--Rollouts_New = addRollouts ( Dialog.Rollouts height:subrollouts_height )("Slot:"+ s as string )(rollouts)
 		if rollouts > 0 then
 		(
-
 			Rollouts_New = addRollouts ( Dialog.Rollouts() )("Slot:"+ s as string )(rollouts)
 
-			--if controls > 0 then
-				--for r = 1 to Rollouts_New.count do
-					--addControls(Rollouts_New[r]) (controls) prefix:("Slot:"+ s as string +"Roll:"+ r as string )
-
+			if controls > 0 then
+				for r = 1 to Rollouts_New.count do
+					addControls(Rollouts_New[r]) (controls) prefix:("Slot:"+ s as string +" Roll:"+ r as string )
 		)
 	)
 
 	/* DIALOG DOWN CONTROLS */
-	if controls_dialog > 0 then
-		addControls(Dialog) (controls_dialog) prefix:"Down Control"
+	if controls_dialog.count > 0 then
+		addControls(Dialog) (controls_dialog[2]) prefix:"Down"
 
 
-	Dialog.create()
+	Dialog.create width:dialog_width
 
 	--Dialog.register()
 )
@@ -166,14 +108,16 @@ function createTestDialog slots:0 nested:0 rollouts:0 controls:0 controls_dialog
 
 
 /* DIALOG ONLY CONTROLS */
---createTestDialog controls_dialog:3
+createTestDialog controls_dialog:#(1,2)
 
 /* DIALOG ONLY ROLLOUTS */
-createTestDialog slots:1 rollouts:1
+--createTestDialog slots:1 rollouts:1
 --createTestDialog slots:2 rollouts:2
 
 /* DIALOG ONLY ROLLOUTS */
---createTestDialog slots:1 rollouts:1 controls:3
+--createTestDialog slots:1 rollouts:1 controls:10
+--createTestDialog slots:2 rollouts:2 controls:10
+createTestDialog slots:1 rollouts:1 controls:5 controls_dialog:#(1,2)
 
 
 --defaultSizeNoRollouts controls_count:10
