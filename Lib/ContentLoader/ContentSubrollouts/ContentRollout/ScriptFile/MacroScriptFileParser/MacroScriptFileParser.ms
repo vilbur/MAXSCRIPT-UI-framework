@@ -1,4 +1,4 @@
-filein( getFilenamePath(getSourceFileName()) + "/ControlParamsParser/ControlParamsParser.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/ControlParamsParser/ControlParamsParser.ms" )	-- "./ControlParamsParser/ControlParamsParser.ms"
 
 /** Parese macroscripts in "*.mcr file"
   *

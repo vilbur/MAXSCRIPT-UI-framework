@@ -246,8 +246,16 @@ struct Menu_v
 		else
 			for single_parameter in this._reverseArray(index_title_item) do
 				this.removeItem (single_parameter)
+	),
 
-
+	/** Remove all itens in menu
+	  *
+	  */
+	function clearMenu =
+	(
+		--format "\n"; print "Menu_v.clearMenu()"
+		for i = this.numItems() to 1 by -1 do
+			this.removeItem(i)
 	),
 
 	/** Move item in menu
@@ -426,38 +434,6 @@ struct Menu_v
 			this.name = this.menu.getTitle()
 	),
 
-	--/** Create empty menu which ca be add as single quad to QUad Menu
-	--  *
-	--  * Max cannot create <MixinInterface:menu> which is not saved in menus
-	--  * In this way new
-	-- */
-	--function _createEmptyQuad =
-	--(
-	--	format "\n"; print "Menu_v._createEmptyQuad()"
-	--
-	--	function quadTitle index = this.name+"-"+index as string --return
-	--
-	--	temp_menu_file = (GetDir #temp) + "\\temp_menu_save.mnux"
-	--
-	--	menuMan.saveMenuFile(temp_menu_file)
-	--
-	--	quad_menu = menuMan.createQuadMenu "X TEMP QUAD" ( quadTitle 1 ) ( quadTitle 2 ) ( quadTitle 3 ) ( quadTitle 4 )
-	--
-	--	format "quad_menu	= % \n" quad_menu
-	--
-	--	EMPTY_QUAD =  deepCopy (quad_menu.getMenu(1))
-	--
-	--	menuMan.loadMenuFile (temp_menu_file)
-	--
-	--	deleteFile(temp_menu_file)
-	--
-	--	menu = deepCopy EMPTY_QUAD
-	--
-	--
-	--	menu.setTitle (this.name)
-	--
-	--	menu--return
-	--),
 
 	/**
 	  *

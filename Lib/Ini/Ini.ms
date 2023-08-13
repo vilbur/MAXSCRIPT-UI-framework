@@ -92,7 +92,7 @@ struct Ini_v
 
 	/** Delete ini file
 	 */
-	function deleteFile =
+	function deleteIni =
 	(
 		--format "\n"; print "Ini_v.deleteFile()"
 		deleteFile _path

@@ -122,7 +122,7 @@ struct MacroscriptGenerator_v
 
 		/* ADD EXECUTED */
 		if macro_data[#execute] == undefined then
-			macro_data[#execute] =  "\"" +(substituteString macroscript_name " " "")+ "\""
+			macro_data[#execute] =  "\"" +( substituteString macroscript_name " " "")+ "\""
 
 		--format "MACRO_DATA:	% \n" macro_data
 		macro_data --return
@@ -210,8 +210,10 @@ struct MacroscriptGenerator_v
     function _mergeCode macro_value general_value =
     (
 		--/* USE ONLY MACROSCRIPT EXECUTE IF STARTS WITH SAME WORD AS GENERAL EXECUTE */
+		first_word_are_same = (filterString macro_value " ")[1] == (filterString general_value " ")[1]
+
 		if macro_value != "" then
-			if (filterString macro_value " ")[1] == (filterString general_value " ")[1] then macro_value else general_value + " " +  macro_value
+			if first_word_are_same then macro_value else general_value + " " +  macro_value
     ),
 
 	/** Replace placeholders
@@ -347,7 +349,7 @@ struct MacroscriptGenerator_v
 		--format "\n"; print "MacroscriptGenerator_v._writeCode()"
 
         for key in this.keys_code where macro_data[key] != undefined do
-			format "\n on % do (\n\t\t%\n\t)\n" ( key as string + (if key == #altExecute then " type" else "")) (macro_data[key]) to:mcr_file
+			format "\n\ton % do (\n\t\t%\n\t)\n" ( key as string + (if key == #altExecute then " type" else "")) (macro_data[key]) to:mcr_file
     ),
 
 	/** Set mcr file
