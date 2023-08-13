@@ -132,62 +132,54 @@ struct ScriptFile_Content_v
 	function _addToMenu Macro ParamsList =
 	(
 		--format "\n\n"; print "ScriptFile_Content_v.addToQuadMenu()"
+		--quad_name	= ParamsList.getVal #quad
 
-		quad_name	= ParamsList.getVal #quad
-		menu_name	= ParamsList.getVal #menu
-		title	= ParamsList.getVal #title
-		index	= ParamsList.getVal #index
-		--tooltip	= Macro.tooltip
-
-		if quad_name == undefined and menu_name == undefined and menu_name != false then
+		if (menu_param = ParamsList.getVal #menu) == undefined or (classOf menu_param == BooleanClass and menu_param != true) then
 			return false
+
+		index	= ParamsList.getVal #index
+		menu_name	= Macro.category
 
 		title =  case of
 		(
-			(menu_name == true ): 	Macro.buttontext
-			(title != undefined ):	title
-			(menu_name as name == #tooltip and Macro.tooltip != undefined ):	Macro.tooltip
-			(menu_name as name == #buttontext ):	Macro.buttontext
-			default: 	Macro.buttontext
+			(menu_param	== true ): 	Macro.buttontext
+			(menu_param as name	== #tooltip ):	if Macro.tooltip != undefined then Macro.tooltip else Macro.buttontext
+			default: 	menu_param
 		)
 
-		/** SET MENU NAME AND ITEM TITLE
-		  */
-		if (classOf menu_name == BooleanClass and menu_name == true ) or menu_name as name == #tooltip or menu_name as name == #buttontext then
-			menu_name = Macro.category
-
 			/* DEBUG */
-		--if matchPattern Macro.macro_name pattern:"*_scene_temp*" then
+		--if matchPattern Macro.category pattern:"*_Test*" then
 		--(
 		--	format "\n\n"; print "ScriptFile_Content_v.addToQuadMenu()"
 		--	format "Macro.category   = % \n" Macro.category
 		--	format "Macro.tooltip   = % \n" Macro.tooltip
 		--	format "Macro.macro_name = % \n" Macro.macro_name
-		--	format "TITLE            = % \n" title
 		--	--format "quad_name = % \n" quad_name
 		--	format "menu_name = % \n" menu_name
 		--
 		--)
 
 		/*
-			QUAD MENU
+			ADD TO MENU
 		*/
-		if quad_name != undefined then
-		(
-			quad_name_split	= filterString quad_name "."
+		(Menu_v (menu_name)).addItem (Macro.category) Macro.macro_name title:title index:index
 
-			quad_index = quad_name_split[2]
+		/*------------------------------------------------------------------------------
 
-			if quad_index == undefined then
-				quad_index = 1
+			ADD TO QUAD MENU SEEM TO BE USELESS, IT IS DISABLED
 
-			(QuadMenu_v(quad_name_split[1])).Quads[quad_index as integer ].addItem (Macro.category)Macro.macro_name title:title index:index
-		)
-		/*
-			MENU
-		*/
-		else if menu_name != undefined then
-			(Menu_v (menu_name)).addItem (Macro.category) Macro.macro_name title:title index:index
+		--------------------------------------------------------------------------------*/
+		--if quad_name != undefined then
+		--(
+		--	quad_name_split	= filterString quad_name "."
+		--
+		--	quad_index = quad_name_split[2]
+		--
+		--	if quad_index == undefined then
+		--		quad_index = 1
+		--
+		--	(QuadMenu_v(quad_name_split[1])).Quads[quad_index as integer ].addItem (Macro.category)Macro.macro_name title:title index:index
+		--)
 
 	),
 
