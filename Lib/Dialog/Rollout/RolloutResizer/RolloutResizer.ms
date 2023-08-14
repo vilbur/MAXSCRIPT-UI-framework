@@ -14,17 +14,34 @@ struct RolloutResizer_v
 	 */
 	function fitSlotsToDialog _Rollout  =
 	(
-		--format "\n"; print "RolloutResizer_v._resizeSubrollouts()"
+		format "\n"; print "RolloutResizer_v._resizeSubrollouts()"
+		format "_Rollout:	% \n" _Rollout
+		--if ( dialog_height = _Rollout.RCI.height ) == undefined then
+		--	dialog_height = execute( _Rollout.id as string + ".height" )
 
-		if ( dialog_height = _Rollout.RCI.height ) == undefined then
-			dialog_height = execute( _Rollout.id as string + ".height" )
+		/** Remove controls before first slot
+		  *
+		  */
+		function removeControlsBeforeFirstSlot &dialog_controls =
+		(
+			for i = 1 to dialog_controls.count do
+				if classOf dialog_controls[1] != subRollout then
+					deleteItem dialog_controls 1
+				else exit
 
-		dialog_controls = _Rollout.RCI.Def.controls
+			dialog_controls --return
+		)
+
+		dialog_height = _Rollout.height
+
+		dialog_controls = _Rollout.controls
 
 		subrollout_slots = for control in dialog_controls where classOf control == subRollout collect control
 
 		if subrollout_slots.count > 0 then
 		(
+			removeControlsBeforeFirstSlot (dialog_controls)
+
 			last_control = this._getLastControl (dialog_controls)
 
 			last_control_position = last_control.pos.y + last_control.height
@@ -33,16 +50,14 @@ struct RolloutResizer_v
 
 			size_offset_per_slot = (empty_space_bottom / subrollout_slots.count) as integer
 
-			if  size_offset_per_slot > 0  then
-			(
-				for control in dialog_controls do
-
-					if classOf control == subRollout then
-						this._resizeSubrolloutSlot (control)(size_offset_per_slot)
-					else
-						this._offsetContrtol (control)
-			)
+			for control in dialog_controls do
+				if classOf control == subRollout then
+					this._resizeSubrolloutSlot (control)(size_offset_per_slot)
+				else
+					this._offsetContrtol (control)
 		)
+
+		offset_position = 0
 	),
 
 	private
@@ -64,14 +79,14 @@ struct RolloutResizer_v
 
 	/** Resize subrollout slot
 	 */
-	function _resizeSubrolloutSlot subrolloutControl size_offset_per_slot=
+	function _resizeSubrolloutSlot subrolloutControl size_offset_per_slot =
 	(
-		--format "\n"; print "RolloutResizer_v._resizeSubrolloutSlot()"
-		subrolloutControl.pos.y	+= offset_position
+		format "\n"; print "RolloutResizer_v._resizeSubrolloutSlot()"
+		subrolloutControl.pos.y	+= offset_position -- Move slot
 
-		subrolloutControl.height	+= size_offset_per_slot
+		subrolloutControl.height	+= size_offset_per_slot -- resize slot
 
-		offset_position	+= size_offset_per_slot
+		offset_position	+= size_offset_per_slot -- increment position
 	),
 
 	/** Offset contrtol
@@ -79,11 +94,8 @@ struct RolloutResizer_v
 	function _offsetContrtol control =
 	(
 		--format "\n"; print "RolloutResizer_v._offsetContrtol()"
-
-		if offset_position > 0 then
-			control.pos.y += offset_position
+		control.pos.y += offset_position
 	),
-
 
 	/**
 	 */

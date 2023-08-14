@@ -101,12 +101,14 @@ function createTestDialog slots:0 nested:0 rollouts:0 controls:0 controls_dialog
 /* SLOTS AND CONTROLS */
 --createTestDialog slots:1 rollouts:1 controls:10
 --createTestDialog slots:2 rollouts:2 controls:10
---createTestDialog slots:1 rollouts:2 controls:5 controls_dialog:#(1,2)
+-- createTestDialog slots:2 rollouts:1 controls:20
+createTestDialog slots:2 rollouts:2 controls:10 controls_dialog:#(1,2)
+-- createTestDialog slots:2 rollouts:2 controls:0 controls_dialog:#(1,1)
 
 
 
 /* DEFINED HEIGHT */
---createTestDialog slots: 2 rollouts:2 controls:5 controls_dialog:#(1,2) dialog_height:1024
+-- createTestDialog slots: 2 rollouts:2 controls:5 controls_dialog:#(1,2) dialog_height:1024
 
 
 /* HEIGHT SAVED IN INI */
@@ -119,7 +121,7 @@ function createTestDialog slots:0 nested:0 rollouts:0 controls:0 controls_dialog
 
 /* INI IS USED BUT SIZE IS NOT SAVED */
 --createTestDialog reset_ini:true -- reset ini
-createTestDialog slots: 2 rollouts:2 controls:5 controls_dialog:#(1,2) ini:true dialog_height:#auto
+-- createTestDialog slots: 2 rollouts:2 controls:5 controls_dialog:#(1,2) ini:true dialog_height:#auto
 
 
 /* MINIMAL SIZE OF DIALOG */

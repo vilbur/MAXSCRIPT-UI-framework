@@ -13,11 +13,11 @@ EventsCombiner 	= EventsCombiner_v()
  */
 function getEeventList event_class =
 (
-	events	= #()	
+	events	= #()
 
-	for event_type in event_types do 
+	for event_type in event_types do
 		append events (Event_v type:event_type code:("(print \""+event_class as string +"\t#"+ event_type as string +"\")" ))
-	
+
 	events --return
 
 )
@@ -25,8 +25,8 @@ function getEeventList event_class =
 
 for event_class in #(#CUSTOM, #DEFAULT, #POST) do
 (
-	EventsCombiner.setEventsClass event_class ( getEeventList(event_class) )
-	
+	EventsCombiner.events_classes[event_class] = ( getEeventList(event_class) )
+
 	for event_type in event_types do
 	(
 		Event_combined = EventsCombiner.combine event_type

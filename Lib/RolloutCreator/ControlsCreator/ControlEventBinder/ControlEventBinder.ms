@@ -109,7 +109,7 @@ struct ControlEventBinder_v
 	 */
 	function _setDefaultEvents =
 	(
-		EventsCombiner.setEventsClass #DEFAULTS ( DefaultControlEvents.getEvents(this._Control) )
+		EventsCombiner.events_classes[#DEFAULTS] = ( DefaultControlEvents.getEvents(this._Control) )
 	),
 
 	/** _combine events
@@ -117,7 +117,7 @@ struct ControlEventBinder_v
 	function _setCustomEvents =
 	(
 		--print "ControlEventBinder_v._setCustomEvents()"
-		EventsCombiner.setEventsClass #CUSTOM this._Control.Events.list
+		EventsCombiner.events_classes[#CUSTOM] = this._Control.Events.list
 	),
 
 	/** Set parameters of events
@@ -130,8 +130,6 @@ struct ControlEventBinder_v
 		for Event in this._Control.Events.list where (params = this._paramsOfEvent(Event.type) ) != undefined do
 			Event.params = params
 	),
-
-
 
 	/** Add paramters to callback if not set all ready
 	  *

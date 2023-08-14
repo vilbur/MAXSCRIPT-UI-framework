@@ -14,8 +14,6 @@ filein( getFilenamePath(getSourceFileName()) + "/../../../Dialog/DialogGlobal/Di
 
 global CALLBACK_DELAY_TIMER
 
-if DIALOG_GLOBAL_DATA == undefined then
-	global DIALOG_GLOBAL_DATA = Dictionary()
 
 /**
   *
@@ -30,35 +28,38 @@ function findResizeEventType sender evt =
 	DataSaved	= DIALOG_GLOBAL_DATA[dialog_id]
 	DataCurrent	= DialogGlobalData_v(DataSaved.DialogClass)
 
+	--format "DataCurrent.size:	% \n" DataCurrent.size
+	--format "DataSaved.size:	% \n" DataSaved.size
 
-	if DataSaved.Dialog.Events.list.count == 0 then
-		return false
-
-	event_type = case of
+	--if DataSaved.Dialog.Events.list.count > 0 then
 	(
-		(DataSaved.dock_state	!= DataCurrent.dock_state):	if DataCurrent.dock_state == #CUI_FLOATABLE then #UNDOCKED else #DOCKED
-		(DataSaved.size	== DataCurrent.size):	#RESIZED
+		event_type = case of
+		(
+			(DataSaved.dock_state	!= DataCurrent.dock_state):	if DataCurrent.dock_state == #CUI_FLOATABLE then #UNDOCKED else #DOCKED
+			(DataSaved.size	== DataCurrent.size):	#RESIZED
 
-		default: undefined
+			default: undefined
+		)
+
+		if event_type != undefined then
+		(
+
+			DataSaved.Dialog.RolloutResizer.fitSlotsToDialog(DataSaved.DialogClass)
+
+			sender.enabled = false
+
+			dotNet.removeEventHandler sender "Elapsed" PerformDelayedTasks
+
+			CALLBACK_DELAY_TIMER = undefined
+
+			print ( toUpper(event_type as string ) ) -- DEV
+
+			/* FIRE CUSTOM EVENT */
+			if ( Event = DataSaved.Dialog.Events.get(event_type) ) != undefined then
+				execute(Event.code)
+
+		)
 	)
-
-	if event_type != undefined then
-	(
-		sender.enabled = false
-
-		dotNet.removeEventHandler sender "Elapsed" PerformDelayedTasks
-
-		CALLBACK_DELAY_TIMER = undefined
-
-		print ( toUpper(event_type as string ) ) -- DEV
-
-		/* FIRE CUSTOM EVENT */
-		if ( Event = DataSaved.Dialog.Events.get(event_type) ) != undefined then
-			execute(Event.code)
-
-
-	)
-
 
 	DataSaved.fill()
 )
@@ -75,14 +76,14 @@ function startResizeEventTimer dialog_id event_type =
 	(
 		CALLBACK_DELAY_TIMER = dotNetObject "Windows.Forms.Timer"
 
-		CALLBACK_DELAY_TIMER.Interval = 250
+		--CALLBACK_DELAY_TIMER.Interval = 250
+		CALLBACK_DELAY_TIMER.Interval = 500
 
 		dotNet.addEventHandler CALLBACK_DELAY_TIMER "Tick" findResizeEventType
 
 		CALLBACK_DELAY_TIMER.enabled = true
 
 		DIALOG_GLOBAL_DATA[#RUNNING_EVENT_DIALOG_ID]	= dialog_id
-
 	)
 
 )

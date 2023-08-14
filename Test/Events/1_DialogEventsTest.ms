@@ -50,18 +50,18 @@ function testAllEvents =
 function testEachEvent =
 (
 	--format "\n"; print "1_DialogEventsTest.ms.testEachEvent()"
-	DialogTest.Events.add #open	"print(\"Custom dialog event #open\")"
-	DialogTest.Events.add #close	"print(\"Custom dialog event #close\")"
-
-	DialogTest.Events.add #moved	"print(\"#Custom dialog event moved\")" -- DOES NOT WORK ON REGISTRED DIALOG
-
-	DialogTest.Events.add #resized	"print(\"Custom dialog event #resized\")"
-
-	DialogTest.Events.add #docked	"print(\"Custom dialog event #docked\")"
-	DialogTest.Events.add #undocked	"print(\"Custom dialog event #undocked\")"
-
-	 /* !!! IMPORTANT - #oktoclose MUST RETURN BOOLEAN */
-	 DialogTest.Events.add #okToClose	"print(\"Custom dialog event #okToClose\"); true"
+	--DialogTest.Events.add #open	"print(\"Custom dialog event #open\")"
+	--DialogTest.Events.add #close	"print(\"Custom dialog event #close\")"
+	--
+	--DialogTest.Events.add #moved	"print(\"#Custom dialog event moved\")" -- DOES NOT WORK ON REGISTRED DIALOG
+	--
+	-- DialogTest.Events.add #resized	"print(\"Custom dialog event #resized\")"
+	--
+	--DialogTest.Events.add #docked	"print(\"Custom dialog event #docked\")"
+	-- DialogTest.Events.add #undocked	"print(\"Custom dialog event #undocked\")"
+	--
+	-- /* !!! IMPORTANT - #oktoclose MUST RETURN BOOLEAN */
+	-- DialogTest.Events.add #okToClose	"print(\"Custom dialog event #okToClose\"); true"
 
 )
 
@@ -74,8 +74,17 @@ function testEachEvent =
 --------------------------------------------------------------------------------*/
 
 ----testAllEvents()
-testEachEvent()
+--testEachEvent()
 
+
+--_Rollouts	 = DialogTest.Rollouts()
+--
+--/* ROLLOUT  */
+--_Rollout    = _Rollouts.Roll "Main Rollout" --height:256
+--
+--_Controls   = _Rollout.Controls group:"Rollout Controls"
+--
+--_Button      = _Controls.control #button "Rollout Btn" id:#button_3
 
 
 

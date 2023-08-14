@@ -1,3 +1,6 @@
+if DIALOG_GLOBAL_DATA == undefined then
+	global DIALOG_GLOBAL_DATA = Dictionary()
+
 
 filein( getFilenamePath(getSourceFileName()) + "/../ConstructPropeties/ConstructPropeties.ms" )	-- "./../ConstructPropeties/ConstructPropeties.ms"
 filein( getFilenamePath(getSourceFileName()) + "/../EventsList/EventsList.ms" )	-- "./../EventsList/EventsList.ms"
@@ -111,7 +114,7 @@ struct Dialog_v
 
 		this._setDockState()
 
-		this.RolloutResizer.fitSlotsToDialog(this)
+		this.RolloutResizer.fitSlotsToDialog(this.RCI.def)
 
 		--format "this.Events:	% \n" this.Events
 		--AutoRunEvents.executeMacros()
