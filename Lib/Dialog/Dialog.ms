@@ -1,3 +1,4 @@
+
 filein( getFilenamePath(getSourceFileName()) + "/../ConstructPropeties/ConstructPropeties.ms" )	-- "./../ConstructPropeties/ConstructPropeties.ms"
 filein( getFilenamePath(getSourceFileName()) + "/../EventsList/EventsList.ms" )	-- "./../EventsList/EventsList.ms"
 filein( getFilenamePath(getSourceFileName()) + "/../RolloutCreator/RolloutCreator.ms" )	-- "./../RolloutCreator/RolloutCreator.ms"
@@ -6,6 +7,8 @@ filein( getFilenamePath(getSourceFileName()) + "/../Ini/Ini.ms" )	-- "./../Ini/I
 filein( getFilenamePath(getSourceFileName()) + "/Layout/Layout.ms" )	-- "./Layout/Layout.ms"
 filein( getFilenamePath(getSourceFileName()) + "/AutoRunEvents/AutoRunEvents.ms" )	-- "./AutoRunEvents/AutoRunEvents.ms"
 filein( getFilenamePath(getSourceFileName()) + "/Hotkeys/Hotkeys.ms" )	-- "./Hotkeys/Hotkeys.ms"
+
+filein( getFilenamePath(getSourceFileName()) + "/DialogGlobal/DialogGlobal.ms" )	-- "./DialogGlobal/DialogGlobal.ms"
 
 global DIALOG_PREVIOUS_STATE = undefined -- this should be in struct
 
@@ -16,6 +19,9 @@ global AUTORUN_EVENTS = Dictionary()
 
 if HOTKEYS_GLOBAL == undefined then
 	global HOTKEYS_GLOBAL = HotKeys_v()
+
+if DIALOG_GLOBAL_DATA == undefined then
+	global DIALOG_GLOBAL_DATA = Dictionary()
 
 /** Create dialog [Maxscript help](https://help.autodesk.com/view/MAXDEV/2021/ENU/?guid=GUID-816D257C-CD2D-4753-A792-6E7AEFAFA6A7)
   *
@@ -46,6 +52,7 @@ struct Dialog_v
 
 	/* inherit */
 	/* properties */
+
 	min_size,
 
 	style = #(
@@ -76,6 +83,7 @@ struct Dialog_v
 		--#cui_max_sized,	-- When this flag is specified, docking the dialogbar on the top causes the dialogbar to expand to the full window width, docked to bottom it expands to full window width minus command panel width.
 	),
 
+
 	/** Create dialog
 	  *
 	  * @param	integer	width	of dialog, minimal size of dialog also
@@ -86,30 +94,34 @@ struct Dialog_v
 	  *
 	  * TODO add params for max 2022
 	 */
-	function create width: height: pos: origin:#SCREEN bgcolor: fgcolor: bitmap: bmpstyle:#bmp_tile  style: modal: escapeEnable:false escapekey:true lockHeight:false lockWidth:true min_size:undefined parent: =
+	function create width:256 height: pos: origin:#SCREEN bgcolor: fgcolor: bitmap: bmpstyle:#bmp_tile  style: modal: escapeEnable:false escapekey:true lockHeight:false lockWidth:true parent: =
 	(
-		--format "\n"; print "Dialog_v.create()"
-
+		format "\n"; print "Dialog_v.create()"
 		_RolloutCreator = RolloutCreator_v Ini:Ini
 
 		this._setDialogSize(width)(height)
 
-		this._setDialogMinimalSize(width)(height)(min_size)
+		this._setDialogMinimalSize()
 
 		_RolloutCreator.createRollout (this) width:width -- create nested rollouts
 
-		CreateDialog (this.RCI.def) width:this.width height:this.height pos:(this._getPosition(pos)(origin)) autoLayoutOnResize:true bgcolor:bgcolor fgcolor:fgcolor	bitmap:bitmap bmpstyle:bmpstyle style:(if( style == unsupplied ) then this.style else style) modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth  parent:parent
+		CreateDialog (this.RCI.def) width:this.width height:this.height pos:(this._getPosition(pos)(origin)) autoLayoutOnResize:true bgcolor:bgcolor fgcolor:fgcolor	bitmap:bitmap bmpstyle:bmpstyle style:(if( style == unsupplied ) then this.style else style) modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
 
 		_RolloutCreator.SubolloutsCreator.addSubRollouts (this)
 
 		this._setDockState()
 
-		RolloutResizer.fitSlotsToDialog(this)
 
+		this.RolloutResizer.fitSlotsToDialog(this)
+
+		format "this.Events:	% \n" this.Events
 		--AutoRunEvents.executeMacros()
 
+		DIALOG_GLOBAL_DATA[this.id] = DialogGlobalData_v(this.RCI.def)(this.Events)
+		format "DIALOG_GLOBAL_DATA:	% \n" DIALOG_GLOBAL_DATA[this.id]
+
 		--format ("\n\nDIALOG \""+title+"\" HAS BEEN CREATED\n\n" )
-		format ("\n\n\""+ id as string +"\" HAS BEEN CREATED\n\n" )
+		format ("\n\nDIALOG \""+ id as string +"\" HAS BEEN CREATED\n\n" )
 
 		CONTROL_BITMAPS_STORE = #() -- reset buffer array
 	),
@@ -222,15 +234,17 @@ struct Dialog_v
 	  * 2) Use this.create() parameter
 	  * 3) Use -1 if size is not defined
 	 */
-	function _setDialogMinimalSize width height min_size_param =
+	function _setDialogMinimalSize =
 	(
 		--format "\n"; print "Dialog_v._setDialogMinimalSize()"
-		if this.min_size == undefined and min_size_param == undefined then
+		if min_size == undefined then
 		(
+			--min_width	= if this.width  != unsupplied then this.width  else ( if width  != unsupplied then width else -1)
+			--min_height	= if this.height != unsupplied then this.height else ( if height != unsupplied then height else -1)
 			min_width	= if this.width  != unsupplied then this.width  else -1
 			min_height	= if this.height != unsupplied then this.height else -1
 
-			this.min_size = [ min_width, min_height ]
+			min_size = [ min_width, min_height ]
 		)
 	),
 
@@ -239,10 +253,9 @@ struct Dialog_v
 	function _setDialogSize width height =
 	(
 		--format "\n\n"; print "Dialog_v._setDialogSize()"
-		--this.width  = this._getDialogSize( #width ) (width)
+		this.width  = this._getDialogSize( #width ) (width)
 
-		this.width  = if width  != #auto then this._getDialogSize( #width ) (width) else  unsupplied
-		this.height = if height != #auto then this._getDialogSize( #height) (height) else  unsupplied
+		this.height = if height != #auto then this._getDialogSize( #height ) (height) else  unsupplied
 	),
 
 	/** Get size of dialog
@@ -261,6 +274,11 @@ struct Dialog_v
 	function _getDialogSize size_type defined_size  =
 	(
 		--print "Dialog_v._getDialogSize()"
+		--format "Ini.isDefined():	% \n" (Ini.isDefined())
+		--format "size_type:	% \n" size_type
+		--format "this.width	= % \n" this.width
+		--format "this.height	= % \n" this.height
+
 		is_size_defined = defined_size != undefined and defined_size != unsupplied
 
 		if( Ini.isDefined() and (ini_size = Ini.load( id as string )("size")) != undefined) then
@@ -364,6 +382,7 @@ struct Dialog_v
 		)
 	),
 
+
 	/** Check if required properties are defined when an instance of the struct is created.
 	 * @example __construct = #( #property_name )
 	 */
@@ -378,7 +397,7 @@ struct Dialog_v
 	 */
 	on create do
 	(
-		--format "\n"; print "Dialog_v.onCreate()"
+		format "\n"; print "Dialog_v.onCreate()"
 		this._checkConstctructProperties #(#title)
 
 		Ini	= Ini_v _path:Ini
@@ -395,6 +414,5 @@ struct Dialog_v
 
 		/*------ ADD THIS TO SOMEWHERE ------*/
 		DialogHotkeys = HOTKEYS_GLOBAL.addDialog(title)
-
 	)
 )

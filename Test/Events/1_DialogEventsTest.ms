@@ -1,44 +1,82 @@
-clearListener()
+clearListener(); print("Cleared in:"+getSourceFileName())
 
 
-filein( "$userscripts\Library\MAXSCRIPT-UI-framework\Lib\Dialog\Dialog.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/../../Lib/Dialog/Dialog.ms" )	-- "./../../Lib/Dialog/Dialog.ms"
 
-try( destroyDialog ROLLOUT_test )catch()
+--try( destroyDialog ROLLOUT_test )catch()
+/* SET DIALOG */
+global DialogTest 	= Dialog_v title:"Test"
 
+/** Test all event
+  *
+  */
+function testAllEvents =
+(
+	--format "\n"; print "1_DialogEventsTest.ms.testAllEvent()"
+	event_types =
+	#(
+		#open, #close, #moved, #resized, #help,
 
-Dialog 	= Dialog_v title:"Test"  ini:( getSourceFileName())
--- Dialog.Events.add #open	"print(\"Custom dialog event #open\")"
--- Dialog.Events.add #close	"print(\"Custom dialog event #close\")"
--- Dialog.Events.add #moved	"print(\"#Custom dialog event moved\")"
--- Dialog.Events.add #resized	"print(\"Custom dialog event #resized\")"
+		/* Mouse button events */
+		#lbuttondown,
+		#lbuttonup,
+		#lbuttondblclk,
 
--- Dialog.Events.add #okToClose	"print(\"Custom dialog event #okToClose\"); true"
+		#mbuttondown,
+		#mbuttonup,
+		#mbuttondblclk,
 
+		#rbuttondown,
+		#rbuttonup,
+		#rbuttondblclk,
 
-
-/* ROLLOUT */ 
-_Rollouts  = Dialog.Rollouts()
--- _Rollouts  = Dialog.Rollouts()
-_Rollout = _Rollouts.new "Rollout 1"
-_Rollout_2 = _Rollouts.new "Rollout 2"
-
--- _Rollout.Events.add #rolledUp	"print(\"Custom Rollout event #open \"+val as string )"
--- _Controls = _Rollout.Controls group:"Rollout Controls"
-
--- _Button_1 = _Controls.control #checkbox "Cbeckbox 1" 
-
-
-/* SUBROLLOUTS */ 
-Subrolllouts = _Rollout.Rollouts()
-_Subrolllout = Subrolllouts.new "Subrollout"
---_Subrolllout.Events.add #rolledUp	"print(\"Custom Subrolllout event #open \"+val as string )"
-
-
-Subrolllouts = _Subrolllout.Rollouts()
-_NestedRollout = Subrolllouts.new "Nested"
---_NestedRollout.Events.add #rolledUp	"print(\"Custom Subrolllout event #open \"+val as string )"
+		/* NOT maxscript NATVIVE */
+		#docked,
+		#undocked
+	)
 
 
-Dialog.create()
+	for event_type in event_types do
+	(
+		DialogTest.Events.add event_type	("print(\"Custom dialog event #"+ event_type as string +"\")")
+	)
 
-Dialog.register()
+)
+
+
+/** Test each event
+  *
+  */
+function testEachEvent =
+(
+	--format "\n"; print "1_DialogEventsTest.ms.testEachEvent()"
+	--DialogTest.Events.add #open	"print(\"Custom dialog event #open\")"
+	--DialogTest.Events.add #close	"print(\"Custom dialog event #close\")"
+	--DialogTest.Events.add #moved	"print(\"#Custom dialog event moved\")" -- DOES NOT WORK ON REGISTRED DIALOG
+	--DialogTest.Events.add #resized	"print(\"Custom dialog event #resized\")"
+
+	--DialogTest.Events.add #docked	"print(\"Custom dialog event #docked\")"
+	 --
+	 --/* !!! IMPORTANT - #oktoclose MUST RETURN BOOLEAN */
+	 --DialogTest.Events.add #okToClose	"print(\"Custom dialog event #okToClose\"); true"
+
+)
+
+
+
+
+
+/*------------------------------------------------------------------------------
+	SET EVENTS
+--------------------------------------------------------------------------------*/
+
+----testAllEvents()
+testEachEvent()
+
+
+
+
+/* CREATE DIALOG */
+DialogTest.create width:256
+
+DialogTest.register()

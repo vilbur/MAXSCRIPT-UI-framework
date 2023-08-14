@@ -1,9 +1,9 @@
-filein( getFilenamePath(getSourceFileName()) + "/DefaultEvents/DefaultEvents.ms" )
-filein( getFilenamePath(getSourceFileName()) + "/EventsCombiner/EventsCombiner.ms" ) -- move this to rollout
+filein( getFilenamePath(getSourceFileName()) + "/DefaultEvents/DefaultEvents.ms" )	-- "./DefaultEvents/DefaultEvents.ms"
+filein( getFilenamePath(getSourceFileName()) + "/EventsCombiner/EventsCombiner.ms" )	-- "./EventsCombiner/EventsCombiner.ms"
 
 /** RolloutEvent
   *
-  *		1) Available events for dialog|rollout are #open, #close, #resized, #moved, #docked
+  *		1) Available events for dialog|rollout are #open, #close, #resized, #moved, #docked, #undocked
   *
   *		2) Events #open, #close and #docked fires save to ini callback before user defined callback, if ini file is defined then
   *
@@ -27,7 +27,7 @@ struct RolloutEventBinder_v
 	*/
 	events_rollout = #( #open, #close, #rolledUp ),
 
-	/* DIALOG Events -- https://help.autodesk.com/view/MAXDEV/2021/ENU/?guid=GUID-816D257C-CD2D-4753-A792-6E7AEFAFA6A7
+	/* DIALOG Events
 	 *
 	 * Event #docled IS NOT NATIVE maxscript event, it is binded to #moved event
 	*/
@@ -46,13 +46,14 @@ struct RolloutEventBinder_v
 
 		#rbuttondown,
 		#rbuttonup,
-		#rbuttondblclk
+		#rbuttondblclk,
 
 		/* NOT maxscript NATVIVE */
-		--#docked
+		#docked,
+		#undocked
 	),
 
-	events_no_param	= #( #open, #close, #oktoclose ),
+	events_no_param	= #( #open, #close, #oktoclose, #help ),
 
 	--not_native_events	= #( #rolledDown, #docked ),
 

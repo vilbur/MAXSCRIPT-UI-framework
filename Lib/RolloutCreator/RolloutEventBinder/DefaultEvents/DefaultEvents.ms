@@ -1,4 +1,7 @@
-/** Events default for rollout
+filein( getFilenamePath(getSourceFileName()) + "/findResizeEventType.ms" )	-- "./findResizeEventType.ms"
+
+
+/** Events default for rollout\dialog
  */
 struct DefaultEvents_v
 (
@@ -15,7 +18,10 @@ struct DefaultEvents_v
 		--format "\n"; print ("DefaultEvents_v.getEvents()" + rollout_id_full as string )
 		--format "rollout_id_full	= % \n" rollout_id_full
 		append Events ( Event_v type:#open	code:("GROUPBOXCREATOR.sortControlsToGroupBoxes(\""+rollout_id_full+"\")") )
-		--append Events ( Event_v type:#rolledUp	code:("print(\"ROLLED UP\")") )
+
+		--append Events ( Event_v type:#moved	code:("startResizeEventTimer(#"+rollout_id_full+")( #moved )") )
+		append Events ( Event_v type:#resized	code:("startResizeEventTimer(#"+rollout_id_full+")( #resized )") )
+
 
 		if( ini_path != undefined ) then
 		(
