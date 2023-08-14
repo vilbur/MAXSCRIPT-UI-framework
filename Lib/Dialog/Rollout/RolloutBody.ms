@@ -12,7 +12,7 @@
 
 	/* dependency */
 	_Controls	= #(),
-	Events	= EventsList_v(),
+	Events	= EventsList_v(), -- "./../../EventsList/EventsList.ms"
 	RolloutResizer	= RolloutResizer_v(),
 
 	/* extended control params */

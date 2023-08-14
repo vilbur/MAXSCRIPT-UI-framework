@@ -3,12 +3,14 @@ filein( getFilenamePath(getSourceFileName()) + "/../List/List.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/../Dialog/Rollout/Rollout.ms" ) 	-- "./../Dialog/Rollout/Rollout.ms"
 filein( getFilenamePath(getSourceFileName()) + "/../Dialog/Rollout/Subrollouts/Subrollouts.ms" )	-- "./../Dialog/Rollout/Subrollouts/Subrollouts.ms"
 
+filein( getFilenamePath(getSourceFileName()) + "/RolloutEventBinder/DefaultEvents/findResizeEventType.ms" )	-- "./RolloutEventBinder/DefaultEvents/findResizeEventType.ms"
 
 filein( getFilenamePath(getSourceFileName()) + "/RolloutEventBinder/RolloutEventBinder.ms" )	-- "./RolloutEventBinder/RolloutEventBinder.ms"
 
 filein( getFilenamePath(getSourceFileName()) + "/ControlsCreator/ControlsCreator.ms" )	-- "./ControlsCreator/ControlsCreator.ms"
 
 filein( getFilenamePath(getSourceFileName()) + "/SubolloutsCreator/SubolloutsCreator.ms" ) -- "./SubolloutsCreator/SubolloutsCreator.ms"
+
 
 /** RolloutCreator_v
   *
@@ -82,9 +84,10 @@ struct RolloutCreator_v
 		if( ini != undefined ) then
 			EventBinder.combineEventsAndAddHandlers(_Rollout)
 
-		--this._setRolloutGlobal(_Rollout)
-		/* EDIT end */
+		/* EDIT END */
 		--_Rollout.RCI.end() --return
+
+		/* EDIT END - DEV VERSION */
 		_Rollout_def =_Rollout.RCI.end() --return
 
 		--format "_ROLLOUT_DEF:---------------------------------------------------------------------\n\n\n% \n"_Rollout.RCI
@@ -287,25 +290,6 @@ struct RolloutCreator_v
 
 		title --return
 	),
-
-
-
-	--/** Set dialog id as global variable
-	--  *
-	--  * It is for unnecessary for make EverntFired working
-	--  *
-	-- */
-	--function _setRolloutGlobal _Rollout =
-	--(
-	--	format "\n"; print "Dialog_v._setRolloutGlobal()"
-	--	format "id	= % \n" _Rollout.id
-	--	--format "id	= % \n" (toUpper (id as string ))
-	--	--execute("global "+ (toUpper (id as string )) )
-	--	--execute("global GLOBAL_"+( id as string ) )
-	--	execute("global "+( _Rollout.id as string ) )
-	--
-	--	--format "GLOBAL_group_options	= % \n" GLOBAL_group_options
-	--),
 
 	/**
 	 */

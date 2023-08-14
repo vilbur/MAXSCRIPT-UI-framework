@@ -5,9 +5,10 @@ struct SubolloutsCreator_v
 	--__construct = #( #property_name ),
 	/* construct */
 	/* properties */
-	--_Rollout,
 
 	ini_path,
+
+	slot_height_fix = 8, -- slot is slightly shorter without this compesation
 
 	/* dependency */
 	/* reference */
@@ -67,11 +68,11 @@ struct SubolloutsCreator_v
 	 (
 		--format "\n\n\n\n=====================================	SubolloutsCreator_v.addSubrolloutSlot() %.%	=====================================\n" ( _Rollout.id as string ) ( Subrollouts.slot as string );
 
-		--format "Subrollouts.height:	% \n" Subrollouts.height
+		slot_height = (Subrollouts.height + this.slot_height_fix ) as string
 
 		slot_id = Subrollouts.slot as string
 
-		_Rollout.RCI.addText ("subRollout "+slot_id +" \""+slot_id+"\" height:"+Subrollouts.height as string )
+		_Rollout.RCI.addText ("subRollout "+slot_id +" \""+slot_id+"\" height:"+ slot_height )
 	 ),
 
 

@@ -1,4 +1,4 @@
-filein( getFilenamePath(getSourceFileName()) + "/IniSaver/IniSaver.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/IniSaver/IniSaver.ms" )	-- "./IniSaver/IniSaver.ms"
 
 /** Save Load ini settings
   *

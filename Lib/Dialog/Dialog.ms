@@ -8,7 +8,7 @@ filein( getFilenamePath(getSourceFileName()) + "/Layout/Layout.ms" )	-- "./Layou
 filein( getFilenamePath(getSourceFileName()) + "/AutoRunEvents/AutoRunEvents.ms" )	-- "./AutoRunEvents/AutoRunEvents.ms"
 filein( getFilenamePath(getSourceFileName()) + "/Hotkeys/Hotkeys.ms" )	-- "./Hotkeys/Hotkeys.ms"
 
-filein( getFilenamePath(getSourceFileName()) + "/DialogGlobal/DialogGlobal.ms" )	-- "./DialogGlobal/DialogGlobal.ms"
+
 
 global DIALOG_PREVIOUS_STATE = undefined -- this should be in struct
 
@@ -20,8 +20,6 @@ global AUTORUN_EVENTS = Dictionary()
 if HOTKEYS_GLOBAL == undefined then
 	global HOTKEYS_GLOBAL = HotKeys_v()
 
-if DIALOG_GLOBAL_DATA == undefined then
-	global DIALOG_GLOBAL_DATA = Dictionary()
 
 /** Create dialog [Maxscript help](https://help.autodesk.com/view/MAXDEV/2021/ENU/?guid=GUID-816D257C-CD2D-4753-A792-6E7AEFAFA6A7)
   *
@@ -84,6 +82,7 @@ struct Dialog_v
 	),
 
 
+
 	/** Create dialog
 	  *
 	  * @param	integer	width	of dialog, minimal size of dialog also
@@ -96,7 +95,7 @@ struct Dialog_v
 	 */
 	function create width:256 height: pos: origin:#SCREEN bgcolor: fgcolor: bitmap: bmpstyle:#bmp_tile  style: modal: escapeEnable:false escapekey:true lockHeight:false lockWidth:true parent: =
 	(
-		format "\n"; print "Dialog_v.create()"
+		--format "\n"; print "Dialog_v.create()"
 		_RolloutCreator = RolloutCreator_v Ini:Ini
 
 		this._setDialogSize(width)(height)
@@ -104,6 +103,7 @@ struct Dialog_v
 		this._setDialogMinimalSize()
 
 		_RolloutCreator.createRollout (this) width:width -- create nested rollouts
+		--format "this.Events:	% \n" this.Events
 
 		CreateDialog (this.RCI.def) width:this.width height:this.height pos:(this._getPosition(pos)(origin)) autoLayoutOnResize:true bgcolor:bgcolor fgcolor:fgcolor	bitmap:bitmap bmpstyle:bmpstyle style:(if( style == unsupplied ) then this.style else style) modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
 
@@ -111,14 +111,14 @@ struct Dialog_v
 
 		this._setDockState()
 
-
 		this.RolloutResizer.fitSlotsToDialog(this)
 
-		format "this.Events:	% \n" this.Events
+		--format "this.Events:	% \n" this.Events
 		--AutoRunEvents.executeMacros()
 
-		DIALOG_GLOBAL_DATA[this.id] = DialogGlobalData_v(this.RCI.def)(this.Events)
-		format "DIALOG_GLOBAL_DATA:	% \n" DIALOG_GLOBAL_DATA[this.id]
+		DIALOG_GLOBAL_DATA[this.id] = DialogGlobalData_v(this.RCI.def)(this)
+
+		--format "DIALOG_GLOBAL_DATA:	% \n" DIALOG_GLOBAL_DATA[this.id]
 
 		--format ("\n\nDIALOG \""+title+"\" HAS BEEN CREATED\n\n" )
 		format ("\n\nDIALOG \""+ id as string +"\" HAS BEEN CREATED\n\n" )
@@ -397,7 +397,7 @@ struct Dialog_v
 	 */
 	on create do
 	(
-		format "\n"; print "Dialog_v.onCreate()"
+		--format "\n"; print "Dialog_v.onCreate()"
 		this._checkConstctructProperties #(#title)
 
 		Ini	= Ini_v _path:Ini
