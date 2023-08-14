@@ -6,18 +6,15 @@ filein( getFilenamePath(getSourceFileName()) + "/../../Lib/Dialog/Dialog.ms" ) -
 /* DIALOG */
 Dialog 	= Dialog_v title:"Test Dialog"
 
+_Controls_Dialog = Dialog.Controls group:"Dialog Controls"
+_Button          = _Controls_Dialog.control #button "Dialog btn" id:#button_3
+
 
 /*------------------------------------------------------------------------------
 	ROLLOUTS
 --------------------------------------------------------------------------------*/
 
 _Rollouts	 = Dialog.Rollouts()
-format "_Rollouts:	% \n" _Rollouts
-
-
-_Controls_Dialog   = Dialog.Controls group:"Dialog Controls"
-_Button      = _Controls_Dialog.control #button "Dialog btn" id:#button_3
-
 
 /* ROLLOUT  */
 _Rollout    = _Rollouts.Roll "Main Rollout" --height:256
@@ -29,7 +26,7 @@ _Button      = _Controls.control #button "Rollout Btn" id:#button_3
 
 /*------------------------------------------------------------------------------
 	SUBROLLOUTS
---------------------------------------------------------------------------------*/
+------------------------------------------------------------------------------*/
 _SubRollouts	 = _Rollout.Rollouts()
 
 /* SUBROLLOUT  */
@@ -42,7 +39,7 @@ _Button      = _Controls.control #button "Subrollout Btn" id:#button_3
 
 /*------------------------------------------------------------------------------
 	NESTED SUBROLLOUTS
---------------------------------------------------------------------------------*/
+------------------------------------------------------------------------------*/
 _NestedSubRollouts	 = _SubRollout.Rollouts()
 
 /* NESTED SUBROLLOUT  */
@@ -58,4 +55,4 @@ _Button      = _Controls.control #button "Nested Btn" id:#button_3
 	 CREATE DIALOG
 --------------------------------------------------------------------------------*/
 --Dialog.create()
-Dialog.create height:512
+Dialog.create width:256 height:512

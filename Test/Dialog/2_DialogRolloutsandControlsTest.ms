@@ -9,15 +9,16 @@ filein( getFilenamePath(getSourceFileName()) + "/../../Lib/Dialog/Dialog.ms" ) -
 Dialog 	    = Dialog_v ("Test") ini:(getSourceFileName())
 
 
---_Controls   = Dialog.Controls group:"Main Controls"
---_Button     = _Controls.control #button "Main" id:#button_1
+_Controls   = Dialog.Controls group:"Main Controls"
+_Button     = _Controls.control #button "Main" id:#button_1
 
+
+/* ROLLOUTS */
+_Rollouts	 = Dialog.Rollouts()
 
 /* ROLLOUT */
---_Rollouts	 = Dialog.Rollouts()
-_Rollouts	 = Dialog.Rollouts height:512
---_Rollout    = _Rollouts.Roll "Subrollout"
-_Rollout    = _Rollouts.Roll "Subrollout" height:256
+_Rollout    = _Rollouts.Roll "Subrollout"
+
 _Controls   = _Rollout.Controls group:"Rollout Controls"
 _Button     = _Controls.control #button "Rollout" id:#button_2
 
@@ -25,6 +26,8 @@ _Button     = _Controls.control #button "Rollout" id:#button_2
 
 /* SUBROLLOUTS */
 Subrollouts = _Rollout.Rollouts()
+
+/* SUBROLLOUT */
 _Subrollout = Subrollouts.Roll "Nested"
 _Controls    = _Subrollout.Controls group:"Subrollout Controls"
 _Button      = _Controls.control #button "Subrollout" id:#button_3

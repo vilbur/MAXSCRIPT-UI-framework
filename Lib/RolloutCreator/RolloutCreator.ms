@@ -124,6 +124,7 @@ struct RolloutCreator_v
 
 			for _RolloutSub in Subrollouts.Rollouts do
 			(
+				format "_RolloutSub:	% \n" _RolloutSub
 				/* SET FULL ID TO SUBROLLOUT */
 				_RolloutSub.parent_rollout_id = Subrollouts.getSlotId()
 
@@ -157,7 +158,8 @@ struct RolloutCreator_v
 	  */
 	function _storeSubrolloutHeight _Rollout =
 	(
-		--format "\n"; print "RolloutCreator_v.storeSubrolloutHeight()"
+		format "\n"; print "RolloutCreator_v.storeSubrolloutHeight()"
+		format "_Rollout:	% \n" _Rollout
 		rollout_height = if _Rollout.height == unsupplied then _Rollout.RCI.def.height else _RolloutSub.height
 		--format "rollout_height:	% \n" rollout_height
 		if rollout_height > max_height_of_subrollout then

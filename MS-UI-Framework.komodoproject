@@ -5,6 +5,8 @@
 </livefolder>
 <livefolder id="b955f8ca-751f-4829-be7d-0d0d34c8d5bb" idref="0a2534c0-4e33-4331-9037-9f7d46588d24" name="Dialog" url="Lib/Dialog/">
 </livefolder>
+<livefolder id="f1a7c246-8bf8-4b3d-b32c-2acbe4b913ba" idref="0a2534c0-4e33-4331-9037-9f7d46588d24" name="Test" url="Test/">
+</livefolder>
 <preference-set idref="0a2534c0-4e33-4331-9037-9f7d46588d24" id="project" preftype="project">
   <long id="prefs_version">1</long>
 </preference-set>

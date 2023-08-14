@@ -15,24 +15,19 @@ struct RolloutResizer_v
 	function fitSlotsToDialog _Rollout  =
 	(
 		--format "\n"; print "RolloutResizer_v._resizeSubrollouts()"
-		--print "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-		--format "_Rollout.id	= % \n" _Rollout.id
-		--format "_Rollout.height:	% \n" _Rollout.height
-		--format "_Rollout.RCI:	% \n" _Rollout.RCI
-		--format "_Rollout.RCI.height:	% \n" _Rollout.RCI.height
 
 		if ( dialog_height = _Rollout.RCI.height ) == undefined then
 			dialog_height = execute( _Rollout.id as string + ".height" )
 
 		dialog_controls = _Rollout.RCI.Def.controls
 
-		--format "DIALOG_CONTROLS:	% \n" dialog_controls
 		subrollout_slots = for control in dialog_controls where classOf control == subRollout collect control
-		--format "SUBROLLOUT_SLOTS:	% \n" subrollout_slots
 
 		if subrollout_slots.count > 0 then
 		(
-			last_control_position = dialog_controls[dialog_controls.count].pos.y + dialog_controls[dialog_controls.count].height
+			last_control = this._getLastControl (dialog_controls)
+
+			last_control_position = last_control.pos.y + last_control.height
 
 			empty_space_bottom = dialog_height - last_control_position - padding_bottom
 
@@ -51,6 +46,21 @@ struct RolloutResizer_v
 	),
 
 	private
+
+	/** Get last control
+	  *
+	  */
+	function _getLastControl controls =
+	(
+		--format "\n"; print "RolloutResizer_v._getLastControl()"
+		for i = controls.count to 1 by -1 do
+		(
+			control_class	= classOf controls[i]
+
+			if control_class != GroupStartControl and control_class != GroupEndControl  then
+				 return controls[i]
+		)
+	),
 
 	/** Resize subrollout slot
 	 */
