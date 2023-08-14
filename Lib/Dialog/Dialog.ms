@@ -86,7 +86,7 @@ struct Dialog_v
 	  *
 	  * TODO add params for max 2022
 	 */
-	function create width:256 height: pos: origin:#SCREEN bgcolor: fgcolor: bitmap: bmpstyle:#bmp_tile  style: modal: escapeEnable:false escapekey:true lockHeight:false lockWidth:true min_size:undefined parent: =
+	function create width: height: pos: origin:#SCREEN bgcolor: fgcolor: bitmap: bmpstyle:#bmp_tile  style: modal: escapeEnable:false escapekey:true lockHeight:false lockWidth:true min_size:undefined parent: =
 	(
 		--format "\n"; print "Dialog_v.create()"
 

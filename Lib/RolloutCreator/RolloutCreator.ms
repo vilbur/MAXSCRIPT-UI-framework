@@ -124,20 +124,20 @@ struct RolloutCreator_v
 
 			for _RolloutSub in Subrollouts.Rollouts do
 			(
-				format "_RolloutSub:	% \n" _RolloutSub
+				--format "_RolloutSub:	% \n" _RolloutSub
 				/* SET FULL ID TO SUBROLLOUT */
 				_RolloutSub.parent_rollout_id = Subrollouts.getSlotId()
 
-				execute ("try(destroyDialog "+_RolloutSub.id as string+ " )catch()") --DEV DESTROY SUBROLLOUT DIALOG
+				--execute ("try(destroyDialog "+_RolloutSub.id as string+ " )catch()") --DEV DESTROY SUBROLLOUT DIALOG
 
 				this.createRollout (_RolloutSub) --width:_RolloutSub.width height:_RolloutSub.height-- CREATE PARENT ROLLOUTS
 
 				/* DONT CREATE ROLOUTS WITH DEFINED HEIGHT */
 				if Subrollouts.height == unsupplied then
 				(
-					--CreateDialog ( _RolloutSub_def ) width:_RolloutParent.width height:_RolloutSub.height pos:[0,-8000]
-					--CreateDialog ( _RolloutSub_def ) width:_RolloutParent.width height:_RolloutSub.height
-					--CreateDialog ( _RolloutSub_def ) width:_RolloutParent.width height:_RolloutSub.height -- DEV
+					--CreateDialog ( _RolloutSub.RCI.def ) width:_RolloutParent.width height:_RolloutSub.height pos:[0,-8000]
+					--CreateDialog ( _RolloutSub.RCI.def ) width:_RolloutParent.width height:_RolloutSub.height
+					--CreateDialog ( _RolloutSub.RCI.def ) width:_RolloutParent.width height:_RolloutSub.height -- DEV
 					CreateDialog ( _RolloutSub.RCI.def )-- DEV
 
 					--_RolloutSub.temporary_created = true -- note that dialog msut be destryed before adding as subrollout
@@ -158,9 +158,11 @@ struct RolloutCreator_v
 	  */
 	function _storeSubrolloutHeight _Rollout =
 	(
-		format "\n"; print "RolloutCreator_v.storeSubrolloutHeight()"
-		format "_Rollout:	% \n" _Rollout
-		rollout_height = if _Rollout.height == unsupplied then _Rollout.RCI.def.height else _RolloutSub.height
+		--format "\n"; print "RolloutCreator_v.storeSubrolloutHeight()"
+		--format "_Rollout:	% \n" _Rollout
+		--format "_Rollout.RCI:	% \n" _Rollout.RCI
+
+		rollout_height = if _Rollout.height == unsupplied then _Rollout.RCI.def.height else _Rollout.height
 		--format "rollout_height:	% \n" rollout_height
 		if rollout_height > max_height_of_subrollout then
 			this.max_height_of_subrollout = rollout_height

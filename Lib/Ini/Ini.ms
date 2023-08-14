@@ -60,6 +60,9 @@ struct Ini_v
 	function keys _section =
 	(
 		--format "\n"; print "Ini_v.keys()"
+		if _path == undefined then
+			return undefined
+
 		 getINISetting _path ( _section	as string ) --return
 	),
 
@@ -84,6 +87,9 @@ struct Ini_v
 	function delete _section _key: =
 	(
 		--format "\n"; print "Ini_v.delete()"
+		if _path == undefined then
+			return false
+
 		if _key != unsupplied then
 			delINISetting  _path ( _section	as string ) ( _key as string )
 		else
@@ -95,7 +101,8 @@ struct Ini_v
 	function deleteIni =
 	(
 		--format "\n"; print "Ini_v.deleteFile()"
-		deleteFile _path
+		if _path != undefined then
+			deleteFile _path
 	),
 
 	/** Is defined

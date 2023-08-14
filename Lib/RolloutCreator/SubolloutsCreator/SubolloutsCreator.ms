@@ -52,7 +52,6 @@ struct SubolloutsCreator_v
 			(
 				_Subrollout = Subrollouts.Rollouts[index]
 
-				--if _Subrollout.temporary_created then
 				try(destroyDialog _Subrollout.RCI.def )catch() -- destroy dialog of subrollout created for find of height
 
 				AddSubRollout SubrolloutsSlot	_Subrollout.RCI.def rolledUp:(this._getRolledUpState(subrollout_id))
