@@ -3,8 +3,8 @@
 struct DialogGlobalData_v
 (
 	/* construct */
-	Dialog,
-	Events,
+	DialogClass, 	-- RolloutClass
+	Dialog,	-- Dialog_v
 	/* properties */
 	size	= [0,0],
 	position	= [0,0],
@@ -19,44 +19,11 @@ struct DialogGlobalData_v
 	  */
 	function fill =
 	(
-		--format "\n"; print "DialogGlobalData_v.fill()"
-		--this.position	= GetDialogPos  this.Dialog
-		--this.size	= GetDialogSize this.Dialog
-		--
-		--this.dock_state = (try(cui.getDockState _Rollout )catch(#cui_floatable))
-		this.fillDockState()
-		this.fillPosition()
-		this.fillSize()
+		this.position	= GetDialogPos  this.DialogClass
 
-	),
+		this.size	= GetDialogSize this.DialogClass
 
-
-
-	/** Set position
-	  *
-	  */
-	function fillPosition =
-	(
-		--format "\n"; print "DialogGlobalData_v.setSize()"
-		this.position	= GetDialogPos  this.Dialog
-	),
-
-	/** Set size
-	  *
-	  */
-	function fillSize =
-	(
-		--format "\n"; print "DialogGlobalData_v.setSize()"
-		this.size	= GetDialogSize this.Dialog
-	),
-
-	/** Set size
-	  *
-	  */
-	function fillDockState =
-	(
-		--format "\n"; print "DialogGlobalData_v.setSize()"
-		this.dock_state = (try(cui.getDockState this.Dialog )catch(#cui_floatable))
+		this.dock_state = (try(cui.getDockState this.DialogClass )catch(#cui_floatable))
 	),
 
 	private

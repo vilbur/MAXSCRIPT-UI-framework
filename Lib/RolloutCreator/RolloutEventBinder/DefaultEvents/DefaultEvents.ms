@@ -16,20 +16,21 @@ struct DefaultEvents_v
 	function getEvents rollout_id_full =
 	(
 		--format "\n"; print ("DefaultEvents_v.getEvents()" + rollout_id_full as string )
-		--format "rollout_id_full	= % \n" rollout_id_full
+
+		/* MOVE CONTROLS TO GROUPBOXES */
 		append Events ( Event_v type:#open	code:("GROUPBOXCREATOR.sortControlsToGroupBoxes(\""+rollout_id_full+"\")") )
 
-		--append Events ( Event_v type:#moved	code:("startResizeEventTimer(#"+rollout_id_full+")( #moved )") )
+		/* HANDLE WITH #RESIZE|#DOCKED|#UNDOCKED events */
 		append Events ( Event_v type:#resized	code:("startResizeEventTimer(#"+rollout_id_full+")( #resized )") )
 
 
+		/* SAVE DIALOG STATE IF INI FILE EXISTS */
 		if( ini_path != undefined ) then
 		(
 			ini_path	= ( dotNetObject "System.Text.RegularExpressions.Regex" @"[\\/]+" ).Replace ini_path "/"
 
 			append Events ( Event_v type:#okToClose code:("(IniSaver_v ini_file:\""+ini_path+"\").saveRollout(\""+rollout_id_full+"\")") )
 		)
-
 
 		Events --return
 	),

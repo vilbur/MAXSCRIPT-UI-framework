@@ -78,7 +78,7 @@ struct RolloutEventBinder_v
 	function _addHandlers =
 	(
 		--print "RolloutEventBinder_v._addHandlers()"
-		dialog_or_rollout_event_types = if( _Rollout.parent_rollout_id == undefined ) then events_dialog else events_rollout
+		dialog_or_rollout_event_types = if( this._Rollout.parent_rollout_id == undefined ) then events_dialog else events_rollout
 
 		for event_type in dialog_or_rollout_event_types do
 			this._addHandler event_type
@@ -88,111 +88,29 @@ struct RolloutEventBinder_v
 	 */
 	function _addHandler event_type =
 	(
-		--print "RolloutEventBinder_v._addHandler()"
+		--format "\n";	print "RolloutEventBinder_v._addHandler()"
 
-		--if( (Event = this._getCombinedEvent event_type) == undefined ) then
-		Event = EventsCombiner.combine (event_type)
+		if (Event = EventsCombiner.combine (event_type)) != undefined then
+		(
+			handler = "on "+(this._Rollout.id)+" "+ event_type as string +" "+this._getParams(event_type)+" do  \n(" +Event.code+ "\n)"
 
-		if Event == undefined then
-			return false
-
-		--print "RolloutEventBinder_v._addHandler()"
-		--format "event_type	= % \n" event_type
-		--format "Event.code	= % \n" Event.code
-		--format "Event	= % \n" Event
-
-		handler = "on "+(_Rollout.id)+" "+ event_type as string +" "+this._getParams(event_type)+" do  \n(" +Event.code+ "\n)"
-
-		--format "handler	= % \n" handler
-		_Rollout.RCI.addText(handler)
+			this._Rollout.RCI.addText(handler)
+		)
 	),
-
-	--/** Get callback on rollout open\close
-	-- */
-	--function _getCombinedEvent event_type =
-	--(
-	--	--format "\n"; print ("RolloutEvent_v._getCombinedEvent()")
-	--	--format "event_type	= % \n" event_type
-	--	case event_type of
-	--	(
-	--		#rolledUp:	this._mutateRolledUpEventToRolledDown()
-	--		#resized:	this._mutateResizedEventToDocked()
-	--		default:	EventsCombiner.combine (event_type)
-	--	)
-	--),
 
 	/** _combine events
 	 */
 	function _setCustomEvents =
 	(
-		EventsCombiner.setEventsClass #CUSTOM _Rollout.Events.list
+		EventsCombiner.events_classes[#CUSTOM] = this._Rollout.Events.list
 	),
 
 	/** _combine events
 	 */
 	function _setDefaultEvents =
 	(
-		EventsCombiner.setEventsClass #DEFAULTS ( (DefaultEvents_v ini_path:ini_path ).getEvents(_Rollout.getFullId()) )
+		EventsCombiner.events_classes[#DEFAULTS] = ( (DefaultEvents_v ini_path:ini_path ).getEvents(this._Rollout.getFullId()) )
 	),
-
-	--/** _combine events
-	-- */
-	--function _setSaveIniEvents =
-	--(
-	--	EventsCombiner.setEventsClass #SAVEINI ( (SaveIniEvents_v rollout_id:_Rollout.id ini_path:ini_path ).getEvents(_Rollout.parent_rollout_id) )
-	--),
-
-
-	--
-	--/** Bind to rolled up handler
-	--  *
-	--  * Events #open, #close are bind to #rolledUp handler
-	--  */
-	--function _mutateRolledUpEventToRolledDown =
-	--(
-	--	--print ("RolloutEvents_v._mutateRolledUpEventToRolledDown()")
-	--	Event_rolledup = EventsCombiner.combineOrGetNewEvent (#rolledUp)
-	--
-	--	if( (Event_rolledown = EventsCombiner.combine (#rolledDown)) != undefined ) then
-	--		Event_rolledup.code = ";if( val ) then (" +Event_rolledown.code+ ")else(" +Event_rolledup.code+ ")" --return
-	--
-	--	Event_rolledup --return
-	--),
-
-	--/** Mutate #resized event to works as #resized event as well
-	--  *
-	--  * Callback from #docked event is bind to #resized handler
-	-- */
-	--function _mutateResizedEventToDocked =
-	--(
-	--	--print "global._mutateResizedEventToDocked()"
-	--	Event_resized	= EventsCombiner.combineOrGetNewEvent (#resized)
-	--	--format "Event_resized	= % \n" Event_resized
-	--
-	--	if( (Event_docked = EventsCombiner.combine (#docked)) != undefined ) then
-	--	(
-	--		prev_state_not_false	= " (DIALOG_PREVIOUS_STATE != false) "
-	--		current_state_changed	= " (dialog_current_state = try(cui.getDockState "+_Rollout.id+")catch(false)) != DIALOG_PREVIOUS_STATE "
-	--		current_state_match_cui	= " matchPattern (dialog_current_state as string) pattern:\"cui_*\" "
-	--
-	--		----if_resizing_enabled     =	" if(ENABLE_RESIZING != false) then\n" -- this is MUST WRAP ALL STRINGS BELOW IN ()
-	--		if_docked_event_enabled = " if(EVENT_DOCKED_ENABLED) then "
-	--
-	--		re_set_previous_state   	= " DIALOG_PREVIOUS_STATE = dialog_current_state "
-	--
-	--		--if( Event_docked != undefined ) then -- on move, if dialog is docked and change its state then call #docked callback
-	--		Event_resized.code = "if ( "+prev_state_not_false+" and "+current_state_changed+" and "+current_state_match_cui+")
-	--								then
-	--									( "+if_docked_event_enabled+" (" +Event_docked.code+ " )  -- Fire #docked event
-	--										EVENT_DOCKED_ENABLED = false
-	--									)
-	--								else "+
-	--									"(" +Event_resized.code+ ")"+ -- Fire #resized event
-	--								re_set_previous_state
-	--	)
-	--
-	--	Event_resized
-	--),
 
 	/** Get events for dialog rollout or subrollout
 	 */
@@ -215,21 +133,6 @@ struct RolloutEventBinder_v
 		findItem events_no_param event_type == 0
 	),
 
-	--/** Get event code of custom and default event
-	--  *
-	--  * @return	string
-	-- */
-	--function _EventsCombinerCombine event_type =
-	--(
-	--	--print ("RolloutEvent_v._EventsCombinerCombine()")
-	--	Event = EventsCombiner.combine event_type
-	--
-	--	if( Event != undefined ) then
-	--		Event.code --return
-	--	else
-	--		"" --return
-	--),
-
 	/** _is event exists
 	 */
 	function _eventNameIsValid event_types event_type =
@@ -248,7 +151,7 @@ struct RolloutEventBinder_v
 	 */
 	function _exception event_type =
 	(
-		messageBox ("WARNING\n\nUnknown Event Type: #" +event_type+ "\n\nControl: " + _Rollout.id )
+		messageBox ("WARNING\n\nUnknown Event Type: #" +event_type+ "\n\nControl: " + this._Rollout.id )
 	),
 
 	on create do
