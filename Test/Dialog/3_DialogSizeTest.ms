@@ -38,12 +38,12 @@ function addRollouts SubRollouts title count slot:slot =
 	CREASTE DIALOG WIDTH VARIOUS PARAMETERS OF SIZE
 
 --------------------------------------------------------------------------------*/
-function createTestDialog slots:0 nested:0 rollouts:0 controls:0 controls_dialog:#() subrollouts_height: construct_width:  dialog_width:256 dialog_height: min_size:undefined ini: reset_ini:false lockWidth:true lockHeight:false =
+function createTestDialog slots:0 nested:0 rollouts:0 controls:0 controls_dialog:#() subrollouts_height: construct_width:  width: height: min_size:undefined ini: reset_ini:false lockWidth:false lockHeight:false =
 (
 	if classOf controls_dialog != Array then
 		controls_dialog = #(controls_dialog, 0)
 
-	Dialog     = Dialog_v title:"Height Test" ini:(if ini != unsupplied or reset_ini then getSourceFileName() else undefined ) width:construct_width
+	Dialog     = Dialog_v title:"Height Test" ini:(if ini != unsupplied or reset_ini then getSourceFileName() else undefined ) width:construct_width min_size:min_size
 
 	if reset_ini then
 		Dialog.Ini.deleteIni()
@@ -70,7 +70,7 @@ function createTestDialog slots:0 nested:0 rollouts:0 controls:0 controls_dialog
 		addControls(Dialog) (controls_dialog[2]) prefix:"Down"
 
 
-	Dialog.create width:dialog_width height:dialog_height min_size:min_size lockWidth:lockWidth lockHeight:lockHeight
+	Dialog.create width:width height:height lockWidth:lockWidth lockHeight:lockHeight
 
 	Dialog.register()
 )
@@ -88,25 +88,33 @@ function createTestDialog slots:0 nested:0 rollouts:0 controls:0 controls_dialog
 
 ================================================================================*/
 
+/*------------------------------------------------------------------------------
+	UNDEFINED SIZE
+--------------------------------------------------------------------------------*/
 
 /* DEFAULT */
---createTestDialog()
+createTestDialog()
 
 
-/* MINIMAL WIDTH */
---createTestDialog  controls_dialog:5	construct_width:512	lockWidth:false
+/* SLOTS AND CONTROLS */
+--createTestDialog slots:1 rollouts:1 controls:10
+--createTestDialog slots:2 rollouts:2 controls:10
+-- createTestDialog slots:2 rollouts:1 controls:20
+ --createTestDialog slots:2 rollouts:2 controls:10 controls_dialog:#(1,2)
+-- createTestDialog slots:2 rollouts:2 controls:0 controls_dialog:#(1,1)
 
-/* DIALOG WIDTH ON CREATION - no minimal size */
---createTestDialog  controls_dialog:5	dialog_width:256	lockWidth:false
 
-/* MINIMAL WIDTH & DIALOG WIDTH */
---createTestDialog  controls_dialog:5	construct_width:128 dialog_width:512	lockWidth:false
+/*------------------------------------------------------------------------------
+	DEFINED CONSTRUCT SIZE
+--------------------------------------------------------------------------------*/
 
-/* MINIMAL WIDTH & DIALOG WIDTH & INI - ini value overrides dialog_width, BUT ONLY if ini value is higher then dialog_width */
-createTestDialog  controls_dialog:5	construct_width:128 dialog_width:256 lockWidth:false ini:true
 
-/* MINIMAL SIZE OF DIALOG */
---createTestDialog  slots:1 rollouts:1 controls:10 ini:true min_size:[256,256]
+/* WIDTH CONSTRUCT - also minimal size  */
+--createTestDialog  controls_dialog:5	construct_width:256
+
+
+/* WIDTH CONSTRUCT & MIN SIZE */
+--createTestDialog  controls_dialog:5	construct_width:256	min_size:[128,128]
 
 
 /* ONLY CONTROLS */
@@ -118,34 +126,33 @@ createTestDialog  controls_dialog:5	construct_width:128 dialog_width:256 lockWid
 --createTestDialog slots:2 rollouts:2
 
 
-/* SLOTS AND CONTROLS */
---createTestDialog slots:1 rollouts:1 controls:10
---createTestDialog slots:2 rollouts:2 controls:10
--- createTestDialog slots:2 rollouts:1 controls:20
--- createTestDialog slots:2 rollouts:2 controls:10 controls_dialog:#(1,2)
--- createTestDialog slots:2 rollouts:2 controls:0 controls_dialog:#(1,1)
+/*------------------------------------------------------------------------------
+	INI SAVED SIZE
+--------------------------------------------------------------------------------*/
+
+--createTestDialog reset_ini:true -- RESET INI
 
 
-
-/* DEFINED HEIGHT */
--- createTestDialog slots: 2 rollouts:2 controls:5 controls_dialog:#(1,2) dialog_height:1024
-
-
-/* HEIGHT SAVED IN INI */
---createTestDialog slots: 2 rollouts:2 controls:5 controls_dialog:#(1,2) ini:true
+/* SIZE BY INI */
+--createTestDialog  controls_dialog:5 ini:true
 
 
-/* HEIGHT SAVED IN INI BUT INIT HEIGHT SET */
---createTestDialog reset_ini:true -- reset ini
---createTestDialog slots: 2 rollouts:2 controls:5 controls_dialog:#(1,2) ini:true dialog_height:512 -- height of dialog for first run
+/* WIDTH CONSTRUCT, HEIGHT AUTO ON FIRST TIME RUN & INI  */
+--createTestDialog  controls_dialog:15	construct_width:256 ini:true
 
 
-/* INI IS USED BUT SIZE IS NOT SAVED */
---createTestDialog reset_ini:true -- reset ini
--- createTestDialog slots: 2 rollouts:2 controls:5 controls_dialog:#(1,2) ini:true dialog_height:#auto
+/* WIDTH CONSTRUCT, INI DEFINED, BUT IT IS OVERRIDED BY PARAM */
+--createTestDialog  controls_dialog:5	construct_width:256 ini:true width:1024 height:512
 
 
+/* WIDTH CONSTRUCT, INI DEFINED, BUT IT IS OVERRIDED BY PARAM */
+--createTestDialog  controls_dialog:15	ini:true height:undefined
 
 
-/* UNLOCK WIDTH, LOCK HEIGHT */
---createTestDialog  slots:1 rollouts:1 controls:10 ini:true lockWidth:false lockHeight:true
+/*------------------------------------------------------------------------------
+	RESIZE LOCKED
+--------------------------------------------------------------------------------*/
+
+
+/* LOCKED SIZE */
+--createTestDialog  slots:1 rollouts:1 controls:10 ini:true lockWidth:true lockHeight:true

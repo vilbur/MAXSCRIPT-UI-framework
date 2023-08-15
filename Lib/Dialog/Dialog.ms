@@ -88,29 +88,26 @@ struct Dialog_v
 
 	/** Create dialog
 	  *
-	  * @param	integer	width	of dialog, minimal size of dialog also
-	  * @param	integer|#auto	height	of dialog, minimal size of dialog also, if #auto then height is not get from ini file
+	  * @param	integer	width of dialog INTEGER: definded width | UNSUPPLIED: width auto or by ini | UNDEFINED: width auto even if ini is defined
+	  * @param	integer|#auto	height
 	  *
 	  * @param	[x,y]|#moue	name	description
 	  * @param	name	origin	#WINDOW|#SCREEN origin of dialog position: Relative to 3Ds Max window|Absolute to screen
 	  *
 	  * TODO add params for max 2022
 	 */
-	function create width:256 height: pos: origin:#SCREEN bgcolor: fgcolor: bitmap: bmpstyle:#bmp_tile  style: modal: escapeEnable:false escapekey:true lockHeight:false lockWidth:true parent: =
+	function create width: height: pos: origin:#SCREEN bgcolor: fgcolor: bitmap: bmpstyle:#bmp_tile  style: modal: escapeEnable:false escapekey:true lockHeight:false lockWidth:true parent: =
 	(
+		format "\n"; print "Dialog_v.create()"
 
-		--format "\n"; print "Dialog_v.create()"
+		width  = this._getSizeOnCreate (#width)  (width)
+		height = this._getSizeOnCreate (#height) (height)
+
 		_RolloutCreator = RolloutCreator_v Ini:Ini
 
-		this.destroy()
-
-		this._setDialogMinimalSize()
-
-		this._setDialogSize(width)(height)
-
 		_RolloutCreator.createRollout (this) width:width -- create nested rollouts
-
-		CreateDialog (this.RCI.def) width:this.width height:this.height pos:(this._getPosition(pos)(origin)) autoLayoutOnResize:true bgcolor:bgcolor fgcolor:fgcolor	bitmap:bitmap bmpstyle:bmpstyle style:(if( style == unsupplied ) then this.style else style) modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
+		format "WIDTH:	% \n" WIDTH
+		CreateDialog (this.RCI.def) width:width height:height pos:(this._getPosition(pos)(origin)) autoLayoutOnResize:true bgcolor:bgcolor fgcolor:fgcolor	bitmap:bitmap bmpstyle:bmpstyle style:(if( style == unsupplied ) then this.style else style) modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
 
 		_RolloutCreator.SubolloutsCreator.addSubRollouts (this)
 
@@ -118,7 +115,6 @@ struct Dialog_v
 
 		this.RolloutResizer.fitSlotsToDialog(this.RCI.def)
 
-		--format "this.Events:	% \n" this.Events
 		--AutoRunEvents.executeMacros()
 
 		DIALOG_GLOBAL_DATA[this.id] = DialogGlobalData_v(this.RCI.def)(this)
@@ -144,9 +140,9 @@ struct Dialog_v
 	function register =
 	(
 		--print "Dialog_v.register()"
-		min_size_string = if min_size != undefined then " minSize:"+min_size as string +" " else ""
+		min_size = if min_size != undefined then min_size as string else "[-1,-1]"
 
-		execute ("cui.RegisterDialogBar "+ this.id +" "+min_size_string+" style:"+style_registred_dialog as string )
+		execute ("cui.RegisterDialogBar "+ this.id +" minSize:"+min_size+" style:"+style_registred_dialog as string )
 	),
 
 	/** Unregister dialog bar
@@ -234,77 +230,67 @@ struct Dialog_v
 
 	private
 
+	/** Set dialog default size
+	  *
+	  */
+	function _setDialogDefaultSize =
+	(
+		--format "\n"; print "if._setDialogDefaultSize()"
+		this.width  = 256
+		this.height = 32
+	),
+
 	/** Set minimal size of registered dialog
-	  * 1) Use rollout size if defined
-	  * 2) Use this.create() parameter
-	  * 3) Use -1 if size is not defined
 	 */
 	function _setDialogMinimalSize =
 	(
 		format "\n"; print "Dialog_v._setDialogMinimalSize()"
-		fn isDefined val = val != undefined and val != unsupplied
-
-		if min_size == undefined then
+		if not this.isDefined (this.min_size) then
 		(
-			--min_width	= if this.width  != unsupplied then this.width  else ( if width  != unsupplied then width else -1)
-			--min_height	= if this.height != unsupplied then this.height else ( if height != unsupplied then height else -1)
-
-			min_width	= if isDefined this.width	then this.width	else -1
-			min_height	= if isDefined this.height	then this.height	else -1
+			min_width	= if this.isDefined (this.width)	then this.width	 else -1
+			min_height	= if this.isDefined (this.height)	then this.height else -1
 
 			min_size = [ min_width, min_height ]
 		)
+		format "MIN_SIZE:	% \n" min_size
 	),
 
 	/** Set size of dialog
 	 */
-	function _setDialogSize width height =
+	function _setDialogSize =
 	(
-		--format "\n\n"; print "Dialog_v._setDialogSize()"
-		this.width  = this._getDialogSize( #width ) (width)
-
-		this.height = if height != #auto then this._getDialogSize( #height ) (height) else  unsupplied
+		format "\n\n"; print "Dialog_v._setDialogSize()"
+		if ( ini_size = this._getSizeFromIni() ) != undefined then
+		(
+			format "INI_SIZE:	% \n" INI_SIZE
+			this.width  = ini_size.x
+			this.height = ini_size.y
+		)
 	),
 
-	/** Get size of dialog
-	  *
-	  *
-	  * 1. use value from ini file
-	  *
-	  * 2. use defined value from method this.create width: height:
-	  *
-	  * 3. use property value of this.width|this.height
-	  *
-	  *
-	  * @param	name	size_type	#width|#height
-	  * @param	integer	defined_size	size in pixels
-	 */
-	function _getDialogSize size_type defined_size  =
+	/** Get size on create
+	  */
+	function _getSizeOnCreate size_type val =
 	(
-		--print "Dialog_v._getDialogSize()"
-		--format "Ini.isDefined():	% \n" (Ini.isDefined())
-		--format "size_type:	% \n" size_type
-		--format "this.width	= % \n" this.width
-		--format "this.height	= % \n" this.height
+		format "\n"; print "if._getSizeOnCreate()"
+		format "size_type:	% \n" size_type
+		format "classOf val:	% \n" (classOf val)
 
-		is_size_defined = defined_size != undefined and defined_size != unsupplied
-
-		if( Ini.isDefined() and (ini_size = Ini.load( id as string )("size")) != undefined) then
+		case classOf val of
 		(
-			ini_size = case size_type of
-			(
-				(#width):  ini_size.x as integer
-				(#height): ini_size.y as integer
-			)
-
-			if is_size_defined and ini_size < defined_size then defined_size else ini_size -- if ini saved size is less then default size, then use default size
-
+			integer:	val	-- if size is defined
+			UndefinedClass:	unsupplied	-- size set auto even if ini is exists
+			UnsuppliedClass:	getProperty this size_type	-- size set by this.width|this.height or ini
 		)
-		else if is_size_defined then
-			defined_size --return defined val on creation
+	),
 
-		else
-			getProperty this size_type
+	/** Get size from ini
+	  */
+	function _getSizeFromIni =
+	(
+		--format "\n"; print "if._getSizeFromIni()"
+		if( Ini.isDefined() and (ini_size = Ini.load( id as string )("size")) != undefined) then
+			ini_size --return
 	),
 
 	/** Get height of maximized viewport to find out height of docked dialog
@@ -391,6 +377,14 @@ struct Dialog_v
 	),
 
 
+
+	/** Is defined
+	  */
+	function isDefined val =
+	(
+		val != undefined and val != unsupplied
+	),
+
 	/** Check if required properties are defined when an instance of the struct is created.
 	 * @example __construct = #( #property_name )
 	 */
@@ -405,14 +399,19 @@ struct Dialog_v
 	 */
 	on create do
 	(
-		--format "\n"; print "Dialog_v.onCreate()"
+		format "\n"; print "Dialog_v.onCreate()"
 		this._checkConstctructProperties #(#title)
 
 		Ini	= Ini_v _path:Ini
 
 		this._setId()
 
-		--this.width  = this._getDialogSize( #width ) (this.width) -- try get dialog width from ini
+		this.destroy()
+
+
+		this._setDialogDefaultSize()
+		this._setDialogMinimalSize()
+		this._setDialogSize()
 
 		--/*------ DEV restart timer ------*/
 		if HOTKEYS_GLOBAL != undefined then
