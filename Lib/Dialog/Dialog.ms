@@ -98,8 +98,11 @@ struct Dialog_v
 	 */
 	function create width:256 height: pos: origin:#SCREEN bgcolor: fgcolor: bitmap: bmpstyle:#bmp_tile  style: modal: escapeEnable:false escapekey:true lockHeight:false lockWidth:true parent: =
 	(
+
 		--format "\n"; print "Dialog_v.create()"
 		_RolloutCreator = RolloutCreator_v Ini:Ini
+
+		this.destroy()
 
 		this._setDialogMinimalSize()
 
@@ -408,8 +411,6 @@ struct Dialog_v
 		Ini	= Ini_v _path:Ini
 
 		this._setId()
-
-		this.destroy()
 
 		--this.width  = this._getDialogSize( #width ) (this.width) -- try get dialog width from ini
 
