@@ -186,7 +186,8 @@ struct ControlEventBinder_v
 	function _paramsOfEvent event_type =
 	(
 		--format "\n"; print "ControlEventBinder_v.getParamsForEventType()"
-		events_params[findItem event_types event_type]
+		if ( index = findItem event_types event_type ) > 0 then
+			events_params[index]
 	),
 
 	/**_type _add event fired

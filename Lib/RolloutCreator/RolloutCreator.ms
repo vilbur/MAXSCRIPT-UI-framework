@@ -138,10 +138,10 @@ struct RolloutCreator_v
 				/* DONT CREATE ROLOUTS WITH DEFINED HEIGHT */
 				if Subrollouts.height == unsupplied then
 				(
-					--CreateDialog ( _RolloutSub.RCI.def ) width:_RolloutParent.width height:_RolloutSub.height pos:[0,-8000]
+					CreateDialog ( _RolloutSub.RCI.def ) width:_RolloutParent.width height:_RolloutSub.height pos:[0,-8000]
 					--CreateDialog ( _RolloutSub.RCI.def ) width:_RolloutParent.width height:_RolloutSub.height
 					--CreateDialog ( _RolloutSub.RCI.def ) width:_RolloutParent.width height:_RolloutSub.height -- DEV
-					CreateDialog ( _RolloutSub.RCI.def )-- DEV
+					--CreateDialog ( _RolloutSub.RCI.def )-- DEV
 
 					--_RolloutSub.temporary_created = true -- note that dialog msut be destryed before adding as subrollout
 				)

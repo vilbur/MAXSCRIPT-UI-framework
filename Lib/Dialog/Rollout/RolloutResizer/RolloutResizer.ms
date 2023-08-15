@@ -14,8 +14,8 @@ struct RolloutResizer_v
 	 */
 	function fitSlotsToDialog _Rollout  =
 	(
-		format "\n"; print "RolloutResizer_v._resizeSubrollouts()"
-		format "_Rollout:	% \n" _Rollout
+		--format "\n"; print "RolloutResizer_v._resizeSubrollouts()"
+		--format "_Rollout:	% \n" _Rollout
 		--if ( dialog_height = _Rollout.RCI.height ) == undefined then
 		--	dialog_height = execute( _Rollout.id as string + ".height" )
 
@@ -81,7 +81,7 @@ struct RolloutResizer_v
 	 */
 	function _resizeSubrolloutSlot subrolloutControl size_offset_per_slot =
 	(
-		format "\n"; print "RolloutResizer_v._resizeSubrolloutSlot()"
+		--format "\n"; print "RolloutResizer_v._resizeSubrolloutSlot()"
 		subrolloutControl.pos.y	+= offset_position -- Move slot
 
 		subrolloutControl.height	+= size_offset_per_slot -- resize slot

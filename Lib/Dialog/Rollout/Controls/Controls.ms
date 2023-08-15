@@ -29,7 +29,7 @@ struct Controls_v
 	  *
 	  * @return Object _Control	"./Control/Control.ms"
 	 */
-	function Control type caption id:undefined params:#() width: height: offset: align: items: range: value: tooltip: across: columns: locals:#() ini:true add_to_controls:true =
+	function Control type caption id:undefined params:#() checked: items: range: value: width: height: offset: align: tooltip: across: columns: locals:#() ini:true add_to_controls:true =
 	(
 		--format "\n"; print "Controls_v.Control()"
 		--format "caption	= % \n" caption
@@ -44,8 +44,8 @@ struct Controls_v
 
 		--format "_Control.id = % \n" _Control.id
 		--format "_Control	= % \n" _Control
-		_param_names  = #( #width, #height, #offset, #align, #items, #range, #value, #ini, #tooltip, #across, #columns)
-		_param_values = #(  width,  height,  offset,  align, items,  range,   value,  ini,  tooltip,  across,  columns)
+		_param_names  = #( #checked, #width, #height, #offset, #align, #items, #range, #value, #ini, #tooltip, #across, #columns)
+		_param_values = #( checked, width,  height,  offset,  align, items,  range,   value,  ini,  tooltip,  across,  columns)
 
 
 		for i = 1 to _param_values.count where _param_values[i]!= unsupplied do

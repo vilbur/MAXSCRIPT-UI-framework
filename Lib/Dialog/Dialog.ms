@@ -101,12 +101,11 @@ struct Dialog_v
 		--format "\n"; print "Dialog_v.create()"
 		_RolloutCreator = RolloutCreator_v Ini:Ini
 
-		this._setDialogSize(width)(height)
-
 		this._setDialogMinimalSize()
 
+		this._setDialogSize(width)(height)
+
 		_RolloutCreator.createRollout (this) width:width -- create nested rollouts
-		--format "this.Events:	% \n" this.Events
 
 		CreateDialog (this.RCI.def) width:this.width height:this.height pos:(this._getPosition(pos)(origin)) autoLayoutOnResize:true bgcolor:bgcolor fgcolor:fgcolor	bitmap:bitmap bmpstyle:bmpstyle style:(if( style == unsupplied ) then this.style else style) modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
 
@@ -239,13 +238,16 @@ struct Dialog_v
 	 */
 	function _setDialogMinimalSize =
 	(
-		--format "\n"; print "Dialog_v._setDialogMinimalSize()"
+		format "\n"; print "Dialog_v._setDialogMinimalSize()"
+		fn isDefined val = val != undefined and val != unsupplied
+
 		if min_size == undefined then
 		(
 			--min_width	= if this.width  != unsupplied then this.width  else ( if width  != unsupplied then width else -1)
 			--min_height	= if this.height != unsupplied then this.height else ( if height != unsupplied then height else -1)
-			min_width	= if this.width  != unsupplied then this.width  else -1
-			min_height	= if this.height != unsupplied then this.height else -1
+
+			min_width	= if isDefined this.width	then this.width	else -1
+			min_height	= if isDefined this.height	then this.height	else -1
 
 			min_size = [ min_width, min_height ]
 		)
@@ -409,7 +411,7 @@ struct Dialog_v
 
 		this.destroy()
 
-		this.width  = this._getDialogSize( #width ) (this.width) -- try get dialog width from ini
+		--this.width  = this._getDialogSize( #width ) (this.width) -- try get dialog width from ini
 
 		--/*------ DEV restart timer ------*/
 		if HOTKEYS_GLOBAL != undefined then
