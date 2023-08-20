@@ -19,16 +19,13 @@ struct DefaultControlCallbacks_v
 	  */
 	function getDefaultCallback _Control event_type =
 	(
-		format "\n"; print "DefaultControlCallbacks_v.getDefaultEvent()"
-
+		--format "\n"; print "DefaultControlCallbacks_v.getDefaultEvent()"
 
 		if( _Control.type == #browsePath ) then
 			(BrowsePath_v()).getCallback(_Control)(event_type)-- "./../../ControlTypes/BrowsePath/BrowsePath.ms"
 
 		else if( _Control.type == #RadioButtons ) then
 			(RadioButtons_v()).getCallback(_Control)(event_type)-- "./../../ControlTypes/BrowsePath/BrowsePath.ms"
-
-
 	),
 
 

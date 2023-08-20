@@ -148,12 +148,12 @@ struct BrowsePath_v
 	 */
 	function _getPathDialog =
 	(
-		print "BrowsePath_v._getPathDialog()"
+		--print "BrowsePath_v._getPathDialog()"
 		path_dialog = (this._getParam #mode) as string
 
 		for param in browse_params where (val = this._getParam param ) != undefined and param != #mode do
 		(
-			format "PARAM:	% \n" param
+			--format "PARAM:	% \n" param
 			if not ( param == #initialDir and pathConfig.isAbsolutePath(val) == false )then
 				val = "@"+ val as string +"@"
 

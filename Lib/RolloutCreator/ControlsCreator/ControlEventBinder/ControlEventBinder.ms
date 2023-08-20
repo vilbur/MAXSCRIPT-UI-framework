@@ -41,6 +41,11 @@ struct ControlEventBinder_v
 	 */
 	function _addHandler _Control Event =
 	(
+		--format "\n\n"; print "ControlEventBinder_v._addHandler()"
+		--format "Event:	% \n" Event
+		--format "Event.params:	% \n" Event.params
+		--format "Event.type:	% \n" Event.type
+		--format "Event.callback[#code]:	% \n" Event.callback[#code]
 
 		this._addEventFired(_Control)(Event)
 
@@ -66,8 +71,8 @@ struct ControlEventBinder_v
 
 	on create do
 	(
-		print("ControlEventBinder_v.onCreate()")
-		format "_ROLLOUT	= % \n" _Rollout.title
+		--print("ControlEventBinder_v.onCreate()")
+		--format "_ROLLOUT	= % \n" _Rollout.title
 		--ConstructPropeties test:this
 	)
 

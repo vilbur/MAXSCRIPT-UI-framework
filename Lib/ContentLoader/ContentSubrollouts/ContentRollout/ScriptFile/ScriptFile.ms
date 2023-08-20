@@ -39,6 +39,7 @@ struct ScriptFile_Content_v
 	_Controls,
 	ControlEventBinder,
 	QuadMenu,
+	EventTypes = EventTypes_v(), 	-- "./../../../../RolloutCreator/ControlsCreator/EventTypes/EventTypes.ms"
 
 	/* Store */
 	InheritParams = List_v(),
@@ -218,9 +219,7 @@ struct ScriptFile_Content_v
 	function _setEventCallMacro &_Control Macro =
 	(
 		--format "\n"; print "ScriptFile_Content_v._setEventCallMacro()"
-		event_type = this._getEventType (_Control) (Macro)
-		--format "event_type	= % \n" event_type
-		if( event_type != undefined ) then
+		if ( event_type = this._getEventType (_Control) (Macro)) != undefined then
 		(
 			callback = "(macros.run \""+Macro.category+"\" \""+Macro.macro_name+"\")"
 
@@ -241,11 +240,8 @@ struct ScriptFile_Content_v
 		--print "ScriptFile_Content_v._getEventType()"
 		--format "event_type	= % \n" (Macro.getParam #event)
 
-		if( (event_type = Macro.getParam #event) == undefined ) then
-			event_type = (ControlEventBinder.EventTypes.getEventTypesOfControl (_Control.type))[ _Control.Events.list.count+1] -- get next event type in list
-
-		--if( event_type != undefined ) then
-			--event_type = event_type as filename --return
+		if (event_type = Macro.getParam #event) == undefined then
+			event_type = this.EventTypes.getNextEvent(_Control.type)(_Control.Events.count +1)
 
 		event_type --return
 	),

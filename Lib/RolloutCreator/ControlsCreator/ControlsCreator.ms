@@ -1,6 +1,3 @@
---filein( getFilenamePath(getSourceFileName()) + "/ControlTypes/BrowsePath/BrowsePath.ms" )	-- "./ControlTypes/BrowsePath/BrowsePath.ms"
---filein( getFilenamePath(getSourceFileName()) + "/ControlTypes/Radiobuttons/Radiobuttons.ms" )	-- "./ControlTypes/Radiobuttons/Radiobuttons.ms"
-
 filein( getFilenamePath(getSourceFileName()) + "/ControlValue/ControlValue.ms" )	-- "./ControlValue/ControlValue.ms"
 filein( getFilenamePath(getSourceFileName()) + "/ControlParamsCreator/ControlParamsCreator.ms" )	-- "./ControlParamsCreator/ControlParamsCreator.ms"
 filein( getFilenamePath(getSourceFileName()) + "/TooltipCreator/TooltipCreator.ms" )	-- "./TooltipCreator/TooltipCreator.ms"
@@ -8,7 +5,7 @@ filein( getFilenamePath(getSourceFileName()) + "/ControlEventBinder/ControlEvent
 filein( getFilenamePath(getSourceFileName()) + "/AcrossParameterModifier/AcrossParameterModifier.ms" )	-- "./AcrossParameterModifier/AcrossParameterModifier.ms"
 filein( getFilenamePath(getSourceFileName()) + "/GroupBoxCreator/GroupBoxCreator.ms" )	-- "./GroupBoxCreator/GroupBoxCreator.ms"
 
-
+filein( getFilenamePath(getSourceFileName()) + "/EventTypes/EventTypes.ms" )	-- "./EventTypes/EventTypes.ms"
 filein( getFilenamePath(getSourceFileName()) + "/ControlEventCreator/ControlEventCreator.ms" )	-- "./ControlEventCreator/ControlEventCreator.ms"
 
 /** ControlCreator_v

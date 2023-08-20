@@ -31,12 +31,17 @@ struct ContentLoader_v
 	/** Create Dialog
 	 */
 	--function create width: height: pos: menu: bgcolor: fgcolor: bitmap: style: modal: escapeEnable: lockHeight: lockWidth: parent: =
-	function create width: height: pos: origin:#SCREEN bgcolor: fgcolor: bitmap: style: modal: escapeEnable:false escapekey:true lockHeight:false lockWidth:false parent: =
+	--function create width: height: pos: origin:#SCREEN bgcolor: fgcolor: bitmap: style: modal: escapeEnable:false escapekey:true lockHeight:false lockWidth:false parent: =
+
+	function create width: height: pos: origin:#SCREEN bgcolor: fgcolor: bitmap: bmpstyle:#bmp_tile  style: modal: escapeEnable:false escapekey:true lockHeight:false lockWidth:true parent: =
+
 	(
 		--print("ContentLoader_v.create()")
 
-		--Dialog.create pos:pos menu:menu bgcolor:bgcolor fgcolor:fgcolor bitmap:bitmap style:style modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
-		Dialog.create width:width height:height pos:pos menu:menu bgcolor:bgcolor fgcolor:fgcolor bitmap:bitmap style:style modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
+		Dialog.create width:width height:height pos:pos menu:menu bgcolor:bgcolor fgcolor:fgcolor bitmap:bitmap bmpstyle:bmpstyle style:style modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
+		--format "Dialog:	% \n" Dialog
+
+		--Dialog.create()
 
 		Dialog --return
 	),

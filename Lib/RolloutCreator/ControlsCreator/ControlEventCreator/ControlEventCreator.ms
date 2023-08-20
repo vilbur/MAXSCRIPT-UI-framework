@@ -8,7 +8,7 @@ struct ControlEventCreator_v
 	/* construct */
 
 	/* properties */
-	control_events = Dictionary(),
+	event_types,
 
 	DefaultControlCallbacks = DefaultControlCallbacks_v(),
 
@@ -23,7 +23,7 @@ struct ControlEventCreator_v
 	(
 		--format "\n"; print "ControlEventCreator_v.createEvents()"
 
-		for event_type in (control_events[_Control.type].keys) do
+		for event_type in (event_types[_Control.type].keys) do
 		(
 			Event = _Control.Events[event_type]
 
@@ -62,7 +62,7 @@ struct ControlEventCreator_v
 		if default_callback != undefined then
 			Event.callback[#code] = "\n/* ---- DEFAULT CALLBACK ---- */\n" +default_callback +";\n\n/* ---- CUSTOM CALLBACK ---- */\n" + Event.callback[#code]
 
-		format "-----------------------\n\nEVENT:	% \n" Event
+		--format "-----------------------\n\nEVENT:	% \n" Event
 	),
 
 
@@ -125,7 +125,10 @@ struct ControlEventCreator_v
 			SET ARDUMENTS TO CALLBACK
 		--------------------------------------------------------------------------------*/
 
-		callback = trimRight Event.callback[#code] "()"  -- remove curly brackets, fool proof when adding callabck
+		callback = Event.callback[#code]
+
+		if matchPattern callback pattern:"*()" then
+			callback = trimRight callback "()"  -- remove curly brackets, fool proof when adding callabck
 
 		is_macro = matchPattern callback pattern:"*macros.run*"
 
@@ -149,7 +152,7 @@ struct ControlEventCreator_v
 	function _getEventParams _Control event_type =
 	(
 		--format "\n"; print "ControlEventCreator_v._getEventPramas()"
-		if control_events[_Control.type][event_type] == undefined then
+		if event_types[_Control.type][event_type] == undefined then
 		(
 			print  ("------------------- WARNING ----------------------")
 			print  ("UNKNOWN TYPE OF EVENT FOR CONTROL.")
@@ -160,50 +163,23 @@ struct ControlEventCreator_v
 			format "Type:     %\n" 	_Control.type
 			format "Event:    % \n"	event_type
 			format "\n"
-			format "AVAILABLE EVENTS FOR THIS TYPE:    % \n" control_events[_Control.type].keys
+			format "AVAILABLE EVENTS FOR THIS TYPE:    % \n" event_types[_Control.type].keys
 			format "\n"
 			print  ("------------------------------------------------")
 		)
 
-		control_events[_Control.type][event_type] --return
-	),
-
-	/** Set events per control type
-	  *
-	  */
-	function _setEventsPerControlType =
-	(
-		--format "\n"; print "ControlEventCreator_v._setEventsPerControlType()"
-		control_events[#Label] 	= undefined
-		control_events[#Groupbox] 	= undefined
-		control_events[#Timer] 	= Dictionary #( #tick,	     "" )
-		control_events[#hyperlink] 	= Dictionary #( #rightclick, "" )
-		control_events[#ColorPicker] 	= Dictionary #( #changed,  "val")
-		control_events[#Button] 	= Dictionary #( #pressed,   "" )	#( #rightclick, "" )
-		control_events[#Checkbox] 	= Dictionary #( #changed,  "val")	#( #rightclick, "" )
-		control_events[#Radiobuttons] 	= Dictionary #( #changed,  "val")	#( #rightclick, "" )
-		control_events[#PickButton] 	= Dictionary #( #picked,   "val")	#( #rightclick, "" )
-		control_events[#Materialbutton] 	= Dictionary #( #picked,   "val")	#( #rightclick, "" )
-		control_events[#CheckButton]	= Dictionary #( #changed,  "val" )	#( #rightclick, "" )
-		control_events[#Angle] 	= Dictionary #( #changed,  "val")	#( #rightclick, "" )
-		control_events[#Edittext] 	= Dictionary #( #changed,  "val")	#( #entered,       "val")
-		control_events[#BrowsePath] 	= Dictionary #( #changed,  "val")	#( #entered,       "val")
-		control_events[#Listbox] 	= Dictionary #( #selected, "val")	#( #doubleClicked, "val")	#( #rightClick, "val")
-		control_events[#Slider] 	= Dictionary #( #changed,  "val")	#( #rightclick, "" )	#( #buttondown, "" )	#( #buttonup, "" )
-		control_events[#Spinner]	= Dictionary #( #changed, "val inSpin" )	#( #entered, "inSpin inCancel" )	#(#buttonup, "inCancel")	#(#buttondown, "")
-		control_events[#MultiListBox] 	= Dictionary #( #selectionEnd, "")	#( #doubleClicked, "val")	#( #rightClick, "val")	#( #selected, "val")
-		control_events[#Combobox] 	= Dictionary #( #selected, "val")	#( #doubleClicked, "val")	#( #entered , "val")	#( #changed , "val")	#( #rightclick, "" )
-		control_events[#Dropdownlist] 	= Dictionary #( #selected, "val")	#( #rightclick, "" )
+		event_types[_Control.type][event_type] --return
 	),
 
 	/**
 	 */
 	on create do
 	(
-		this._setEventsPerControlType()
 		--format "\n"; print "ControlEventCreator.onCreate()"
 		--for prop in #(  ) where getProperty this prop == undefined do -- CHECK CONSTRUCT PROPERTIES -- Array of this struct properties necessary to run
 		--	throw ("\n\n\nUNDEFINED CONSTRUCT PROPERTY\n\n\nSTRUCT:\n\n"+ ((filterString( classof this as string )"(:")[2]) +"\n\n\nPROPERTY:\n\n"+ prop )
+
+		event_types = (EventTypes_v()).event_types
 
 	)
 

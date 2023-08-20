@@ -57,7 +57,7 @@ struct Control_v
 		_Event.callback[#code]	= callback
 		_Event.callback[#arguments]	= params
 
-
+		--format "_Event:	% \n" _Event
 		this.Events[type] = _Event
 	),
 

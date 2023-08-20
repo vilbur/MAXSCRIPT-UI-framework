@@ -13,4 +13,4 @@ ContentLoader	= ContentLoader_v path:(current_dir+"/Test-files")
 
 
 /* CREATE UI */
-ContentLoader.create width:512 height:512
+ContentLoader.create width:512
