@@ -12,12 +12,9 @@ global STARTUP_EVENTS = #() -- run callbacks of controls like checkbox, checkbut
  * 		2) Save value of control to ini file if is defined
  *
  *
- *
  *							   !!!!!!!!! NOTES FOR ADDING NEW TYPE OF CONTROL !!!!!!!!!
  *
  *								  Edit arrays in this file: control_types, event_types
- *
- *
  */
 struct ControlEventBinder_v
 (
@@ -27,20 +24,91 @@ struct ControlEventBinder_v
 	_Rollout,
 
 	/* construct option */
-	ini_path, -- set in RolloutCreator_v._setIniToCreators()
+	--ini_path, -- set in RolloutCreator_v._setIniToCreators()
+	--
+	--/* properties */
+	--_Control,
+	--
+	--/* dependency */
+	--EventTypes	= EventTypes_v(),
+	--EventsCombiner	= EventsCombiner_v(),	-- "./../../RolloutEventBinder/EventsCombiner/EventsCombiner.ms"
+	--DefaultControlEvents	= DefaultControlEvents_v(),
+	--
+	--control_types	= (ControlTypes_v()).getAllTypes(),
+	--
+	--event_types,	-- E.G.: #(#changed, 	#rightClick)	keys
+	--events_params,	-- E.G.: #("val",	undefined)	values -- default params for defauls events E.G.: on checkbox changed val do ...
 
-	/* properties */
-	_Control,
+	/** Combine events and add handlers
+	 */
+	function addHandlers &_Control =
+	(
+		--format "\n"; print ("ControlEventBinder_v.addHandlers() "+ _Control.id)
 
-	/* dependency */
-	EventTypes	= EventTypes_v(),
-	EventsCombiner	= EventsCombiner_v(),
-	DefaultControlEvents	= DefaultControlEvents_v(),
+		for Event_Data in _Control.Events do
+			this._addHandler(_Control)(Event_Data.value)
 
-	control_types	= (ControlTypes_v()).getAllTypes(),
+		_Control --return
+	),
 
-	event_types,	-- E.G.: #(#changed, 	#rightClick)	keys
-	events_params,	-- E.G.: #("val",	undefined)	values -- default params for defauls events E.G.: on checkbox changed val do ...
+	--private
+
+	/** Bind events
+	 */
+	function _addHandler _Control Event =
+	(
+		--print "ControlEventBinder_v._addHandler()"
+		--format "classOf _Control.id:	% \n" (classOf _Control.id)
+
+		--if _Control.id as name == #CBXBTN_layer_manager then
+		--(
+		--	format "\n"; print "ControlEventBinder_v._addHandler()"
+		--
+		--	format "EVENT: % \n"	Event
+		--	format "EVENT.type: % \n"	Event.type
+		--	format "EVENT.params: % \n"	Event.params
+		--	format "EVENT.code: % \n"	Event.code
+		--
+		--)
+		this._addEventFired(_Control)(Event)
+
+		--format "Event.callback[#code]:	% \n" Event.callback[#code]
+		if( Event.callback[#code] != "" ) then
+			_Rollout.RCI.addHandler _Control.id Event.type codeStr:( "("+Event.callback[#code]+")" ) paramStr:(Event.params) filter:on
+	),
+
+	/**_type _add event fired
+	 */
+	function _addEventFired _Control Event =
+	(
+		--print "ControlEventBinder_v._addEventFired()"
+		EventFiredCreator = EventFiredCreator_v _RolloutClass:(_Rollout.getFullId()) _RolloutControl:( (_Rollout.getFullId()) +"."+ _Control.id as string )
+
+		for Event_Data in _Control.Events do
+			Event.callback[#code]  = (EventFiredCreator.getEventFired(Event)) + "\n"+ Event.callback[#code]
+			--(EventFiredCreator.getEventFired(Event)) --DEVELOP
+	),
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	/** Combine events and add handlers
 	 */
@@ -56,54 +124,19 @@ struct ControlEventBinder_v
 
 		this._validateEvents()
 
-		this._addParametersToCallback()
+		this._setParametersToCallback()
+		this._setParametersToEvents()
 
 		this._setDefaultEvents()
 		this._setCustomEvents()
-		----------this._setSaveIniEvents() -- DEPRECATED and UNUSED, but not deleted yet in case for later use
+		this._combineEvents()
 
-		this._combineEventTypes()
-
-		this._setEventsParamters()
 
 		this._addEventFired()
 
 		this._Control --return
 	),
 
-	/** Combine events and add handlers
-	 */
-	function addHandlers &_Control =
-	(
-		--format "\n"; print ("ControlEventBinder_v.addHandlers() "+ _Control.id)
-		for Event in _Control.Events.list do
-			this._addHandler(_Control)(Event)
-
-		_Control --return
-	),
-
-	--private
-
-	/** Bind events
-	 */
-	function _addHandler _Control Event =
-	(
-		--print "ControlEventBinder_v._addHandler()"
-		if( Event.code == "" ) then
-			return false
-		--format "\nEVENT = % \n" Event
-		--format "\nEVENT.type = % \n" Event.type
-		--format "\nEVENT.code = % \n" Event.code
-		_Rollout.RCI.addHandler _Control.id Event.type codeStr:( "("+Event.code+")" ) paramStr:Event.params filter:on
-	),
-
-	/** _combine all event types
-	 */
-	function _combineEventTypes =
-	(
-		--format "\n"; print "ControlEventBinder_v._combineEventTypes()"
-		this._Control.Events.list = for event_type in event_types where (Event = EventsCombiner.combine (event_type)) != undefined collect Event
-	),
 
 	/** _combine events
 	 */
@@ -120,87 +153,110 @@ struct ControlEventBinder_v
 		EventsCombiner.events_classes[#CUSTOM] = this._Control.Events.list
 	),
 
-	/** Set parameters of events
-	  *
-	  * E.G.: Event.params = "Val"
+	/** Combine all event types default and custom events code
 	 */
-	function _setEventsParamters =
+	function _combineEvents =
 	(
-		--print "ControlEvents._setEventsParamters()"
-		for Event in this._Control.Events.list where (params = this._paramsOfEvent(Event.type) ) != undefined do
-			Event.params = params
+		--format "\n"; print "ControlEventBinder_v._combineEvents()"
+		this._Control.Events.list = for event_type in event_types where ( Event = EventsCombiner.combine (event_type)) != undefined collect Event
 	),
 
-	/** Add paramters to callback if not set all ready
+	/** Add prarameters to callback
 	  *
-	  * E.G.:	input:	Event.code = "callBackFn"
-	  *	output:	Event.code = "callBackFn()" or "callBackFn val"
+	  * E.G.:	 on spinner changed val inspisn do fooCallback VAL INSPIN CUSTOM_PARAM -- CAllback parameters are VAL, INSPIN & CUSTOM_PARAM
 	 */
-	function _addParametersToCallback =
+	function _setParametersToCallback =
 	(
-		--print "ControlEvents._addParametersToCallback()"
-		--for Event in this._Control.Events.list where not (matchPattern Event.code pattern:"*macros.run*" or matchPattern Event.code pattern:"*()" ) do
-		/** Get event params
-		  *
-		  */
-		function getEventParams params_event =
-		(
-			--format "\n"; print "ControlEventBinder_v.getEventParams()"
-			if params_event != "" then
-			(
-				if classOf params_event != Array then
-					params_event = #(params_event)
+		--format "\n"; print "ControlEvents._setParametersToCallback()"
 
-				for param in params_event collect if classOf param == string then "\"" +param + "\"" else param
-				--format "params_event:	% \n" params_event
-				--params_event --return
-			)
+		function isMacro _callback = (matchPattern _callback pattern:"*macros.run*")
+
+		/** Get event params
+		  */
+		function getCallbackParams params_event =
+		(
+			--format "\n"; print "ControlEventBinder_v.getCallbackParams()"
+			if classOf params_event != Array then
+				params_event = #(params_event)
+
+			for param in params_event where param !="" collect
+				case classOf param of
+				(
+					string:	"\"" +param + "\""
+					name:	"#" + param as string
+					default: param as string
+				)
 		)
 
-
-		for Event in this._Control.Events.list where not matchPattern Event.code pattern:"* *" do
+		/** Join prameters to string
+		  *
+		  * @return string E.G.: "(val)(inspin)(custom_param)"
+		  */
+		function getParamsString Event params =
 		(
-			params_default = this._paramsOfEvent(Event.type)
-			params_event    = getEventParams(Event.params)
+			--format "\n"; print "ControlEventBinder_v.getParamsString()"
+			prams_string = ""
 
-			params = case of
-			(
-				(params_default != undefined):	filterString params_default " "
-				(params_event   != undefined ):	params_event
-			)
+			params_in_callback =	deleteItem (filterString Event.code " ()") 1 -- get parameters from string E.G.:  "fooCallback val (inSpin)" >>> #( "val", "inspin" )
 
-			if params != undefined then
-				for param in params where ( PARAM_IS_NOT_ADDED = matchPattern Event.code pattern:("*"+param as string +"*")) == false do
-					Event.code  += " ("+ param as string + ")" -- add parameters after callback E.G.: "callbackFn" >>>  "callbackFn inSpin inCancel
+			/* ADD PRAM IF IS NOT ADDED E.G.: "fooCallback" >>> "fooCallback val (inSpin)" */
+			for param in params where findItem params_in_callback param == 0 do
+				prams_string  += " ("+ param as string + ")" -- add parameters after callback E.G.: "callbackFn" >>>  "callbackFn inSpin inCancel
 
+			prams_string --return
+		)
+
+		--format "isMacro(Event.code):	% \n" (isMacro(Event.code))
+		--for Event in this._Control.Events.list where not matchPattern Event.code pattern:"* *" do
+		for Event in this._Control.Events.list where Event.code.count > 0 and not isMacro(Event.code)  do
+		(
+			event_params = this._getEventDefaultParams(Event.type)
+
+			params = join ( filterString event_params " ") (getCallbackParams(Event.params))
+			--format "PARAMS:	% \n" params
+			if params.count > 0 then
+				Event.code += getParamsString (Event)(params)
 
 			else if not( matchPattern Event.code pattern:"*(*)" ) and not (  matchPattern Event.code pattern:"*\"*\"" ) then -- if not match E.G.: "print (\"XXX\")" OR "print \"XXX\""
 				Event.code += "()" -- add brackets after callback E.G.: "callbackFn" >>>  "callbackFn()"
 		)
 	),
+	/** Set parameters of events
+	  *
+	  * E.G.:	 on spinner changed VAL INSPISN do ... -- set VAL INSPIN
+	 */
+	function _setParametersToEvents =
+	(
+		--print "ControlEvents._setEventsParamters()"
+		for Event in this._Control.Events.list where (params = this._getEventDefaultParams(Event.type) ) != undefined do
+		--if this._Control.id as name == #CBXBTN_layer_manager then
+		--(
+		--	format "\n"; print "ControlEventBinder_v._setEventsParamters()"
+		--	Event.params = params
+		--
+		--	format "params:	% \n" params
+		--	format "EVENT: % \n"	Event
+		--	format "EVENT.type: % \n"	Event.type
+		--	format "EVENT.params: % \n"	Event.params
+		--	format "EVENT.code: % \n"	Event.code
+		--
+		--)else
+			Event.params = params
+	),
 
 	/** Get params for given event type
 	  *
-	  * @return	string
+	  * @return	string E.G.: "val inSPin"
 	 */
-	function _paramsOfEvent event_type =
+	function _getEventDefaultParams event_type =
 	(
 		--format "\n"; print "ControlEventBinder_v.getParamsForEventType()"
 		if ( index = findItem event_types event_type ) > 0 then
-			events_params[index]
+			events = events_params[index]
+
+		if events != undefined then events else ""
 	),
 
-	/**_type _add event fired
-	 */
-	function _addEventFired =
-	(
-		--print "ControlEventBinder_v._addEventFired()"
-		EventFiredCreator = EventFiredCreator_v _RolloutClass:(_Rollout.getFullId()) _RolloutControl:( (_Rollout.getFullId()) +"."+ _Control.id as string )
-
-		for Event in this._Control.Events.list do
-			Event.code = (EventFiredCreator.getEventFired(Event)) + "\n"+ Event.code
-			--(EventFiredCreator.getEventFired(Event)) --DEVELOP
-	),
 
 	/** Get event from control, if dos not exists then create new
 	 */
@@ -258,8 +314,8 @@ struct ControlEventBinder_v
 
 	on create do
 	(
-		--print("ControlEventBinder_v.onCreate()")
-		--format "_ROLLOUT	= % \n" _Rollout
+		print("ControlEventBinder_v.onCreate()")
+		format "_ROLLOUT	= % \n" _Rollout.title
 		--ConstructPropeties test:this
 	)
 

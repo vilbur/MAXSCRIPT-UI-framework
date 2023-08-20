@@ -8,6 +8,9 @@ filein( getFilenamePath(getSourceFileName()) + "/ControlEventBinder/ControlEvent
 filein( getFilenamePath(getSourceFileName()) + "/AcrossParameterModifier/AcrossParameterModifier.ms" )	-- "./AcrossParameterModifier/AcrossParameterModifier.ms"
 filein( getFilenamePath(getSourceFileName()) + "/GroupBoxCreator/GroupBoxCreator.ms" )	-- "./GroupBoxCreator/GroupBoxCreator.ms"
 
+
+filein( getFilenamePath(getSourceFileName()) + "/ControlEventCreator/ControlEventCreator.ms" )	-- "./ControlEventCreator/ControlEventCreator.ms"
+
 /** ControlCreator_v
  */
 struct ControlCreator_v
@@ -25,10 +28,11 @@ struct ControlCreator_v
 	/* dependency */
 	_Controls,
 
+	ControlEventCreator	= ControlEventCreator_v(),
 	ParamsCreator	= ControlParamsCreator_v(),
 	ControlValue 	= ControlValue_v(),
 	TooltipCreator	= TooltipCreator_v(),
-	EventBinder	= ControlEventBinder_v _Rollout:_Rollout,
+	ControlEventBinder	= ControlEventBinder_v _Rollout:_Rollout,
 
 
 	/** Add controls to rollout
@@ -58,9 +62,10 @@ struct ControlCreator_v
 
 			TooltipCreator.addTooltips(_Control)
 
-			this.addToAutoRunEvents(_Control) -- MUST RUN BEFORE EventBinder.combineEvents(), because only custom events are used to autorun
+			--this.addToAutoRunEvents(_Control) -- MUST RUN BEFORE ControlEventBinder.combineEvents(), because only custom events are used to autorun
 
-			EventBinder.combineEvents(_Control)
+			ControlEventCreator.createEvents(_Control)
+			--ControlEventBinder.combineEvents(_Control)
 
 			this._customizeControlTypes(_Control)
 		)
@@ -176,7 +181,7 @@ struct ControlCreator_v
 	function _addHandlersToRollout =
 	(
 		for _Control in _Controls.list do
-			EventBinder.addHandlers(_Control)
+			ControlEventBinder.addHandlers(_Control)
 	),
 
 	/** Add controls group
@@ -299,6 +304,6 @@ struct ControlCreator_v
 		--print "ControlCreator_v.onCreate()"
 		ControlValue.Ini = Ini
 
-		EventBinder.ini_path	= Ini.getPath()
+		--ControlEventBinder.ini_path	= Ini.getPath()
 	)
 )

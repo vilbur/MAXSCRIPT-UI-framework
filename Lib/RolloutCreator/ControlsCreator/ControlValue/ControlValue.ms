@@ -5,17 +5,17 @@ struct ControlValue_v
 	/* properties */
 	Ini,
 	_Control,
-	
+
 	/** Each control has different property where value is stored
-	  *	
-	  * E.G.: EditText.text|Checkbox.checked|Spinner.range 
+	  *
+	  * E.G.: EditText.text|Checkbox.checked|Spinner.range
 	  *
 	  * Used for pass value: parameter on Control creation as well
 	  */
 	names_of_value_param = #(
 		#( #SELECTION,	#Listbox,	#Multilistbox,	#Dropdownlist, #Combobox	),
 		#( #CHECKED,	#Checkbox,	#Checkbutton		),
-		#( #RANGE,  	#Spinner,	#Slider,	#Angle	),	
+		#( #RANGE,  	#Spinner,	#Slider,	#Angle	),
 		#( #TEXT,  	#Edittext,	#BrowsePath		),
 		#( #DEFAULT,  	#RadioButtons			),
 		#( #MATERIAL,  	#Materialbutton			),
@@ -25,40 +25,40 @@ struct ControlValue_v
 	),
 
 	/** Add value parameter
-	  * 
+	  *
 	  * Priority of value definition
 	  * 	1) value from ini file - if control`s parameter ini: is not false
 	  * 	2) user defined value
 	 */
-	function setControlValue _Control rollout_id = 
+	function setControlValue _Control rollout_id =
 	(
 		--print "ControlCreator_v._setControlValue()"
 		this._Control = _Control
-		
-		/* if control type has value E.G.: #label or #groupbox HAS NOT VALUE */ 
-		if (value_param_name = this._getNameOfValueParameter() ) == undefined  then 
-			return false		
-		
+
+		/* if control type has value E.G.: #label or #groupbox HAS NOT VALUE */
+		if (value_param_name = this._getNameOfValueParameter() ) == undefined  then
+			return false
+
 		ini_allowed = _Control.Params.getVal (#ini)
 
 		 if ini_allowed and ( ini_value = this._getIniValue (rollout_id)) != undefined then
 			this._setValueByIni (value_param_name) (ini_value)
-			
-		else if( _value = this._getValueParameter (value_param_name) ) != undefined then 
+
+		else if( _value = this._getValueParameter (value_param_name) ) != undefined then
 			this._setValue(value_param_name)(_value)
-			
+
 		_Control.Params.delete (#value)
 		_Control.Params.delete (#ini)
 	),
-	
+
 
 	/** Each control type has different name of parameter for default value
-	  * 
-	  * E.G.: 
+	  *
+	  * E.G.:
 	  * 	#checkbox	checked:true
 	  * 	#listbox	selection:3
 	  * 	#radiobuttons	default:3
-	  * 
+	  *
 	  *  @return	name of parameter
 	 */
 	function _getNameOfValueParameter =
@@ -70,7 +70,7 @@ struct ControlValue_v
 			name_of_param[1] --return
 	),
 
-	
+
 	/** Get value from ini file
 	 */
 	function _getIniValue rollout_id =
@@ -83,8 +83,8 @@ struct ControlValue_v
 		--	format "classOf ini_value	= % \n" (classOf ini_value)
 		--)
 	),
-	
-	
+
+
 	/** Get value parameter
 	 */
 	function _getValueParameter value_param_name =
@@ -93,10 +93,10 @@ struct ControlValue_v
 
 		if( ( _value = _Control.Params.getVal (#value) ) == undefined ) then --try get parameter #value  e.g.: params:#(#value, true)
 			_value = _Control.Params.getVal (value_param_name)	            --try get parameter by name e.g.: params:#(#checked, true)
-		
+
 		_value --return
 	),
-	
+
 	/** Set parameter of value with correct name for control type
 	  * 	then remove #value paramater
 	  *
@@ -105,16 +105,17 @@ struct ControlValue_v
 	 */
 	function _setValue value_param_name _value =
 	(
-		--format "\n"; print "ControlValue_v._setValue()"
-		if _Control.type  == #ColorPicker and classOf _value == color then 
+		/* COLOR */
+		if _Control.type  == #ColorPicker and classOf _value == color then
 			_value as point3
-			
+
+		/* SLIDER,SPINNER, ANGLE */
 		else if (this._isRangeControlType()) then
 			_value = this._setValueIntoRange(_value)
 
 		_Control.Params.setVal (value_param_name) (_value)
 	),
-	
+
 	/** Set value by ini
 	 */
 	function _setValueByIni value_param_name _value =
@@ -122,31 +123,31 @@ struct ControlValue_v
 		--format "\n"; print "ControlValue_v._setValueByIni()"
 		if (this._isRangeControlType()) then
 			_value = this._setValueIntoRange(_value)
-		
-		--format "_value	= % \n" _value
+
 		_Control.Params.setVal value_param_name _value
 	),
-	
+
 	/** Format string value to valid datatype
-	  * 
-	  * @return	point3	
+	  *
+	  * @return	point3
 	 */
 	function _setValueIntoRange _value =
 	(
 		--format "\n"; print "ControlValue_v._setValueIntoRange()"
 		--format "_value	= % \n" _value
+
 		if classOf _value != point3  then
 		(
 			_range = _Control.Params.getval #range
 
 			_range.z = _value
-			
+
 			_range --return
 		)
 		else
-			_value --return 
+			_value --return
 	),
-	
+
 	/** Is range control type
 	 */
 	function _isRangeControlType =
@@ -156,8 +157,8 @@ struct ControlValue_v
 		--findItem names_of_value_param[3] _Control.type > 0
 		 _Control.type == #Spinner or _Control.type == #Slider or _Control.type == #Angle
 	),
-	
-	/**  
+
+	/**
 	 */
 	on create do
 	(

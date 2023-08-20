@@ -1,12 +1,16 @@
+filein( getFilenamePath(getSourceFileName()) + "/DefaultControlCallbacks/DefaultControlCallbacks.ms" )	-- "./DefaultControlCallbacks/DefaultControlCallbacks.ms"
+
+
 /** Control event creator
  */
 struct ControlEventCreator_v
 (
 	/* construct */
 
-	control_events = Dictionary(),
 	/* properties */
+	control_events = Dictionary(),
 
+	DefaultControlCallbacks = DefaultControlCallbacks_v(),
 
 	/* dependency */
 	/* reference */
@@ -17,34 +21,57 @@ struct ControlEventCreator_v
 	  */
 	function createEvents _Control =
 	(
-		format "\n"; print "ControlEventCreator_v.createEvents()"
-		for Event_data in _Control.Events where (event_params = this._getEventParams (_Control) (Event_data.key)) != undefined do
+		--format "\n"; print "ControlEventCreator_v.createEvents()"
+
+		for event_type in (control_events[_Control.type].keys) do
 		(
-			--format "Event_data:	% \n" Event_data
-			Event = Event_data.value
+			Event = _Control.Events[event_type]
 
-			Event.params = event_params
+			default_callback = DefaultControlCallbacks.getDefaultCallback (_Control) (event_type)
+			--format "Event:	% \n" Event
+			--format "default_callback:	% \n" default_callback
 
-			this._setArgumentsToCallback( Event )
-
-
-			--this._addDefaultCallback()
-
-			--this._addEventFired()
-
-			format "Event:	% \n" Event
+			/* IF DEFAULT OR CUSTOM EVENT EXISTS */
+			if  Event != undefined or default_callback != undefined  then
+				this._mergeEvents (_Control) (event_type) (Event) (default_callback)
 		)
-
 	),
 
 	private
+
+	/** Combine events
+	  *
+	  */
+	function _mergeEvents _Control event_type Event default_callback =
+	(
+		--format "\n"; print "ControlEventCreator_v.combineEvents()"
+		/* GET NEW EVENT IF ONLY DEAFAULT CALLBACK EXIST */
+		if  Event == undefined then Event = Event_v type:event_type
+
+		/* SET EVENT PARAMS */
+		if ( event_params = this._getEventParams (_Control) (event_type) ) != undefined then
+			Event.params = event_params
+
+
+		/* ADD ARGUMENTS TO CUSTOM CALLBACK */
+		if Event.callback[#code] != "" then
+			this._setArgumentsToCallback( Event )
+
+
+		/* MERGE CODE OF DEFAULT AND CUSTOM CALLBACK */
+		if default_callback != undefined then
+			Event.callback[#code] = default_callback + Event.callback[#code]
+
+		format "-----------------------\n\nEVENT:	% \n" Event
+	),
+
 
 	/** Set arguments to events
 	  * E.G.:	 on spinner changed val inspisn do fooCallback VAL INSPIN CUSTOM_PARAM -- CAllback parameters are VAL, INSPIN & CUSTOM_PARAM
 	  */
 	function _setArgumentsToCallback Event =
 	(
-		format "\n"; print "ControlEventCreator_v._setArgumentsToCallback()"
+		--format "\n"; print "ControlEventCreator_v._setArgumentsToCallback()"
 		/** Convert each argument to string friendly format
 		  * @return Array of arguemnts
 		  */
@@ -83,13 +110,16 @@ struct ControlEventCreator_v
 		  */
 		function tryAddBracketsToCallback &callback =
 		(
+			--format "\n"; print "ControlEventCreator_v.tryAddBracketsToCallback()"
+			--format "callback:	% \n" callback
 			has_brackets_already	= matchPattern callback pattern:"*(*)"	-- if "callbackHasBarckets()"
 			is_not_escaped_string	= matchPattern callback pattern:"*\"*\""	-- if not match E.G.: "print (\"XXX\")" OR "print \"XXX\""
 
 			 if not (has_brackets_already or is_not_escaped_string) then
 				callback += "()"
-		)
 
+			callback --return
+		)
 
 		/*------------------------------------------------------------------------------
 			SET ARDUMENTS TO CALLBACK
@@ -107,13 +137,11 @@ struct ControlEventCreator_v
 				callback += 	getArgumentsString (callback)(arguments)
 
 			else
-				tryAddBracketsToCallback(callback)
+				tryAddBracketsToCallback(&callback)
 		)
 
-		format "EVENT:	% \n" Event
 		Event.callback[#code] = callback
 	),
-
 
 	/** Validate event
 	  *
