@@ -5,8 +5,6 @@ filein( getFilenamePath(getSourceFileName()) + "/../../../../EventsList/EventsLi
  */
 struct Control_v
 (
-	__construct = #(),
-
 	/* required */
 	type,
 	caption,
@@ -15,7 +13,7 @@ struct Control_v
 	id,
 
 	/* dependency */
-	Events = EventsList_v(),
+	Events = Dictionary(),
 	Params = ParamsList_v(),
 
 
@@ -48,11 +46,19 @@ struct Control_v
 	),
 
 	/** Add Event to control
+	  *
+	  *
 	 */
-	function event type callback params:"" tooltip:"" =
+	function Event type callback params:#() tooltip:"" =
 	(
 		--print "Control_v.event()"
-		Events.add type callback params:params tooltip:tooltip
+		_Event = Event_v type:type tooltip:tooltip
+
+		_Event.callback[#code]	= callback
+		_Event.callback[#arguments]	= params
+
+
+		this.Events[type] = _Event
 	),
 
 	/** Addlocal

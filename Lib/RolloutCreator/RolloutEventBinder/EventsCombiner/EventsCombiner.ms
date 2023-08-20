@@ -34,17 +34,17 @@ struct EventsCombiner_v
 
 		)
 	),
-
-	/** Get events
-	 */
-	function combineOrGetNewEvent event_type =
-	(
-		--print "EventsCombiner_v.combineOrGetNewEvent()"
-		if( (Event = this.combine(event_type)) == undefined ) then
-			Event	= (Event_v type:event_type)
-
-		Event --return
-	),
+	--
+	--/** Get events
+	-- */
+	--function combineOrGetNewEvent event_type =
+	--(
+	--	--print "EventsCombiner_v.combineOrGetNewEvent()"
+	--	if( (Event = this.combine(event_type)) == undefined ) then
+	--		Event	= (Event_v type:event_type)
+	--
+	--	Event --return
+	--),
 
 
 	private
@@ -66,8 +66,8 @@ struct EventsCombiner_v
 					--Event_combined.code	+= Event.code + ";"
 
 				/* PARAMS */
-				--if Event.params != "" then
-					--Event_combined.params	+= Event.params + " "
+				if Event.params != "" then
+					Event_combined.params	+= Event.params + " "
 
 				/* TOOLTIP */
 				Event_combined.tooltip	+= Event.tooltip

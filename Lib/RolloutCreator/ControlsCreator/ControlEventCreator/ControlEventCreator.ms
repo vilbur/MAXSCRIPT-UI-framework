@@ -60,7 +60,7 @@ struct ControlEventCreator_v
 
 		/* MERGE CODE OF DEFAULT AND CUSTOM CALLBACK */
 		if default_callback != undefined then
-			Event.callback[#code] = default_callback + Event.callback[#code]
+			Event.callback[#code] = "\n/* ---- DEFAULT CALLBACK ---- */\n" +default_callback +";\n\n/* ---- CUSTOM CALLBACK ---- */\n" + Event.callback[#code]
 
 		format "-----------------------\n\nEVENT:	% \n" Event
 	),
@@ -174,11 +174,26 @@ struct ControlEventCreator_v
 	function _setEventsPerControlType =
 	(
 		--format "\n"; print "ControlEventCreator_v._setEventsPerControlType()"
-		control_events[#Label] 	= #()
-		control_events[#Button] 	= Dictionary #( #pressed, "" )	#( #rightclick, "" )
-		control_events[#CheckButton]	= Dictionary #( #changed, "val" )	#( #rightclick, "" )
+		control_events[#Label] 	= undefined
+		control_events[#Groupbox] 	= undefined
+		control_events[#Timer] 	= Dictionary #( #tick,	     "" )
+		control_events[#hyperlink] 	= Dictionary #( #rightclick, "" )
+		control_events[#ColorPicker] 	= Dictionary #( #changed,  "val")
+		control_events[#Button] 	= Dictionary #( #pressed,   "" )	#( #rightclick, "" )
+		control_events[#Checkbox] 	= Dictionary #( #changed,  "val")	#( #rightclick, "" )
+		control_events[#Radiobuttons] 	= Dictionary #( #changed,  "val")	#( #rightclick, "" )
+		control_events[#PickButton] 	= Dictionary #( #picked,   "val")	#( #rightclick, "" )
+		control_events[#Materialbutton] 	= Dictionary #( #picked,   "val")	#( #rightclick, "" )
+		control_events[#CheckButton]	= Dictionary #( #changed,  "val" )	#( #rightclick, "" )
+		control_events[#Angle] 	= Dictionary #( #changed,  "val")	#( #rightclick, "" )
+		control_events[#Edittext] 	= Dictionary #( #changed,  "val")	#( #entered,       "val")
+		control_events[#BrowsePath] 	= Dictionary #( #changed,  "val")	#( #entered,       "val")
+		control_events[#Listbox] 	= Dictionary #( #selected, "val")	#( #doubleClicked, "val")	#( #rightClick, "val")
+		control_events[#Slider] 	= Dictionary #( #changed,  "val")	#( #rightclick, "" )	#( #buttondown, "" )	#( #buttonup, "" )
 		control_events[#Spinner]	= Dictionary #( #changed, "val inSpin" )	#( #entered, "inSpin inCancel" )	#(#buttonup, "inCancel")	#(#buttondown, "")
-
+		control_events[#MultiListBox] 	= Dictionary #( #selectionEnd, "")	#( #doubleClicked, "val")	#( #rightClick, "val")	#( #selected, "val")
+		control_events[#Combobox] 	= Dictionary #( #selected, "val")	#( #doubleClicked, "val")	#( #entered , "val")	#( #changed , "val")	#( #rightclick, "" )
+		control_events[#Dropdownlist] 	= Dictionary #( #selected, "val")	#( #rightclick, "" )
 	),
 
 	/**

@@ -98,7 +98,7 @@ struct Dialog_v
 	 */
 	function create width: height: pos: origin:#SCREEN bgcolor: fgcolor: bitmap: bmpstyle:#bmp_tile  style: modal: escapeEnable:false escapekey:true lockHeight:false lockWidth:true parent: =
 	(
-		format "\n"; print "Dialog_v.create()"
+		--format "\n"; print "Dialog_v.create()"
 
 		width  = this._getSizeOnCreate (#width)  (width)
 		height = this._getSizeOnCreate (#height) (height)
@@ -106,7 +106,7 @@ struct Dialog_v
 		_RolloutCreator = RolloutCreator_v Ini:Ini
 
 		_RolloutCreator.createRollout (this) width:width -- create nested rollouts
-		format "WIDTH:	% \n" WIDTH
+
 		CreateDialog (this.RCI.def) width:width height:height pos:(this._getPosition(pos)(origin)) autoLayoutOnResize:true bgcolor:bgcolor fgcolor:fgcolor	bitmap:bitmap bmpstyle:bmpstyle style:(if( style == unsupplied ) then this.style else style) modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
 
 		_RolloutCreator.SubolloutsCreator.addSubRollouts (this)
@@ -237,14 +237,13 @@ struct Dialog_v
 	(
 		--format "\n"; print "if._setDialogDefaultSize()"
 		this.width  = 256
-		this.height = 32
 	),
 
 	/** Set minimal size of registered dialog
 	 */
 	function _setDialogMinimalSize =
 	(
-		format "\n"; print "Dialog_v._setDialogMinimalSize()"
+		--format "\n"; print "Dialog_v._setDialogMinimalSize()"
 		if not this.isDefined (this.min_size) then
 		(
 			min_width	= if this.isDefined (this.width)	then this.width	 else -1
@@ -252,17 +251,17 @@ struct Dialog_v
 
 			min_size = [ min_width, min_height ]
 		)
-		format "MIN_SIZE:	% \n" min_size
+		--format "MIN_SIZE:	% \n" min_size
 	),
 
 	/** Set size of dialog
 	 */
 	function _setDialogSize =
 	(
-		format "\n\n"; print "Dialog_v._setDialogSize()"
+		--format "\n\n"; print "Dialog_v._setDialogSize()"
 		if ( ini_size = this._getSizeFromIni() ) != undefined then
 		(
-			format "INI_SIZE:	% \n" INI_SIZE
+			--format "INI_SIZE:	% \n" INI_SIZE
 			this.width  = ini_size.x
 			this.height = ini_size.y
 		)
@@ -272,9 +271,9 @@ struct Dialog_v
 	  */
 	function _getSizeOnCreate size_type val =
 	(
-		format "\n"; print "if._getSizeOnCreate()"
-		format "size_type:	% \n" size_type
-		format "classOf val:	% \n" (classOf val)
+		--format "\n"; print "if._getSizeOnCreate()"
+		--format "size_type:	% \n" size_type
+		--format "classOf val:	% \n" (classOf val)
 
 		case classOf val of
 		(
@@ -399,7 +398,7 @@ struct Dialog_v
 	 */
 	on create do
 	(
-		format "\n"; print "Dialog_v.onCreate()"
+		--format "\n"; print "Dialog_v.onCreate()"
 		this._checkConstctructProperties #(#title)
 
 		Ini	= Ini_v _path:Ini
@@ -407,7 +406,6 @@ struct Dialog_v
 		this._setId()
 
 		this.destroy()
-
 
 		this._setDialogDefaultSize()
 		this._setDialogMinimalSize()

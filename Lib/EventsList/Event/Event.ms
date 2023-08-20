@@ -6,10 +6,11 @@
   * @property	string	params
   *
  */
-struct Event_v 
+struct Event_v
 (
 	type     = #pressed,
-	tooltip	= "", -- tooltip for event
 	params	= "",
-	code     = ""
+	code     = "", -- REMOVE THIS
+	callback = Dictionary #( #code, "" ) #( #arguments, "" ),
+	tooltip	= "" -- tooltip for callback
 )

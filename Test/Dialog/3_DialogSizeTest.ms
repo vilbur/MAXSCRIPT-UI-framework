@@ -93,10 +93,12 @@ function createTestDialog slots:0 nested:0 rollouts:0 controls:0 controls_dialog
 --------------------------------------------------------------------------------*/
 
 /* DEFAULT */
-createTestDialog()
+-- createTestDialog()
 
 
 /* SLOTS AND CONTROLS */
+createTestDialog controls_dialog:10
+
 --createTestDialog slots:1 rollouts:1 controls:10
 --createTestDialog slots:2 rollouts:2 controls:10
 -- createTestDialog slots:2 rollouts:1 controls:20
@@ -145,7 +147,7 @@ createTestDialog()
 --createTestDialog  controls_dialog:5	construct_width:256 ini:true width:1024 height:512
 
 
-/* WIDTH CONSTRUCT, INI DEFINED, BUT IT IS OVERRIDED BY PARAM */
+/* WIDTH CONSTRUCT, INI DEFINED, BUT HEIGHT IS AUTO */
 --createTestDialog  controls_dialog:15	ini:true height:undefined
 
 

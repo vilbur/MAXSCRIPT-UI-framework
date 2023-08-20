@@ -13,27 +13,38 @@ _Controls	= Dialog.Controls group:"Main Controls"
 
 items = for i = 1 to 3 collect ("item "+ i as string )
 
+_Controls.Default #across 1
 
-/** CREATE CONTROLS
---  */
---_Button	= _Controls.control #button "Button" params:#(#border, false, #tooltip, "Test Tooltip")
---_Button	= _Controls.control #button "Button offset" params:#( #offset, [ 32, 128] )
+/*------ BUTTON ------*/
+--_Controls.control #button "Button" params:#(#border, false, #tooltip, "Test Tooltip")
+--_Controls.control #button "Button offset" params:#( #offset, [ 32, 128] )
 --
---_Checkbox	= _Controls.control #checkbox "Checkbox value" value:true
---_Checkbox	= _Controls.control #checkbox "Checkbox param" params:#(#checked, true)
---
+/*------ CHECKBOX ------*/
+--_Controls.control #checkbox "Checkbox value" value:true
+--_Controls.control #checkbox "Checkbox param" params:#(#checked, true)
+
+/*------ SPINNER ------*/
+
+_Spinner = _Controls.control #spinner "Spinner params" range:[0,10.0,3]
+--_Spinner = _Controls.control #spinner "Spinner params"  value:10.0
+--_Spinner = _Controls.control #spinner "Spinner params" range:[0,10,0] value:3 -- value ovverides value in range
+
+
+/*------ LISTBOX ------*/
 --_Listbox	= _Controls.control #listbox "Listbox param" items:items value:2
 --
---_Controls.control #slider "slider"  params:#(#type, #integer, #range,[0,10,5], #across, 1)
-
-/*------ RADIOBUTTONS ------*/
-_Controls.control #radioButtons "RadioButtons"	items:items columns:2
---_Controls.control #radioButtons "RadioButtons"	items:items params:#(#columns, 1)
-
 /*------ SLIDER ------*/
+--_Controls.control #slider "slider"  params:#(#type, #integer, #range,[0,10,5], #across, 1)
 --_Controls.control #slider "Slider" range:[0,10,5] width:200 params:#(#type, #integer, #ticks, 20 )
 
 
+
+/*------ RADIOBUTTONS ------*/
+--_Controls.control #radioButtons "RadioButtons"	items:items columns:2
+--_Controls.control #radioButtons "RadioButtons"	items:items params:#(#columns, 1)
+
+
+/*------ BROWSEATH ------*/
 /* Browse path parameters: "https://help.autodesk.com/view/MAXDEV/2021/ENU/?guid=GUID-D4B43A33-8342-4BC9-80AB-91460861D37C"
 						--"./../../../Lib/RolloutCreator/ControlsCreator/ControlTypes/BrowsePath/BrowsePath.ms"
 
@@ -54,6 +65,11 @@ _Controls.control #radioButtons "RadioButtons"	items:items columns:2
 --_Controls.control #browsePath "OpenFileName" params:#( #mode, #getOpenFileName )
 
 
+/*------ CECKBUTTON ------*/
+/*------ DROPDOWN ------*/
+/*------ EDITTEXT ------*/
+/*------ COLORPICKER ------*/
+
 
 /* DIALOG CREATE */
-Dialog.create width:256 height:256
+Dialog.create width:256

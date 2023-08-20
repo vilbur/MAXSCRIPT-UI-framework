@@ -1,5 +1,5 @@
-filein( getFilenamePath(getSourceFileName()) + "/ControlTypes/BrowsePath/BrowsePath.ms" )	-- "./ControlTypes/BrowsePath/BrowsePath.ms"
-filein( getFilenamePath(getSourceFileName()) + "/ControlTypes/Radiobuttons/Radiobuttons.ms" )	-- "./ControlTypes/Radiobuttons/Radiobuttons.ms"
+--filein( getFilenamePath(getSourceFileName()) + "/ControlTypes/BrowsePath/BrowsePath.ms" )	-- "./ControlTypes/BrowsePath/BrowsePath.ms"
+--filein( getFilenamePath(getSourceFileName()) + "/ControlTypes/Radiobuttons/Radiobuttons.ms" )	-- "./ControlTypes/Radiobuttons/Radiobuttons.ms"
 
 filein( getFilenamePath(getSourceFileName()) + "/ControlValue/ControlValue.ms" )	-- "./ControlValue/ControlValue.ms"
 filein( getFilenamePath(getSourceFileName()) + "/ControlParamsCreator/ControlParamsCreator.ms" )	-- "./ControlParamsCreator/ControlParamsCreator.ms"
@@ -32,7 +32,7 @@ struct ControlCreator_v
 	ParamsCreator	= ControlParamsCreator_v(),
 	ControlValue 	= ControlValue_v(),
 	TooltipCreator	= TooltipCreator_v(),
-	ControlEventBinder	= ControlEventBinder_v _Rollout:_Rollout,
+	ControlEventBinder	= ControlEventBinder_v _Rollout:_Rollout, -- "./ControlEventBinder/ControlEventBinder.ms"
 
 
 	/** Add controls to rollout

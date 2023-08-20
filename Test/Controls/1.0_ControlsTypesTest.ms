@@ -24,24 +24,35 @@ Controls   = Dialog.Controls()
 --Controls.control #button "Group Box without Label" params:#(#groupbox, "[Groupbox Hidden Label]") width:128 offset:[-32,0]
 
 
+
+/* ADD CONTROL AS OBJECT */
+Controls.add (Control_v #button "THIS IS TEST")
+
+
 /*------ BUTTON ------*/
 --Controls.control #button "Button" id:#button_1
-Controls.control #button "Button ☑✅✓" id:#button_1
+--Controls.control #button "Button ☑✅✓" id:#button_1
+
 
 /*------ CECKBUTTON ------*/
 --Controls.control #checkbutton "checkbutton"
 
+
 /*------ CHECKBOX ------*/
 --Controls.control #checkbox "Checkbox"
+
 
 /*------ RADIOBUTTONS ------*/
 --Controls.control #radioButtons "RadioButtons"	items:#("Item 1","Item 2")
 
+
 /*------ DROPDOWN ------*/
 --Controls.control #Dropdownlist "Dropdownlist"
 
+
 /*------ EDITTEXT ------*/
 --Controls.control #Edittext "Edittext"
+
 
 /*------ SLIDER ------*/
 --Controls.control #slider "Slider"
