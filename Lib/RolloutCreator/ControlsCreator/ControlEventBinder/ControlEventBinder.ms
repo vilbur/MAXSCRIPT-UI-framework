@@ -1,5 +1,4 @@
 filein( getFilenamePath(getSourceFileName()) + "/EventFiredCreator/EventFiredCreator.ms" )	-- "./EventFiredCreator/EventFiredCreator.ms"
-filein( getFilenamePath(getSourceFileName()) + "/DefaultControlEvents/DefaultControlEvents.ms" )	-- "./DefaultControlEvents/DefaultControlEvents.ms"
 
 
 global STARTUP_EVENTS = #() -- run callbacks of controls like checkbox, checkbutton on UI start

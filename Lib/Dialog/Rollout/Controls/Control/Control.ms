@@ -1,5 +1,5 @@
 filein( getFilenamePath(getSourceFileName()) + "/ParamsList/ParamsList.ms" )	-- "./ParamsList/ParamsList.ms"
-filein( getFilenamePath(getSourceFileName()) + "/../../../../EventsList/EventsList.ms" )	-- "./../../../../EventsList/EventsList.ms"
+--filein( getFilenamePath(getSourceFileName()) + "/../../../../EventsList/EventsList.ms" )	-- "./../../../../EventsList/EventsList.ms"
 
 /** Control
  */

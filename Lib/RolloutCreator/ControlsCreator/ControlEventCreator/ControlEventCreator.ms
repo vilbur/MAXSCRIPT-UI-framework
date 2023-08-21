@@ -21,7 +21,10 @@ struct ControlEventCreator_v
 	  */
 	function createEvents _Control =
 	(
-		--format "\n"; print "ControlEventCreator_v.createEvents()"
+		--format "\n================\n"; print "ControlEventCreator_v.createEvents()"
+		--format "_Control:	% \n" _Control.caption
+
+		this._validateEvents(_Control)
 
 		for event_type in (event_types[_Control.type].keys) do
 		(
@@ -49,9 +52,7 @@ struct ControlEventCreator_v
 		if  Event == undefined then Event = Event_v type:event_type
 
 		/* SET EVENT PARAMS */
-		if ( event_params = this._getEventParams (_Control) (event_type) ) != undefined then
-			Event.params = event_params
-
+		Event.params = event_types[_Control.type][event_type]
 
 		/* ADD ARGUMENTS TO CUSTOM CALLBACK */
 		if Event.callback[#code] != "" then
@@ -149,26 +150,28 @@ struct ControlEventCreator_v
 	/** Validate event
 	  *
 	  */
-	function _getEventParams _Control event_type =
+	function _validateEvents _Control =
 	(
-		--format "\n"; print "ControlEventCreator_v._getEventPramas()"
-		if event_types[_Control.type][event_type] == undefined then
-		(
-			print  ("------------------- WARNING ----------------------")
-			print  ("UNKNOWN TYPE OF EVENT FOR CONTROL.")
-			format "\n\n"
-			--format "_Rollout: % \n" _Rollout.title
-			format "Control:  #% \n" 	_Control.id
-			format "Title:    \"%\" \n"	_Control.caption
-			format "Type:     %\n" 	_Control.type
-			format "Event:    % \n"	event_type
-			format "\n"
-			format "AVAILABLE EVENTS FOR THIS TYPE:    % \n" event_types[_Control.type].keys
-			format "\n"
-			print  ("------------------------------------------------")
-		)
+		--format "\n----------------\n"; print "ControlEventCreator_v._getEventPramas()"
+		--format "_Control:	% \n" _Control.caption
+		--format "_Control.type:	% \n" _Control.type
 
-		event_types[_Control.type][event_type] --return
+		for Event_Data in _Control.Events do
+			--format "event_types[_Control.type][Event_Data.key]:	% \n" event_types[_Control.type][Event_Data.key]
+			if event_types[_Control.type][Event_Data.key] == undefined then
+			(
+				format  ("\n\n=================== WARNING ======================\n\n")
+				print  ("EVENT TYPE #"+ Event_Data.key as string +" DOES NOT EXISTS")
+				format "\n"
+				format "Control:  #% \n" 	_Control.id
+				format "Title:    \"%\" \n"	_Control.caption
+				format "Type:     %\n" 	_Control.type
+				format "Event:    % \n"	Event_Data.key
+				format "\n"
+				format "AVAILABLE EVENTS FOR THIS TYPE: % \n" event_types[_Control.type].keys
+				format "\n"
+				print  ("================================================")
+			)
 	),
 
 	/**

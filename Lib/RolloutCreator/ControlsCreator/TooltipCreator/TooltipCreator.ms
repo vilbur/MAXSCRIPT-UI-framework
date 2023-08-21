@@ -3,34 +3,32 @@
 struct TooltipCreator_v
 (
 	/* properties */
-	_Control,
+	--_Control,
 
 	/** Add tooltips
 	 */
 	function addTooltips &_Control =
 	(
 		--format "\n"; print "TooltipCreator_v.addTooltips()"
-		this._Control = _Control
+		--this._Control = _Control
 
-		if( tooltip = this._getTooltipsOfEvents() ) != "" then
-			this._Control.params.setVal (#tooltip) (tooltip)
+		if( tooltip = this._getTooltipsOfEvents(_Control) ) != "" then
+			_Control.params.setVal (#tooltip) (tooltip)
 
-		this._Control --return
+		_Control --return
 	),
 
 	private
 
 	/** Get tooltips of events
 	 */
-	function _getTooltipsOfEvents =
+	function _getTooltipsOfEvents _Control =
 	(
 		--format "\n"; print "TooltipCreator_v.getTooltipsOfEvents()"
-		--Events = this._Control.Events.List
-
 		tooltip = if( tooltip_param = _Control.params.getVal #tooltip ) != undefined then tooltip_param + "\n" else ""
 
-		--for Event in Events where Event.tooltip != "" do
-			--tooltip += this._getEventPrefix(Event.type) + Event.tooltip + "\n"
+		for Event_data in _Control.Events where (event_tooltip = Event_data.value.tooltip) != "" do
+			tooltip += this._getEventPrefix(Event_data.value.type) + event_tooltip + "\n"
 
 		trimRight tooltip "\n" --return
 	),

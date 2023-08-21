@@ -45,13 +45,13 @@ function Callback3Params arg_1 arg_2 arg_3 = (format "Callback3Params()\narg_1: 
 
 
 /*------ BUTTON ------*/
- -- _Button	= _Controls.control #button "Button"
---_Button.Event #pressed	"macros.run \"_Test\" \"_test_control_callback_macro\""
+_Button = _Controls.control #button "Button"
+_Button.Event #pressed	"macros.run \"_Test\" \"_test_control_callback_macro\"" tooltip:"Test Tooltip"
 
- -- _Button.Event #pressed "CallbackNoParam"
- --_Button.Event #pressed "Callback1Param(\"Value in callback\")"
- --_Button.Event #pressed "Callback1Param" params:"Value in pram string"
- --_Button.Event #pressed "Callback2Params" params:#("Value A", "Value B")
+-- _Button.Event #pressed "CallbackNoParam"
+--_Button.Event #pressed "Callback1Param(\"Value in callback\")"
+--_Button.Event #pressed "Callback1Param" params:"Value in pram string"
+--_Button.Event #pressed "Callback2Params" params:#("Value A", "Value B")
 
 /*------ CECKBUTTON ------*/
 
@@ -78,9 +78,9 @@ function Callback3Params arg_1 arg_2 arg_3 = (format "Callback3Params()\narg_1: 
 -- _OpenFileName.Event #entered ("Callback1Param") -- Called when the user enters text in the edit box and then presses ENTER or TAB to move the cursor out of the field.
 
 /*------ RADIOBUTTONS ------*/
-_RadioButtons = _Controls.control #radioButtons "RadioButtons"	items:#("Item 1","Item 2")
+--_RadioButtons = _Controls.control #radioButtons "RadioButtons"	items:#("Item 1","Item 2")
 
-_RadioButtons.Event #changed ("Callback1Param")
+--_RadioButtons.Event #changed ("Callback1Param")
 
 /*------ CHECKBOX ------*/
 /*------ DROPDOWN ------*/

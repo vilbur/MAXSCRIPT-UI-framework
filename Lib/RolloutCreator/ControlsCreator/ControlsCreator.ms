@@ -1,9 +1,9 @@
 filein( getFilenamePath(getSourceFileName()) + "/ControlValue/ControlValue.ms" )	-- "./ControlValue/ControlValue.ms"
-filein( getFilenamePath(getSourceFileName()) + "/ControlParamsCreator/ControlParamsCreator.ms" )	-- "./ControlParamsCreator/ControlParamsCreator.ms"
 filein( getFilenamePath(getSourceFileName()) + "/TooltipCreator/TooltipCreator.ms" )	-- "./TooltipCreator/TooltipCreator.ms"
-filein( getFilenamePath(getSourceFileName()) + "/ControlEventBinder/ControlEventBinder.ms" )	-- "./ControlEventBinder/ControlEventBinder.ms"
-filein( getFilenamePath(getSourceFileName()) + "/AcrossParameterModifier/AcrossParameterModifier.ms" )	-- "./AcrossParameterModifier/AcrossParameterModifier.ms"
 filein( getFilenamePath(getSourceFileName()) + "/GroupBoxCreator/GroupBoxCreator.ms" )	-- "./GroupBoxCreator/GroupBoxCreator.ms"
+filein( getFilenamePath(getSourceFileName()) + "/ControlEventBinder/ControlEventBinder.ms" )	-- "./ControlEventBinder/ControlEventBinder.ms"
+filein( getFilenamePath(getSourceFileName()) + "/ControlParamsCreator/ControlParamsCreator.ms" )	-- "./ControlParamsCreator/ControlParamsCreator.ms"
+filein( getFilenamePath(getSourceFileName()) + "/AcrossParameterModifier/AcrossParameterModifier.ms" )	-- "./AcrossParameterModifier/AcrossParameterModifier.ms"
 
 filein( getFilenamePath(getSourceFileName()) + "/EventTypes/EventTypes.ms" )	-- "./EventTypes/EventTypes.ms"
 filein( getFilenamePath(getSourceFileName()) + "/ControlEventCreator/ControlEventCreator.ms" )	-- "./ControlEventCreator/ControlEventCreator.ms"
@@ -62,7 +62,6 @@ struct ControlCreator_v
 			--this.addToAutoRunEvents(_Control) -- MUST RUN BEFORE ControlEventBinder.combineEvents(), because only custom events are used to autorun
 
 			ControlEventCreator.createEvents(_Control)
-			--ControlEventBinder.combineEvents(_Control)
 
 			this._customizeControlTypes(_Control)
 		)
