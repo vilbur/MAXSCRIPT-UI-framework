@@ -8,7 +8,7 @@
 struct MacroScript_Content_v
 (
 
-	/* Properties of macroscript */ 
+	/* Properties of macroscript */
 	macro_name,
 	category,
 	buttontext,
@@ -16,6 +16,8 @@ struct MacroScript_Content_v
 	tooltip = "",
 	icon    = "",
 	params = #( #(), #() ), -- 2D matrix #( #(keys), #(values) )
+	silentErrors = false,
+	autoUndoEnabled = false,
 
 	public
 
@@ -65,7 +67,7 @@ struct MacroScript_Content_v
 		--print "MacroScript_Content_v.getParamsArray()"
 		params_array = #()
 
-		for i = 1 to params[1].count do 
+		for i = 1 to params[1].count do
 		(
 			append params_array params[1][i]
 			append params_array params[2][i]
@@ -81,11 +83,11 @@ struct MacroScript_Content_v
 	function getParam param =
 	(
 		--print "MacroScript_Content_v.getParam()"
-		if (index = findItem params[1] param ) > 0 then 
+		if (index = findItem params[1] param ) > 0 then
 			params[2][index] --return
 	),
 
-	/**  
+	/**
 	 */
 	on create do
 	(

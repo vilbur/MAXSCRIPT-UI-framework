@@ -25,6 +25,7 @@ struct TooltipCreator_v
 	function _getTooltipsOfEvents _Control =
 	(
 		--format "\n"; print "TooltipCreator_v.getTooltipsOfEvents()"
+		--format "_Control.caption:	% \n" _Control.caption
 		tooltip = if( tooltip_param = _Control.params.getVal #tooltip ) != undefined then tooltip_param + "\n" else ""
 
 		for Event_data in _Control.Events where (event_tooltip = Event_data.value.tooltip) != "" do
@@ -37,10 +38,11 @@ struct TooltipCreator_v
 	 */
 	function _getEventPrefix event_type =
 	(
-		--format "\n"; print "TooltipCreator_v.getEventType()"
+		--format "\n"; print "TooltipCreator_v._getEventPrefix()"
+		--format "event_type:	% \n" event_type
 		case event_type of
 		(
-			(#pressed):	"LMB:  "
+			(#pressed):	"LMB:   "
 			(#rightclick):	"\nRMB: "
 			default:	""
 			--default:	"On " + this._capitalize(event_type as string ) + ": "

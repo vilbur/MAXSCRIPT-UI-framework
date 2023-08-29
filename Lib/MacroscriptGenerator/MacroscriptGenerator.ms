@@ -160,16 +160,7 @@ struct MacroscriptGenerator_v
 		macro_data --return
 	),
 
-	/** Write macroscript name
-	 *
-	 */
-	function writeMacroscriptName macro_data =
-	(
-		--format "\n"; print "MacroscriptGenerator_v.writeMacroscriptName()"
-		macroscript_name = substituteString (general_params[#macroscript] + macro_data[#macroscript]) " " "_"
 
-        format "macroscript %\n" macroscript_name to:mcr_file
-	),
 
 	/** Merge macroscript params
      */
@@ -296,6 +287,17 @@ struct MacroscriptGenerator_v
         /* CLOSE FILE */
         close this.mcr_file
     ),
+	
+	/** Write macroscript name
+	 *
+	 */
+	function writeMacroscriptName macro_data =
+	(
+		--format "\n"; print "MacroscriptGenerator_v.writeMacroscriptName()"
+		macroscript_name = substituteString (general_params[#macroscript] + macro_data[#macroscript]) " " "_"
+
+        format "macroscript %\n" macroscript_name to:mcr_file
+	),
 
     /** Write to file
     *

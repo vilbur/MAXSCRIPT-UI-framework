@@ -40,7 +40,8 @@ struct Dialog_v
 	include "MAXSCRIPT-UI-framework/Lib/Dialog/Rollout/RolloutBody.ms" --"./Rollout/RolloutBody.ms"
 
 	public
-
+	--DEBUG = false,
+	DEBUG = true,
 	/* construct */
 	Ini,
 
@@ -53,6 +54,7 @@ struct Dialog_v
 
 	/* inherit */
 	/* properties */
+
 
 	min_size,
 
@@ -99,6 +101,7 @@ struct Dialog_v
 	function create width: height: pos: origin:#SCREEN bgcolor: fgcolor: bitmap: bmpstyle:#bmp_tile  style: modal: escapeEnable:false escapekey:true lockHeight:false lockWidth:true parent: =
 	(
 		--format "\n"; print "Dialog_v.create()"
+		timer_create_dialog = timestamp()
 
 		width  = this._getSizeOnCreate (#width)  (width)
 		height = this._getSizeOnCreate (#height) (height)
@@ -109,11 +112,15 @@ struct Dialog_v
 
 		CreateDialog (this.RCI.def) width:width height:height pos:(this._getPosition(pos)(origin)) autoLayoutOnResize:true bgcolor:bgcolor fgcolor:fgcolor	bitmap:bitmap bmpstyle:bmpstyle style:(if( style == unsupplied ) then this.style else style) modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
 
+		if this.DEBUG then format "CreateDialog % ms\n" ((timestamp()) - timer_create_dialog)
+
 		_RolloutCreator.SubolloutsCreator.addSubRollouts (this)
+		if this.DEBUG then format "addSubRollouts % ms\n" ((timestamp()) - timer_create_dialog)
 
 		this._setDockState()
 
 		this.RolloutResizer.fitSlotsToDialog(this.RCI.def)
+		if this.DEBUG then format "fitSlotsToDialog % ms\n" ((timestamp()) - timer_create_dialog)
 
 		--AutoRunEvents.executeMacros()
 
@@ -123,6 +130,8 @@ struct Dialog_v
 
 		--format ("\n\nDIALOG \""+title+"\" HAS BEEN CREATED\n\n" )
 		format ("\n\nDIALOG \""+ id as string +"\" HAS BEEN CREATED\n\n" )
+
+		if this.DEBUG then format "Dialog Create % ms\n" ((timestamp()) - timer_create_dialog)
 
 		CONTROL_BITMAPS_STORE = #() -- reset buffer array
 	),

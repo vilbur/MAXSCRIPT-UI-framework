@@ -45,7 +45,7 @@ struct Controls_v
 		--format "_Control.id = % \n" _Control.id
 		--format "_Control	= % \n" _Control
 		_param_names  = #( #checked, #width, #height, #offset, #align, #items, #range, #value, #ini, #tooltip, #across, #columns)
-		_param_values = #( checked, width,  height,  offset,  align, items,  range,   value,  ini,  tooltip,  across,  columns)
+		_param_values = #(  checked,  width,  height,  offset,  align, items,  range,   value,  ini,  tooltip,  across,  columns)
 
 
 		for i = 1 to _param_values.count where _param_values[i]!= unsupplied do

@@ -3,7 +3,11 @@
 <project id="0a2534c0-4e33-4331-9037-9f7d46588d24" kpf_version="5" name="MS-UI-Framework.komodoproject">
 <livefolder id="50356b3b-8359-4a1b-b6c6-6f731f0e9c30" idref="0a2534c0-4e33-4331-9037-9f7d46588d24" name="RolloutCreator" url="Lib/RolloutCreator/">
 </livefolder>
+<livefolder id="61b546ad-abd8-4c7d-9d16-100d46a077e7" idref="0a2534c0-4e33-4331-9037-9f7d46588d24" name="ContentLoader" url="Lib/ContentLoader/">
+</livefolder>
 <livefolder id="b955f8ca-751f-4829-be7d-0d0d34c8d5bb" idref="0a2534c0-4e33-4331-9037-9f7d46588d24" name="Dialog" url="Lib/Dialog/">
+</livefolder>
+<livefolder id="c5a1b039-1eeb-4e5a-852e-635484d5a834" idref="0a2534c0-4e33-4331-9037-9f7d46588d24" name="Menus" url="Lib/Menus/">
 </livefolder>
 <livefolder id="f1a7c246-8bf8-4b3d-b32c-2acbe4b913ba" idref="0a2534c0-4e33-4331-9037-9f7d46588d24" name="Test" url="Test/">
 </livefolder>

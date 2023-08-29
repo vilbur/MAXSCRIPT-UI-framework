@@ -291,6 +291,13 @@ struct Menu_v
 			this._addSeparator (index)
 	),
 
+	/** Wrapper for this.addSeparator()
+	 */
+	function addSeparators indexes =
+	(
+		this.addSeparator index:indexes
+	),
+
 	/** Remove separator on index
 	  *
 	  * @return	false if separator has not been deleted
@@ -306,9 +313,9 @@ struct Menu_v
 
 	/** Remove double separators and separators on start or end of menu
 	 */
-	function cleanSeparators =
+	function clearSeparators =
 	(
-		--format "\n"; print "Menu_v.cleanSeparators()"
+		--format "\n"; print "Menu_v.clearSeparators()"
 		indexes_to_remove 	= #()
 		next_item_is_separator	= false
 

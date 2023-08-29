@@ -25,6 +25,9 @@ struct RolloutCreator_v
 	/* properties */
 	closed_rollout_bar_height = 24,
 
+	--DEBUG = false,
+	DEBUG = true,
+
 	/* dependency */
 	EventBinder	= RolloutEventBinder_v ini_path:(Ini.getPath()),
 
@@ -43,11 +46,12 @@ struct RolloutCreator_v
 		--format "\n\n-------------------------------------	RolloutCreator_v.createRollout() id:#%	-------------------------------------\n"  ( _Rollout.id as string );
 		--format "_ROLLOUT: %\n" _Rollout.title
 		--format "_ROLLOUT: %:	% \n" _Rollout.title _Rollout
-
+		timer_create_rollout = timestamp()
 
 		this._setSubrolloutDefaultSlots(_Rollout)
 
 		this._createSubrollouts(_Rollout)
+		if this.DEBUG then format "RolloutCreator._createSubrollouts % ms\n" ((timestamp()) - timer_create_rollout)
 
 		ControlsCreator	= ControlCreator_v _Rollout:_Rollout Ini:Ini -- MUST BE AFTER SUBROLLOUT ARE CREATED
 
@@ -78,6 +82,7 @@ struct RolloutCreator_v
 
 		/* add CONTROLS and SUBROLLOUTS SLOTS */
 		this._addControlsAndSubrollouts (_Rollout)
+		if this.DEBUG then format "%._addControlsAndSubrollouts % ms\n" _Rollout.id ((timestamp()) - timer_create_rollout)
 
 
 		/* add EVENTS */

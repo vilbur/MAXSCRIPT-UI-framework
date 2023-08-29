@@ -1,70 +1,11 @@
 clearListener()
 
 
---struct _test ( prop )
---
---
---mapped function testFn p = print (p as string)
---
---
---mapped function testFn item  =(
---
--- item.prop += "X"
---)
---
---test = #()
---arr = #( _test("A"), _test("B")  )
-----arr = #( red , green , blue )
-----a = #( 0,1,2 )
---
---test = testFn arr
---format "arr:	% \n" arr
---format "test:	% \n" test
-----testFn a
 
---struct _test ( prop )
-
---result = #()
---
---mapped function testFn p &result = ( append result (toUpper  p) )
---
---
---
-----arr = #( _test("A"), _test("B")  )
-----arr = #( red , green , blue )
---arr = #( "red" , "green" , "blue" )
-----a = #( 0,1,2 )
---
---testFn arr result
---
---
---format "arr:	% \n" arr
---format "result:	% \n" result
+--dialogs_hwnd = UIAccessor.GetPopupDialogs()
+actionMan.executeAction 0 "59245"  -- Customize User Interface: Hotkey Editor
 
 
 
-
-
-
-mapped function testFn str = ( append  str "X"  )
-
-
-arr = #( "red" , "green" , "blue" )
-
-testFn arr
-
-format "arr:	% \n" arr
-
-
-
-
-
---mapped function testFn arr &result = ( append result (  "X" + arr ) )
---
---
---arr = #( "red" , "green" , "blue" )
---
---testFn arr (result = #())
---
---format "arr:	% \n" arr
---format "result:	% \n" result
+if (hotkey_dialog = (for hwnd in UIAccessor.GetPopupDialogs() where UIAccessor.GetWindowText hwnd == "Hotkey Editor" collect hwnd)[1]) != undefined then
+	UIAccessor.CloseDialog hotkey_dialog
