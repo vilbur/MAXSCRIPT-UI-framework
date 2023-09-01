@@ -1,5 +1,13 @@
 filein( getFilenamePath(getSourceFileName()) + "/Event/Event.ms" ) -- "./Event/Event.ms"
 
+
+/*------------------------------------------------------------------------------
+
+	DEPRECATED
+
+--------------------------------------------------------------------------------*/
+
+
 /** Event
  */
 struct EventsList_v

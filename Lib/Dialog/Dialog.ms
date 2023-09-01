@@ -8,7 +8,6 @@ filein( getFilenamePath(getSourceFileName()) + "/../RolloutCreator/RolloutCreato
 filein( getFilenamePath(getSourceFileName()) + "/../Ini/Ini.ms" )	-- "./../Ini/Ini.ms"
 
 filein( getFilenamePath(getSourceFileName()) + "/Layout/Layout.ms" )	-- "./Layout/Layout.ms"
-filein( getFilenamePath(getSourceFileName()) + "/AutoRunEvents/AutoRunEvents.ms" )	-- "./AutoRunEvents/AutoRunEvents.ms"
 filein( getFilenamePath(getSourceFileName()) + "/Hotkeys/Hotkeys.ms" )	-- "./Hotkeys/Hotkeys.ms"
 
 
@@ -40,15 +39,15 @@ struct Dialog_v
 	include "MAXSCRIPT-UI-framework/Lib/Dialog/Rollout/RolloutBody.ms" --"./Rollout/RolloutBody.ms"
 
 	public
-	--DEBUG = false,
-	DEBUG = true,
+
 	/* construct */
 	Ini,
 
 	/* options */
+	DEBUG = false,
+	--DEBUG = true,
 
 	/* dependency */
-	AutoRunEvents 	= AutoRunEvents_v(),
 	DialogHotkeys,
 	--Menu	= DialogMenu_v Dialog:this,
 
@@ -132,6 +131,8 @@ struct Dialog_v
 		format ("\n\nDIALOG \""+ id as string +"\" HAS BEEN CREATED\n\n" )
 
 		if this.DEBUG then format "Dialog Create % ms\n" ((timestamp()) - timer_create_dialog)
+
+		this._executeAutorunEvents()
 
 		CONTROL_BITMAPS_STORE = #() -- reset buffer array
 	),
@@ -385,6 +386,19 @@ struct Dialog_v
 	),
 
 
+
+
+	/** Execute autorun events
+	  *
+	  */
+	function _executeAutorunEvents =
+	(
+		--format "\n"; print "Dialog_v._executeAutorunEvents()"
+		--format "\n-----------\nDICTIONARY:AUTORUN_EVENTS:%\n" AUTORUN_EVENTS; for data_pair in AUTORUN_EVENTS do format "%:	%\n" data_pair.key data_pair.value
+
+		 for data_pair in AUTORUN_EVENTS do
+			execute data_pair.value
+	),
 
 	/** Is defined
 	  */

@@ -4,52 +4,62 @@ clearListener()
 filein( getFilenamePath(getSourceFileName()) + "/../../../Lib/Dialog/Dialog.ms" ) -- "./../../../Lib/Dialog/Dialog.ms"
 
 
-/* DIALOG */
-Dialog 	    = Dialog_v title:"Test" ini:(getSourceFileName())
---Dialog 	    = Dialog_v title:"Test"
+/*------------------------------------------------------------------------------
 
+	CALLACKS
+
+--------------------------------------------------------------------------------*/
+/** MACRO CALLBACK
+ */
+macroscript	_test_control_callback_macro
+category:	"_Test"
+(
+	format "Macro:EventFired:	% \n" EventFired
+)
+/** 0 PRAMAS
+ */
+function CallbackNoParam = (format "\nCallbackNoParam()\nEventFired:	% \n" EventFired)
+
+/** 1 PARAMETER
+ */
+function Callback1Param val = (format "Callback1Param()\nval: % \n" val)
+
+/** 2 PARAMETERS
+ */
+function Callback2Params arg_1 arg_2 = (format "Callback2Params()\narg_1: % \narg_2: % \n" arg_1 arg_2)
+
+/** 3 PARAMETERS
+ */
+function Callback3Params arg_1 arg_2 arg_3 = (format "Callback3Params()\narg_1: %\narg_2: %\narg_3: %\n" arg_1 arg_2 arg_3)
+
+/*------------------------------------------------------------------------------
+
+	DEFINE DIALOG
+
+--------------------------------------------------------------------------------*/
+
+/* DIALOG */
+Dialog 	    = Dialog_v title:"Test"
 
 /* CONTROLS */
---Controls   = Dialog.Controls group:"Main Controls"
 Controls   = Dialog.Controls()
 
-/*------ GROUPBOX ------*/
---Controls.control #Groupbox "Groupbox Test" height:64
---Controls.control #button "Button in Groupbox" params:#(#groupbox, "Groupbox Test")
---
---
---Controls.control #Groupbox "[Groupbox Hidden Label]" height:64
---Controls.control #button "Group Box without Label" params:#(#groupbox, "[Groupbox Hidden Label]") width:128 offset:[-32,0]
 
 
 /*------ BUTTON ------*/
-_Button = Controls.control #button "Button" id:#button_1
- _Button.Events.add #pressed ("format \"EventFired:	% \n\" EventFired") across:1 align:#right
+_Button = Controls.control #button "Button"
+ _Button.Event #pressed ("Callback1Param") params:"AUTO EXECUTED EVENT"  autorun:true
+
 
 /*------ CECKBUTTON ------*/
-Checkbutton = Controls.control #checkbutton "checkbutton" across:1
- Checkbutton.Events.add #changed    ("print \"Checkbutton Event\"")
+Checkbutton = Controls.control #checkbutton "checkbutton"
+ Checkbutton.Event #changed ("Callback2Params") params:"AUTO EXECUTED EVENT"autorun:true
 
 /*------ CHECKBOX ------*/
-_Checkbox = Controls.control #checkbox "Checkbox"
-_Checkbox.Events.add #changed    ("print \"Checkbox Event\"")
-
-
-/*------ RADIOBUTTONS ------*/
-
-/**
-	RADIOBUTTONS ARE NOT Currently not supported
-
-  */
-
---Controls.control #radioButtons "RadioButtons"	items:#("Item 1","Item 2")
---_Checkbox.Events.add #changed    ("print \"RadioButtons Event\"")
-
-
+_Checkbox = Controls.control #checkbox "Checkbox" across:1
+_Checkbox.Event #changed ("Callback2Params") params:"AUTO EXECUTED EVENT"autorun:true
 
 
 
 /* DIALOG CREATE */
---Dialog.create()
-Dialog.create   width:320
---Dialog.create   width:1024
+Dialog.create()

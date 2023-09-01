@@ -59,8 +59,6 @@ struct ControlCreator_v
 
 			TooltipCreator.addTooltips(_Control)
 
-			--this.addToAutoRunEvents(_Control) -- MUST RUN BEFORE ControlEventBinder.combineEvents(), because only custom events are used to autorun
-
 			ControlEventCreator.createEvents(_Control)
 
 			this._customizeControlTypes(_Control)
@@ -255,24 +253,6 @@ struct ControlCreator_v
 
 		else if _Control.type == #Radiobuttons then
 			(RadioButtons_v()).setParams(_Control)
-	),
-	/** Add to auto run after dialog is created
-	  *
-	  * Auto run is for control types: checkbox|checkbutton|radiobuttons
-	  *
-	  * If control has event #changed and value is true, the it is added to autorun events
-	  *
-	 */
-	function addToAutoRunEvents _Control =
-	(
-
-		if _Control.type == #checkbox or _Control.type == #checkbutton or _Control.type == #radiobuttons then
-		(
-			--format "\n"; print "ControlCreator_v.addToAutoRunEvents()"
-			--format "_Control.Params.getVal #checked:	% \n" (_Control.Params.getVal #checked)
-			if( Event = _Control.Events.get #changed ) != undefined and _Control.Params.getVal #checked == true then
-				AUTORUN_EVENTS[_Control.id as name ] = Event.CODE
-		)
 	),
 
 	/** _is controls

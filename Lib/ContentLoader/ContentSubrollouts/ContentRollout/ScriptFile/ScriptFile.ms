@@ -103,12 +103,10 @@ struct ScriptFile_Content_v
 	(
 		--format "\n"; print "ScriptFile_Content_v.createControlfromMacro()"
 		--format "Macro	= % \n" Macro
-		--macro_type   = Macro.getControlType()
+
 		macro_params = Macro.getParamsArray()
-		--format "macro_params	= % \n" macro_params
 
 		_Control = _Controls.Control (Macro.getControlType()) Macro.buttontext params:(Macro.getParamsArray()) add_to_controls:false
-		--format "_Control.id	= % \n" _Control.id
 
 		this._addToMenu (Macro)(_Control.Params)
 
@@ -116,9 +114,10 @@ struct ScriptFile_Content_v
 			_Control = _Control_Exist -- update existing control
 
 		else
-			this.inheritParameters (_Control)
+			this._inheritParameters (_Control)
 
-		this._setEventCallMacro (_Control) (Macro)
+
+		this._setEvent (_Control) (Macro)
 
 		if( _Control_Exist == undefined ) then
 			_Controls.add _Control
@@ -190,9 +189,9 @@ struct ScriptFile_Content_v
 	  *
 	  * params types are defined in this.inherit_params
 	 */
-	function inheritParameters &_Control =
+	function _inheritParameters &_Control =
 	(
-		--format "\n"; print "ScriptFile_Content_v.inheritParameters()"
+		--format "\n"; print "ScriptFile_Content_v._inheritParameters()"
 		--format "InheritParams	= % \n" InheritParams
 
 		inherit_values	= if (values_exists = InheritParams.getVal(_Control.type)) != undefined then values_exists else #()
@@ -214,16 +213,17 @@ struct ScriptFile_Content_v
 		_Control --return
 	),
 
-	/** Set events which call macro
+	/** Set events which call macroscript
 	 */
-	function _setEventCallMacro &_Control Macro =
+	function _setEvent &_Control Macro =
 	(
-		--format "\n"; print "ScriptFile_Content_v._setEventCallMacro()"
 		if ( event_type = this._getEventType (_Control) (Macro)) != undefined then
 		(
 			callback = "(macros.run \""+Macro.category+"\" \""+Macro.macro_name+"\")"
 
-			_Control.Event event_type callback tooltip:Macro.toolTip
+			autorun = ( autorun_param = Macro.getParam(#autorun) ) != undefined and autorun_param == true
+
+			_Control.Event event_type callback tooltip:Macro.toolTip autorun:autorun
 		)
 
 		_Control --return

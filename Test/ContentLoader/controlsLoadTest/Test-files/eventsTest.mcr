@@ -1,5 +1,19 @@
 
 /*------------------------------------------------------------------------------
+	AUTORUN
+--------------------------------------------------------------------------------*/
+
+macroscript macroFileTest_autorun_event
+	category:	"MacroFileTest"
+	buttontext:	"Autorun Event"
+	toolTip:	"This event is fired when ui uis created"
+	icon:	"#autorun:true"
+(
+	print "--------- AUTOEXECUTED EVENT ---------"
+)
+
+
+/*------------------------------------------------------------------------------
   LEFT RIGHT CLICK TEST
 ------------------------------------------------------------------------------*/
 
@@ -92,4 +106,3 @@ icon:	"control:multilistbox|event:#selected"
 	format "EventFired	Secondary = % \n" EventFired
 
 )
-

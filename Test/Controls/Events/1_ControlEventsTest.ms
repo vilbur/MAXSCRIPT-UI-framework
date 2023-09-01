@@ -59,8 +59,9 @@ function Callback3Params arg_1 arg_2 arg_3 = (format "Callback3Params()\narg_1: 
 -- CheckButton.Event #changed "Callback2Params" params:"Value in pram string"
 
 /*------ SPINNER ------*/
--- Spinner	= _Controls.control #spinner "Spinner"
--- Spinner.Event #changed "Callback3Params()" params:"Value in pram string"
+ Spinner	= _Controls.control #spinner "Spinner"
+ Spinner.Event #changed "Callback2Params"
+ --Spinner.Event #changed "Callback3Params()" params:"Value in pram string"
 
 
 

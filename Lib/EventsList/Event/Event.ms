@@ -12,5 +12,6 @@ struct Event_v
 	params	= "",
 	code     = "", -- REMOVE THIS
 	callback = Dictionary #( #code, "" ) #( #arguments, "" ),
-	tooltip	= "" -- tooltip for callback
+	tooltip	= "", -- tooltip for callback
+	autorun	= false
 )

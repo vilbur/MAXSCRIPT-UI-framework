@@ -1,5 +1,4 @@
 filein( getFilenamePath(getSourceFileName()) + "/ParamsList/ParamsList.ms" )	-- "./ParamsList/ParamsList.ms"
---filein( getFilenamePath(getSourceFileName()) + "/../../../../EventsList/EventsList.ms" )	-- "./../../../../EventsList/EventsList.ms"
 
 /** Control
  */
@@ -49,10 +48,10 @@ struct Control_v
 	  *
 	  *
 	 */
-	function Event type callback params:#() tooltip:"" =
+	function Event type callback params:#() tooltip:"" autorun:false =
 	(
 		--print "Control_v.event()"
-		_Event = Event_v type:type tooltip:tooltip
+		_Event = Event_v type:type tooltip:tooltip autorun:autorun
 
 		_Event.callback[#code]	= callback
 		_Event.callback[#arguments]	= params

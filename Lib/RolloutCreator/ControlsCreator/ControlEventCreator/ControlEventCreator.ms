@@ -28,11 +28,16 @@ struct ControlEventCreator_v
 
 		for event_type in (event_types[_Control.type].keys) do
 		(
-			Event = _Control.Events[event_type]
+
+			if ( Event = _Control.Events[event_type] ) != undefined then
+			(
+				this._setEventParams (_Control) (event_type) (Event)
+
+				this._addToAutoRunEvents(_Control)(Event)
+			)
+
 
 			default_callback = DefaultControlCallbacks.getDefaultCallback (_Control) (event_type)
-			--format "Event:	% \n" Event
-			--format "default_callback:	% \n" default_callback
 
 			/* IF DEFAULT OR CUSTOM EVENT EXISTS */
 			if  Event != undefined or default_callback != undefined  then
@@ -41,6 +46,41 @@ struct ControlEventCreator_v
 	),
 
 	private
+
+	/** Add to auto run after dialog is created
+	  *
+	 */
+	function _addToAutoRunEvents _Control Event =
+	(
+		--format "\n"; print "ControlEventCreator_v._addToAutoRunEvents()"
+		if Event.autorun then
+			AUTORUN_EVENTS[ ( _Control.id as string + "_" + Event.type as string  )as name ] = Event.callback[#code]
+	),
+
+	/** Combine events
+	  *
+	  */
+	function _setEventParams _Control event_type Event =
+	(
+		--format "\n"; print "ControlEventCreator_v.combineEvents()"
+		/* GET NEW EVENT IF ONLY DEAFAULT CALLBACK EXIST */
+		--if  Event == undefined then Event = Event_v type:event_type
+
+		/* SET EVENT PARAMS */
+		Event.params = event_types[_Control.type][event_type]
+
+		/* ADD ARGUMENTS TO CUSTOM CALLBACK */
+		if Event.callback[#code] != "" then
+			this._setArgumentsToCallback( Event )
+
+
+		--/* MERGE CODE OF DEFAULT AND CUSTOM CALLBACK */
+		--if default_callback != undefined then
+		--	Event.callback[#code] = "\n/* ---- DEFAULT CALLBACK ---- */\n" +default_callback +";\n\n/* ---- CUSTOM CALLBACK ---- */\n" + Event.callback[#code]
+
+		--format "-----------------------\n\nEVENT:	% \n" Event
+	),
+
 
 	/** Combine events
 	  *
@@ -51,12 +91,12 @@ struct ControlEventCreator_v
 		/* GET NEW EVENT IF ONLY DEAFAULT CALLBACK EXIST */
 		if  Event == undefined then Event = Event_v type:event_type
 
-		/* SET EVENT PARAMS */
-		Event.params = event_types[_Control.type][event_type]
-
-		/* ADD ARGUMENTS TO CUSTOM CALLBACK */
-		if Event.callback[#code] != "" then
-			this._setArgumentsToCallback( Event )
+		--/* SET EVENT PARAMS */
+		--Event.params = event_types[_Control.type][event_type]
+		--
+		--/* ADD ARGUMENTS TO CUSTOM CALLBACK */
+		--if Event.callback[#code] != "" then
+		--	this._setArgumentsToCallback( Event )
 
 
 		/* MERGE CODE OF DEFAULT AND CUSTOM CALLBACK */
