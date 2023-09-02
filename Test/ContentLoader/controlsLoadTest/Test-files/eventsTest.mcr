@@ -1,15 +1,23 @@
 
 /*------------------------------------------------------------------------------
-	AUTORUN
+	AUTORUN EVENT
+
+	Macros of controls with CHECKED parameter can be executed on Dialog is created
+
+	Control must be in checked state to run event
+
+	PARAMETER AUTORUN MSUT BE USED:
+		"autorun:true"
+
 --------------------------------------------------------------------------------*/
 
 macroscript macroFileTest_autorun_event
 	category:	"MacroFileTest"
 	buttontext:	"Autorun Event"
-	toolTip:	"This event is fired when ui uis created"
-	icon:	"#autorun:true"
+	toolTip:	"This event is fired when ui is created"
+	icon:	"control:checkbutton|autorun:true|#checked:true"
 (
-	print "--------- AUTOEXECUTED EVENT ---------"
+	print "\n\n--------- AUTOEXECUTED EVENT ---------\n\n"
 )
 
 
@@ -17,16 +25,16 @@ macroscript macroFileTest_autorun_event
   LEFT RIGHT CLICK TEST
 ------------------------------------------------------------------------------*/
 
-/*
-*/
-macroscript macroFileTest_cotrol_button
-	category:	"MacroFileTest"
-	buttontext:	"Button Left\Right Click"
-	toolTip:	"Left click tooltip"
-	icon:	"border:false"
-(
-	print "Button #pressed"
-)
+--/*
+--*/
+--macroscript macroFileTest_cotrol_button
+--	category:	"MacroFileTest"
+--	buttontext:	"Button Left\Right Click"
+--	toolTip:	"Left click tooltip"
+--	icon:	"border:false"
+--(
+--	print "Button #pressed"
+--)
 
 /*
 */

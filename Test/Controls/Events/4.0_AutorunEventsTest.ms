@@ -6,7 +6,7 @@ filein( getFilenamePath(getSourceFileName()) + "/../../../Lib/Dialog/Dialog.ms" 
 
 /*------------------------------------------------------------------------------
 
-	CALLACKS
+	DEFINE CALLACKS
 
 --------------------------------------------------------------------------------*/
 /** MACRO CALLBACK
@@ -32,32 +32,36 @@ function Callback2Params arg_1 arg_2 = (format "Callback2Params()\narg_1: % \nar
  */
 function Callback3Params arg_1 arg_2 arg_3 = (format "Callback3Params()\narg_1: %\narg_2: %\narg_3: %\n" arg_1 arg_2 arg_3)
 
-/*------------------------------------------------------------------------------
 
-	DEFINE DIALOG
+
+
+/*------------------------------------------------------------------------------
+	AUTORUN EVENT
+
+	Controls with CHECKED parameter can be executed on Dialog is created
+
+	Control must be in checked state to run event
+
+	PARAMETER AUTORUN MSUT BE USED:
+		"autorun:true"
 
 --------------------------------------------------------------------------------*/
 
+
 /* DIALOG */
-Dialog 	    = Dialog_v title:"Test"
+Dialog 	    = Dialog_v title:"Test" ini:(getSourceFileName())
 
 /* CONTROLS */
 Controls   = Dialog.Controls()
 
 
-
-/*------ BUTTON ------*/
-_Button = Controls.control #button "Button"
- _Button.Event #pressed ("Callback1Param") params:"AUTO EXECUTED EVENT"  autorun:true
-
-
 /*------ CECKBUTTON ------*/
 Checkbutton = Controls.control #checkbutton "checkbutton"
- Checkbutton.Event #changed ("Callback2Params") params:"AUTO EXECUTED EVENT"autorun:true
+ Checkbutton.Event #changed ("Callback2Params") params:"\n\nAUTO EXECUTED EVENT\n\n" autorun:true
 
 /*------ CHECKBOX ------*/
 _Checkbox = Controls.control #checkbox "Checkbox" across:1
-_Checkbox.Event #changed ("Callback2Params") params:"AUTO EXECUTED EVENT"autorun:true
+_Checkbox.Event #changed ("Callback2Params") params:"\n\nAUTO EXECUTED EVENT\n\n" autorun:true
 
 
 

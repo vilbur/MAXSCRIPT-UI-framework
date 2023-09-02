@@ -41,7 +41,7 @@ struct ControlEventCreator_v
 
 			/* IF DEFAULT OR CUSTOM EVENT EXISTS */
 			if  Event != undefined or default_callback != undefined  then
-				this._mergeEvents (_Control) (event_type) (Event) (default_callback)
+				this._mergeEvents (event_type) (Event) (default_callback)
 		)
 	),
 
@@ -49,12 +49,17 @@ struct ControlEventCreator_v
 
 	/** Add to auto run after dialog is created
 	  *
+	  * Control MUST has CHECKED parameter and it`s value MUST be TRUE
+	  *
 	 */
 	function _addToAutoRunEvents _Control Event =
 	(
 		--format "\n"; print "ControlEventCreator_v._addToAutoRunEvents()"
 		if Event.autorun then
-			AUTORUN_EVENTS[ ( _Control.id as string + "_" + Event.type as string  )as name ] = Event.callback[#code]
+		(
+			if ( control_state = _Control.Params.getVal (#checked) ) != undefined and control_state == true then
+				AUTORUN_EVENTS[ ( _Control.id as string + "_" + Event.type as string  )as name ] = Event.callback[#code]
+		)
 	),
 
 	/** Combine events
@@ -85,19 +90,12 @@ struct ControlEventCreator_v
 	/** Combine events
 	  *
 	  */
-	function _mergeEvents _Control event_type Event default_callback =
+	function _mergeEvents event_type Event default_callback =
 	(
 		--format "\n"; print "ControlEventCreator_v.combineEvents()"
+
 		/* GET NEW EVENT IF ONLY DEAFAULT CALLBACK EXIST */
 		if  Event == undefined then Event = Event_v type:event_type
-
-		--/* SET EVENT PARAMS */
-		--Event.params = event_types[_Control.type][event_type]
-		--
-		--/* ADD ARGUMENTS TO CUSTOM CALLBACK */
-		--if Event.callback[#code] != "" then
-		--	this._setArgumentsToCallback( Event )
-
 
 		/* MERGE CODE OF DEFAULT AND CUSTOM CALLBACK */
 		if default_callback != undefined then

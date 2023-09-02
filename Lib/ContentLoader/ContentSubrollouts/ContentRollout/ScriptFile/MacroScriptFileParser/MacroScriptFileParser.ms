@@ -41,8 +41,9 @@ struct MacroScriptFileParser_v
 	function _parseMacros =
 	(
 		--format ( "MacroScriptParser._parseMacros()\n" )
-		for line in file_content do
+		for line in file_content where not matchPattern line pattern:"--*" do
 		(
+			--format "LINE:	% \n" LINE
 			if( this._lineIsMacroName line ) then
 				--format "line = % \n" line
 				this._setNewMacroSript (this._getMacroName line)
