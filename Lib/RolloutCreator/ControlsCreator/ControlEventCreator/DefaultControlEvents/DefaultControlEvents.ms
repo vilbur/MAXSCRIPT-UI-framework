@@ -1,9 +1,9 @@
 filein( getFilenamePath(getSourceFileName()) + "/BrowsePath/BrowsePath.ms" )	-- "./BrowsePath/BrowsePath.ms"
 filein( getFilenamePath(getSourceFileName()) + "/RadioButtons/RadioButtons.ms" )	-- "./RadioButtons/RadioButtons.ms"
 
-/** Default control callbacks
+/** Default control events
  */
-struct DefaultControlCallbacks_v
+struct DefaultControlEvents_v
 (
 	/* construct */
 

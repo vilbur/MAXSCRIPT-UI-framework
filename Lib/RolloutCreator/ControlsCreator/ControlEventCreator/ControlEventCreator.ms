@@ -1,4 +1,4 @@
-filein( getFilenamePath(getSourceFileName()) + "/DefaultControlCallbacks/DefaultControlCallbacks.ms" )	-- "./DefaultControlCallbacks/DefaultControlCallbacks.ms"
+filein( getFilenamePath(getSourceFileName()) + "/DefaultControlEvents/DefaultControlEvents.ms" )	-- "./DefaultControlCallbacks/DefaultControlCallbacks.ms"
 
 
 /** Control event creator
@@ -10,7 +10,7 @@ struct ControlEventCreator_v
 	/* properties */
 	event_types,
 
-	DefaultControlCallbacks = DefaultControlCallbacks_v(),
+	DefaultControlEvents = DefaultControlEvents_v(),
 
 	/* dependency */
 	/* reference */
@@ -37,7 +37,7 @@ struct ControlEventCreator_v
 				this._addToAutoRunEvents(_Control)(Event)
 			)
 
-			Event_default = DefaultControlCallbacks.getDefaultEvent (_Control) (event_type)
+			Event_default = DefaultControlEvents.getDefaultEvent (_Control) (event_type)
 
 			/* IF DEFAULT OR CUSTOM EVENT EXISTS */
 			if  Event != undefined or Event_default != undefined  then

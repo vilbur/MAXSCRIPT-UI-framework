@@ -14,7 +14,7 @@ filein( getFilenamePath(getSourceFileName()) + "/SubolloutsCreator/SubolloutsCre
 
 /** RolloutCreator_v
   *
-  * RolloutCreator: https://help.autodesk.com/view/3DSMAX/2016/ENU/?guid=__files_GUID_5FC5036F_E2D7_46C9_9AFA_7B3550B9F254_htm
+  --* RolloutCreator: https://help.autodesk.com/view/3DSMAX/2016/ENU/?guid=__files_GUID_5FC5036F_E2D7_46C9_9AFA_7B3550B9F254_htm
 
  */
 struct RolloutCreator_v
@@ -25,8 +25,8 @@ struct RolloutCreator_v
 	/* properties */
 	closed_rollout_bar_height = 24,
 
-	--DEBUG = false,
-	DEBUG = true,
+	DEBUG = false,
+	--DEBUG = true,
 
 	/* dependency */
 	EventBinder	= RolloutEventBinder_v ini_path:(Ini.getPath()),
