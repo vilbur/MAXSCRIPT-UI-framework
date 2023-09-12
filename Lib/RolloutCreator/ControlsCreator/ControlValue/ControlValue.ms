@@ -42,7 +42,7 @@ struct ControlValue_v
 		ini_allowed = _Control.Params.getVal (#ini)
 
 		 if ini_allowed and ( ini_value = this._getIniValue (rollout_id)) != undefined then
-			this._setValueByIni (value_param_name) (ini_value)
+			this._setValue (value_param_name) (ini_value)
 
 		else if( _value = this._getValueParameter (value_param_name) ) != undefined then
 			this._setValue(value_param_name)(_value)
@@ -105,58 +105,58 @@ struct ControlValue_v
 	 */
 	function _setValue value_param_name _value =
 	(
-		/* COLOR */
-		if _Control.type  == #ColorPicker and classOf _value == color then
-			_value as point3
-
-		/* SLIDER,SPINNER, ANGLE */
-		else if (this._isRangeControlType()) then
-			_value = this._setValueIntoRange(_value)
+		_value = this._setValueToDatatype(value_param_name)(_value)
 
 		_Control.Params.setVal (value_param_name) (_value)
 	),
 
-	/** Set value by ini
-	 */
-	function _setValueByIni value_param_name _value =
-	(
-		--format "\n"; print "ControlValue_v._setValueByIni()"
-		if (this._isRangeControlType()) then
-			_value = this._setValueIntoRange(_value)
-
-		_Control.Params.setVal value_param_name _value
-	),
-
-	/** Format string value to valid datatype
+	/** Set value  correctto datatype
 	  *
-	  * @return	point3
-	 */
-	function _setValueIntoRange _value =
+	  * Cover special cases as Range datatype, or number in text field, which is treaded as number, but IT MSUT be string for edit text for example
+	  *
+	  * Ini_v is converting string to datatype, but in some caseses error can occured, E.G.: 0 >>> "0"
+	  *
+	  */
+	function _setValueToDatatype value_param_name _value  =
 	(
-		--format "\n"; print "ControlValue_v._setValueIntoRange()"
-		--format "_value	= % \n" _value
+		--format "\n"; print "ControlValue_v._setValueToDatatype()"
 
-		if classOf _value != point3  then
+		/** Format string value to valid datatype
+		  *
+		  * @return	point3
+		 */
+		function setValueIntoRange _value =
 		(
-			_range = _Control.Params.getval #range
+			--format "\n"; print "ControlValue_v._setValueIntoRange()"
 
-			_range.z = _value
+			if classOf _value != point3  then
+			(
+				_range = _Control.Params.getval #range
 
-			_range --return
+				_range.z = _value
+
+				_range --return
+			)
+			else
+				_value --return
 		)
-		else
-			_value --return
+
+		case value_param_name of
+		(
+			#RANGE:	setValueIntoRange (_value)
+			#TEXT:	_value as string
+			#COLOR:	_value as point3
+			default:	_value
+
+			/* BELOW ANOTHER CONTROLS DATATYPES */
+			--#SELECTION:
+			--#DEFAULT:
+			--#MATERIAL:
+			--#BITMAP:
+			--#ADDRESS:
+		)
 	),
 
-	/** Is range control type
-	 */
-	function _isRangeControlType =
-	(
-		--format "\n"; print "ControlValue_v._isRangeControlType()"
-		--format "\n"; print "ControlValue_v._isRangeControlType() REVIEW THIS METHOD"
-		--findItem names_of_value_param[3] _Control.type > 0
-		 _Control.type == #Spinner or _Control.type == #Slider or _Control.type == #Angle
-	),
 
 	/**
 	 */

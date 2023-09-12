@@ -28,20 +28,26 @@ struct ControlEventCreator_v
 
 		for event_type in (event_types[_Control.type].keys) do
 		(
+			event_params = event_types[_Control.type][event_type]
 
 			if ( Event = _Control.Events[event_type] ) != undefined then
 			(
-				this._setEventParams (_Control) (event_type) (Event)
+				this._setArgumentsToCallback(Event)(event_params)
 
 				this._addToAutoRunEvents(_Control)(Event)
 			)
 
-
-			default_callback = DefaultControlCallbacks.getDefaultCallback (_Control) (event_type)
+			Event_default = DefaultControlCallbacks.getDefaultEvent (_Control) (event_type)
 
 			/* IF DEFAULT OR CUSTOM EVENT EXISTS */
-			if  Event != undefined or default_callback != undefined  then
-				this._mergeEvents (event_type) (Event) (default_callback)
+			if  Event != undefined or Event_default != undefined  then
+			(
+				Event =  this._mergeEvents (event_type) (Event) (Event_default)
+
+				Event.params = event_params
+
+				 _Control.Events[event_type] = Event
+			)
 		)
 	),
 
@@ -56,59 +62,15 @@ struct ControlEventCreator_v
 	(
 		--format "\n"; print "ControlEventCreator_v._addToAutoRunEvents()"
 		if Event.autorun then
-		(
 			if ( control_state = _Control.Params.getVal (#checked) ) != undefined and control_state == true then
 				AUTORUN_EVENTS[ ( _Control.id as string + "_" + Event.type as string  )as name ] = Event.callback[#code]
-		)
-	),
-
-	/** Combine events
-	  *
-	  */
-	function _setEventParams _Control event_type Event =
-	(
-		--format "\n"; print "ControlEventCreator_v.combineEvents()"
-		/* GET NEW EVENT IF ONLY DEAFAULT CALLBACK EXIST */
-		--if  Event == undefined then Event = Event_v type:event_type
-
-		/* SET EVENT PARAMS */
-		Event.params = event_types[_Control.type][event_type]
-
-		/* ADD ARGUMENTS TO CUSTOM CALLBACK */
-		if Event.callback[#code] != "" then
-			this._setArgumentsToCallback( Event )
-
-
-		--/* MERGE CODE OF DEFAULT AND CUSTOM CALLBACK */
-		--if default_callback != undefined then
-		--	Event.callback[#code] = "\n/* ---- DEFAULT CALLBACK ---- */\n" +default_callback +";\n\n/* ---- CUSTOM CALLBACK ---- */\n" + Event.callback[#code]
-
-		--format "-----------------------\n\nEVENT:	% \n" Event
-	),
-
-
-	/** Combine events
-	  *
-	  */
-	function _mergeEvents event_type Event default_callback =
-	(
-		--format "\n"; print "ControlEventCreator_v.combineEvents()"
-
-		/* GET NEW EVENT IF ONLY DEAFAULT CALLBACK EXIST */
-		if  Event == undefined then Event = Event_v type:event_type
-
-		/* MERGE CODE OF DEFAULT AND CUSTOM CALLBACK */
-		if default_callback != undefined then
-			Event.callback[#code] = "\n/* ---- DEFAULT CALLBACK ---- */\n" +default_callback +";\n\n/* ---- CUSTOM CALLBACK ---- */\n" + Event.callback[#code]
-
-		--format "-----------------------\n\nEVENT:	% \n" Event
 	),
 
 
 	/** Set arguments to events
 	  * E.G.:	 on spinner changed val inspisn do fooCallback VAL INSPIN CUSTOM_PARAM -- CAllback parameters are VAL, INSPIN & CUSTOM_PARAM
 	  */
-	function _setArgumentsToCallback Event =
+	function _setArgumentsToCallback Event event_params =
 	(
 		--format "\n"; print "ControlEventCreator_v._setArgumentsToCallback()"
 		/** Convert each argument to string friendly format
@@ -145,44 +107,65 @@ struct ControlEventCreator_v
 
 			arguments_string --return
 		)
-		/** Add brackets to callback
+
+		/** Regex is match
+		  *
+		  * @return boolean
 		  */
-		function tryAddBracketsToCallback &callback =
+		function _rxIsMatch _string pattern ignore_case:true =
 		(
-			--format "\n"; print "ControlEventCreator_v.tryAddBracketsToCallback()"
-			--format "callback:	% \n" callback
-			has_brackets_already	= matchPattern callback pattern:"*(*)"	-- if "callbackHasBarckets()"
-			is_not_escaped_string	= matchPattern callback pattern:"*\"*\""	-- if not match E.G.: "print (\"XXX\")" OR "print \"XXX\""
+			RegEx	= ( dotNetClass "System.Text.RegularExpressions.RegEx" )
 
-			 if not (has_brackets_already or is_not_escaped_string) then
-				callback += "()"
+			IgnoreCase = ( dotNetClass "System.Text.RegularExpressions.RegexOptions" ).IgnoreCase
 
-			callback --return
+			if ignore_case then RegEx.isMatch _string pattern IgnoreCase else  RegEx.isMatch _string pattern
 		)
 
 		/*------------------------------------------------------------------------------
 			SET ARDUMENTS TO CALLBACK
 		--------------------------------------------------------------------------------*/
 
-		callback = Event.callback[#code]
-
-		if matchPattern callback pattern:"*()" then
-			callback = trimRight callback "()"  -- remove curly brackets, fool proof when adding callabck
-
-		is_macro = matchPattern callback pattern:"*macros.run*"
-
-		if not is_macro then
+		if (callback = Event.callback[#code]) != "" then
 		(
-			arguments = join ( filterString Event.params " ") (getCallbackArguments(Event.callback[#arguments]))
+			--format "CALLBACK:	% \n" callback
 
-			if arguments.count > 0 then
-				callback += 	getArgumentsString (callback)(arguments)
+			has_bracket	= "\("
+			has_quote	= "\\\""
+			is_macro	= "macros.run"
 
-			else
-				tryAddBracketsToCallback(&callback)
+			pattern = "[" +has_bracket + has_quote + "]|" + is_macro
+
+			--format "TEST:	% \n" (not(_rxIsMatch callback pattern))
+
+			if not _rxIsMatch (callback) (pattern) then
+			(
+
+				arguments = join ( filterString event_params " ") (getCallbackArguments(Event.callback[#arguments]))
+
+				if arguments.count > 0  then
+					callback += 	getArgumentsString (callback)(arguments)
+			)
+
+			Event.callback[#code] = callback
 		)
+	),
 
-		Event.callback[#code] = callback
+	/** Combine events
+	  *
+	  */
+	function _mergeEvents event_type Event Event_default =
+	(
+		--format "\n"; print "ControlEventCreator_v.combineEvents()"
+
+		/* GET NEW EVENT IF ONLY DEAFAULT CALLBACK EXIST */
+		if  Event == undefined then Event = Event_v type:event_type
+
+		/* MERGE CODE OF DEFAULT AND CUSTOM CALLBACK */
+		if Event_default != undefined then
+			Event.callback[#code] = "\n/* ---- DEFAULT CALLBACK ---- */\n" + Event_default.callback[#code] +";\n\n/* ---- CUSTOM CALLBACK ---- */\n" + Event.callback[#code]
+
+
+		Event --return
 	),
 
 	/** Validate event
@@ -211,6 +194,7 @@ struct ControlEventCreator_v
 				print  ("================================================")
 			)
 	),
+
 
 	/**
 	 */

@@ -35,15 +35,18 @@ struct RadioButtons_v
 		this._makeUnselectAble()
 	),
 
-		/** Get callback
+	/** Make radiobuttons unselectable
 	  *
 	  */
-	function getCallback _Control event_type =
+	function getEvent _Control event_type =
 	(
 		--format "\n"; print "ControlEventCreator_v.getCallback()"
 
 		if event_type == #changed then
 		(
+			Event = Event_v type:event_type
+
+
 			save_state_var = this._getSaveStateVariableName(_Control.id)
 
 			_Control.addlocal ( save_state_var as name ) ""
@@ -52,9 +55,11 @@ struct RadioButtons_v
 					"+ (_Control.id as string) +".state = val = 0
 						"+save_state_var+" = val
 						EventFired.val     = val"
-		)
 
-		callback --return
+			Event.callback[#code] = callback
+
+			Event --return
+		)
 	),
 
 	private

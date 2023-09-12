@@ -41,7 +41,7 @@ struct ControlEventBinder_v
 	function _addHandler _Control Event =
 	(
 		--format "\n\n"; print "ControlEventBinder_v._addHandler()"
-		--format "Event:	% \n" Event
+		----format "Event:	% \n" Event
 		--format "Event.params:	% \n" Event.params
 		--format "Event.type:	% \n" Event.type
 		--format "Event.callback[#code]:	% \n" Event.callback[#code]
@@ -60,7 +60,7 @@ struct ControlEventBinder_v
 		EventFiredCreator = EventFiredCreator_v _RolloutClass:(_Rollout.getFullId()) _RolloutControl:( (_Rollout.getFullId()) +"."+ _Control.id as string )
 
 		for Event_Data in _Control.Events do
-			Event.callback[#code]  = (EventFiredCreator.getEventFired(Event)) + "\n"+ Event.callback[#code]
+			Event.callback[#code]  = (EventFiredCreator.getEventFired(Event)) + "\n"+ Event.callback[#code] + ";EventFired = undefined"
 			--(EventFiredCreator.getEventFired(Event)) --DEVELOP
 	),
 

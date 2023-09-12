@@ -42,7 +42,7 @@ struct EventFiredCreator_v
 	 */
 	function _defineStruct =
 	(
-		struct_def = "struct EventFired_v(Type,Roll,Control"+(this._getProperties())+")"
+		struct_def = "struct EventFired_v(Type,Roll,Control"+(this._getProperties())+ "," + (this._getMethods())+")"
 
 		"execute \""+struct_def+"\"" --return
 	),
@@ -59,7 +59,7 @@ struct EventFiredCreator_v
 		properties --return
 	),
 
-	/** _add properties
+	/** Get params passed to callback
 	 */
 	function _getParams =
 	(
@@ -71,6 +71,16 @@ struct EventFiredCreator_v
 		--format "params_join = % \n" params_join
 		params_join --return
 	),
+
+	/** Get  Test if EventFired has property, if yes, the retur n value, else return false
+	 */
+	function _getMethods =
+	(
+		-- " function test val = ( print val  )"
+		--print "EventFiredCreator_v._getParams()"
+		" function get prop = ( if hasProperty this ( prop as name ) then getProperty this ( prop as name ) else false  )"
+	),
+
 
 	on create do
 	(

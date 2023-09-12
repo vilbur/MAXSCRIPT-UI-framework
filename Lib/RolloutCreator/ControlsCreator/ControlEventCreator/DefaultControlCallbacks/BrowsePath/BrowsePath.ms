@@ -46,10 +46,13 @@ struct BrowsePath_v
 	/** Get callback
 	  *
 	  */
-	function getCallback _Control event_type =
+	function getEvent _Control event_type =
 	(
-		--format "\n"; print "ControlEventCreator_v.getCallback()"
+		--format "\n"; print "BrowsePath_v.getCallback()"
+		--format "_Control:	% \n" _Control
 		this._Control = _Control
+
+		Event = Event_v type:event_type
 
 		this.prev_value_variable = (_Control.id as string + "_prev_state")
 
@@ -57,12 +60,13 @@ struct BrowsePath_v
 
 		this._setDefaultParams()
 
-		case event_type of
+		Event.callback[#code] = case event_type of
 		(
 			#changed:	this._getChangedEvent(tooltip)
 			#entered:	this._getEnteredEvent(tooltip)
 		)
 
+		Event --return
 	),
 
 	/** Get changed event
@@ -70,15 +74,22 @@ struct BrowsePath_v
 	function _getChangedEvent tooltip =
 	(
 		--format "\n"; print "BrowsePath_v._getChangedEvent()"
+		--empty_string = "^\s+$" -- MATCH: " " or "        "
+		empty_string = "^\s+$" -- MATCH: " " or "        "
+		emtpy_field 	= "^$"    -- MATCH if nothing entered
+
+		pattern = empty_string + "|" + emtpy_field
+		--pattern = empty_string
 
 		/** NOTE: function valueIsEmpty should be placed in rollout, but there is no problem with it  */
 		callback = "function valueIsEmpty _string =
 		(
-			(( dotNetClass @System.Text.RegularExpressions.RegEx@).match _string @^\s+$|^$@ ).success
+			(( dotNetClass @System.Text.RegularExpressions.RegEx@).match _string @"+pattern+"@ ).success
 		)
 
 		if( val != "+prev_value_variable+" and valueIsEmpty(val) and valueIsEmpty("+prev_value_variable+") ) then -- IF VALUE HAS CHANGED AND FIELD IS EMPTY
 		(
+
 			 -- OPEN BROWSE DIALOG
 			if( (browsed_path = "+ this._getPathDialog() +") != undefined ) then -- IF PATH HAS BEEN BROWSED
 			(
@@ -101,6 +112,7 @@ struct BrowsePath_v
 
 		callback --return
 	),
+
 	/** Get entered event
 	 */
 	function _getEnteredEvent tooltip =
