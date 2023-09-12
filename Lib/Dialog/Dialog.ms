@@ -100,6 +100,8 @@ struct Dialog_v
 	function create width: height: pos: origin:#SCREEN bgcolor: fgcolor: bitmap: bmpstyle:#bmp_tile  style: modal: escapeEnable:false escapekey:true lockHeight:false lockWidth:true parent: =
 	(
 		--format "\n"; print "Dialog_v.create()"
+		this.destroy()
+
 		timer_create_dialog = timestamp()
 
 		width  = this._getSizeOnCreate (#width)  (width)
@@ -385,9 +387,6 @@ struct Dialog_v
 		)
 	),
 
-
-
-
 	/** Execute autorun events
 	  *
 	  */
@@ -397,7 +396,15 @@ struct Dialog_v
 		--format "\n-----------\nDICTIONARY:AUTORUN_EVENTS:%\n" AUTORUN_EVENTS; for data_pair in AUTORUN_EVENTS do format "%:	%\n" data_pair.key data_pair.value
 
 		 for data_pair in AUTORUN_EVENTS do
+		 try(
 			execute data_pair.value
+
+		 )catch(
+			format "\n——————————————— ERROR IN FILE ———————————————\n\n%\n" (getSourceFileName())
+			format "\n————————————————— EXCEPTION —————————————————\n\n%\n" (getCurrentException())
+			format "\n——————————————————— TRACE ———————————————————\n%\n"   (getCurrentExceptionStackTrace())
+			format "\n——————————————————— STACK ———————————————————\n%\n"   (getCurrentExceptionCallStack())
+		 )
 	),
 
 	/** Is defined
@@ -416,7 +423,6 @@ struct Dialog_v
 			messageBox ("SaveIniControlEvents\nUndefined construct property !\n\n"+ ((filterString( classof this as string )"(:")[2]) +"."+ prop )
 	),
 
-
 	/**
 	 */
 	on create do
@@ -428,7 +434,7 @@ struct Dialog_v
 
 		this._setId()
 
-		this.destroy()
+		(IniSaver_v(this.Ini.getPath())).saveRollout(this.id)
 
 		this._setDialogDefaultSize()
 		this._setDialogMinimalSize()

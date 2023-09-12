@@ -97,6 +97,8 @@ struct QuadMenu_v
 	function setRightClick which:#nonePressed  =
 	(
 		--format "\n"; print "QuadMenu_v.setRightClick()"
+		--format "this.name:	% \n" this.name
+		--format "which:	% \n" which
 		menuMan.setViewportRightClickMenu which quadMenu
 	),
 

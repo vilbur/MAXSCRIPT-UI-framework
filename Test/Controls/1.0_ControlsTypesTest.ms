@@ -26,7 +26,7 @@ Controls   = Dialog.Controls()
 
 
 /* ADD CONTROL AS OBJECT */
-Controls.add (Control_v #button "THIS IS TEST")
+--Controls.add (Control_v #button "THIS IS TEST")
 
 
 /*------ BUTTON ------*/
@@ -51,7 +51,7 @@ Controls.add (Control_v #button "THIS IS TEST")
 
 
 /*------ EDITTEXT ------*/
---Controls.control #Edittext "Edittext"
+Controls.control #Edittext "Edittext"
 
 
 /*------ SLIDER ------*/
@@ -60,7 +60,7 @@ Controls.add (Control_v #button "THIS IS TEST")
 
 
 /*------ BROWSEATH ------*/
---Controls.control #browsePath "browsePath"
+--Controls.control #browsePath "browsePathTest"
 
 /*------ COLORPICKER ------*/
 -- Controls.control #ColorPicker "ColorPicker A" value: [ 64, 128, 0 ]	across:1

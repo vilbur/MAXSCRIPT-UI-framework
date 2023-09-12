@@ -298,6 +298,23 @@ struct Menu_v
 		this.addSeparator index:indexes
 	),
 
+	/** Add separator on index or end of menu
+	  *
+	  * @param integer|#(integer) index or array of indexes where add separator, if UNSUPPLIED then add separator on the end of menu
+	  *
+	  * If separator on this index exists already, then will not be added
+	 */
+	function addSeparator index: =
+	(
+		--format "\n"; print "Menu_v.addSeparator()"
+		--format "index = % \n" index
+		if classOf index == Array then
+			for _index in this._reverseArray(index) do
+				this._addSeparator (_index)
+		else
+			this._addSeparator (index)
+	),
+
 	/** Remove separator on index
 	  *
 	  * @return	false if separator has not been deleted

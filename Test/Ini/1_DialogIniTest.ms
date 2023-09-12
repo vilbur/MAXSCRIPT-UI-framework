@@ -1,10 +1,10 @@
 clearListener()
 
-filein( "$userscripts\Library\MAXSCRIPT-UI-framework\Lib\Dialog\Dialog.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/../../Lib/Dialog/Dialog.ms" )	-- "./../../Lib/Dialog/Dialog.ms"
 
 Dialog 	= Dialog_v title:(getFilenameFile(getSourceFileName()))  ini:( getSourceFileName())
 
-/* ROLLOUTS */ 
+/* ROLLOUTS */
 _Rollouts  = Dialog.Rollouts()
 
 _Rollout_1 = _Rollouts.roll "Rollout 1"
@@ -13,16 +13,16 @@ _Rollout_1 = _Rollouts.roll "Rollout 1"
 
 -- _Controls = _Rollout_1.Controls group:"Test"
 
--- /* SUBROLLOUTS */ 
+-- /* SUBROLLOUTS */
  -- Subrolllouts = _Rollout_1.Rollouts()
  -- _Subrolllout_1 = Subrolllouts.roll "Subrollout 1"
  -- _Subrolllout_2 = Subrolllouts.roll "Subrollout 2"
 
--- /* NESTED SUBROLLOUTS */ 
+-- /* NESTED SUBROLLOUTS */
  -- Subrolllouts = _Subrolllout_1.Rollouts()
  -- _NestedRollout = Subrolllouts.roll "Nested"
 
 
-/* CREATE DIALOG */ 
+/* CREATE DIALOG */
 Dialog.create()
 Dialog.register()

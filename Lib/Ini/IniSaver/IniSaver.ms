@@ -34,7 +34,7 @@ struct IniSaver_v
 		--format "rollout_id	= % \n" rollout_id
 		--format "ini_file	= % \n" ini_file
 
-		if (_Rollout = execute(rollout_id)) != undefined then
+		if (_Rollout = execute(rollout_id as string )) != undefined then
 		(
 			if EVENT_DOCKED_ENABLED != undefined and EVENT_DOCKED_ENABLED then
 				this.saveDialogDockState (rollout_id)
