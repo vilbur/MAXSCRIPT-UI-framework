@@ -12,9 +12,9 @@
 
 	/* dependency */
 	_Controls	= #(),
-	Events	= EventsList_v(), -- "./../../EventsList/EventsList.ms"
-	RolloutResizer	= RolloutResizer_v(),
-
+	Events	= EventsList_v(),	-- "./../../EventsList/EventsList.ms"
+	RolloutResizer	= RolloutResizer_v(),	-- "./RolloutResizer/RolloutResizer.ms"
+	
 	/* extended control params */
 	add_locals	= #(), -- #(#variable_name1, init_value1, #variable_name2, init_value2)	// used in ControlCreator_v._addLocalVariablesToRollout 	"../../../RolloutCreator/ControlCreator/ControlCreator.ms"
 	add_text	= "",  -- string added to rollout	// used in ControlCreator_v._addFunctionsVariablesToRollout	"../../../RolloutCreator/ControlCreator/ControlCreator.ms"

@@ -55,6 +55,9 @@ struct SubolloutsCreator_v
 
 				try(destroyDialog _Subrollout.RCI.def )catch() -- destroy dialog of subrollout created for find of height
 
+				/*
+				    FOR FLOATEBLE SUBROLLOUTS diable AddSubRollout below
+				*/
 				AddSubRollout SubrolloutsSlot	_Subrollout.RCI.def rolledUp:(this._getRolledUpState(subrollout_id))
 
 				this.addSubRollouts (_Subrollout)

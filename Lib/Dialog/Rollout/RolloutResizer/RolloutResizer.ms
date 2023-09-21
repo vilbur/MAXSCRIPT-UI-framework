@@ -9,6 +9,9 @@ struct RolloutResizer_v
 
 	offset_position = 0,
 
+	/* developent  */
+	DEBUG = false,
+	--DEBUG = true,
 
 	/** Resize subrollouts
 	 */
@@ -18,6 +21,8 @@ struct RolloutResizer_v
 		--format "_Rollout:	% \n" _Rollout
 		--if ( dialog_height = _Rollout.RCI.height ) == undefined then
 		--	dialog_height = execute( _Rollout.id as string + ".height" )
+
+		fit_rollouts_stamp = timestamp()
 
 		/** Remove controls before first slot
 		  *
@@ -56,6 +61,8 @@ struct RolloutResizer_v
 				else
 					this._offsetContrtol (control)
 		)
+
+		--if this.DEBUG then format "fitSlotsToDialog % ms\n" ((timestamp()) - fit_rollouts_stamp)
 
 		offset_position = 0
 	),

@@ -125,6 +125,8 @@ struct RolloutCreator_v
 		--format "\n"; print "RolloutCreator_v.createSubrollouts()"
 		--format "_ROLLOUTPARENT:	% \n" _RolloutParent.title
 		--format "_ROLLOUTPARENT:	% \n" _RolloutParent
+		--format "MAX_HEIGHT_OF_SUBROLLOUT:	% \n" max_height_of_subrollout
+
 
 		for Subrollouts in _RolloutParent.getSubrollouts() do -- loop slots where height is not defined by user
 		(
@@ -136,19 +138,21 @@ struct RolloutCreator_v
 				/* SET FULL ID TO SUBROLLOUT */
 				_RolloutSub.parent_rollout_id = Subrollouts.getSlotId()
 
-				--execute ("try(destroyDialog "+_RolloutSub.id as string+ " )catch()") --DEV DESTROY SUBROLLOUT DIALOG
 
 				this.createRollout (_RolloutSub) --width:_RolloutSub.width height:_RolloutSub.height-- CREATE PARENT ROLLOUTS
 
 				/* DONT CREATE ROLOUTS WITH DEFINED HEIGHT */
 				if Subrollouts.height == unsupplied then
 				(
-					CreateDialog ( _RolloutSub.RCI.def ) width:_RolloutParent.width height:_RolloutSub.height pos:[0,-8000]
-					--CreateDialog ( _RolloutSub.RCI.def ) width:_RolloutParent.width height:_RolloutSub.height
-					--CreateDialog ( _RolloutSub.RCI.def ) width:_RolloutParent.width height:_RolloutSub.height -- DEV
-					--CreateDialog ( _RolloutSub.RCI.def )-- DEV
+					CreateDialog ( _RolloutSub.RCI.def ) width:_RolloutParent.width height:_RolloutSub.height pos:[0,-8000] -- create subroullouts away from display
 
-					--_RolloutSub.temporary_created = true -- note that dialog msut be destryed before adding as subrollout
+					/* BELOW IS DEV VERSION OF LINE ABOVE
+
+					  FOR FLOATEBLE SUBROLLOUTS diable adding in SubolloutsCreator.addSubRollouts()
+
+					*/
+					--execute ("try(destroyDialog "+_RolloutSub.id as string+ " )catch()") --DEV DESTROY SUBROLLOUT DIALOG
+					--CreateDialog ( _RolloutSub.RCI.def ) width:_RolloutParent.width height:_RolloutSub.height -- DEV - creat
 				)
 
 				this._storeSubrolloutHeight(_RolloutSub)
@@ -156,6 +160,9 @@ struct RolloutCreator_v
 
 			this._setSlotHeight(Subrollouts)
 		)
+
+		this.max_height_of_subrollout = 0 -- reset value for next subrollouts
+
 	),
 
 	/** Store height of highest subrollout for auto sized dialog
@@ -167,13 +174,15 @@ struct RolloutCreator_v
 	function _storeSubrolloutHeight _Rollout =
 	(
 		--format "\n"; print "RolloutCreator_v.storeSubrolloutHeight()"
-		--format "_Rollout:	% \n" _Rollout
+		--format "_Rollout:	% \n" _Rollout.id
 		--format "_Rollout.RCI:	% \n" _Rollout.RCI
 
 		rollout_height = if _Rollout.height == unsupplied then _Rollout.RCI.def.height else _Rollout.height
 		--format "rollout_height:	% \n" rollout_height
 		if rollout_height > max_height_of_subrollout then
 			this.max_height_of_subrollout = rollout_height
+
+		--format "max_height_of_subrollout:	% \n" max_height_of_subrollout
 	),
 
 	/** Set slot height

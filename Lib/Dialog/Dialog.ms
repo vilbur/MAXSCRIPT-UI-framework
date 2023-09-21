@@ -43,7 +43,7 @@ struct Dialog_v
 	/* construct */
 	Ini,
 
-	/* options */
+	/* developent */
 	DEBUG = false,
 	--DEBUG = true,
 
@@ -121,13 +121,9 @@ struct Dialog_v
 		this._setDockState()
 
 		this.RolloutResizer.fitSlotsToDialog(this.RCI.def)
-		if this.DEBUG then format "fitSlotsToDialog % ms\n" ((timestamp()) - timer_create_dialog)
-
-		--AutoRunEvents.executeMacros()
 
 		DIALOG_GLOBAL_DATA[this.id] = DialogGlobalData_v(this.RCI.def)(this)
 
-		--format "DIALOG_GLOBAL_DATA:	% \n" DIALOG_GLOBAL_DATA[this.id]
 
 		--format ("\n\nDIALOG \""+title+"\" HAS BEEN CREATED\n\n" )
 		format ("\n\nDIALOG \""+ id as string +"\" HAS BEEN CREATED\n\n" )
@@ -375,7 +371,7 @@ struct Dialog_v
 	 */
 	function _setDockState =
 	(
-		--format "\n"; print "global._setDockState()"
+		format "\n"; print "global._setDockState()"
 		if Ini.isDefined() then
 		(
 			if( (dock_state = Ini.load( id as string )("dock_state")) == undefined or dock_state == "cui_floatable" ) then
