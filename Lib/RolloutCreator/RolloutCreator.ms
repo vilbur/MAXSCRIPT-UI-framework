@@ -35,7 +35,7 @@ struct RolloutCreator_v
 	SubolloutsCreator = SubolloutsCreator_v ini_path:(Ini.getPath()),
 
 	/* store */
-	max_height_of_subrollout = 0,
+	subrollouts_heights	= Dictionary(#string),
 
 	/** Create dialog
 	  *
@@ -130,11 +130,16 @@ struct RolloutCreator_v
 
 		for Subrollouts in _RolloutParent.getSubrollouts() do -- loop slots where height is not defined by user
 		(
-			local max_height_of_subrollout = 0
+			subrollouts_heights[ Subrollouts.slot ]  = 0
+
+			--local max_height_of_subrollout = 0
 
 			for _RolloutSub in Subrollouts.Rollouts do
 			(
-				--format "_RolloutSub:	% \n" _RolloutSub
+				--format "Subrollouts.slot:	% \n" ( Subrollouts.slot )
+				--format "Subrollouts.slot:	% \n" ( classOf Subrollouts.slot )
+				--format "subrollouts_heights:	% \n" subrollouts_heights
+--
 				/* SET FULL ID TO SUBROLLOUT */
 				_RolloutSub.parent_rollout_id = Subrollouts.getSlotId()
 
@@ -155,13 +160,12 @@ struct RolloutCreator_v
 					--CreateDialog ( _RolloutSub.RCI.def ) width:_RolloutParent.width height:_RolloutSub.height -- DEV - creat
 				)
 
-				this._storeSubrolloutHeight(_RolloutSub)
+				this._storeSubrolloutHeight(_RolloutSub)(Subrollouts.slot)
 			)
-
 			this._setSlotHeight(Subrollouts)
 		)
 
-		this.max_height_of_subrollout = 0 -- reset value for next subrollouts
+		--this.max_height_of_subrollout = 0 -- reset value for next subrollouts
 
 	),
 
@@ -171,18 +175,16 @@ struct RolloutCreator_v
 	  *
 	  * This is only if slot height is not defined by user
 	  */
-	function _storeSubrolloutHeight _Rollout =
+	function _storeSubrolloutHeight _Rollout slot =
 	(
 		--format "\n"; print "RolloutCreator_v.storeSubrolloutHeight()"
 		--format "_Rollout:	% \n" _Rollout.id
 		--format "_Rollout.RCI:	% \n" _Rollout.RCI
 
 		rollout_height = if _Rollout.height == unsupplied then _Rollout.RCI.def.height else _Rollout.height
-		--format "rollout_height:	% \n" rollout_height
-		if rollout_height > max_height_of_subrollout then
-			this.max_height_of_subrollout = rollout_height
 
-		--format "max_height_of_subrollout:	% \n" max_height_of_subrollout
+		if rollout_height > subrollouts_heights[ slot ] then
+			subrollouts_heights[ slot ] = rollout_height
 	),
 
 	/** Set slot height
@@ -192,9 +194,7 @@ struct RolloutCreator_v
 	(
 		--format "\n"; print "RolloutCreator_v._setSlotHeight()"
 		if Subrollouts.height == unsupplied then
-			Subrollouts.height = this.max_height_of_subrollout + (  Subrollouts.Rollouts.count  * this.closed_rollout_bar_height ) -- Slot height = Biggest subrollout OPEN and other subrollouts CLOSED
-
-		this.max_height_of_subrollout = 0 -- reset for next slot
+			Subrollouts.height = subrollouts_heights[ Subrollouts.slot ] + (  Subrollouts.Rollouts.count  * this.closed_rollout_bar_height ) -- Slot height = Biggest subrollout OPEN and other subrollouts CLOSED
 	),
 
 	/** Set subrollout slot default ids if not set by user
