@@ -371,7 +371,7 @@ struct Dialog_v
 	 */
 	function _setDockState =
 	(
-		format "\n"; print "global._setDockState()"
+		--format "\n"; print "global._setDockState()"
 		if Ini.isDefined() then
 		(
 			if( (dock_state = Ini.load( id as string )("dock_state")) == undefined or dock_state == "cui_floatable" ) then

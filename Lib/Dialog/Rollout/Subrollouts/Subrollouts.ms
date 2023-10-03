@@ -82,7 +82,7 @@ struct Subrollouts_v
 	function getSlotId =
 	(
 		--format "\n"; print "Subrollouts_v.getSlotId()"
-		 parent_rollout_id +"."+ slot as string --return
+		 parent_rollout_id as string +"."+ slot as string --return
 	),
 
 	private
@@ -92,7 +92,7 @@ struct Subrollouts_v
 	on create do
 	(
 		--format "\n"; print "Subrollouts_v.onCreate()"
-		--format "SLOT:	% \n" slot
-		--format "parent_rollout_id: % \n" parent_rollout_id
+		if this.slot != undefined and this.slot != unsupplied then
+			this.slot = this.slot as name
 	)
 )

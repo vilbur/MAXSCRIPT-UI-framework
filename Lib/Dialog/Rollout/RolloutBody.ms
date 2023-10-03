@@ -14,7 +14,7 @@
 	_Controls	= #(),
 	Events	= EventsList_v(),	-- "./../../EventsList/EventsList.ms"
 	RolloutResizer	= RolloutResizer_v(),	-- "./RolloutResizer/RolloutResizer.ms"
-	
+
 	/* extended control params */
 	add_locals	= #(), -- #(#variable_name1, init_value1, #variable_name2, init_value2)	// used in ControlCreator_v._addLocalVariablesToRollout 	"../../../RolloutCreator/ControlCreator/ControlCreator.ms"
 	add_text	= "",  -- string added to rollout	// used in ControlCreator_v._addFunctionsVariablesToRollout	"../../../RolloutCreator/ControlCreator/ControlCreator.ms"
@@ -33,9 +33,8 @@
 	(
 		--format "\n"; print "RolloutBody.Roll()"
 		Subrollouts = if (Subrollout_slots = this.getSubrollouts()).count > 0 then Subrollout_slots[1] else this.Rollouts()
-
+		--format "Subrollouts:	% \n" Subrollouts
 		Subrollouts.Roll title id:id height:height --return
-		--Subrollouts.Roll title id:id  --return
 	),
 
 	/** Controls
@@ -57,7 +56,8 @@
 		--format "\n"; print "RolloutBody.Subrollouts()"
 		--format "height	= % \n" height
 
-		local Subrollouts = Subrollouts_v slot:slot parent_rollout_id:(this.getFullId()) width:(if width != unsupplied then width else this.width) height:height
+		--local Subrollouts = Subrollouts_v slot:(slot as name ) parent_rollout_id:(this.getFullId()) width:(if width != unsupplied then width else this.width) height:height
+		local Subrollouts = Subrollouts_v slot:slot parent_rollout_id:(this.id) width:(if width != unsupplied then width else this.width) height:height
 
 		append _Controls Subrollouts
 
@@ -171,42 +171,9 @@
 		if( parent_rollout_id == undefined ) then 0 else floor ((filterString (this.getFullId()) ".").count  / 2) - 1 --return
 	),
 
-	--/** Resize subrollouts
-	-- */
-	--function resizeSubrollouts =
-	--(
-	--	format "\n"; print "RolloutBody.resizeSubrollouts()"
-	--	RolloutResizer.resizeSubrollouts(this)(execute( id as string + ".height" ))
-	--
-	--
-	--),
 
 	private
 
-
-	/** Generate slot id if not defined
-	  *
-	  * 1st slot id "subrollouts"
-	  * 2nd and others has numbered suffix E.G.: "subrollouts_2"
-	  *
-	  * @return	string
-	 */
-	function _getSubrolloutsSlotName slot_id =
-	(
-		--print "RolloutBody._getSubrolloutsSlotName()"
-		if slot_id == undefined or slot_id == unsupplied then
-			slot_id = if ((subrollouts_count = this._getSubrolloutsCount()) > 1 ) then "subrollouts_" +subrollouts_count as string else "subrollouts_1"
-
-		slot_id as name --return
-	),
-
-	/** Get subrollouts count
-	 */
-	function _getSubrolloutsCount =
-	(
-		--format "\n"; print "RolloutBody._getSubrolloutsCount()"
-		(for _struct in _Controls where matchPattern (classof _struct as string ) pattern:@"*Subrollouts_v*" collect _struct).count + 1 -- Add 1 because of current subrollouts are not added yet
-	),
 
 	/** Set id by title if not defined
 	 */

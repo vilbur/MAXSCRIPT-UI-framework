@@ -33,19 +33,26 @@ function CallbackWith3Params arg_1 arg_2 arg_3 = (format "arg_1: % \narg_2: % \n
  */
 Dialog 	= Dialog_v title:(getFilenameFile(getSourceFileName()))  ini:( getSourceFileName())
 
-_Controls = Dialog.Controls group:"Test"
+
+_Rollout = Dialog.Roll ("Rollout A") 
+
+_SubRollout = _Rollout.Roll ("SubRollout A") 
+
+-- _Controls = Dialog.Controls group:"Test"
+-- _Controls = _Rollout.Controls group:"Test"
+_Controls = _SubRollout.Controls group:"Test"
 
 _Controls.Default #across 1
 
 /*------ BUTTON ------*/
- --_Button_1 = _Controls.control #button "Button 1"
---	_Button_1.Event #pressed	"macros.run \"_Test\" \"_test_control_callback_macro\""
---	_Button_1.Event #rightclick 	"print" params:"Button Ricghtclick"
+_Button_1 = _Controls.control #button "Button 1"
+_Button_1.Event #pressed	"macros.run \"_Test\" \"_test_control_callback_macro\""
+_Button_1.Event #rightclick 	"print" params:"Button Ricghtclick"
 
 
 /*------ CECKBUTTON ------*/
- _CbxButton_1 = _Controls.control #checkbutton "Checkbutton"
-	_CbxButton_1.Event #changed "CallbackWithValue"
+ --_CbxButton_1 = _Controls.control #checkbutton "Checkbutton"
+--_CbxButton_1.Event #changed "CallbackWithValue"
 --	_CbxButton_1.Event #rightclick 	"print" params:"Checkbutton Ricghtclick"
 
 
@@ -82,7 +89,10 @@ _Controls.Default #across 1
 --
 
 /*------ MULTILISTBOX ------*/
--- _Multilistbox = _Controls.control #Multilistbox "Multilistbox 1" across:1 items:#("A", "B" )
+--_Multilistbox = _Controls.control #Multilistbox "Multilistbox 1" across:1 items:#("A", "B" )
+--_Multilistbox.Event #selected "CallbackWithValue(val)" -- Called when the user selects or deselects an item in the list
+--_Multilistbox.Event #selectionEnd "CallbackNoParam()"
+
 
 /*------ SPINNER ------*/
 
@@ -90,16 +100,6 @@ _Controls.Default #across 1
 	-- _Spinner.Events.add #changed "CallbackWith2Params"
 	--_Spinner.Events.add #changed "CallbackWith3Params" params:"CUSTOM_PARAM"
 	--_Spinner.Events.add #changed "CallbackWith3Params" params:#CUSTOM_PARAM
-
-
-
-
-
-
-
-
-
-
 
 
 

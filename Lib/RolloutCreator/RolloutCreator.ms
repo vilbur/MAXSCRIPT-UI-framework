@@ -35,7 +35,7 @@ struct RolloutCreator_v
 	SubolloutsCreator = SubolloutsCreator_v ini_path:(Ini.getPath()),
 
 	/* store */
-	subrollouts_heights	= Dictionary(#string),
+	subrollouts_heights	= Dictionary(),
 
 	/** Create dialog
 	  *
@@ -48,7 +48,9 @@ struct RolloutCreator_v
 		--format "_ROLLOUT: %:	% \n" _Rollout.title _Rollout
 		timer_create_rollout = timestamp()
 
-		this._setSubrolloutDefaultSlots(_Rollout)
+
+		/* SET SLOT IDS */
+		this._setSubrolloutDefaultSlotIds(_Rollout)
 
 		this._createSubrollouts(_Rollout)
 		if this.DEBUG then format "RolloutCreator._createSubrollouts % ms\n" ((timestamp()) - timer_create_rollout)
@@ -160,7 +162,7 @@ struct RolloutCreator_v
 					--CreateDialog ( _RolloutSub.RCI.def ) width:_RolloutParent.width height:_RolloutSub.height -- DEV - creat
 				)
 
-				this._storeSubrolloutHeight(_RolloutSub)(Subrollouts.slot)
+				this._storeSubrolloutHeight(_RolloutSub)( Subrollouts.slot)
 			)
 			this._setSlotHeight(Subrollouts)
 		)
@@ -194,19 +196,21 @@ struct RolloutCreator_v
 	(
 		--format "\n"; print "RolloutCreator_v._setSlotHeight()"
 		if Subrollouts.height == unsupplied then
-			Subrollouts.height = subrollouts_heights[ Subrollouts.slot ] + (  Subrollouts.Rollouts.count  * this.closed_rollout_bar_height ) -- Slot height = Biggest subrollout OPEN and other subrollouts CLOSED
+			Subrollouts.height = subrollouts_heights[  Subrollouts.slot ] + (  Subrollouts.Rollouts.count  * this.closed_rollout_bar_height ) -- Slot height = Biggest subrollout OPEN and other subrollouts CLOSED
 	),
 
-	/** Set subrollout slot default ids if not set by user
+	/** SET SUBROLLOUT SLOT DEFAULT IDS if not set by user
 	 *
 	 *  Slot id is "Subrollouts" if only 1 slot exist
 	 *  Slot id is "Subrollouts_{number of slot}" if more then 1 slot exist
 	 */
-	function _setSubrolloutDefaultSlots _Rollout =
+	function _setSubrolloutDefaultSlotIds _Rollout =
 	(
-		--format "\n"; print "RolloutCreator_v._setSubrolloutDefaultSlots()"
-		for i = 1 to (Subrollouts_all = _Rollout.getSubrollouts()).count where Subrollouts_all[i].slot == unsupplied do
-			Subrollouts_all[i].slot = if Subrollouts_all.count == 1 then "Subrollouts" else  "Subrollouts_" + i as string
+		--format "\n"; print "RolloutCreator_v._setSubrolloutDefaultSlotIds()"
+		function slotIdIsUndefined slot_id = slot_id == undefined or slot_id == unsupplied
+
+		for i = 1 to (Subrollouts_all = _Rollout.getSubrollouts()).count where slotIdIsUndefined(Subrollouts_all[i].slot) do
+			Subrollouts_all[i].slot = if Subrollouts_all.count == 1 then #SUBROLLOUTS else  ("Subrollouts_" + i as string ) as name
 	),
 
 	 /** Create controls and subrollout slots

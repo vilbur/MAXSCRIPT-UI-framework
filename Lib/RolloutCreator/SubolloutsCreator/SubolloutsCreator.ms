@@ -60,6 +60,10 @@ struct SubolloutsCreator_v
 				*/
 				AddSubRollout SubrolloutsSlot	_Subrollout.RCI.def rolledUp:(this._getRolledUpState(subrollout_id))
 
+				--format "\n\nAddSubRollout %	%" (Subrollouts.getSlotId()) _Subrollout.id
+				--format "\n\n AddSubRollout  %	%" (Subrollouts.getSlotId()) (_Subrollout.id as string )
+				--format "\n\n removeSubRollout  %	%" (Subrollouts.getSlotId()) (_Subrollout.id as string )
+
 				this.addSubRollouts (_Subrollout)
 			)
 		)

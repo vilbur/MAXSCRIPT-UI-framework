@@ -31,7 +31,7 @@ function addSubRolloutSlots _Rollout prefix:"" rollouts_count:1 nested_levels: c
 		   _SubRollout = _Rollouts.Roll rollout_title --height:512
 
 		   /* ADD NESTED SUBROLLOUTS */
-			   addSubRolloutSlots _SubRollout prefix:prefix nested_levels:nested_levels current_level:(current_level+1) controls_count:controls_count\
+			   addSubRolloutSlots _SubRollout prefix:prefix nested_levels:nested_levels current_level:(current_level+1) rollouts_count:rollouts_count controls_count:controls_count
 
 		)
 
@@ -80,7 +80,7 @@ function onlyControls controls_count: =
 
 /** Default rollout
  */
-function controlsRolloutControls nested_levels:0 controls_count:0 =
+function controlsRolloutControls nested_levels:0 controls_count:0 rollouts_count:1 =
 (
 	-- title = "Case 2: Controls Rollout Controls"
 	title = "Test"
@@ -91,7 +91,7 @@ function controlsRolloutControls nested_levels:0 controls_count:0 =
 
 	-- addSControls (Dialog) prefix:"Controls A" controls_count:controls_count
 
-	addSubRolloutSlots (Dialog) prefix:("Slot A") nested_levels:nested_levels controls_count:controls_count
+	addSubRolloutSlots (Dialog) prefix:("Slot A") nested_levels:nested_levels rollouts_count:rollouts_count controls_count:controls_count
 	-- addSubRolloutSlots (Dialog) prefix:("Slot B") nested_levels:nested_levels controls_count:controls_count
 
 	-- addSControls (Dialog) prefix:"Controls B" controls_count:controls_count
@@ -134,25 +134,25 @@ function DialogWithSubtollouts title slots_count:0 nested_levels:0 controls_coun
 
 clearListener()
 
-/** CASE 1: DILOG WITHOUT SUBROLLOUTS HAS AUTOMATIC HEIGHT
+/** DILOG WITHOUT SUBROLLOUTS HAS AUTOMATIC HEIGHT
   */
 --onlyControls controls_count:3
 
 
-/** CASE 2: DILOG WITH SUBROLLOUTS WITHOUT CONTROLS
+/** DILOG WITH SUBROLLOUTS WITHOUT CONTROLS
   */
 --DialogWithSubtollouts "Subrollouts without controls" slots_count:1  nested_levels:1
 --DialogWithSubtollouts "Subrollouts without controls" slots_count:2 nested_levels:1
 
 
-/**
+/** DILOG WITH SUBROLLOUTS WITH CONTROLS
   */
- --controlsRolloutControls nested_levels:1 controls_count:0
- controlsRolloutControls nested_levels:2 controls_count:2
---controlsRolloutControls nested_levels:3 controls_count:3
+ --controlsRolloutControls nested_levels:1	controls_count:0	rollouts_count:3
+ controlsRolloutControls nested_levels:2	controls_count:5	rollouts_count:2
+--controlsRolloutControls nested_levels:3	controls_count:1	rollouts_count:3
 
 
-/** CASE 3: DILOG WITH SUBROLLOUTS WITHOUT CONTROLS
+/** DILOG WITH SUBROLLOUTS WITHOUT CONTROLS
   */
 --DialogWithSubtollouts "Subrollouts with controls"  slots_count:1 nested_levels:1 controls_count:3
 -- DialogWithSubtollouts "Subrollouts with controls"  slots_count:1 nested_levels:1 controls_count:3 dialog_height:512

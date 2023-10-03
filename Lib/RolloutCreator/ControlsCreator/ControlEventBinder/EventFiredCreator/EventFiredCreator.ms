@@ -1,3 +1,6 @@
+global EventFired_v = undefined -- here is casted generated struct
+global EventFired   = undefined -- here is stored instance of EventFired_v
+
 /** Each control event fires global variable EventFired
   *
   * Properties of EventFired
@@ -30,6 +33,11 @@ struct EventFiredCreator_v
 		this.params = filterString Event.params " "
 
 	    EventFired_string = (this._defineStruct()) + "\n\t global EventFired = EventFired_v Type:#"+Event.type+" Roll:"+ _RolloutClass +" Control:"+ _RolloutControl +" "+(this._getParams())
+	    --EventFired_string = (this._defineStruct()) + "\n\t global EventFired = EventFired_v Type:#"+Event.type
+	    --EventFired_string = (this._defineStruct()) + "\n\t global EventFired = EventFired_v()"
+
+
+
 		--format "\n";format "EventFired_string:	% \n" EventFired_string
 
 		EventFired_string --return
@@ -88,5 +96,3 @@ struct EventFiredCreator_v
 	)
 )
 
-global EventFired_v = undefined -- here is casted generated struct
-global EventFired   = undefined -- here is stored instance of EventFired_v
