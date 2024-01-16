@@ -7,12 +7,15 @@ struct ControlEventCreator_v
 (
 	/* construct */
 
-	/* properties */
-	event_types,
-
-	DefaultControlEvents = DefaultControlEvents_v(),
 
 	/* dependency */
+	DefaultControlEvents	= DefaultControlEvents_v(),
+	TooltipCreator	= TooltipCreator_v(),
+	EventTypes	= EventTypes_v(),
+
+	/* properties */
+	event_types = EventTypes.event_types,
+
 	/* reference */
 	/* inhered */
 
@@ -23,32 +26,30 @@ struct ControlEventCreator_v
 	(
 		--format "\n================\n"; print "ControlEventCreator_v.createEvents()"
 		--format "_Control:	% \n" _Control.caption
-
-		this._validateEvents(_Control)
-
-		for event_type in (event_types[_Control.type].keys) do
-		(
-			event_params = event_types[_Control.type][event_type]
-
-			if ( Event = _Control.Events[event_type] ) != undefined then
+		for event_type in this.EventTypes.priority
+			where (event_params = event_types[_Control.type][event_type]) != undefined do
 			(
-				this._setArgumentsToCallback(Event)(event_params)
+				if ( Event = _Control.Events[event_type] ) != undefined then
+				(
+					this._setArgumentsToCallback(Event)(event_params)
 
-				this._addToAutoRunEvents(_Control)(Event)
+					this._addToAutoRunEvents(_Control)(Event)
+
+					TooltipCreator.addTooltip(_Control)(event_type)
+				)
+
+				Event_default = DefaultControlEvents.getDefaultEvent (_Control) (event_type)
+
+				/* IF DEFAULT OR CUSTOM EVENT EXISTS */
+				if  Event != undefined or Event_default != undefined  then
+				(
+					Event =  this._mergeEvents (event_type) (Event) (Event_default)
+
+					Event.params = event_params
+
+					 _Control.Events[event_type] = Event
+				)
 			)
-
-			Event_default = DefaultControlEvents.getDefaultEvent (_Control) (event_type)
-
-			/* IF DEFAULT OR CUSTOM EVENT EXISTS */
-			if  Event != undefined or Event_default != undefined  then
-			(
-				Event =  this._mergeEvents (event_type) (Event) (Event_default)
-
-				Event.params = event_params
-
-				 _Control.Events[event_type] = Event
-			)
-		)
 	),
 
 	private
@@ -204,7 +205,6 @@ struct ControlEventCreator_v
 		--for prop in #(  ) where getProperty this prop == undefined do -- CHECK CONSTRUCT PROPERTIES -- Array of this struct properties necessary to run
 		--	throw ("\n\n\nUNDEFINED CONSTRUCT PROPERTY\n\n\nSTRUCT:\n\n"+ ((filterString( classof this as string )"(:")[2]) +"\n\n\nPROPERTY:\n\n"+ prop )
 
-		event_types = (EventTypes_v()).event_types
 
 	)
 

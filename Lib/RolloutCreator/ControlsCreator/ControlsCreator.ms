@@ -28,7 +28,6 @@ struct ControlCreator_v
 	ControlEventCreator	= ControlEventCreator_v(), 	-- "./ControlEventCreator/ControlEventCreator.ms"
 	ParamsCreator	= ControlParamsCreator_v(), 	-- "./ControlParamsCreator/ControlParamsCreator.ms"
 	ControlValue 	= ControlValue_v(),
-	TooltipCreator	= TooltipCreator_v(),
 	ControlEventBinder	= ControlEventBinder_v _Rollout:_Rollout, -- "./ControlEventBinder/ControlEventBinder.ms"
 
 	/** Add controls to rollout
@@ -55,8 +54,6 @@ struct ControlCreator_v
 			ParamsCreator.mergeParams(_Control)
 			--format "_Control.Params	= % \n" _Control.Params
 			ControlValue.setControlValue (_Control) (_Rollout.id)
-
-			TooltipCreator.addTooltips(_Control)
 
 			ControlEventCreator.createEvents(_Control)
 

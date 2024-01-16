@@ -3,36 +3,27 @@
 struct TooltipCreator_v
 (
 	/* properties */
-	--_Control,
 
 	/** Add tooltips
 	 */
-	function addTooltips &_Control =
+	function addTooltip &_Control event_type =
 	(
-		--format "\n"; print "TooltipCreator_v.addTooltips()"
-		--this._Control = _Control
+		--format "\n"; print "TooltipCreator_v.addTooltip()"
+		 event_tooltip = _Control.Events[event_type].tooltip
 
-		if( tooltip = this._getTooltipsOfEvents(_Control) ) != "" then
-			_Control.params.setVal (#tooltip) (tooltip)
+		if ( event_tooltip = _Control.Events[event_type].tooltip ) != "" then
+		(
+			tooltip = if( tooltip_param = _Control.params.getVal #tooltip ) != undefined then tooltip_param + "\n" else ""
+
+			if tooltip != "" then
+				tooltip += "\n"
+
+			_Control.params.setVal #tooltip ( tooltip + this._getEventPrefix(event_type) + event_tooltip )
+		)
 
 		_Control --return
 	),
-
 	private
-
-	/** Get tooltips of events
-	 */
-	function _getTooltipsOfEvents _Control =
-	(
-		--format "\n"; print "TooltipCreator_v.getTooltipsOfEvents()"
-		--format "_Control.caption:	% \n" _Control.caption
-		tooltip = if( tooltip_param = _Control.params.getVal #tooltip ) != undefined then tooltip_param + "\n" else ""
-
-		for Event_data in _Control.Events where (event_tooltip = Event_data.value.tooltip) != "" do
-			tooltip += this._getEventPrefix(Event_data.value.type) + event_tooltip + "\n"
-
-		trimRight tooltip "\n" --return
-	),
 
 	/** Get event type
 	 */
@@ -42,10 +33,10 @@ struct TooltipCreator_v
 		--format "event_type:	% \n" event_type
 		case event_type of
 		(
-			(#pressed):	"LMB:   "
-			(#rightclick):	"\nRMB: "
-			default:	""
-			--default:	"On " + this._capitalize(event_type as string ) + ": "
+			(#pressed):	"LMB: "
+			(#rightclick):	"RMB: "
+			--default:	""
+			default:	this._capitalize(event_type as string ) + ": "
 		)
 	),
 
