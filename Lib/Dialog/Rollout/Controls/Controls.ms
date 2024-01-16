@@ -25,11 +25,21 @@ struct Controls_v
 	  * @property	string	caption	Caption of control, caption is hidden if it`s wrapped into brackets "[]" E.G.: "[Browse Path]"
 	  * @property	#name	id	Id of control
 	  * @property	#boolean	ini	Enable Disable save control value to ini
+	  *
+	  *
+	  * SLIDER: https://help.autodesk.com/view/3DSMAX/2017/ENU/?guid=__files_GUID_B674277E_596E_4469_BA45_2AE8F071D975_htm
+	  * @property	#integer	ticks	Slider ticks
+	  * @property	#vertical	type	Slider type: #vertical|#horizontal
+	  *
+	  * SPINNER:https://help.autodesk.com/view/3DSMAX/2017/ENU/?guid=__files_GUID_411DB273_7B74_4FD7_89E9_B74B9CED102B_htm
+	  * @property	#float	scale	Spinner scale
+	  *
+	  *
 	  * @property	array	params	Params for control #( #key1, "value1", #key2, "value2" )
 	  *
 	  * @return Object _Control	"./Control/Control.ms"
 	 */
-	function Control type caption id:undefined params:#() checked: items: range: value: width: height: offset: align: tooltip: across: columns: locals:#() ini:true add_to_controls:true =
+	function Control control_type caption id:undefined params:#() checked: items: range: ticks: type: scale: value: width: height: offset: align: tooltip: across: columns: locals:#() ini:true add_to_controls:true =
 	(
 		--format "\n"; print "Controls_v.Control()"
 		--format "caption	= % \n" caption
@@ -39,13 +49,13 @@ struct Controls_v
 			id = params[key_index +1]
 
 
-		_Control = Control_v type:type caption:caption id:id add_locals:locals rollout_id:rollout_id
+		_Control = Control_v type:control_type caption:caption id:id add_locals:locals rollout_id:rollout_id
 
 
 		--format "_Control.id = % \n" _Control.id
 		--format "_Control	= % \n" _Control
-		_param_names  = #( #checked, #width, #height, #offset, #align, #items, #range, #value, #ini, #tooltip, #across, #columns)
-		_param_values = #(  checked,  width,  height,  offset,  align, items,  range,   value,  ini,  tooltip,  across,  columns)
+		_param_names  = #( #checked, #width, #height, #offset, #align, #items, #range, #type, #ticks, #scale, #controller, #value, #ini, #tooltip, #across, #columns)
+		_param_values = #(  checked,  width,  height,  offset,  align, items,  range,   type, ticks,   scale,  controller,  value,  ini,  tooltip,  across,  columns)
 
 
 		for i = 1 to _param_values.count where _param_values[i]!= unsupplied do

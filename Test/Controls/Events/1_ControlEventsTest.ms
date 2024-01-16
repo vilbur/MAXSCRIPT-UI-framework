@@ -3,7 +3,7 @@ clearListener()
 filein( getFilenamePath(getSourceFileName()) + "/../../../Lib/Dialog/Dialog.ms" ) -- "./../../../Lib/Dialog/Dialog.ms"
 
 /* DIALOG */
-Dialog 	    = Dialog_v title:"Test"
+Dialog 	    = Dialog_v title:"Events Test"
 
 _Controls   = Dialog.Controls group:"Main Controls"
 
@@ -23,11 +23,18 @@ category:	"_Test"
 
 /** 0 PRAMAS
  */
-function CallbackNoParam = (format "\nCallbackNoParam()\nEventFired:	% \n" EventFired)
+function CallbackNoParam =
+(
+	format "\nCallbackNoParam()\nEventFired:	% \n" EventFired
+)
 
 /** 1 PARAMETER
  */
-function Callback1Param val = (format "Callback1Param()\nval: % \n" val)
+function Callback1Param val =
+(
+	--format "Callback1Param()\nval: % \n" val
+	format "% \n" val
+)
 
 /** 2 PARAMETERS
  */
@@ -50,15 +57,15 @@ function Callback3Params arg_1 arg_2 arg_3 = (format "Callback3Params()\narg_1: 
 /*
 	if callback has brackets "()"
 */
-CheckButton	= _Controls.control #checkbutton "No prarams"
-CheckButton.Event #CHANGED "CallbackNoParam()"
+--CheckButton	= _Controls.control #checkbutton "No prarams"
+--CheckButton.Event #CHANGED "CallbackNoParam()"
 
 
 /*
    if callback is macro
 */
-CheckButton	= _Controls.control #checkbutton "Run Macro"
-CheckButton.Event #CHANGED "macros.run \"_Test\" \"_test_control_callback_macro\""
+--CheckButton	= _Controls.control #checkbutton "Run Macro"
+--CheckButton.Event #CHANGED "macros.run \"_Test\" \"_test_control_callback_macro\""
 
 
 
@@ -68,8 +75,8 @@ CheckButton.Event #CHANGED "macros.run \"_Test\" \"_test_control_callback_macro\
 /*
 	if callback has not brackets "()" and is single world
 */
-CheckButton	= _Controls.control #checkbutton "Default prarams"
-CheckButton.Event #CHANGED "Callback1Param" -- pass Callback1Param(val)
+--CheckButton	= _Controls.control #checkbutton "Default prarams"
+--CheckButton.Event #CHANGED "Callback1Param" -- pass Callback1Param(val)
 
 
 /*------------------------------------------------------------------------------
@@ -78,8 +85,8 @@ CheckButton.Event #CHANGED "Callback1Param" -- pass Callback1Param(val)
 /*
 	IF params: are defined then default and
 */
-CheckButton	= _Controls.control #checkbutton "Custom prarams"
-CheckButton.Event #CHANGED "Callback2Params" params:"Value in arguemnt string" -- Callback2Params(val)("Value in arguemnt string")
+--CheckButton	= _Controls.control #checkbutton "Custom prarams"
+--CheckButton.Event #CHANGED "Callback2Params" params:"Value in arguemnt string" -- Callback2Params(val)("Value in arguemnt string")
 
 
 
@@ -131,9 +138,16 @@ CheckButton.Event #CHANGED "Callback2Params" params:"Value in arguemnt string" -
 
 --_RadioButtons.Event #CHANGED ("Callback1Param")
 
+/*------ SLIDER ------*/
+--_Slider = _Controls.control #slider "Slider" ticks:10 type:#integer across:1
+_Slider.Event #CHANGED ("Callback1Param")
+
+
+
 /*------ CHECKBOX ------*/
 /*------ DROPDOWN ------*/
-/*------ SLIDER ------*/
+
+
 /*------ COLORPICKER ------*/
 /*------ BITMAP ------*/
 /*------ BROWSEATH ------*/

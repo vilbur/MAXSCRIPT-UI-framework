@@ -276,7 +276,7 @@ struct ScriptFile_Content_v
 	 */
 	function _getGroupName =
 	(
-		( dotNetObject "System.Text.RegularExpressions.Regex" @"^\d*\s*_-*" ).Replace ( trimLeft ( trimRight (getFilenameFile path) "_ " )  "_ " ) " "
+		( dotNetObject "System.Text.RegularExpressions.Regex" @"^\d*[\s_-]*" ).Replace ( trimLeft ( trimRight (getFilenameFile path) "_ " )  "_ " ) " "
 	),
 
 	--/** If filename starts with underscore "_"

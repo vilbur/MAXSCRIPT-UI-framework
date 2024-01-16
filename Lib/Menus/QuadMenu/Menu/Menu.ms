@@ -92,7 +92,7 @@ struct Menu_v
 	  *
 	  * @return Menu_v
 	 */
-	function addMenu menu_or_name title: index: flat:this.flat =
+	function addMenu menu_or_name title: index: flat:this.flat separators:#() =
 	(
 		--format "\n"; print "Menu_v.addMenu()"
 
@@ -124,10 +124,16 @@ struct Menu_v
 				title = menu_or_name.name
 		)
 
+		if submenu.numItems() == 0 then
+		(
+			format "\n\n\n----------- WARNING ----------------------\n\tMENU HAS NOT ANY ITEMS\n\n\tMenu: \"%\"" (submenu.getTitle() )
 
+			return false
+		)
+
+		/* ADD AS LAST ITEM */
 		if index == unsupplied then
 			index = menu.numItems() + 1
-
 
 		if this.getItem( title ) == undefined then -- if item with title does not exists yet
 		(
@@ -143,7 +149,11 @@ struct Menu_v
 
 		--format "submenu = % \n" submenu
 
-		Menu_v menu:submenu --return
+		_Menu = Menu_v menu:submenu
+
+		_Menu.addSeparators ( separators )
+
+		_Menu --return
 	),
 
 	/** Add menus at once
@@ -467,7 +477,10 @@ struct Menu_v
 		--format "\n"; print "Menu_v._addSeparator()"
 		add_on_end_of_menu = index == unsupplied or index > menu.numItems()
 
-		if index != unsupplied and index > (menu.numItems() +1 ) or menu.numItems() == 0 then
+		--format "menu.numItems():	% \n" (menu.numItems())
+		--format "index:	% \n" index
+		--format "add_on_end_of_menu:	% \n" add_on_end_of_menu
+		if index != unsupplied and index > (menu.numItems() +1 ) then
 			format "\n\n----------- WARNING ----------------------\n\nSEPARATOR IS ADDED ON END OF MENU\n\n\tMenu: \"%\"\n\tindex: % \n\titems in menu: %\n\n" this.name index (menu.numItems())
 
 		if add_on_end_of_menu then

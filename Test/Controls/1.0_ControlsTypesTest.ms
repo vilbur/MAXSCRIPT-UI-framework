@@ -7,8 +7,8 @@ filein( getFilenamePath(getSourceFileName()) + "/../../Lib/Dialog/Dialog.ms" )	-
   */
 
 /* DIALOG */
-Dialog 	    = Dialog_v title:"Test" ini:(getSourceFileName())
---Dialog 	    = Dialog_v title:"Test"
+--Dialog 	    = Dialog_v title:"Test" ini:(getSourceFileName())
+Dialog 	    = Dialog_v title:"Test"	--WITHOUT INI FILE
 
 
 /* CONTROLS */
@@ -51,12 +51,15 @@ Controls   = Dialog.Controls()
 
 
 /*------ EDITTEXT ------*/
-Controls.control #Edittext "Edittext"
+--Controls.control #Edittext "Edittext"
 
 
 /*------ SLIDER ------*/
---Controls.control #slider "Slider"
+_Slider = Controls.control #slider "Slider" ticks:3 width:256 range:[0,50,0] ticks:5 type:#integer
 
+/*------ SPINNER ------*/
+--Controls.control #spinner "Spinner"
+--Controls.control #spinner "Spinner" width:96 scale:0.01 range:[0,100,0.01]
 
 
 /*------ BROWSEATH ------*/

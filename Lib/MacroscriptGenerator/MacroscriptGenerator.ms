@@ -1,4 +1,5 @@
-/*
+
+/* Compile  *.mcr.ini files to  *.mcr files
  */
 struct MacroscriptGenerator_v
 (
@@ -7,6 +8,7 @@ struct MacroscriptGenerator_v
 
     /* properties */
     mcr_file,
+    mcr_file_path,
 
     macroscripts = #(),
 
@@ -23,15 +25,16 @@ struct MacroscriptGenerator_v
     /* reference */
     /* inhered */
 
-    /** /** Generate macroscript file
+    /** Generate macroscript file
     *
+    * @return path to *.mcr file
     */
     function generateMacroscriptFile =
     (
         --format "\n"; print "MacroscriptGenerator_v.generateMacroscriptFile()"
 		--format "ini_file:	% \n" (filenameFromPath( ini_file ))
 		--format "all_keys:	% \n" all_keys
-		this._setOutputFile()
+		this._setMcrFilePath()
 
         sections = for _section in getINISetting ini_file collect _section
 
@@ -54,6 +57,8 @@ struct MacroscriptGenerator_v
 
 		this.writeToFile(macro_data)
 
+
+		this.mcr_file_path --return
     ),
 
     private
@@ -262,7 +267,7 @@ struct MacroscriptGenerator_v
         --format "\n"; print "MacroscriptGenerator_v.writeToFile()"
 
         /* CREATE FILE */
-        this.mcr_file = createFile this.mcr_file
+        this.mcr_file = createFile this.mcr_file_path
 
         /* WRITE FILE START */
         if general_params[#filein] != undefined then
@@ -286,8 +291,10 @@ struct MacroscriptGenerator_v
 
         /* CLOSE FILE */
         close this.mcr_file
+
+		free this.mcr_file
     ),
-	
+
 	/** Write macroscript name
 	 *
 	 */
@@ -357,13 +364,13 @@ struct MacroscriptGenerator_v
 	/** Set mcr file
 	  *
 	  */
-	function _setOutputFile =
+	function _setMcrFilePath =
 	(
-		--format "\n"; print "MacroscriptGenerator_v._setOutputFile()"
-		this.mcr_file = ( trimRight this.ini_file ".ini" )
+		--format "\n"; print "MacroscriptGenerator_v._setMcrFilePath()"
+		this.mcr_file_path = ( trimRight this.ini_file ".ini" )
 
-		if not matchPattern  this.mcr_file pattern:"*.mcr" then
-			 this.mcr_file += ".mcr"
+		if not matchPattern  this.mcr_file_path pattern:"*.mcr" then
+			 this.mcr_file_path += ".mcr"
 	),
 
     /** Write open bracket
@@ -401,6 +408,5 @@ struct MacroscriptGenerator_v
     --for prop in #() where getProperty this prop == undefined do -- CHECK CONSTRUCT PROPERTIES -- Array of this struct properties necessary to run
     --throw ("\n\n\nUNDEFINED CONSTRUCT PROPERTY\n\n\nSTRUCT:\n\n"+ ((filterString( classof this as string )"(:")[2]) +"\n\n\nPROPERTY:\n\n"+ prop )
 
-        this.generateMacroscriptFile()
     )
 )
