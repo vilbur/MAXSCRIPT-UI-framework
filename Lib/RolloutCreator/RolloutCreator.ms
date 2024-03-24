@@ -48,6 +48,7 @@ struct RolloutCreator_v
 		--format "_ROLLOUT: %:	% \n" _Rollout.title _Rollout
 		timer_create_rollout = timestamp()
 
+		execute( "global " + _Rollout.id as string )
 
 		/* SET SLOT IDS */
 		this._setSubrolloutDefaultSlotIds(_Rollout)

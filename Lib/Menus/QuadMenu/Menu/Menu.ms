@@ -95,8 +95,9 @@ struct Menu_v
 	function addMenu menu_or_name title: index: flat:this.flat separators:#() =
 	(
 		--format "\n"; print "Menu_v.addMenu()"
+		--format "menu_or_name: %\n" menu_or_name
 
-		if menu_or_name == "" then
+		if menu_or_name == undefined or menu_or_name == "" then
 			return false
 
 		if classOf menu_or_name == MixinInterface then  -- IF <MixinInterface:menu>

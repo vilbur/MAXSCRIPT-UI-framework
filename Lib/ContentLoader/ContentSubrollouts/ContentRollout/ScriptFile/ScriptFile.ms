@@ -85,12 +85,23 @@ struct ScriptFile_Content_v
 			this._addToMenu(MacroScripts[i]) ( ParamsList_v keys:MacroScripts[i].Params[1] values:MacroScripts[i].Params[2] )
 	),
 
+	/** Get filename of groupbox by file filename
+	  *
+	  *  Remove numbers, empty space and characters like "-_" from start of string E.G.: "1_Filename" >> "Filename"
+	  *
+	  * @return	string	Name of groupbox
+	 */
+	function _getControlsGroupName =
+	(
+		( dotNetObject "System.Text.RegularExpressions.Regex" @"^[\d\.\s_-]+" ).Replace ( trimLeft ( trimRight (getFilenameFile path) "_ " )  "_ " ) " "
+	),
+
 	/** _create controls
 	 */
 	function _createControls _Rollout =
 	(
 		--format "\n"; print("ScriptFile_Content_v._createControls()" )
-		_Controls	= _Rollout.Controls	group:(this._getGroupName())
+		_Controls	= _Rollout.Controls	group:(this._getControlsGroupName())
 		ControlEventBinder	= ControlEventBinder_v 	_Rollout:_Rollout
 
 		for i = 1 to MacroScripts.count do
@@ -265,18 +276,6 @@ struct ScriptFile_Content_v
 	function hasMacroScripts =
 	(
 		MacroScripts.count > 0 --return
-	),
-
-
-	/** Get filename of groupbox by file filename
-	  *
-	  *  Remove numbers, empty space and characters like "-_" from start of string E.G.: "1_Filename" >> "Filename"
-	  *
-	  * @return	string	Name of groupbox
-	 */
-	function _getGroupName =
-	(
-		( dotNetObject "System.Text.RegularExpressions.Regex" @"^\d*[\s_-]*" ).Replace ( trimLeft ( trimRight (getFilenameFile path) "_ " )  "_ " ) " "
 	),
 
 	--/** If filename starts with underscore "_"
