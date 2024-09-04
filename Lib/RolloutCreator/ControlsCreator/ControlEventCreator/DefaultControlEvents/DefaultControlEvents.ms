@@ -1,5 +1,6 @@
 filein( getFilenamePath(getSourceFileName()) + "/BrowsePath/BrowsePath.ms" )	-- "./BrowsePath/BrowsePath.ms"
 filein( getFilenamePath(getSourceFileName()) + "/RadioButtons/RadioButtons.ms" )	-- "./RadioButtons/RadioButtons.ms"
+filein( getFilenamePath(getSourceFileName()) + "/Slider/Slider.ms" )	-- "./Slider/Slider.ms"
 
 /** Default control events
  */
@@ -22,11 +23,13 @@ struct DefaultControlEvents_v
 		--format "\n"; print "DefaultControlCallbacks_v.getDefaultEvent()"
 		--format " _Control.type:	% \n" _Control.type
 
-		if( _Control.type == #BROWSEPATH ) then
-			(BrowsePath_v()).getEvent(_Control)(event_type)-- "./../../ControlTypes/BrowsePath/BrowsePath.ms"
+		case _Control.type of
+		(
+			#BROWSEPATH:	(BrowsePath_v()).getEvent(_Control)(event_type)	-- "./BrowsePath/BrowsePath.ms"
+			#RADIOBUTTONS:	(RadioButtons_v()).getEvent(_Control)(event_type)	-- "./RadioButtons/RadioButtons.ms"
+			#SLIDER:	(Slider_v()).getEvent(_Control)(event_type)	-- "./Slider/Slider.ms"
+		)
 
-		else if( _Control.type == #RADIOBUTTONS ) then
-			(RadioButtons_v()).getEvent(_Control)(event_type)-- "./../../ControlTypes/BrowsePath/BrowsePath.ms"
 	),
 
 

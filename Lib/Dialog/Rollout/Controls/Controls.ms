@@ -39,7 +39,12 @@ struct Controls_v
 	  *
 	  * @return Object _Control	"./Control/Control.ms"
 	 */
-	function Control control_type caption id:undefined params:#() pos: checked: items: range: ticks: orient: type: scale: value: width: height: offset: align: tooltip: across: columns: locals:#() ini:true add_to_controls:true =
+	function Control control_type caption id:undefined params:#() pos: width: height: across: offset: align: tooltip: locals:#() ini:true add_to_controls:true \ -- common params for all types
+				range: ticks: orient:	\ -- slider
+				items: columns:	\ -- radiobutton, lisbox, mutlilistbox
+				type: scale:	\ -- spinner
+				checked:	\ -- checkbox, checkbutton
+				value: =
 	(
 		--format "\n"; print "Controls_v.Control()"
 		--format "caption:	 % \n" caption

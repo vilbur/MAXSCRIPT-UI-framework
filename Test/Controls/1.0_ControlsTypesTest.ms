@@ -43,7 +43,8 @@ _Controls   = Dialog.Controls()
 
 
 /*------ RADIOBUTTONS ------*/
-_Controls.control #RADIOBUTTONS "RadioButtons" items:#("Item 1","Item 2") params:#( #UNSELECT, false )
+--_Controls.control #radioButtons "RadioButtons" items:#("Item 1","Item 2") columns:2
+--_Controls.control #RADIOBUTTONS "RadioButtons" items:#("Item 1","Item 2") params:#( #UNSELECT, false )
 
 
 /*------ DROPDOWN ------*/

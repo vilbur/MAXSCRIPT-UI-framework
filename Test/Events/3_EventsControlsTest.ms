@@ -13,7 +13,7 @@ category:	"_Test"
 
 /** 0 PRAMAS
  */
-function CallbackNoParam = (format "Macro:EventFired:	% \n" EventFired)
+function CallbackNoParam = (format "Macro:EventFired:	% \n" EventFired.type )
 
 /** 1 PARAMETER
  */
@@ -34,25 +34,25 @@ function CallbackWith3Params arg_1 arg_2 arg_3 = (format "arg_1: % \narg_2: % \n
 Dialog 	= Dialog_v title:(getFilenameFile(getSourceFileName()))  ini:( getSourceFileName())
 
 
-_Rollout = Dialog.Roll ("Rollout A") 
+_Rollout = Dialog.Roll ("Rollout A")
 
-_SubRollout = _Rollout.Roll ("SubRollout A") 
+_SubRollout = _Rollout.Roll ("")
 
 -- _Controls = Dialog.Controls group:"Test"
 -- _Controls = _Rollout.Controls group:"Test"
-_Controls = _SubRollout.Controls group:"Test"
+_Controls = _SubRollout.Controls()
 
 _Controls.Default #across 1
 
 /*------ BUTTON ------*/
-_Button_1 = _Controls.control #button "Button 1"
-_Button_1.Event #pressed	"macros.run \"_Test\" \"_test_control_callback_macro\""
-_Button_1.Event #rightclick 	"print" params:"Button Ricghtclick"
+--_Button_1 = _Controls.control #button "Button 1"
+--_Button_1.Event #pressed	"macros.run \"_Test\" \"_test_control_callback_macro\""
+--_Button_1.Event #rightclick 	"print" params:"Button Ricghtclick"
 
 
 /*------ CECKBUTTON ------*/
  --_CbxButton_1 = _Controls.control #checkbutton "Checkbutton"
---_CbxButton_1.Event #changed "CallbackWithValue"
+--_CbxButton_1.Event #CHANGED "CallbackWithValue"
 --	_CbxButton_1.Event #rightclick 	"print" params:"Checkbutton Ricghtclick"
 
 
@@ -65,24 +65,34 @@ _Button_1.Event #rightclick 	"print" params:"Button Ricghtclick"
 --_Controls.control #radioButtons "RadioButtons"	items:items columns:2
 --_Controls.control #radioButtons "RadioButtons"	items:items params:#(#columns, 1)
 
+
 /*------ DROPDOWN ------*/
 
+
 /*------ SLIDER ------*/
+_Slider = _Controls.control #SLIDER "Slider" ticks:3 width:232 range:[0,50,0] ticks:10 type:#integer --offset:[-16, 0]
+_Slider.Event #CHANGED	"CallbackWithValue(val)"
+_Slider.Event #RIGHTCLICK	"CallbackNoParam()"
+_Slider.Event #BUTTONDOWN	"CallbackNoParam()"
+_Slider.Event #BUTTONUP	"CallbackNoParam()"
+
+
 
 /*------ COLORPICKER ------*/
 
 /*------ BITMAP ------*/
 
 /*------ EDITTEXT ------*/
- --_EditText = _Controls.control #EditText "EditText 1"
-	-- _EditText.Event #entered  "CallbackWithValue(val)"
-	-- _EditText.Event #changed "CallbackWithValue(val)"
+--_EditText = _Controls.control #EditText "EditText 1"
+--_EditText.Event #ENTERED  "CallbackWithValue(val)"
+--_EditText.Event #CHANGED "CallbackWithValue(val)"
 
 
 /*------ BROWSEATH ------*/
 -- _BrowsePath = _Controls.control #BrowsePath "BrowsePath 1"
-	-- _BrowsePath.Event #entered  "CallbackWithValue(val)"
-	-- _BrowsePath.Event #changed "CallbackWithValue(val)"
+-- _BrowsePath.Event #ENTERED  "CallbackWithValue(val)"
+-- _BrowsePath.Event #CHANGED "CallbackWithValue(val)"
+
 
 /*------ LISTBOX ------*/
 --_Listbox	= _Controls.control #listbox "Listbox param" items:items value:2
@@ -90,16 +100,15 @@ _Button_1.Event #rightclick 	"print" params:"Button Ricghtclick"
 
 /*------ MULTILISTBOX ------*/
 --_Multilistbox = _Controls.control #Multilistbox "Multilistbox 1" across:1 items:#("A", "B" )
---_Multilistbox.Event #selected "CallbackWithValue(val)" -- Called when the user selects or deselects an item in the list
---_Multilistbox.Event #selectionEnd "CallbackNoParam()"
+--_Multilistbox.Event #SELECTED "CallbackWithValue(val)" -- Called when the user selects or deselects an item in the list
+--_Multilistbox.Event #SELECTIONEND "CallbackNoParam()"
 
 
 /*------ SPINNER ------*/
-
 --_Spinner = _Controls.control #spinner "Spinner params"
-	-- _Spinner.Events.add #changed "CallbackWith2Params"
-	--_Spinner.Events.add #changed "CallbackWith3Params" params:"CUSTOM_PARAM"
-	--_Spinner.Events.add #changed "CallbackWith3Params" params:#CUSTOM_PARAM
+-- _Spinner.Events.add #CHANGED "CallbackWith2Params"
+--_Spinner.Events.add #CHANGED "CallbackWith3Params" params:"CUSTOM_PARAM"
+--_Spinner.Events.add #CHANGED "CallbackWith3Params" params:#CUSTOM_PARAM
 
 
 

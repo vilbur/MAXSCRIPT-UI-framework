@@ -250,11 +250,12 @@ struct ControlCreator_v
 	function _customizeControlTypes _Control =
 	(
 		--print "ControlCreator_v._customizeControlTypes()"
-		if _Control.type == #browsePath then
-			(BrowsePath_v()).convertToEditText(_Control)
-
-		else if _Control.type == #Radiobuttons then
-			(RadioButtons_v()).setParams(_Control)
+		case _Control.type of
+		(
+			#BROWSEPATH:	(BrowsePath_v()).convertToEditText(_Control)	-- "./BrowsePath/BrowsePath.ms"
+			#RADIOBUTTONS:	(RadioButtons_v()).setParams(_Control)	-- "./RadioButtons/RadioButtons.ms"
+			#SLIDER:	(Slider_v()).setLocalsForCustomEvents(_Control)	-- "./Slider/Slider.ms"
+		)
 	),
 
 	/** _is controls
