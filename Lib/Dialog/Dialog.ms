@@ -56,6 +56,7 @@ struct Dialog_v
 
 
 	min_size,
+	max_size,
 
 	style = #(
 		#style_border, 	-- Creates a window with a double border, but no title.
@@ -89,6 +90,9 @@ struct Dialog_v
 
 	/** Create dialog
 	  *
+	  * IMPORTANT:
+	  *		param #width WORKS AS WIDTH OF DOCKED DIALOG
+	  *
 	  * @param	integer	width of dialog INTEGER: definded width | UNSUPPLIED: width auto or by ini | UNDEFINED: width auto even if ini is defined
 	  * @param	integer|#auto	height
 	  *
@@ -99,19 +103,44 @@ struct Dialog_v
 	 */
 	function create width: height: pos: origin:#SCREEN bgcolor: fgcolor: bitmap: bmpstyle:#bmp_tile  style: modal: escapeEnable:false escapekey:true lockHeight:false lockWidth:true parent: =
 	(
-		--format "\n"; print "Dialog_v.create()"
+		format "\n"; print "Dialog_v.create()"
+		format "height: %\n" height
 		this.destroy()
 
 		timer_create_dialog = timestamp()
 
+		this._setDialogMinimalSize()
+		this._setDialogSizeByIni()
+		--format "width A: %\n" width
 		width  = this._getSizeOnCreate (#width)  (width)
 		height = this._getSizeOnCreate (#height) (height)
+		--format "width B: %\n" width
+		--format "this.style: %\n" this.style
 
 		_RolloutCreator = RolloutCreator_v Ini:Ini
 
 		_RolloutCreator.createRollout (this) width:width -- create nested rollouts
 
-		CreateDialog (this.RCI.def) width:width height:height pos:(this._getPosition(pos)(origin)) autoLayoutOnResize:true bgcolor:bgcolor fgcolor:fgcolor	bitmap:bitmap bmpstyle:bmpstyle style:(if( style == unsupplied ) then this.style else style) modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
+		--format "onCreate() WIDTH: %\n" width
+		format "onCreate() HEIGHT: %\n" height
+
+		CreateDialog (this.RCI.def) \
+			width:	width                          	\
+			height:	height                          	\
+			pos:	(this._getPosition(pos)(origin))	\
+			bgcolor:	bgcolor	\
+			fgcolor:	fgcolor	\
+			bitmap:	bitmap	\
+			bmpstyle:	bmpstyle	\
+			style:	(if( style == unsupplied ) then this.style else style)	\
+			modal:	modal	\
+			autoLayoutOnResize:	true	\
+			escapeEnable:	escapeEnable	\
+			lockHeight:	lockHeight	\
+			lockWidth:	lockWidth	\
+			parent:	parent
+
+
 
 		if this.DEBUG then format "CreateDialog % ms\n" ((timestamp()) - timer_create_dialog)
 
@@ -147,10 +176,17 @@ struct Dialog_v
 	 */
 	function register =
 	(
-		--print "Dialog_v.register()"
-		min_size = if min_size != undefined then min_size as string else "[-1,-1]"
+		print "Dialog_v.register()"
 
-		execute ("cui.RegisterDialogBar "+ this.id +" minSize:"+min_size+" style:"+style_registred_dialog as string )
+		min_size = if min_size != undefined then min_size as string else "[-1,-1]"
+		max_size = if max_size != undefined then max_size as string else "[-1,-1]"
+		--format "min_size: %\n" min_size
+		--format "max_size: %\n" max_size
+		--format "style_registred_dialog: %\n" style_registred_dialog
+
+		--execute ("cui.RegisterDialogBar "+ this.id +" minSize:"+min_size+" style:"+style_registred_dialog as string )
+		--execute ("cui.RegisterDialogBar "+ this.id +" minSize:"+min_size+" maxSize:"+max_size+" style:"+style_registred_dialog as string )
+		execute ("cui.RegisterDialogBar "+ this.id + " style:"+style_registred_dialog as string )
 	),
 
 	/** Unregister dialog bar
@@ -236,6 +272,35 @@ struct Dialog_v
 		execute( "GetDialogPos " + id as string ) != [0,0]
 	),
 
+
+	/** Get height of maximized viewport
+	  * Good to find out height of docked dialog
+	 */
+	function getViewportHeight =
+	(
+		--print "Dialog_v.getViewportHeight()"
+		is_maximized	= viewport.numViews == 1
+
+		height_of_ui	= 0 -- Add heigh
+		dialog_title_height	= 30
+
+		--if( trackbar.visible ) then
+		--	height_of_ui	+= 27
+		--
+		--if( timeSlider.isVisible() ) then
+		--	height_of_ui	+= 18
+
+		if not( is_maximized ) then
+			actionMan.executeAction 0 "50026"  -- Tools: Maximize Viewport Toggle
+
+		viewport_area_size = getViewSize()
+		--format "viewport_area_size	= % \n" viewport_area_size
+		if not( is_maximized ) then
+			actionMan.executeAction 0 "50026"  -- Tools: Maximize Viewport Toggle
+
+		(viewport_area_size[2] as integer) + height_of_ui - dialog_title_height --return
+	),
+
 	private
 
 	/** Set dialog default size
@@ -264,31 +329,59 @@ struct Dialog_v
 
 	/** Set size of dialog
 	 */
-	function _setDialogSize =
+	function _setDialogSizeByIni =
 	(
-		--format "\n\n"; print "Dialog_v._setDialogSize()"
-		if ( ini_size = this._getSizeFromIni() ) != undefined then
+		format "\n\n"; print "Dialog_v._setDialogSizeByIni()"
+
+		if ( ini_size = this._getSizeFromIni() ) != undefined and not this._isIniDocked() then
 		(
-			--format "INI_SIZE:	% \n" INI_SIZE
+			format "INI_SIZE:	% \n" INI_SIZE
 			this.width  = ini_size.x
 			this.height = ini_size.y
 		)
+	),
+
+	/** Get ini dock state
+	 */
+	function _isIniDocked=
+	(
+		--format "\n"; print "if.getIniDockState()"
+		Ini.isDefined() and (dock_state = Ini.load( id as string )("dock_state")) != undefined and dock_state != "cui_floatable"
 	),
 
 	/** Get size on create
 	  */
 	function _getSizeOnCreate size_type val =
 	(
-		--format "\n"; print "if._getSizeOnCreate()"
-		--format "size_type:	% \n" size_type
+		format "\n"; print "if._getSizeOnCreate()"
+		format "size_type:	% \n" size_type
+		format "val: %\n" val
 		--format "classOf val:	% \n" (classOf val)
 
-		case classOf val of
+		if val == unsupplied then
 		(
-			integer:	val	-- if size is defined
-			UndefinedClass:	unsupplied	-- size set auto even if ini is exists
-			UnsuppliedClass:	getProperty this size_type	-- size set by this.width|this.height or ini
+			--format "this.width: %\n" this.width
+
+			getProperty this size_type	-- size set by this.width|this.height or ini value
+
 		)
+
+		--else if val == #AUTO then
+			--val = unsupplied
+
+		else if classOf val != integer then
+			case val of
+			(
+
+				#AUTO:	unsupplied	-- size set auto even if ini is exists
+				undefined:	unsupplied	-- size set auto even if ini is exists
+				--unsupplied:	getProperty this size_type	-- size set by this.width|this.height or ini value
+				#VIEWPORT:	this.getViewportHeight()
+				default:	unsupplied
+			)
+		else
+			val --return value if size is defined
+
 	),
 
 	/** Get size from ini
@@ -300,32 +393,6 @@ struct Dialog_v
 			ini_size --return
 	),
 
-	/** Get height of maximized viewport to find out height of docked dialog
-	 */
-	function _getViewportHeight =
-	(
-		--print "Dialog_v._getViewportHeight()"
-		is_maximized	= viewport.numViews == 1
-
-		height_of_ui	= 0 -- Add heigh
-		dialog_title_height	= 30
-
-		--if( trackbar.visible ) then
-		--	height_of_ui	+= 27
-		--
-		--if( timeSlider.isVisible() ) then
-		--	height_of_ui	+= 18
-
-		if not( is_maximized ) then
-			actionMan.executeAction 0 "50026"  -- Tools: Maximize Viewport Toggle
-
-		viewport_area_size = getViewSize()
-		--format "viewport_area_size	= % \n" viewport_area_size
-		if not( is_maximized ) then
-			actionMan.executeAction 0 "50026"  -- Tools: Maximize Viewport Toggle
-
-		(viewport_area_size[2] as integer) + height_of_ui - dialog_title_height --return
-	),
 
 	/** Get position
 	  *
@@ -419,6 +486,23 @@ struct Dialog_v
 			messageBox ("SaveIniControlEvents\nUndefined construct property !\n\n"+ ((filterString( classof this as string )"(:")[2]) +"."+ prop )
 	),
 
+	/** Set default style
+	 */
+	function _setDefaultStyle =
+	(
+		--format "\n"; print "if._setDefaultStyle()"
+		--format "this.title: %\n" this.title
+
+		if this.title == "" then
+		(
+			deleteItem this.style ( findItem this.style #style_titlebar )
+			deleteItem this.style ( findItem this.style #style_sysmenu )
+			deleteItem this.style ( findItem this.style #style_border )
+
+		)
+
+	),
+
 	/**
 	 */
 	on create do
@@ -429,12 +513,13 @@ struct Dialog_v
 		Ini	= Ini_v _path:Ini
 
 		this._setId()
+		this._setDefaultStyle()
 
 		(IniSaver_v(this.Ini.getPath())).saveRollout(this.id)
 
 		this._setDialogDefaultSize()
-		this._setDialogMinimalSize()
-		this._setDialogSize()
+		--this._setDialogMinimalSize()
+		--this._setDialogSizeByIni()
 
 		--/*------ DEV restart timer ------*/
 		if HOTKEYS_GLOBAL != undefined then

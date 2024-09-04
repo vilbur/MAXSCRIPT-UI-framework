@@ -22,10 +22,10 @@ struct DefaultControlEvents_v
 		--format "\n"; print "DefaultControlCallbacks_v.getDefaultEvent()"
 		--format " _Control.type:	% \n" _Control.type
 
-		if( _Control.type == #browsePath ) then
+		if( _Control.type == #BROWSEPATH ) then
 			(BrowsePath_v()).getEvent(_Control)(event_type)-- "./../../ControlTypes/BrowsePath/BrowsePath.ms"
 
-		else if( _Control.type == #RadioButtons ) then
+		else if( _Control.type == #RADIOBUTTONS ) then
 			(RadioButtons_v()).getEvent(_Control)(event_type)-- "./../../ControlTypes/BrowsePath/BrowsePath.ms"
 	),
 

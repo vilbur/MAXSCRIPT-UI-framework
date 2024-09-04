@@ -1,7 +1,6 @@
 clearListener()
 
-filein( getFilenamePath(getSourceFileName()) + "/../../Dialog/Dialog.ms" )
-
+filein( getFilenamePath(getSourceFileName()) + "/../../../Dialog/Dialog.ms" )	--"./../../../Dialog/Dialog.ms"
 
 Dialog	= Dialog_v title:(getFilenameFile(getSourceFileName()))
 
@@ -20,7 +19,7 @@ Rollout_A	= Rollouts_1.Roll "Subrollout A"
 
 
 
-/** CREATE MENU 
+/** CREATE MENU
  */
 
 /* DEFINE MAIN MENU */
@@ -31,7 +30,7 @@ Rollout_A	= Rollouts_1.Roll "Subrollout A"
 --menu_2	= Menu.menu "Menu 2"
 --
 --
---/** MENU ITEMS 
+--/** MENU ITEMS
 -- */
 --menu_1.item "Item 1" "messagebox \"Item 1\"" id:"test_item1"
 --
@@ -50,8 +49,8 @@ Rollout_A	= Rollouts_1.Roll "Subrollout A"
 
 
 
-/** CREATE ROLLOUT 
- *	
+/** CREATE ROLLOUT
+ *
  */
 --CreateDialog roll_main menu:(Menu.create()) style:#(#style_border, #style_resizing )
 
@@ -60,8 +59,3 @@ Rollout_A	= Rollouts_1.Roll "Subrollout A"
 
 /* CREATE DIALOG */
 Dialog.create()	-- create with default params
-
-
-
-
-

@@ -82,8 +82,9 @@ function createTestDialog slots:0 nested:0 rollouts:0 controls:0 controls_dialog
 
 	RUN TESTS
 
-	IMPORTANT NOTES:
-		Lock width does NOT WORK ON REGISTERED Dialog
+	----- IMPORTANT NOTES -----
+
+	1) Lock width does NOT WORK ON REGISTERED Dialog
 
 
 ================================================================================*/
@@ -152,7 +153,7 @@ createTestDialog controls_dialog:10
 
 
 /*------------------------------------------------------------------------------
-	RESIZE LOCKED
+	LOCKED SIZE
 --------------------------------------------------------------------------------*/
 
 

@@ -93,7 +93,7 @@ struct ScriptFile_Content_v
 	 */
 	function _getControlsGroupName =
 	(
-		( dotNetObject "System.Text.RegularExpressions.Regex" @"^[\d\.\s_-]+" ).Replace ( trimLeft ( trimRight (getFilenameFile path) "_ " )  "_ " ) " "
+		( dotNetObject "System.Text.RegularExpressions.Regex" @"^[\d\.\s_-]+" ).Replace ( trimLeft ( trimRight (getFilenameFile path) "_ " )  "_ " ) ""
 	),
 
 	/** _create controls

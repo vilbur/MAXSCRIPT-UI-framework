@@ -95,4 +95,3 @@ struct EventFiredCreator_v
 		--format "_RolloutClass:	% \n" _RolloutClass
 	)
 )
-

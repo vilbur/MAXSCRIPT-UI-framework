@@ -1,23 +1,32 @@
+clearListener(); print("Cleared in:\n"+getSourceFileName())
+
+delete objects
+
+b1 = box()
+b2 = box()
+b3 = box()
+
+select objects
 
 
+global WHEN_SELECT_CHANGED_OBJECTS = #()
 
-rollout rollout_id "Title"
+/** When selection change
+ */
+function whenSelectionChange objs =
 (
+	if classOf objs == Array then
+		join WHEN_SELECT_CHANGED_OBJECTS objs
 
-	spinner spinner_test "caption" range:[0,10,0] type:#float scale:0.001
+	else
+		append WHEN_SELECT_CHANGED_OBJECTS objs
 
-	on spinner_test changed val  do
+	deleteAllChangeHandlers id:#WHEN_SELECT_CHANGED
 
-		format "val	= % \n" val
-
-	on spinner_test entered inSpin_arg inCancel_arg  do
+	when select WHEN_SELECT_CHANGED_OBJECTS changes id:#WHEN_SELECT_CHANGED obj do
 	(
-	format "\n"
-
-		format "inSpin_arg	= % \n" inSpin_arg
-		format "inCancel_arg	= % \n" inCancel_arg
+		format "obj: %\n" obj
 	)
-
 )
 
-CreateDialog rollout_id
+whenSelectionChange( selection as Array )

@@ -294,19 +294,16 @@ struct Menu_v
 	function addSeparator index: =
 	(
 		--format "\n"; print "Menu_v.addSeparator()"
-		--format "index = % \n" index
-		if classOf index == Array then
-			for _index in this._reverseArray(index) do
-				this._addSeparator (_index)
-		else
-			this._addSeparator (index)
+		this._addSeparator (index)
 	),
 
 	/** Wrapper for this.addSeparator()
 	 */
 	function addSeparators indexes =
 	(
-		this.addSeparator index:indexes
+		--format "\n"; print "Menu_v.addSeparators()"
+		for index in this._reverseArray(indexes) do
+			this._addSeparator (index)
 	),
 
 	/** Add separator on index or end of menu

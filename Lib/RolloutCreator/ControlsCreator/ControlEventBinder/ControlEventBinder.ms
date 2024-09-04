@@ -49,6 +49,8 @@ struct ControlEventBinder_v
 		--format "Event.callback[#code]:	% \n" Event.callback[#code]
 
 		this._addEventFired(_Control)(Event)
+		--format "\nEvent.callback[#code]:	% \n" Event.callback[#code]
+		--format "\nEvent.params:	% \n" Event.params
 
 		if( Event.callback[#code] != "" ) then
 			_Rollout.RCI.addHandler _Control.id Event.type codeStr:( "("+Event.callback[#code]+")" ) paramStr:(Event.params) filter:on

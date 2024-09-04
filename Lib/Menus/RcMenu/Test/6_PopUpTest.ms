@@ -6,15 +6,18 @@ filein ( getFilenamePath(getSourceFileName()) + "/../RcMenu.ms" )
 /* DEFINE MAIN MENU */
 Menu = RcMenu_v name:"TestMenu"
 
+Menu.item "&Main Item 1" "messagebox \"Main Item 1\""
+
+
 /* DEFINE MENU */
 menu_1	= Menu.menu "Menu 1"
 menu_2	= Menu.menu "Menu 2"
 
 
-/** MENU ITEMS 
+/** MENU ITEMS
 -- */
-menu_1.item "Item 1" "messagebox \"Item 1\"" 
-menu_1.item "Exit" "try( execute(\"DestroyDialog rollout_test\") )catch()" 
+menu_1.item "Item 1" "messagebox \"Item 1\""
+menu_1.item "Exit" "try( execute(\"DestroyDialog rollout_test\") )catch()"
 
 
 
@@ -32,7 +35,7 @@ menu_2.item "Item 3" "messagebox \"Item 3\""
 
 
 
-/** CREATE ROLLOUT 
- *	
+/** CREATE ROLLOUT
+ *
  */
-popUpMenu (Menu.create()) 
+popUpMenu (Menu.create())

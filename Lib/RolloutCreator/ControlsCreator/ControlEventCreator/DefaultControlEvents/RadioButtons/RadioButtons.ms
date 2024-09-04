@@ -37,25 +37,27 @@ struct RadioButtons_v
 
 	/** Make radiobuttons unselectable
 	  *
+	  * Add local variable in rollout to store buttons state E.G.: BTN_id_last_state
 	  */
 	function getEvent _Control event_type =
 	(
 		--format "\n"; print "ControlEventCreator_v.getCallback()"
 
-		if event_type == #changed then
+		/* MAKE UNSELECTABLE if param #UNSELECTABLE == true  */
+		if event_type == #changed and ( unselectable = _Control.Params.getVal #UNSELECT ) != undefined and unselectable == true then
 		(
 			Event = Event_v type:event_type
 
-
 			save_state_var = this._getSaveStateVariableName(_Control.id)
-
+			--format "save_state_var: %\n" save_state_var
+			/* ADD LOCAL VARIABLE */
 			_Control.addlocal ( save_state_var as name ) ""
 
-			callback = "if val == "+save_state_var+" then
-					"+ (_Control.id as string) +".state = val = 0
-						"+save_state_var+" = val
+			callback = "if val == "+save_state_var+" then         -- if value == saved value
+					"+ (_Control.id as string) +".state = val = 0 -- then set value 0 ( unselect buttons )
+						if val != 0 then "+save_state_var+" = val -- store value if not unselected
 						EventFired.val     = val"
-
+			--format "CALLBACK: %\n" CALLBACK
 			Event.callback[#code] = callback
 
 			Event --return
@@ -127,12 +129,13 @@ struct RadioButtons_v
 	function _makeUnselectAble =
 	(
 		--format "\n"; print "RadioButtons_v._makeUnselectAble()"
-		if( ( unselectable = _Control.Params.getVal #unselect ) != undefined and unselectable == true ) then
+
+		if( ( unselectable = _Control.Params.getVal #UNSELECT ) != undefined and unselectable == true ) then
 		(
 			default	= _Control.Params.getVal #default
 
 			init_state = if( default != undefined ) then default else 1
-			--format "init_state	= % \n" init_state
+
 			_Control.addLocal( this._getSaveStateVariableName(_Control.id) as name ) init_state
 
 			_Control.Params.delete #unselect
@@ -140,12 +143,15 @@ struct RadioButtons_v
 	),
 
 	/** Get save state variable name
+	  *
+	  *
+	  * @return string "{Control.id}_last_state" E.G.: BTN_id_last_state
 	 */
 	function _getSaveStateVariableName control_id =
 	(
 		--format "\n"; print "RadioButtons_v._getSaveStateVariableName()"
 		--format "control_id	= % \n" control_id
-		control_id as string + "_prev_state" --return
+		control_id as string + "_last_state" --return
 	),
 	/**
 	 */

@@ -18,31 +18,38 @@ _Controls.Default #across 1
 macroscript	_test_control_callback_macro
 category:	"_Test"
 (
-	format "Macro:EventFired:	% \n" EventFired.get(#val)
+	--format "Macro:EventFired:	% \n" EventFired
+	format "Macro:EventFired:	% \n" EventFired.type
 )
 
 /** 0 PRAMAS
  */
 function CallbackNoParam =
 (
-	format "\nCallbackNoParam()\nEventFired:	% \n" EventFired
+	format "Macro:EventFired:	% \n" EventFired.type
 )
 
 /** 1 PARAMETER
  */
-function Callback1Param val =
+function CallbackParam1 val =
 (
-	--format "Callback1Param()\nval: % \n" val
-	format "% \n" val
+	--format "Macro:EventFired:	% \n" EventFired
+	format "Macro:EventFired:	% \n" EventFired.type
 )
 
 /** 2 PARAMETERS
  */
-function Callback2Params arg_1 arg_2 = (format "Callback2Params()\narg_1: % \narg_2: % \n" arg_1 arg_2)
+function CallbackParams2 arg_1 arg_2 = (
+	format "CallbackParams2()\narg_1: % \narg_2: % \n" arg_1 arg_2
+	format "Macro:EventFired:	% \n" EventFired
+)
 
 /** 3 PARAMETERS
  */
-function Callback3Params arg_1 arg_2 arg_3 = (format "Callback3Params()\narg_1: %\narg_2: %\narg_3: %\n" arg_1 arg_2 arg_3)
+function CallbackParams3 arg_1 arg_2 arg_3 = (
+	format "CallbackParams3()\narg_1: %\narg_2: %\narg_3: %\n" arg_1 arg_2 arg_3
+	format "Macro:EventFired:	% \n" EventFired
+)
 
 
 /*==============================================================================
@@ -76,7 +83,7 @@ function Callback3Params arg_1 arg_2 arg_3 = (format "Callback3Params()\narg_1: 
 	if callback has not brackets "()" and is single world
 */
 --CheckButton	= _Controls.control #checkbutton "Default prarams"
---CheckButton.Event #CHANGED "Callback1Param" -- pass Callback1Param(val)
+--CheckButton.Event #CHANGED "CallbackParam1" -- pass CallbackParam1(val)
 
 
 /*------------------------------------------------------------------------------
@@ -86,7 +93,7 @@ function Callback3Params arg_1 arg_2 arg_3 = (format "Callback3Params()\narg_1: 
 	IF params: are defined then default and
 */
 --CheckButton	= _Controls.control #checkbutton "Custom prarams"
---CheckButton.Event #CHANGED "Callback2Params" params:"Value in arguemnt string" -- Callback2Params(val)("Value in arguemnt string")
+--CheckButton.Event #CHANGED "CallbackParams2" params:"Value in arguemnt string" -- CallbackParams2(val)("Value in arguemnt string")
 
 
 
@@ -102,45 +109,47 @@ function Callback3Params arg_1 arg_2 arg_3 = (format "Callback3Params()\narg_1: 
 --_Button.Event #PRESSED	"macros.run \"_Test\" \"_test_control_callback_macro\"" tooltip:"Test Tooltip"
 
 -- _Button.Event #PRESSED "CallbackNoParam()"
---_Button.Event #PRESSED "Callback1Param(\"Value in callback\")"
---_Button.Event #PRESSED "Callback1Param" params:"Value in pram string"
---_Button.Event #PRESSED "Callback2Params" params:#("Value A", "Value B")
+--_Button.Event #PRESSED "CallbackParam1(\"Value in callback\")"
+--_Button.Event #PRESSED "CallbackParam1" params:"Value in pram string"
+--_Button.Event #PRESSED "CallbackParams2" params:#("Value A", "Value B")
 
 /*------ CECKBUTTON ------*/
 
--- CheckButton	= _Controls.control #checkbutton "CheckButton"
--- CheckButton.Event #CHANGED "Callback2Params" params:"Value in pram string"
+ --CheckButton	= _Controls.control #CHECKBUTTON "CheckButton"
+ --CheckButton.Event #CHANGED "CallbackParams2" params:"Value in pram string"
 
 
 
 /*------ SPINNER ------*/
- --Spinner	= _Controls.control #spinner "Spinner"
- --Spinner.Event #CHANGED "Callback2Params"
- --Spinner.Event #CHANGED "Callback3Params()" params:"Value in pram string"
+ --Spinner	= _Controls.control #SPINNER "Spinner"
+ --Spinner.Event #CHANGED "CallbackParams2"
+ --Spinner.Event #CHANGED "CallbackParams3()" params:"Value in pram string"
 
 
 
 /*------ EDITTEXT ------*/
---_EditText = _Controls.control #editText "EditTextControl" across:1 -- #Mode:#getSavePath is default
+--_EditText = _Controls.control #EDITTEXT "EditTextControl" across:1 -- #Mode:#getSavePath is default
 
 --_EditText.Event #CHANGED ("CallbackNoParam()")
---_EditText.Event #ENTERED ("Callback1Param") -- Called when the user enters text in the edit box and then presses ENTER or TAB to move the cursor out of the field.
+--_EditText.Event #ENTERED ("CallbackParam1") -- Called when the user enters text in the edit box and then presses ENTER or TAB to move the cursor out of the field.
 --
 --
 /*------ BROWSEATH ------*/
- --_OpenFileName = _Controls.control #browsePath "OpenFileName" params:#( #mode,#getOpenFileName, #tooltip, "Test Tooltip" )
+ --_OpenFileName = _Controls.control #BROWSEPATH "OpenFileName" params:#( #mode,#getOpenFileName, #tooltip, "Test Tooltip" )
 
--- _OpenFileName.Event #CHANGED ("Callback1Param")
--- _OpenFileName.Event #ENTERED ("Callback1Param") -- Called when the user enters text in the edit box and then presses ENTER or TAB to move the cursor out of the field.
+-- _OpenFileName.Event #CHANGED ("CallbackParam1")
+-- _OpenFileName.Event #ENTERED ("CallbackParam1") -- Called when the user enters text in the edit box and then presses ENTER or TAB to move the cursor out of the field.
 
 /*------ RADIOBUTTONS ------*/
---_RadioButtons = _Controls.control #radioButtons "RadioButtons"	items:#("Item 1","Item 2")
+_RadioButtons = _Controls.control #RADIOBUTTONS "RadioButtons"	items:#("Item 1","Item 2") params:#( #UNSELECT, true )
+format "Unselectable Radio buttons last state: %\n" DIALOG_events_test.CBXBTN_checkbutton_last_state
 
---_RadioButtons.Event #CHANGED ("Callback1Param")
+
+--_RadioButtons.Event #CHANGED ("CallbackParam1")
 
 /*------ SLIDER ------*/
---_Slider = _Controls.control #slider "Slider" ticks:10 type:#integer across:1
-_Slider.Event #CHANGED ("Callback1Param")
+--_Slider = _Controls.control #SLIDER "Slider" ticks:10 type:#integer across:1
+--_Slider.Event #CHANGED ("CallbackParam1")
 
 
 
@@ -153,6 +162,13 @@ _Slider.Event #CHANGED ("Callback1Param")
 /*------ BROWSEATH ------*/
 /*------ LISTBOX ------*/
 /*------ MULTILISTBOX ------*/
+--_multilistbox =  _Controls.control #MULTILISTBOX "Multilistbox" items:#("Item 1","Item 2", "Item 3")
+--
+--_multilistbox.Event #SELECTIONEND 	("CallbackNoParam()") -- called when select action ends
+--_multilistbox.Event #SELECTED 	("CallbackParam1") -- called on SELECT AND DESELECT
+--_multilistbox.Event #RIGHTCLICK  	("CallbackNoParam()")
+--_multilistbox.Event #DOUBLECLICKED  	("CallbackParam1")
+
 
 
 

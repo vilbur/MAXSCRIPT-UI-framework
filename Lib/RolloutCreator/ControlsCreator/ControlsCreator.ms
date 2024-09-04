@@ -176,12 +176,18 @@ struct ControlCreator_v
 
 	/** Add controls group
 	  *
+	  * GROUP IS IGNORED IF
+	  * 		1) _Controls.group name is empty string E.G.: ""
+	  *		2) _Controls.group name is wraped in square brackets like [Foo Controls]
+	  *
 	  * https://help.autodesk.com/view/3DSMAX/2016/ENU/?guid=__files_GUID_1361B847_7878_4C52_98DE_5BC5CA830B40_htm
 	 */
 	function _addControlsGroup start_or_end =
 	(
-		--print ("ControlCreator_v._addControlsGroup() " + start_or_end as string )
-		if( _Controls.group == undefined or  matchPattern _Controls.group pattern:("[*]") or _Controls.group == "" ) do
+		--format "\n"; print "ControlCreator_v._addControlsGroup()"
+		--format "_Controls.group:-%-\n" _Controls.group
+		--format "MATCH: %\n" (matchPattern _Controls.group pattern:("[*]"))
+		if( _Controls.group == undefined or matchPattern _Controls.group pattern:("[*]") or _Controls.group == "" ) do
 			return false
 
 		start_or_end_string = if( start_or_end == #start ) then "group @"+_Controls.group+"@ (" else ")"

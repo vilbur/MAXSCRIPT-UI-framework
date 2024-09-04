@@ -12,68 +12,78 @@ Dialog 	    = Dialog_v title:"Test"	--WITHOUT INI FILE
 
 
 /* CONTROLS */
---Controls   = Dialog.Controls group:"Main Controls"
-Controls   = Dialog.Controls()
+--_Controls   = Dialog.Controls group:"Main _Controls"
+_Controls   = Dialog.Controls()
 
 /*------ GROUPBOX ------*/
---Controls.control #Groupbox "Groupbox Test" height:64
---Controls.control #button "Button in Groupbox" params:#(#groupbox, "Groupbox Test")
+--_Controls.control #Groupbox "Groupbox Test" height:64
+--_Controls.control #button "Button in Groupbox" params:#(#groupbox, "Groupbox Test")
 --
 --
---Controls.control #Groupbox "[Groupbox Hidden Label]" height:64
---Controls.control #button "Group Box without Label" params:#(#groupbox, "[Groupbox Hidden Label]") width:128 offset:[-32,0]
+--_Controls.control #Groupbox "[Groupbox Hidden Label]" height:64
+--_Controls.control #button "Group Box without Label" params:#(#groupbox, "[Groupbox Hidden Label]") width:128 offset:[-32,0]
 
 
 
 /* ADD CONTROL AS OBJECT */
---Controls.add (Control_v #button "THIS IS TEST")
+--_Controls.add (Control_v #button "THIS IS TEST")
 
 
 /*------ BUTTON ------*/
---Controls.control #button "Button" id:#button_1
---Controls.control #button "Button ☑✅✓" id:#button_1
+--_Controls.control #BUTTON "Button" id:#button_1
+--_Controls.control #BUTTON "Button ☑✅✓" id:#button_1
 
 
 /*------ CECKBUTTON ------*/
---Controls.control #checkbutton "checkbutton"
+--_Controls.control #CHECKBUTTON "checkbutton"
 
 
 /*------ CHECKBOX ------*/
---Controls.control #checkbox "Checkbox"
+--_Controls.control #CHECKBOX "Checkbox"
 
 
 /*------ RADIOBUTTONS ------*/
---Controls.control #radioButtons "RadioButtons"	items:#("Item 1","Item 2")
+_Controls.control #RADIOBUTTONS "RadioButtons" items:#("Item 1","Item 2") params:#( #UNSELECT, false )
 
 
 /*------ DROPDOWN ------*/
---Controls.control #Dropdownlist "Dropdownlist"
+--_Controls.control #DROPDOWNLIST "Dropdownlist"
 
 
 /*------ EDITTEXT ------*/
---Controls.control #Edittext "Edittext"
+--_Controls.control #EDITTEXT "Edittext"
 
 
 /*------ SLIDER ------*/
---_Slider = Controls.control #slider "Slider" ticks:3 width:256 range:[0,50,0] ticks:5 type:#integer
+--_Slider = _Controls.control #SLIDER "Slider" ticks:3 width:256 range:[0,50,0] ticks:5 type:#integer
 
 /*------ SPINNER ------*/
---Controls.control #spinner "Spinner"
-Controls.control #spinner "Spinner" width:96 scale:0.01 range:[0,100,0.01]
+--_Controls.control #SPINNER "Spinner"
+--_Controls.control #SPINNER "Spinner" width:96 scale:0.01 range:[0,100,0.01]
+
+
+/*------ CHECKBOX ------*/
+/*------ COLORPICKER ------*/
+/*------ BITMAP ------*/
+/*------ BROWSEATH ------*/
+/*------ LISTBOX ------*/
+/*------ MULTILISTBOX ------*/
+--_multilistbox =  _Controls.control #MULTILISTBOX "Multilistbox" items:#("Item 1","Item 2", "It/*e*/m 3")
 
 
 /*------ BROWSEATH ------*/
---Controls.control #browsePath "browsePathTest"
+--_Controls.control #BROWSEPATH "browsePathTest"
+
 
 /*------ COLORPICKER ------*/
--- Controls.control #ColorPicker "ColorPicker A" value: [ 64, 128, 0 ]	across:1
--- Controls.control #ColorPicker "ColorPicker B"  params:#(#color, ( color 255 0 128 ))	across:1
--- Controls.control #ColorPicker "ColorPicker C"  params:#(#color, [0,128,0 ] )	across:1
+-- _Controls.control #COLORPICKER "ColorPicker A" value: [ 64, 128, 0 ]	across:1
+-- _Controls.control #COLORPICKER "ColorPicker B"  params:#(#color, ( color 255 0 128 ))	across:1
+-- _Controls.control #COLORPICKER "ColorPicker C"  params:#(#color, [0,128,0 ] )	across:1
 
 /*------ BITMAP ------*/
---Controls.Control #bitmap "_bitmap_test" params:#(#bitmap, "(bitmap 50 50 color:green)" )
---Controls.Control #bitmap "_bitmap_test" params:#(#bitmap, (bitmap 50 50 color:orange) )
---Controls.Control #bitmap "_bitmap_test" value: (bitmap 50 50 color:blue)
+--_Controls.Control #BITMAP "_bitmap_test" params:#(#bitmap, "(bitmap 50 50 color:green)" )
+--_Controls.Control #BITMAP "_bitmap_test" params:#(#bitmap, (bitmap 50 50 color:orange) )
+--_Controls.Control #BITMAP "_bitmap_test" value: (bitmap 50 50 color:blue)
 
 
 
@@ -85,7 +95,7 @@ Controls.control #spinner "Spinner" width:96 scale:0.01 range:[0,100,0.01]
  * SOLUTION: Set lower across parameter or wider rollout
  *
 */
--- Controls.control #ColorPicker "THERE IS NOT PICKER SHOWN" value: [ 64, 128, 0 ] across:4
+-- _Controls.control #ColorPicker "THERE IS NOT PICKER SHOWN" value: [ 64, 128, 0 ] across:4
 
 
 
