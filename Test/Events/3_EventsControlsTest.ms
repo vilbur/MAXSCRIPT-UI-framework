@@ -45,8 +45,8 @@ _Controls = _SubRollout.Controls()
 _Controls.Default #across 1
 
 /*------ BUTTON ------*/
---_Button_1 = _Controls.control #button "Button 1"
---_Button_1.Event #pressed	"macros.run \"_Test\" \"_test_control_callback_macro\""
+_Button_1 = _Controls.control #button "Button 1"
+_Button_1.Event #PRESSED	"macros.run \"_Test\" \"_test_control_callback_macro\""
 --_Button_1.Event #RIGHTCLICK 	"print" params:"Button Ricghtclick"
 
 
@@ -71,17 +71,17 @@ _Controls.Default #across 1
 /*------ DROPDOWN ------*/
 
 
-/*------ SLIDER ------*/
-_Slider = _Controls.control #SLIDER "Slider" ticks:10 width:232 range:[0,50,0] ticks:10 type:#integer --offset:[-16, 0]
-_Slider.Event #CHANGED	"CallbackWithValue(val)"
-_Slider.Event #RIGHTCLICK	"CallbackNoParam()"
-_Slider.Event #BUTTONDOWN	"CallbackNoParam()"
-_Slider.Event #BUTTONUP	"CallbackNoParam()"
-
-/* SLIDE FIRED UP ON THEN END OF SLIDE */
-_Slider.Event #SLIDE	"format @EventFired type:%	changes:% \n@ EventFired.type EventFired.changes"
-_Slider.Event #LEFTCLICK	"format @EventFired type:%	changes:% \n@ EventFired.type EventFired.changes"
-
+--/*------ SLIDER ------ */
+--_Slider = _Controls.control #SLIDER "Slider" ticks:9 width:200 range:[0,10,0] ticks:10 type:#integer offset:[-16, 0]
+----_Slider.Event #CHANGED	"CallbackWithValue(val)"
+----_Slider.Event #RIGHTCLICK	"CallbackNoParam()"
+----_Slider.Event #BUTTONDOWN	"CallbackNoParam()"
+----_Slider.Event #BUTTONUP	"CallbackNoParam()"
+--
+--/* SLIDE FIRED UP ON THEN END OF SLIDE */
+--_Slider.Event #SLIDE	"format @EventFired type:%	changes:% \n@ EventFired.type EventFired.changes"
+--_Slider.Event #LEFTCLICK	"format @EventFired type:%	changes:% \n@ EventFired.type EventFired.changes"
+--
 
 /*------ COLORPICKER ------*/
 

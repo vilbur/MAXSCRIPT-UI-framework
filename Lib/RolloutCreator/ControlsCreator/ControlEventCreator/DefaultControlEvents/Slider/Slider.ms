@@ -85,6 +85,7 @@ struct Slider_v
 		format "\n"; print "Slider_v.getChangeDEvent()"
 		/* ADD LOCAL VARIABLE */
 		--_Control.addlocal var_name "XXX" -- E.G.:  #BROWSEPATH_id_prev_state = ""
+		control = _Control.getFullId()
 
 		--if ( Event =  _Control.Events[#CHANGED] ) == undefined then
 			Event = Event_v type:#CHANGED
@@ -93,9 +94,25 @@ struct Slider_v
 		callback = ""
 
 		--callback = "print " + var_name + " as string"
-		callback =  ";print val as string;"
-		callback = ";append "+var_name+" val"
+		--callback =  ";print val as string;"
+		callback = "append "+var_name+" val\n"
 		--callback += ";print " + var_name + " as string"
+		--callback += control + ".value   = val + 1 \n"
+
+		callback +=  "/*------ INCREMENTAL STEP BY TICK ON LEFTCLICK --fixed default behaviour ------*/\n"
+		callback += "if "+var_name+".count == 2 then
+		(
+			increment_direction = if "+var_name+"[2] > "+var_name+"[1] then 1 else -1
+
+			tick_step = " + control + ".range.y / (" + control + ".ticks + 1)
+			tick_step = 1
+			
+			format @tick_step:%@ tick_step
+
+		    "+control + ".value   = "+var_name+"[1] + (tick_step * increment_direction)
+
+		)\n"
+
 
 		--Event.callback[#code] += callback
 		Event.callback[#code] = callback
@@ -111,6 +128,8 @@ struct Slider_v
 		format "\n"; print "Slider_v.getChangeDEvent()"
 		--Event = Event_v type:#BUTTONUP
 		Event = Event_v type:#BUTTONUP params: "changes"
+
+		control = _Control.getFullId()
 
 		/* TEST */
 		leftclick_exist = _Control.Events[#LEFTCLICK] != undefined
@@ -144,7 +163,16 @@ struct Slider_v
 		)\n"
 
 		/* RESET ARRAY FOR NEXT EVENT */
-		callback += var_name + " = #()"
+		callback += var_name + " = #()\n"
+
+		--callback += "increment_direction = if EventFired.changes.count == 2 and EventFired.changes[2] > EventFired.changes[1] then 1 else -1\n"
+
+		--callback += "tick_step = " + control + ".range.y / (" + control + ".ticks + 1)\n"
+
+		--callback += "format @tick_step:%@ tick_step\n"
+		--callback += control + ".value   = EventFired.changes[1] + (tick_step * increment_direction) \n"
+		callback += control + ".tooltip = "+control + ".value as string \n"
+
 
 		/* SET CALLBACK TO EVENT */
 		Event.callback[#code] = callback
@@ -165,8 +193,5 @@ struct Slider_v
 	on create do
 	(
 		--format "\n"; print "Slider.onCreate()"
-		--for prop in #(  ) where getProperty this prop == undefined do -- CHECK CONSTRUCT PROPERTIES -- Array of this struct properties necessary to run
-		--	throw ("\n\n\nUNDEFINED CONSTRUCT PROPERTY\n\n\nSTRUCT:\n\n"+ ((filterString( classof this as string )"(:")[2]) +"\n\n\nPROPERTY:\n\n"+ prop )
 	)
-
 )

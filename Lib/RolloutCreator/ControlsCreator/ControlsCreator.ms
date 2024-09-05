@@ -229,7 +229,7 @@ struct ControlCreator_v
 	 */
 	function _addLocalVariablesToRollout =
 	(
-		print "ControlCreator_v._addLocalVariablesToRollout()"
+		--print "ControlCreator_v._addLocalVariablesToRollout()"
 		for _Control in _Controls.list where _Control.add_locals != undefined do
 			for local_var_name in _Control.add_locals.keys do
 				_Rollout.RCI.addLocal ( local_var_name as string )  init:_Control.add_locals[local_var_name]

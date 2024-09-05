@@ -53,7 +53,7 @@ struct ControlEventCreator_v
 			(
 				/* GET NEW EVENT IF ONLY DEAFAULT CALLBACK EXIST */
 				if  Event == undefined then Event = Event_v type:event_type
-				
+
 				Event.params = event_params
 
 				/*------ CODE SNIPPETS ------*/
@@ -64,7 +64,7 @@ struct ControlEventCreator_v
 				free_event_fired = "EventFired = undefined"
 
 				/*------ MERGE FINALCALLABCKCODE ------*/
-				Event.callback[#code] = event_fired + "\n\n" + callback + "\n\n" + free_event_fired + "\n\n"
+				Event.callback[#code] += "\n\n" + event_fired + "\n\n" + callback + "\n\n" + free_event_fired + "\n\n"
 
 				/* RETURN FINAL EVENT TO CONTROL */
 				_Control.Events[event_type] = Event
