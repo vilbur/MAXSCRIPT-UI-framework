@@ -12,7 +12,7 @@ global STARTUP_EVENTS = #() -- run callbacks of controls like checkbox, checkbut
  *
  *							   !!!!!!!!! NOTES FOR ADDING NEW TYPE OF CONTROL !!!!!!!!!
  *
- *								  Edit arrays in this file: control_types, event_types
+ *								  Edit arrays in this file: control_types, event_types -- in which file ??? WTF :)
  */
 struct ControlEventBinder_v
 (
@@ -41,16 +41,17 @@ struct ControlEventBinder_v
 	 */
 	function _addHandler _Control Event =
 	(
-		--format "\n\n"; print "ControlEventBinder_v._addHandler()"
-		--format "_Control.id:	% \n" _Control.id
-		----format "Event:	% \n" Event
+		format "\n\n"; print "ControlEventBinder_v._addHandler()"
+		format "_Control.id:	% \n" _Control.id
+		--format "Event:	% \n" Event
 		--format "Event.params:	% \n" Event.params
-		--format "Event.type:	% \n" Event.type
-		--format "Event.callback[#code]:	% \n" Event.callback[#code]
+		format "Event.type:	% \n" Event.type
+		--format "Event.callback[#code]:	\n=====================\n%\n=====================\n\n" Event.callback[#code]
 
 		this._addEventFired(_Control)(Event)
 		--format "\nEvent.callback[#code]:	% \n" Event.callback[#code]
-		--format "\nEvent.params:	% \n" Event.params
+		format "\nEvent.params:	% \n" Event.params
+		format "Event.callback[#code]:	\n\n=====================\n%\n=====================\n\n" Event.callback[#code]
 
 		if( Event.callback[#code] != "" ) then
 			_Rollout.RCI.addHandler _Control.id Event.type codeStr:( "("+Event.callback[#code]+")" ) paramStr:(Event.params) filter:on
@@ -64,8 +65,8 @@ struct ControlEventBinder_v
 
 		EventFiredCreator = EventFiredCreator_v _RolloutClass:(_Rollout.id as string ) _RolloutControl:( _Rollout.id as string +"."+ _Control.id as string )
 
-		for Event_Data in _Control.Events do
-			Event.callback[#code]  = (EventFiredCreator.getEventFired(Event)) + "\n"+ Event.callback[#code] + ";EventFired = undefined"
+		--for Event_Data in _Control.Events do
+			Event.callback[#code]  = (EventFiredCreator.getEventFired(Event)) + "\n\n"+ Event.callback[#code] + ";EventFired = undefined"
 	),
 
 	/*------------------------------------------------------------------------------

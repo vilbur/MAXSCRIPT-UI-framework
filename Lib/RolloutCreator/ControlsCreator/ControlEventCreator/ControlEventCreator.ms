@@ -39,8 +39,11 @@ struct ControlEventCreator_v
 				)
 
 				Event_default = DefaultControlEvents.getDefaultEvent (_Control) (event_type)
+				--format "Event_default: %\n" Event_default
 
-				/* IF DEFAULT OR CUSTOM EVENT EXISTS */
+				/*------------------------------------------------------------------------------
+					MERGE DEFAULT & CUSTOM EVENT
+				--------------------------------------------------------------------------------*/
 				if  Event != undefined or Event_default != undefined  then
 				(
 					Event =  this._mergeEvents (event_type) (Event) (Event_default)
@@ -158,12 +161,40 @@ struct ControlEventCreator_v
 	(
 		--format "\n"; print "ControlEventCreator_v.combineEvents()"
 
+		/** Merge code
+		 */
+		function mergeCode Event Event_default =
+		(
+			--format "\n"; print "ControlEventCreator_v.mergeCode()"
+			callback = ""
+
+			if Event_default.callback[#code] != "" then
+				callback += "\n/* ---- DEFAULT CALLBACK ---- */\n" + Event_default.callback[#code]
+
+			if Event.callback[#code] != "" then
+				callback +=  ";\n\n/* ---- CUSTOM CALLBACK ---- */\n" + Event.callback[#code]
+
+			callback --return
+		)
+
+		/** Merge params
+		 */
+		function mergeParams Event Event_default =
+		(
+			--format "\n"; print "ControlEventCreator_v.mergeParams()"
+		)
+
+
 		/* GET NEW EVENT IF ONLY DEAFAULT CALLBACK EXIST */
 		if  Event == undefined then Event = Event_v type:event_type
 
 		/* MERGE CODE OF DEFAULT AND CUSTOM CALLBACK */
 		if Event_default != undefined then
-			Event.callback[#code] = "\n/* ---- DEFAULT CALLBACK ---- */\n" + Event_default.callback[#code] +";\n\n/* ---- CUSTOM CALLBACK ---- */\n" + Event.callback[#code]
+		(
+
+
+			Event.callback[#code] = mergeCode Event Event_default
+		)
 
 
 		Event --return

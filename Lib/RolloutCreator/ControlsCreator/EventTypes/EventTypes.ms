@@ -9,6 +9,10 @@ struct EventTypes_v
 	event_types = Dictionary(),
 
 	priority = #( -- in this order are added auto event of macros in ContentLoader
+
+		/* Custom */
+		#leftclick,
+
 		/* Primary */
 		#pressed,
 		#changed,
@@ -51,7 +55,7 @@ struct EventTypes_v
 		event_types[#Edittext] 	= Dictionary #( #changed,  "val")	#( #entered,       "val")
 		event_types[#BrowsePath] 	= Dictionary #( #changed,  "val")	#( #entered,       "val")
 		event_types[#Listbox] 	= Dictionary #( #selected, "val")	#( #doubleClicked, "val")	#( #rightClick, "val")
-		event_types[#Slider] 	= Dictionary #( #changed,  "val")	#( #rightclick, "" )	#( #buttondown, "" )	#( #buttonup, "" )
+		event_types[#Slider] 	= Dictionary #( #changed,  "val")	#( #leftclick, "changes" )	#( #rightclick, "changes" )	#( #buttondown, "" )	#( #buttonup, "" )
 		event_types[#Spinner]	= Dictionary #( #changed, "val inSpin" )	#( #entered, "inSpin inCancel" )	#( #buttonup, "inCancel")	#( #buttondown, "")
 		event_types[#MultiListBox] 	= Dictionary #( #selectionEnd, "")	#( #doubleClicked, "val")	#( #rightClick, "val")	#( #selected, "val")
 		event_types[#Combobox] 	= Dictionary #( #selected, "val")	#( #doubleClicked, "val")	#( #entered , "val")	#( #changed , "val")	#( #rightclick, "" )

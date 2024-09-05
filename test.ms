@@ -1,32 +1,20 @@
-clearListener(); print("Cleared in:\n"+getSourceFileName())
-
-delete objects
-
-b1 = box()
-b2 = box()
-b3 = box()
-
-select objects
+/*
 
 
-global WHEN_SELECT_CHANGED_OBJECTS = #()
+	1) Parmas MIN_SIZE: and MAX_SIZE: of RegisterDialogBar() DOES NOT WORK
 
-/** When selection change
- */
-function whenSelectionChange objs =
-(
-	if classOf objs == Array then
-		join WHEN_SELECT_CHANGED_OBJECTS objs
+	2) MINIMAL SIZE OF REGISTERED DIALOG IS ITS SIZE ON CREATION
 
-	else
-		append WHEN_SELECT_CHANGED_OBJECTS objs
+		E.g.: CreateDialog rollout_id width:164 height:164 -- minimal width and height is 164
 
-	deleteAllChangeHandlers id:#WHEN_SELECT_CHANGED
 
-	when select WHEN_SELECT_CHANGED_OBJECTS changes id:#WHEN_SELECT_CHANGED obj do
-	(
-		format "obj: %\n" obj
-	)
-)
+*/
 
-whenSelectionChange( selection as Array )
+
+try( DestroyDialog rollout_id )catch()
+
+rollout rollout_id "MAX BUG TEST"
+
+CreateDialog rollout_id width:164 height:164
+
+cui.RegisterDialogBar rollout_id MIN_SIZE:[128, 128] MAX_SIZE:[256, 128]

@@ -44,7 +44,7 @@ struct RadioButtons_v
 		--format "\n"; print "ControlEventCreator_v.getCallback()"
 
 		/* MAKE UNSELECTABLE if param #UNSELECTABLE == true  */
-		if event_type == #changed and ( unselectable = _Control.Params.getVal #UNSELECT ) != undefined and unselectable == true then
+		if event_type == #CHANGED and ( unselectable = _Control.Params.getVal #UNSELECT ) != undefined and unselectable == true then
 		(
 			Event = Event_v type:event_type
 

@@ -229,10 +229,10 @@ struct ControlCreator_v
 	 */
 	function _addLocalVariablesToRollout =
 	(
-		--print "ControlCreator_v._addLocalVariablesToRollout()"
-		for _Control in _Controls.list where _Control.add_locals != unsupplied do
-			for i = 1 to _Control.add_locals.count by 2 do
-				_Rollout.RCI.addLocal ( _Control.add_locals[i] as string )  init:_Control.add_locals[i+1]
+		print "ControlCreator_v._addLocalVariablesToRollout()"
+		for _Control in _Controls.list where _Control.add_locals != undefined do
+			for local_var_name in _Control.add_locals.keys do
+				_Rollout.RCI.addLocal ( local_var_name as string )  init:_Control.add_locals[local_var_name]
 	),
 
 	/** Add functions to rollout
@@ -254,7 +254,7 @@ struct ControlCreator_v
 		(
 			#BROWSEPATH:	(BrowsePath_v()).convertToEditText(_Control)	-- "./BrowsePath/BrowsePath.ms"
 			#RADIOBUTTONS:	(RadioButtons_v()).setParams(_Control)	-- "./RadioButtons/RadioButtons.ms"
-			#SLIDER:	(Slider_v()).setLocalsForCustomEvents(_Control)	-- "./Slider/Slider.ms"
+			--#SLIDER:	(Slider_v()).setLocalsForCustomEvents(_Control)	-- "./Slider/Slider.ms"
 		)
 	),
 

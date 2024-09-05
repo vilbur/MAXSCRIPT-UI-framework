@@ -39,7 +39,7 @@ struct Controls_v
 	  *
 	  * @return Object _Control	"./Control/Control.ms"
 	 */
-	function Control control_type caption id:undefined params:#() pos: width: height: across: offset: align: tooltip: locals:#() ini:true add_to_controls:true \ -- common params for all types
+	function Control control_type caption id:undefined params:#() pos: width: height: across: offset: align: tooltip: /*locals:*/ ini:true add_to_controls:true \ -- common params for all types
 				range: ticks: orient:	\ -- slider
 				items: columns:	\ -- radiobutton, lisbox, mutlilistbox
 				type: scale:	\ -- spinner
@@ -54,7 +54,7 @@ struct Controls_v
 			id = params[key_index +1]
 
 
-		_Control = Control_v type:control_type caption:caption id:id add_locals:locals rollout_id:rollout_id
+		_Control = Control_v type:control_type caption:caption id:id rollout_id:rollout_id /*add_locals:locals */
 
 
 		--format "_Control.id = % \n" _Control.id

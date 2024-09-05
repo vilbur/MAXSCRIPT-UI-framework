@@ -29,31 +29,22 @@ struct EventFiredCreator_v
 	function getEventFired Event =
 	(
 		--print "EventFiredCreator_v.getEventFired()"
+		--format "Event: %\n" Event
 		--format "RolloutControl	= % \n" RolloutControl
 		this.params = filterString Event.params " "
 
-	    EventFired_string = (this._defineStruct()) + "\n\t global EventFired = EventFired_v Type:#"+Event.type+" Roll:"+ _RolloutClass +" Control:"+ _RolloutControl +" "+(this._getParams())
-	    --EventFired_string = (this._defineStruct()) + "\n\t global EventFired = EventFired_v Type:#"+Event.type
-	    --EventFired_string = (this._defineStruct()) + "\n\t global EventFired = EventFired_v()"
+		note_def	= "\n/*--- EventFired definition ---*/\n\n"
+		note_set_global	= "\n/*--- EventFired global ---*/\n\n"
+
+		struct_def	= "execute \"struct EventFired_v(Type,Roll,Control"+(this._getProperties())+ "," + (this._getMethods())+")\""
+		set_global	= "global EventFired = EventFired_v Type:#"+Event.type+" Roll:"+ _RolloutClass +" Control:"+ _RolloutControl +" "+(this._getParams())
 
 
+	   note_def + struct_def + "\n" + note_set_global + set_global
 
-		--format "\n";format "EventFired_string:	% \n" EventFired_string
-
-		EventFired_string --return
 	),
-
 
 	private
-
-	/** _define struct
-	 */
-	function _defineStruct =
-	(
-		struct_def = "struct EventFired_v(Type,Roll,Control"+(this._getProperties())+ "," + (this._getMethods())+")"
-
-		"execute \""+struct_def+"\"" --return
-	),
 
 	/** _add properties
 	 */

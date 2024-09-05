@@ -17,7 +17,9 @@ struct Control_v
 
 
 	/* ControlCreator_v */
-	add_locals	= #(),	-- #(#variable_name1, init_value1, #variable_name2, init_value2)	// used in ControlCreator_v._addLocalVariablesToRollout 	"../../../RolloutCreator/ControlCreator/ControlCreator.ms"
+	--add_locals, 	= #(),	-- #(#variable_name1, init_value1, #variable_name2, init_value2)	// used in ControlCreator_v._addLocalVariablesToRollout 	"../../../RolloutCreator/ControlCreator/ControlCreator.ms"
+	add_locals, -- Dictionary -- KEY:#variable_name VALUE:variable_value
+
 	add_text,		-- string added to rollout	// used in ControlCreator_v._addFunctionsVariablesToRollout	"../../../RolloutCreator/ControlCreator/ControlCreator.ms"
 
 	rollout_id,
@@ -65,9 +67,12 @@ struct Control_v
 	function addlocal key val =
 	(
 		--print "Control_v.addlocal()"
-		append add_locals key
+		--format "key: %\n" key
+		--format "val: %\n" val
+		if add_locals == undefined then
+			add_locals	=  Dictionary #NAME
 
-		append add_locals (if classof val == string then "\"" + val + "\"" else val) -- if string, then wrap to quotes
+		add_locals[key as name ] = (if classof val == string then "\"" + val + "\"" else val) -- if string, then wrap to quotes
 	),
 
 	/** Add text

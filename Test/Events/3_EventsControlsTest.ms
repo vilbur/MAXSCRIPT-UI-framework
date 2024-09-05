@@ -36,7 +36,7 @@ Dialog 	= Dialog_v title:(getFilenameFile(getSourceFileName()))  ini:( getSource
 
 _Rollout = Dialog.Roll ("Rollout A")
 
-_SubRollout = _Rollout.Roll ("")
+_SubRollout = _Rollout.Roll ("Subrollout")
 
 -- _Controls = Dialog.Controls group:"Test"
 -- _Controls = _Rollout.Controls group:"Test"
@@ -47,18 +47,20 @@ _Controls.Default #across 1
 /*------ BUTTON ------*/
 --_Button_1 = _Controls.control #button "Button 1"
 --_Button_1.Event #pressed	"macros.run \"_Test\" \"_test_control_callback_macro\""
---_Button_1.Event #rightclick 	"print" params:"Button Ricghtclick"
+--_Button_1.Event #RIGHTCLICK 	"print" params:"Button Ricghtclick"
 
 
 /*------ CECKBUTTON ------*/
  --_CbxButton_1 = _Controls.control #checkbutton "Checkbutton"
 --_CbxButton_1.Event #CHANGED "CallbackWithValue"
---	_CbxButton_1.Event #rightclick 	"print" params:"Checkbutton Ricghtclick"
+--	_CbxButton_1.Event #RIGHTCLICK 	"print" params:"Checkbutton Ricghtclick"
 
 
 /*------ CHECKBOX ------*/
---_Controls.control #checkbox "Checkbox value" value:true
---_Controls.control #checkbox "Checkbox param" params:#(#checked, true)
+--_checkbox = _Controls.control #checkbox "Checkbox value" value:true
+--_checkbox = _Controls.control #checkbox "Checkbox param" params:#(#checked, true)
+--_checkbox.Event #CHANGED	"CallbackWithValue(val)"
+--_checkbox.Event #RIGHTCLICK	"CallbackNoParam()"
 
 
 /*------ RADIOBUTTONS ------*/
@@ -70,12 +72,13 @@ _Controls.Default #across 1
 
 
 /*------ SLIDER ------*/
-_Slider = _Controls.control #SLIDER "Slider" ticks:3 width:232 range:[0,50,0] ticks:10 type:#integer --offset:[-16, 0]
-_Slider.Event #CHANGED	"CallbackWithValue(val)"
-_Slider.Event #RIGHTCLICK	"CallbackNoParam()"
-_Slider.Event #BUTTONDOWN	"CallbackNoParam()"
-_Slider.Event #BUTTONUP	"CallbackNoParam()"
-
+_Slider = _Controls.control #SLIDER "Slider" ticks:10 width:232 range:[0,50,0] ticks:10 type:#integer --offset:[-16, 0]
+--_Slider.Event #CHANGED	"CallbackWithValue(val)"
+--_Slider.Event #RIGHTCLICK	"CallbackNoParam()"
+--_Slider.Event #BUTTONDOWN	"CallbackNoParam()"
+--_Slider.Event #BUTTONUP	"CallbackNoParam()"
+--_Slider.Event #LEFTCLICK	"CallbackNoParam()"
+_Slider.Event #LEFTCLICK	"CallbackWithValue(val)"
 
 
 /*------ COLORPICKER ------*/
