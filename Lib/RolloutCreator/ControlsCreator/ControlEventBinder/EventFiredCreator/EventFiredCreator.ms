@@ -26,18 +26,16 @@ struct EventFiredCreator_v
 
 	/** Get event
 	 */
-	function getEventFired Event =
+	function getEventFired event_type params =
 	(
 		--print "EventFiredCreator_v.getEventFired()"
-		--format "Event: %\n" Event
-		--format "RolloutControl	= % \n" RolloutControl
-		this.params = filterString Event.params " "
+		this.params = filterString params " "
 
 		note_def	= "\n/*--- EventFired definition ---*/\n\n"
 		note_set_global	= "\n/*--- EventFired global ---*/\n\n"
 
 		struct_def	= "execute \"struct EventFired_v(Type,Roll,Control"+(this._getProperties())+ "," + (this._getMethods())+")\""
-		set_global	= "global EventFired = EventFired_v Type:#"+Event.type+" Roll:"+ _RolloutClass +" Control:"+ _RolloutControl +" "+(this._getParams())
+		set_global	= "global EventFired = EventFired_v Type:#"+event_type+" Roll:"+ _RolloutClass +" Control:"+ _RolloutControl +" "+(this._getParams())
 
 
 	   note_def + struct_def + "\n" + note_set_global + set_global
@@ -79,7 +77,6 @@ struct EventFiredCreator_v
 		--print "EventFiredCreator_v._getParams()"
 		" function get prop = ( if hasProperty this ( prop as name ) then getProperty this ( prop as name ) else false  )"
 	),
-
 
 	on create do
 	(

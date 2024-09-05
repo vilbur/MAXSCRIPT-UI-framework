@@ -73,12 +73,12 @@ _Controls.Default #across 1
 
 /*------ SLIDER ------*/
 _Slider = _Controls.control #SLIDER "Slider" ticks:10 width:232 range:[0,50,0] ticks:10 type:#integer --offset:[-16, 0]
---_Slider.Event #CHANGED	"CallbackWithValue(val)"
+_Slider.Event #CHANGED	"CallbackWithValue(val)"
 --_Slider.Event #RIGHTCLICK	"CallbackNoParam()"
 --_Slider.Event #BUTTONDOWN	"CallbackNoParam()"
 --_Slider.Event #BUTTONUP	"CallbackNoParam()"
---_Slider.Event #LEFTCLICK	"CallbackNoParam()"
-_Slider.Event #LEFTCLICK	"CallbackWithValue(val)"
+_Slider.Event #LEFTCLICK	"CallbackNoParam()"
+--_Slider.Event #LEFTCLICK	"CallbackWithValue(val)"
 
 
 /*------ COLORPICKER ------*/

@@ -25,10 +25,10 @@ struct ControlCreator_v
 	/* dependency */
 	_Controls,
 
-	ControlEventCreator	= ControlEventCreator_v(), 	-- "./ControlEventCreator/ControlEventCreator.ms"
-	ParamsCreator	= ControlParamsCreator_v(), 	-- "./ControlParamsCreator/ControlParamsCreator.ms"
 	ControlValue 	= ControlValue_v(),
-	ControlEventBinder	= ControlEventBinder_v _Rollout:_Rollout, -- "./ControlEventBinder/ControlEventBinder.ms"
+	ParamsCreator	= ControlParamsCreator_v(), 	-- "./ControlParamsCreator/ControlParamsCreator.ms"
+	ControlEventCreator	= ControlEventCreator_v _Rollout:_Rollout, 	-- "./ControlEventCreator/ControlEventCreator.ms"
+	ControlEventBinder	= ControlEventBinder_v  _Rollout:_Rollout, -- "./ControlEventBinder/ControlEventBinder.ms"
 
 	/** Add controls to rollout
 	 */

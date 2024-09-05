@@ -6,7 +6,7 @@ filein( getFilenamePath(getSourceFileName()) + "/DefaultControlEvents/DefaultCon
 struct ControlEventCreator_v
 (
 	/* construct */
-
+	_Rollout,
 
 	/* dependency */
 	DefaultControlEvents	= DefaultControlEvents_v(),
@@ -26,36 +26,53 @@ struct ControlEventCreator_v
 	(
 		--format "\n================\n"; print "ControlEventCreator_v.createEvents()"
 		--format "_Control:	% \n" _Control.caption
-		for event_type in this.EventTypes.priority
-			where (event_params = event_types[_Control.type][event_type]) != undefined do
+
+		/** Get event params
+		 */
+		function getParams Event = if Event != undefined then Event.params else ""
+
+		EventFiredCreator = EventFiredCreator_v _RolloutClass:(_Rollout.id as string ) _RolloutControl:( _Rollout.id as string +"."+ _Control.id as string )
+
+		for event_type in this.EventTypes.priority where ( event_params = event_types[_Control.type][event_type]) != undefined do
+		(
+			if ( Event = _Control.Events[event_type] ) != undefined then
 			(
-				if ( Event = _Control.Events[event_type] ) != undefined then
-				(
-					this._setArgumentsToCallback(Event)(event_params)
+				Event.params = event_params
 
-					this._addToAutoRunEvents(_Control)(Event)
+				this._setArgumentsToCallback(Event)
 
-					TooltipCreator.addTooltip(_Control)(event_type)
-				)
+				this._addToAutoRunEvents(_Control)(Event)
 
-				Event_default = DefaultControlEvents.getDefaultEvent (_Control) (event_type)
-				--format "Event_default: %\n" Event_default
-
-				/*------------------------------------------------------------------------------
-					MERGE DEFAULT & CUSTOM EVENT
-				--------------------------------------------------------------------------------*/
-				if  Event != undefined or Event_default != undefined  then
-				(
-					Event =  this._mergeEvents (event_type) (Event) (Event_default)
-
-					Event.params = event_params
-
-					 _Control.Events[event_type] = Event
-				)
+				TooltipCreator.addTooltip(_Control)(event_type)
 			)
+
+			Event_default = DefaultControlEvents.getDefaultEvent (_Control) (event_type)
+			--format "Event_default: %\n" Event_default
+
+			if  Event != undefined or Event_default != undefined  then
+			(
+				/* GET NEW EVENT IF ONLY DEAFAULT CALLBACK EXIST */
+				if  Event == undefined then Event = Event_v type:event_type
+
+				/*------ CODE SNIPPETS ------*/
+				callback = this._mergeEvents (event_type) (Event) (Event_default)
+
+				event_fired = EventFiredCreator.getEventFired(event_type)( getParams Event + " " + getParams Event_default )
+
+				free_event_fired = "EventFired = undefined"
+
+				/*------ MERGE FINALCALLABCKCODE ------*/
+				Event.callback[#code] = event_fired + "\n\n" + callback + "\n\n" + free_event_fired + "\n\n"
+
+				/* RETURN FINAL EVENT TO CONTROL */
+				_Control.Events[event_type] = Event
+			)
+
+		)
 	),
 
 	private
+
 
 	/** Add to auto run after dialog is created
 	  *
@@ -74,9 +91,11 @@ struct ControlEventCreator_v
 	/** Set arguments to events
 	  * E.G.:	 on spinner changed val inspisn do fooCallback VAL INSPIN CUSTOM_PARAM -- CAllback parameters are VAL, INSPIN & CUSTOM_PARAM
 	  */
-	function _setArgumentsToCallback Event event_params =
+	function _setArgumentsToCallback Event =
 	(
 		--format "\n"; print "ControlEventCreator_v._setArgumentsToCallback()"
+		--format "Event: %\n" Event
+
 		/** Convert each argument to string friendly format
 		  * @return Array of arguemnts
 		  */
@@ -144,7 +163,7 @@ struct ControlEventCreator_v
 			if not _rxIsMatch (callback) (pattern) then
 			(
 
-				arguments = join ( filterString event_params " ") (getCallbackArguments(Event.callback[#arguments]))
+				arguments = join ( filterString Event.params " ") (getCallbackArguments(Event.callback[#arguments]))
 
 				if arguments.count > 0  then
 					callback += 	getArgumentsString (callback)(arguments)
@@ -154,19 +173,17 @@ struct ControlEventCreator_v
 		)
 	),
 
-	/** Combine events
+	/** MERGE CODE OF DEFAULT AND CUSTOM
 	  *
 	  */
 	function _mergeEvents event_type Event Event_default =
 	(
-		--format "\n"; print "ControlEventCreator_v.combineEvents()"
+		--format "\n"; print "ControlEventCreator_v._mergeEvents()"
+		callback = ""
 
-		/** Merge code
-		 */
-		function mergeCode Event Event_default =
+		if Event_default != undefined then
 		(
 			--format "\n"; print "ControlEventCreator_v.mergeCode()"
-			callback = ""
 
 			if Event_default.callback[#code] != "" then
 				callback += "\n/* ---- DEFAULT CALLBACK ---- */\n" + Event_default.callback[#code]
@@ -174,30 +191,9 @@ struct ControlEventCreator_v
 			if Event.callback[#code] != "" then
 				callback +=  ";\n\n/* ---- CUSTOM CALLBACK ---- */\n" + Event.callback[#code]
 
-			callback --return
 		)
 
-		/** Merge params
-		 */
-		function mergeParams Event Event_default =
-		(
-			--format "\n"; print "ControlEventCreator_v.mergeParams()"
-		)
-
-
-		/* GET NEW EVENT IF ONLY DEAFAULT CALLBACK EXIST */
-		if  Event == undefined then Event = Event_v type:event_type
-
-		/* MERGE CODE OF DEFAULT AND CUSTOM CALLBACK */
-		if Event_default != undefined then
-		(
-
-
-			Event.callback[#code] = mergeCode Event Event_default
-		)
-
-
-		Event --return
+		callback --return
 	),
 
 	/** Validate event

@@ -48,26 +48,27 @@ struct ControlEventBinder_v
 		format "Event.type:	% \n" Event.type
 		--format "Event.callback[#code]:	\n=====================\n%\n=====================\n\n" Event.callback[#code]
 
-		this._addEventFired(_Control)(Event)
+		--this._addEventFired(_Control)(Event)
 		--format "\nEvent.callback[#code]:	% \n" Event.callback[#code]
 		format "\nEvent.params:	% \n" Event.params
+		format "\nEvent.callback[#arguments]:	% \n" Event.callback[#arguments]
 		format "Event.callback[#code]:	\n\n=====================\n%\n=====================\n\n" Event.callback[#code]
 
 		if( Event.callback[#code] != "" ) then
 			_Rollout.RCI.addHandler _Control.id Event.type codeStr:( "("+Event.callback[#code]+")" ) paramStr:(Event.params) filter:on
 	),
 
-	/**_type _add event fired
-	 */
-	function _addEventFired _Control Event =
-	(
-		--print "ControlEventBinder_v._addEventFired()"
-
-		EventFiredCreator = EventFiredCreator_v _RolloutClass:(_Rollout.id as string ) _RolloutControl:( _Rollout.id as string +"."+ _Control.id as string )
-
-		--for Event_Data in _Control.Events do
-			Event.callback[#code]  = (EventFiredCreator.getEventFired(Event)) + "\n\n"+ Event.callback[#code] + ";EventFired = undefined"
-	),
+	--/**_type _add event fired
+	-- */
+	--function _addEventFired _Control Event =
+	--(
+	--	--print "ControlEventBinder_v._addEventFired()"
+	--
+	--	EventFiredCreator = EventFiredCreator_v _RolloutClass:(_Rollout.id as string ) _RolloutControl:( _Rollout.id as string +"."+ _Control.id as string )
+	--
+	--	--for Event_Data in _Control.Events do
+	--		Event.callback[#code]  = (EventFiredCreator.getEventFired(Event)) + "\n\n"+ Event.callback[#code] + ";EventFired = undefined"
+	--),
 
 	/*------------------------------------------------------------------------------
 		ON CREATE

@@ -111,12 +111,12 @@ struct Slider_v
 		format "\n"; print "Slider_v.getChangeDEvent()"
 		--Event = Event_v type:#BUTTONUP
 		Event = Event_v type:#BUTTONUP params: "test_param"
-		format "**********EVENT**********: %\n" Event
-		--Event.params =  "test_param"
+		--format "**********EVENT**********: %\n" Event
+		Event.params =  "changes"
 
 		--callback = "print \"BUTTONUP TEST\";"
 		callback = ""
-		callback += "format @var_name: %\n@ "+var_name+ ";"
+		--callback += "format @var_name: %\n@ "+var_name+ ";"
 
 		callback += "EventFired.type = case "+var_name+ ".count of
 		(
