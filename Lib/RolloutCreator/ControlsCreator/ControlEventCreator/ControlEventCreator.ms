@@ -37,7 +37,7 @@ struct ControlEventCreator_v
 		(
 			if ( Event = _Control.Events[event_type] ) != undefined then
 			(
-				Event.params = event_params
+				--Event.params = event_params
 
 				this._setArgumentsToCallback(Event)
 
@@ -53,6 +53,8 @@ struct ControlEventCreator_v
 			(
 				/* GET NEW EVENT IF ONLY DEAFAULT CALLBACK EXIST */
 				if  Event == undefined then Event = Event_v type:event_type
+				
+				Event.params = event_params
 
 				/*------ CODE SNIPPETS ------*/
 				callback = this._mergeEvents (event_type) (Event) (Event_default)

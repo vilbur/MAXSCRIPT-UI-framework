@@ -13,7 +13,7 @@ category:	"_Test"
 
 /** 0 PRAMAS
  */
-function CallbackNoParam = (format "Macro:EventFired:	% \n" EventFired.type )
+function CallbackNoParam = (format "EventFired %:	% \n" EventFired.type EventFired )
 
 /** 1 PARAMETER
  */
@@ -74,11 +74,13 @@ _Controls.Default #across 1
 /*------ SLIDER ------*/
 _Slider = _Controls.control #SLIDER "Slider" ticks:10 width:232 range:[0,50,0] ticks:10 type:#integer --offset:[-16, 0]
 _Slider.Event #CHANGED	"CallbackWithValue(val)"
---_Slider.Event #RIGHTCLICK	"CallbackNoParam()"
---_Slider.Event #BUTTONDOWN	"CallbackNoParam()"
---_Slider.Event #BUTTONUP	"CallbackNoParam()"
-_Slider.Event #LEFTCLICK	"CallbackNoParam()"
---_Slider.Event #LEFTCLICK	"CallbackWithValue(val)"
+_Slider.Event #RIGHTCLICK	"CallbackNoParam()"
+_Slider.Event #BUTTONDOWN	"CallbackNoParam()"
+_Slider.Event #BUTTONUP	"CallbackNoParam()"
+
+/* SLIDE FIRED UP ON THEN END OF SLIDE */
+_Slider.Event #SLIDE	"format @EventFired type:%	changes:% \n@ EventFired.type EventFired.changes"
+_Slider.Event #LEFTCLICK	"format @EventFired type:%	changes:% \n@ EventFired.type EventFired.changes"
 
 
 /*------ COLORPICKER ------*/

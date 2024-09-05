@@ -110,26 +110,43 @@ struct Slider_v
 	(
 		format "\n"; print "Slider_v.getChangeDEvent()"
 		--Event = Event_v type:#BUTTONUP
-		Event = Event_v type:#BUTTONUP params: "test_param"
-		--format "**********EVENT**********: %\n" Event
-		Event.params =  "changes"
+		Event = Event_v type:#BUTTONUP params: "changes"
 
-		--callback = "print \"BUTTONUP TEST\";"
-		callback = ""
-		--callback += "format @var_name: %\n@ "+var_name+ ";"
+		/* TEST */
+		leftclick_exist = _Control.Events[#LEFTCLICK] != undefined
+		slide_exist     = _Control.Events[#SLIDE]     != undefined
 
+		/* SNIPPETS */
+		code_leftclick = if not leftclick_exist then "\"\"" else _Control.Events[#LEFTCLICK].callback[#CODE]
+		code_slide     = if not slide_exist     then "\"\"" else _Control.Events[#SLIDE].callback[#CODE]
+
+		case_leftclick = if not leftclick_exist then "" else
+		"1: #LEFTCLICK	-- buttondown > buttonup
+		 \t2: #LEFTCLICK	-- buttondown > changed > buttonup"
+
+		case_default = if not slide_exist then "\"\"" else "#SLIDE	-- buttondown > changed > changed > buttonup"
+
+		/* SAVE CHANGED VALUES */
+		callback = "EventFired.changes = "+var_name + "\n"
+
+		/* MODIFY EVENT TYPE */
 		callback += "EventFired.type = case "+var_name+ ".count of
 		(
-			0: #LEFTCLICK	-- buttondown > buttonup
-			1: #LEFTCLICK	-- buttondown > changed > buttonup
-			default: #SLIDE	-- buttondown > changed > changed > buttonup
+			"+case_leftclick+"
+			default: "+case_default+"
 		)\n"
 
-		callback += "format @EventFired: %\\n@ EventFired;"
-		--callback += "format @EVENT TYPE: %\\n@ EventFired.type;"
+		/* CALL CALLBACK BY EVENT TYPE */
+		callback += "case EventFired.type of
+		(
+			#LEFTCLICK: "+code_leftclick+"
+			#SLIDE:     "+code_slide+"
+		)\n"
 
+		/* RESET ARRAY FOR NEXT EVENT */
 		callback += var_name + " = #()"
 
+		/* SET CALLBACK TO EVENT */
 		Event.callback[#code] = callback
 
 		Event --return
