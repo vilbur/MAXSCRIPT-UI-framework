@@ -48,15 +48,21 @@ struct RadioButtons_v
 		(
 			Event = Event_v type:event_type
 
+			callback = ""
+
 			save_state_var = this._getSaveStateVariableName(_Control.id)
-			--format "save_state_var: %\n" save_state_var
+
 			/* ADD LOCAL VARIABLE */
 			_Control.addlocal ( save_state_var as name ) ""
 
-			callback = "if val == "+save_state_var+" then         -- if value == saved value
-					"+ (_Control.id as string) +".state = val = 0 -- then set value 0 ( unselect buttons )
-						if val != 0 then "+save_state_var+" = val -- store value if not unselected
-						EventFired.val     = val"
+			/* GET CALLBACK CODE STRING */
+			--callback += "format( @"+save_state_var+":%\\n@ ) "+save_state_var+" -- DEBUG\n\n"
+			callback += "if val == "+save_state_var+" then    -- if checked radiobutton is clicked again"
+			callback += "\n	"+(_Control.id as string) +".state = val = 0          -- then unselect buttons"
+
+			callback += "\n\n"+save_state_var+" = val             -- store value"
+
+			callback += "\n\nEventFired.val = val\n"
 			--format "CALLBACK: %\n" CALLBACK
 			Event.callback[#code] = callback
 

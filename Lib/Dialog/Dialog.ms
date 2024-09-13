@@ -103,8 +103,8 @@ struct Dialog_v
 	 */
 	function create width: height: pos: origin:#SCREEN bgcolor: fgcolor: bitmap: bmpstyle:#bmp_tile  style: modal: escapeEnable:false escapekey:true lockHeight:false lockWidth:true parent: =
 	(
-		format "\n"; print "Dialog_v.create()"
-		format "height: %\n" height
+		--format "\n"; print "Dialog_v.create()"
+		--format "height: %\n" height
 		this.destroy()
 
 		timer_create_dialog = timestamp()
@@ -122,7 +122,7 @@ struct Dialog_v
 		_RolloutCreator.createRollout (this) width:width -- create nested rollouts
 
 		--format "onCreate() WIDTH: %\n" width
-		format "onCreate() HEIGHT: %\n" height
+		--format "onCreate() HEIGHT: %\n" height
 
 		CreateDialog (this.RCI.def) \
 			width:	width                          	\
@@ -176,7 +176,7 @@ struct Dialog_v
 	 */
 	function register =
 	(
-		print "Dialog_v.register()"
+		--print "Dialog_v.register()"
 
 		min_size = if min_size != undefined then min_size as string else "[-1,-1]"
 		max_size = if max_size != undefined then max_size as string else "[-1,-1]"
@@ -331,11 +331,11 @@ struct Dialog_v
 	 */
 	function _setDialogSizeByIni =
 	(
-		format "\n\n"; print "Dialog_v._setDialogSizeByIni()"
+		--format "\n\n"; print "Dialog_v._setDialogSizeByIni()"
 
 		if ( ini_size = this._getSizeFromIni() ) != undefined and not this._isIniDocked() then
 		(
-			format "INI_SIZE:	% \n" INI_SIZE
+			--format "INI_SIZE:	% \n" INI_SIZE
 			this.width  = ini_size.x
 			this.height = ini_size.y
 		)
@@ -353,9 +353,9 @@ struct Dialog_v
 	  */
 	function _getSizeOnCreate size_type val =
 	(
-		format "\n"; print "if._getSizeOnCreate()"
-		format "size_type:	% \n" size_type
-		format "val: %\n" val
+		--format "\n"; print "if._getSizeOnCreate()"
+		--format "size_type:	% \n" size_type
+		--format "val: %\n" val
 		--format "classOf val:	% \n" (classOf val)
 
 		if val == unsupplied then

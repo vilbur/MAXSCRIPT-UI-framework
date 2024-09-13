@@ -40,10 +40,11 @@ struct Controls_v
 	  * @return Object _Control	"./Control/Control.ms"
 	 */
 	function Control control_type caption id:undefined params:#() pos: width: height: across: offset: align: tooltip: /*locals:*/ ini:true add_to_controls:true \ -- common params for all types
-				range: ticks: orient:	\ -- slider
-				items: columns:	\ -- radiobutton, lisbox, mutlilistbox
-				type: scale:	\ -- spinner
-				checked:	\ -- checkbox, checkbutton
+				range:	ticks: orient:	\ -- slider
+				default:	unselect:	\ -- radiobutton
+				items:	columns:	\ -- radiobutton, lisbox, mutlilistbox
+				type:	scale:	\ -- spinner
+				checked:		\ -- checkbox, checkbutton
 				value: =
 	(
 		--format "\n"; print "Controls_v.Control()"
@@ -59,8 +60,8 @@ struct Controls_v
 
 		--format "_Control.id = % \n" _Control.id
 		--format "_Control = % \n" _Control
-		_param_names  = #( #pos, #checked, #width, #height, #offset, #align, #items, #range, #type, #ticks,	#orient,	#scale, #controller, #value, #ini, #tooltip, #across, #columns)
-		_param_values = #( pos, checked,  width,  height,  offset,  align, items,  range,   type, ticks,	orient,   scale,  controller,  value,  ini,  tooltip,  across,  columns)
+		_param_names  = #( #pos, #checked, #width, #height, #offset, #align, #items, #range, #type, #ticks,	#orient,	#scale, #controller, #default, #unselect, #value, #ini, #tooltip, #across, #columns)
+		_param_values = #( pos, checked,  width,  height,  offset,  align, items,  range,   type, ticks,	orient,   scale,  controller,  default,  unselect,  value,  ini,  tooltip,  across,  columns)
 
 
 		for i = 1 to _param_values.count where _param_values[i]!= unsupplied do

@@ -42,17 +42,13 @@ struct ControlEventBinder_v
 	function _addHandler _Control Event =
 	(
 		format "\n\n"; print "ControlEventBinder_v._addHandler()"
-		format "_Control.id:	% \n" _Control.id
-		--format "Event:	% \n" Event
-		--format "Event.params:	% \n" Event.params
-		format "Event.type:	% \n" Event.type
-		--format "Event.callback[#code]:	\n=====================\n%\n=====================\n\n" Event.callback[#code]
-
-		--this._addEventFired(_Control)(Event)
-		--format "\nEvent.callback[#code]:	% \n" Event.callback[#code]
-		format "\nEvent.params:	% \n" Event.params
-		format "\nEvent.callback[#arguments]:	% \n" Event.callback[#arguments]
-		format "Event.callback[#code]:	\n\n=====================\n%\n=====================\n\n" Event.callback[#code]
+		----format "_Control.id:	% \n" _Control.id
+		----format "Event:	% \n" Event
+		----format "Event.type:	% \n" Event.type
+		----format "Event.params:	% \n" Event.params
+		--
+		--format "\nEvent.callback[#arguments]:	% \n" Event.callback[#arguments]
+		format "Event.callback[#code]:	\n\n============================================================\n%\n============================================================\n" Event.callback[#code]
 
 		if( Event.callback[#code] != "" ) then
 			_Rollout.RCI.addHandler _Control.id Event.type codeStr:( "("+Event.callback[#code]+")" ) paramStr:(Event.params) filter:on

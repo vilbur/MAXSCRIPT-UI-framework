@@ -47,9 +47,9 @@ struct ControlEventCreator_v
 			)
 
 			Event_default = DefaultControlEvents.getDefaultEvent (_Control) (event_type)
-			--format "Event_default: %\n" Event_default
 
-			if  Event != undefined or Event_default != undefined  then
+
+			if  Event != undefined or Event_default != undefined then
 			(
 				/* GET NEW EVENT IF ONLY DEAFAULT CALLBACK EXIST */
 				if  Event == undefined then Event = Event_v type:event_type
@@ -57,14 +57,16 @@ struct ControlEventCreator_v
 				Event.params = event_params
 
 				/*------ CODE SNIPPETS ------*/
-				callback = this._mergeEvents (event_type) (Event) (Event_default)
+				callback = this._mergeCodeOfEvents (event_type) (Event) (Event_default)
+
 
 				event_fired = EventFiredCreator.getEventFired(event_type)( getParams Event + " " + getParams Event_default )
 
 				free_event_fired = "EventFired = undefined"
 
 				/*------ MERGE FINALCALLABCKCODE ------*/
-				Event.callback[#code] += "\n\n" + event_fired + "\n\n" + callback + "\n\n" + free_event_fired + "\n\n"
+				--Event.callback[#code] = callback
+				Event.callback[#code] = "\n" + event_fired + "\n\n" + callback + "\n" + free_event_fired + "\n"
 
 				/* RETURN FINAL EVENT TO CONTROL */
 				_Control.Events[event_type] = Event
@@ -178,22 +180,16 @@ struct ControlEventCreator_v
 	/** MERGE CODE OF DEFAULT AND CUSTOM
 	  *
 	  */
-	function _mergeEvents event_type Event Event_default =
+	function _mergeCodeOfEvents event_type Event Event_default =
 	(
-		--format "\n"; print "ControlEventCreator_v._mergeEvents()"
+		--format "\n"; print "ControlEventCreator_v._mergeCodeOfEvents()"
 		callback = ""
 
-		if Event_default != undefined then
-		(
-			--format "\n"; print "ControlEventCreator_v.mergeCode()"
+		if Event_default != undefined and Event_default.callback[#code] != "" then
+			callback += "\n/* ---- DEFAULT CALLBACK ---- */\n" + Event_default.callback[#code]
 
-			if Event_default.callback[#code] != "" then
-				callback += "\n/* ---- DEFAULT CALLBACK ---- */\n" + Event_default.callback[#code]
-
-			if Event.callback[#code] != "" then
-				callback +=  ";\n\n/* ---- CUSTOM CALLBACK ---- */\n" + Event.callback[#code]
-
-		)
+		if Event.callback[#code] != "" then
+			callback +=  "\n\n/* ---- CUSTOM CALLBACK ---- */\n" + Event.callback[#code]
 
 		callback --return
 	),

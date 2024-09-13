@@ -44,8 +44,10 @@ _Controls   = Dialog.Controls()
 
 /*------ RADIOBUTTONS ------*/
 --_Controls.control #radioButtons "RadioButtons" items:#("Item 1","Item 2") columns:2
---_Controls.control #RADIOBUTTONS "RadioButtons" items:#("Item 1","Item 2") params:#( #UNSELECT, false )
+--_Controls.control #RADIOBUTTONS "RadioButtons" items:#("Item 1","Item 2") params:#( #UNSELECT, true ) default:2
 
+_RadioButtons = _Controls.control #RADIOBUTTONS "RadioButtons" items:#("Item 1","Item 2") params:#( #UNSELECT, true ) default:2
+_RadioButtons.Event #CHANGED ("print @TEST CHANGED@")
 
 /*------ DROPDOWN ------*/
 --_Controls.control #DROPDOWNLIST "Dropdownlist"
@@ -63,10 +65,6 @@ _Controls   = Dialog.Controls()
 --_Controls.control #SPINNER "Spinner" width:96 scale:0.01 range:[0,100,0.01]
 
 
-/*------ CHECKBOX ------*/
-/*------ COLORPICKER ------*/
-/*------ BITMAP ------*/
-/*------ BROWSEATH ------*/
 /*------ LISTBOX ------*/
 /*------ MULTILISTBOX ------*/
 --_multilistbox =  _Controls.control #MULTILISTBOX "Multilistbox" items:#("Item 1","Item 2", "It/*e*/m 3")
