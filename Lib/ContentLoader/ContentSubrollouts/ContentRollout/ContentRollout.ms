@@ -132,18 +132,20 @@ struct ContentRollout_v
 	  *
 	  * Remove invalid characters, valid characters: "A-Za-z0-9-_" WAS DISABLED FOR USE ABILITY TO USEE ASCII CHARACTERS
 	 */
-	function _sanitizeTitle =
+	function _getRolloutTitle =
 	(
 		--print ("ContentRollout_v._sanitizeTitle() " )
 		title = trimRight title "\\" --remove backslash from directory name
 
-		title = substituteString title " " "xWHITESPACEx" -- preserve whitespace workaround, "[^A-Za-z0-9_-\s]" DOES NOT WORK
+		--title = substituteString title " " "xWHITESPACEx" -- preserve whitespace workaround, "[^A-Za-z0-9_-\s]" DOES NOT WORK
 
-		title = ( dotNetObject "System.Text.RegularExpressions.Regex" "^rollout-"    ).Replace title "" -- remove prefix "rolout-" from directory name
+		title = ( dotNetObject "System.Text.RegularExpressions.Regex" "^rollout-" ).Replace title "" -- remove prefix "rolout-" from directory name
 
 		-----title = ( dotNetObject "System.Text.RegularExpressions.Regex" "[^A-Za-z0-9_-]" ).Replace title "" !!! DISABLED FOR USE OF ASCII IAMAGES
 
-		title = substituteString title "xWHITESPACEx" " " -- put whitespace back
+		--title = substituteString title "xWHITESPACEx" " " -- put whitespace back
+
+		title = substituteString title "_" " " -- put whitespace back
 	),
 
 	on create do
@@ -154,7 +156,7 @@ struct ContentRollout_v
 		ConstructPropeties test:this
 
 		this._setName()
-		this._sanitizeTitle()
+		this._getRolloutTitle()
 
 		PathsLoader = PathsLoader_v path:path
 

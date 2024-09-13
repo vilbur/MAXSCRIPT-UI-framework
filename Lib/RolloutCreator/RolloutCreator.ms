@@ -296,18 +296,20 @@ struct RolloutCreator_v
 			_Rollout.title
 	),
 
-	/** Get title string
+	/** Get title of rollout
+	  *
+	  * @return string title with whitespace between each character E.G.: "ROLLOUT TITLE" >>> "R O L L O U T   T I T L E"
 	 */
 	function _getTitleString _Rollout =
 	(
 		--format "\n"; print "RolloutCreator_v._getTitleString()"
+		
+		/* modify only title of rollout, NOT title of dialog */
+		if _Rollout.parent_rollout_id != undefined then
+			( dotNetObject "System.Text.RegularExpressions.Regex" "(.)" ).Replace _Rollout.title "$1 "
 
-		title = ""
-
-		for i = 1 to _Rollout.title.count do
-			title += _Rollout.title[i] + " "
-
-		title --return
+		else
+			_Rollout.title --return Dialog title as it is
 	),
 
 	/**

@@ -46,8 +46,6 @@ _Controls   = Dialog.Controls()
 --_Controls.control #radioButtons "RadioButtons" items:#("Item 1","Item 2") columns:2
 --_Controls.control #RADIOBUTTONS "RadioButtons" items:#("Item 1","Item 2") params:#( #UNSELECT, true ) default:2
 
-_RadioButtons = _Controls.control #RADIOBUTTONS "RadioButtons" items:#("Item 1","Item 2") params:#( #UNSELECT, true ) default:2
-_RadioButtons.Event #CHANGED ("print @TEST CHANGED@")
 
 /*------ DROPDOWN ------*/
 --_Controls.control #DROPDOWNLIST "Dropdownlist"

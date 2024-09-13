@@ -37,7 +37,7 @@ struct ContentSubrollouts_v
 		--format "\n"; print ("ContentSubrollouts_v._setSlot()")
 		slot = filenameFromPath path
 
-		slot = trimLeft slot  "rollouts-"
+		slot = trimLeft slot  "rollouts-" -- remove prefix of folder name 
 
 		slot = ( dotNetObject "System.Text.RegularExpressions.Regex" @"[^A-Za-z0-9_]" ).Replace slot ""
 	),
