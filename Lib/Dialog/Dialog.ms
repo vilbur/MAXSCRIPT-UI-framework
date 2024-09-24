@@ -101,7 +101,22 @@ struct Dialog_v
 	  *
 	  * TODO add params for max 2022
 	 */
-	function create width: height: pos: origin:#SCREEN bgcolor: fgcolor: bitmap: bmpstyle:#bmp_tile  style: modal: escapeEnable:false escapekey:true lockHeight:false lockWidth:true parent: =
+	function create           \
+		width:	\
+		height:	\
+		pos:	\
+		origin:#SCREEN	\
+		bgcolor:	\
+		fgcolor:	\
+		bitmap:	\
+		bmpstyle:#bmp_tile	\
+		style:	\
+		modal:	\
+		escapeEnable:false	\
+		escapekey:true	\
+		lockHeight:false	\
+		lockWidth:true	\
+		parent: =
 	(
 		--format "\n"; print "Dialog_v.create()"
 		--format "height: %\n" height
@@ -111,10 +126,11 @@ struct Dialog_v
 
 		this._setDialogMinimalSize()
 		this._setDialogSizeByIni()
-		--format "width A: %\n" width
-		width  = this._getSizeOnCreate (#width)  (width)
+		this._setWithByMinimalSize()
+		--format "width A: %\n" this.width
+		--width  = this._getSizeOnCreate (#width)  (width)
 		height = this._getSizeOnCreate (#height) (height)
-		--format "width B: %\n" width
+		--format "width B: %\n" this.width
 		--format "this.style: %\n" this.style
 
 		_RolloutCreator = RolloutCreator_v Ini:Ini
@@ -139,7 +155,6 @@ struct Dialog_v
 			lockHeight:	lockHeight	\
 			lockWidth:	lockWidth	\
 			parent:	parent
-
 
 
 		if this.DEBUG then format "CreateDialog % ms\n" ((timestamp()) - timer_create_dialog)
@@ -180,13 +195,12 @@ struct Dialog_v
 
 		min_size = if min_size != undefined then min_size as string else "[-1,-1]"
 		max_size = if max_size != undefined then max_size as string else "[-1,-1]"
-		--format "min_size: %\n" min_size
-		--format "max_size: %\n" max_size
-		--format "style_registred_dialog: %\n" style_registred_dialog
+		--format "MIN_SIZE: %\n" min_size
+		--format "MAX_SIZE: %\n" max_size
+		--format "STYLE: %\n" style_registred_dialog
 
-		--execute ("cui.RegisterDialogBar "+ this.id +" minSize:"+min_size+" style:"+style_registred_dialog as string )
 		--execute ("cui.RegisterDialogBar "+ this.id +" minSize:"+min_size+" maxSize:"+max_size+" style:"+style_registred_dialog as string )
-		execute ("cui.RegisterDialogBar "+ this.id + " style:"+style_registred_dialog as string )
+		execute ("cui.RegisterDialogBar "+ this.id +" minSize:"+min_size+" style:"+style_registred_dialog as string )
 	),
 
 	/** Unregister dialog bar
@@ -317,6 +331,7 @@ struct Dialog_v
 	function _setDialogMinimalSize =
 	(
 		--format "\n"; print "Dialog_v._setDialogMinimalSize()"
+		--format "MIN_SIZE:	% \n" min_size
 		if not this.isDefined (this.min_size) then
 		(
 			min_width	= if this.isDefined (this.width)	then this.width	 else -1
@@ -339,6 +354,16 @@ struct Dialog_v
 			this.width  = ini_size.x
 			this.height = ini_size.y
 		)
+	),
+
+	/** Set with by minimal size
+	 */
+	function _setWithByMinimalSize =
+	(
+		--format "\n"; print "if._setRolloutWithByMinimalSize()"
+		if not this.isDefined (this.width) then
+			width = min_size.x
+		--format "width: %\n" width
 	),
 
 	/** Get ini dock state

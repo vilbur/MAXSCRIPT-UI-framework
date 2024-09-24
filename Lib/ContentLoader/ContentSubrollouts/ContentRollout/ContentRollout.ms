@@ -119,33 +119,43 @@ struct ContentRollout_v
 		getFilenameType path == "" --return
 	),
 
+
+	/** Set rollout title by folder name E.g.: "1-Rollout_A" >> "Rollout A"
+	  *
+	  *  Remove numbers, empty space and characters like "-_" from start of string E.G.: "1_Filename" >> "Filename"
+	  *
+	  * @return	string	Name of groupbox
+	 */
+	function _getControlsGroupName =
+	(
+	),
+
 	/** Set rollout title by folder title E.g.: "Rollout-1" >> "Rollout 1"
 	 */
 	function _setName =
 	(
-		title = filenameFromPath path
 	),
 
 	/**
+	/** Set rollout title by folder name E.g.: "1-Rollout_A" >> "Rollout A"
+	  *
 	  * Replace underscore "_" with whitespace " " E.G.: This_is_test" >>> "This is test"
 	  *
 	  *
 	  * Remove invalid characters, valid characters: "A-Za-z0-9-_" WAS DISABLED FOR USE ABILITY TO USEE ASCII CHARACTERS
 	 */
-	function _getRolloutTitle =
+	function _setRolloutTitle =
 	(
 		--print ("ContentRollout_v._sanitizeTitle() " )
-		title = trimRight title "\\" --remove backslash from directory name
+		title = filenameFromPath path
 
-		--title = substituteString title " " "xWHITESPACEx" -- preserve whitespace workaround, "[^A-Za-z0-9_-\s]" DOES NOT WORK
+		title = trimRight title "\\" --remove backslash from directory name
 
 		title = ( dotNetObject "System.Text.RegularExpressions.Regex" "^rollout-" ).Replace title "" -- remove prefix "rolout-" from directory name
 
-		-----title = ( dotNetObject "System.Text.RegularExpressions.Regex" "[^A-Za-z0-9_-]" ).Replace title "" !!! DISABLED FOR USE OF ASCII IAMAGES
+		title = ( dotNetObject "System.Text.RegularExpressions.Regex" @"^[\d\.\s_-]+" ).Replace ( trimLeft title "_ " ) "" -- remove prefix
 
-		--title = substituteString title "xWHITESPACEx" " " -- put whitespace back
-
-		title = substituteString title "_" " " -- put whitespace back
+		title = substituteString title "_" " " -- replace whitespace
 	),
 
 	on create do
@@ -155,8 +165,8 @@ struct ContentRollout_v
 		--format "ini_file	= % \n" ini_file
 		ConstructPropeties test:this
 
-		this._setName()
-		this._getRolloutTitle()
+		--this._setName()
+		this._setRolloutTitle()
 
 		PathsLoader = PathsLoader_v path:path
 

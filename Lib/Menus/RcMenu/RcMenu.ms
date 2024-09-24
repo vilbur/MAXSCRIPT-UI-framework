@@ -1,25 +1,25 @@
-filein( getFilenamePath(getSourceFileName()) + "/MenuItem.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/MenuItem.ms" )	--"./MenuItem.ms"
 
 /** Menu for rollout
  */
 struct RcMenu_v
-(	
+(
 	/* properties */
 	name = "MainMenu",
-	
+
 	self	= this,
 	type	= "RCmenu",
 	items	= #(),
-	
+
 	/** Submenu
 	 */
 	function menu _name =
 	(
 		local _menu =  RcMenu_v name:_name type:"submenu"
-		
+
 		this._addItem _menu
-		
-		_menu --return 
+
+		_menu --return
 	),
 
 	/** Add item to menu
@@ -33,7 +33,7 @@ struct RcMenu_v
 		--print "RcMenu_v.item()"
 		--format "title	= % \n" title
 		--format "command	= % \n" command
-		this._addItem (MenuItem_v title:(title as string) command:command id:id)
+		this._addItem (MenuItem_v title:( title as string ) command:command id:id)
 	),
 
 	/** Set separator item
@@ -55,7 +55,7 @@ struct RcMenu_v
 		menu_def	= this._getMenuDefinition()
 		subitems	= this._getDefinitionsOfMenuItems()
 		commands	= this._getAllCommandsDefinitions()
-		
+
 		definition = menu_def + "\n(\n" + subitems + commands + "\n)"
 		--format "\n\nDefinition = \n% \n" definition
 		if( type == "RCmenu" ) then
@@ -80,7 +80,7 @@ struct RcMenu_v
 		else
 			"RcMenu " + name -- return
 	),
-	
+
 	/** Get definitions of items
 	 */
 	function _getDefinitionsOfMenuItems =
@@ -89,7 +89,7 @@ struct RcMenu_v
 		--format "items.count = % \n" items.count
 		for item in items do
 			_definition += item.create()
-			
+
 		_definition -- return
 	),
 
@@ -98,10 +98,10 @@ struct RcMenu_v
 	function _getAllCommandsDefinitions =
 	(
 		commands	= ""
-		
+
 		if( type != "submenu" ) then
 			commands	= this._getCommandDefinition()
-		
+
 		commands -- return
 	),
 
@@ -110,14 +110,46 @@ struct RcMenu_v
 	function _getCommandDefinition =
 	(
 		commands	= ""
-	
+
 		for item in items do
 			commands += item._getCommandDefinition()
-			
-		commands --return 
+
+		commands --return
 	),
-	
-	/**  
+
+	/** Rem
+	  ove double separators and separators on start or end of menu
+	 */
+	function clearSeparators =
+	(
+		--format "\n"; print "Menu_v.clearSeparators()"
+		indexes_to_remove 	= #()
+		next_item_is_separator	= false
+
+		--items = this._getMenuItems()
+		--format "items.count	= % \n" items.count
+		for i = 1 to items.count do
+		(
+			local item = items[i]
+			--format "item: %\n" item
+
+			item_is_separator = item.isSeparator()
+
+			next_item_is_separator = i < items.count and (items[i + 1]).isSeparator()
+
+			if (SEPARATOR_IS_FIRST = (item_is_separator and i == 1 ) or
+			  (SEPARATOR_IS_LAST  = (item_is_separator and i == items.count) )) or
+			  (SEPARATOR_IS_TWICE = (item_is_separator and next_item_is_separator )) then
+				append indexes_to_remove i
+
+		)
+
+		for i = indexes_to_remove.count to 1 by -1 do
+			deleteItem items i
+			--menu.removeItemByPosition (indexes_to_remove[i])
+	),
+
+	/**
 	 */
 	on create do
 	(

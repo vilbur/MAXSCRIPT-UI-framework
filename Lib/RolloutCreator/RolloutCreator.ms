@@ -46,6 +46,7 @@ struct RolloutCreator_v
 		--format "\n\n-------------------------------------	RolloutCreator_v.createRollout() id:#%	-------------------------------------\n"  ( _Rollout.id as string );
 		--format "_ROLLOUT: %\n" _Rollout.title
 		--format "_ROLLOUT: %:	% \n" _Rollout.title _Rollout
+		--format "WIDTH: %\n" width
 		timer_create_rollout = timestamp()
 
 		execute( "global " + _Rollout.id as string )
@@ -303,7 +304,7 @@ struct RolloutCreator_v
 	function _getTitleString _Rollout =
 	(
 		--format "\n"; print "RolloutCreator_v._getTitleString()"
-		
+
 		/* modify only title of rollout, NOT title of dialog */
 		if _Rollout.parent_rollout_id != undefined then
 			( dotNetObject "System.Text.RegularExpressions.Regex" "(.)" ).Replace _Rollout.title "$1 "

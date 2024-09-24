@@ -24,6 +24,8 @@ struct ContentLoader_v
 
 	/*  properties */
 	Dialog, -- Dialog_v "./../Dialog/Dialog.ms"
+	min_size,
+	max_size,
 
 	/* dependency */
 	ContentRollout,
@@ -33,15 +35,38 @@ struct ContentLoader_v
 	--function create width: height: pos: menu: bgcolor: fgcolor: bitmap: style: modal: escapeEnable: lockHeight: lockWidth: parent: =
 	--function create width: height: pos: origin:#SCREEN bgcolor: fgcolor: bitmap: style: modal: escapeEnable:false escapekey:true lockHeight:false lockWidth:false parent: =
 
-	function create width: height: pos: origin:#SCREEN bgcolor: fgcolor: bitmap: bmpstyle:#bmp_tile  style: modal: escapeEnable:false escapekey:true lockHeight:false lockWidth:true parent: =
-
+	function create \
+			width:	\
+		height:	\
+		pos:	\
+		origin:#SCREEN bgcolor:	\
+		fgcolor:	\
+		bitmap:	\
+		bmpstyle:#bmp_tile  style:	\
+		modal:	\
+		escapeEnable:false	\
+		escapekey:true	\
+		lockHeight:false	\
+		lockWidth:true	\
+		parent: =
 	(
 		--print("ContentLoader_v.create()")
 
-		Dialog.create width:width height:height pos:pos menu:menu bgcolor:bgcolor fgcolor:fgcolor bitmap:bitmap bmpstyle:bmpstyle style:style modal:modal escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent
-		--format "Dialog:	% \n" Dialog
-
-		--Dialog.create()
+		Dialog.create \
+			width:width 	\
+			height:height 	\
+			pos:pos 	\
+			menu:menu 	\
+			bgcolor:bgcolor 	\
+			fgcolor:fgcolor 	\
+			bitmap:bitmap 	\
+			bmpstyle:bmpstyle 	\
+			style:style 	\
+			modal:modal 	\
+			escapeEnable:escapeEnable 	\
+			lockHeight:lockHeight 	\
+			lockWidth:lockWidth 	\
+			parent:parent
 
 		Dialog --return
 	),
@@ -59,7 +84,7 @@ struct ContentLoader_v
 
 		ContentRollout =  ContentRollout_v path:path
 
-		Dialog	= Dialog_v title:ContentRollout.title ini:ini
+		Dialog	= Dialog_v title:ContentRollout.title ini:ini min_size:min_size max_size:max_size
 
 		for Subrollouts_or_Controls in ContentRollout.Subrollouts_and_Controls do
 			Subrollouts_or_Controls.addToUi Dialog
