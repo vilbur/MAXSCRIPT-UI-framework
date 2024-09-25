@@ -119,23 +119,6 @@ struct ContentRollout_v
 		getFilenameType path == "" --return
 	),
 
-
-	/** Set rollout title by folder name E.g.: "1-Rollout_A" >> "Rollout A"
-	  *
-	  *  Remove numbers, empty space and characters like "-_" from start of string E.G.: "1_Filename" >> "Filename"
-	  *
-	  * @return	string	Name of groupbox
-	 */
-	function _getControlsGroupName =
-	(
-	),
-
-	/** Set rollout title by folder title E.g.: "Rollout-1" >> "Rollout 1"
-	 */
-	function _setName =
-	(
-	),
-
 	/**
 	/** Set rollout title by folder name E.g.: "1-Rollout_A" >> "Rollout A"
 	  *
@@ -165,7 +148,6 @@ struct ContentRollout_v
 		--format "ini_file	= % \n" ini_file
 		ConstructPropeties test:this
 
-		--this._setName()
 		this._setRolloutTitle()
 
 		PathsLoader = PathsLoader_v path:path
