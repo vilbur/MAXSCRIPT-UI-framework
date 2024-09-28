@@ -188,7 +188,7 @@ struct Controls_v
 	on create do
 	(
 		--print "Controls_v.create()"
-		if this.group != undefined then
-			this.group = this.group
+		--if this.group != undefined then
+			--this.group = this.group
 	)
 )

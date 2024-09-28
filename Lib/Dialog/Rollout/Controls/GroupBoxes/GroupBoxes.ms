@@ -25,6 +25,7 @@ struct GroupBoxes_v
 	function addGroupbox _Controls _Control =
 	(
 		--print ("GroupBoxes_v.addGroupbox() " + _Control.caption)
+		--format "_Control.id: %\n" _Control.id
 		--format "ADD GROUPBOX = % \n" _Control
 		this._setDefaultHeight(_Control)
 
@@ -40,7 +41,6 @@ struct GroupBoxes_v
 		/* IF CONTROL IS IN GROUPBOX */
 		if( (groupbox_caption = _Control.Params.getVal #Groupbox) != undefined ) then
 		(
-			--format "groupbox_caption	= % \n" groupbox_caption
 			_GroupBox = this._createOrGetGroupBoxControl (_Controls) (_Control) (groupbox_caption)
 
 			_Control.param #pos [0, 0] -- move controls aside, so they don`t mess up with layout
@@ -49,7 +49,6 @@ struct GroupBoxes_v
 
 			this._addControlToGroupboxList (_GroupBox.id as name ) (_Control.id as name )
 		)
-		--format "groupbox_caption	= % \n" groupbox_caption
 	),
 
 

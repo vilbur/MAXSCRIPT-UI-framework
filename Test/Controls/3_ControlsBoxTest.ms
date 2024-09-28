@@ -1,34 +1,36 @@
-clearListener()
+clearListener(); print("Cleared in:\n"+getSourceFileName())
 
-filein( getFilenamePath(getSourceFileName()) + "/../../Lib/RolloutCreator/RolloutCreator.ms" )
-filein( getFilenamePath(getSourceFileName()) + "/../../Lib/Ini/Ini.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/../../Lib/Dialog/Dialog.ms" )	--"./../../Lib/Dialog/Dialog.ms"
 
-try( destroyDialog ROLLOUT_test )catch()
+/* DIALOG */
+Dialog 	    = Dialog_v title:"Test"
 
-
-/** DEFINE UI 
- *	
- */
-_RolloutCreator = RolloutCreator_v Ini:(Ini_v())
-_Rollout        = _RolloutCreator.new "Test"
+/* ROLLOUT  */
+_Rollout    = Dialog.Roll "Main Rollout" --height:256
 
 
-/* CONTROLS IN GROUP */ 
-_Controls = _Rollout.Controls group:"Controls A"
-_Button_1 = _Controls.control #button "Button A1"
-_Button_1 = _Controls.control #button "Button A2"
+
+/* CONTROLS WITHOUT GROUP */
+_Controls = _Rollout.Controls()
+_Button_2 = _Controls.control #button "Main Ui Top"
+
+
+/* CONTROLS IN GROUP */
+_Controls = _Rollout.Controls group:"Controls A" offset:[16,0]
+_Button_1 = _Controls.control #button "Button A"
 
 _Controls = _Rollout.Controls group:"Controls B"
-_Button_1 = _Controls.control #button "Button B1"
---_Button_1 = _Controls.control #button "Button B2"
+_Button_1 = _Controls.control #button "Button B"
 
-/* CONTROLS WITHOUT GROUP */ 
+
+/* CONTROLS WITHOUT GROUP */
 _Controls = _Rollout.Controls()
-_Button_2 = _Controls.control #button "Button c1"
+_Button_2 = _Controls.control #button "Main Ui Bottom"
 
-/** CREATE UI 
- *	
+
+
+Subrollouts
+/** CREATE UI
+ *
  */
-_RolloutCreator.createRollout _Rollout
-
-CreateDialog (_RolloutCreator.getDefinition _Rollout) width:420
+Dialog.create width:256
