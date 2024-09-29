@@ -110,11 +110,11 @@ struct ControlEventCreator_v
 		/** Convert each argument to string friendly format
 		  * @return Array of arguemnts
 		  */
-		function convertArgumentsToString arguments =
+		function formatToString arguments =
 		(
 			--format "\n"; print "ControlEventBinder_v.getCallbackParams()"
-			--if classOf arguments != Array then
-			--	arguments = #(arguments)
+			if classOf arguments != Array then
+				arguments = #(arguments)
 
 			for argument in arguments where argument !="" collect
 				case classOf argument of
@@ -168,11 +168,11 @@ struct ControlEventCreator_v
 		--------------------------------------------------------------------------------*/
 		if Event.callback != "" and not callbackHasArguments (Event.callback) then
 		(
-			format "classOf Event.arguments: %\n" (classOf Event.arguments)
+			--format "classOf Event.arguments: %\n" (classOf Event.arguments)
 			/* JOIN ARRAY */
 			if classOf Event.arguments == Array then
 			(
-				arguments = join ( filterString Event.params " ") (convertArgumentsToString(Event.arguments))
+				arguments = join ( filterString Event.params " ") (formatToString(Event.arguments))
 
 				if arguments.count > 0  then
 					Event.callback += joinArgumentsToString (arguments)
@@ -182,7 +182,7 @@ struct ControlEventCreator_v
 			/* ADD STRING */
 			else if Event.params.count > 0 or Event.arguments.count > 0 then
 
-				Event.callback += " " + Event.params + " " + (Event.arguments as string )
+				Event.callback += " " + Event.params + " " + joinArgumentsToString(formatToString (Event.arguments))
 
 			/* ADD DEFAULT BRACKETS */
 			else
