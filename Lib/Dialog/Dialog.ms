@@ -168,15 +168,12 @@ struct Dialog_v
 
 		DIALOG_GLOBAL_DATA[this.id] = DialogGlobalData_v(this.RCI.def)(this)
 
-
-		--format ("\n\nDIALOG \""+title+"\" HAS BEEN CREATED\n\n" )
-		format ("\n\nDIALOG \""+ id as string +"\" HAS BEEN CREATED\n\n" )
-
-		if this.DEBUG then format "Dialog Create % ms\n" ((timestamp()) - timer_create_dialog)
-
 		this._executeAutorunEvents()
 
 		CONTROL_BITMAPS_STORE = #() -- reset buffer array
+
+		format ("\n\nDIALOG \""+ id as string +"\" HAS BEEN CREATED\n\n" )
+		--if this.DEBUG then format "Dialog Create % ms\n" ((timestamp()) - timer_create_dialog)
 	),
 
 	/** Key press

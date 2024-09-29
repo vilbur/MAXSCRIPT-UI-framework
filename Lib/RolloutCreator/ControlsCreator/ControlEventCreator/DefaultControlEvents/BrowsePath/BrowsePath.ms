@@ -60,7 +60,7 @@ struct BrowsePath_v
 
 		this._setDefaultParams()
 
-		Event.callback[#code] = case event_type of
+		Event.callback = case event_type of
 		(
 			#changed:	this._getChangedEvent(tooltip)
 			#entered:	this._getEnteredEvent(tooltip)

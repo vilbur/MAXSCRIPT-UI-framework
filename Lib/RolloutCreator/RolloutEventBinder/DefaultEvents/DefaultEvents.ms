@@ -17,19 +17,45 @@ struct DefaultEvents_v
 	(
 		--format "\n"; print ("DefaultEvents_v.getEvents()" + rollout_id_full as string )
 
+		/** Append event
+		 */
+		function appendEvent type callback =
+		(
+			--format "\n"; print "DefaultEvents_v.appendEvent()"
+			Event =  Event_v type:type
+
+			Event.callback = callback
+
+			append this.Events Event
+		)
+
+
 		/* MOVE CONTROLS TO GROUPBOXES */
-		append Events ( Event_v type:#open	code:("GROUPBOXCREATOR.sortControlsToGroupBoxes(\""+rollout_id_full+"\")") )
+		--appendEvent #OPEN "GROUPBOXCREATOR.sortControlsToGroupBoxes(\""+rollout_id_full+"\")"
+		Event =  Event_v type:#OPEN
+
+		Event.callback = "GROUPBOXCREATOR.sortControlsToGroupBoxes(\""+rollout_id_full+"\")"
+
+		append Events Event
+
 
 		/* HANDLE WITH #RESIZE|#DOCKED|#UNDOCKED events */
-		append Events ( Event_v type:#resized	code:("startResizeEventTimer(#"+rollout_id_full+")( #resized )") )
+		Event =  Event_v type:#RESIZED
 
+		Event.callback = "startResizeEventTimer(#"+rollout_id_full+")( #resized )"
+
+		append Events Event
 
 		/* SAVE DIALOG STATE IF INI FILE EXISTS */
 		if( ini_path != undefined ) then
 		(
 			ini_path	= ( dotNetObject "System.Text.RegularExpressions.Regex" @"[\\/]+" ).Replace ini_path "/"
 
-			append Events ( Event_v type:#okToClose code:("(IniSaver_v ini_file:\""+ini_path+"\").saveRollout(\""+rollout_id_full+"\")") )
+			Event =  Event_v type:#OKTOCLOSE
+
+			Event.callback = "(IniSaver_v ini_file:\""+ini_path+"\").saveRollout(\""+rollout_id_full+"\")"
+
+			append Events Event
 		)
 
 		Events --return

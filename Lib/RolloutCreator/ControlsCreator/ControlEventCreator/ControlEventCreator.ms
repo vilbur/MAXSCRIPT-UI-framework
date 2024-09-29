@@ -31,13 +31,15 @@ struct ControlEventCreator_v
 		 */
 		function getParams Event = if Event != undefined then Event.params else ""
 
+
 		EventFiredCreator = EventFiredCreator_v _RolloutClass:(_Rollout.id as string ) _RolloutControl:( _Rollout.id as string +"."+ _Control.id as string )
+
 
 		for event_type in this.EventTypes.priority where ( event_params = event_types[_Control.type][event_type]) != undefined do
 		(
 			if ( Event = _Control.Events[event_type] ) != undefined then
 			(
-				--Event.params = event_params
+				Event.params = event_params
 
 				this._setArgumentsToCallback(Event)
 
@@ -46,32 +48,37 @@ struct ControlEventCreator_v
 				TooltipCreator.addTooltip(_Control)(event_type)
 			)
 
+
 			Event_default = DefaultControlEvents.getDefaultEvent (_Control) (event_type)
 
 
 			if  Event != undefined or Event_default != undefined then
 			(
 				/* GET NEW EVENT IF ONLY DEAFAULT CALLBACK EXIST */
-				if  Event == undefined then Event = Event_v type:event_type
+				if  Event == undefined then Event = Event_v type:event_type params:event_params
 
-				Event.params = event_params
-
-				/*------ CODE SNIPPETS ------*/
+				/*------ MERGE CALLBACKS CODE ------*/
 				callback = this._mergeCodeOfEvents (event_type) (Event) (Event_default)
 
-
+				/* GET EVENT FIRED */
 				event_fired = EventFiredCreator.getEventFired(event_type)( getParams Event + " " + getParams Event_default )
 
 				free_event_fired = "EventFired = undefined"
 
-				/*------ MERGE FINALCALLABCKCODE ------*/
-				--Event.callback[#code] = callback
-				Event.callback[#code] = "\n" + event_fired + "\n\n" + callback + "\n" + free_event_fired + "\n"
+				/*------ MERGE FINAL CALLABCK ------*/
+				Event.callback = "\n" + event_fired + "\n\n" + callback + "\n" + free_event_fired + "\n"
+
+
+				--format "\n----------------------------------------\n";
+				----format "EVENT:         %\n" Event
+				--format "EVENT.params:    %\n" Event.params
+				--format "EVENT.arguments: %\n" Event.arguments
+				--format "EVENT.callback:  %\n" Event.callback
+
 
 				/* RETURN FINAL EVENT TO CONTROL */
 				_Control.Events[event_type] = Event
 			)
-
 		)
 	),
 
@@ -88,7 +95,7 @@ struct ControlEventCreator_v
 		--format "\n"; print "ControlEventCreator_v._addToAutoRunEvents()"
 		if Event.autorun then
 			if ( control_state = _Control.Params.getVal (#checked) ) != undefined and control_state == true then
-				AUTORUN_EVENTS[ ( _Control.id as string + "_" + Event.type as string  )as name ] = Event.callback[#code]
+				AUTORUN_EVENTS[ ( _Control.id as string + "_" + Event.type as string  )as name ] = Event.callback
 	),
 
 
@@ -103,11 +110,11 @@ struct ControlEventCreator_v
 		/** Convert each argument to string friendly format
 		  * @return Array of arguemnts
 		  */
-		function getCallbackArguments arguments =
+		function convertArgumentsToString arguments =
 		(
 			--format "\n"; print "ControlEventBinder_v.getCallbackParams()"
-			if classOf arguments != Array then
-				arguments = #(arguments)
+			--if classOf arguments != Array then
+			--	arguments = #(arguments)
 
 			for argument in arguments where argument !="" collect
 				case classOf argument of
@@ -121,59 +128,66 @@ struct ControlEventCreator_v
 		  *
 		  * @return string E.G.: "fooCallback" >>> "fooCallback(val)(inspin)(custom_param)"
 		  */
-		function getArgumentsString callback arguments =
+		function joinArgumentsToString arguments =
 		(
-			--format "\n"; print "ControlEventBinder_v.getArgumentsString()"
+			--format "\n"; print "ControlEventBinder_v.joinArgumentsToString()"
 			arguments_string = ""
 
-			params_in_callback =	deleteItem (filterString callback " ()") 1 -- get parameters from string E.G.:  "fooCallback val (inSpin)" >>> #( "val", "inspin" )
+			--params_in_callback =	deleteItem (filterString callback " ()") 1 -- get parameters from string E.G.:  "fooCallback val (inSpin)" >>> #( "val", "inspin" )
 
 			/* ADD PRAM IF IS NOT ADDED E.G.: "fooCallback" >>> "fooCallback val (inSpin)" */
-			for argument in arguments where findItem params_in_callback argument == 0 do
+			--for argument in arguments where findItem params_in_callback argument == 0 do
+			for argument in arguments do
 				arguments_string  += " ("+ argument as string + ")" -- add parameters after callback E.G.: "callbackFn" >>>  "callbackFn inSpin inCancel
 
 			arguments_string --return
 		)
 
-		/** Regex is match
-		  *
-		  * @return boolean
-		  */
-		function _rxIsMatch _string pattern ignore_case:true =
+		/** Callback has arguments
+		 */
+		function callbackHasArguments callback =
 		(
-			RegEx	= ( dotNetClass "System.Text.RegularExpressions.RegEx" )
-
+			--format "\n"; print "ControlEventCreator_v.callbackHasArguments()"
+			RegEx		 = ( dotNetClass "System.Text.RegularExpressions.RegEx" )
 			IgnoreCase = ( dotNetClass "System.Text.RegularExpressions.RegexOptions" ).IgnoreCase
 
-			if ignore_case then RegEx.isMatch _string pattern IgnoreCase else  RegEx.isMatch _string pattern
-		)
-
-		/*------------------------------------------------------------------------------
-			SET ARDUMENTS TO CALLBACK
-		--------------------------------------------------------------------------------*/
-
-		if (callback = Event.callback[#code]) != "" then
-		(
-			--format "CALLBACK:	% \n" callback
-
+			has_space	= "\s"
+			has_name	= "\#"
 			has_bracket	= "\("
 			has_quote	= "\\\""
 			is_macro	= "macros.run"
 
-			pattern = "[" +has_bracket + has_quote + "]|" + is_macro
+			pattern = "[" + has_space + has_bracket + has_quote + has_name + "]|" + is_macro
 
-			--format "TEST:	% \n" (not(_rxIsMatch callback pattern))
+			RegEx.isMatch callback pattern IgnoreCase
+		)
 
-			if not _rxIsMatch (callback) (pattern) then
+
+		/*------------------------------------------------------------------------------
+			SET ARGUMENTS TO CALLBACK
+		--------------------------------------------------------------------------------*/
+		if Event.callback != "" and not callbackHasArguments (Event.callback) then
+		(
+			format "classOf Event.arguments: %\n" (classOf Event.arguments)
+			/* JOIN ARRAY */
+			if classOf Event.arguments == Array then
 			(
-
-				arguments = join ( filterString Event.params " ") (getCallbackArguments(Event.callback[#arguments]))
+				arguments = join ( filterString Event.params " ") (convertArgumentsToString(Event.arguments))
 
 				if arguments.count > 0  then
-					callback += 	getArgumentsString (callback)(arguments)
+					Event.callback += joinArgumentsToString (arguments)
+
 			)
 
-			Event.callback[#code] = callback
+			/* ADD STRING */
+			else if Event.params.count > 0 or Event.arguments.count > 0 then
+
+				Event.callback += " " + Event.params + " " + (Event.arguments as string )
+
+			/* ADD DEFAULT BRACKETS */
+			else
+				Event.callback += "()"
+
 		)
 	),
 
@@ -185,11 +199,11 @@ struct ControlEventCreator_v
 		--format "\n"; print "ControlEventCreator_v._mergeCodeOfEvents()"
 		callback = ""
 
-		if Event_default != undefined and Event_default.callback[#code] != "" then
-			callback += "\n/* ---- DEFAULT CALLBACK ---- */\n" + Event_default.callback[#code]
+		if Event_default != undefined and Event_default.callback != "" then
+			callback += "\n/* ---- DEFAULT CALLBACK ---- */\n" + Event_default.callback
 
-		if Event.callback[#code] != "" then
-			callback +=  "\n\n/* ---- CUSTOM CALLBACK ---- */\n" + Event.callback[#code]
+		if Event.callback != "" then
+			callback +=  "\n\n/* ---- CUSTOM CALLBACK ---- */\n" + Event.callback
 
 		callback --return
 	),

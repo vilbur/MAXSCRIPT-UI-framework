@@ -94,7 +94,7 @@ struct RolloutEventBinder_v
 			--format "\n";	print "RolloutEventBinder_v._addHandler()"
 			--format "event_type:	% \n" event_type
 
-			handler = "on "+(this._Rollout.id)+" "+ event_type as string +" "+this._getParams(event_type)+" do  \n(" +Event.code+ "\n)"
+			handler = "on "+(this._Rollout.id)+" "+ event_type as string +" "+this._getParams(event_type)+" do  \n(" +Event.callback+ "\n)"
 			--format "handler:	% \n" handler
 			this._Rollout.RCI.addText(handler)
 		)

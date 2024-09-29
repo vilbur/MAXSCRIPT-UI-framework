@@ -76,7 +76,7 @@ struct Slider_v
 
 		Event = Event_v type:#BUTTONDOWN
 
-		Event.callback[#code] = changes_var + " = #( "+_Control.id+".value )" -- save current value of slider
+		Event.callback = changes_var + " = #( "+_Control.id+".value )" -- save current value of slider
 
 		Event --return
 	),
@@ -113,13 +113,13 @@ struct Slider_v
 		--if not changed_event_exist then
 			--callback += else_unblock_event
 
-		--Event.callback[#code] += callback
-		Event.callback[#code] = callback
+		--Event.callback += callback
+		Event.callback = callback
 
 
 		/* BLOCK CUSTOM CALLBACK IF CHENGED EVENT IS BLOCKED */
 		--if changed_event_exist then
-			--_Control.Events[#CHANGED].callback[#code]  = "if not "+changed_event_blocked+" then\n(\n\t" + _Control.Events[#CHANGED].callback[#code] + "\n\t" + block_event + "\n)"+ else_unblock_event
+			--_Control.Events[#CHANGED].callback  = "if not "+changed_event_blocked+" then\n(\n\t" + _Control.Events[#CHANGED].callback + "\n\t" + block_event + "\n)"+ else_unblock_event
 
 		Event --return
 	),
@@ -144,9 +144,9 @@ struct Slider_v
 		leftclick_event_exist = _Control.Events[#LEFTCLICK] != undefined
 
 		/* SNIPPETS */
-		 code_leftclick = if not leftclick_event_exist then "" else "\n#LEFTCLICK: (" + _Control.Events[#LEFTCLICK].callback[#CODE]+ ")"
-		 code_slide     = if not slide_event_exist     then "" else "\n#SLIDE: (" + _Control.Events[#SLIDE].callback[#CODE]+ ")"
-		 --code_change    = if not changed_event_exist   then "" else"\n#CHANGED: (" + _Control.Events[#CHANGED].callback[#CODE]+ ")"
+		 code_leftclick = if not leftclick_event_exist then "" else "\n#LEFTCLICK: (" + _Control.Events[#LEFTCLICK].callback+ ")"
+		 code_slide     = if not slide_event_exist     then "" else "\n#SLIDE: (" + _Control.Events[#SLIDE].callback+ ")"
+		 --code_change    = if not changed_event_exist   then "" else"\n#CHANGED: (" + _Control.Events[#CHANGED].callback+ ")"
 
 		--case_leftclick = if not leftclick_event_exist then "" else
 		--"1: #LEFTCLICK	-- buttondown > buttonup
@@ -229,7 +229,7 @@ struct Slider_v
 
 
 		/* SET CALLBACK TO EVENT */
-		Event.callback[#code] = callback
+		Event.callback = callback
 
 		Event --return
 

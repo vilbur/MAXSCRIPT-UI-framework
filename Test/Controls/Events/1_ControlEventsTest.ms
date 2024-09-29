@@ -26,29 +26,29 @@ category:	"_Test"
  */
 function CallbackNoParam =
 (
-	format "Macro:EventFired:	% \n" EventFired.type
+	format "CallbackNoParam EventFired:	% \n" EventFired.type
 )
 
 /** 1 PARAMETER
  */
-function CallbackParam1 val =
+function CallbackParam1 arg_1 =
 (
-	--format "Macro:EventFired:	% \n" EventFired
-	format "Macro:EventFired:	% \n" EventFired.type
+	format "CallbackParam1 EventFired:	% \n" EventFired.type
+	format "arg_1: %\n" arg_1
 )
 
 /** 2 PARAMETERS
  */
 function CallbackParams2 arg_1 arg_2 = (
-	format "CallbackParams2()\narg_1: % \narg_2: % \n" arg_1 arg_2
-	format "Macro:EventFired:	% \n" EventFired
+	format "CallbackParams2 EventFired:	% \n" EventFired
+	format "arg_1: % \narg_2: % \n" arg_1 arg_2
 )
 
 /** 3 PARAMETERS
  */
 function CallbackParams3 arg_1 arg_2 arg_3 = (
-	format "CallbackParams3()\narg_1: %\narg_2: %\narg_3: %\n" arg_1 arg_2 arg_3
-	format "Macro:EventFired:	% \n" EventFired
+	format "CallbackParams3 EventFired:	% \n" EventFired
+	format "arg_1: %\narg_2: %\narg_3: %\n" arg_1 arg_2 arg_3
 )
 
 
@@ -102,66 +102,79 @@ function CallbackParams3 arg_1 arg_2 arg_3 = (
 	DEFINE EVENTS FOR EACH COTNROL TYPE
 
 --------------------------------------------------------------------------------*/
-
-
-/*------ BUTTON ------*/
+--
+--
+--/*------ BUTTON ------*/
 --_Button = _Controls.control #button "Button"
 --_Button.Event #PRESSED	"macros.run @_Test@ @_test_control_callback_macro@" tooltip:"Test Tooltip"
-
--- _Button.Event #PRESSED "CallbackNoParam()"
+--
+--_Button.Event #PRESSED "CallbackNoParam"
+--_Button.Event #RIGHTCLICK "CallbackNoParam()"
 --_Button.Event #PRESSED "CallbackParam1(\"Value in callback\")"
 --_Button.Event #PRESSED "CallbackParam1" params:"Value in pram string"
 --_Button.Event #PRESSED "CallbackParams2" params:#("Value A", "Value B")
 
-/*------ CECKBUTTON ------*/
-
- --CheckButton	= _Controls.control #CHECKBUTTON "CheckButton"
- --CheckButton.Event #CHANGED "CallbackParams2" params:"Value in pram string"
 
 
+/*------ CHECKBUTTON ------*/
+CheckButton = _Controls.control #CHECKBUTTON "CheckButton"
 
-/*------ SPINNER ------*/
- --Spinner	= _Controls.control #SPINNER "Spinner"
- --Spinner.Event #CHANGED "CallbackParams2"
- --Spinner.Event #CHANGED "CallbackParams3()" params:"Value in pram string"
+/* DIFFERNET WAYS HOW TO PASS ARGUMENTS TO CALLBACK */
+--CheckButton.Event #CHANGED "CallbackNoParam()"	-- NO ARGUMENT
+
+--CheckButton.Event #CHANGED "CallbackParam1"	-- DEFAULT ARGUMENT:	CallbackParam1 val
+--CheckButton.Event #CHANGED "CallbackParam1 #MY_CUSTOM_ARGUMENT"	-- CUSTOM ARGUEMNT:	CallbackParam1 custom_val
+
+--CheckButton.Event #CHANGED "CallbackParam2" params:#MY_CUSTOM_ARGUMENT	-- DEFAULT AND CUSTOM:	CallbackParam1 val custom_val
+--CheckButton.Event #CHANGED "CallbackParam2 val #MY_CUSTOM_ARGUMENT"	-- same as above
+CheckButton.Event #CHANGED "CallbackParams3" params:#("Value A", "Value B")
 
 
 
-/*------ EDITTEXT ------*/
+
+--/*------ SPINNER ------*/
+--Spinner	= _Controls.control #SPINNER "Spinner"
+--Spinner.Event #CHANGED "CallbackParams2"
+--Spinner.Event #CHANGED "CallbackParams3()" params:"Value in pram string"
+--
+--
+--
+--/*------ EDITTEXT ------*/
 --_EditText = _Controls.control #EDITTEXT "EditTextControl" across:1 -- #Mode:#getSavePath is default
-
+--
 --_EditText.Event #CHANGED ("CallbackNoParam()")
 --_EditText.Event #ENTERED ("CallbackParam1") -- Called when the user enters text in the edit box and then presses ENTER or TAB to move the cursor out of the field.
 --
 --
-/*------ BROWSEATH ------*/
- --_OpenFileName = _Controls.control #BROWSEPATH "OpenFileName" params:#( #mode,#getOpenFileName, #tooltip, "Test Tooltip" )
+--/*------ BROWSEATH ------*/
+--_OpenFileName = _Controls.control #BROWSEPATH "OpenFileName" params:#( #mode,#getOpenFileName, #tooltip, "Test Tooltip" )
+--
+--_OpenFileName.Event #CHANGED ("CallbackParam1")
+--_OpenFileName.Event #ENTERED ("CallbackParam1") -- Called when the user enters text in the edit box and then presses ENTER or TAB to move the cursor out of the field.
 
--- _OpenFileName.Event #CHANGED ("CallbackParam1")
--- _OpenFileName.Event #ENTERED ("CallbackParam1") -- Called when the user enters text in the edit box and then presses ENTER or TAB to move the cursor out of the field.
 
 /*------ RADIOBUTTONS ------*/
-_RadioButtons = _Controls.control #RADIOBUTTONS "RadioButtons"	items:#("Item 1","Item 2") params:#( #UNSELECT, true )
-format "Unselectable Radio buttons last state: %\n" DIALOG_events_test.CBXBTN_checkbutton_last_state
-
+--_RadioButtons = _Controls.control #RADIOBUTTONS "RadioButtons"	items:#("Item 1","Item 2") params:#( #UNSELECT, true )
+--format "Unselectable Radio buttons last state: %\n" DIALOG_events_test.CBXBTN_checkbutton_last_state
 
 --_RadioButtons.Event #CHANGED ("CallbackParam1")
 
-/*------ SLIDER ------*/
+
+--/*------ SLIDER ------*/
 --_Slider = _Controls.control #SLIDER "Slider" ticks:10 type:#integer across:1
 --_Slider.Event #CHANGED ("CallbackParam1")
-
-
-
-/*------ CHECKBOX ------*/
-/*------ DROPDOWN ------*/
-
-
-/*------ COLORPICKER ------*/
-/*------ BITMAP ------*/
-/*------ BROWSEATH ------*/
-/*------ LISTBOX ------*/
-/*------ MULTILISTBOX ------*/
+--
+--
+--
+--/*------ CHECKBOX ------*/
+--/*------ DROPDOWN ------*/
+--
+--
+--/*------ COLORPICKER ------*/
+--/*------ BITMAP ------*/
+--/*------ BROWSEATH ------*/
+--/*------ LISTBOX ------*/
+--/*------ MULTILISTBOX ------*/
 --_multilistbox =  _Controls.control #MULTILISTBOX "Multilistbox" items:#("Item 1","Item 2", "Item 3")
 --
 --_multilistbox.Event #SELECTIONEND 	("CallbackNoParam()") -- called when select action ends

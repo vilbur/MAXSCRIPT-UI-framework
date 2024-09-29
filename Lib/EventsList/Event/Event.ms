@@ -8,10 +8,15 @@
  */
 struct Event_v
 (
-	type     = #pressed,
-	params	= "",
-	code     = "", -- REMOVE THIS
-	callback = Dictionary #( #code, "" ) #( #arguments, "" ),
+	/* EVENT PROPERTIES */
+	type     = #PRESSED,
+	params	= "", -- E.g.: "val inCancel" -- params used for event definition
+
+	/* CALLBACK PROPERTIES */
+	callback	= "", -- code called when event is fired
+	arguments	= "", -- arguments passed to callback
+
+	/* OTHER PROPERTIES */
 	tooltip	= "", -- tooltip for callback
 	autorun	= false
 )

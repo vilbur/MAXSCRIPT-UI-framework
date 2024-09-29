@@ -50,13 +50,15 @@ struct Control_v
 	  *
 	  *
 	 */
-	function Event type callback params:#() tooltip:"" autorun:false =
+	function Event type callback params:"" tooltip:"" autorun:false =
 	(
 		--print "Control_v.event()"
 		_Event = Event_v type:type tooltip:tooltip autorun:autorun
 
-		_Event.callback[#code]	= callback
-		_Event.callback[#arguments]	= params
+		_Event.callback	= callback
+		_Event.arguments	= params --- NOTICE: "arguments" are "params" FOR FRONT END USER
+
+		--_Event.callback[#arguments]	= params
 
 		--format "_Event:	% \n" _Event
 		this.Events[type] = _Event

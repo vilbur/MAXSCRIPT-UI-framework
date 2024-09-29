@@ -48,10 +48,10 @@ struct ControlEventBinder_v
 		----format "Event.params:	% \n" Event.params
 		--
 		--format "\nEvent.callback[#arguments]:	% \n" Event.callback[#arguments]
-		--format "Event.callback[#code]:	\n\n============================================================\n%\n============================================================\n" Event.callback[#code]
+		--format "Event.callback:	\n\n============================================================\n%\n============================================================\n" Event.callback
 
-		if( Event.callback[#code] != "" ) then
-			_Rollout.RCI.addHandler _Control.id Event.type codeStr:( "("+Event.callback[#code]+")" ) paramStr:(Event.params) filter:on
+		if( Event.callback != "" ) then
+			_Rollout.RCI.addHandler _Control.id Event.type codeStr:( "("+Event.callback+")" ) paramStr:(Event.params) filter:on
 	),
 
 	--/**_type _add event fired
@@ -63,7 +63,7 @@ struct ControlEventBinder_v
 	--	EventFiredCreator = EventFiredCreator_v _RolloutClass:(_Rollout.id as string ) _RolloutControl:( _Rollout.id as string +"."+ _Control.id as string )
 	--
 	--	--for Event_Data in _Control.Events do
-	--		Event.callback[#code]  = (EventFiredCreator.getEventFired(Event)) + "\n\n"+ Event.callback[#code] + ";EventFired = undefined"
+	--		Event.callback  = (EventFiredCreator.getEventFired(Event)) + "\n\n"+ Event.callback + ";EventFired = undefined"
 	--),
 
 	/*------------------------------------------------------------------------------

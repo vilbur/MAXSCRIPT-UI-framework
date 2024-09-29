@@ -64,7 +64,7 @@ struct RadioButtons_v
 
 			callback += "\n\nEventFired.val = val\n"
 			--format "CALLBACK: %\n" CALLBACK
-			Event.callback[#code] = callback
+			Event.callback = callback
 
 			Event --return
 		)
