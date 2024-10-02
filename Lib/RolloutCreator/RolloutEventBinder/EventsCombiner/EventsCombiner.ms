@@ -76,7 +76,7 @@ struct EventsCombiner_v
 			--format "\n-----------------------\n"
 			/* CODE */
 			if Event.callback != "" then
-				Event_combined.callback	+= "\n	"+Event.callback + ";"
+				Event_combined.callback	+= "\n	"+Event.callback
 				--Event_combined.callback	+= Event.callback + ";"
 
 			/* PARAMS */

@@ -65,15 +65,27 @@ struct RolloutCreator_v
 
 		ControlsCreator.moveGrouboxControlsToEnd(_Rollout)
 
-		_Rollout.RCI	= RolloutCreator (_Rollout.id) ( this._getTitleString(_Rollout) )
+		
+		/* PREPARE EVENTS */
+		RolloutEventBinder.setRollout(_Rollout)
 
+		RolloutEventBinder.combineEvents()
+
+		RolloutEventBinder.mutateOpenCloseToRolledUp()
+
+
+
+		/* SET RolloutCreator */
+		_Rollout.RCI	= RolloutCreator (_Rollout.id) ( this._getTitleString(_Rollout) )
 
 		/* EDIT start */
 		_Rollout.RCI.begin()
 
 
+
 		if hasProperty _Rollout #DialogHotkeys and _Rollout.DialogHotkeys.hot_keys.count > 0 then
 			_Rollout.DialogHotkeys.addHotkeyTimer(_Rollout)
+
 
 
 		/* add LOCAL VARIABLES */
@@ -90,13 +102,8 @@ struct RolloutCreator_v
 
 
 		/* add EVENTS */
-		RolloutEventBinder.setRollout(_Rollout)
-
-		RolloutEventBinder.combineEvents()
-
-		RolloutEventBinder.mutateOpenCloseToRolledUp()
-
 		RolloutEventBinder.addHandlers()
+
 		/* EDIT END */
 		--_Rollout.RCI.end() --return
 

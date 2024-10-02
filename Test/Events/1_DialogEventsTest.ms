@@ -56,7 +56,7 @@ function rolloutEventsTest =
 	_Rollouts	 = DialogTest.Rollouts()
 
 	_Rollout    = _Rollouts.Roll "Main Rollout" --height:256
-	
+
 	_Controls   = _Rollout.Controls group:"Rollout Controls"
 
 	_Button      = _Controls.control #button "Rollout Btn" id:#button_3

@@ -110,6 +110,10 @@ struct RolloutEventBinder_v
 
 		if Event_rolledup != undefined or Event_open != undefined or Event_close != undefined then
 		(
+
+			_Rollout.addlocal #rolledup_initilazied false
+
+
 			if Event_rolledup == undefined then
 				Event_rolledup	= Event_v type:#ROLLEDUP
 
@@ -118,6 +122,10 @@ struct RolloutEventBinder_v
 
 			if Event_close != undefined then
 				Event_rolledup.callback += "\n\n	if val == false then " + Event_close.callback
+
+			/* WRAP CALLBACK TO PREVENT FIRE ON ADDING OF SUBROLLOUT --"./_Dev/preventRolledUpEventOnAdding.ms" */
+			Event_rolledup.callback = 	"if rolledup_initilazied == true then\n	(\n\t\t" + Event_rolledup.callback + "\n\t)\n	else\n\t	rolledup_initilazied = true"
+
 
 			--format "EVENT_ROLLEDUP.CALLBACK: %\n" Event_rolledup.callback
 			_Rollout.Events.replace	(Event_rolledup)
