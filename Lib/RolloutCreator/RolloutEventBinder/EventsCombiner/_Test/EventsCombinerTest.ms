@@ -25,7 +25,7 @@ function getEeventList event_class =
 
 for event_class in #(#CUSTOM, #DEFAULT, #POST) do
 (
-	EventsCombiner.events_classes[event_class] = ( getEeventList(event_class) )
+	EventsCombiner.Lists[event_class] = ( getEeventList(event_class) )
 
 	for event_type in event_types do
 	(

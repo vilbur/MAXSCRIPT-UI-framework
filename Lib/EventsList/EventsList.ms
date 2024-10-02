@@ -18,9 +18,10 @@ struct EventsList_v
 	 */
 	function add type callback params:"" tooltip:"" =
 	(
-		--print "ControlEvent_v.add()"
+		--print "EventsList_v.add()"
+		--format "type: %\n" type
 		--format "callback	= % \n" callback
-		append list (Event_v type:type code:callback tooltip:tooltip params:params)
+		append list (Event_v type:type callback:callback tooltip:tooltip arguments:params)
 	),
 
 	/** Get
@@ -50,6 +51,6 @@ struct EventsList_v
 	 */
 	on create do
 	(
-		--print("ControlEvent_v.onCreate()")
+		--print("EventsList_v.onCreate()")
 	)
 )

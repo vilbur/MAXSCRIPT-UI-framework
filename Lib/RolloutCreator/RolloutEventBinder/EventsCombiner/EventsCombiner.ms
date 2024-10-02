@@ -5,7 +5,7 @@
 struct EventsCombiner_v
 (
 
-	events_classes = Dictionary(), --{ keys: #CUSTOM|#DEFAULT|#POST, values:#(EVENTS)  }
+	EventsLists = Dictionary(), --{ keys: #CUSTOM|#DEFAULT|#POST, values:#(EVENTS)  }
 
 	/** Merge callbacks for each class of events
 	  *
@@ -17,24 +17,29 @@ struct EventsCombiner_v
 	(
 		--format "\n";	print ( "EventsCombiner_v.combine() " + event_type as string )
 
-		if event_type != #resized then
+		if event_type != #RESIZED then
 		(
-			Event_combined = (Event_v type:event_type)
+			Events = for key in EventsLists.keys where EventsLists[key]!=undefined and (Event = EventsLists[key].get(event_type))!= undefined collect Event
 
-			for event_class in this.events_classes where (Events = this._getEventsOfType(event_class.key)(event_type)) != undefined do
-				this._mergeEvents (Events) (Event_combined)
 
-			if( Event_combined.callback != "" ) then
-				Event_combined --return
+			if( Events.count > 0 ) then
+			(
+				Event_combined = this._mergeEvents (Events)
+
+				if( Event_combined.callback != "" ) then
+				(
+					if event_type == #okToClose then
+						Event_combined.callback += "\n\n	true -- IMPORTANT - #oktoclose MUST RETURN BOOLEAN"
+
+					Event_combined --return
+				)
+			)
 		)
-		else
-		(
-			/* CUSTOM RESIZE EVENT IS FIRED BY findResizeEventType(), binded is only default */
-			for Event in this.events_classes[#DEFAULTS] where Event.type == #resized do return Event
 
-		)
+		else /* CUSTOM RESIZE EVENT IS FIRED BY findResizeEventType(), binded is only default */
+			this.EventsLists[#DEFAULTS].get(#RESIZED)
 	),
-	--
+
 	--/** Get events
 	-- */
 	--function combineOrGetNewEvent event_type =
@@ -52,36 +57,46 @@ struct EventsCombiner_v
 
 	/** Combine events
 	 */
-	function _mergeEvents Events &Event_combined =
+	function _mergeEvents Events =
 	(
 		--format "\n"; print "EventsCombiner_v._mergeEvents()"
 		--format "Events	= % \n" Events
+		Event_combined = (Event_v type:Events[1].type)
 
-		if( Events.count > 0 ) then
-			for Event in Events do
-			(
-				/* CODE */
-				if Event.callback != "" then
-					Event_combined.callback	+= "\n"+Event.callback + ";"
-					--Event_combined.callback	+= Event.callback + ";"
+		for Event in Events do
+		(
+			--format "\n"; print "EventsCombiner_v._mergeEvent()"
+			--format "Event.callback: %\n" Event.callback
 
-				/* PARAMS */
-				if Event.params != "" then
-					Event_combined.params	+= Event.params + " "
+			--format "Event.type: %\n" Event.type
+			--format "\n-----------------------\n"
+			--format "Event.callback: %\n" Event.callback
+			--format "\n-----------------------\n"
+			--format "Event_combined.callback: %\n" Event_combined.callback
+			--format "\n-----------------------\n"
+			/* CODE */
+			if Event.callback != "" then
+				Event_combined.callback	+= "\n	"+Event.callback + ";"
+				--Event_combined.callback	+= Event.callback + ";"
 
-				/* TOOLTIP */
-				Event_combined.tooltip	+= Event.tooltip
-			)
+			/* PARAMS */
+			if Event.params != "" then
+				Event_combined.params	+= Event.params + " "
+
+			/* TOOLTIP */
+			Event_combined.tooltip	+= Event.tooltip
+		)
+		--format "\n\nEVENT_COMBINED: %\n" Event_combined
 
 		Event_combined --return
 	),
 
 	/** Get event
 	 */
-	function _getEventsOfType event_class event_type =
+	function _getEventsOfType List event_type =
 	(
-		if (Events = this.events_classes[event_class]) != undefined then
-			(for Event in Events where Event.type == event_type collect Event)
+		--if (Events = this.EventsLists[List]) != undefined then
+			(for Event in List.Events where Event.type == event_type collect Event)
 	),
 
 	/**

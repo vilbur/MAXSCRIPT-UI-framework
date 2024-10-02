@@ -19,7 +19,7 @@ struct SubolloutsCreator_v
 	 */
 	function addSubRollouts _Rollout =
 	(
-		--format "\n"; print "SubolloutsCreator_v.addSubRollouts()"
+		format "\n"; print "SubolloutsCreator_v.addSubRollouts()"
 		--print "============================================================="
 		--format "_ROLLOUT:	% \n" _Rollout.id
 
@@ -58,7 +58,9 @@ struct SubolloutsCreator_v
 				/*
 				    FOR FLOATEBLE SUBROLLOUTS diable AddSubRollout below
 				*/
+				print "************************************************************"
 				AddSubRollout SubrolloutsSlot	_Subrollout.RCI.def rolledUp:(this._getRolledUpState(subrollout_id))
+				print "============================================================="
 
 				--format "\n\nAddSubRollout %	%" (Subrollouts.getSlotId()) _Subrollout.id
 				--format "\n\n AddSubRollout  %	%" (Subrollouts.getSlotId()) (_Subrollout.id as string )
@@ -67,6 +69,7 @@ struct SubolloutsCreator_v
 				this.addSubRollouts (_Subrollout)
 			)
 		)
+
 	),
 
 	 /** _create subrollouts

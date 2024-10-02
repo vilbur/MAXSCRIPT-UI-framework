@@ -132,6 +132,14 @@
 			id as string --return
 	),
 
+	/** Is dialog
+	 */
+	function isDialog =
+	(
+		--format "\n"; print ".isDialog()"
+		parent_rollout_id == undefined
+	),
+
 	/*------------------------------------------------------------------------------
 		RENAME METHODS BELOW TO PRIVATE
 	--------------------------------------------------------------------------------*/

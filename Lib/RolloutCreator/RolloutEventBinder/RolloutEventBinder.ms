@@ -57,32 +57,84 @@ struct RolloutEventBinder_v
 
 	--not_native_events	= #( #rolledDown, #docked ),
 
+	/** Set rollout
+	 */
+	function setRollout _Rollout =
+	(
+		--format "\n"; print "RolloutEventBinder_v.setRollout ()"
+		this._Rollout = _Rollout
+	),
+
 	/** Bind events
 	 */
-	function combineEventsAndAddHandlers _Rollout =
+	function combineEvents =
 	(
 		--format "\n\n~~~~~~~~~	Rollout Events:%	~~~~~~~~~\n" _Rollout.id
 
-		this._Rollout = _Rollout
+		if( ini_path != undefined ) then
+		(
+			this._setDefaultEvents()
 
-		this._setDefaultEvents()
-		this._setCustomEvents()  -- NOTE: callback will be fired in reversed order then has been added. Default event goes first
-
-		this._addHandlers()
+			this._setCustomEvents()  -- NOTE: callback will be fired in reversed order then has been added. Default event goes first
+		)
 	),
 
-	private
-
-	/** _bind events
+	/** Add handlers
 	 */
-	function _addHandlers =
+	function addHandlers =
 	(
-		--print "RolloutEventBinder_v._addHandlers()"
-		dialog_or_rollout_event_types = if( this._Rollout.parent_rollout_id == undefined ) then events_dialog else events_rollout
+		--format "\n"; print "RolloutEventBinder_v.addHandlers()"
+		dialog_or_rollout_event_types = if( this._Rollout.isDialog() ) then events_dialog else #( #ROLLEDUP )
+
+		--format "this._Rollout.isDialog(): %\n" (this._Rollout.isDialog())
+		--format "dialog_or_rollout_event_types: %\n" dialog_or_rollout_event_types
 
 		for event_type in dialog_or_rollout_event_types do
 			this._addHandler event_type
 	),
+
+	/** Bind open\close events to rolled up handler
+	  *
+	  * Events #open, #close are bind to #rolledUp handler
+	  */
+	function mutateOpenCloseToRolledUp =
+	(
+		--format "\n";	print "RolloutEventBinder_v._addHandler()"
+
+		--if ( Event_rolledup = _Rollout.Events.get(#ROLLEDUP) ) == undefined then
+
+		Event_rolledup	= _Rollout.Events.get(#ROLLEDUP)
+		Event_open	= _Rollout.Events.get(#OPEN)
+		Event_close	= _Rollout.Events.get(#CLOSE)
+
+
+		if Event_rolledup != undefined or Event_open != undefined or Event_close != undefined then
+		(
+			if Event_rolledup == undefined then
+				Event_rolledup	= Event_v type:#ROLLEDUP
+
+			if Event_open != undefined then
+				Event_rolledup.callback += "\n\n	if val == true then " + Event_open.callback
+
+			if Event_close != undefined then
+				Event_rolledup.callback += "\n\n	if val == false then " + Event_close.callback
+
+			--format "EVENT_ROLLEDUP.CALLBACK: %\n" Event_rolledup.callback
+			_Rollout.Events.replace	(Event_rolledup)
+		)
+
+		----format "EVENT_ROLLEDUP: %\n" Event_rolledup
+		--
+		--
+		----if( (Event_rolledown = EventsCombiner.combine (#rolledDown)) != undefined ) then
+		--	--Event_rolledup.code = ";if( val ) then (" +Event_rolledown.code+ ")else(" +Event_rolledup.code+ ")" --return
+		--
+
+		--Event_rolledup --return
+	),
+
+	private
+
 
 	/** Bind events
 	 */
@@ -92,26 +144,74 @@ struct RolloutEventBinder_v
 		if (Event = EventsCombiner.combine (event_type)) != undefined then
 		(
 			--format "\n";	print "RolloutEventBinder_v._addHandler()"
+			--format "Event.callback: %\n" Event.callback
+			--format "\n";	print "RolloutEventBinder_v._addHandler()"
 			--format "event_type:	% \n" event_type
 
-			handler = "on "+(this._Rollout.id)+" "+ event_type as string +" "+this._getParams(event_type)+" do  \n(" +Event.callback+ "\n)"
-			--format "handler:	% \n" handler
+			handler = "on "+(this._Rollout.id)+" "+ event_type as string + this._getParams(event_type)+" do\n(" +Event.callback+ "\n)"
+			format "HANDLER:	% \n" handler
 			this._Rollout.RCI.addText(handler)
 		)
 	),
 
-	/** _combine events
+	/** Mutate #resized event to works as #resized event as well
+	  *
+	  * Callback from #docked event is bind to #resized handler
+
+
+
+			CURRENTLY UNUSED
+
+
 	 */
-	function _setCustomEvents =
+	function _mutateResizedEventToDocked =
 	(
-		EventsCombiner.events_classes[#CUSTOM] = this._Rollout.Events.list
+		--print "global._mutateResizedEventToDocked()"
+		Event_resized	= EventsCombiner.combineOrGetNewEvent (#resized)
+		--format "Event_resized	= % \n" Event_resized
+
+		if( (Event_docked = EventsCombiner.combine (#docked)) != undefined ) then
+		(
+			prev_state_not_false	= " (DIALOG_PREVIOUS_STATE != false) "
+			current_state_changed	= " (dialog_current_state = try(cui.getDockState "+_Rollout.id+")catch(false)) != DIALOG_PREVIOUS_STATE "
+			current_state_match_cui	= " matchPattern (dialog_current_state as string) pattern:\"cui_*\" "
+
+			----if_resizing_enabled     =	" if(ENABLE_RESIZING != false) then\n" -- this is MUST WRAP ALL STRINGS BELOW IN ()
+			if_docked_event_enabled = " if(EVENT_DOCKED_ENABLED) then "
+
+			re_set_previous_state   	= " DIALOG_PREVIOUS_STATE = dialog_current_state "
+
+			--if( Event_docked != undefined ) then -- on move, if dialog is docked and change its state then call #docked callback
+			Event_resized.code = "if ( "+prev_state_not_false+" and "+current_state_changed+" and "+current_state_match_cui+")
+									then
+										( "+if_docked_event_enabled+" (" +Event_docked.code+ " )  -- Fire #docked event
+											EVENT_DOCKED_ENABLED = false
+										)
+									else "+
+										"(" +Event_resized.code+ ")"+ -- Fire #resized event
+									re_set_previous_state
+		)
+
+		Event_resized
 	),
 
 	/** _combine events
 	 */
 	function _setDefaultEvents =
 	(
-		EventsCombiner.events_classes[#DEFAULTS] = ( (DefaultEvents_v ini_path:ini_path ).getEvents(this._Rollout.getFullId()) )
+		DefaultEvents = DefaultEvents_v ini_path:ini_path
+
+		EventsCombiner.EventsLists[#DEFAULTS] = if _Rollout.parent_rollout_id == undefined then
+			DefaultEvents.getDialogEvents(this._Rollout.id)
+		--else
+			--DefaultEvents.getDialogEvents(this._Rollout.getFullId())
+	),
+
+	/** _combine events
+	 */
+	function _setCustomEvents =
+	(
+		EventsCombiner.EventsLists[#CUSTOM] = this._Rollout.Events
 	),
 
 	/** Get events for dialog rollout or subrollout
@@ -125,7 +225,7 @@ struct RolloutEventBinder_v
 	 */
 	function _getParams event_type =
 	(
-		 if( this._eventHasParameters(event_type) ) then "val" else ""
+		if( this._eventHasParameters(event_type) ) then " val" else ""
 	),
 
 	/** _event has parameters

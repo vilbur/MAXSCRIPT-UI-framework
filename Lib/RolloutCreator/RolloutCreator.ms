@@ -29,7 +29,7 @@ struct RolloutCreator_v
 	--DEBUG = true,
 
 	/* dependency */
-	EventBinder	= RolloutEventBinder_v ini_path:(Ini.getPath()),
+	RolloutEventBinder	= RolloutEventBinder_v ini_path:(Ini.getPath()),
 
 	ControlsCreator,
 	SubolloutsCreator = SubolloutsCreator_v ini_path:(Ini.getPath()),
@@ -86,13 +86,17 @@ struct RolloutCreator_v
 
 		/* add CONTROLS and SUBROLLOUTS SLOTS */
 		this._addControlsAndSubrollouts (_Rollout)
-		if this.DEBUG then format "%._addControlsAndSubrollouts % ms\n" _Rollout.id ((timestamp()) - timer_create_rollout)
+		--if this.DEBUG then format "%._addControlsAndSubrollouts % ms\n" _Rollout.id ((timestamp()) - timer_create_rollout)
 
 
 		/* add EVENTS */
-		if( ini != undefined ) then
-			EventBinder.combineEventsAndAddHandlers(_Rollout)
+		RolloutEventBinder.setRollout(_Rollout)
 
+		RolloutEventBinder.combineEvents()
+
+		RolloutEventBinder.mutateOpenCloseToRolledUp()
+
+		RolloutEventBinder.addHandlers()
 		/* EDIT END */
 		--_Rollout.RCI.end() --return
 

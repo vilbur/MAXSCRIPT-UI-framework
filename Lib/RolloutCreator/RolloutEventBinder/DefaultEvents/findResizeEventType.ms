@@ -56,7 +56,7 @@ function findResizeEventType sender evt =
 
 			/* FIRE CUSTOM EVENT */
 			if ( Event = DataSaved.Dialog.Events.get(event_type) ) != undefined then
-				execute(Event.code)
+				execute(Event.callback)
 
 		)
 	)
