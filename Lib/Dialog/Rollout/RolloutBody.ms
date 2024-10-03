@@ -34,7 +34,7 @@
 		--format "\n"; print "RolloutBody.Roll()"
 		Subrollouts = if (Subrollout_slots = this.getSubrollouts()).count > 0 then Subrollout_slots[1] else this.Rollouts()
 		--format "Subrollouts:	% \n" Subrollouts
-		Subrollouts.Roll title id:id height:height --return
+		Subrollouts.Roll title id:id height:height  --return
 	),
 
 	/** Controls
@@ -54,6 +54,8 @@
 	function Subrollouts slot: width: height: =
 	(
 		--format "\n"; print "RolloutBody.Subrollouts()"
+		--format "this.width: %\n" this.width
+		--format "width:      %\n" width
 		--format "height	= % \n" height
 
 		--local Subrollouts = Subrollouts_v slot:(slot as name ) parent_rollout_id:(this.getFullId()) width:(if width != unsupplied then width else this.width) height:height

@@ -24,6 +24,10 @@ struct ContentLoader_v
 
 	/*  properties */
 	Dialog, -- Dialog_v "./../Dialog/Dialog.ms"
+
+	width  = unsupplied, -- unsupplied for compatibility with CreateDialog()
+	height = unsupplied,
+
 	min_size,
 	max_size,
 
@@ -84,7 +88,7 @@ struct ContentLoader_v
 
 		ContentRollout =  ContentRollout_v path:path
 
-		Dialog	= Dialog_v title:ContentRollout.title ini:ini min_size:min_size max_size:max_size
+		Dialog	= Dialog_v title:ContentRollout.title ini:ini width:width height:height min_size:min_size max_size:max_size
 
 		for Subrollouts_or_Controls in ContentRollout.Subrollouts_and_Controls do
 			Subrollouts_or_Controls.addToUi Dialog

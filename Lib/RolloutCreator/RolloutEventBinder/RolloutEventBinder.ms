@@ -101,18 +101,11 @@ struct RolloutEventBinder_v
 	(
 		--format "\n";	print "RolloutEventBinder_v._addHandler()"
 
-		--if ( Event_rolledup = _Rollout.Events.get(#ROLLEDUP) ) == undefined then
-
-		Event_rolledup	= _Rollout.Events.get(#ROLLEDUP)
-		Event_open	= _Rollout.Events.get(#OPEN)
-		Event_close	= _Rollout.Events.get(#CLOSE)
-
-
-		if Event_rolledup != undefined or Event_open != undefined or Event_close != undefined then
+		if  (Event_rolledup	= _Rollout.Events.get(#ROLLEDUP)) != undefined \
+		or (Event_open   	= _Rollout.Events.get(#OPEN))     != undefined \
+		or (Event_close  	= _Rollout.Events.get(#CLOSE))    != undefined then
 		(
-
 			_Rollout.addlocal #rolledup_initilazied false
-
 
 			if Event_rolledup == undefined then
 				Event_rolledup	= Event_v type:#ROLLEDUP
@@ -130,15 +123,6 @@ struct RolloutEventBinder_v
 			--format "EVENT_ROLLEDUP.CALLBACK: %\n" Event_rolledup.callback
 			_Rollout.Events.replace	(Event_rolledup)
 		)
-
-		----format "EVENT_ROLLEDUP: %\n" Event_rolledup
-		--
-		--
-		----if( (Event_rolledown = EventsCombiner.combine (#rolledDown)) != undefined ) then
-		--	--Event_rolledup.code = ";if( val ) then (" +Event_rolledown.code+ ")else(" +Event_rolledup.code+ ")" --return
-		--
-
-		--Event_rolledup --return
 	),
 
 	private
@@ -157,7 +141,7 @@ struct RolloutEventBinder_v
 			--format "event_type:	% \n" event_type
 
 			handler = "on "+(this._Rollout.id)+" "+ event_type as string + this._getParams(event_type)+" do\n(" +Event.callback+ "\n)"
-			format "HANDLER:	% \n" handler
+			--format "HANDLER:	% \n" handler
 			this._Rollout.RCI.addText(handler)
 		)
 	),

@@ -37,6 +37,7 @@ struct EventsCombiner_v
 		)
 
 		else /* CUSTOM RESIZE EVENT IS FIRED BY findResizeEventType(), binded is only default */
+			if this.EventsLists[#DEFAULTS] != undefined then
 			this.EventsLists[#DEFAULTS].get(#RESIZED)
 	),
 

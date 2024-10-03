@@ -6,6 +6,7 @@ filein( getFilenamePath(getSourceFileName()) + "/RolloutResizer/RolloutResizer.m
  */
 struct Rollout_v
 (
+	rolledup, -- if undefined then ini is used, if ini undefined then subbrollout is open on init
 
 	include "MAXSCRIPT-UI-framework/Lib/Dialog/Rollout/RolloutBody.ms" --"./RolloutBody.ms"
 

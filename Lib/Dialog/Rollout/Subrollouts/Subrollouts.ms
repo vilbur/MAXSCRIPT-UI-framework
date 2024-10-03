@@ -19,11 +19,17 @@ struct Subrollouts_v
 
 	/** Create new Rollout
 	 */
-	function Roll title id: width: height: =
+	function Roll title id: width: height: rolledUp:undefined =
 	(
 		--format "\n"; print "Subrollouts_v.Roll()"
+		--format "this.width: %\n" this.width
+		--format "width:      %\n" width
+
+		if width == unsupplied then
+			width = this.width - 8 -- make rollout wide as is possible
+
 		--local _Rollout = Rollout_v title:title id:id parent_rollout_id:( parent_rollout_id as string +"."+slot as string )
-		local _Rollout = Rollout_v title:title id:id width:(if width != unsupplied then width else this.width) height:height parent_rollout_id:parent_rollout_id
+		local _Rollout = Rollout_v title:title id:id width:width height:height parent_rollout_id:parent_rollout_id rolledUp:rolledUp
 		--format "_Rollout:	% \n" _Rollout
 		append Rollouts _Rollout
 

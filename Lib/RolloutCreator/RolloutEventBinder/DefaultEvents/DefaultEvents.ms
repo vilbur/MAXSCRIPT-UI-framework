@@ -32,32 +32,32 @@ struct DefaultEvents_v
 
 		/* MOVE CONTROLS TO GROUPBOXES */
 		--appendEvent #OPEN "GROUPBOXCREATOR.sortControlsToGroupBoxes(\""+rollout_id_full+"\")"
---		Event =  Event_v type:#OPEN
+		Event =  Event_v type:#OPEN
+
+		Event.callback = "GROUPBOXCREATOR.sortControlsToGroupBoxes(\""+rollout_id_full+"\")"
 --
---		Event.callback = "GROUPBOXCREATOR.sortControlsToGroupBoxes(\""+rollout_id_full+"\")"
-----
---		append EventsList.list Event
+		append EventsList.list Event
 
 
-		--/* HANDLE WITH #RESIZE|#DOCKED|#UNDOCKED events */
-		--Event =  Event_v type:#RESIZED
-		--
-		--Event.callback = "startResizeEventTimer(#"+rollout_id_full+")( #resized )"
-		--
-		--append EventsList.list Event
-		--
-		--
-		--/* SAVE DIALOG STATE IF INI FILE EXISTS */
-		--if( ini_path != undefined ) then
-		--(
-		--	ini_path	= ( dotNetObject "System.Text.RegularExpressions.Regex" @"[\\/]+" ).Replace ini_path "/"
-		--
-		--	Event =  Event_v type:#OKTOCLOSE
-		--
-		--	Event.callback = "(IniSaver_v ini_file:\""+ini_path+"\").saveRollout(\""+rollout_id_full+"\")"
-		--
-		--	append EventsList.list Event
-		--)
+		/* HANDLE WITH #RESIZE|#DOCKED|#UNDOCKED events */
+		Event =  Event_v type:#RESIZED
+
+		Event.callback = "startResizeEventTimer(#"+rollout_id_full+")( #resized )"
+
+		append EventsList.list Event
+
+
+		/* SAVE DIALOG STATE IF INI FILE EXISTS */
+		if( ini_path != undefined ) then
+		(
+			ini_path	= ( dotNetObject "System.Text.RegularExpressions.Regex" @"[\\/]+" ).Replace ini_path "/"
+
+			Event =  Event_v type:#OKTOCLOSE
+
+			Event.callback = "(IniSaver_v ini_file:\""+ini_path+"\").saveRollout(\""+rollout_id_full+"\")"
+
+			append EventsList.list Event
+		)
 
 		EventsList --return
 	),

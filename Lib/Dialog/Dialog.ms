@@ -53,8 +53,6 @@ struct Dialog_v
 
 	/* inherit */
 	/* properties */
-
-
 	min_size,
 	max_size,
 
@@ -128,8 +126,12 @@ struct Dialog_v
 		this._setDialogSizeByIni()
 		this._setWithByMinimalSize()
 		--format "width A: %\n" this.width
-		--width  = this._getSizeOnCreate (#width)  (width)
-		height = this._getSizeOnCreate (#height) (height)
+
+		height = this._getHeightOnCreate(height)
+
+		if classOf width != integer then
+			width = this.width
+
 		--format "width B: %\n" this.width
 		--format "this.style: %\n" this.style
 
@@ -317,10 +319,11 @@ struct Dialog_v
 	/** Set dialog default size
 	  *
 	  */
-	function _setDialogDefaultSize =
+	function _setDialogDefaultWidth =
 	(
-		--format "\n"; print "if._setDialogDefaultSize()"
-		this.width  = 256
+		--format "\n"; print "if._setDialogDefaultWidth()"
+		if classOf this.width != integer then
+			this.width  = 256
 	),
 
 	/** Set minimal size of registered dialog
@@ -373,28 +376,19 @@ struct Dialog_v
 
 	/** Get size on create
 	  */
-	function _getSizeOnCreate size_type val =
+	function _getHeightOnCreate val =
 	(
-		--format "\n"; print "if._getSizeOnCreate()"
+		--format "\n"; print "if._getHeightOnCreate()"
 		--format "size_type:	% \n" size_type
 		--format "val: %\n" val
 		--format "classOf val:	% \n" (classOf val)
 
 		if val == unsupplied then
-		(
-			--format "this.width: %\n" this.width
-
-			getProperty this size_type	-- size set by this.width|this.height or ini value
-
-		)
-
-		--else if val == #AUTO then
-			--val = unsupplied
+			this.height	-- size set by this.width|this.height or ini value
 
 		else if classOf val != integer then
 			case val of
 			(
-
 				#AUTO:	unsupplied	-- size set auto even if ini is exists
 				undefined:	unsupplied	-- size set auto even if ini is exists
 				--unsupplied:	getProperty this size_type	-- size set by this.width|this.height or ini value
@@ -530,6 +524,7 @@ struct Dialog_v
 	on create do
 	(
 		--format "\n"; print "Dialog_v.onCreate()"
+		--format "this.width: %\n" this.width
 		this._checkConstctructProperties #(#title)
 
 		Ini	= Ini_v _path:Ini
@@ -539,7 +534,7 @@ struct Dialog_v
 
 		(IniSaver_v(this.Ini.getPath())).saveRollout(this.id)
 
-		this._setDialogDefaultSize()
+		this._setDialogDefaultWidth()
 		--this._setDialogMinimalSize()
 		--this._setDialogSizeByIni()
 

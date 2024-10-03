@@ -1,13 +1,15 @@
-clearListener()
+clearListener(); print("Cleared in:\n"+getSourceFileName())
 
 filein( getFilenamePath(getSourceFileName()) + "/../../Lib/Dialog/Dialog.ms" ) -- "./../../Lib/Dialog/Dialog.ms"
 
 
 /* DIALOG */
-Dialog 	= Dialog_v title:"Test Dialog"
+--Dialog 	= Dialog_v title:"Test"
+Dialog 	= Dialog_v title:"Test" width:512
+--Dialog 	= Dialog_v title:"Test" ini:(getSourceFileName())
 
-_Controls_Dialog = Dialog.Controls group:"Dialog Controls"
-_Button          = _Controls_Dialog.control #button "Dialog btn" id:#button_3
+-- _Controls_Dialog = Dialog.Controls group:"Dialog Controls"
+-- _Button          = _Controls_Dialog.control #button "Dialog btn" id:#button_3
 
 
 /*------------------------------------------------------------------------------
@@ -17,7 +19,7 @@ _Button          = _Controls_Dialog.control #button "Dialog btn" id:#button_3
 _Rollouts	 = Dialog.Rollouts()
 
 /* ROLLOUT  */
-_Rollout    = _Rollouts.Roll "Main Rollout" --height:256
+_Rollout    = _Rollouts.Roll "Main Rollout" --rolledUp:true --height:256
 
 _Controls   = _Rollout.Controls group:"Rollout Controls"
 
@@ -54,5 +56,5 @@ _Button      = _Controls.control #button "Nested Btn" id:#button_3
 /*------------------------------------------------------------------------------
 	 CREATE DIALOG
 --------------------------------------------------------------------------------*/
---Dialog.create()
-Dialog.create width:256 height:512
+Dialog.create()
+--Dialog.create width:512 height:512

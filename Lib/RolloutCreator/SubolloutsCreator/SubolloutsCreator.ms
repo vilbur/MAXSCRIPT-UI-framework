@@ -10,18 +10,35 @@ struct SubolloutsCreator_v
 
 	slot_height_fix = 8, -- slot is slightly shorter without this compesation
 
+	slot_width_fix = 2, -- make slot wide as possible, remove this value from width of parent rollout
+
+	slot_offset_x = -12,
+
 	/* dependency */
 	/* reference */
 	/* inhered */
 
+	 /** _create subrollouts
+	  */
+	 function addSubrolloutSlot _Rollout Subrollouts =
+	 (
+		--format "\n\n\n\n=====================================	SubolloutsCreator_v.addSubrolloutSlot() %.%	=====================================\n" ( _Rollout.id as string ) ( Subrollouts.slot as string );
+
+		slot_height = (Subrollouts.height + this.slot_height_fix ) as string
+
+		slot_id = Subrollouts.slot as string
+
+		--_Rollout.RCI.addText ("subRollout "+slot_id +" \""+slot_id+"\" height:"+ slot_height )
+		_Rollout.RCI.addText ("subRollout "+slot_id +" \""+slot_id+"\" height:"+ slot_height + " width:" + (Subrollouts.width - slot_width_fix) as string + " offset:["+slot_offset_x as string +", 0]" )
+	 ),
 
 	/** Add sub rollouts
 	 */
 	function addSubRollouts _Rollout =
 	(
-		format "\n"; print "SubolloutsCreator_v.addSubRollouts()"
+		--format "\n"; print "SubolloutsCreator_v.addSubRollouts()"
 		--print "============================================================="
-		format "_ROLLOUT:	% \n" _Rollout.id
+		--format "_ROLLOUT:	% \n" _Rollout.id
 
 		/** Get subrollouts slot
 		 *
@@ -59,7 +76,7 @@ struct SubolloutsCreator_v
 				    FOR FLOATEBLE SUBROLLOUTS diable AddSubRollout below
 				*/
 				--print "************************************************************"
-				AddSubRollout SubrolloutsSlot	_Subrollout.RCI.def rolledUp:(this._getRolledUpState(subrollout_id))
+				AddSubRollout SubrolloutsSlot	_Subrollout.RCI.def rolledUp:(this._getRolledUpState(_Subrollout)(subrollout_id))
 				--print "============================================================="
 
 				--format "\n\nAddSubRollout %	%" (Subrollouts.getSlotId()) _Subrollout.id
@@ -72,35 +89,25 @@ struct SubolloutsCreator_v
 
 	),
 
-	 /** _create subrollouts
-	  */
-	 function addSubrolloutSlot _Rollout Subrollouts =
-	 (
-		--format "\n\n\n\n=====================================	SubolloutsCreator_v.addSubrolloutSlot() %.%	=====================================\n" ( _Rollout.id as string ) ( Subrollouts.slot as string );
-
-		slot_height = (Subrollouts.height + this.slot_height_fix ) as string
-
-		slot_id = Subrollouts.slot as string
-
-		_Rollout.RCI.addText ("subRollout "+slot_id +" \""+slot_id+"\" height:"+ slot_height )
-	 ),
-
 
 	private
 
 
 	/** Get rolled state from ini
 	 */
-	function _getRolledUpState subrollout_id =
+	function _getRolledUpState _Subrollout subrollout_id =
 	(
 		--print "SubolloutsCreator_v._getRolledStateFromIni()"
 
-		rolledup_state = false
-
-		if( ini_path != undefined and (rolledup_state_ini = getINISetting (ini_path) subrollout_id "rolledUp") != "" ) then
+		if ( rolledup_state = _Subrollout.rolledUp ) == undefined \
+		and( ini_path != undefined and (rolledup_state_ini = getINISetting (ini_path) subrollout_id "rolledUp") != "" ) then
 			rolledup_state = execute rolledup_state_ini
 
-		rolledup_state --return
+
+		if rolledup_state != undefined then
+			rolledup_state --return
+		else
+			false --return
 	),
 
 	/** Get order ofsubrollouts
