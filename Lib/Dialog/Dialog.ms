@@ -91,19 +91,14 @@ struct Dialog_v
 	  * IMPORTANT:
 	  *		param #width WORKS AS WIDTH OF DOCKED DIALOG
 	  *
-	  * @param	integer	width of dialog INTEGER: definded width | UNSUPPLIED: width auto or by ini | UNDEFINED: width auto even if ini is defined
-	  * @param	integer|#auto	height
-	  *
-	  * @param	[x,y]|#moue	name	description
-	  * @param	name	origin	#WINDOW|#SCREEN origin of dialog position: Relative to 3Ds Max window|Absolute to screen
-	  *
 	  * TODO add params for max 2022
 	 */
 	function create           \
-		width:	\
-		height:	\
-		pos:	\
-		origin:#SCREEN	\
+		create_dialog:true	\ -- boolean	create_dialog if false, then oly rollout without dialog is created
+		width:	\ -- integer	width of dialog INTEGER: definded width | UNSUPPLIED: width auto or by ini | UNDEFINED: width auto even if ini is defined
+		height:	\ -- integer|#auto	height
+		pos:	\ -- [x,y]|#mouse	position of dialog when created
+		origin:#SCREEN	\ -- #WINDOW|#SCREEN	origin of dialog position: Relative to 3Ds Max window|Absolute to screen
 		bgcolor:	\
 		fgcolor:	\
 		bitmap:	\
@@ -142,39 +137,46 @@ struct Dialog_v
 		--format "onCreate() WIDTH: %\n" width
 		--format "onCreate() HEIGHT: %\n" height
 
-		CreateDialog (this.RCI.def) \
-			width:	width                          	\
-			height:	height                          	\
-			pos:	(this._getPosition(pos)(origin))	\
-			bgcolor:	bgcolor	\
-			fgcolor:	fgcolor	\
-			bitmap:	bitmap	\
-			bmpstyle:	bmpstyle	\
-			style:	(if( style == unsupplied ) then this.style else style)	\
-			modal:	modal	\
-			autoLayoutOnResize:	true	\
-			escapeEnable:	escapeEnable	\
-			lockHeight:	lockHeight	\
-			lockWidth:	lockWidth	\
-			parent:	parent
+		if create_dialog then--
+		(
+			CreateDialog (this.RCI.def) \
+				width:	width                          	\
+				height:	height                          	\
+				pos:	(this._getPosition(pos)(origin))	\
+				bgcolor:	bgcolor	\
+				fgcolor:	fgcolor	\
+				bitmap:	bitmap	\
+				bmpstyle:	bmpstyle	\
+				style:	(if( style == unsupplied ) then this.style else style)	\
+				modal:	modal	\
+				autoLayoutOnResize:	true	\
+				escapeEnable:	escapeEnable	\
+				lockHeight:	lockHeight	\
+				lockWidth:	lockWidth	\
+				parent:	parent
 
 
-		if this.DEBUG then format "CreateDialog % ms\n" ((timestamp()) - timer_create_dialog)
+			if this.DEBUG then format "CreateDialog % ms\n" ((timestamp()) - timer_create_dialog)
 
-		_RolloutCreator.SubolloutsCreator.addSubRollouts (this)
-		if this.DEBUG then format "addSubRollouts % ms\n" ((timestamp()) - timer_create_dialog)
+			_RolloutCreator.SubolloutsCreator.addSubRollouts (this)
+			if this.DEBUG then format "addSubRollouts % ms\n" ((timestamp()) - timer_create_dialog)
 
-		this._setDockState()
+			this._setDockState()
 
-		this.RolloutResizer.fitSlotsToDialog(this.RCI.def)
+			this.RolloutResizer.fitSlotsToDialog(this.RCI.def)
 
-		DIALOG_GLOBAL_DATA[this.id] = DialogGlobalData_v(this.RCI.def)(this)
+			DIALOG_GLOBAL_DATA[this.id] = DialogGlobalData_v(this.RCI.def)(this)
 
-		this._executeAutorunEvents()
+			this._executeAutorunEvents()
 
-		CONTROL_BITMAPS_STORE = #() -- reset buffer array
+			CONTROL_BITMAPS_STORE = #() -- reset buffer array
 
-		format ("\n\nDIALOG \""+ id as string +"\" HAS BEEN CREATED\n\n" )
+			format ("\n\nDIALOG \""+ id as string +"\" HAS BEEN CREATED\n\n" )
+		)
+		else
+			format ("\n\nROLLOUT \""+ id as string +"\" HAS BEEN CREATED\n\n" )
+
+
 		--if this.DEBUG then format "Dialog Create % ms\n" ((timestamp()) - timer_create_dialog)
 	),
 
