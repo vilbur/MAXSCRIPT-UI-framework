@@ -17,6 +17,10 @@ struct Subrollouts_v
 
 	Rollouts	= #(),
 
+	/* developent */
+	DEBUG = false,
+	--DEBUG = true,
+
 	/** Create new Rollout
 	 */
 	function Roll title id: width: height: rolledUp:undefined =
@@ -26,10 +30,10 @@ struct Subrollouts_v
 		--format "width:      %\n" width
 
 		if width == unsupplied then
-			width = this.width - 8 -- make rollout wide as is possible
+			width = this.width - 4 -- make rollout wide as is possible
 
 		--local _Rollout = Rollout_v title:title id:id parent_rollout_id:( parent_rollout_id as string +"."+slot as string )
-		local _Rollout = Rollout_v title:title id:id width:width height:height parent_rollout_id:parent_rollout_id rolledUp:rolledUp
+		local _Rollout = Rollout_v title:title id:id width:width height:height parent_rollout_id:parent_rollout_id rolledUp:rolledUp DEBUG:DEBUG
 		--format "_Rollout:	% \n" _Rollout
 		append Rollouts _Rollout
 

@@ -43,11 +43,8 @@ struct Dialog_v
 	/* construct */
 	Ini,
 
-	/* developent */
-	DEBUG = false,
-	--DEBUG = true,
-
 	/* dependency */
+	_RolloutCreator,
 	DialogHotkeys,
 	--Menu	= DialogMenu_v Dialog:this,
 
@@ -83,8 +80,6 @@ struct Dialog_v
 		--#cui_dock_bottom,	-- Can dock to the bottom
 		--#cui_max_sized,	-- When this flag is specified, docking the dialogbar on the top causes the dialogbar to expand to the full window width, docked to bottom it expands to full window width minus command panel width.
 	),
-
-
 
 	/** Create dialog
 	  *
@@ -126,11 +121,13 @@ struct Dialog_v
 
 		if classOf width != integer then
 			width = this.width
+		--else
+			--this.width = width
 
 		--format "width B: %\n" this.width
 		--format "this.style: %\n" this.style
 
-		_RolloutCreator = RolloutCreator_v Ini:Ini
+		_RolloutCreator = RolloutCreator_v Ini:Ini DEBUG:DEBUG
 
 		_RolloutCreator.createRollout (this) width:width -- create nested rollouts
 
@@ -178,6 +175,20 @@ struct Dialog_v
 
 
 		--if this.DEBUG then format "Dialog Create % ms\n" ((timestamp()) - timer_create_dialog)
+	),
+
+	/** Create rollout
+	 */
+	function createRollout _Rollout =
+	(
+		format "\n"; print "Dialog_v.createRollout()"
+
+		--_RolloutCreator.createRollout (_Rollout)
+
+		--_RolloutCreator = RolloutCreator_v Ini:Ini DEBUG:DEBUG
+
+		_RolloutCreator.createRollout (_Rollout) width:width -- create nested rollouts
+
 	),
 
 	/** Key press

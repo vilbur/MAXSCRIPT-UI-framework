@@ -34,8 +34,8 @@ struct ControlCreator_v
 	 */
 	function addControls _Controls =
 	(
-		--format "\n\n-------------- Controls group:% --------------\n" _Controls.group
-		--format "_Controls.list.count	= % \n" _Controls.list.count
+		if DEBUG then format "\n\n-------------- Controls group:% --------------\n" _Controls.group
+		if DEBUG then format "_Controls.list.count	= % \n" _Controls.list.count
 
 		if _Controls.list.count == 0 then
 			return false
@@ -51,6 +51,7 @@ struct ControlCreator_v
 
 		for _Control in _Controls.list do
 		(
+			format "_CONTROL: %\n" _Control
 			ParamsCreator.mergeParams(_Control)
 			--format "_Control.Params	= % \n" _Control.Params
 			ControlValue.setControlValue (_Control) (_Rollout.id)
@@ -76,6 +77,10 @@ struct ControlCreator_v
 
 		/* add HANDLERS */
 		this._addHandlersToRollout()
+
+		
+		for i = _Controls.list.count to 1 by -1  where matchPattern  _Controls.list[i].id pattern:("fake*") do
+			deleteItem  _Controls.list i
 	),
 
 	/** Controls to groupbox will be rendered as last

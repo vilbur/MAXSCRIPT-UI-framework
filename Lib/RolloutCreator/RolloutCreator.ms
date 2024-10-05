@@ -22,20 +22,22 @@ struct RolloutCreator_v
 	/* construct option */
 	Ini,
 
-	/* properties */
-	closed_rollout_bar_height = 24,
-
+	/* developent */
 	DEBUG = false,
 	--DEBUG = true,
+
+	/* properties */
+	closed_rollout_bar_height = 24,
 
 	/* dependency */
 	RolloutEventBinder	= RolloutEventBinder_v ini_path:(Ini.getPath()),
 
 	ControlsCreator,
-	SubolloutsCreator = SubolloutsCreator_v ini_path:(Ini.getPath()),
+	SubolloutsCreator = SubolloutsCreator_v ini_path:(Ini.getPath()) DEBUG:DEBUG,
 
 	/* store */
 	subrollouts_heights	= Dictionary(),
+
 
 	/** Create dialog
 	  *
@@ -43,7 +45,7 @@ struct RolloutCreator_v
 	 */
 	function createRollout _Rollout width: =
 	(
-		--format "\n\n-------------------------------------	RolloutCreator_v.createRollout() id:#%	-------------------------------------\n"  ( _Rollout.id as string );
+		 if DEBUG then format "\n\n-------------------------------------	RolloutCreator_v.createRollout() id:#%	-------------------------------------\n"  ( _Rollout.id as string );
 		--format "_ROLLOUT: %\n" _Rollout.title
 		--format "_ROLLOUT: %:	% \n" _Rollout.title _Rollout
 		--format "WIDTH: %\n" width
@@ -57,7 +59,7 @@ struct RolloutCreator_v
 		this._createSubrollouts(_Rollout)
 		if this.DEBUG then format "RolloutCreator._createSubrollouts % ms\n" ((timestamp()) - timer_create_rollout)
 
-		ControlsCreator	= ControlCreator_v _Rollout:_Rollout Ini:Ini -- MUST BE AFTER SUBROLLOUT ARE CREATED
+		ControlsCreator	= ControlCreator_v _Rollout:_Rollout Ini:Ini DEBUG:DEBUG -- MUST BE AFTER SUBROLLOUT ARE CREATED
 
 		if _Rollout.width == unsupplied and width != unsupplied then
 			_Rollout.width = width
@@ -65,7 +67,7 @@ struct RolloutCreator_v
 
 		ControlsCreator.moveGrouboxControlsToEnd(_Rollout)
 
-		
+
 		/* PREPARE EVENTS */
 		RolloutEventBinder.setRollout(_Rollout)
 

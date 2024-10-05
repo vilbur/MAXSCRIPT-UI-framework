@@ -27,6 +27,10 @@
 	/* inhered */
 	--Layout,
 
+	/* developent */
+	DEBUG = false,
+	--DEBUG = true,
+
 	/** Wrapper to create new rollout in first slot
 	 */
 	function Roll title id: height: =
@@ -59,7 +63,7 @@
 		--format "height	= % \n" height
 
 		--local Subrollouts = Subrollouts_v slot:(slot as name ) parent_rollout_id:(this.getFullId()) width:(if width != unsupplied then width else this.width) height:height
-		local Subrollouts = Subrollouts_v slot:slot parent_rollout_id:(this.id) width:(if width != unsupplied then width else this.width) height:height
+		local Subrollouts = Subrollouts_v slot:slot parent_rollout_id:(this.id) width:(if width != unsupplied then width else this.width) height:height DEBUG:DEBUG
 
 		append _Controls Subrollouts
 

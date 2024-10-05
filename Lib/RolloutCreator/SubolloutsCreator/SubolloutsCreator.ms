@@ -14,6 +14,8 @@ struct SubolloutsCreator_v
 
 	slot_offset_x = -12,
 
+	DEBUG = false,
+
 	/* dependency */
 	/* reference */
 	/* inhered */
@@ -22,7 +24,8 @@ struct SubolloutsCreator_v
 	  */
 	 function addSubrolloutSlot _Rollout Subrollouts =
 	 (
-		--format "\n\n\n\n=====================================	SubolloutsCreator_v.addSubrolloutSlot() %.%	=====================================\n" ( _Rollout.id as string ) ( Subrollouts.slot as string );
+
+		if DEBUG then format "\n\n===================================== SubolloutsCreator_v.addSubrolloutSlot() %.% =====================================\n\n" ( _Rollout.id as string ) ( Subrollouts.slot as string );
 
 		slot_height = (Subrollouts.height + this.slot_height_fix ) as string
 
