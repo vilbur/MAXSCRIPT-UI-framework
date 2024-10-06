@@ -30,6 +30,8 @@ struct ControlCreator_v
 	ControlEventCreator	= ControlEventCreator_v _Rollout:_Rollout, 	-- "./ControlEventCreator/ControlEventCreator.ms"
 	ControlEventBinder	= ControlEventBinder_v  _Rollout:_Rollout, -- "./ControlEventBinder/ControlEventBinder.ms"
 
+	AcrossParameterModifier = AcrossParameterModifier_v(),
+
 	/** Add controls to rollout
 	 */
 	function addControls _Controls =
@@ -64,7 +66,7 @@ struct ControlCreator_v
 
 		/* modify ACROSS PARAMETER */
 		if not this.isGroupboxControls() then
-			(AcrossParameterModifier_v()).addFakeControls(this._Controls)
+			AcrossParameterModifier.addFakeControls(this._Controls)
 
 		/* add LOCAL VARIABLES */
 		this._addLocalVariablesToRollout()
@@ -78,9 +80,9 @@ struct ControlCreator_v
 		/* add HANDLERS */
 		this._addHandlersToRollout()
 
-		
-		for i = _Controls.list.count to 1 by -1  where matchPattern  _Controls.list[i].id pattern:("fake*") do
-			deleteItem  _Controls.list i
+		/* REMOVE FAKE CONTROLS -- it allows to add controls when dialog exists */
+		if not this.isGroupboxControls() then
+			AcrossParameterModifier.removeFakeControls(this._Controls)
 	),
 
 	/** Controls to groupbox will be rendered as last

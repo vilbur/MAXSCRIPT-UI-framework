@@ -67,10 +67,12 @@ Dialog.create height:512
 
 _Button_added      = _Controls.control #button "Rollout Btn Added" across:2
 
-RemoveSubRollout DIALOG_test.Subrollouts	ROLLOUT_main_rollout
 
-clearListener(); print("Cleared in:\n"+getSourceFileName())
+Dialog.addSubRollout(_Rollout)
 
-Dialog.createRollout(_Rollout)
-
-AddSubRollout DIALOG_test.Subrollouts	ROLLOUT_main_rollout
+--RemoveSubRollout DIALOG_test.Subrollouts	ROLLOUT_main_rollout
+--
+--
+--Dialog.createRollout(_Rollout)
+--
+--AddSubRollout DIALOG_test.Subrollouts	ROLLOUT_main_rollout

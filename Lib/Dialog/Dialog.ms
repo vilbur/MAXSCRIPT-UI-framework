@@ -191,6 +191,34 @@ struct Dialog_v
 
 	),
 
+	/** Add rollout
+	 */
+	function addSubRollout _Rollout =
+	(
+		--format "\n"; print "if.addRollout()"
+		/** Join array to string
+		 */
+		function arrayToString arr delimeter = ( _string = ""; for item in arr do _string += item as string  + delimeter; substring _string 1 (_string.count-delimeter.count))
+
+		id_split	= filterString (_Rollout.getFullId()) "."
+
+		deleteItem id_split id_split.count
+
+		slot_id = arrayToString id_split "."
+
+
+		--RemoveSubRollout DIALOG_test.Subrollouts	ROLLOUT_main_rollout
+
+		execute ("RemoveSubRollout "+ slot_id + " " + _Rollout.id )
+
+		this.createRollout(_Rollout)
+
+		execute ("AddSubRollout "+ slot_id + " " + _Rollout.id )
+		--AddSubRollout DIALOG_test.Subrollouts	ROLLOUT_main_rollout
+
+
+	),
+
 	/** Key press
 	 */
 	function hotKey hot_keys callback =
