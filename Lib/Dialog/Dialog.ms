@@ -213,7 +213,6 @@ struct Dialog_v
 		(
 			/* GET SUBROLLOUTS AFTER GIVEN ROLLOUT */
 			for i = rollout_index to _subrollouts.count do
-			--for i = _subrollouts.count to rollout_index - 1 by -1 do
 				append temporary_removed_rollouts _subrollouts[i].name
 
 			/* REMOVE ROLLOUTS */

@@ -40,7 +40,8 @@ _Rollouts[2].title += " - REFRESHED"
 
 _Controls   = _Rollouts[2].Controls group:"Rollout Controls"
 
-_Button      = _Controls.control #button "Rollout Btn" across:2
+for i = 1 to count = 3 do
+	_Button = _Controls.control #BUTTON ("Rollout Btn" + i as string) across:count
 
 
 /*------------------------------------------------------------------------------
