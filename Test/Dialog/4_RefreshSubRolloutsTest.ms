@@ -3,59 +3,27 @@ clearListener(); print("Cleared in:\n"+getSourceFileName())
 filein( getFilenamePath(getSourceFileName()) + "/../../Lib/Dialog/Dialog.ms" ) -- "./../../Lib/Dialog/Dialog.ms"
 
 /* PRINT LOG */
---DEBUG = false
-DEBUG = true
+DEBUG = false
+--DEBUG = true
 
 /* DIALOG */
---Dialog 	= Dialog_v title:"Test"
 Dialog 	= Dialog_v title:"Test" width:320 DEBUG:DEBUG
---Dialog 	= Dialog_v title:"Test" ini:(getSourceFileName())
-
- --_Controls_Dialog = Dialog.Controls group:"Dialog Controls"
- --_Button          = _Controls_Dialog.control #button "Dialog btn"
- --
-
 
 /*------------------------------------------------------------------------------
 	ROLLOUTS
 --------------------------------------------------------------------------------*/
 
-_Rollouts	 = Dialog.Rollouts()
+_Rollouts = #()
 
-/* ROLLOUT  */
-_Rollout    = _Rollouts.Roll "Main Rollout" --rolledUp:true --height:256
+_SubRollouts	 = Dialog.Rollouts()
 
-_Controls   = _Rollout.Controls group:"Rollout Controls"
+for i = 1 to 3 do
+(
+	/* ROLLOUT  */
+	_SubRollout    =_SubRollouts.Roll ( "Rollout "+ i as string ) --rolledUp:true --height:256
 
-_Button      = _Controls.control #button "Rollout Btn" across:2
---_Button_added      = _Controls.control #button "Rollout Btn Added" across:2
-
-
-/*------------------------------------------------------------------------------
-	SUBROLLOUTS
-------------------------------------------------------------------------------*/
---_SubRollouts	 = _Rollout.Rollouts()
---
---/* SUBROLLOUT  */
---_SubRollout    = _SubRollouts.Roll "Sub Rollout"
---
---_Controls   = _SubRollout.Controls group:"SubRollout Controls"
---
---_Button      = _Controls.control #button "Subrollout Btn"
-
-
---/*------------------------------------------------------------------------------
---	NESTED SUBROLLOUTS
---------------------------------------------------------------------------------*/
---_NestedSubRollouts	 = _SubRollout.Rollouts()
---
---/* NESTED SUBROLLOUT  */
---_NestedSubRollout    = _NestedSubRollouts.Roll "Nested Sub Rollout"
---
---_Controls   = _NestedSubRollout.Controls group:"Nested SubRollout Controls"
---
---_Button      = _Controls.control #button "Nested Btn"
---
+	append _Rollouts _SubRollout
+)
 
 
 /*------------------------------------------------------------------------------
@@ -65,14 +33,17 @@ _Button      = _Controls.control #button "Rollout Btn" across:2
 Dialog.create height:512
 
 
-_Button_added      = _Controls.control #button "Rollout Btn Added" across:2
+/*------------------------------------------------------------------------------
+	MODIFY ROLLOUT
+--------------------------------------------------------------------------------*/
+_Rollouts[2].title += " - REFRESHED"
+
+_Controls   = _Rollouts[2].Controls group:"Rollout Controls"
+
+_Button      = _Controls.control #button "Rollout Btn" across:2
 
 
-Dialog.addSubRollout(_Rollout)
-
---RemoveSubRollout DIALOG_test.Subrollouts	ROLLOUT_main_rollout
---
---
---Dialog.createRollout(_Rollout)
---
---AddSubRollout DIALOG_test.Subrollouts	ROLLOUT_main_rollout
+/*------------------------------------------------------------------------------
+	REFRESH ROLLOUT
+--------------------------------------------------------------------------------*/
+Dialog.updateRollout(_Rollouts[2])

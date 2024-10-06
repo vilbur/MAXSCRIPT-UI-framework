@@ -53,7 +53,7 @@ struct ControlCreator_v
 
 		for _Control in _Controls.list do
 		(
-			format "_CONTROL: %\n" _Control
+			--format "_CONTROL: %\n" _Control
 			ParamsCreator.mergeParams(_Control)
 			--format "_Control.Params	= % \n" _Control.Params
 			ControlValue.setControlValue (_Control) (_Rollout.id)

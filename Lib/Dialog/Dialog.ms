@@ -181,24 +181,22 @@ struct Dialog_v
 	 */
 	function createRollout _Rollout =
 	(
-		format "\n"; print "Dialog_v.createRollout()"
-
-		--_RolloutCreator.createRollout (_Rollout)
-
-		--_RolloutCreator = RolloutCreator_v Ini:Ini DEBUG:DEBUG
-
+		--format "\n"; print "Dialog_v.createRollout()"
 		_RolloutCreator.createRollout (_Rollout) width:width -- create nested rollouts
-
 	),
 
-	/** Add rollout
+	/** Update rollout
 	 */
-	function addSubRollout _Rollout =
+	function updateRollout _Rollout =
 	(
-		--format "\n"; print "if.addRollout()"
+		--format "\n"; print "Dialog_v.addRollout()"
 		/** Join array to string
 		 */
 		function arrayToString arr delimeter = ( _string = ""; for item in arr do _string += item as string  + delimeter; substring _string 1 (_string.count-delimeter.count))
+
+		local rollout_index
+
+		temporary_removed_rollouts = #()
 
 		id_split	= filterString (_Rollout.getFullId()) "."
 
@@ -206,17 +204,30 @@ struct Dialog_v
 
 		slot_id = arrayToString id_split "."
 
+		_subrollouts = execute ( slot_id + ".Rollouts" )
 
-		--RemoveSubRollout DIALOG_test.Subrollouts	ROLLOUT_main_rollout
+		for i = 1 to _subrollouts.count while rollout_index == undefined where _subrollouts[i].name == _Rollout.id as string do rollout_index = i
 
-		execute ("RemoveSubRollout "+ slot_id + " " + _Rollout.id )
+		/* REFRESH ROLLOUT - remove and add rollouts aftter given rollout */
+		if rollout_index != undefined then
+		(
+			/* GET SUBROLLOUTS AFTER GIVEN ROLLOUT */
+			for i = rollout_index to _subrollouts.count do
+			--for i = _subrollouts.count to rollout_index - 1 by -1 do
+				append temporary_removed_rollouts _subrollouts[i].name
 
-		this.createRollout(_Rollout)
+			/* REMOVE ROLLOUTS */
+			for rollout_id in temporary_removed_rollouts do
+				execute ("RemoveSubRollout "+ slot_id + " " + rollout_id )
 
-		execute ("AddSubRollout "+ slot_id + " " + _Rollout.id )
-		--AddSubRollout DIALOG_test.Subrollouts	ROLLOUT_main_rollout
+			/* CREATE ROLLOUT */
+			this.createRollout(_Rollout)
 
+			/* ADD ROLLOUTS */
+			for rollout_id in temporary_removed_rollouts do
+				execute ("AddSubRollout "+ slot_id + " " + rollout_id )
 
+		)
 	),
 
 	/** Key press
