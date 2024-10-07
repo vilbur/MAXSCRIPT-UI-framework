@@ -16,72 +16,72 @@ Dialog 	    = Dialog_v title:"Test"	--WITHOUT INI FILE
 _Controls   = Dialog.Controls()
 
 /*------ GROUPBOX ------*/
---_Controls.control #Groupbox "Groupbox Test" height:64
---_Controls.control #button "Button in Groupbox" params:#(#groupbox, "Groupbox Test")
---
---
---_Controls.control #Groupbox "[Groupbox Hidden Label]" height:64
---_Controls.control #button "Group Box without Label" params:#(#groupbox, "[Groupbox Hidden Label]") width:128 offset:[-32,0]
+_Controls.control #Groupbox "Groupbox Test" height:64
+_Controls.control #button "Button in Groupbox" params:#(#groupbox, "Groupbox Test")
+
+
+_Controls.control #Groupbox "[Groupbox Hidden Label]" height:64
+_Controls.control #button "Group Box without Label" params:#(#groupbox, "[Groupbox Hidden Label]") width:128 offset:[-32,0]
 
 
 
 /* ADD CONTROL AS OBJECT */
---_Controls.add (Control_v #button "THIS IS TEST")
+_Controls.add (Control_v #button "By struct")
 
 
 /*------ BUTTON ------*/
---_Controls.control #BUTTON "Button" id:#button_1
---_Controls.control #BUTTON "Button ☑✅✓" id:#button_1
+_Controls.control #BUTTON "Button" id:#button_1
+_Controls.control #BUTTON "Button ☑✅✓" id:#button_2
 
 
 /*------ CECKBUTTON ------*/
---_Controls.control #CHECKBUTTON "checkbutton"
+_Controls.control #CHECKBUTTON "checkbutton"
 
 
 /*------ CHECKBOX ------*/
---_Controls.control #CHECKBOX "Checkbox"
+_Controls.control #CHECKBOX "Checkbox"
 
 
 /*------ RADIOBUTTONS ------*/
---_Controls.control #radioButtons "RadioButtons" items:#("Item 1","Item 2") columns:2
---_Controls.control #RADIOBUTTONS "RadioButtons" items:#("Item 1","Item 2") params:#( #UNSELECT, true ) default:2
+_Controls.control #radioButtons "RadioButtons" items:#("Item 1","Item 2") columns:2
+--_Controls.control #RADIOBUTTONS "RadioButtons 2" items:#("Item 1","Item 2") params:#( #UNSELECT, true ) default:2
 
 
 /*------ DROPDOWN ------*/
---_Controls.control #DROPDOWNLIST "Dropdownlist"
+_Controls.control #DROPDOWNLIST "Dropdownlist"
 
 
 /*------ EDITTEXT ------*/
---_Controls.control #EDITTEXT "Edittext"
+_Controls.control #EDITTEXT "Edittext"
 
 
 /*------ SLIDER ------*/
---_Slider = _Controls.control #SLIDER "Slider" ticks:3 width:256 range:[0,50,0] ticks:5 type:#integer
+_Slider = _Controls.control #SLIDER "Slider" ticks:3 width:256 range:[0,50,0] ticks:5 type:#integer
 
 /*------ SPINNER ------*/
---_Controls.control #SPINNER "Spinner"
---_Controls.control #SPINNER "Spinner" width:96 scale:0.01 range:[0,100,0.01]
+_Controls.control #SPINNER "Spinner"
+--_Controls.control #SPINNER "Spinner 2" width:96 scale:0.01 range:[0,100,0.01]
 
 
 /*------ LISTBOX ------*/
 /*------ MULTILISTBOX ------*/
---_multilistbox =  _Controls.control #MULTILISTBOX "Multilistbox" items:#("Item 1","Item 2", "It/*e*/m 3")
+_multilistbox =  _Controls.control #MULTILISTBOX "Multilistbox" items:#("Item 1","Item 2", "It/*e*/m 3")
 
 
 /*------ BROWSEATH ------*/
---_Controls.control #BROWSEPATH "browsePathTest"
+_Controls.control #BROWSEPATH "browsePathTest"
 
 
 /*------ COLORPICKER ------*/
--- _Controls.control #COLORPICKER "ColorPicker A" value: [ 64, 128, 0 ]	across:1
--- _Controls.control #COLORPICKER "ColorPicker B"  params:#(#color, ( color 255 0 128 ))	across:1
--- _Controls.control #COLORPICKER "ColorPicker C"  params:#(#color, [0,128,0 ] )	across:1
+_Controls.control #COLORPICKER "ColorPicker A" value: [ 64, 128, 0 ]	across:1
+_Controls.control #COLORPICKER "ColorPicker B"  params:#(#color, ( color 255 0 128 ))	across:1
+_Controls.control #COLORPICKER "ColorPicker C"  params:#(#color, [0,128,0 ] )	across:1
 
-/*------ BITMAP ------*/
+--/*------ BITMAP ------*/
 --_Controls.Control #BITMAP "_bitmap_test" params:#(#bitmap, "(bitmap 50 50 color:green)" )
 --_Controls.Control #BITMAP "_bitmap_test" params:#(#bitmap, (bitmap 50 50 color:orange) )
 --_Controls.Control #BITMAP "_bitmap_test" value: (bitmap 50 50 color:blue)
-
+--
 
 
 

@@ -100,7 +100,7 @@ struct RolloutCreator_v
 
 		/* add CONTROLS and SUBROLLOUTS SLOTS */
 		this._addControlsAndSubrollouts (_Rollout)
-		--if this.DEBUG then format "%._addControlsAndSubrollouts % ms\n" _Rollout.id ((timestamp()) - timer_create_rollout)
+		if this.DEBUG then format "%._addControlsAndSubrollouts % ms\n" _Rollout.id ((timestamp()) - timer_create_rollout)
 
 
 		/* add EVENTS */
@@ -232,8 +232,7 @@ struct RolloutCreator_v
 	  */
 	 function _addControlsAndSubrollouts _Rollout =
 	 (
-		--format "\n"; print "RolloutCreator_v._createSubrollouts()"
-
+		--format "\n"; print "RolloutCreator_v._addControlsAndSubrollouts()"
 		for Controls_or_Subrollouts in _Rollout._Controls do
 			if( this._is(Controls_or_Subrollouts)("Controls") ) then
 				ControlsCreator.addControls(Controls_or_Subrollouts)

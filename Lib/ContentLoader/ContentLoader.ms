@@ -34,13 +34,18 @@ struct ContentLoader_v
 	/* dependency */
 	ContentRollout,
 
+	/* developent */
+	DEBUG = false,
+	--DEBUG = true,
+
+
 	/** Create Dialog
 	 */
 	--function create width: height: pos: menu: bgcolor: fgcolor: bitmap: style: modal: escapeEnable: lockHeight: lockWidth: parent: =
 	--function create width: height: pos: origin:#SCREEN bgcolor: fgcolor: bitmap: style: modal: escapeEnable:false escapekey:true lockHeight:false lockWidth:false parent: =
 
 	function create \
-			width:	\
+		width:	\
 		height:	\
 		pos:	\
 		origin:#SCREEN bgcolor:	\
@@ -88,7 +93,7 @@ struct ContentLoader_v
 
 		ContentRollout =  ContentRollout_v path:path
 
-		Dialog	= Dialog_v title:ContentRollout.title ini:ini width:width height:height min_size:min_size max_size:max_size
+		Dialog	= Dialog_v title:ContentRollout.title ini:ini width:width height:height min_size:min_size max_size:max_size DEBUG:DEBUG
 
 		for Subrollouts_or_Controls in ContentRollout.Subrollouts_and_Controls do
 			Subrollouts_or_Controls.addToUi Dialog

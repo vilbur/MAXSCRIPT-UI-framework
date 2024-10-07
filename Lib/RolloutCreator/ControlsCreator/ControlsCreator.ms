@@ -23,7 +23,7 @@ struct ControlCreator_v
 	DEBUG = false,
 
 	/* dependency */
-	_Controls,
+	Controls,
 
 	ControlValue 	= ControlValue_v(),
 	ParamsCreator	= ControlParamsCreator_v(), 	-- "./ControlParamsCreator/ControlParamsCreator.ms"
@@ -36,22 +36,22 @@ struct ControlCreator_v
 	 */
 	function addControls _Controls =
 	(
-		if DEBUG then format "\n\n-------------- Controls group:% --------------\n" _Controls.group
-		if DEBUG then format "_Controls.list.count	= % \n" _Controls.list.count
+		if DEBUG then format "\n\n-------------- ControlCreator_v.addControls() group:% --------------\n" _Controls.group
+		--if DEBUG then format "_Controls.list.count	= % \n" _Controls.list.count
 
 		if _Controls.list.count == 0 then
 			return false
 
-		this._Controls = _Controls
+		this.Controls = _Controls
 
 		if not this.isGroupboxControls() then
-			GROUPBOXCREATOR.addGrouboxes (_Rollout.getFullId() as name ) (_Controls.GroupBoxes)
+			GROUPBOXCREATOR.addGrouboxes (_Rollout.getFullId() as name ) (this.Controls.GroupBoxes)
 
 		/* pass DEFAULT PARAMETERS to params creator */
-		ParamsCreator.setDefaultParameters(_Controls.DefaultParameters)
+		ParamsCreator.setDefaultParameters(this.Controls.DefaultParameters)
 
 
-		for _Control in _Controls.list do
+		for _Control in this.Controls.list do
 		(
 			--format "_CONTROL: %\n" _Control
 			ParamsCreator.mergeParams(_Control)
@@ -66,7 +66,7 @@ struct ControlCreator_v
 
 		/* modify ACROSS PARAMETER */
 		if not this.isGroupboxControls() then
-			AcrossParameterModifier.addFakeControls(this._Controls)
+			AcrossParameterModifier.addFakeControls(this.Controls)
 
 		/* add LOCAL VARIABLES */
 		this._addLocalVariablesToRollout()
@@ -82,7 +82,7 @@ struct ControlCreator_v
 
 		/* REMOVE FAKE CONTROLS -- it allows to add controls when dialog exists */
 		if not this.isGroupboxControls() then
-			AcrossParameterModifier.removeFakeControls(this._Controls)
+			AcrossParameterModifier.removeFakeControls(this.Controls)
 	),
 
 	/** Controls to groupbox will be rendered as last
@@ -141,13 +141,13 @@ struct ControlCreator_v
 	(
 		--format "\n"; print "ControlCreator_v._addControlsToRollout()"
 		--format "this.isGroupboxControls()	= % \n" (this.isGroupboxControls())
-		--format "this._Controls	= % \n" this._Controls
+		--format "this.Controls	= % \n" this.Controls
 
 		if not this.isGroupboxControls() then
 			this._addControlsGroup #start
 
 
-		for _Control in _Controls.list do
+		for _Control in this.Controls.list do
 			this._addControlToRollout (_Control) -- add control first before variables, functions and events
 
 
@@ -177,7 +177,7 @@ struct ControlCreator_v
 	 */
 	function _addHandlersToRollout =
 	(
-		for _Control in _Controls.list do
+		for _Control in this.Controls.list do
 			ControlEventBinder.addHandlers(_Control)
 	),
 
@@ -194,10 +194,10 @@ struct ControlCreator_v
 		--format "\n"; print "ControlCreator_v._addControlsGroup()"
 		--format "_Controls.group:-%-\n" _Controls.group
 		--format "MATCH: %\n" (matchPattern _Controls.group pattern:("[*]"))
-		if( _Controls.group == undefined or matchPattern _Controls.group pattern:("[*]") or _Controls.group == "" ) do
+		if( Controls.group == undefined or matchPattern Controls.group pattern:("[*]") or Controls.group == "" ) do
 			return false
 
-		start_or_end_string = if( start_or_end == #start ) then "group @"+_Controls.group+"@ (" else ")"
+		start_or_end_string = if( start_or_end == #start ) then "group @"+Controls.group+"@ (" else ")"
 
 		_Rollout.RCI.addText ( start_or_end_string ) filter:on
 	),
@@ -237,7 +237,7 @@ struct ControlCreator_v
 	function _addLocalVariablesToRollout =
 	(
 		--print "ControlCreator_v._addLocalVariablesToRollout()"
-		for _Control in _Controls.list where _Control.add_locals != undefined do
+		for _Control in this.Controls.list where _Control.add_locals != undefined do
 			for local_var_name in _Control.add_locals.keys do
 				_Rollout.RCI.addLocal ( local_var_name as string )  init:_Control.add_locals[local_var_name]
 	),
@@ -248,7 +248,7 @@ struct ControlCreator_v
 	function _addTextToRollout =
 	(
 		--print "ControlCreator_v._addTextToRollout()"
-		for _Control in _Controls.list where _Control.add_text != undefined do
+		for _Control in this.Controls.list where _Control.add_text != undefined do
 			_Rollout.RCI.addText  _Control.add_text filter:true
 	),
 
@@ -278,9 +278,9 @@ struct ControlCreator_v
 	function isGroupboxControls =
 	(
 		--format "\n"; print "ControlCreator_v.isGroupboxControls()"
-		--format "this._Controls.group	= % \n" (this._Controls.group  == #controls_in_groupboxes)
-		--this._Controls.group == #controls_in_groupboxes or this._Controls.group == #hotkeys_timers
-		this._Controls.group == #controls_in_groupboxes
+		--format "this.Controls.group	= % \n" (this.Controls.group  == #controls_in_groupboxes)
+		--this.Controls.group == #controls_in_groupboxes or this.Controls.group == #hotkeys_timers
+		this.Controls.group == #controls_in_groupboxes
 	),
 
 	/**

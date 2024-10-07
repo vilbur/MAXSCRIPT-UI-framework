@@ -124,15 +124,12 @@ struct Dialog_v
 		--else
 			--this.width = width
 
-		--format "width B: %\n" this.width
-		--format "this.style: %\n" this.style
-
 		_RolloutCreator = RolloutCreator_v Ini:Ini DEBUG:DEBUG
 
 		_RolloutCreator.createRollout (this) width:width -- create nested rollouts
 
-		--format "onCreate() WIDTH: %\n" width
-		--format "onCreate() HEIGHT: %\n" height
+		----format "onCreate() WIDTH: %\n" width
+		------format "onCreate() HEIGHT: %\n" height
 
 		if create_dialog then--
 		(

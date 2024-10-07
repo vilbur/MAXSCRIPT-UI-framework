@@ -1,4 +1,4 @@
-/**
+/** TEST parse of "icon" parameter
   *
   */
 macroscript macrotest_parse_params

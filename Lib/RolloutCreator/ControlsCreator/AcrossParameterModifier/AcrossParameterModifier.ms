@@ -8,7 +8,7 @@
  */
 struct AcrossParameterModifier_v
 (
-	_Controls,
+	Controls,
 
 	List_new = #(),
 
@@ -22,50 +22,48 @@ struct AcrossParameterModifier_v
 
 	/** Fill end of row with fake controls to keep layout
 	 */
-	function addFakeControls &_Controls =
+	function addFakeControls &Controls =
 	(
 		----format "\n\n\n"; print ("AcrossParameterModifier_v.addFakeControls()" )
-		this._Controls = _Controls
+		List_new = #()
 
-		--controls_count = _Controls.list.count
+		this.Controls = Controls
 
-		for i = 1 to _Controls.list.count do
+		controls_count = Controls.list.count
+
+		for i = 1 to Controls.list.count do
 		(
-			--format "\n--------------------------------------\n\n_CONTROL: % \n\n" _Controls.list[i].caption
+			--format "\n--------------------------------------\n\n_CONTROL: % \n\n" Controls.list[i].caption
 			index = i
 
-			this._setAcrossOfCurrentControl(_Controls.list[i])
-			--format "index	= % \n" index
-			--format "across_current	= % \n" across_current
-			--format "across_last	= % \n" across_last
+			this._setAcrossOfCurrentControl(Controls.list[i])
 
 			controls_left	= across_last - position_in_row
 
 			this._setPositionInRow()
-			--format "position_in_row	= % \n" position_in_row
 
 			this._fillEndOfRowBeforeControl(controls_left)
 
 			across_last = across_current
 
-			append List_new _Controls.list[i]
+			append List_new Controls.list[i]
 
 			if this._isLastControl() then
 				this._fillEndOfGroup()
 		)
 
-		_Controls.List = List_new
+		this.Controls.List = List_new
 
-		_Controls --return
+		this.Controls --return
 	),
 
 	/** Remove fake controls
 	 */
-	function removeFakeControls &_Controls =
+	function removeFakeControls &Controls =
 	(
 		--format "\n"; print "AcrossParameterModifier_v.removeFakeControls()"
-		for i = _Controls.list.count to 1 by -1 where ( _Control =  _Controls.list[i] ).type == #LABEL and matchPattern  _Control.id pattern:("fake*") do
-			deleteItem  _Controls.list i
+		for i = Controls.list.count to 1 by -1 where ( _Control =  Controls.list[i] ).type == #LABEL and matchPattern  _Control.id pattern:("fake*") do
+			deleteItem  Controls.list i
 	),
 
 	private
@@ -104,10 +102,10 @@ struct AcrossParameterModifier_v
 	function _isLastControl =
 	(
 		--format "\n"; print "AcrossParameterModifier_v._isLastControl()"
-		--format "controls_count	= % \n"  _Controls.list.count
+		--format "controls_count	= % \n"  Controls.list.count
 		--format "index	= % \n" index
-		--format "_isLastControl	= % \n" ( _Controls.list.count == index)
-		 _Controls.list.count == index  --return
+		--format "_isLastControl	= % \n" ( Controls.list.count == index)
+		 Controls.list.count == index  --return
 	),
 
 	/** Get position in row
@@ -141,7 +139,7 @@ struct AcrossParameterModifier_v
 		--format "fake_control_caption	= % \n" fake_control_caption
 		for i = 1 to fake_controls_count do
 			append List_new (this._createFakeControl(fake_control_caption))
-			--insertItem (this._createFakeControl(fake_control_caption)) _Controls.list (index)
+			--insertItem (this._createFakeControl(fake_control_caption)) Controls.list (index)
 	),
 
 
@@ -150,7 +148,7 @@ struct AcrossParameterModifier_v
 	function _createFakeControl fake_control_caption =
 	(
 		--print "AcrossParameterModifier_v._createFakeControl()"
-		_Controls.control #LABEL fake_control_caption id:(this._generateId()) add_to_controls:false --return
+		Controls.control #LABEL fake_control_caption id:(this._generateId()) add_to_controls:false --return
 	),
 
 	/** _get fake control id
