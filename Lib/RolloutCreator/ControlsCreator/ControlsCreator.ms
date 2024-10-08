@@ -30,8 +30,6 @@ struct ControlCreator_v
 	ControlEventCreator	= ControlEventCreator_v _Rollout:_Rollout, 	-- "./ControlEventCreator/ControlEventCreator.ms"
 	ControlEventBinder	= ControlEventBinder_v  _Rollout:_Rollout, -- "./ControlEventBinder/ControlEventBinder.ms"
 
-	AcrossParameterModifier = AcrossParameterModifier_v(),
-
 	/** Add controls to rollout
 	 */
 	function addControls _Controls =
@@ -50,7 +48,7 @@ struct ControlCreator_v
 		/* pass DEFAULT PARAMETERS to params creator */
 		ParamsCreator.setDefaultParameters(this.Controls.DefaultParameters)
 
-
+		/* PREPARE EACH CONTROL */
 		for _Control in this.Controls.list do
 		(
 			--format "_CONTROL: %\n" _Control
@@ -63,10 +61,9 @@ struct ControlCreator_v
 			this._customizeControlTypes(_Control)
 		)
 
-
 		/* modify ACROSS PARAMETER */
 		if not this.isGroupboxControls() then
-			AcrossParameterModifier.addFakeControls(this.Controls)
+			( AcrossParameterModifier = AcrossParameterModifier_v()).addFakeControls(this.Controls)
 
 		/* add LOCAL VARIABLES */
 		this._addLocalVariablesToRollout()
@@ -81,7 +78,7 @@ struct ControlCreator_v
 		this._addHandlersToRollout()
 
 		/* REMOVE FAKE CONTROLS -- it allows to add controls when dialog exists */
-		if not this.isGroupboxControls() then
+		if AcrossParameterModifier != undefined then
 			AcrossParameterModifier.removeFakeControls(this.Controls)
 	),
 

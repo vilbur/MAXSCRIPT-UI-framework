@@ -39,7 +39,8 @@ struct ControlValue_v
 		if (value_param_name = this._getNameOfValueParameter() ) == undefined  then
 			return false
 
-		ini_allowed = _Control.Params.getVal (#ini)
+		--ini_allowed = _Control.Params.getVal (#ini)
+		ini_allowed = if ( ini_val = _Control.Params.getVal (#ini) ) != undefined then ini_val else true
 
 		 if ini_allowed and ( ini_value = this._getIniValue (rollout_id)) != undefined then
 			this._setValue (value_param_name) (ini_value)

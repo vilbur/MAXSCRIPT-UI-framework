@@ -33,7 +33,7 @@ struct Subrollouts_v
 			width = this.width - 4 -- make rollout wide as is possible
 
 		--local _Rollout = Rollout_v title:title id:id parent_rollout_id:( parent_rollout_id as string +"."+slot as string )
-		local _Rollout = Rollout_v title:title id:id width:width height:height parent_rollout_id:parent_rollout_id rolledUp:rolledUp DEBUG:DEBUG
+		local _Rollout = Rollout_v title:title id:id width:width height:height parent_rollout_id:(parent_rollout_id as string + "." + slot as string ) rolledUp:rolledUp DEBUG:DEBUG
 		--format "_Rollout:	% \n" _Rollout
 		append Rollouts _Rollout
 

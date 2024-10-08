@@ -117,13 +117,13 @@ function createsubrolloutsControls =
 	_Controls = Subrollout_1.controls group:"Subrollouts test"
 
 	for i = 1 to 1 do
-		_Button1    = _Controls.control #button ( "Subrollouts "+ i as string) --params:#(#across, across)
+		_Button1 = _Controls.control #button ( "Subrollouts "+ i as string) --params:#(#across, across)
 )
 
 
 /*==============================================================================
 
-		RUN TESTS
+	RUN TESTS
 
 ================================================================================*/
 
@@ -137,12 +137,16 @@ function createsubrolloutsControls =
 --myltipleListboxes(3)
 
 /*------ CONTROL GROUPS ------*/
- createControlsGoups(4)
+ createControlsGoups(2)
 --createControlsGoups(3)
+ --createControlsGoups(4)
 
--- createsubrolloutsControls()
+/* SUBROLLOUTS */
+ createsubrolloutsControls()
 
-/** Create dialog from _Rollout
+
+
+/** CREATE DIALOG from _Rollout
   */
 dialog_width = 512
 dialog_height = 1920

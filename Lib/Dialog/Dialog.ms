@@ -186,7 +186,7 @@ struct Dialog_v
 	 */
 	function updateRollout _Rollout =
 	(
-		--format "\n"; print "Dialog_v.addRollout()"
+		--format "\n"; print "Dialog_v.updateRollout()"
 		/** Join array to string
 		 */
 		function arrayToString arr delimeter = ( _string = ""; for item in arr do _string += item as string  + delimeter; substring _string 1 (_string.count-delimeter.count))
@@ -195,7 +195,7 @@ struct Dialog_v
 
 		temporary_removed_rollouts = #()
 
-		id_split	= filterString (_Rollout.getFullId()) "."
+		id_split	= filterString ( _Rollout.getFullId() ) "."
 
 		deleteItem id_split id_split.count
 
@@ -204,6 +204,12 @@ struct Dialog_v
 		_subrollouts = execute ( slot_id + ".Rollouts" )
 
 		for i = 1 to _subrollouts.count while rollout_index == undefined where _subrollouts[i].name == _Rollout.id as string do rollout_index = i
+
+		--format "slot_id: %\n" slot_id
+		--format "_Rollout.id: %\n" _Rollout.id
+		--format "rollout_index: %\n" rollout_index
+
+		--this.createRollout(_Rollout)
 
 		/* REFRESH ROLLOUT - remove and add rollouts aftter given rollout */
 		if rollout_index != undefined then
@@ -222,8 +228,16 @@ struct Dialog_v
 			/* ADD ROLLOUTS */
 			for rollout_id in temporary_removed_rollouts do
 				execute ("AddSubRollout "+ slot_id + " " + rollout_id )
-
 		)
+		else
+		(
+			this.createRollout(_Rollout)
+
+			execute ("AddSubRollout "+ slot_id + " " + _Rollout.id as string )
+		)
+		--	--print ("AddSubRollout "+ slot_id + " " + _Rollout.id as string )
+
+
 	),
 
 	/** Key press

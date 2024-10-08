@@ -17,17 +17,18 @@ struct AcrossParameterModifier_v
 	across_last	= 0,
 	position_in_row	= 0,
 
-	--DEBUG = true,
-	DEBUG = false,
+	/* development */
+	DEBUG = true, -- SHOW PLACEHOLDER CONTROLS
+	--DEBUG = false,
 
 	/** Fill end of row with fake controls to keep layout
 	 */
-	function addFakeControls &Controls =
+	function addFakeControls &_Controls =
 	(
 		----format "\n\n\n"; print ("AcrossParameterModifier_v.addFakeControls()" )
-		List_new = #()
+		--List_new = #()
 
-		this.Controls = Controls
+		this.Controls = _Controls
 
 		controls_count = Controls.list.count
 

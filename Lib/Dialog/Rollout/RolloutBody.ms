@@ -132,7 +132,7 @@
 		--format "parent_rollout_id:	% \n" parent_rollout_id
 
 		if ( parent_rollout_id != undefined ) then
-			parent_rollout_id +"."+ id as string --return
+			parent_rollout_id as string +"."+ id as string --return
 
 		else
 			id as string --return
