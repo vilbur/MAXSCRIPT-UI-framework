@@ -18,8 +18,8 @@ struct AcrossParameterModifier_v
 	position_in_row	= 0,
 
 	/* development */
-	DEBUG = true, -- SHOW PLACEHOLDER CONTROLS
-	--DEBUG = false,
+	--DEBUG = true, -- SHOW PLACEHOLDER CONTROLS
+	DEBUG = false,
 
 	/** Fill end of row with fake controls to keep layout
 	 */

@@ -104,7 +104,7 @@ struct RolloutCreator_v
 
 
 		/* add EVENTS */
-		--RolloutEventBinder.addHandlers()
+		RolloutEventBinder.addHandlers()
 
 		/* EDIT END */
 		--_Rollout.RCI.end() --return
