@@ -97,7 +97,8 @@ struct MacroscriptGenerator_v
             --format "\n"; print "MacroscriptGenerator_v.getMacroscriptData()"
             macro_data = Dictionary()
 
-            for key in macro_keys where (val = getINISetting ini_file macroscript_name key) != "" do macro_data[key as name] = val
+            --for key in macro_keys where (val = getINISetting ini_file macroscript_name key) != "" do macro_data[key as name] = val
+            for key in macro_keys do macro_data[key as name] = getINISetting ini_file macroscript_name key
 
             macro_data --return
         )
@@ -115,6 +116,7 @@ struct MacroscriptGenerator_v
 	function _autoFillValuesByScriptName macroscript_name &macro_data =
 	(
 		--format "\n"; print "MacroscriptGenerator_v.autoFillValues()"
+		--format "macro_data[#buttontext]: %\n" macro_data[#buttontext]
 		--format "MACRO_DATA IN:	% \n" macro_data
 		/* ADD MACROSCRIPT NAME */
 		if macro_data[#macroscript] == undefined then
@@ -123,7 +125,7 @@ struct MacroscriptGenerator_v
 
 		/* ADD BUTTONTEXT */
 		if macro_data[#buttontext] == undefined then
-		 macro_data[#buttontext] = substituteString macroscript_name "_" " "
+		 macro_data[#buttontext] = substituteString macroscript_name "_" " " -- use script name as button text
 
 		/* ADD EXECUTED */
 		if macro_data[#execute] == undefined then
@@ -180,7 +182,10 @@ struct MacroscriptGenerator_v
 											  default: " "
 		)
 
-		general_value + divider + macro_value --return
+		if not (key == #BUTTONTEXT and macro_value == "" ) then
+			general_value + divider + macro_value --return
+		else
+			"" --return empty button text
     ),
 
     /** Merge macroscript filters

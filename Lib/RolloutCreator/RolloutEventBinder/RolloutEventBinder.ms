@@ -65,18 +65,16 @@ struct RolloutEventBinder_v
 		this._Rollout = _Rollout
 	),
 
-	/** Bind events
+	/** TODO: rename this to setEventsToCombiner or like that
 	 */
 	function combineEvents =
 	(
+		--format "\n"; print "RolloutEventBinder_v.combineEvents()"
 		--format "\n\n~~~~~~~~~	Rollout Events:%	~~~~~~~~~\n" _Rollout.id
 
-		if( ini_path != undefined ) then
-		(
-			this._setDefaultEvents()
+		this._setDefaultEvents()
 
-			this._setCustomEvents()  -- NOTE: callback will be fired in reversed order then has been added. Default event goes first
-		)
+		this._setCustomEvents()  -- NOTE: callback will be fired in reversed order then has been added. Default event goes first
 	),
 
 	/** Add handlers
@@ -132,7 +130,7 @@ struct RolloutEventBinder_v
 	 */
 	function _addHandler event_type =
 	(
-
+		--format "\n"; print "RolloutEventBinder_v._addHandler()"
 		if (Event = EventsCombiner.combine (event_type)) != undefined then
 		(
 			--format "\n";	print "RolloutEventBinder_v._addHandler()"

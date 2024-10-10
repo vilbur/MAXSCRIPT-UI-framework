@@ -2,9 +2,18 @@ clearListener()
 
 filein( getFilenamePath(getSourceFileName()) + "/../../Lib/Dialog/Dialog.ms" )	-- "./../../Lib/Dialog/Dialog.ms"
 
-/**  CONTROL TYPES: https://help.autodesk.com/view/3DSMAX/2017/ENU/?guid=__files_GUID_E421933F_958E_42FD_80A1_D66F2A2C0A06_htm
-  *
-  */
+
+/*==============================================================================
+
+	TEST CONTROL TYPES
+
+	Max Help: https://help.autodesk.com/view/3DSMAX/2017/ENU/?guid=__files_GUID_E421933F_958E_42FD_80A1_D66F2A2C0A06_htm
+
+================================================================================*/
+
+/*------------------------------------------------------------------------------
+	PREPARE DIALOG & CONTROLS
+--------------------------------------------------------------------------------*/
 
 /* DIALOG */
 --Dialog 	    = Dialog_v title:"Test" ini:(getSourceFileName())
@@ -14,6 +23,11 @@ Dialog 	    = Dialog_v title:"Test"	--WITHOUT INI FILE
 /* CONTROLS */
 --_Controls   = Dialog.Controls group:"Main _Controls"
 _Controls   = Dialog.Controls()
+
+
+/*------------------------------------------------------------------------------
+	TEST EACH CONTROL TYPE
+--------------------------------------------------------------------------------*/
 
 /*------ GROUPBOX ------*/
 _Controls.control #Groupbox "Groupbox Test" height:64
@@ -60,7 +74,7 @@ _Slider = _Controls.control #SLIDER "Slider" ticks:3 width:256 range:[0,50,0] ti
 
 /*------ SPINNER ------*/
 _Controls.control #SPINNER "Spinner"
---_Controls.control #SPINNER "Spinner 2" width:96 scale:0.01 range:[0,100,0.01]
+_Controls.control #SPINNER "Spinner 2" width:96 scale:0.01 range:[0,100,0.01]
 
 
 /*------ LISTBOX ------*/
@@ -72,18 +86,22 @@ _multilistbox =  _Controls.control #MULTILISTBOX "Multilistbox" items:#("Item 1"
 _Controls.control #BROWSEPATH "browsePathTest"
 
 
+/*------ BITMAP ------*/
+_Controls.Control #BITMAP "_bitmap_test A" value: (bitmap 256 32 color:black ) across:1
+_Controls.Control #BITMAP "_bitmap_test B" params:#(#bitmap, (bitmap 128 16 color:gray) ) across:1 offset:[ 0, -40 ]
+
 /*------ COLORPICKER ------*/
-_Controls.control #COLORPICKER "ColorPicker A" value: [ 64, 128, 0 ]	across:1
-_Controls.control #COLORPICKER "ColorPicker B"  params:#(#color, ( color 255 0 128 ))	across:1
-_Controls.control #COLORPICKER "ColorPicker C"  params:#(#color, [0,128,0 ] )	across:1
-
---/*------ BITMAP ------*/
---_Controls.Control #BITMAP "_bitmap_test" params:#(#bitmap, "(bitmap 50 50 color:green)" )
---_Controls.Control #BITMAP "_bitmap_test" params:#(#bitmap, (bitmap 50 50 color:orange) )
---_Controls.Control #BITMAP "_bitmap_test" value: (bitmap 50 50 color:blue)
---
+--_Controls.control #COLORPICKER "ColorPicker A" value:( color 255 0 0 )       	across:1
+--_Controls.control #COLORPICKER "ColorPicker B"  params:#(#color, green)     	across:1
+--_Controls.control #COLORPICKER "ColorPicker C"  params:#(#color, [0,0,128 ] )	across:1
 
 
+
+
+
+/*==============================================================================
+	CREATE DIALOG
+================================================================================*/
 
 /* IMPORTANT: IF PICKER IS NOT DISPLAYED
  *
