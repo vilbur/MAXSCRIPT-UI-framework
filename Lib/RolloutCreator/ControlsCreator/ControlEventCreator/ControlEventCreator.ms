@@ -151,13 +151,15 @@ struct ControlEventCreator_v
 			RegEx		 = ( dotNetClass "System.Text.RegularExpressions.RegEx" )
 			IgnoreCase = ( dotNetClass "System.Text.RegularExpressions.RegexOptions" ).IgnoreCase
 
-			has_space	= "\s"
-			has_name	= "\#"
-			has_bracket	= "\("
-			has_quote	= "\\\""
-			is_macro	= "macros.run"
+			/* DO NOT ADD ARGUMENTS IF THESE PATTERNS ARE FOUND IN CALLBACK */
+			has_space	= "\s"	-- "Foo Bar"
+			has_name	= "\#"	-- "#FooBar"
+			has_quote	= "\\\""	-- \"Foo\"
+			is_wrrapped	= "^\(.*\)$"	-- ( print @foo@ )
+			has_brackets	= ".*\(.*\)$"	-- fooFn(bar)
+			is_macro	= "macros.run"	-- macros.run "foo" "bar"
 
-			pattern = "[" + has_space + has_bracket + has_quote + has_name + "]|" + is_macro
+			pattern = "[" + has_space + has_quote + has_name + "]|"+is_wrrapped+"|"+has_brackets+"|" + is_macro
 
 			RegEx.isMatch callback pattern IgnoreCase
 		)

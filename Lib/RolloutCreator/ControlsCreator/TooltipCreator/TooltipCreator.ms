@@ -18,7 +18,7 @@ struct TooltipCreator_v
 			if tooltip != "" then
 				tooltip += "\n"
 
-			_Control.params.setVal #tooltip ( tooltip + this._getEventPrefix(event_type) + event_tooltip )
+			_Control.params.setVal #tooltip ( tooltip + this._getEventPrefix(_Control.type)(event_type) + event_tooltip )
 		)
 
 		_Control --return
@@ -27,17 +27,20 @@ struct TooltipCreator_v
 
 	/** Get event type
 	 */
-	function _getEventPrefix event_type =
+	function _getEventPrefix control_type event_type =
 	(
 		--format "\n"; print "TooltipCreator_v._getEventPrefix()"
 		--format "event_type:	% \n" event_type
-		case event_type of
-		(
-			(#pressed):	"LMB: "
-			(#rightclick):	"RMB: "
-			--default:	""
-			default:	this._capitalize(event_type as string ) + ": "
-		)
+		if control_type == #CHECKBUTTON and event_type == #CHANGED then
+			"LMB: " --return #CHECKBUTTON:changed
+		else
+			case event_type of
+			(
+				(#pressed):	"LMB: "
+				(#rightclick):	"RMB: "
+				--default:	""
+				default:	this._capitalize(event_type as string ) + ": "
+			)
 	),
 
 	/** Capitalize first letter

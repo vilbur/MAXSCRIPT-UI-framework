@@ -46,6 +46,7 @@ struct Controls_v
 				type:	scale:	\ -- spinner
 				checked:		\ -- checkbox, checkbutton
 				visible:		\
+				border:		\
 				value: =
 	(
 		--format "\n"; print "Controls_v.Control()"
@@ -61,8 +62,8 @@ struct Controls_v
 
 		--format "_Control.id = % \n" _Control.id
 		--format "_Control = % \n" _Control
-		_param_names  = #( #pos, #checked, #width, #height, #offset, #align, #items, #range, #type, #ticks, #orient, #scale, #controller, #default, #unselect, #value, #ini, #tooltip, #across, #columns,	#visible)
-		_param_values = #(  pos,  checked,  width,  height,  offset,  align,  items,  range,  type,  ticks,  orient,  scale,  controller,  default,  unselect,  value,  ini,  tooltip,  across,  columns,  visible)
+		_param_names  = #( #pos, #checked, #width, #height, #offset, #align, #items, #range, #type, #ticks, #orient, #scale, #controller, #default, #unselect, #value, #ini, #tooltip, #across, #columns,	#visible, #border)
+		_param_values = #(  pos,  checked,  width,  height,  offset,  align,  items,  range,  type,  ticks,  orient,  scale,  controller,  default,  unselect,  value,  ini,  tooltip,  across,  columns,  visible,  border)
 
 
 		for i = 1 to _param_values.count where _param_values[i]!= unsupplied do
