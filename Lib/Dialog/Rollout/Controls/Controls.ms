@@ -27,6 +27,8 @@ struct Controls_v
 	  * @property	#boolean	ini	Enable Disable save control value to ini
 	  *
 	  *
+	  * CONTROLS GROUP: https://help.autodesk.com/view/MAXDEV/2021/ENU/?guid=GUID-5DFECB42-C452-457B-BAD4-B07767AE8C9E
+	  *
 	  * SLIDER: https://help.autodesk.com/view/3DSMAX/2017/ENU/?guid=__files_GUID_B674277E_596E_4469_BA45_2AE8F071D975_htm
 	  * @property	#integer	ticks	Slider ticks
 	  * @property	#vertical	type	Slider type: #vertical|#horizontal
