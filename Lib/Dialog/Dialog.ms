@@ -110,25 +110,23 @@ struct Dialog_v
 		--format "height: %\n" height
 		this.destroy()
 
-		timer_create_dialog = timestamp()
+		--if this.DEBUG then timer_create_dialog = timestamp()
+
+		_RolloutCreator = RolloutCreator_v Ini:Ini DEBUG:DEBUG
 
 		this._setDialogMinimalSize()
 		this._setDialogSizeByIni()
 		this._setWithByMinimalSize()
-		--format "width A: %\n" this.width
 
 		height = this._getHeightOnCreate(height)
 
 		if classOf width != integer then
 			width = this.width
-		--else
-			--this.width = width
 
-		_RolloutCreator = RolloutCreator_v Ini:Ini DEBUG:DEBUG
 
 		_RolloutCreator.createRollout (this) width:width -- create nested rollouts
 
-		----format "onCreate() WIDTH: %\n" width
+		--format "onCreate() WIDTH: %\n" width
 		------format "onCreate() HEIGHT: %\n" height
 
 		if create_dialog then--
@@ -384,7 +382,7 @@ struct Dialog_v
 	function _setDialogDefaultWidth =
 	(
 		--format "\n"; print "if._setDialogDefaultWidth()"
-		if classOf this.width != integer then
+		if superClassOf this.width != Number then
 			this.width  = 256
 	),
 

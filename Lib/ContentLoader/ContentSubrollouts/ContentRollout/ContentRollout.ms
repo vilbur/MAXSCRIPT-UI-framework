@@ -1,6 +1,7 @@
 filein( getFilenamePath(getSourceFileName()) + "/PathsLoader/PathsLoader.ms" )	-- "./PathsLoader/PathsLoader.ms"
 filein( getFilenamePath(getSourceFileName()) + "/ScriptFile/ScriptFile.ms" )	-- "./ScriptFile/ScriptFile.ms"
 filein( getFilenamePath(getSourceFileName()) + "/../ContentSubrollouts.ms" )	-- "./../ContentSubrollouts.ms"
+
 /** Create rollout from dir containing ".ms" & ".mcr" files
  *
  * @property	string	dir	Path to dir
@@ -136,7 +137,7 @@ struct ContentRollout_v
 
 		title = ( dotNetObject "System.Text.RegularExpressions.Regex" "^rollout-" ).Replace title "" -- remove prefix "rolout-" from directory name
 
-		title = ( dotNetObject "System.Text.RegularExpressions.Regex" @"^[\d\.\s_-]+" ).Replace ( trimLeft title "_ " ) "" -- remove prefix
+		title = ( dotNetObject "System.Text.RegularExpressions.Regex" @"^[\.\s_-]+|^[\d]+[_-]" ).Replace ( trimLeft title "_ " ) "" -- remove prefix
 
 		title = substituteString title "_" " " -- replace whitespace
 	),
