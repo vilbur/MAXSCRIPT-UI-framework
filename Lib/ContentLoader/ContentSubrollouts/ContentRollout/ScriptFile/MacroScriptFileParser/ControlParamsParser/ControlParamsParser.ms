@@ -84,18 +84,22 @@ struct ControlParamsParser_v
 		--format "key_value_string	= % \n" key_value_string
 		colon_index = findString key_value_string ":" -- split string by firt occurencce of ":"
 
-		key	= substring key_value_string 1 (colon_index-1)
-		val	= substring key_value_string   (colon_index+1)	-1
-
-		if key as name != #images then
+		--if colon_index != undefined then
 		(
-			val = this._convertDatatype( this._trimWhiteSpace(val))
+			key	= substring key_value_string 1 (colon_index-1)
+			val	= substring key_value_string   (colon_index+1)	-1
 
-			append params[1] ( this._sanitizeKey(key) as name )
-			append params[2] val
+			if key as name != #images then
+			(
+				val = this._convertDatatype( this._trimWhiteSpace(val))
+
+				append params[1] ( this._sanitizeKey(key) as name )
+				append params[2] val
+			)
+			else
+				ImagesArrayParser.setImageParameter(params)(execute val)
+
 		)
-		else
-			ImagesArrayParser.setImageParameter(params)(execute val)
 
 	),
 

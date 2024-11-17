@@ -250,13 +250,13 @@ struct Dialog_v
 	 */
 	function register =
 	(
-		--print "Dialog_v.register()"
+		print "Dialog_v.register()"
 
 		min_size = if min_size != undefined then min_size as string else "[-1,-1]"
 		max_size = if max_size != undefined then max_size as string else "[-1,-1]"
 		--format "MIN_SIZE: %\n" min_size
 		--format "MAX_SIZE: %\n" max_size
-		--format "STYLE: %\n" style_registred_dialog
+		format "STYLE: %\n" style_registred_dialog
 
 		--execute ("cui.RegisterDialogBar "+ this.id +" minSize:"+min_size+" maxSize:"+max_size+" style:"+style_registred_dialog as string )
 		execute ("cui.RegisterDialogBar "+ this.id +" minSize:"+min_size+" style:"+style_registred_dialog as string )

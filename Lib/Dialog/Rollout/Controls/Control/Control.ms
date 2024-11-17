@@ -146,7 +146,7 @@ struct Control_v
 			#Label:	"LABEL"
 			#Button:	"BTN"
 			#Checkbox:	"CBX"
-			#CheckButton:	"CBXBTN"
+			#CheckButton:	"CBTN"
 			#Spinner:	"SPIN"
 			#Edittext:	"ET"
 			#Listbox:	"LB"

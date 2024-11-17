@@ -45,8 +45,11 @@ struct Menu_v
 		item = if( group == unsupplied ) then menuMan.createActionItem (macro_script_name) (category) else menuMan.createMenuItemFromAction ( group ) (macro_script_name) --category:(category)
 		--format "item = % \n" item
 		if item == undefined then
-			return false
+		(
+			format "\n\n----------- WARNING - undefined menu item ---------------------- \n\n(%).addItem(\"%\")(\"%\")\n\n	MENU:   %\n	CATEGORY: %\n	SCRIPT NAME: %\n" this.name category macro_script_name this.name category macro_script_name
 
+			return false
+		)
 
 		/* SET TITLE */
 		if( title != unsupplied ) then
@@ -84,7 +87,8 @@ struct Menu_v
 
 
 	/** Add quad from 'menus' to quad
-	  * IMPORTANT: Menu does not show, if does not contain any items
+	  *
+	  * 		IMPORTANT: Menu does not show, if does not contain any items
 	  *
 	  * @param	Menu_V|string|<MixinInterface:menu>	menu_or_name	menu or name of menu which will be added as sub menu
 	  * @param	string	title	custom title of menu displayed in quad
@@ -203,7 +207,7 @@ struct Menu_v
 
 			if index > items_count then
 			(
-				format "%.getItem(%) -- WARNING - index % is higher then count of items %\n" this.name index index items_count
+				format "	%.getItem(%) -- WARNING - index % is higher then count of items %\n" this.name index index items_count
 
 				undefined --return
 			)
@@ -236,13 +240,16 @@ struct Menu_v
 
 	/** Remove given item or by title
 	  *
-	  * @param	#()|<MixinInterface:menuItem>|string|integer|	index_title_item MenuItem, title string or index of item, can be array of these
+	  * @param	Array|BitArray|<MixinInterface:menuItem>|string|integer|	index_title_item MenuItem, title string or index of item, can be array of these
 	  *
 	  * @return	menuItem
 	 */
 	function removeItem index_title_item =
 	(
 		--format "\n"; print "Menu_v.removeItem()"
+
+		if classOf index_title_item == BitArray then
+			index_title_item = index_title_item as Array
 
 		if classOf index_title_item != Array then
 		(
