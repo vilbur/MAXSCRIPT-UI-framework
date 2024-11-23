@@ -26,12 +26,6 @@
             macroscript → CONTROL
 
 
-1. Directory → ROLLOUT
-
-	2. \*.mcr file → GROUP OF CONTROLS
- 
-		3. macroscript → CONTROL
-
 
 
 KNOWING ISSUES:

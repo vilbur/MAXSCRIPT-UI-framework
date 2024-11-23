@@ -20,7 +20,7 @@ struct SubolloutsCreator_v
 	/* reference */
 	/* inhered */
 
-	 /** _create subrollouts
+	 /** CREATE SUBROLLOUTS SLOT IN UI
 	  */
 	 function addSubrolloutSlot _Rollout Subrollouts =
 	 (
@@ -35,7 +35,7 @@ struct SubolloutsCreator_v
 		_Rollout.RCI.addText ("subRollout "+slot_id +" \""+slot_id+"\" height:"+ slot_height + " width:" + (Subrollouts.width - slot_width_fix) as string + " offset:["+slot_offset_x as string +", 0]" )
 	 ),
 
-	/** Add sub rollouts
+	/** ADD SUBROLLOUTS TO ROLLOUT
 	 */
 	function addSubRollouts _Rollout =
 	(
@@ -60,7 +60,9 @@ struct SubolloutsCreator_v
 
 		SubrolloutsSlots = for Subrollouts in _Rollout.RCI.Def.controls where classOf Subrollouts == SubRollout collect Subrollouts
 
-		/* GET ALL Rollouts from Subrollouts_v.Rollouts */
+		/* FOR EACH SUBROLLOUTS SLOT
+		
+		*/
 		for Subrollouts in _Rollout.getSubrollouts() do
 		(
 			SubrolloutsSlot = getSubrolloutsSlot(SubrolloutsSlots)(Subrollouts.slot)
@@ -69,27 +71,23 @@ struct SubolloutsCreator_v
 
 			rollouts_order	= this._getOrderOfsubrollouts(_Rollout)(Subrollouts)
 
+			
+			/* ADD EACH SUB ROLLOUT
+			*/ 
 			for subrollout_id in rollouts_order where ( index = findItem subrollouts_in_slot subrollout_id ) > 0 do
 			(
 				_Subrollout = Subrollouts.Rollouts[index]
 
 				try(destroyDialog _Subrollout.RCI.def )catch() -- destroy dialog of subrollout created for find of height
 
-				/*
-				    FOR FLOATEBLE SUBROLLOUTS diable AddSubRollout below
+				/*  DEBUG:
+						FOR FLOATEBLE SUBROLLOUTS disable AddSubRollout
 				*/
-				--print "************************************************************"
 				AddSubRollout SubrolloutsSlot	_Subrollout.RCI.def rolledUp:(this._getRolledUpState(_Subrollout)(subrollout_id))
-				--print "============================================================="
-
-				--format "\n\nAddSubRollout %	%" (Subrollouts.getSlotId()) _Subrollout.id
-				--format "\n\n AddSubRollout  %	%" (Subrollouts.getSlotId()) (_Subrollout.id as string )
-				--format "\n\n removeSubRollout  %	%" (Subrollouts.getSlotId()) (_Subrollout.id as string )
 
 				this.addSubRollouts (_Subrollout)
 			)
 		)
-
 	),
 
 

@@ -81,7 +81,7 @@ struct Dialog_v
 		--#cui_max_sized,	-- When this flag is specified, docking the dialogbar on the top causes the dialogbar to expand to the full window width, docked to bottom it expands to full window width minus command panel width.
 	),
 
-	/** Create dialog
+	/** CREATE DIALOG
 	  *
 	  * IMPORTANT:
 	  *		param #width WORKS AS WIDTH OF DOCKED DIALOG
@@ -106,14 +106,16 @@ struct Dialog_v
 		lockWidth:true	\
 		parent: =
 	(
-		--format "\n"; print "Dialog_v.create()"
-		--format "height: %\n" height
+
 		this.destroy()
 
 		--if this.DEBUG then timer_create_dialog = timestamp()
 
 		_RolloutCreator = RolloutCreator_v Ini:Ini DEBUG:DEBUG
 
+		
+		
+		/* DIALOG SIZE */ 
 		this._setDialogMinimalSize()
 		this._setDialogSizeByIni()
 		this._setWithByMinimalSize()
@@ -124,12 +126,10 @@ struct Dialog_v
 			width = this.width
 
 
+		/* CREATE ROLLOUT */ 
 		_RolloutCreator.createRollout (this) width:width -- create nested rollouts
 
-		--format "onCreate() WIDTH: %\n" width
-		------format "onCreate() HEIGHT: %\n" height
-
-		if create_dialog then--
+		if create_dialog then
 		(
 			CreateDialog (this.RCI.def) \
 				width:	width                          	\
@@ -150,6 +150,7 @@ struct Dialog_v
 
 			if this.DEBUG then format "CreateDialog % ms\n" ((timestamp()) - timer_create_dialog)
 
+			/* ADD SUBROLLOUTS */ 
 			_RolloutCreator.SubolloutsCreator.addSubRollouts (this)
 			if this.DEBUG then format "addSubRollouts % ms\n" ((timestamp()) - timer_create_dialog)
 
@@ -234,7 +235,6 @@ struct Dialog_v
 			execute ("AddSubRollout "+ slot_id + " " + _Rollout.id as string )
 		)
 		--	--print ("AddSubRollout "+ slot_id + " " + _Rollout.id as string )
-
 
 	),
 

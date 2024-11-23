@@ -45,20 +45,24 @@ struct RolloutCreator_v
 	 */
 	function createRollout _Rollout width: =
 	(
-		 if DEBUG then format "\n\n-------------------------------------	RolloutCreator_v.createRollout() id:#%	-------------------------------------\n"  ( _Rollout.id as string );
-		--format "_ROLLOUT: %\n" _Rollout.title
-		--format "_ROLLOUT: %:	% \n" _Rollout.title _Rollout
-		--format "WIDTH: %\n" width
-		timer_create_rollout = timestamp()
+		--if DEBUG then format "\n\n-------------------------------------	RolloutCreator_v.createRollout() id:#%	-------------------------------------\n"  ( _Rollout.id as string );
+		--timer_create_rollout = timestamp()
 
 		execute( "global " + _Rollout.id as string )
-
+		
+		/*------ SUBROLLOUTS ------*/
+		
 		/* SET SLOT IDS */
 		this._setSubrolloutDefaultSlotIds(_Rollout)
-
+		
+		/* CREATE SUBROLLOUTS */
 		this._createSubrollouts(_Rollout)
-		if this.DEBUG then format "RolloutCreator._createSubrollouts % ms\n" ((timestamp()) - timer_create_rollout)
+		--if this.DEBUG then format "RolloutCreator._createSubrollouts % ms\n" ((timestamp()) - timer_create_rollout)
 
+		
+		
+		/*------ CONTROLS ------*/
+		
 		ControlsCreator	= ControlCreator_v _Rollout:_Rollout Ini:Ini DEBUG:DEBUG -- MUST BE AFTER SUBROLLOUT ARE CREATED
 
 		if _Rollout.width == unsupplied and width != unsupplied then
@@ -68,23 +72,28 @@ struct RolloutCreator_v
 		ControlsCreator.moveGrouboxControlsToEnd(_Rollout)
 
 
-		/* PREPARE EVENTS */
+
+		/*------ EVENTS ------*/
+		
 		RolloutEventBinder.setRollout(_Rollout)
-
+		
 		RolloutEventBinder.combineEvents()
-
+		
 		RolloutEventBinder.mutateOpenCloseToRolledUp()
 
 
 
+		/*------ CREATE ROLLOUT ------*/
+
 		/* SET RolloutCreator */
 		_Rollout.RCI	= RolloutCreator (_Rollout.id) ( this._getTitleString(_Rollout) )
 
+		
 		/* EDIT start */
 		_Rollout.RCI.begin()
 
 
-
+		/* add HOTKEYS */ 
 		if hasProperty _Rollout #DialogHotkeys and _Rollout.DialogHotkeys.hot_keys.count > 0 then
 			_Rollout.DialogHotkeys.addHotkeyTimer(_Rollout)
 
@@ -99,8 +108,8 @@ struct RolloutCreator_v
 
 
 		/* add CONTROLS and SUBROLLOUTS SLOTS */
-		this._addControlsAndSubrollouts (_Rollout)
-		if this.DEBUG then format "%._addControlsAndSubrollouts % ms\n" _Rollout.id ((timestamp()) - timer_create_rollout)
+		this._addControlsAndSubrolloutSlots (_Rollout)
+		--if this.DEBUG then format "%._addControlsAndSubrolloutSlots % ms\n" _Rollout.id ((timestamp()) - timer_create_rollout)
 
 
 		/* add EVENTS */
@@ -230,9 +239,9 @@ struct RolloutCreator_v
 
 	 /** Create controls and subrollout slots
 	  */
-	 function _addControlsAndSubrollouts _Rollout =
+	 function _addControlsAndSubrolloutSlots _Rollout =
 	 (
-		--format "\n"; print "RolloutCreator_v._addControlsAndSubrollouts()"
+		--format "\n"; print "RolloutCreator_v._addControlsAndSubrolloutSlots()"
 		for Controls_or_Subrollouts in _Rollout._Controls do
 			if( this._is(Controls_or_Subrollouts)("Controls") ) then
 				ControlsCreator.addControls(Controls_or_Subrollouts)
