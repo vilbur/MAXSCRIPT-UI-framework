@@ -186,7 +186,61 @@
 	),
 
 
+
+	
+	/** Save Rollout Definition to file
+	  * 
+	  * FILE PATH E.G.:
+	  *		"C:\Users\%username%\AppData\Local\Autodesk\3dsMax\2023 - 64bit\ENU\temp\UI-Framework\Rollout-Definitions\{DIALOG ID}\{ROLLOUT_ID}.ms"
+	  * 
+	 */
+	function saveDefition def =
+	(
+		--format "\n"; print "RolloutBody.saveDefition()"
+
+		def_file = this._getDefinitionFilePath()
+		
+		if doesDirectoryExist (dir = getFilenamePath(def_file)) then
+			deleteFile def_file
+		else
+			makeDir dir all:true
+
+		def_filestream = createFile def_file
+
+		--format "def_file: %\n" def_file
+		
+		format "%" def to:def_filestream
+		
+		close def_filestream
+	),
+	
+	/** Load definition
+	 */
+	function loadDefinition =
+	(
+		format "\n"; print "RolloutBody.loadDefinition()"
+		def_file = this._getDefinitionFilePath()
+
+		if (file_exists = doesFileExist def_file) then
+			filein def_file
+
+		file_exists --return
+	),
+	
+
 	private
+	
+	/** Get definition file path
+	 */
+	function _getDefinitionFilePath =
+	(
+		format "\n"; print "RolloutBody._getDefinitionFilePath()"
+		dialog_dir = if this.isDialog() then id else parent_rollout_id
+		
+		dir = getDir #temp + "\\UI-Framework\\Rollout-Definitions\\" + dialog_dir
+		
+		dir + "\\" + id + ".ms" --return
+	),
 
 
 	/** Set id by title if not defined

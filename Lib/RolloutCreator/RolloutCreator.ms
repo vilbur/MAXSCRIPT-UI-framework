@@ -30,7 +30,7 @@ struct RolloutCreator_v
 	closed_rollout_bar_height = 24,
 
 	/* dependency */
-	RolloutEventBinder	= RolloutEventBinder_v ini_path:(Ini.getPath()),
+	RolloutEventBinder = RolloutEventBinder_v ini_path:(Ini.getPath()),
 
 	ControlsCreator,
 	SubolloutsCreator = SubolloutsCreator_v ini_path:(Ini.getPath()) DEBUG:DEBUG,
@@ -45,85 +45,96 @@ struct RolloutCreator_v
 	 */
 	function createRollout _Rollout width: =
 	(
-		--if DEBUG then format "\n\n-------------------------------------	RolloutCreator_v.createRollout() id:#%	-------------------------------------\n"  ( _Rollout.id as string );
+		if DEBUG then format "\n\n-------------------------------------	RolloutCreator_v.createRollout() id:#%	-------------------------------------\n"  ( _Rollout.id as string );
 		--timer_create_rollout = timestamp()
 
-		execute( "global " + _Rollout.id as string )
 		
-		/*------ SUBROLLOUTS ------*/
+		if not (_Rollout.loadDefinition()) then
+		(
+			execute( "global " + _Rollout.id as string )
+			/*------ SUBROLLOUTS ------*/
+			
+			/* SET SLOT IDS */
+			this._setSubrolloutDefaultSlotIds(_Rollout)
+			
+			/* CREATE SUBROLLOUTS */
+			this._createSubrollouts(_Rollout)
+			--if this.DEBUG then format "RolloutCreator._createSubrollouts % ms\n" ((timestamp()) - timer_create_rollout)
+	
+			
+			
+			/*------ CONTROLS ------*/
+			
+			ControlsCreator	= ControlCreator_v _Rollout:_Rollout Ini:Ini DEBUG:DEBUG -- MUST BE AFTER SUBROLLOUT ARE CREATED
+	
+			if _Rollout.width == unsupplied and width != unsupplied then
+				_Rollout.width = width
+	
+	
+			ControlsCreator.moveGrouboxControlsToEnd(_Rollout)
+	
+	
+	
+			/*------ EVENTS ------*/
+			
+			RolloutEventBinder.setRollout(_Rollout)
+			
+			RolloutEventBinder.combineEvents()
+			
+			RolloutEventBinder.mutateOpenCloseToRolledUp()
+	
+	
+	
+			/*------ CREATE ROLLOUT ------*/
+	
+			/* SET RolloutCreator */
+			_Rollout.RCI	= RolloutCreator (_Rollout.id) ( this._getTitleString(_Rollout) )
+	
+			
+			/* EDIT BEGIN - RolloutCreator */
+			_Rollout.RCI.begin()
+	
+	
+			/* add HOTKEYS */ 
+			if hasProperty _Rollout #DialogHotkeys and _Rollout.DialogHotkeys.hot_keys.count > 0 then
+				_Rollout.DialogHotkeys.addHotkeyTimer(_Rollout)
+	
+	
+	
+			/* add LOCAL VARIABLES */
+			this._addLocalVariablesToRollout (_Rollout)
+	
+	
+			/* add TEXT */
+			this._addTextToRollout (_Rollout)
+	
+	
+			/* add CONTROLS and SUBROLLOUTS SLOTS */
+			this._addControlsAndSubrolloutSlots (_Rollout)
+			--if this.DEBUG then format "%._addControlsAndSubrolloutSlots % ms\n" _Rollout.id ((timestamp()) - timer_create_rollout)
+	
+	
+			/* add EVENTS */
+			RolloutEventBinder.addHandlers()
+	
+			/* EDIT END */
+			--_Rollout.RCI.end() --return
+	
+			/* EDIT END - DEV VERSION */
+			_Rollout_def = _Rollout.RCI.end() --return
+	
+			--format "_ROLLOUT_DEF:---------------------------------------------------------------------\n\n\n% \n"_Rollout.RCI
+	
+			_Rollout.saveDefition(_Rollout.RCI.str)
+			
+			_Rollout_def  --return
+			
+		)
+		--else
 		
-		/* SET SLOT IDS */
-		this._setSubrolloutDefaultSlotIds(_Rollout)
 		
-		/* CREATE SUBROLLOUTS */
-		this._createSubrollouts(_Rollout)
-		--if this.DEBUG then format "RolloutCreator._createSubrollouts % ms\n" ((timestamp()) - timer_create_rollout)
-
+		--format "load_def: %\n" load_def
 		
-		
-		/*------ CONTROLS ------*/
-		
-		ControlsCreator	= ControlCreator_v _Rollout:_Rollout Ini:Ini DEBUG:DEBUG -- MUST BE AFTER SUBROLLOUT ARE CREATED
-
-		if _Rollout.width == unsupplied and width != unsupplied then
-			_Rollout.width = width
-
-
-		ControlsCreator.moveGrouboxControlsToEnd(_Rollout)
-
-
-
-		/*------ EVENTS ------*/
-		
-		RolloutEventBinder.setRollout(_Rollout)
-		
-		RolloutEventBinder.combineEvents()
-		
-		RolloutEventBinder.mutateOpenCloseToRolledUp()
-
-
-
-		/*------ CREATE ROLLOUT ------*/
-
-		/* SET RolloutCreator */
-		_Rollout.RCI	= RolloutCreator (_Rollout.id) ( this._getTitleString(_Rollout) )
-
-		
-		/* EDIT start */
-		_Rollout.RCI.begin()
-
-
-		/* add HOTKEYS */ 
-		if hasProperty _Rollout #DialogHotkeys and _Rollout.DialogHotkeys.hot_keys.count > 0 then
-			_Rollout.DialogHotkeys.addHotkeyTimer(_Rollout)
-
-
-
-		/* add LOCAL VARIABLES */
-		this._addLocalVariablesToRollout (_Rollout)
-
-
-		/* add TEXT */
-		this._addTextToRollout (_Rollout)
-
-
-		/* add CONTROLS and SUBROLLOUTS SLOTS */
-		this._addControlsAndSubrolloutSlots (_Rollout)
-		--if this.DEBUG then format "%._addControlsAndSubrolloutSlots % ms\n" _Rollout.id ((timestamp()) - timer_create_rollout)
-
-
-		/* add EVENTS */
-		RolloutEventBinder.addHandlers()
-
-		/* EDIT END */
-		--_Rollout.RCI.end() --return
-
-		/* EDIT END - DEV VERSION */
-		_Rollout_def =_Rollout.RCI.end() --return
-
-		--format "_ROLLOUT_DEF:---------------------------------------------------------------------\n\n\n% \n"_Rollout.RCI
-
-		_Rollout_def  --return
 	),
 
 

@@ -126,9 +126,12 @@ struct Dialog_v
 			width = this.width
 
 
-		/* CREATE ROLLOUT */ 
+		/*
+		   CREATE DIALOG ROLLOUT AND NESTED ROLLOUTS
+		*/ 
 		_RolloutCreator.createRollout (this) width:width -- create nested rollouts
 
+		
 		if create_dialog then
 		(
 			CreateDialog (this.RCI.def) \
