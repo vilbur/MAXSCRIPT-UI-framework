@@ -106,13 +106,15 @@ struct Dialog_v
 		lockWidth:true	\
 		parent: =
 	(
-
+		--format "\n"; print "Dialog_v.create()"
+		
 		this.destroy()
-
-		--if this.DEBUG then timer_create_dialog = timestamp()
+		
 
 		_RolloutCreator = RolloutCreator_v Ini:Ini DEBUG:DEBUG
 
+		--DEBUG = true
+		if this.DEBUG then timer_all = timestamp()
 		
 		
 		/* DIALOG SIZE */ 
@@ -125,15 +127,19 @@ struct Dialog_v
 		if classOf width != integer then
 			width = this.width
 
-
 		/*
 		   CREATE DIALOG ROLLOUT AND NESTED ROLLOUTS
-		*/ 
-		_RolloutCreator.createRollout (this) width:width -- create nested rollouts
+		*/
+		--format "createRollout START\n"
 
-		
+		timer_createRollout = timeStamp()
+		_RolloutCreator.createRollout (this) width:width  -- create nested rollouts
+		if this.DEBUG then format "createRollout % ms\n" ((timestamp()) - timer_all)
+
+
 		if create_dialog then
 		(
+			
 			CreateDialog (this.RCI.def) \
 				width:	width                          	\
 				height:	height                          	\
@@ -151,11 +157,11 @@ struct Dialog_v
 				parent:	parent
 
 
-			if this.DEBUG then format "CreateDialog % ms\n" ((timestamp()) - timer_create_dialog)
+			--if this.DEBUG then format "CreateDialog % ms\n" ((timestamp()) - timer_all)
 
-			/* ADD SUBROLLOUTS */ 
+			/* ADD SUBROLLOUTS */
 			_RolloutCreator.SubolloutsCreator.addSubRollouts (this)
-			if this.DEBUG then format "addSubRollouts % ms\n" ((timestamp()) - timer_create_dialog)
+			--if this.DEBUG then format "addSubRollouts % ms\n" ((timestamp()) - timer_all)
 
 			this._setDockState()
 
@@ -166,6 +172,8 @@ struct Dialog_v
 			this._executeAutorunEvents()
 
 			CONTROL_BITMAPS_STORE = #() -- reset buffer array
+			
+			if this.DEBUG then format "Dialog_v.create()% ms\n" ((timestamp()) - timer_createRollout)
 
 			format ("\n\nDIALOG \""+ id as string +"\" HAS BEEN CREATED\n\n" )
 		)
@@ -173,7 +181,7 @@ struct Dialog_v
 			format ("\n\nROLLOUT \""+ id as string +"\" HAS BEEN CREATED\n\n" )
 
 
-		--if this.DEBUG then format "Dialog Create % ms\n" ((timestamp()) - timer_create_dialog)
+		if this.DEBUG then format "Dialog Create % ms\n" ((timestamp()) - timer_createRollout)
 	),
 
 	/** Create rollout

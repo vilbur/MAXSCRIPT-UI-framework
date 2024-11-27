@@ -26,7 +26,7 @@ function loadContentTest dir_name =
 	ContentLoader	= ContentLoader_v path:(current_dir+"/"+dir_name)
 	
 	/* CHANGE DIALOG PROPERTIES */ 
-	ContentLoader.Dialog.width  = 720
+	ContentLoader.Dialog.width  = 320
 	ContentLoader.Dialog.height = 1024
 	
 	

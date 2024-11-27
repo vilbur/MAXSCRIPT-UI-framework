@@ -18,7 +18,7 @@ struct ContentLoader_v
 (
 	__construct = #( #path ),
 
-	/* required properties */
+	/* REQUIRED properties */
 	path, -- source dir of content
 	ini,  -- path to ini file
 
@@ -94,8 +94,23 @@ struct ContentLoader_v
 		ContentRollout =  ContentRollout_v path:path
 
 		Dialog	= Dialog_v title:ContentRollout.title ini:ini width:width height:height min_size:min_size max_size:max_size DEBUG:DEBUG
-
+		
+		
+		--format "DIALOG.ID: %\n" Dialog.id
+		
 		for Subrollouts_or_Controls in ContentRollout.Subrollouts_and_Controls do
 			Subrollouts_or_Controls.addToUi Dialog
 	)
 )
+
+
+
+
+
+
+
+
+
+
+
+

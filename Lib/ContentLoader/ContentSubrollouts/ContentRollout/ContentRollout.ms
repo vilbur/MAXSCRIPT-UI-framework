@@ -32,10 +32,36 @@ struct ContentRollout_v
 		--format "ini_file	= % \n" ini_file
 		Rollout_new	= Subrollouts.Roll title -- get new rollout
 
-		this._setRolloutPropertiesFromIniFile(Rollout_new)
-
-		for Subrollouts_or_Controls in Subrollouts_and_Controls do
-			Subrollouts_or_Controls.addToUi Rollout_new
+		/*------------------------------------------------------------------------------
+			USE CACHE IS DISBALED CURRENTRLY
+			
+			TODO:
+				1) load UI state from ini when dialog is created
+				2) Store AUTORUN controls in file and FIRE EVENTS when dialog is created
+			
+		--------------------------------------------------------------------------------*/
+		
+		___DEV_USE_CACHE___ = false
+		
+		if ___DEV_USE_CACHE___ or ( rci_loaded = Rollout_new.loadRolloutDefinitionFromCache() ) == undefined then
+		(
+			this._setRolloutPropertiesFromIniFile(Rollout_new)
+	
+			for Subrollouts_or_Controls in Subrollouts_and_Controls do
+				Subrollouts_or_Controls.addToUi Rollout_new
+		)
+		else
+		(
+			--format "RCI_LOADED: %\n" rci_loaded
+			Rollout_new.setRCI()
+		
+			Rollout_new.RCI.def = rci_loaded
+		
+			for Subrollouts in Subrollouts_and_Controls where hasProperty Subrollouts "Rollouts" do
+				Subrollouts.addToUi Rollout_new
+		)
+		
+		
 	),
 
 	/** Get new instance of This
@@ -159,5 +185,21 @@ struct ContentRollout_v
 			ini_file = PathsLoader.ini_files[1]
 
 		this._initLoadContentFromDir()
+		
+		
 	)
 )
+
+
+
+
+
+
+
+
+
+
+
+
+
+

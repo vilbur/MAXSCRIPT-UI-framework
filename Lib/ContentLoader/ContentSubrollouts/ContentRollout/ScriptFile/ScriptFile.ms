@@ -1,13 +1,13 @@
 filein( getFilenamePath(getSourceFileName()) + "/MacroScript/MacroScript.ms" ) -- "./MacroScript/MacroScript.ms"
 
-filein( getFilenamePath(getSourceFileName()) + "/MacroScriptFileParser/MacroScriptFileParser.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/MacroScriptFileParser/MacroScriptFileParser.ms" )	--"./MacroScriptFileParser/MacroScriptFileParser.ms"
 --filein( getFilenamePath(getSourceFileName()) + "/ContentControlCreator/ContentControlCreator.ms" )
 
 filein( getFilenamePath(getSourceFileName()) + "/../../../../Menus/QuadMenu/QuadMenu.ms" ) -- "./../../../../Menus/QuadMenu/QuadMenu.ms"
 /*
 		TODO:
 
-		RENAME THIS TO contentCotnrolCreator
+		RENAME THIS TO ContentCotnrolCreator
 
 */
 
@@ -66,6 +66,9 @@ struct ScriptFile_Content_v
 		--print("ScriptFile_Content_v.addToUi() " +_Rollout.id)
 		--format "filename	= % \n" filename
 		--filename	= if( filename == undefined ) then "" else ""; -- ????????????
+		
+		
+		this.loadMacroscriptFile()
 
 		if( this.isMacrosriptFile() and MacroScripts.count > 0 ) then
 			this._createControls (_Rollout)
@@ -300,6 +303,10 @@ struct ScriptFile_Content_v
 		--format "\n"
 		--print ("ScriptFile_v.onCreate " + path )
 
-		this.loadMacroscriptFile()
+		--this.loadMacroscriptFile()
 	)
 )
+
+
+
+

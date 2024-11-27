@@ -190,11 +190,8 @@
 	
 	/** Save Rollout Definition to file
 	  * 
-	  * FILE PATH E.G.:
-	  *		"C:\Users\%username%\AppData\Local\Autodesk\3dsMax\2023 - 64bit\ENU\temp\UI-Framework\Rollout-Definitions\{DIALOG ID}\{ROLLOUT_ID}.ms"
-	  * 
 	 */
-	function saveDefition def =
+	function saveRolloutDefinitionToCache def =
 	(
 		--format "\n"; print "RolloutBody.saveDefition()"
 
@@ -209,6 +206,9 @@
 
 		--format "def_file: %\n" def_file
 		
+		--def	= ( dotNetObject "System.Text.RegularExpressions.Regex" "\"" ).Replace def "\\\""
+		
+		
 		format "%" def to:def_filestream
 		
 		close def_filestream
@@ -216,28 +216,54 @@
 	
 	/** Load definition
 	 */
-	function loadDefinition =
+	function loadRolloutDefinitionFromCache =
 	(
-		format "\n"; print "RolloutBody.loadDefinition()"
+		--format "\n"; print "RolloutBody.loadDefinition()"
 		def_file = this._getDefinitionFilePath()
 
 		if (file_exists = doesFileExist def_file) then
-			filein def_file
+		(
+			def_filestream = openFile def_file mode:"rS"
+			--format "def_filestream: %\n" def_filestream
+			
+			rci_loaded = ""
 
-		file_exists --return
+			try(
+				rci_loaded = execute def_filestream
+				
+				close def_filestream
+			)
+			catch
+				close def_filestream
+			
+			rci_loaded --return	
+		)
+	),
+	
+	/** Set Rollout Createor
+	 */
+	function setRCI =
+	(
+		--format "\n"; format "RolloutBody.setRCI() % " this.id
+		this.RCI	= RolloutCreator (this.id) ( this._getTitleString() )
 	),
 	
 
 	private
 	
 	/** Get definition file path
+	  * 
+	  * FILE PATH E.G.:
+	  *		"C:\Users\%username%\AppData\Local\Autodesk\3dsMax\2023 - 64bit\ENU\temp\UI-Framework\RolloutCreator-Cache\{ROLLOUT_ID}.ms"
+	  * 
 	 */
 	function _getDefinitionFilePath =
 	(
-		format "\n"; print "RolloutBody._getDefinitionFilePath()"
-		dialog_dir = if this.isDialog() then id else parent_rollout_id
+		--format "\n"; print "RolloutBody._getDefinitionFilePath()"
+		--format "id: %\n" id
+		--dialog_dir = if this.isDialog() then id else parent_rollout_id
 		
-		dir = getDir #temp + "\\UI-Framework\\Rollout-Definitions\\" + dialog_dir
+		dir = getDir #temp + "\\UI-Framework\\RolloutCreator-Cache\\"
 		
 		dir + "\\" + id + ".ms" --return
 	),
@@ -292,6 +318,23 @@
 			format "\n"
 			id  = id_prefixed
 		)
+	),
+
+
+	/** Get title of rollout
+	  *
+	  * @return string title with whitespace between each character E.G.: "ROLLOUT TITLE" >>> "R O L L O U T   T I T L E"
+	 */
+	function _getTitleString =
+	(
+		--format "\n"; print "RolloutCreator_v._getTitleString()"
+
+		/* modify only title of rollout, NOT title of dialog */
+		if this.parent_rollout_id != undefined then
+			( dotNetObject "System.Text.RegularExpressions.Regex" "(.)" ).Replace this.title "$1 "
+
+		else
+			this.title --return Dialog title as it is
 	),
 
 	/** _repleace string

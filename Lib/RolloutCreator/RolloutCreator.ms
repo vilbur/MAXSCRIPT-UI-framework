@@ -23,8 +23,8 @@ struct RolloutCreator_v
 	Ini,
 
 	/* developent */
-	DEBUG = false,
-	--DEBUG = true,
+	--DEBUG = false,
+	DEBUG = true,
 
 	/* properties */
 	closed_rollout_bar_height = 24,
@@ -45,12 +45,13 @@ struct RolloutCreator_v
 	 */
 	function createRollout _Rollout width: =
 	(
-		if DEBUG then format "\n\n-------------------------------------	RolloutCreator_v.createRollout() id:#%	-------------------------------------\n"  ( _Rollout.id as string );
-		--timer_create_rollout = timestamp()
+		--if DEBUG then format "\n\n-------------------------------------	RolloutCreator_v.createRollout() id:#%	-------------------------------------\n"  ( _Rollout.id as string );
+		--format "\n\n-------------------------------------	RolloutCreator_v.createRollout() id:#%	-------------------------------------\n"  ( _Rollout.id as string );
 
-		
-		if not (_Rollout.loadDefinition()) then
+		if _Rollout.RCI == undefined then -- RCI is defined WHEN chache is loaded
 		(
+			_Rollout.setRCI()
+			
 			execute( "global " + _Rollout.id as string )
 			/*------ SUBROLLOUTS ------*/
 			
@@ -58,38 +59,34 @@ struct RolloutCreator_v
 			this._setSubrolloutDefaultSlotIds(_Rollout)
 			
 			/* CREATE SUBROLLOUTS */
-			this._createSubrollouts(_Rollout)
-			--if this.DEBUG then format "RolloutCreator._createSubrollouts % ms\n" ((timestamp()) - timer_create_rollout)
+			timer_createSubrollouts = timeStamp()
+			
+			this._createSubrolloutDialogs(_Rollout)
+			
+			--format "createSubrollouts: % ms\n" (( timeStamp()) - timer_createSubrollouts)
+			if this.DEBUG then format "RolloutCreator._createSubrolloutDialogs % ms\n" ((timestamp()) - timer_create_rollout)
 	
 			
-			
 			/*------ CONTROLS ------*/
-			
 			ControlsCreator	= ControlCreator_v _Rollout:_Rollout Ini:Ini DEBUG:DEBUG -- MUST BE AFTER SUBROLLOUT ARE CREATED
 	
 			if _Rollout.width == unsupplied and width != unsupplied then
 				_Rollout.width = width
 	
-	
 			ControlsCreator.moveGrouboxControlsToEnd(_Rollout)
 	
 	
-	
 			/*------ EVENTS ------*/
-			
 			RolloutEventBinder.setRollout(_Rollout)
 			
 			RolloutEventBinder.combineEvents()
 			
 			RolloutEventBinder.mutateOpenCloseToRolledUp()
 	
-	
-	
-			/*------ CREATE ROLLOUT ------*/
-	
-			/* SET RolloutCreator */
-			_Rollout.RCI	= RolloutCreator (_Rollout.id) ( this._getTitleString(_Rollout) )
-	
+
+			/*==============================================================================
+				CREATE ROLLOUT
+			================================================================================*/
 			
 			/* EDIT BEGIN - RolloutCreator */
 			_Rollout.RCI.begin()
@@ -100,40 +97,33 @@ struct RolloutCreator_v
 				_Rollout.DialogHotkeys.addHotkeyTimer(_Rollout)
 	
 	
-	
 			/* add LOCAL VARIABLES */
-			this._addLocalVariablesToRollout (_Rollout)
-	
+			this._addLocalVariablesToRollout(_Rollout)
 	
 			/* add TEXT */
 			this._addTextToRollout (_Rollout)
 	
-	
 			/* add CONTROLS and SUBROLLOUTS SLOTS */
-			this._addControlsAndSubrolloutSlots (_Rollout)
-			--if this.DEBUG then format "%._addControlsAndSubrolloutSlots % ms\n" _Rollout.id ((timestamp()) - timer_create_rollout)
-	
+			this._addControlsAndSubrolloutSlots(_Rollout)
 	
 			/* add EVENTS */
 			RolloutEventBinder.addHandlers()
 	
 			/* EDIT END */
-			--_Rollout.RCI.end() --return
-	
-			/* EDIT END - DEV VERSION */
-			_Rollout_def = _Rollout.RCI.end() --return
-	
-			--format "_ROLLOUT_DEF:---------------------------------------------------------------------\n\n\n% \n"_Rollout.RCI
-	
-			_Rollout.saveDefition(_Rollout.RCI.str)
-			
-			_Rollout_def  --return
-			
+			_Rollout.RCI.end() --return _Rollout.RCI.def
 		)
-		--else
 		
+		global timer_TEST_END = timeStamp()
 		
-		--format "load_def: %\n" load_def
+		--format "\n\n"
+		--else(
+			--_Rollout.RCI.begin()
+
+			----_Rollout.RCI.end()
+			--_Rollout.RCI.def = rci_loaded --return
+		--)
+		--format "createRollout END\n"
+
 		
 	),
 
@@ -141,7 +131,10 @@ struct RolloutCreator_v
 	private
 
 	/** Create subrollouts recursively from most nested to dialog level
-	  *
+	  * 
+	  * MAIN PURPOSE: get heights of subrollouts
+	  * 
+	  * 
 	  * NESTED ROLLOUTS ARE CREATED AS DIALOGS OUTSIDE OF DISPLAY, TO FIND THEIR HEIGHT FOR SUBROLLOUT SLOT
 	  *
 	  * Rollouts
@@ -157,7 +150,7 @@ struct RolloutCreator_v
 	  *
 	  *
 	 */
-	function _createSubrollouts _RolloutParent =
+	function _createSubrolloutDialogs _RolloutParent =
 	(
 		--format "\n"; print "RolloutCreator_v.createSubrollouts()"
 		--format "_ROLLOUTPARENT:	% \n" _RolloutParent.title
@@ -186,19 +179,23 @@ struct RolloutCreator_v
 				/* DONT CREATE ROLOUTS WITH DEFINED HEIGHT */
 				if Subrollouts.height == unsupplied then
 				(
-					CreateDialog ( _RolloutSub.RCI.def ) width:_RolloutParent.width height:_RolloutSub.height pos:[0,-8000] -- create subroullouts away from display
 
-					/* BELOW IS DEV VERSION OF LINE ABOVE
+					/* ======= DEV CODE =======
 
 					  FOR FLOATEBLE SUBROLLOUTS diable adding in SubolloutsCreator.addSubRollouts()
 
 					*/
 					--execute ("try(destroyDialog "+_RolloutSub.id as string+ " )catch()") --DEV DESTROY SUBROLLOUT DIALOG
 					--CreateDialog ( _RolloutSub.RCI.def ) width:_RolloutParent.width height:_RolloutSub.height -- DEV - creat
+					
+					
+					/* ======= PRODUCTION CODE =======*/
+					--CreateDialog ( _RolloutSub.RCI.def ) width:_RolloutParent.width height:_RolloutSub.height pos:[0,-8000] -- create subroullouts away from display
 				)
 
-				this._storeSubrolloutHeight(_RolloutSub)( Subrollouts.slot)
+				--this._storeSubrolloutHeight(_RolloutSub)( Subrollouts.slot)
 			)
+			
 			this._setSlotHeight(Subrollouts)
 		)
 
@@ -329,21 +326,21 @@ struct RolloutCreator_v
 			_Rollout.title
 	),
 
-	/** Get title of rollout
-	  *
-	  * @return string title with whitespace between each character E.G.: "ROLLOUT TITLE" >>> "R O L L O U T   T I T L E"
-	 */
-	function _getTitleString _Rollout =
-	(
-		--format "\n"; print "RolloutCreator_v._getTitleString()"
-
-		/* modify only title of rollout, NOT title of dialog */
-		if _Rollout.parent_rollout_id != undefined then
-			( dotNetObject "System.Text.RegularExpressions.Regex" "(.)" ).Replace _Rollout.title "$1 "
-
-		else
-			_Rollout.title --return Dialog title as it is
-	),
+	--/** Get title of rollout
+	--  *
+	--  * @return string title with whitespace between each character E.G.: "ROLLOUT TITLE" >>> "R O L L O U T   T I T L E"
+	-- */
+	--function _getTitleString _Rollout =
+	--(
+	--	--format "\n"; print "RolloutCreator_v._getTitleString()"
+	--
+	--	/* modify only title of rollout, NOT title of dialog */
+	--	if _Rollout.parent_rollout_id != undefined then
+	--		( dotNetObject "System.Text.RegularExpressions.Regex" "(.)" ).Replace _Rollout.title "$1 "
+	--
+	--	else
+	--		_Rollout.title --return Dialog title as it is
+	--),
 
 	/**
 	 */
