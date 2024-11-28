@@ -4,18 +4,25 @@ filein( getFilenamePath(getSourceFileName()) + "/../StdScriptImporter.ms" )	--".
 
 
 files = #(
-	"\scripts-to-import\StdScriptImported.msX",	-- RELATIVE path
+	"\scripts-to-import\StdScriptImportedX.ms",	-- RELATIVE path
 	"scripts-to-import\StdScriptImported.ms",	-- RELATIVE path
 	getFilenamePath(getSourceFileName()) + "/scripts-to-import/StdScriptImported.ms"	-- ABSOLUTE path
 )
 
-
+/*------------------------------------------------------------------------------
+	CREATE INSTANCE
+--------------------------------------------------------------------------------*/
 StdScriptImporter 	= StdScriptImporter_v(getSourceFileName())
-
-
-
 
 StdScriptImporter.files = files
 
+/*------------------------------------------------------------------------------
+	CREATE IMPORT STD SCRIPTS FILE
+--------------------------------------------------------------------------------*/
+StdScriptImporter.createStartUpFile()
 
-StdScriptImporter.import()
+
+/*------------------------------------------------------------------------------
+	COMMENT
+--------------------------------------------------------------------------------*/
+--StdScriptImporter.delete()

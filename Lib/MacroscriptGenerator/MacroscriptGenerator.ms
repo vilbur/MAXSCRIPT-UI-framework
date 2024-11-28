@@ -25,6 +25,8 @@ struct MacroscriptGenerator_v
     /* reference */
     /* inhered */
 
+	
+	
     /** Generate macroscript file
     *
     * @return path to *.mcr file

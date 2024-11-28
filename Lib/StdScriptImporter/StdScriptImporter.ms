@@ -29,11 +29,11 @@ struct StdScriptImporter_v
 	/* reference */
 	/* inhered */
 
-	/** Import
+	/** Create Start Up File
 	 */
-	function import =
+	function createStartUpFile =
 	(
-		format "\n"; print "StdScriptImporter_v.import()"
+		--format "\n"; print "StdScriptImporter_v.import()"
 		this._setFileName()
 		this._setRootPath()
 
@@ -44,6 +44,13 @@ struct StdScriptImporter_v
 		this._writeToFile()
 	),
 	
+	/** Delete file
+	 */
+	function delete =
+	(
+		--format "\n"; print "StdScriptImporter_v.deleteFile()"
+		deleteFile (this._getStdFilePath())
+	),
 
 	private
 	
@@ -51,9 +58,8 @@ struct StdScriptImporter_v
 	 */
 	function _writeToFile =
 	(
-		format "\n"; print "StdScriptImporter_v._writeToFile()"
-		std_file_path =  pathConfig.normalizePath ((getDir #maxroot)+ "/stdplugs/stdscripts/" + filename)
-		format "STD_FILE_PATH: %\n" STD_FILE_PATH
+		--format "\n"; print "StdScriptImporter_v._writeToFile()"
+		std_file_path = this._getStdFilePath()
 		
 		std_file = createFile std_file_path
 		
@@ -71,8 +77,7 @@ struct StdScriptImporter_v
 		content += "	if doesFileExist file_path then\n"
 		content += "		filein file_path\n"
 		content += "	else\n"
-		content += "		format \"\\n\\n----- WARNING - Missing file in: % -----\\n\\nERROR OF IMPORT FILE: %\n\" (getSourceFileName()) file_path"
-		
+		content += "		format \"\\n\\n----- WARNING: Missing file in: %\\n\\nERROR OF IMPORT FILE: %\\n\" (getSourceFileName()) file_path"
 		
 		try(
 			format "%" content to:std_file
@@ -83,6 +88,14 @@ struct StdScriptImporter_v
 			close std_file
 		
 		filein std_file_path
+	),
+	
+	/** Get std file path
+	 */
+	function _getStdFilePath =
+	(
+		--format "\n"; print "StdScriptImporter_v._getStdFilePath()"
+		pathConfig.normalizePath ((getDir #maxroot)+ "/stdplugs/stdscripts/" + filename + ".ms") --return
 	),
 	
 	/** Remove leading slash
@@ -100,7 +113,7 @@ struct StdScriptImporter_v
 	(
 		--format "\n"; print "StdScriptImporter_v._convertRelativeToAbsolutePaths()"
 		for i = 1 to files.count where not pathConfig.isAbsolutePath files[i] do
-			files[i] = root + files[i]
+			files[i] = root + "/" + files[i]
 	),
 	
 	/** Set file name
@@ -108,8 +121,9 @@ struct StdScriptImporter_v
 	function _setFileName =
 	(
 		--format "\n"; print "StdScriptImporter_v._setFileName()"
-		if root != undefined and filename == undefined and this._isPathToFile(root) then
-			filename = filenameFromPath(root)
+		--if root != undefined and filename == undefined and this._isPathToFile(root) then
+		if root != undefined and filename == undefined then
+			filename = getFilenameFile(root)
 	),
 
 	/** Set root path
