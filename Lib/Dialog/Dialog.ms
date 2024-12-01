@@ -173,7 +173,7 @@ struct Dialog_v
 
 			CONTROL_BITMAPS_STORE = #() -- reset buffer array
 			
-			if this.DEBUG then format "Dialog_v.create()% ms\n" ((timestamp()) - timer_createRollout)
+			format "Dialog_v.create()% ms\n" ((timestamp()) - timer_createRollout)
 
 			format ("\n\nDIALOG \""+ id as string +"\" HAS BEEN CREATED\n\n" )
 		)
