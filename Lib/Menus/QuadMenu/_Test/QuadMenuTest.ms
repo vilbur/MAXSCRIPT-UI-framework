@@ -31,7 +31,13 @@ function getDefaultQuadMenu =
 (
 	--format "\n"; print ".getDefaultQuadMenu()"
 	DeafultQuadMenu 	= QuadMenu_v ("Snap")
-	format "DeafultQuadMenu = % \n" DeafultQuadMenu
+	format "\nDeafultQuadMenu = % \n" DeafultQuadMenu
+	
+	SnapOptionsMenu	= DeafultQuadMenu.getMenu(#TOP_LEFT)
+	format "\nSnapOptionsMenu: %\n" SnapOptionsMenu
+	
+	item_1 = SnapOptionsMenu.getItem 1
+	format "\nSnapOptionsMenu.item.1: %\n" (item_1.getTitle())
 )
 
 
@@ -41,7 +47,7 @@ function getDefaultQuadMenu =
   */
 function createQuadMenu =
 (
-	QuadMenuTest 	= QuadMenu_v (quad_menu_name)
+	QuadMenuTest 	= QuadMenu_v (quad_menu_name) prefix:"_" -- "_" is DEFAULT PREFIX 
 
 	Quad_1 = QuadMenuTest.Quads[1]
 	Quad_2 = QuadMenuTest.Quads[2]
@@ -180,14 +186,7 @@ function removeItems =
 	Quad_1.removeItem "Item to remove by title"
 )
 
-/** Set menu options
- */
-function setMenuOptions =
-(
-	QuadMenuTest.setRightClick()
 
-	QuadMenuTest.showAllQuads()
-)
 
 
 
@@ -195,31 +194,31 @@ function setMenuOptions =
 	RUN TESTS
 --------------------------------------------------------------------------------*/
 
-/* QUAD MENU */
+--/* DEFAULT QUAD MENU */
 --getDefaultQuadMenu()
-
-
---/* QUAD MENU */
+--
+--
+/* QUAD MENU */
 createQuadMenu()
 
-addItemsToQuad()
-
-moveItemInQuad()
-
-
-/* MENU */
-createMenuInMenuList()
-
-addMenuToQuad2()
-
-moveItemsInMenu()
-
-
-/* SUBMENU */
-addSubmenu()
-
-
-/* SEPARATOR */
+--addItemsToQuad()
+--
+--moveItemInQuad()
+--
+--
+--/* MENU */
+--createMenuInMenuList()
+--
+--addMenuToQuad2()
+--
+--moveItemsInMenu()
+--
+--
+--/* SUBMENU */
+--addSubmenu()
+--
+--
+--/* SEPARATOR */
 addSeparator()
 --
 --removeSeparator()
@@ -231,5 +230,17 @@ addSeparator()
 --removeItems()
 --
 --
---/* QUAD MEMU OPTIONS */
---setMenuOptions() -- set open on rightclick
+----/* QUAD RIGHT CLICK */
+--QuadMenuTest.setRightClick() -- only rightclick
+--QuadMenuTest.setRightClick which: #controlPressed
+--
+--
+--/* SET HOTKEY */ 
+--QuadMenuTest.setHotkey "shift"
+--QuadMenuTest.setHotkey #shiftPressed
+--
+--
+--/* SHOW ALL QUADS */ 
+--QuadMenuTest.showAllQuads()
+
+

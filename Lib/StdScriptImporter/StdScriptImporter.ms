@@ -1,4 +1,6 @@
-/** Import structures used in macroscripts on Max start
+/** Import structures used in macroscripts on 3Ds Max startup.
+  * 
+  * USECASE: If script is used in quad menu, then imported scripts are independent on UI
   * 
   * Create .ms file in "#maxroot+ "/stdplugs/stdscripts/"
   * 
@@ -7,10 +9,6 @@
   *		 	1) Std scripts
   *		 	2) Macroscripts
   *		 	3) Startup scripts
-  * 
-  * 
-  * USECASE: If script is used in quad menu, then imported scripts are independent on UI
-  *
   *
  */
 struct StdScriptImporter_v

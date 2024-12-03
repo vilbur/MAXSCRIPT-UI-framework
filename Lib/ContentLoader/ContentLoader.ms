@@ -1,4 +1,5 @@
-filein( getFilenamePath(getSourceFileName()) + "/../ConstructPropeties/ConstructPropeties.ms" )
+
+filein( getFilenamePath(getSourceFileName()) + "/../ConstructPropeties/ConstructPropeties.ms" )	--"./../ConstructPropeties/ConstructPropeties.ms"
 
 filein( getFilenamePath(getSourceFileName()) + "/../Dialog/Dialog.ms" )	-- "./../Dialog/Dialog.ms"
 
@@ -87,14 +88,14 @@ struct ContentLoader_v
 	 */
 	on create do
 	(
-		--print("ContentLoader_v.onCreate()")
+		print("ContentLoader_v.onCreate()")
+		format "path: %\n" path
 
 		ConstructPropeties test:this
 
 		ContentRollout =  ContentRollout_v path:path
 
 		Dialog	= Dialog_v title:ContentRollout.title ini:ini width:width height:height min_size:min_size max_size:max_size DEBUG:DEBUG
-		
 		
 		--format "DIALOG.ID: %\n" Dialog.id
 		

@@ -1,6 +1,8 @@
 filein( getFilenamePath(getSourceFileName()) + "/Menu/Menu.ms" ) -- "./Menu/Menu.ms"
 
-/** Wrapper for <MixinInterface:quadMenu>
+print "IMPORT QuadMenu_v !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+
+/** Wrapper for <MixinInterface:QuadMenu>
   *
   * HELP: https://help.autodesk.com/view/MAXDEV/2021/ENU/?guid=GUID-1374EDCA-CC8B-4B43-81A5-6ED98DBE01D3#GUID-1374EDCA-CC8B-4B43-81A5-6ED98DBE01D3__GUID-B997CD35-721D-41F9-B011-304446C3F482
   *
@@ -8,19 +10,21 @@ filein( getFilenamePath(getSourceFileName()) + "/Menu/Menu.ms" ) -- "./Menu/Menu
 struct QuadMenu_v
 (
 	/* construct */
-	name,
-
+	menu_name,
+	prefix = "_", -- menu name prefix
+	
 	/* dependency */
 	/* reference */
 	/* inhered */
 	/* properties */
-	quadMenu, -- <MixinInterface:quadMenu>
+	QuadMenu, -- <MixinInterface:QuadMenu>
 	Quads	= #(),
 
+	private
+	
 	macroscripts = #(),
-
-
-	/** Default quads
+	
+	/** Long names of 3Ds Max default quads
 	 */
 	default_quad_names =
 	#(
@@ -43,7 +47,11 @@ struct QuadMenu_v
         "Windows",
         "Texture Tools"
 	),
+	
+	hotkeys = #( #RightClick, #shiftPressed, #altPressed, #controlPressed, #shiftAndAltPressed, #shiftAndControlPressed, #controlAndAltPressed, #shiftAndAltAndControlPressed ),
 
+	public
+	
 	/** Add menu
 	  *
 	  * @param	Menu_V|string|<MixinInterface:menu>	menu_or_name	menu or name added as quad
@@ -84,7 +92,7 @@ struct QuadMenu_v
 	function showAllQuads switch:true =
 	(
 		----format "\n"; print "QuadMenu_v.showAllQuads()"
-		menuMan.setShowAllQuads quadMenu switch
+		menuMan.setShowAllQuads QuadMenu switch
 
 		this --return
 	),
@@ -97,9 +105,9 @@ struct QuadMenu_v
 	function setRightClick which:#nonePressed  =
 	(
 		--format "\n"; print "QuadMenu_v.setRightClick()"
-		--format "this.name:	% \n" this.name
+		--format "this.menu_name:	% \n" this.menu_name
 		--format "which:	% \n" which
-		menuMan.setViewportRightClickMenu which quadMenu
+		menuMan.setViewportRightClickMenu which QuadMenu
 	),
 
 	/** Reset right click to default
@@ -116,54 +124,75 @@ struct QuadMenu_v
 		quadmenu = menuMan.findQuadMenu "Modeling 1 [Cntrl+RMB]"
 		if quadmenu != undefined do menuMan.setViewportRightClickMenu #controlPressed quadmenu
 	),
+	
+	/** Set hotkey
+	 */
+	function setHotkey hotkey =
+	(
+		if ( hotkey_name = this._getHotkeyName( hotkey as string ) ) != undefined then
+			this.setRightClick which:hotkey_name
+
+		else
+			format "WARNING - TRY TO ASSIGN NOT WALID HOTKEY TO QUAD MENU in file: QuadMenu_v.setHotkey( \"%\" )\n" hotkey
+	),
 
 
 	private
 
 
-	/** Create quadMenu menu
+	/** Create QuadMenu menu
 	  *
 	  * @return	this
 	 */
-	function _setQuad =
+	function _setQuadMenu =
 	(
-		--format "\n"; print "QuadMenu_v._setQuad()"
+		--format "\n"; print "QuadMenu_v._setQuadMenu()"
+		
+		full_name = if ( default_quad = this._getDefaultQuadName() ) != undefined then default_quad else this._getFullName()
 
-		function quadTitle index = this.name+"-"+index as string --return
-
-		if ( found_default_quad = this._getDefaultQuad() ) != undefined then
-			this.name = found_default_quad
-
-		if (quadMenu = menuMan.findQuadMenu this.name) == undefined then
-			--quadMenu = menuMan.createQuadMenu this.name (this.name+"_"+1 as string )(this.name+"_"+2 as string )(this.name+"_"+3 as string )(this.name+"_"+4 as string )
-			quadMenu = menuMan.createQuadMenu this.name ( quadTitle 1 ) ( quadTitle 2 ) ( quadTitle 3 ) ( quadTitle 4 )
-
-		--format "quadMenu	= % \n" quadMenu
-
+		/* SEARCH QUAD MENU OR CREATE NEW ONE - if menu was not found */ 
+		QuadMenu = if (QuadMenu_found = menuMan.findQuadMenu full_name) != undefined then QuadMenu_found else this._createNewQuadMenu()  
+			
 		this --return
+	),
+	
+	/** Create new quad menu
+	 */
+	function _createNewQuadMenu =
+	(
+		--format "\n"; print "QuadMenu_v._createNewQuadMenu()"
+		function quadTitle index = this.menu_name + "-" + index as string --return
+
+		full_name = this._getFullName()
+		
+		format "\nNEW QUAD MENU CREATED: \"%\" -- QuadMenu_v._createNewQuadMenu()\n\n" full_name
+		
+		menuMan.createQuadMenu (full_name) ( quadTitle 1 ) ( quadTitle 2 ) ( quadTitle 3 ) ( quadTitle 4 ) --return
 	),
 
 	/** Get default 3Ds Max quad menu
+	  *
+	  * @return string|undefined name of delaut quad
 	 */
-	function _getDefaultQuad =
+	function _getDefaultQuadName =
 	(
-		--format "\n"; print "QuadMenu_v.getDefaultQuad()"
-		found_default_quad = for default_quad_name in default_quad_names where matchPattern default_quad_name pattern:( this.name + "*") collect default_quad_name
-
+		--format "\n"; print "QuadMenu_v._getDefaultQuadName()"
+		found_default_quad = for default_quad_name in default_quad_names where matchPattern default_quad_name pattern:( this.menu_name + "*") collect default_quad_name
+			--format "found_default_quad: %\n" found_default_quad
 		if found_default_quad.count > 0 then
 			found_default_quad[1] --return
 	),
 
-	/** Create quadMenu menu
+	/** Create QuadMenu menu
 	  *
 	  * @return	this
 	 */
 	function _setQuads =
 	(
-		--format "\n"; print "QuadMenu_v._setQuad()"
-		if quadMenu != undefined then
+		--format "\n"; print "QuadMenu_v._setQuadMenu()"
+		if QuadMenu != undefined then
 			for i = 1 to 4 do
-				append Quads (Menu_v menu:(quadMenu.getMenu(i)) quad_index:i)
+				append Quads (Menu_v menu:(QuadMenu.getMenu(i)) quad_index:i)
 	),
 
 	/** Get quad index
@@ -182,18 +211,66 @@ struct QuadMenu_v
 				default: quad_index
 			)
 	),
+	
+	/** Get hotkey by name
+	 */
+	function _getHotkeyByQuadName =
+	(
+		format "\n"; print "QuadMenu_v._getHotkeyByQuadName()"
+		hotkey = this._getHotkeyName(this.menu_name)
+		
+		if ( index = findItem hotkeys hotkey ) > 0 then
+			hotkeys[index] --return
+	),
+	
+	/** Get hotkey name
+	  * 
+	  * @return name of hotkey E.G.: #shiftPressed
+	 */
+	function _getHotkeyName hotkey =
+	(
+		format "\n"; print "QuadMenu_v._getHotkeyName()"
+		--format "hotkey: %\n" hotkey
+		--format "classof hotkey: %\n" (classof hotkey)
+		--
+		--test = matchPattern hotkey pattern:( "*Pressed")
+		--
+		----hotkey_name = hotkey + "Pressed" 
+		--format "hotkey_name: %\n" hotkey_name
+		--format "classof hotkey_name: %\n" (classof hotkey_name)
+		--format "test: %\n" test
+		--
+		if not matchPattern hotkey pattern:( "*Pressed") then
+			( hotkey + "Pressed" ) as name -- add suffix "Pressed"
+		else
+			hotkey as name 
+	),
 
+	
+	/** Get full name
+	 */
+	function _getFullName =
+	(
+		--format "\n"; print "QuadMenu_v._getFullName()"
+		this.prefix + this.menu_name --return
+	),
+	
 	/**
 	 */
 	on create do
 	(
 		--print("QuadMenu_v.onCreate()")
-		--format "this.name = % \n" this.name
+		--format "this.menu_name = % \n" this.menu_name
 
-		this._setQuad()
-
-		this.showAllQuads()
+		this._setQuadMenu()
 
 		this._setQuads()
+
+		this.showAllQuads()
+		
+		--this._getHotkeyByQuadName()
+		
+		--if ( hotkey = this._getHotkeyByQuadName() ) != undefined then 
+			--this.setHotkey (hotkey)
 	)
 )

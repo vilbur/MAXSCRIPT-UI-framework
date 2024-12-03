@@ -64,7 +64,7 @@ struct RolloutCreator_v
 			this._createSubrolloutDialogs(_Rollout)
 			
 			--format "createSubrollouts: % ms\n" (( timeStamp()) - timer_createSubrollouts)
-			if this.DEBUG then format "RolloutCreator._createSubrolloutDialogs % ms\n" ((timestamp()) - timer_create_rollout)
+			--if this.DEBUG then format "RolloutCreator._createSubrolloutDialogs % ms\n" ((timestamp()) - timer_create_rollout)
 	
 			
 			/*------ CONTROLS ------*/

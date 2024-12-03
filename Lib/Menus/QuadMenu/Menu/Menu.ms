@@ -131,7 +131,7 @@ struct Menu_v
 
 		if submenu.numItems() == 0 then
 		(
-			format "\n\n\n----------- WARNING ----------------------\n\tMENU HAS NOT ANY ITEMS\n\n\tMenu: \"%\"" (submenu.getTitle() )
+			format "\n\n\n*********** WARNING **********************\n\tMENU HAS NOT ANY ITEMS\n\n\tMenu: \"%\"" (submenu.getTitle() )
 
 			return false
 		)
@@ -480,19 +480,24 @@ struct Menu_v
 	function _addSeparator index =
 	(
 		--format "\n"; print "Menu_v._addSeparator()"
-		add_on_end_of_menu = index == unsupplied or index > menu.numItems()
-
-		--format "menu.numItems():	% \n" (menu.numItems())
-		--format "index:	% \n" index
-		--format "add_on_end_of_menu:	% \n" add_on_end_of_menu
-		if index != unsupplied and index > (menu.numItems() +1 ) then
-			format "\n\n----------- WARNING ----------------------\n\nSEPARATOR IS ADDED ON END OF MENU\n\n\tMenu: \"%\"\n\tindex: % \n\titems in menu: %\n\n" this.name index (menu.numItems())
-
-		if add_on_end_of_menu then
-			index = menu.numItems() +1
-
-		this._isSeparator( if add_on_end_of_menu then menu.numItems() else index  )
-			menu.addItem (menuMan.createSeparatorItem()) (index)
+		if (items_count = menu.numItems()) > 0 then
+		(
+			add_on_end_of_menu = index == unsupplied or index > items_count
+			
+			--format "items_count:	% \n" (items_count)
+			--format "index:	% \n" index
+			--format "add_on_end_of_menu:	% \n" add_on_end_of_menu
+			
+			if index != unsupplied and index > (menu.numItems() +1 ) then
+				format "\n\n----------- WARNING ----------------------\n\nSEPARATOR IS ADDED ON END OF MENU\n\n\tMenu: \"%\"\n\tindex: % \n\titems in menu: %\n\n" this.name index (menu.numItems())
+			
+			if add_on_end_of_menu then
+				index = menu.numItems() +1
+			
+			this._isSeparator( if add_on_end_of_menu then menu.numItems() else index  )
+				menu.addItem (menuMan.createSeparatorItem()) (index)
+			
+		)
 	),
 
 	/** Is separator
@@ -519,12 +524,20 @@ struct Menu_v
 		local menu
 
 		if (menu = menuMan.findMenu menu_name) == undefined then
-			menu = menuMan.createMenu menu_name
-
-		--format "menu = % \n" menu
+			menu = this._createNewMenu (menu_name)
+		
 		menu --return
 	),
-
+	
+	/** Create new menu
+	 */
+	function _createNewMenu menu_name =
+	(
+		--format "\n"; print "Menu_v._createNewMenu()"
+		format "\nNEW MENU CREATED: \"%\" -- Menu_v._createNewMenu()\n\n" menu_name
+		
+		menuMan.createMenu menu_name --return
+	),
 
 	/** Set title to item
 	 */

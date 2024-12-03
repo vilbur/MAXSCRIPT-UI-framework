@@ -1,13 +1,13 @@
-global QUAD_MENU_INSTALL
+--global QUAD_MENU_INSTALL
 
 filein( getFilenamePath(getSourceFileName()) + "/../QuadMenu/QuadMenu.ms" )	--"./../QuadMenu/QuadMenu.ms"
 
 /* ADD QUAD MENUS FROM CONFIG FILES
  * 
  * QUAD MENU SHORTCUT IS CREATED IF FILENAME IS PREFIXED BY:
- *		shiftPressed|altPressed|controlPressed|shiftAndAltPressed|shiftAndControlPressed|controlAndAltPressed|shiftAndAltAndControlPressed
+ *		RightClick|shift|alt|control|shiftAndAlt|shiftAndControl|controlAndAlt|shiftAndAltAndControl
  * 
- * 	E.G.: controlPressed.ms|shiftAndAltPressed-fooBarSuffix|altPressed_.ms
+ * 	E.G.: RightClick.ms|shiftAndAlt-fooBarSuffix|alt_fooBar.ms
  * 	
  * 
  * @param dir where quadMenu config *.ms are converted to quad menus
@@ -15,37 +15,54 @@ filein( getFilenamePath(getSourceFileName()) + "/../QuadMenu/QuadMenu.ms" )	--".
  */
 function QuadMenuInstall dir delimeters:" -_" =
 (
-	--format "\n"; print ".()"
-	key_shortcuts = #( #shiftPressed, #altPressed, #controlPressed, #shiftAndAltPressed, #shiftAndControlPressed, #controlAndAltPressed, #shiftAndAltAndControlPressed )
+	format "\n"; print "QuadMenuInstall()"
+	--format "dir: %\n" dir
+	format "\n\n====== INSTALL QUAD MENUS FROM DIRECTORY ======\n%\n" ( pathConfig.normalizePath dir )
+	
+	key_shortcuts = #( #RightClick, #shiftPressed, #altPressed, #controlPressed, #shiftAndAltPressed, #shiftAndControlPressed, #controlAndAltPressed, #shiftAndAltAndControlPressed )
 	
 	for menu_file in getFiles ( dir + "\\*.ms") do
 	(
-		--format "\n";	format "menu_file:	% \n" menu_file
+		menu_file = pathConfig.normalizePath menu_file
+		
+		format "\n\n====== INSTALL QUAD MENU FILE ======\n%\n" menu_file
 	
 		filein( menu_file )
 	
-		filename = getFilenameFile( menu_file )
-	
-		 if QUAD_MENU_INSTALL != undefined then
-		 (
-			--format "QUAD_MENU_INSTALL:	% \n" filename
-		--try(
-			filename	= (filterString filename delimeters)[1]
-		
-	
-			if filename == "RightClick" then
-				QUAD_MENU_INSTALL.setRightClick()
-	
-			else
-			(
-				menu_shortcut = ( filename + "Pressed" ) as name
-	
-				if ( index = findItem key_shortcuts menu_shortcut ) > 0 then
-					QUAD_MENU_INSTALL.setRightClick which:menu_shortcut
-			)
-	
-			QUAD_MENU_INSTALL = undefined
-	
+		-- if QUAD_MENU_INSTALL != undefined then
+		-- (
+		--	filename = getFilenameFile( menu_file )
+		--	
+		--	keyboard_shortcut	= (filterString filename delimeters)[1]
+		--
+		--	if ( index = findItem key_shortcuts menu_shortcut ) > 0 then
+		--	(
+		--		--format "QUAD_MENU_INSTALL:	% \n" filename
+		--	--try(
+		--
+		--		if keyboard_shortcut == "RightClick" then
+		--		(
+		--			QUAD_MENU_INSTALL.setRightClick()
+		--			
+		--			format "KEYBOARD SHORTCUT: RightClick\n"
+		--		)
+		--		else
+		--		(
+		--			keyboard_shortcut = ( keyboard_shortcut + "Pressed" ) as name
+		--
+		--			QUAD_MENU_INSTALL.setRightClick which:keyboard_shortcut
+		--			
+		--			format "KEYBOARD SHORTCUT: %\n" keyboard_shortcut
+		--		)
+		--		
+		--
+		--		QUAD_MENU_INSTALL = undefined
+		--		
+		--	)
+		--	else
+		--		format "\nQUAD MENU IS NOT INSTALLED: global variable QUAD_MENU_INSTALL is undefined\n"
+		--	
+		--
 	--	)catch(
 	--
 	--		format "\n——————————————— ERROR IN FILE ———————————————\n\n%\n" (getSourceFileName())
@@ -55,7 +72,7 @@ function QuadMenuInstall dir delimeters:" -_" =
 	--
 	--    )
 	
-		 )
+		 --)
 	
 	
 	)

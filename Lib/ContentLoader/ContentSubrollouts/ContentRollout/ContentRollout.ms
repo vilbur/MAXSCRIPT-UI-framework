@@ -175,6 +175,8 @@ struct ContentRollout_v
 		--format "ini_file	= % \n" ini_file
 		ConstructPropeties test:this
 
+		--generateMacroscripts (path)
+		
 		this._setRolloutTitle()
 
 		PathsLoader = PathsLoader_v path:path

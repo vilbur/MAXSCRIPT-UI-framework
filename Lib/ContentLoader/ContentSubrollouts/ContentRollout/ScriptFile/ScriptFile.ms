@@ -3,7 +3,9 @@ filein( getFilenamePath(getSourceFileName()) + "/MacroScript/MacroScript.ms" ) -
 filein( getFilenamePath(getSourceFileName()) + "/MacroScriptFileParser/MacroScriptFileParser.ms" )	--"./MacroScriptFileParser/MacroScriptFileParser.ms"
 --filein( getFilenamePath(getSourceFileName()) + "/ContentControlCreator/ContentControlCreator.ms" )
 
-filein( getFilenamePath(getSourceFileName()) + "/../../../../Menus/QuadMenu/QuadMenu.ms" ) -- "./../../../../Menus/QuadMenu/QuadMenu.ms"
+if QuadMenu_v == undefined then 
+	filein( getFilenamePath(getSourceFileName()) + "/../../../../Menus/QuadMenu/QuadMenu.ms" ) -- "./../../../../Menus/QuadMenu/QuadMenu.ms"
+	
 /*
 		TODO:
 
@@ -84,6 +86,7 @@ struct ScriptFile_Content_v
 	function importMacroscriptsToMenus =
 	(
 		--format "\n"; print "ScriptFile_Content_v.importToMenus()"
+		--format "filename: %\n" filename
 		for i = 1 to MacroScripts.count do
 			this._addToMenu(MacroScripts[i]) ( ParamsList_v keys:MacroScripts[i].Params[1] values:MacroScripts[i].Params[2] )
 	),
@@ -145,7 +148,7 @@ struct ScriptFile_Content_v
 	 */
 	function _addToMenu Macro ParamsList =
 	(
-		--format "\n\n"; print "ScriptFile_Content_v.addToQuadMenu()"
+		format "\n\n"; print "ScriptFile_Content_v.addToQuadMenu()"
 		--quad_name	= ParamsList.getVal #quad
 
 		if (menu_param = ParamsList.getVal #menu) == undefined or (classOf menu_param == BooleanClass and menu_param != true) then
