@@ -148,7 +148,7 @@ struct ScriptFile_Content_v
 	 */
 	function _addToMenu Macro ParamsList =
 	(
-		format "\n\n"; print "ScriptFile_Content_v.addToQuadMenu()"
+		--format "\n\n"; print "ScriptFile_Content_v.addToQuadMenu()"
 		--quad_name	= ParamsList.getVal #quad
 
 		if (menu_param = ParamsList.getVal #menu) == undefined or (classOf menu_param == BooleanClass and menu_param != true) then
@@ -306,7 +306,7 @@ struct ScriptFile_Content_v
 		--format "\n"
 		--print ("ScriptFile_v.onCreate " + path )
 
-		--this.loadMacroscriptFile()
+		this.loadMacroscriptFile()
 	)
 )
 

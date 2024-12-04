@@ -18,21 +18,24 @@ struct QuadMenuManager_v
 	/* inhered */
 	
 	
-	/** Install menus
+	/** Setup menus by config files in dir
+	  * 
+	  * NOTE: hotkey of DEFAULT QUAD is set to CTRL+SHIFT+AL+RMB
+	  * 
 	 */
-	function installMenus dir =
+	function setupMenus dir =
 	(
-		--format "\n"; print "QuadMenuManager_v.installMenus()"
-		this.importMacroscriptFilesToMenus()
+		--format "\n"; print "QuadMenuManager_v.setupMenus()"
+		--this.createMenusFromMacroscriptFiles()
 		
 		/* ISNTALL QUAD MENUS */ 
-		installQuadsFromFiles( dir  )	--"./../../../QuadMenu/QuadMenus"
-
 		this.setDefaultQuadHotkey(#shiftAndAltAndControlPressed)
+
+		this._fileInSetupFiles( dir  )	--"./../../../QuadMenu/QuadMenus"
 		
-		this.saveMenusToMaxStartup()
+		this._saveMenusToMaxStartup()
 		
-		this.reconnectHotkeys()
+		this._reconnectHotkeys()
 	),
 	
 	/** Reset mnus and hotkeys
@@ -40,29 +43,30 @@ struct QuadMenuManager_v
 	function resetMenusAndHotkeys =
 	(
 		--format "\n"; print "QuadMenuManager_v.resetMnusAndHotkeys()"
-		if queryBox "REST ALL MENUS AND QUADMENUS ?" title:"RESET MENUS" then
-		(
-			this.loadDefaultMenuConfig()
+		this._loadDefaultMenuConfig()
 			
-			this.resetHotkeysOfDefaultQuads()
-		)
+		this._resetHotkeysOfDefaultQuads()
 	),
 
 	/** Import macroscript files to menus
 	 */
-	function importMacroscriptFilesToMenus dir blacklist:#() =
+	function createMenusFromMacroscriptFiles dir blacklist:#() =
 	(
-		--format "\n"; print "QuadMenuManager_v.importMacroscriptFilesToMenus()"
+		format "\n"; print "QuadMenuManager_v.createMenusFromMacroscriptFiles()"
+		
 		/** Test if path is on blacklist
 		 */
 		function _isNotOnBlacklist macro_path blacklist = (for pattern in blacklist where matchPattern macro_path pattern:pattern collect pattern).count == 0
-		
+		--format "dir: %\n" dir
 		all_macro_files = getFiles ( dir + "/*.mcr" ) recurse:true  -- "./../../slot_properties.ini"
-		
-		for macro_path in all_macro_files where this._isNotOnBlacklist macro_path blacklist do
+		--format "all_macro_files: %\n" all_macro_files
+		for macro_path in all_macro_files where _isNotOnBlacklist macro_path blacklist do
 			try
-				(ScriptFile_Content_v(macro_path)).importMacroscriptsToMenus()
+			(
+				format "CREATE MENUS FROM MACROSCRIPT FILE: %\n" (filenameFromPath(macro_path))
 				
+				(ScriptFile_Content_v(macro_path)).importMacroscriptsToMenus()
+			)
 			catch
 				format "!!!!! FILEIN *.mcr file ERROR\n\n%\n\n" (getCurrentException())
 	),
@@ -81,9 +85,9 @@ struct QuadMenuManager_v
 	
 	/** Install quads from files
 	 */
-	function installQuadsFromFiles dir =
+	function _fileInSetupFiles dir =
 	(
-		--format "\n"; print "QuadMenuManager_v.installQuadsFromFiles()"
+		--format "\n"; print "QuadMenuManager_v._fileInSetupFiles()"
 		key_shortcuts = #( #RightClick, #shiftPressed, #altPressed, #controlPressed, #shiftAndAltPressed, #shiftAndControlPressed, #controlAndAltPressed, #shiftAndAltAndControlPressed )
 		
 		for menu_file in getFiles ( dir + "\\*.ms") do
@@ -98,33 +102,33 @@ struct QuadMenuManager_v
 	
 	/** Set menus to max start
 	 */
-	function saveMenusToMaxStartup =
+	function _saveMenusToMaxStartup =
 	(
-		--format "\n"; print "QuadMenuManager_v.saveMenusToMaxStartup()"
+		--format "\n"; print "QuadMenuManager_v._saveMenusToMaxStartup()"
 		menuMan.saveMenuFile ((getDir #ui)+"\\MaxStartUI.mnux") --"./../../../../../en-US/UI/MaxStartUI.mnux"
 	),
 	
 	/** Load default menu config
 	 */
-	function loadDefaultMenuConfig =
+	function _loadDefaultMenuConfig =
 	(
 		--format "\n"; print "QuadMenuManager_v.loadDefaultMenuNfig()"
 		/* LAOD 3DS MAX DEFAULT .mnux FILE */
 		menuMan.loadMenuFile ( getFilenamePath(getSourceFileName()) + "/user-interface-mnux-file/menu-default.mnux" )	--"./user-interface-mnux-file/menu-default.mnux"
 		
-		this.resetHotkeysOfDefaultQuads()
+		this._resetHotkeysOfDefaultQuads()
 	),
 	
 	/** Reset hotkeys of default quads
 	 */
-	function resetHotkeysOfDefaultQuads =
+	function _resetHotkeysOfDefaultQuads =
 	(
-		--format "\n"; print "QuadMenuManager_v.resetHotkeysOfDefaultQuads()"
+		--format "\n"; print "QuadMenuManager_v._resetHotkeysOfDefaultQuads()"
 		
-		default_quads	=  Dictionary #{ "Default Viewport Quad",  #nonePressed } #{ "Modeling 1 [Cntrl+RMB]", #controlPressed 
+		default_quads	=  Dictionary #( "Default Viewport Quad",  #nonePressed ) #( "Modeling 1 [Cntrl+RMB]", #controlPressed )
 
 		for quad_name in default_quads.keys where ( quad_default = menuMan.findQuadMenu quad_name ) != undefined do
-			menuMan.setViewportRightClickMenu default_quads.value quad_default
+			menuMan.setViewportRightClickMenu default_quads[quad_name] quad_default
 	),
 	
 	/** Update menus hotkeys by OPENING and CLOSING hotkey editor
@@ -136,9 +140,9 @@ struct QuadMenuManager_v
 	  *  	SOLUTION: Open and close hotkey editor will reconnect hotkeys and reinstalled quadmenus
 	  * 
 	 */
-	function reconnectHotkeys =
+	function _reconnectHotkeys =
 	(
-		--format "\n"; print "QuadMenuManager_v.reconnectHotkeys()"
+		--format "\n"; print "QuadMenuManager_v._reconnectHotkeys()"
 		/* OPEN HOTKEY EDITOR - for refresh quad menu keyboard shortcuts */
 		actionMan.executeAction 0 "59245"  -- Customize User Interface: Hotkey Editor
 

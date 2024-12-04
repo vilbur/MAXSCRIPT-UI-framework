@@ -1,4 +1,4 @@
-
+filein( getFilenamePath(getSourceFileName()) + "/../../../../Lib/Menus/QuadMenuManager/QuadMenuManager.ms" )	--"./../../../../Lib/Menus/QuadMenuManager/QuadMenuManager.ms"
 
 
 /**
@@ -38,8 +38,8 @@
 */
 macroscript	_test_menu_title_by_buttontext
 category:	"_Test Menu"
-buttontext:	"THIS IS TITLE"
-icon:	"MENU:true"
+buttontext:	"THIS IS MENU ITEM TITLE"
+icon:	"MENU:true|across:1|width:256|height:32"
 (
 	on execute do messageBox "Voila"
 
@@ -49,7 +49,7 @@ icon:	"MENU:true"
 */
 macroscript	_test_menu_title_defined
 category:	"_Test Menu"
-buttontext:	"This is buttontext"
+buttontext:	"Title defined in parameter"
 icon:	"MENU:ITEM TITLE"
 (
 	on execute do messageBox "Voila"
@@ -61,7 +61,7 @@ icon:	"MENU:ITEM TITLE"
 macroscript	_test_menu_title_by_tooltip
 category:	"_Test Menu"
 buttontext:	"This is not menu title"
-toolTip:	"TOOLTIP IS TITLE"
+toolTip:	"TITLE IS TOOLTIP"
 icon:	"MENU:tooltip"
 (
 	on execute do messageBox "Voila"
@@ -75,54 +75,40 @@ icon:	"MENU:tooltip"
 	MANAGE QUADS BUTTONS
 
 --------------------------------------------------------------------------------*
+/* PARSE .mcr files
+*/ 
+macroscript	_test_menu_quads_macros_to_menu
+category:	"_Test Menu"
+buttontext:	"MACROS TO MENUS"
+icon:	"across:1|width:128|height:48"
+(
+	on execute do
+		(QuadMenuManager_v()).createMenusFromMacroscriptFiles(getFilenamePath(getSourceFileName()))
+)
 
-
-/* ISNTALL QUAD MENUS
+/* SETUP MENUS
 */
 macroscript	_test_menu_quads_install
 category:	"_Test Menu"
-buttontext:	"INSTALL QUADS"
-icon:	"across:2"
+buttontext:	"SETUP MENUS"
 (
 	on execute do
 	(
-		/*------------------------------------------------------------------------------
-			GET QUAD MENU
-		--------------------------------------------------------------------------------*/
-		QuadMenuTest 	= QuadMenu_v ("_Quad Test")
+		(QuadMenuManager_v()).setupMenus(getFilenamePath(getSourceFileName()) + "\\menus-setup")
 		
-		/*------------------------------------------------------------------------------
-			ADD MENU TO QUAD MENU
-		------------------------------------------------------------------------------*/
-		QuadMenuTest.Quads[1].clearMenu() -- clear menu is not necessary, jsut for test repetion
-		
-		QuadMenuTest.Quads[1].addMenu ("_Test Menu") flat:true
-		
-		/*------------------------------------------------------------------------------
-			MODIFY QUAD MENU OPTIONS
-		------------------------------------------------------------------------------*/
-		
-		QuadMenuTest.showAllQuads()
-		
-		QuadMenuTest.setRightClick()
-		--
-		--QuadMenuTest.resetRightClick()
-		
-		(QuadMenuManager_v()).installMenus()
-		
+		print "RightClick QUad Menu should be customized"
 	)
-
 )
 
-/* RESET QUAD MENUS
+/* RESET MENUS
 */
 macroscript	_test_menu_quads_reset
 category:	"_Test Menu"
-buttontext:	"RESET QUADS"
-icon:	"across:2"
+buttontext:	"RESET MENUS"
 (
 	on execute do
-		(QuadMenuManager_v()).resetMenusAndHotkeys()
+		if queryBox "REST ALL MENUS AND QUADMENUS ?" title:"RESET MENUS" then
+			(QuadMenuManager_v()).resetMenusAndHotkeys()
 )
 
 

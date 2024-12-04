@@ -11,7 +11,7 @@ DEBUG = true
 
 
 /* LOAD CONTENT FROM FOLDERS */
-ContentLoader	= ContentLoader_v path:( getFilenamePath(getSourceFileName()) + "\\content") ini:( getSourceFileName()) DEBUG:DEBUG
+ContentLoader	= ContentLoader_v path:( getFilenamePath(getSourceFileName()) + "\\content" ) ini:( getSourceFileName()) DEBUG:DEBUG
 --ContentLoader	= ContentLoader_v path:(current_dir+"/Groupbox-Test")
 
 
