@@ -1,6 +1,6 @@
 filein( getFilenamePath(getSourceFileName()) + "/Menu/Menu.ms" ) -- "./Menu/Menu.ms"
 
-print "IMPORT QuadMenu_v !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+--print "IMPORT QuadMenu_v !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
 
 /** Wrapper for <MixinInterface:QuadMenu>
   *
@@ -129,7 +129,7 @@ struct QuadMenu_v
 	 */
 	function setHotkey hotkey =
 	(
-		if ( hotkey_name = this._getHotkeyName( hotkey as string ) ) != undefined then
+		if ( hotkey_name = this._getHotkeyName( hotkey) ) != undefined then
 			this.setRightClick which:hotkey_name
 
 		else
@@ -152,7 +152,7 @@ struct QuadMenu_v
 
 		/* SEARCH QUAD MENU OR CREATE NEW ONE - if menu was not found */ 
 		QuadMenu = if (QuadMenu_found = menuMan.findQuadMenu full_name) != undefined then QuadMenu_found else this._createNewQuadMenu()  
-			
+		
 		this --return
 	),
 	
@@ -229,21 +229,18 @@ struct QuadMenu_v
 	 */
 	function _getHotkeyName hotkey =
 	(
-		format "\n"; print "QuadMenu_v._getHotkeyName()"
-		--format "hotkey: %\n" hotkey
-		--format "classof hotkey: %\n" (classof hotkey)
-		--
-		--test = matchPattern hotkey pattern:( "*Pressed")
-		--
-		----hotkey_name = hotkey + "Pressed" 
-		--format "hotkey_name: %\n" hotkey_name
-		--format "classof hotkey_name: %\n" (classof hotkey_name)
-		--format "test: %\n" test
-		--
-		if not matchPattern hotkey pattern:( "*Pressed") then
-			( hotkey + "Pressed" ) as name -- add suffix "Pressed"
-		else
-			hotkey as name 
+		--format "\n"; print "QuadMenu_v._getHotkeyName()"
+		hotkey = hotkey as name
+
+		if not matchPattern ( hotkey as string ) pattern:( "*Pressed") then
+			hotkey = ( hotkey + "Pressed" ) as name -- add suffix "Pressed"
+		
+				
+		if hotkey == #RightClick then
+			#nonePressed  --return
+		
+		else if findItem hotkeys hotkey > 0 then
+			hotkey --return
 	),
 
 	
@@ -268,6 +265,8 @@ struct QuadMenu_v
 
 		this.showAllQuads()
 		
+		LAST_CREATED_QUAD = QuadMenu
+
 		--this._getHotkeyByQuadName()
 		
 		--if ( hotkey = this._getHotkeyByQuadName() ) != undefined then 

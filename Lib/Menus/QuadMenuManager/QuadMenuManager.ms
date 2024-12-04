@@ -1,16 +1,18 @@
+filein( getFilenamePath(getSourceFileName()) + "/../QuadMenu/QuadMenu.ms" )	--"./../QuadMenu/QuadMenu.ms"
+
+global LAST_CREATED_QUAD
+
+
 /** Quad menu manager
  */
 struct QuadMenuManager_v
 (
 	/* construct */
-	
 
 	/* required */
-	
 
 	/* properties */
-
-	
+	hotkeys = #( #RightClick, #shiftPressed, #altPressed, #controlPressed, #shiftAndAltPressed, #shiftAndControlPressed, #controlAndAltPressed, #shiftAndAltAndControlPressed ),
 
 	/* private */
 	/* dependency */
@@ -56,11 +58,11 @@ struct QuadMenuManager_v
 		
 		/** Test if path is on blacklist
 		 */
-		function _isNotOnBlacklist macro_path blacklist = (for pattern in blacklist where matchPattern macro_path pattern:pattern collect pattern).count == 0
+		function isOnBlacklist macro_path blacklist = (for pattern in blacklist where matchPattern macro_path pattern:pattern collect pattern).count > 0
 		--format "dir: %\n" dir
 		all_macro_files = getFiles ( dir + "/*.mcr" ) recurse:true  -- "./../../slot_properties.ini"
 		--format "all_macro_files: %\n" all_macro_files
-		for macro_path in all_macro_files where _isNotOnBlacklist macro_path blacklist do
+		for macro_path in all_macro_files where not isOnBlacklist macro_path blacklist do
 			try
 			(
 				format "CREATE MENUS FROM MACROSCRIPT FILE: %\n" (filenameFromPath(macro_path))
@@ -83,21 +85,32 @@ struct QuadMenuManager_v
 	
 	private
 	
-	/** Install quads from files
+	/** Import modify files of quad names
+	  * Each quad should has its own file
+	  *
+	  *
+	  * HOTKEY of quad is assignend by filename if prefix match one of this.hotkeys
+	  *
+	  *		E.G.: "-RightClick-Config-Quad.mcr" >>> hotkey is #RIGHTCLICK
+	  *
 	 */
 	function _fileInSetupFiles dir =
 	(
 		--format "\n"; print "QuadMenuManager_v._fileInSetupFiles()"
-		key_shortcuts = #( #RightClick, #shiftPressed, #altPressed, #controlPressed, #shiftAndAltPressed, #shiftAndControlPressed, #controlAndAltPressed, #shiftAndAltAndControlPressed )
 		
 		for menu_file in getFiles ( dir + "\\*.ms") do
 		(
 			menu_file = pathConfig.normalizePath menu_file
-			
+
 			format "\n\n====== INSTALL QUAD MENU FILE ======\n%\n" menu_file
 		
 			filein( menu_file )
-		)
+			
+			--format "LAST_CREATED_QUAD: %\n" (LAST_CREATED_QUAD)
+			
+			this._setHotkeyByFilename(getFilenameFile(menu_file))
+			
+	)
 	),
 	
 	/** Set menus to max start
@@ -129,6 +142,40 @@ struct QuadMenuManager_v
 
 		for quad_name in default_quads.keys where ( quad_default = menuMan.findQuadMenu quad_name ) != undefined do
 			menuMan.setViewportRightClickMenu default_quads[quad_name] quad_default
+	),
+	
+	
+	/** Set hotkey by filename
+	 */
+	function _setHotkeyByFilename filename =
+	(
+		--format "\n"; print "QuadMenuManager_v.setHotkeyByFilename()"
+		
+		if LAST_CREATED_QUAD != undefined and ( hotkey = this._getHotkeyFromPrefix(filename) ) != undefined then
+			menuMan.setViewportRightClickMenu hotkey LAST_CREATED_QUAD
+	),
+	
+	
+	/** Get hotkey from prefix of string
+	  * 
+	  * E.G.: "RightClick-foobar" >>> #RightClick
+	  * 
+	  * @return name|undefined
+	 */
+	function _getHotkeyFromPrefix _string =
+	(
+		--format "\n"; print "QuadMenuManager_v._getHotkeyFromPrefix()"
+		delimeters = "_- "
+		
+		prefix = (filterString _string delimeters)[1]
+		
+		hotkey = ( trimLeft prefix delimeters ) as name
+		
+		if hotkey == #RightClick then
+			#nonePressed  --return
+		
+		else if findItem hotkeys hotkey > 0 then
+			hotkey --return
 	),
 	
 	/** Update menus hotkeys by OPENING and CLOSING hotkey editor

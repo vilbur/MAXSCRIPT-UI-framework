@@ -131,7 +131,7 @@ struct Menu_v
 
 		if submenu.numItems() == 0 then
 		(
-			format "\n\n\n*********** WARNING **********************\n\tMENU HAS NOT ANY ITEMS\n\n\tMenu: \"%\"" (submenu.getTitle() )
+			format "\n\n\n*********** WARNING: MENU HAS NOT ANY ITEMS **********************\nMenu: \"%\"\n" (submenu.getTitle() )
 
 			return false
 		)
@@ -534,7 +534,7 @@ struct Menu_v
 	function _createNewMenu menu_name =
 	(
 		--format "\n"; print "Menu_v._createNewMenu()"
-		format "\nNEW MENU CREATED: \"%\" -- Menu_v._createNewMenu()\n\n" menu_name
+		format "NEW MENU CREATED: \"%\" -- Menu_v._createNewMenu()\n\n" menu_name
 		
 		menuMan.createMenu menu_name --return
 	),

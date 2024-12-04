@@ -1,4 +1,3 @@
-filein( getFilenamePath(getSourceFileName()) + "/../../../../Lib/Menus/QuadMenuManager/QuadMenuManager.ms" )	--"./../../../../Lib/Menus/QuadMenuManager/QuadMenuManager.ms"
 
 
 /**
@@ -83,7 +82,7 @@ buttontext:	"MACROS TO MENUS"
 icon:	"across:1|width:128|height:48"
 (
 	on execute do
-		(QuadMenuManager_v()).createMenusFromMacroscriptFiles(getFilenamePath(getSourceFileName()))
+		(QuadMenuManager_v()).createMenusFromMacroscriptFiles(getFilenamePath(getSourceFileName())) blacklist:#("*blacklist*")
 )
 
 /* SETUP MENUS

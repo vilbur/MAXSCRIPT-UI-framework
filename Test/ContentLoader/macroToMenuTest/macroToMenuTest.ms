@@ -2,6 +2,8 @@ clearListener()
 
 filein( getFilenamePath(getSourceFileName()) + "/../../../Lib/ContentLoader/ContentLoader.ms" ) -- "./../../../Lib/ContentLoader/ContentLoader.ms"
 
+filein( getFilenamePath(getSourceFileName()) + "/../../../Lib/Menus/QuadMenuManager/QuadMenuManager.ms" )	--"./../../../Lib/Menus/QuadMenuManager/QuadMenuManager.ms"
+
 --DEBUG = false
 DEBUG = true
 
@@ -11,7 +13,7 @@ DEBUG = true
 
 
 /* LOAD CONTENT FROM FOLDERS */
-ContentLoader	= ContentLoader_v path:( getFilenamePath(getSourceFileName()) + "\\content" ) ini:( getSourceFileName()) DEBUG:DEBUG
+ContentLoader	= ContentLoader_v path:( getFilenamePath(getSourceFileName()) + "\\content" ) --ini:( getSourceFileName()) DEBUG:DEBUG
 --ContentLoader	= ContentLoader_v path:(current_dir+"/Groupbox-Test")
 
 
