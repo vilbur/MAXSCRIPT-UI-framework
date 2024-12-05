@@ -1,7 +1,7 @@
 /*------------------------------------------------------------------------------
 	GET QUAD MENU
 --------------------------------------------------------------------------------*/
-QuadMenuTest 	= QuadMenu_v ("Quad Test")
+QuadMenuTest 	= QuadMenu_v ("Quad Test RightClick")
 
 /*------------------------------------------------------------------------------
 	ADD MENU TO QUAD MENU
@@ -16,4 +16,4 @@ QuadMenuTest.Quads[1].addMenu ("_Test Menu") flat:true
 
 QuadMenuTest.showAllQuads()
 
-QuadMenuTest.setRightClick()
+--QuadMenuTest.setRightClick()

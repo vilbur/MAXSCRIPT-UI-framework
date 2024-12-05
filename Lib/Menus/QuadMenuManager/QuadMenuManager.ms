@@ -150,9 +150,15 @@ struct QuadMenuManager_v
 	function _setHotkeyByFilename filename =
 	(
 		--format "\n"; print "QuadMenuManager_v.setHotkeyByFilename()"
+		format "LAST_CREATED_QUAD: %\n" ( menuMan.getQuadMenuName  LAST_CREATED_QUAD )
+		format "hotkey: %\n" (this._getHotkeyFromPrefix(filename))
 		
 		if LAST_CREATED_QUAD != undefined and ( hotkey = this._getHotkeyFromPrefix(filename) ) != undefined then
+		(
+			format "ASSIGN HOTKEY TO QUADMENU: \"%\" HOTKEY: %\n" ( menuMan.getQuadMenuName  LAST_CREATED_QUAD ) hotkey
+			
 			menuMan.setViewportRightClickMenu hotkey LAST_CREATED_QUAD
+		)
 	),
 	
 	
@@ -164,18 +170,29 @@ struct QuadMenuManager_v
 	 */
 	function _getHotkeyFromPrefix _string =
 	(
-		--format "\n"; print "QuadMenuManager_v._getHotkeyFromPrefix()"
+		format "\n"; print "QuadMenuManager_v._getHotkeyFromPrefix()"
+		format "_string: %\n" _string
 		delimeters = "_- "
 		
 		prefix = (filterString _string delimeters)[1]
+		format "prefix: %\n" prefix
+		hotkey = ( trimLeft prefix delimeters ) 
+		format "hotkey: %\n" hotkey
 		
-		hotkey = ( trimLeft prefix delimeters ) as name
-		
-		if hotkey == #RightClick then
+		if hotkey != "RightClick" then
+		(
+			if not matchPattern ( hotkey ) pattern:( "*Pressed") then
+				hotkey = ( hotkey + "Pressed" ) -- add suffix "Pressed"
+			format "hotkey: %\n" hotkey
+			format "index: %\n" (findItem hotkeys hotkey)
+			
+			hotkey = hotkey as name 
+			
+			if ( index = findItem hotkeys hotkey ) > 0 then
+				hotkey --return
+		)
+		else
 			#nonePressed  --return
-		
-		else if findItem hotkeys hotkey > 0 then
-			hotkey --return
 	),
 	
 	/** Update menus hotkeys by OPENING and CLOSING hotkey editor

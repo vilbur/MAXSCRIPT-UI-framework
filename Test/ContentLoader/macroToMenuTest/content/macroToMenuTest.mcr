@@ -67,6 +67,17 @@ icon:	"MENU:tooltip"
 
 )
 
+/* ITEM TITLE IS TOOLTIP
+*/
+macroscript	_test_menu_control
+category:	"_Control Menu"
+buttontext:	"CTRL + RMB QuadMenu"
+icon:	"MENU:true"
+(
+	on execute do messageBox "Voila"
+
+)
+
 
 
 /*------------------------------------------------------------------------------
@@ -93,7 +104,7 @@ buttontext:	"SETUP MENUS"
 (
 	on execute do
 	(
-		(QuadMenuManager_v()).setupMenus(getFilenamePath(getSourceFileName()) + "\\menus-setup")
+		(QuadMenuManager_v()).setupMenus(getFilenamePath(getSourceFileName()) + "/../menus-setup")
 		
 		print "RightClick QUad Menu should be customized"
 	)
