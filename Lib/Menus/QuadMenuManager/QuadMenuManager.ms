@@ -1,6 +1,6 @@
 filein( getFilenamePath(getSourceFileName()) + "/../QuadMenu/QuadMenu.ms" )	--"./../QuadMenu/QuadMenu.ms"
 
-global LAST_CREATED_QUAD
+--global LAST_CREATED_QUAD
 
 
 /** Quad menu manager
@@ -96,21 +96,21 @@ struct QuadMenuManager_v
 	 */
 	function _fileInSetupFiles dir =
 	(
-		--format "\n"; print "QuadMenuManager_v._fileInSetupFiles()"
+		format "\n"; print "QuadMenuManager_v._fileInSetupFiles()"
 		
 		for menu_file in getFiles ( dir + "\\*.ms") do
 		(
 			menu_file = pathConfig.normalizePath menu_file
 
-			format "\n\n====== INSTALL QUAD MENU FILE ======\n%\n" menu_file
+			format "\n\n============================== SETUP QUAD MENU FILE ==========================================\n%\n" menu_file
 		
 			filein( menu_file )
 			
 			--format "LAST_CREATED_QUAD: %\n" (LAST_CREATED_QUAD)
 			
-			this._setHotkeyByFilename(getFilenameFile(menu_file))
+			--this._setHotkeyByFilename(getFilenameFile(menu_file))
 			
-	)
+		)
 	),
 	
 	/** Set menus to max start
@@ -145,55 +145,57 @@ struct QuadMenuManager_v
 	),
 	
 	
-	/** Set hotkey by filename
-	 */
-	function _setHotkeyByFilename filename =
-	(
-		--format "\n"; print "QuadMenuManager_v.setHotkeyByFilename()"
-		format "LAST_CREATED_QUAD: %\n" ( menuMan.getQuadMenuName  LAST_CREATED_QUAD )
-		format "hotkey: %\n" (this._getHotkeyFromPrefix(filename))
-		
-		if LAST_CREATED_QUAD != undefined and ( hotkey = this._getHotkeyFromPrefix(filename) ) != undefined then
-		(
-			format "ASSIGN HOTKEY TO QUADMENU: \"%\" HOTKEY: %\n" ( menuMan.getQuadMenuName  LAST_CREATED_QUAD ) hotkey
-			
-			menuMan.setViewportRightClickMenu hotkey LAST_CREATED_QUAD
-		)
-	),
+	--/** Set hotkey by filename
+	-- */
+	--function _setHotkeyByFilename filename =
+	--(
+	--	format "\n"; print "QuadMenuManager_v._setHotkeyByFilename()"
+	--	format "LAST_CREATED_QUAD: %\n" LAST_CREATED_QUAD
+	--	
+	--	--format "LAST_CREATED_QUAD: %\n" ( menuMan.getQuadMenuName  LAST_CREATED_QUAD )
+	--	format "HOTKEY: %\n" (this._getHotkeyFromPrefix(filename))
+	--	
+	--	if LAST_CREATED_QUAD != undefined and ( hotkey = this._getHotkeyFromPrefix(filename) ) != undefined then
+	--	(
+	--		format "ASSIGN HOTKEY TO QUADMENU: \"%\" HOTKEY: %\n" ( menuMan.getQuadMenuName  LAST_CREATED_QUAD ) hotkey
+	--		
+	--		menuMan.setViewportRightClickMenu hotkey LAST_CREATED_QUAD
+	--	)
+	--),
 	
 	
-	/** Get hotkey from prefix of string
-	  * 
-	  * E.G.: "RightClick-foobar" >>> #RightClick
-	  * 
-	  * @return name|undefined
-	 */
-	function _getHotkeyFromPrefix _string =
-	(
-		format "\n"; print "QuadMenuManager_v._getHotkeyFromPrefix()"
-		format "_string: %\n" _string
-		delimeters = "_- "
-		
-		prefix = (filterString _string delimeters)[1]
-		format "prefix: %\n" prefix
-		hotkey = ( trimLeft prefix delimeters ) 
-		format "hotkey: %\n" hotkey
-		
-		if hotkey != "RightClick" then
-		(
-			if not matchPattern ( hotkey ) pattern:( "*Pressed") then
-				hotkey = ( hotkey + "Pressed" ) -- add suffix "Pressed"
-			format "hotkey: %\n" hotkey
-			format "index: %\n" (findItem hotkeys hotkey)
-			
-			hotkey = hotkey as name 
-			
-			if ( index = findItem hotkeys hotkey ) > 0 then
-				hotkey --return
-		)
-		else
-			#nonePressed  --return
-	),
+	--/** Get hotkey from prefix of string
+	--  * 
+	--  * E.G.: "RightClick-foobar" >>> #RightClick
+	--  * 
+	--  * @return name|undefined
+	-- */
+	--function _getHotkeyFromPrefix _string =
+	--(
+	--	--format "\n"; print "QuadMenuManager_v._getHotkeyFromPrefix()"
+	--	--format "_string: %\n" _string
+	--	delimeters = "_- "
+	--	
+	--	prefix = (filterString _string delimeters)[1]
+	--	--format "prefix: %\n" prefix
+	--	hotkey = ( trimLeft prefix delimeters ) 
+	--	--format "hotkey: %\n" hotkey
+	--	
+	--	if hotkey != "RightClick" then
+	--	(
+	--		if not matchPattern ( hotkey ) pattern:( "*Pressed") then
+	--			hotkey = ( hotkey + "Pressed" ) -- add suffix "Pressed"
+	--		--format "hotkey: %\n" hotkey
+	--		--format "index: %\n" (findItem hotkeys hotkey)
+	--		
+	--		hotkey = hotkey as name 
+	--		
+	--		if ( index = findItem hotkeys hotkey ) > 0 then
+	--			hotkey --return
+	--	)
+	--	else
+	--		#nonePressed  --return
+	--),
 	
 	/** Update menus hotkeys by OPENING and CLOSING hotkey editor
 	  * Workaround for reconnect of quad menus hotkeys and reinstalled quadmenus

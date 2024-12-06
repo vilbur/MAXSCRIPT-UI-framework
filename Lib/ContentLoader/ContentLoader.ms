@@ -88,8 +88,8 @@ struct ContentLoader_v
 	 */
 	on create do
 	(
-		print("ContentLoader_v.onCreate()")
-		format "path: %\n" path
+		--print("ContentLoader_v.onCreate()")
+		--format "path: %\n" path
 
 		ConstructPropeties test:this
 

@@ -89,8 +89,8 @@ icon:	"MENU:true"
 */ 
 macroscript	_test_menu_quads_macros_to_menu
 category:	"_Test Menu"
-buttontext:	"MACROS TO MENUS"
-icon:	"across:1|width:128|height:48"
+buttontext:	"PARSE MACROS TO MENUS"
+icon:	"across:1|width:468|height:48|offset:[0,32]"
 (
 	on execute do
 		(QuadMenuManager_v()).createMenusFromMacroscriptFiles(getFilenamePath(getSourceFileName())) blacklist:#("*blacklist*")
@@ -100,7 +100,7 @@ icon:	"across:1|width:128|height:48"
 */
 macroscript	_test_menu_quads_install
 category:	"_Test Menu"
-buttontext:	"SETUP MENUS"
+buttontext:	"SETUP QUADS - ASSIGN HOTKEYS #Rightclick and Ctrl + #Rightclick"
 (
 	on execute do
 	(

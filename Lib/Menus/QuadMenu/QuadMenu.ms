@@ -48,7 +48,8 @@ struct QuadMenu_v
         "Texture Tools"
 	),
 	
-	hotkeys = #( #RightClick, #shiftPressed, #altPressed, #controlPressed, #shiftAndAltPressed, #shiftAndControlPressed, #controlAndAltPressed, #shiftAndAltAndControlPressed ),
+	--hotkeys = #( #nonePressed, #RightClick, #shiftPressed, #altPressed, #controlPressed, #shiftAndAltPressed, #shiftAndControlPressed, #controlAndAltPressed, #shiftAndAltAndControlPressed ),
+	hotkeys = #( #nonePressed, #shiftPressed, #altPressed, #controlPressed, #shiftAndAltPressed, #shiftAndControlPressed, #controlAndAltPressed, #shiftAndAltAndControlPressed ),
 
 	public
 	
@@ -108,6 +109,8 @@ struct QuadMenu_v
 		--format "this.menu_name:	% \n" this.menu_name
 		--format "which:	% \n" which
 		menuMan.setViewportRightClickMenu which QuadMenu
+		
+		format "ASSIGN HOTKEY TO QUADMENU: \"%\" HOTKEY: %\n" ( menuMan.getQuadMenuName  QuadMenu ) which
 	),
 
 	/** Reset right click to default
@@ -129,7 +132,7 @@ struct QuadMenu_v
 	 */
 	function setHotkey hotkey =
 	(
-		if ( hotkey_name = this._getHotkeyName( hotkey) ) != undefined then
+		if ( hotkey_name = this._getHotkey( hotkey) ) != undefined then
 			this.setRightClick which:hotkey_name
 
 		else
@@ -177,8 +180,12 @@ struct QuadMenu_v
 	function _getDefaultQuadName =
 	(
 		--format "\n"; print "QuadMenu_v._getDefaultQuadName()"
-		found_default_quad = for default_quad_name in default_quad_names where matchPattern default_quad_name pattern:( this.menu_name + "*") collect default_quad_name
-			--format "found_default_quad: %\n" found_default_quad
+		found_default_quad = for default_quad_name in default_quad_names \
+							    where matchPattern default_quad_name pattern:( this.menu_name) \	-- match:"Foo"
+							    or   matchPattern default_quad_name pattern:( this.menu_name + " ")	-- match:"Foo "
+							        collect default_quad_name
+
+
 		if found_default_quad.count > 0 then
 			found_default_quad[1] --return
 	),
@@ -212,37 +219,60 @@ struct QuadMenu_v
 			)
 	),
 	
-	/** Get hotkey by name
-	 */
-	function _getHotkeyByQuadName =
-	(
-		format "\n"; print "QuadMenu_v._getHotkeyByQuadName()"
-		hotkey = this._getHotkeyName(this.menu_name)
-		
-		if ( index = findItem hotkeys hotkey ) > 0 then
-			hotkeys[index] --return
-	),
+	--/** Get hotkey by name
+	-- */
+	--function _getHotkeyByQuadName =
+	--(
+	--	format "\n"; print "QuadMenu_v._getHotkeyByQuadName()"
+	--	hotkey = this._getHotkey(this.menu_name)
+	--	
+	--	if ( index = findItem hotkeys hotkey ) > 0 then
+	--		hotkeys[index] --return
+	--),
 	
-	/** Get hotkey name
+	/** Get hotkey from prefix of string
 	  * 
-	  * @return name of hotkey E.G.: #shiftPressed
+	  * E.G.: "RightClick-foobar" >>> #RightClick
+	  * 
+	  * @return name|undefined
 	 */
-	function _getHotkeyName hotkey =
+	function _getHotkey hotkey_source =
 	(
-		--format "\n"; print "QuadMenu_v._getHotkeyName()"
-		hotkey = hotkey as name
-
-		if not matchPattern ( hotkey as string ) pattern:( "*Pressed") then
-			hotkey = ( hotkey + "Pressed" ) as name -- add suffix "Pressed"
+		--format "\n"; print "QuadMenuManager_v._getHotkey()"
+		--format "hotkey_source: %\n" hotkey_source
 		
+		if ( findItem hotkeys ( hotkey_source as name ) ) == 0 then
+		(
+			hotkey_source = hotkey_source as string 
+			
+			delimeters = "_- "
+			
+			prefix = (filterString hotkey_source delimeters)[1]
+			--format "prefix: %\n" prefix
+			hotkey = ( trimLeft prefix delimeters ) 
+			--format "hotkey: %\n" hotkey
+			
+			if not matchPattern hotkey pattern:"RightClick" then
+			(
+				if not matchPattern ( hotkey ) pattern:( "*Pressed") then
+					hotkey = ( hotkey + "Pressed" ) -- add suffix "Pressed"
+				--format "hotkey: %\n" hotkey
+				--format "index: %\n" (findItem hotkeys hotkey)
 				
-		if hotkey == #RightClick then
-			#nonePressed  --return
+				hotkey = hotkey as name 
+				
+				if ( index = findItem hotkeys hotkey ) > 0 then
+					hotkey --return
+			)
+			else
+				#nonePressed  --return
+			
+		)
+		else
+			hotkey_source as name  --return
 		
-		else if findItem hotkeys hotkey > 0 then
-			hotkey --return
+		
 	),
-
 	
 	/** Get full name
 	 */
@@ -265,11 +295,12 @@ struct QuadMenu_v
 
 		this.showAllQuads()
 		
-		LAST_CREATED_QUAD = QuadMenu
+		--LAST_CREATED_QUAD = QuadMenu
 
 		--this._getHotkeyByQuadName()
 		
 		--if ( hotkey = this._getHotkeyByQuadName() ) != undefined then 
-			--this.setHotkey (hotkey)
+		if ( hotkey = this._getHotkey(this.menu_name) ) != undefined then 
+			this.setHotkey (hotkey)
 	)
 )
