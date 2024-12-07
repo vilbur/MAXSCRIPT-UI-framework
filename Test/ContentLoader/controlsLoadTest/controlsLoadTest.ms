@@ -12,7 +12,7 @@ current_dir	= getFilenamePath(getSourceFileName())
 
 
 /* LOAD CONTENT FROM FOLDERS */
-ContentLoader	= ContentLoader_v path:(current_dir+"/Test-files") ini:( getSourceFileName()) DEBUG:DEBUG
+ContentLoader	= ContentLoader_v path:(current_dir+"/Test-files") --ini:( getSourceFileName()) DEBUG:DEBUG
 --ContentLoader	= ContentLoader_v path:(current_dir+"/Groupbox-Test")
 
 

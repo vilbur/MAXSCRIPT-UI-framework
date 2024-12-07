@@ -30,9 +30,21 @@ if QuadMenu_v == undefined then
   */
 struct ScriptFile_Content_v
 (
+	
 	/* public properties */
-	path,
+	path, -- path to *.mcr file
+	
+	
+	
+	
+	/*------------------------------------------------------------------------------
+		PROPAGATED PARAMETERS
+	--------------------------------------------------------------------------------*/
+	inherit_params	= #( #width, #height, #across, #border ), -- parameters of controls which are propagated downnstream through macroscripts
 
+	
+	
+	
 	/* private properties */
 	filename, -- filename of ".mcr" file
 	MacroScripts	= #(),
@@ -45,7 +57,7 @@ struct ScriptFile_Content_v
 
 	/* Store */
 	InheritParams = List_v(),
-	inherit_params	= #( #width, #height, #across ),
+	
 
 	/** Load controls from .mcr file
 	 */
@@ -91,17 +103,10 @@ struct ScriptFile_Content_v
 			this._addToMenu(MacroScripts[i]) ( ParamsList_v keys:MacroScripts[i].Params[1] values:MacroScripts[i].Params[2] )
 	),
 
-	/** Get filename of groupbox by file filename
-	  *
-	  *  Remove numbers, empty space and characters like "-_" from start of string E.G.: "1_Filename" >> "Filename"
-	  *
-	  * @return	string	Name of groupbox
-	 */
-	function _getControlsGroupName =
-	(
-		( dotNetObject "System.Text.RegularExpressions.Regex" @"^[\d\.\s_-]+" ).Replace ( trimLeft ( trimRight (getFilenameFile path) "_ " )  "_ " ) ""
-	),
-
+	
+	private
+	
+	
 	/** _create controls
 	 */
 	function _createControls _Rollout =
@@ -199,7 +204,23 @@ struct ScriptFile_Content_v
 		--)
 
 	),
-
+	
+	/** Get filename of groupbox by file filename
+	  *
+	  *  Remove numbers, empty space and characters like "-_" from start of string E.G.: "1_Filename" >> "Filename"
+	  *
+	  * @return	string	Name of groupbox
+	 */
+	function _getControlsGroupName =
+	(
+		filename = getFilenameFile path
+		
+		filename = trimLeft ( trimRight filename "_ " )  "_ " -- -- remove prefix & suffix E.G.: " _Foo-Bar _ " >>>  "Foo-Bar"
+		
+		filename = substituteString filename "_" " " -- replace underscore with whitepsace E.G.: "Foo_Bar" >>> "Foo Bar"
+		
+		( dotNetObject "System.Text.RegularExpressions.Regex" @"^[\d\.\s_-]+" ).Replace filename "" -- remove prefix & suffix E.G.: " 1-Foo Bar" >>> "" 1-Foo Bar"
+	),
 
 	/** Inherit parameters of previous same control type
 	  * 	So in ".mcr" file is not necessary define for each control
@@ -209,6 +230,7 @@ struct ScriptFile_Content_v
 	function _inheritParameters &_Control =
 	(
 		--format "\n"; print "ScriptFile_Content_v._inheritParameters()"
+		--format "_Control: %\n" _Control
 		--format "InheritParams	= % \n" InheritParams
 
 		inherit_values	= if (values_exists = InheritParams.getVal(_Control.type)) != undefined then values_exists else #()
