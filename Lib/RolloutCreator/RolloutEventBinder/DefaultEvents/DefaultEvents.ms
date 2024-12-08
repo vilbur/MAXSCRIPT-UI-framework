@@ -1,4 +1,4 @@
-filein( getFilenamePath(getSourceFileName()) + "/findResizeEventType.ms" )	-- "./findResizeEventType.ms"
+filein( getFilenamePath(getSourceFileName()) + "/fitSubrolloutSlotToRolloutCallback.ms" )	-- "./fitSubrolloutSlotToRolloutCallback.ms"
 
 
 /** Events default for rollout\dialog
@@ -42,7 +42,7 @@ struct DefaultEvents_v
 		/* HANDLE WITH #RESIZE|#DOCKED|#UNDOCKED events */
 		Event =  Event_v type:#RESIZED
 
-		Event.callback = "startResizeEventTimer(#"+rollout_id_full+")( #resized )"
+		Event.callback = "waitForResixeEndTimer(#"+rollout_id_full+")( #resized )"
 
 		append EventsList.list Event
 
