@@ -47,7 +47,7 @@ struct RolloutCreator_v
 	function createRollout _Rollout width: =
 	(
 		--if DEBUG then format "\n\n-------------------------------------	RolloutCreator_v.createRollout() id:#%	-------------------------------------\n"  ( _Rollout.id as string );
-		format "\n\n-------------------------------------	RolloutCreator_v.createRollout() id:#%	-------------------------------------\n"  ( (_Rollout.getFullId()) as string );
+		--format "\n\n-------------------------------------	RolloutCreator_v.createRollout() id:#%	-------------------------------------\n"  ( (_Rollout.getFullId()) as string );
 
 		if _Rollout.RCI == undefined then -- RCI is defined WHEN chache is loaded
 		(

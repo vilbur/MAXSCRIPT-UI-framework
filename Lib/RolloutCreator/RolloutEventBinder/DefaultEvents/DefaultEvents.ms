@@ -89,20 +89,25 @@ struct DefaultEvents_v
 
 		callback = "if val then for _rollout in "+rollouts+" where not matchPattern ( _rollout as string ) pattern:(\"*\"+\""+rollout_id+"\") do _rollout.open = false"
 		
-		max_opened_rollouts = "max_opened_rollouts = 1\n\n"
-		
 		open_rollouts = parent_rollout + ".open_rollouts"
+		
+		
+		open_rollouts_count = "open_rollouts_count = if ( open_rollouts_parent_count =" + parent_rollout + ".max_opened_subrollouts ) == undefined then "+rollouts+".count else open_rollouts_parent_count \n\n"
+		--open_rollouts_count = "open_rollouts_count = 1\n\n"
+
+		
+		max_opened_rollouts = parent_rollout + ".max_opened_rollouts"
 		
 		if_roullout_opened = "if val then\n"
 		
-		add_opened_rollout = "    insertItem \"" + rollout_id + "\" " + open_rollouts + " 1 \n\n"
+		add_opened_rollout = "    insertItem \"" + rollout_id + "\" "+open_rollouts+" 1 \n\n"
 		
-		opened_rollouts_clear = "    " + open_rollouts + " = makeUniqueArray (for i = 1 to " + open_rollouts + ".count where i <= max_opened_rollouts collect " + open_rollouts + "[i]) \n\n"
+		opened_rollouts_clear = "    "+open_rollouts+" = makeUniqueArray (for i = 1 to "+open_rollouts+".count where i <= open_rollouts_count collect "+open_rollouts+"[i]) \n\n"
 		
-		close_other_rollouts = "    for _rollout in "+rollouts+" where findItem " + open_rollouts + " ((filterString (_rollout as string) \":\")[2]) == 0 do _rollout.open = false \n"
+		close_other_rollouts = "    for _rollout in "+rollouts+" where findItem "+open_rollouts+" ((filterString (_rollout as string) \":\")[2]) == 0 do _rollout.open = false \n"
 		
-		callback = max_opened_rollouts + if_roullout_opened  +"(\n" + add_opened_rollout + opened_rollouts_clear +_format+ close_other_rollouts + "\n)"
-		--format "CALLBACK: %\n" callback
+		callback =  open_rollouts_count + if_roullout_opened  +"(\n" + add_opened_rollout + opened_rollouts_clear + close_other_rollouts + "\n)"
+		--format "CALLBACK:\n\n%\n" callback
 		
 		Event.callback = callback
 		

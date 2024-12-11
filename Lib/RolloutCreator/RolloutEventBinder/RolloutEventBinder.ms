@@ -191,9 +191,12 @@ struct RolloutEventBinder_v
 	(
 		DefaultEvents = DefaultEvents_v ini_path:ini_path
 
-		_Rollout.addLocal #open_rollouts #()
+		is_dialog = _Rollout.parent_rollout_id == undefined
 		
-		EventsCombiner.EventsLists[#DEFAULTS] = if _Rollout.parent_rollout_id == undefined then
+		_Rollout.addLocal #open_rollouts #()
+		_Rollout.addLocal #max_opened_subrollouts (if is_dialog then undefined else 1) -- keep only single opened subrollout
+		
+		EventsCombiner.EventsLists[#DEFAULTS] = if is_dialog then
 		
 			/* DIALOG EVENTS */ 
 			DefaultEvents.getDialogEvents(this._Rollout.id)

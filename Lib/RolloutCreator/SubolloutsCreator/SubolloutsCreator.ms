@@ -30,7 +30,7 @@ struct SubolloutsCreator_v
 
 		--slot_height = (Subrollouts.height + this.slot_height_fix ) as string
 		slot_height = 512 as string
-		slot_height = 256 as string
+		--slot_height = 256 as string
 
 		slot_id = Subrollouts.slot as string
 
