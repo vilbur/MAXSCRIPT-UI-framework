@@ -11,6 +11,7 @@ struct SubolloutsCreator_v
 	slot_height_fix = 8, -- slot is slightly shorter without this compesation
 
 	slot_width_fix = 2, -- make slot wide as possible, remove this value from width of parent rollout
+	--slot_width_fix = 0, -- make slot wide as possible, remove this value from width of parent rollout
 
 	slot_offset_x = -12,
 
@@ -29,6 +30,7 @@ struct SubolloutsCreator_v
 
 		--slot_height = (Subrollouts.height + this.slot_height_fix ) as string
 		slot_height = 512 as string
+		slot_height = 256 as string
 
 		slot_id = Subrollouts.slot as string
 
@@ -83,8 +85,8 @@ struct SubolloutsCreator_v
 			(
 				_Subrollout = Subrollouts.Rollouts[index]
 		
-		--		try(destroyDialog _Subrollout.RCI.def )catch() -- destroy dialog of subrollout created for find of height
-		--
+				try(destroyDialog _Subrollout.RCI.def )catch() -- destroy dialog of subrollout created for find of height
+		
 		--		/*  DEBUG:
 		--				FOR FLOATEBLE SUBROLLOUTS disable AddSubRollout
 		--		*/

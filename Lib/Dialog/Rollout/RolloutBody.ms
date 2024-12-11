@@ -16,7 +16,7 @@
 	RolloutResizer	= RolloutResizer_v(),	-- "./RolloutResizer/RolloutResizer.ms"
 
 	/* extended control params */
-	add_locals	= #(), -- #(#variable_name1, init_value1, #variable_name2, init_value2)	// used in ControlCreator_v._addLocalVariablesToRollout 	"../../../RolloutCreator/ControlCreator/ControlCreator.ms"
+	add_locals	= #(), -- TODO: REPLACE ARRAY WITH DICTIONARY  #(#variable_name1, init_value1, #variable_name2, init_value2)	// used in ControlCreator_v._addLocalVariablesToRollout 	"../../../RolloutCreator/ControlCreator/ControlCreator.ms"
 	add_text	= "",  -- string added to rollout	// used in ControlCreator_v._addFunctionsVariablesToRollout	"../../../RolloutCreator/ControlCreator/ControlCreator.ms"
 
 	RCI, -- Maxscript native RolloutCreator  https://help.autodesk.com/view/3DSMAX/2016/ENU/?guid=__files_GUID_5FC5036F_E2D7_46C9_9AFA_7B3550B9F254_htm
@@ -108,7 +108,7 @@
 	function addlocal key val =
 	(
 		--print "RolloutBody.addlocal()"
-		append add_locals key
+		append add_locals (key as name )
 
 		append add_locals val
 	),

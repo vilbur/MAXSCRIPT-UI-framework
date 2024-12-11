@@ -3,7 +3,8 @@ filein( getFilenamePath(getSourceFileName()) + "/../List/List.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/../Dialog/Rollout/Rollout.ms" ) 	-- "./../Dialog/Rollout/Rollout.ms"
 filein( getFilenamePath(getSourceFileName()) + "/../Dialog/Rollout/Subrollouts/Subrollouts.ms" )	-- "./../Dialog/Rollout/Subrollouts/Subrollouts.ms"
 
-filein( getFilenamePath(getSourceFileName()) + "/RolloutEventBinder/DefaultEvents/findResizeEventType.ms" )	-- "./RolloutEventBinder/DefaultEvents/findResizeEventType.ms"
+filein( getFilenamePath(getSourceFileName()) + "/RolloutEventBinder/DefaultEvents/fitSubrolloutSlotToRolloutCallback.ms" )	-- "./RolloutEventBinder/DefaultEvents/fitSubrolloutSlotToRolloutCallback.ms"
+filein( getFilenamePath(getSourceFileName()) + "/RolloutEventBinder/DefaultEvents/waitForResizeEndTimer.ms" )	-- "./RolloutEventBinder/DefaultEvents/waitForResizeEndTimer.ms"
 
 filein( getFilenamePath(getSourceFileName()) + "/RolloutEventBinder/RolloutEventBinder.ms" )	-- "./RolloutEventBinder/RolloutEventBinder.ms"
 
@@ -30,7 +31,7 @@ struct RolloutCreator_v
 	closed_rollout_bar_height = 24,
 
 	/* dependency */
-	RolloutEventBinder = RolloutEventBinder_v ini_path:(Ini.getPath()),
+	RolloutEventBinder = RolloutEventBinder_v ini_path:(Ini.getPath()), -- "./RolloutEventBinder/RolloutEventBinder.ms"
 
 	ControlsCreator,
 	SubolloutsCreator = SubolloutsCreator_v ini_path:(Ini.getPath()) DEBUG:DEBUG,
@@ -187,16 +188,16 @@ struct RolloutCreator_v
 					*/
 					--execute ("try(destroyDialog "+_RolloutSub.id as string+ " )catch()") --DEV DESTROY SUBROLLOUT DIALOG
 					--CreateDialog ( _RolloutSub.RCI.def ) width:_RolloutParent.width height:_RolloutSub.height -- DEV - creat
-					
+--					
 					
 					/* ======= PRODUCTION CODE =======*/
-					--CreateDialog ( _RolloutSub.RCI.def ) width:_RolloutParent.width height:_RolloutSub.height pos:[0,-8000] -- create subroullouts away from display
+					CreateDialog ( _RolloutSub.RCI.def ) width:_RolloutParent.width height:_RolloutSub.height pos:[0,-8000] -- create subroullouts away from display
 				)
 
 				--this._storeSubrolloutHeight(_RolloutSub)( Subrollouts.slot)
 			)
 			
-			this._setSlotHeight(Subrollouts)
+			--this._setSlotHeight(Subrollouts)
 		)
 
 		--this.max_height_of_subrollout = 0 -- reset value for next subrollouts

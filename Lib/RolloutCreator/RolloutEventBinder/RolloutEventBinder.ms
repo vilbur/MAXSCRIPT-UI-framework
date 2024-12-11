@@ -191,10 +191,16 @@ struct RolloutEventBinder_v
 	(
 		DefaultEvents = DefaultEvents_v ini_path:ini_path
 
+		_Rollout.addLocal #open_rollouts #()
+		
 		EventsCombiner.EventsLists[#DEFAULTS] = if _Rollout.parent_rollout_id == undefined then
+		
+			/* DIALOG EVENTS */ 
 			DefaultEvents.getDialogEvents(this._Rollout.id)
-		--else
-			--DefaultEvents.getDialogEvents(this._Rollout.getFullId())
+		else
+		
+			/* ROLLOUT EVENTS */ 
+			DefaultEvents.getRolloutEvents(_Rollout)
 	),
 
 	/** _combine events

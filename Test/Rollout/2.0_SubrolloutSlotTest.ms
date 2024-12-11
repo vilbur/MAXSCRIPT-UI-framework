@@ -3,12 +3,12 @@ clearListener()
 filein( getFilenamePath(getSourceFileName()) + "/../../Lib/Dialog/Dialog.ms" ) -- "./../../Lib/Dialog/Dialog.ms"
 
 /* INIT DIALOG */
-Dialog 	= Dialog_v title:(getFilenameFile(getSourceFileName()))
+Dialog 	= Dialog_v title:(getFilenameFile(getSourceFileName())) width:320
 
 
 /* ROLLOUTS A */
 _Rollouts_A = Dialog.Rollouts slot:#Rollouts_A
-_Rollout_A1 = _Rollouts_A.Roll ("Rollout A1") height:512
+_Rollout_A1 = _Rollouts_A.Roll ("Rollout A1") height:256
 
 /* Set properties of subrollouts */
 _Rollouts_A_set_props	= Dialog.get (#rollouts_A)
@@ -31,4 +31,4 @@ _Rollout_B1 = _Rollouts_B.Roll ("Rollout B1")	height:96
 
 /* CREATE DIALOG */
 --Dialog.create()
-Dialog.create height:1024 width:320
+Dialog.create height:1024 

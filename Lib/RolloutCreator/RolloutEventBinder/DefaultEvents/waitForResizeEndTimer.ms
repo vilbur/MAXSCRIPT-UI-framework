@@ -7,9 +7,9 @@ global CALLBACK_DELAY_TIMER
 /**
   *
   */
-function waitForResixeEndTimer dialog_id event_type =
+function waitForResizeEndTimer dialog_id event_type =
 (
-	--format "\n"; print "DefaultEvents_v.waitForResixeEndTimer()"
+	--format "\n"; print "DefaultEvents_v.waitForResizeEndTimer()"
 
 	if CALLBACK_DELAY_TIMER == undefined then
 	(

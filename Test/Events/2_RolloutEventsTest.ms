@@ -27,22 +27,23 @@ Dialog 	= Dialog_v title:(getFilenameFile(getSourceFileName()))
 /* ROLLOUTS */
 
 _Rollouts_A = addRollouts ( Dialog.Rollouts slot:#rollouts_A height:256 )	("Rollout A") rollouts_in_slot: 1
---_Rollouts_B = addRollouts ( Dialog.Rollouts  height:128 )	("Rollout B") rollouts_in_slot: 2
---_Rollouts_C = addRollouts ( Dialog.Rollouts() )	("Rollout C") rollouts_in_slot: 3
---
+_Rollouts_B = addRollouts ( Dialog.Rollouts  height:128 )	("Rollout B") rollouts_in_slot: 2
+_Rollouts_C = addRollouts ( Dialog.Rollouts() )	("Rollout C") rollouts_in_slot: 3
+
 
 /* SUBROLLOUTS */
 
- _SubRollouts	= addRollouts (_Rollouts_A[1].Rollouts())("SubRollout A") rollouts_in_slot: 5
+ _SubRollouts	= addRollouts (_Rollouts_A[1].Rollouts())("SubRollout A") rollouts_in_slot: 2
 
 
 /*  NESTED SUBROLLOUTS */
- --_NestedSubRollouts	= addRollouts (_SubRollouts[1].Rollouts())("Nested SubRollout A") rollouts_in_slot: 3
+
+ _NestedSubRollouts	= addRollouts (_SubRollouts[1].Rollouts())("Nested SubRollout A") rollouts_in_slot: 3
 
 
 /*  SUPER NESTED SUBROLLOUTS */
 
- --_SuperNestedSubRollouts	= addRollouts (_NestedSubRollouts[1].Rollouts())("Super Nested SubRollout A") rollouts_in_slot: 4
+ _SuperNestedSubRollouts	= addRollouts (_NestedSubRollouts[1].Rollouts())("Super Nested SubRollout A") rollouts_in_slot: 4
 
 
 
