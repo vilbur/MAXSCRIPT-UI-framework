@@ -194,10 +194,10 @@ struct RolloutCreator_v
 					CreateDialog ( _RolloutSub.RCI.def ) width:_RolloutParent.width height:_RolloutSub.height pos:[0,-8000] -- create subroullouts away from display
 				)
 
-				--this._storeSubrolloutHeight(_RolloutSub)( Subrollouts.slot)
+				this._storeSubrolloutHeight(_RolloutSub)( Subrollouts.slot)
 			)
 			
-			--this._setSlotHeight(Subrollouts)
+			this._setSlotHeight(Subrollouts)
 		)
 
 		--this.max_height_of_subrollout = 0 -- reset value for next subrollouts

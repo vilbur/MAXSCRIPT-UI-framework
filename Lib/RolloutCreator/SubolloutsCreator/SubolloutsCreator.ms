@@ -28,8 +28,8 @@ struct SubolloutsCreator_v
 
 		if DEBUG then format "\n\n===================================== SubolloutsCreator_v.addSubrolloutSlot() %.% =====================================\n\n" ( _Rollout.id as string ) ( Subrollouts.slot as string );
 
-		--slot_height = (Subrollouts.height + this.slot_height_fix ) as string
-		slot_height = 512 as string
+		slot_height = (Subrollouts.height + this.slot_height_fix ) as string
+		--slot_height = 512 as string
 		--slot_height = 256 as string
 
 		slot_id = Subrollouts.slot as string
