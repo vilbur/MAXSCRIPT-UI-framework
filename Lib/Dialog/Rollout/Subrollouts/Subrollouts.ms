@@ -14,6 +14,8 @@ struct Subrollouts_v
 
 	width,
 	height,
+	
+	autoclose_rollouts, -- undefined|integer -- number
 
 	Rollouts	= #(),
 

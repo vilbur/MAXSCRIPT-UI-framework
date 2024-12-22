@@ -8,7 +8,8 @@ struct SubolloutsCreator_v
 
 	ini_path,
 
-	slot_height_fix = 8, -- slot is slightly shorter without this compesation
+	--slot_height_fix = 8, -- slot is slightly shorter without this compesation
+	slot_height_fix = 0, -- slot is slightly shorter without this compesation
 
 	slot_width_fix = 2, -- make slot wide as possible, remove this value from width of parent rollout
 	--slot_width_fix = 0, -- make slot wide as possible, remove this value from width of parent rollout
@@ -25,17 +26,19 @@ struct SubolloutsCreator_v
 	  */
 	 function addSubrolloutSlot _Rollout Subrollouts =
 	 (
-
 		if DEBUG then format "\n\n===================================== SubolloutsCreator_v.addSubrolloutSlot() %.% =====================================\n\n" ( _Rollout.id as string ) ( Subrollouts.slot as string );
+		format "\n\n===================================== SubolloutsCreator_v.addSubrolloutSlot() %.% =====================================\n\n" ( _Rollout.id as string ) ( Subrollouts.slot as string );
+
 
 		slot_height = (Subrollouts.height + this.slot_height_fix ) as string
 		--slot_height = 512 as string
 		--slot_height = 256 as string
 
 		slot_id = Subrollouts.slot as string
+		--format "SLOT: %\nHEIGHT: %\n" slot_id SLOT_HEIGHT
 
 		--_Rollout.RCI.addText ("subRollout "+slot_id +" \""+slot_id+"\"  )
-		_Rollout.RCI.addText ("subRollout "+slot_id +" \""+slot_id+"\" height:"+ slot_height + " width:" + (Subrollouts.width - slot_width_fix) as string + " offset:["+slot_offset_x as string +", 0]" )
+		_Rollout.RCI.addText ("subRollout "+slot_id +" \""+(this._getSlotData(Subrollouts))+"\" height:"+ slot_height + " width:" + (Subrollouts.width - slot_width_fix) as string + " offset:["+slot_offset_x as string +", 0]" )
 
 	 ),
 
@@ -100,6 +103,28 @@ struct SubolloutsCreator_v
 
 	private
 
+	/** Get slot data
+	 */
+	function _getSlotData Subrollouts =
+	(
+		--format "\n"; print "SubolloutsCreator_v._getSlotData()"
+		
+		if ( Subrollouts.autoclose_rollouts ) != undefined then
+		(
+			slot_data	=  Dictionary()
+			
+			 slot_data[#AUTOCLOSE_ROLLOUTS] = Subrollouts.autoclose_rollouts
+			 
+			 
+			slot_data as string --return
+		)
+		else
+			Subrollouts.slot as string --return
+		
+		
+		
+
+	),
 
 	/** Get rolled state from ini
 	 */

@@ -2,10 +2,10 @@
  */
 function autoCloseRolloutCallback parent_rollout slot_id rollout_id =
 (
-	format "\n"; print ".autoCloseRolloutCallback()"
+	--format "\n"; print ".autoCloseRolloutCallback()"
 	--format "parent_rollout: %\n" parent_rollout
 	--format "slot_id: %\n" slot_id
-	format "rollout_id: %\n" rollout_id
+	--format "rollout_id: %\n" rollout_id
 
 	/** Is current slot
 	 */
@@ -24,24 +24,20 @@ function autoCloseRolloutCallback parent_rollout slot_id rollout_id =
 
 	for slot in parent_rollout.controls where classOf slot == SubRollout and isCurrentSlot slot slot_id do
 	(
-		
 		if classOf ( slot_data = execute slot.text ) == Dictionary then
 		(
 			open_rollouts_count = if classOf slot_data[#AUTOCLOSE_ROLLOUTS] == integer then slot_data[#AUTOCLOSE_ROLLOUTS] else 1
 
 			not_close_rollouts = if slot_data[#KEEP_OPEN_ROLLOUTS] != undefined then slot_data[#KEEP_OPEN_ROLLOUTS] else #()
 			
-			--current_rollout	= for _rollout in slot.rollouts where isCurrentRollout _rollout rollout_id collect _rollout
-
-			for _rollout in slot.rollouts where _rollout.open and not isCurrentRollout _rollout rollout_id and not isKeepOpened not_close_rollouts _rollout do
-				_rollout.open = false
-			
-			
 			/* ADD CURRENT ROLLOUT */ 
 			insertItem rollout_id not_close_rollouts 1
 			
 			/* KEEP MAX OPENED ROLLOUTS COUNT */ 
 			not_close_rollouts = makeUniqueArray (for i = 1 to not_close_rollouts.count where i <= open_rollouts_count collect not_close_rollouts[i])
+			
+			for _rollout in slot.rollouts where _rollout.open and not isKeepOpened not_close_rollouts _rollout do
+				_rollout.open = false
 
 			
 			slot_data[#KEEP_OPEN_ROLLOUTS] = not_close_rollouts

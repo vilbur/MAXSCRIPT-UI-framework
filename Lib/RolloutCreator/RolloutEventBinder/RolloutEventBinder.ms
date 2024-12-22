@@ -65,7 +65,9 @@ struct RolloutEventBinder_v
 		this._Rollout = _Rollout
 	),
 
-	/** TODO: rename this to setEventsToCombiner or like that
+	/**Combine CUSTOM and DEFAULT events
+	  * 
+	  * TODO: rename this to setEventsToCombiner or like that
 	 */
 	function combineEvents =
 	(
@@ -155,7 +157,7 @@ struct RolloutEventBinder_v
 
 	 */
 	function _mutateResizedEventToDocked =
-	(
+	( 
 		--print "global._mutateResizedEventToDocked()"
 		Event_resized	= EventsCombiner.combineOrGetNewEvent (#resized)
 		--format "Event_resized	= % \n" Event_resized
@@ -191,12 +193,12 @@ struct RolloutEventBinder_v
 	(
 		DefaultEvents = DefaultEvents_v ini_path:ini_path
 
-		is_dialog = _Rollout.parent_rollout_id == undefined
+		parent_is_dialog = _Rollout.parent_rollout_id == undefined
 		
-		_Rollout.addLocal #open_rollouts #()
-		_Rollout.addLocal #max_opened_subrollouts (if is_dialog then undefined else 1) -- keep only single opened subrollout
+		--_Rollout.addLocal #open_rollouts #()
+		--_Rollout.addLocal #autoclose_rollouts (if parent_is_dialog then undefined else 2 ) -- keep only single opened subrollout
 		
-		EventsCombiner.EventsLists[#DEFAULTS] = if is_dialog then
+		EventsCombiner.EventsLists[#DEFAULTS] = if parent_is_dialog then
 		
 			/* DIALOG EVENTS */ 
 			DefaultEvents.getDialogEvents(this._Rollout.id)

@@ -9,41 +9,53 @@ filein( getFilenamePath(getSourceFileName()) + "/../../Lib/Dialog/Dialog.ms" ) -
  */
 function addRollouts _Rollouts title rollouts_in_slot: slot:slot =
 (
-	_Rollout_new = #()
+	_Rollouts_new = #()
 
 	for i = 1 to rollouts_in_slot do
-		append _Rollout_new (_Rollouts.Roll ( title + i as string ))
+		append _Rollouts_new (_Rollouts.Roll ( title + i as string ))
 
-	_Rollout_new --return
+	_Rollouts_new --return
 )
 
+/** Add item controls
+ */
+function addControls _Rollout count:10 =
+(
+	Controls = _Rollout.Controls()
+	
+	for i = 1 to count do 
+		Controls.control #BUTTON ( _Rollout.id as string + i as string ) across:1
+)
 
 
 /* DIALOG */
 
-Dialog 	= Dialog_v title:(getFilenameFile(getSourceFileName()))
+Dialog 	= Dialog_v title:(getFilenameFile(getSourceFileName())) width:320
 
 
 /* ROLLOUTS */
 
 _Rollouts_A = addRollouts ( Dialog.Rollouts slot:#rollouts_A height:256 )	("Rollout A") rollouts_in_slot: 1
---_Rollouts_B = addRollouts ( Dialog.Rollouts  height:128 )	("Rollout B") rollouts_in_slot: 2
+_Rollouts_B = addRollouts ( Dialog.Rollouts height:128 )	("Rollout B") rollouts_in_slot: 2
 --_Rollouts_C = addRollouts ( Dialog.Rollouts() )	("Rollout C") rollouts_in_slot: 3
 --
 
 /* SUBROLLOUTS */
 
- _SubRollouts	= addRollouts (_Rollouts_A[1].Rollouts())("SubRollout A") rollouts_in_slot: 2
+_SubRollouts	= addRollouts (_Rollouts_A[1].Rollouts())("SubRollout A") rollouts_in_slot: 2
 
-
-/*  NESTED SUBROLLOUTS */
-
- _NestedSubRollouts	= addRollouts (_SubRollouts[1].Rollouts())("Nested SubRollout A") rollouts_in_slot: 3
-
-
-/*  SUPER NESTED SUBROLLOUTS */
-
- _SuperNestedSubRollouts	= addRollouts (_NestedSubRollouts[1].Rollouts())("Super Nested SubRollout A") rollouts_in_slot: 4
+for _SubRollout in _SubRollouts do 
+	addControls _SubRollout
+	
+	
+--/*  NESTED SUBROLLOUTS */
+--
+-- _NestedSubRollouts	= addRollouts (_SubRollouts[1].Rollouts())("Nested SubRollout A") rollouts_in_slot: 3
+--
+--
+--/*  SUPER NESTED SUBROLLOUTS */
+--
+-- _SuperNestedSubRollouts	= addRollouts (_NestedSubRollouts[1].Rollouts())("Super Nested SubRollout A") rollouts_in_slot: 4
 
 
 
@@ -66,5 +78,5 @@ _Rollouts_A = addRollouts ( Dialog.Rollouts slot:#rollouts_A height:256 )	("Roll
 
 
 /* CREATE DIALOG */
---Dialog.create()
-Dialog.create width:512
+Dialog.create()
+--Dialog.create width:512

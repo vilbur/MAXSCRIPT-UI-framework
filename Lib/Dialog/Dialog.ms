@@ -92,9 +92,9 @@ struct Dialog_v
 	function create           \
 		create_dialog:true	\ -- boolean	create_dialog if false, then oly rollout without dialog is created
 		width:	\ -- integer	width of dialog INTEGER: definded width | UNSUPPLIED: width auto or by ini | UNDEFINED: width auto even if ini is defined
-		height:	\ -- integer|#auto	height
-		pos:	\ -- [x,y]|#mouse	position of dialog when created
-		origin:#SCREEN	\ -- #WINDOW|#SCREEN	origin of dialog position: Relative to 3Ds Max window|Absolute to screen
+		height:	\ -- integer|#AUTO	height
+		pos:	\ -- [x,y]|#MOUSE	position of dialog when created
+		origin:#WINDOW	\ -- #WINDOW|#SCREEN	origin of dialog position: Relative to 3Ds Max window | Absolute pos to screen
 		bgcolor:	\
 		fgcolor:	\
 		bitmap:	\
@@ -110,7 +110,6 @@ struct Dialog_v
 		--format "\n"; print "Dialog_v.create()"
 		
 		this.destroy()
-		
 
 		_RolloutCreator = RolloutCreator_v Ini:Ini DEBUG:DEBUG
 
@@ -131,11 +130,9 @@ struct Dialog_v
 		/*
 		   CREATE DIALOG ROLLOUT AND NESTED ROLLOUTS
 		*/
-		--format "createRollout START\n"
-
 		timer_createRollout = timeStamp()
 		_RolloutCreator.createRollout (this) width:width  -- create nested rollouts
-		if this.DEBUG then format "createRollout % ms\n" ((timestamp()) - timer_all)
+		--if this.DEBUG then format "createRollout % ms\n" ((timestamp()) - timer_all)
 
 
 		if create_dialog then
@@ -493,10 +490,10 @@ struct Dialog_v
 		--format "pos	= % \n" pos
 		if pos != unsupplied then
 		(
-			if pos == #mouse then
+			if pos == #MOUSE then
 				pos = mouse.screenpos - [-1,0] -- offset postion of -1px, otherwise resize cursor is dispalyed on creation
 
-			else if origin == #window then
+			else if origin == #WINDOW then
 				pos = this._getPositionRelativeToWindow(pos)
 
 		)  else if Ini.isDefined() and (position_ini = Ini.load( id as string )("position")) != undefined  then

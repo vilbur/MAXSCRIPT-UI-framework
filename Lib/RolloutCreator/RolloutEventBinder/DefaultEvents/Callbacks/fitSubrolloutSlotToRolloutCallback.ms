@@ -1,5 +1,4 @@
-filein( getFilenamePath(getSourceFileName()) + "/../../../Dialog/DialogGlobal/DialogGlobal.ms" )	-- "./../../../Dialog/DialogGlobal/DialogGlobal.ms"
-
+filein( getFilenamePath(getSourceFileName()) + "/../../../../Dialog/DialogGlobal/DialogGlobal.ms" )	--"./../../../../Dialog/DialogGlobal/DialogGlobal.ms"
 
 /*------------------------------------------------------------------------------
 
