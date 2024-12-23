@@ -113,7 +113,7 @@ struct SubolloutsCreator_v
 		(
 			slot_data	=  Dictionary()
 			
-			 slot_data[#AUTOCLOSE_ROLLOUTS] = Subrollouts.auto_roll_up
+			 slot_data[#AUTOROLLUP] = Subrollouts.auto_roll_up
 			 
 			 
 			slot_data as string --return

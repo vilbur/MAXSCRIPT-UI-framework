@@ -26,7 +26,7 @@ function autoRollUpRolloutCallback parent_rollout slot_id rollout_id =
 	(
 		if classOf ( slot_data = execute slot.text ) == Dictionary then
 		(
-			open_rollouts_count = if classOf slot_data[#AUTOCLOSE_ROLLOUTS] == integer then slot_data[#AUTOCLOSE_ROLLOUTS] else 1
+			open_rollouts_count = if classOf slot_data[#AUTOROLLUP] == integer then slot_data[#AUTOROLLUP] else 1
 
 			not_close_rollouts = if slot_data[#KEEP_OPEN_ROLLOUTS] != undefined then slot_data[#KEEP_OPEN_ROLLOUTS] else #()
 			
