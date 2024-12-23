@@ -4,7 +4,7 @@ filein( getFilenamePath(getSourceFileName()) + "/../Dialog/Rollout/Rollout.ms" )
 filein( getFilenamePath(getSourceFileName()) + "/../Dialog/Rollout/Subrollouts/Subrollouts.ms" )	-- "./../Dialog/Rollout/Subrollouts/Subrollouts.ms"
 
 filein( getFilenamePath(getSourceFileName()) + "/RolloutEventBinder/DefaultEvents/Callbacks/fitSubrolloutSlotToRolloutCallback.ms" )	--"./RolloutEventBinder/DefaultEvents/Callbacks/fitSubrolloutSlotToRolloutCallback.ms"
-filein( getFilenamePath(getSourceFileName()) + "/RolloutEventBinder/DefaultEvents/Callbacks/autoCloseRolloutCallback.ms" )	--"./RolloutEventBinder/DefaultEvents/Callbacks/autoCloseRolloutCallback.ms"
+filein( getFilenamePath(getSourceFileName()) + "/RolloutEventBinder/DefaultEvents/Callbacks/autoRollUpRolloutCallback.ms" )	--"./RolloutEventBinder/DefaultEvents/Callbacks/autoRollUpRolloutCallback.ms"
 filein( getFilenamePath(getSourceFileName()) + "/RolloutEventBinder/DefaultEvents/waitForResizeEndTimer.ms" )	-- "./RolloutEventBinder/DefaultEvents/waitForResizeEndTimer.ms"
 
 filein( getFilenamePath(getSourceFileName()) + "/RolloutEventBinder/RolloutEventBinder.ms" )	-- "./RolloutEventBinder/RolloutEventBinder.ms"
@@ -174,7 +174,7 @@ struct RolloutCreator_v
 
 				)
 				 
-				this._storeSubrolloutHeight(_RolloutSub)( Subrollouts.slot)
+				this._storeSubrolloutHeight(Subrollouts)(_RolloutSub)( Subrollouts.slot)
 			)
 			
 			this._setSlotHeight(Subrollouts)
@@ -187,21 +187,25 @@ struct RolloutCreator_v
 	  *
 	  * This is only if slot height is not defined by user
 	  */
-	function _storeSubrolloutHeight _Rollout slot =
+	function _storeSubrolloutHeight Subrollouts _Rollout slot =
 	(
-		format "\n"; print "RolloutCreator_v.storeSubrolloutHeight()"
+		--format "\n"; print "RolloutCreator_v.storeSubrolloutHeight()"
 		--format "_Rollout:	% \n" _Rollout.id
 		--format "_Rollout.RCI:	% \n" _Rollout.RCI
 
 		rollout_height = if _Rollout.height == unsupplied then _Rollout.RCI.def.height else _Rollout.height
 
-		--if rollout_height > subrollouts_heights[ slot ] then
-			--subrollouts_heights[ slot ] = rollout_height
-			
-		subrollouts_heights[ slot ] += rollout_height
-
-			
-		format "SLOT: %\nHEIGHT: %\n" slot (subrollouts_heights[ slot ])
+		if ( Subrollouts.auto_roll_up ) != undefined then
+		(
+			/* GET SLOT HEIGHT BY TALLEST ROLLOUT */
+	
+			if rollout_height > subrollouts_heights[ slot ] then
+				subrollouts_heights[ slot ] = rollout_height
+		)
+		else
+			/* GET SLOT HEIGHT FOR ALL ROLLOUTS */ 
+			subrollouts_heights[ slot ] += rollout_height
+		--format "SLOT: %\nHEIGHT: %\n" slot (subrollouts_heights[ slot ])
 	),
 
 	/** Set slot height
@@ -209,12 +213,12 @@ struct RolloutCreator_v
 	  */
 	function _setSlotHeight Subrollouts =
 	(
-		format "\n"; print "RolloutCreator_v._setSlotHeight()"
-		format "Subrollouts.height: %\n" Subrollouts.height
+		--format "\n"; print "RolloutCreator_v._setSlotHeight()"
+		--format "Subrollouts.height: %\n" Subrollouts.height
 		
 		if Subrollouts.height == unsupplied then
 			Subrollouts.height = subrollouts_heights[  Subrollouts.slot ] + (  Subrollouts.Rollouts.count  * this.closed_rollout_bar_height ) -- Slot height = Biggest subrollout OPEN and other subrollouts CLOSED
-		format "Subrollouts.height: %\n" Subrollouts.height
+		--format "Subrollouts.height: %\n" Subrollouts.height
 	),
 
 	/** SET SUBROLLOUT SLOT DEFAULT IDS if not set by user

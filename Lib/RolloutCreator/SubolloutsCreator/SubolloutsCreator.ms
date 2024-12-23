@@ -8,8 +8,8 @@ struct SubolloutsCreator_v
 
 	ini_path,
 
-	--slot_height_fix = 8, -- slot is slightly shorter without this compesation
-	slot_height_fix = 0, -- slot is slightly shorter without this compesation
+	padding_bottom = 8, -- slot is slightly shorter without this compesation
+	--padding_bottom = 0, -- slot is slightly shorter without this compesation
 
 	slot_width_fix = 2, -- make slot wide as possible, remove this value from width of parent rollout
 	--slot_width_fix = 0, -- make slot wide as possible, remove this value from width of parent rollout
@@ -27,10 +27,10 @@ struct SubolloutsCreator_v
 	 function addSubrolloutSlot _Rollout Subrollouts =
 	 (
 		if DEBUG then format "\n\n===================================== SubolloutsCreator_v.addSubrolloutSlot() %.% =====================================\n\n" ( _Rollout.id as string ) ( Subrollouts.slot as string );
-		format "\n\n===================================== SubolloutsCreator_v.addSubrolloutSlot() %.% =====================================\n\n" ( _Rollout.id as string ) ( Subrollouts.slot as string );
+		--format "\n\n===================================== SubolloutsCreator_v.addSubrolloutSlot() %.% =====================================\n\n" ( _Rollout.id as string ) ( Subrollouts.slot as string );
 
 
-		slot_height = (Subrollouts.height + this.slot_height_fix ) as string
+		slot_height = (Subrollouts.height + this.padding_bottom ) as string
 		--slot_height = 512 as string
 		--slot_height = 256 as string
 
@@ -109,11 +109,11 @@ struct SubolloutsCreator_v
 	(
 		--format "\n"; print "SubolloutsCreator_v._getSlotData()"
 		
-		if ( Subrollouts.autoclose_rollouts ) != undefined then
+		if ( Subrollouts.auto_roll_up ) != undefined then
 		(
 			slot_data	=  Dictionary()
 			
-			 slot_data[#AUTOCLOSE_ROLLOUTS] = Subrollouts.autoclose_rollouts
+			 slot_data[#AUTOCLOSE_ROLLOUTS] = Subrollouts.auto_roll_up
 			 
 			 
 			slot_data as string --return

@@ -67,7 +67,7 @@
 		function getAutoRollUpOption = if not this.isDialog() then 1
 
 		--local Subrollouts = Subrollouts_v slot:(slot as name ) parent_rollout_id:(this.getFullId()) width:(if width != unsupplied then width else this.width) height:height
-		local Subrollouts = Subrollouts_v slot:slot parent_rollout_id:(this.id) width:(if width != unsupplied then width else this.width) height:height autoclose_rollouts:(getAutoRollUpOption()) DEBUG:DEBUG
+		local Subrollouts = Subrollouts_v slot:slot parent_rollout_id:(this.id) width:(if width != unsupplied then width else this.width) height:height auto_roll_up:(getAutoRollUpOption()) DEBUG:DEBUG
 
 		append _Controls Subrollouts
 

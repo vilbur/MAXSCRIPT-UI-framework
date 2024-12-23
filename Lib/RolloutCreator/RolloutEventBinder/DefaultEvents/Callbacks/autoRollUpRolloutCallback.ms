@@ -1,8 +1,8 @@
 /** Auto close rollout callback
  */
-function autoCloseRolloutCallback parent_rollout slot_id rollout_id =
+function autoRollUpRolloutCallback parent_rollout slot_id rollout_id =
 (
-	--format "\n"; print ".autoCloseRolloutCallback()"
+	--format "\n"; print ".autoRollUpRolloutCallback()"
 	--format "parent_rollout: %\n" parent_rollout
 	--format "slot_id: %\n" slot_id
 	--format "rollout_id: %\n" rollout_id

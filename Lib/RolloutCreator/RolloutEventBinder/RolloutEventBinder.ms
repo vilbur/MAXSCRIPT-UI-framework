@@ -196,7 +196,7 @@ struct RolloutEventBinder_v
 		parent_is_dialog = _Rollout.parent_rollout_id == undefined
 		
 		--_Rollout.addLocal #open_rollouts #()
-		--_Rollout.addLocal #autoclose_rollouts (if parent_is_dialog then undefined else 2 ) -- keep only single opened subrollout
+		--_Rollout.addLocal #auto_roll_up (if parent_is_dialog then undefined else 2 ) -- keep only single opened subrollout
 		
 		EventsCombiner.EventsLists[#DEFAULTS] = if parent_is_dialog then
 		

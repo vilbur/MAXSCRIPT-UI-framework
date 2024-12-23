@@ -1,5 +1,5 @@
 --filein( getFilenamePath(getSourceFileName()) + "/Callbacks/fitSubrolloutSlotToRolloutCallback.ms" )	--"./Callbacks/fitSubrolloutSlotToRolloutCallback.ms"
---filein( getFilenamePath(getSourceFileName()) + "/Callbacks/autoCloseRolloutCallback.ms" )	--"./Callbacks/autoCloseRolloutCallback.ms"
+--filein( getFilenamePath(getSourceFileName()) + "/Callbacks/autoRollUpRolloutCallback.ms" )	--"./Callbacks/autoRollUpRolloutCallback.ms"
 
 /** Events default for rollout\dialog
  */
@@ -72,7 +72,7 @@ struct DefaultEvents_v
 		--format "\n"; print "DefaultEvents_v.getRolloutEvents()"
 		EventsList = EventsList_v()
 		
-		append EventsList.list (this._getAutoCloseRolloutEvent(_Rollout))
+		append EventsList.list (this._getAutoRollUpRolloutEvent(_Rollout))
 		
 		EventsList --return
 	),
@@ -80,17 +80,17 @@ struct DefaultEvents_v
 	
 	private
 	
-	/** Get auto close rollout event
+	/** Get auto roll up rollout event
 	 */
-	function _getAutoCloseRolloutEvent _Rollout =
+	function _getAutoRollUpRolloutEvent _Rollout =
 	(
-		--format "\n"; print "DefaultEvents_v._getAutoCloseRolloutEvent()"
+		--format "\n"; print "DefaultEvents_v._getAutoRollUpRolloutEvent()"
 		rollout_id_full = _Rollout.getFullId()
 		--format "rollout_id_full: %\n" rollout_id_full
 		
 		rollout_id_full_split	= filterString rollout_id_full "."
 	
-		callback = "if val then autoCloseRolloutCallback ( \""+rollout_id_full_split[1]+"\" ) ( \""+rollout_id_full_split[2]+"\" ) ( \""+rollout_id_full_split[3]+"\" )"
+		callback = "if val then autoRollUpRolloutCallback ( \""+rollout_id_full_split[1]+"\" ) ( \""+rollout_id_full_split[2]+"\" ) ( \""+rollout_id_full_split[3]+"\" )"
 		
 		Event_v type:#ROLLEDUP callback:callback --return
 	),
