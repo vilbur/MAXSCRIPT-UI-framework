@@ -7,20 +7,24 @@ function autoRollUpRolloutCallback parent_rollout slot_id rollout_id =
 	--format "slot_id: %\n" slot_id
 	--format "rollout_id: %\n" rollout_id
 
+	parent_rollout	= parent_rollout as string
+	rollout_id	= rollout_id as string
+	slot_id	= slot_id as string
+	
 	/** Is current slot
 	 */
-	function isCurrentSlot slot slot_id = matchPattern ( slot as string ) pattern:("*:"+slot_id as string )
+	function isCurrentSlot slot slot_id = matchPattern ( slot as string ) pattern:("*:"+slot_id )
 	
 	/** Is not current rollout
 	 */
-	function isCurrentRollout _rollout rollout_id = matchPattern ( _rollout as string ) pattern:("*"+rollout_id )
+	function isCurrentRollout _rollout rollout_id = matchPattern ( _rollout ) pattern:("*"+rollout_id )
 	
 	/** Is keep opened
 	 */
 	function isKeepOpened not_close_rollouts _rollout = findItem not_close_rollouts ((filterString ( _rollout as string ) ":")[2]) > 0 
 	
 	
-	parent_rollout	= execute (parent_rollout as string )
+	parent_rollout	= execute parent_rollout
 
 	for slot in parent_rollout.controls where classOf slot == SubRollout and isCurrentSlot slot slot_id do
 	(

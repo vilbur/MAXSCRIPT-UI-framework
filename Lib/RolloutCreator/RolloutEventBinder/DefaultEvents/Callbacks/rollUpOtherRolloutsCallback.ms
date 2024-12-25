@@ -2,8 +2,11 @@
  */
 function rollUpOtherRolloutsCallback parent_rollout slot_id rollout_id =
 (
-	--format "\n"; print ".autoRollUpRolloutCallback()"
-
+	--format "\n"; print ".rollUpOtherRolloutsCallback()"
+	parent_rollout	= parent_rollout as string
+	rollout_id	= rollout_id as string
+	slot_id	= slot_id as string
+	
 	/** Is current slot
 	 */
 	function isCurrentSlot slot slot_id = matchPattern ( slot as string ) pattern:("*:"+slot_id as string )
