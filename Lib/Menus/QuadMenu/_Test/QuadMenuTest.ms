@@ -195,11 +195,11 @@ function removeItems =
 --------------------------------------------------------------------------------*/
 
 --/* DEFAULT QUAD MENU */
---getDefaultQuadMenu()
---
---
+getDefaultQuadMenu()
+
+
 /* QUAD MENU */
-createQuadMenu()
+--createQuadMenu()
 
 --addItemsToQuad()
 --
@@ -219,7 +219,7 @@ createQuadMenu()
 --
 --
 --/* SEPARATOR */
-addSeparator()
+--addSeparator()
 --
 --removeSeparator()
 --cleanSeparator()

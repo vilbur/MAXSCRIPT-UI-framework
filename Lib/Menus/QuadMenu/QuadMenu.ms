@@ -180,14 +180,14 @@ struct QuadMenu_v
 	function _getDefaultQuadName =
 	(
 		--format "\n"; print "QuadMenu_v._getDefaultQuadName()"
-		found_default_quad = for default_quad_name in default_quad_names \
-							    where matchPattern default_quad_name pattern:( this.menu_name) \	-- match:"Foo"
-							    or   matchPattern default_quad_name pattern:( this.menu_name + " ")	-- match:"Foo "
+		
+		default_quad_names = for default_quad_name in default_quad_names \
+							    where matchPattern default_quad_name pattern:( this.menu_name ) \	-- match:"Foo"
+							    or   matchPattern default_quad_name pattern:( this.menu_name + "*")	-- match:"Foo.*"
 							        collect default_quad_name
-
-
-		if found_default_quad.count > 0 then
-			found_default_quad[1] --return
+		
+		if default_quad_names.count > 0 then
+			default_quad_names[1] --return
 	),
 
 	/** Create QuadMenu menu
