@@ -19,26 +19,36 @@ function addRollouts _Rollouts title rollouts_in_slot: slot:slot =
 
 /** Add item controls
  */
-function addControls _Rollout count:10 =
+function addControls _Rollout title: count:1 =
 (
 	Controls = _Rollout.Controls()
 	
+	if title == unsupplied then
+		title =  _Rollout.id as string
+	
 	for i = 1 to count do 
-		Controls.control #BUTTON ( _Rollout.id as string + i as string ) across:1
+		Controls.control #BUTTON ( title + i as string ) across:1
 )
 
 
 /* DIALOG */
 
-Dialog 	= Dialog_v title:(getFilenameFile(getSourceFileName())) width:320
+Dialog 	= Dialog_v title:(getFilenameFile(getSourceFileName())) width:420
 
 
 /* ROLLOUTS */
 
-_Rollouts_A = addRollouts ( Dialog.Rollouts slot:#rollouts_A height:256 )	("Rollout A") rollouts_in_slot: 1
-_Rollouts_B = addRollouts ( Dialog.Rollouts height:128 )	("Rollout B") rollouts_in_slot: 2
+slot_A = Dialog.Rollouts slot:#rollouts_A height:164
+slot_B = Dialog.Rollouts slot:#rollouts_B
+
+_Rollouts_A = addRollouts ( slot_A )	("Rollouts") rollouts_in_slot: 1
+_Rollouts_B = addRollouts ( slot_B )	("Press CTRL to close other rollouts ") rollouts_in_slot:3
 --_Rollouts_C = addRollouts ( Dialog.Rollouts() )	("Rollout C") rollouts_in_slot: 3
 --
+
+for _rollout in _Rollouts_B do
+	addControls _rollout title:"Btn"
+
 
 /* SUBROLLOUTS */
 

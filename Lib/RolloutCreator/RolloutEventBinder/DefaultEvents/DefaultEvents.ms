@@ -90,7 +90,14 @@ struct DefaultEvents_v
 		
 		rollout_id_full_split	= filterString rollout_id_full "."
 	
-		callback = "if val then autoRollUpRolloutCallback ( \""+rollout_id_full_split[1]+"\" ) ( \""+rollout_id_full_split[2]+"\" ) ( \""+rollout_id_full_split[3]+"\" )"
+		params = "( \""+rollout_id_full_split[1]+"\" ) ( \""+rollout_id_full_split[2]+"\" ) ( \""+rollout_id_full_split[3]+"\" )"
+	
+		roll_up_other_rollouts_callback = "rollUpOtherRolloutsCallback " + params
+		auto_roll_up_rollout_callback   = "autoRollUpRolloutCallback " + params
+	
+		if_control_pressed = "	if keyboard.controlPressed then\n		"+roll_up_other_rollouts_callback+"\nelse\n		"+auto_roll_up_rollout_callback
+	
+		callback = "if val then\n	(\n	" + if_control_pressed + "\n)"
 		
 		Event_v type:#ROLLEDUP callback:callback --return
 	),
