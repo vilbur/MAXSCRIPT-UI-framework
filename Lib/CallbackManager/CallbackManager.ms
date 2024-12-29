@@ -1,13 +1,15 @@
 
 filein( getFilenamePath(getSourceFileName()) + "/Callback/Callback.ms" )	--"./Callback/Callback.ms"
 
-
-/* CALLBACKMANAGER is global singleton instance
+/*------------------------------------------------------------------------------
+	
+	
+    CALLBACKMANAGER is global singleton instance
 
 	It can be used by mutliple scripts at once
-
-*/ 
-if CALLBACKMANAGER == undefined then 
+	
+--------------------------------------------------------------------------------*/
+--if CALLBACKMANAGER == undefined then -- IMPORTANT: ENABLE THIS LINE IN PRODUCTION
 	global CALLBACKMANAGER
 
 /*
@@ -31,12 +33,12 @@ struct CallbackManager_v
 	 */
 	function import dir =
 	(
-		format "\n"; print "Callback_v.import()"
+		--format "\n"; print "Callback_v.import()"
 		for callback_subdir in  getDirectories (dir + "/*") recurse:true do
 			for callback_file in getFiles (callback_subdir + "/*.ms") do
 			(
 				--format "callback_subdir: %\n" callback_subdir
-				type = getFilenameFile( trimRight callback_subdir "\\" )
+				type = getFilenameFile( trimRight callback_subdir "\\" ) as name
 				--format "type: %\n" type
 				callback = getFilenameFile( callback_file )
 				--format "callback: %\n" callback
@@ -51,9 +53,9 @@ struct CallbackManager_v
 	  */
 	function add callback_fn type id: =
 	(
-		format "\n"; print "CallbackManager_v.add()"
-		format "callback_fn:	% \n" callback_fn
-		format "type:	% \n" type
+		--format "\n"; print "CallbackManager_v.add()"
+		--format "callback_fn:	% \n" callback_fn
+		--format "type:	% \n" type
 
 		callback_key = this._getCallbackKey (callback_fn)(type)(id)
 
@@ -98,7 +100,6 @@ struct CallbackManager_v
 				where getProperty dataPair.value key == val and ( if option_val != undefined then getProperty dataPair.value option_key == option_val else true )
 					collect dataPair.value
 		)
-
 
 		callback_exist	= callback	!= unsupplied
 		type_exist	= type	!= unsupplied
@@ -152,7 +153,9 @@ struct CallbackManager_v
 	 */
 	function startCallback Callback =
 	(
-		format "\n"; print ("CallbackManager_v.startCallback( "+Callback.id+" )")
+		--format "\n"; print "Callback_v.startCallback()"
+		--format "\n"; print ("CallbackManager_v.startCallback( "+Callback as string +" )")
+		--format "classof Callback.type: %\n" (classof Callback.type)
 		--format "CallbackManager_v.START TYPE:% CALLBACK:% ID:% \n\n" Callback.type Callback.callback Callback.id
 		callbacks.addScript Callback.type Callback.callback id:Callback.id
 	),
@@ -162,7 +165,7 @@ struct CallbackManager_v
 	 */
 	function killCallback Callback =
 	(
-		format "\n"; print ("CallbackManager_v.killCallback( "+Callback.id+" )")
+		--format "\n"; print ("CallbackManager_v.killCallback( "+Callback.id+" )")
 		--format "Callback.callback = % \n" Callback.callback
 		--format "Callback.type = % \n" Callback.type
 		--format "Callback.id   = % \n" Callback.id
@@ -207,3 +210,12 @@ struct CallbackManager_v
 	)
 
 )
+
+/*------------------------------------------------------------------------------
+  
+	SET GLOBAL INSTANCE OF CallbackManager_v
+	
+--------------------------------------------------------------------------------*/
+
+--if CALLBACKMANAGER == undefined then -- IMPORTANT: ENABLE THIS LINE IN PRODUCTION
+	CALLBACKMANAGER = CallbackManager_v()
