@@ -24,7 +24,7 @@ b = box()
 
 /*----------------------------------------------------------------------------------------------------------------------------------------
   
-	FILEIN CALLBACK FILES
+	MASS FILEIN CALLBACK FILES
 	
 	• Import all files in subdirs of given name
 	• callback function and type are get from "DIR_NAME/FILENAME.ms" >>> callback:FILENAME  type:DIR_NAME
@@ -36,13 +36,13 @@ CALLBACKMANAGER.import( getFilenamePath(getSourceFileName()) + "/Callbacks" )
 
 /*------------------------------------------------------------------------------
 
-	ADD CALLBACKS
+	ADD CALLBACKS MANNUALY
 
 --------------------------------------------------------------------------------*/
 
---CALLBACKMANAGER.add #nodeCreatedCallback	#nodeCreated
---CALLBACKMANAGER.add "nodeCreatedCallback"	#nodeCreated	id:#nodeCreated_2nd
---CALLBACKMANAGER.add #nodeDeletedCallback	#nodePreDelete	id:#nodeDeletedCallback_id
+CALLBACKMANAGER.add #nodeCreatedCallback	#nodeCreated
+CALLBACKMANAGER.add "nodeCreatedCallback"	#nodeCreated   id:#nodeCreated_2nd
+CALLBACKMANAGER.add #nodeDeletedCallback	#nodePreDelete id:#nodeDeletedCallback_id
 
 
 
@@ -50,24 +50,23 @@ CALLBACKMANAGER.import( getFilenamePath(getSourceFileName()) + "/Callbacks" )
   
 	GET CALLBACKS
 	
---------------------------------------------------------------------------------*/
---
---/* ALL CALLBACKS */ 
---all_callbacks = CALLBACKMANAGER.getCallbacks()
---format "all_callbacks: %\n" all_callbacks
---
---
---/* GET ALL BY CALLBACK FN */ 
---all_callBackFn = CALLBACKMANAGER.getCallbacks callback:#nodeCreatedCallback
---format "all_callBackFn: %\n" all_callBackFn
---
---/* GET ALL BY TYPE */ 
---all_nodeCreated = CALLBACKMANAGER.getCallbacks type:#nodeCreated
---format "all_nodeCreated: %\n" all_nodeCreated
---
---/* GET CALLBACK BY ID */ 
---callback_by_id = CALLBACKMANAGER.getCallbacks id:#id_first
---format "callback_by_id: %\n" callback_by_id
+------------------------------------------------------------------------*/
+
+/* ALL CALLBACKS */ 
+all_callbacks = CALLBACKMANAGER.getCallbacks(undefined)
+format "all_callbacks: %\n" all_callbacks
+
+/* GET ALL BY CALLBACK FN */ 
+all_callBackFn = CALLBACKMANAGER.getCallbacks "nodeCreatedCallback"
+format "all_callBackFn: %\n" all_callBackFn
+
+/* GET ALL BY TYPE */ 
+all_nodeCreated = CALLBACKMANAGER.getCallbacks #nodeCreated
+format "all_nodeCreated: %\n" all_nodeCreated
+
+/* GET CALLBACK BY ID */ 
+callback_by_id = CALLBACKMANAGER.getCallbacks #id_first
+format "callback_by_id: %\n" callback_by_id
 
 
 
@@ -78,14 +77,18 @@ CALLBACKMANAGER.import( getFilenamePath(getSourceFileName()) + "/Callbacks" )
 
 --------------------------------------------------------------------------------*/
 
-/* START CALLBACKS */ 
---CALLBACKMANAGER.start()
+/* START ALL CALLBACKS */ 
+CALLBACKMANAGER.start(undefined)
+
+
+/* START BY CALLBACK FN */ 
+CALLBACKMANAGER.start "nodeCreatedCallback"
 
 /* START CALLBACKS BY TYPE */ 
---CALLBACKMANAGER.start type:#nodeCreated
+CALLBACKMANAGER.start #nodeCreated
 
 /* START BY ID */ 
---CALLBACKMANAGER.start id:#nodeCreated_2nd
+CALLBACKMANAGER.start #nodeCreated_2nd
 
 
 
@@ -95,42 +98,42 @@ CALLBACKMANAGER.import( getFilenamePath(getSourceFileName()) + "/Callbacks" )
 
 --------------------------------------------------------------------------------*/
 
---CALLBACKMANAGER.kill id:#nodeCreated_2nd
-
 /* KILL ALL CALLBACKS */ 
---CALLBACKMANAGER.kill()
+CALLBACKMANAGER.kill(undefined)
+
+
+/* KILL BY CALLBACK FN */ 
+CALLBACKMANAGER.kill "nodeCreatedCallback"
+
 
 /* KILL CALLBACKS BY TYPE */ 
---CALLBACKMANAGER.kill type:#nodeCreated
+CALLBACKMANAGER.kill #nodeCreated
 
 /* KILL BY ID */ 
---CALLBACKMANAGER.kill id:#nodeCreated_2nd
+CALLBACKMANAGER.kill #nodeCreated_2nd
 
 
 
 
 /*------------------------------------------------------------------------------
-	
+
 	DELETE CALLBACKS
-	
+
 --------------------------------------------------------------------------------*/
 
-/*------ GET BY ALL PARAMS ------*/
---format "TEST ALL PARAMS: % \n"	(( CALLBACKMANAGER.remove  callback:#nodeCreatedCallback type:#nodeCreated id:#id_first).count	== 1)
+/* REMOVE ALL CALLBACKS */ 
+CALLBACKMANAGER.remove(undefined)
 
 
-/*------ GET BY MULTIPLE PARAMS ------*/
---format "TEST CALLBACK AND ID PARAMS: % \n"	((CALLBACKMANAGER.remove callback:#nodeCreatedCallback	id:#id_first).count	== 1)
---format "TEST CALLBACK AND TYPE PARAMS: % \n"	((CALLBACKMANAGER.remove callback:#nodeCreatedCallback	type:#nodeCreated).count	== 2)
---format "TEST TYPE AND ID PARAMS: % \n"	((CALLBACKMANAGER.remove type:#nodeCreated	id:#id_first).count	== 1)
+/* REMOVE BY CALLBACK FN */ 
+CALLBACKMANAGER.remove "nodeCreatedCallback"
 
 
-/*------ GET BY SINGLE PARAM ------*/
---format "TEST CALLBACK PARAM: % \n"	((CALLBACKMANAGER.remove callback:#nodeCreatedCallback).count	== 3)
---format "TEST TYPE PARAM: % \n"	((CALLBACKMANAGER.remove type:#nodeCreated).count	== 2)
---format "TEST ID PARAM: % \n"	((CALLBACKMANAGER.remove id:#id_first).count	== 1)
+/* REMOVE CALLBACKS BY TYPE */ 
+CALLBACKMANAGER.remove #nodeCreated
 
-
+/* REMOVE BY ID */ 
+CALLBACKMANAGER.remove #nodeCreated_2nd
 
 
 

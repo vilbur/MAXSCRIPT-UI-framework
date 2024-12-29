@@ -57,9 +57,9 @@ struct CallbackManager_v
 		--format "callback_fn:	% \n" callback_fn
 		--format "type:	% \n" type
 
-		callback_key = this._getCallbackKey (callback_fn)(type)(id)
+		callback_key = if id == unsupplied then this._getCallbackKey (callback_fn)(type) else id
 
-		this.List[callback_key] = Callback_v callback:(this._getCallbackFn (callback_fn)) type:type id:( if id == unsupplied then callback_key else id )
+		this.List[callback_key] = Callback_v callback:(this._getCallbackFn (callback_fn)) type:type id:callback_key
 
 		--this.startCallback (this.List[callback_key])
 	),
@@ -68,28 +68,29 @@ struct CallbackManager_v
 	  *
 	  * @retrun #(Callback_v) removed callbacks
 	  */
-	function remove callback: type: id: =
+	function remove callback_type_id =
 	(
 		--format "\n"; print "CallbackManager_v.remove()"
-		_Callbacks = this.getCallbacks callback:callback type:type id:id
+		_Callbacks = this.getCallbacks (callback_type_id)
 
-		--format "_Callbacks	= % \n" _Callbacks
-		--format "\n\n------------------------------------\n\n"
-
-		if _Callbacks != undefined then
-			for _Callback in _Callbacks do
-				this.kill (_Callback)
-
-		_Callbacks --return
+		for i = _Callbacks.count to 1 by -1 do 
+			(
+				_Callback = _Callbacks[i]
+				
+				this.killCallback (_Callback)
+				
+				removeDictValue this.List _Callback.id
+			)
 	),
 
 	/** Get callbacks
 	 *
 	 * @return #(Callback_v)
 	 */
-	function getCallbacks callback: type: id: =
+	function getCallbacks param =
 	(
-		--format "\n"; print "Callback_v.getCallback()"
+		--format "\n"; print "Callback_v.getCallbacks()"
+		--format "param: %\n" param
 		--format "\n\n------------------------------------\n\n"
 
 		/** Get callback by type
@@ -100,10 +101,23 @@ struct CallbackManager_v
 				where getProperty dataPair.value key == val and ( if option_val != undefined then getProperty dataPair.value option_key == option_val else true )
 					collect dataPair.value
 		)
+		
+		--/** Is id
+		-- */
+		--function isId val = classOf val == name and this.list[val] != undefined
+		--
+		
+		callback	= if classOf param == string then param
+		type	= if classOf val == name and this.list[val] == undefined then param
+		id	= if classOf val == name and this.list[val] != undefined then param
+		
+		--format "callback: %\n" callback
+		--format "type: %\n" type
+		--format "id: %\n" id
 
-		callback_exist	= callback	!= unsupplied
-		type_exist	= type	!= unsupplied
-		id_exist	= id	!= unsupplied
+		callback_exist	= callback	!= undefined
+		type_exist	= type	!= undefined
+		id_exist	= id	!= undefined
 
 		callback = (this._getCallbackFn(callback))
 
@@ -124,28 +138,24 @@ struct CallbackManager_v
 			)
 		else
 			/*------ GET BY ALL PARAMS ------*/
-			#( this.List[this._getCallbackKey (callback)(type)(id)] )
+			#( this.List[this._getCallbackKey (callback)(type)] )
 	),
 	
 	/** Start
 	 */
-	function start callback: type: id: =
+	function start callback_type_id =
 	(
 		--format "\n"; print "Callback_v.start()"
-		_Callbacks = this.getCallbacks callback:callback type:type id:id
-
-		for Callback in _Callbacks do 
+		for Callback in (this.getCallbacks (callback_type_id)) do 
 			this.startCallback (Callback)
 	),
 	
 	/** Kill
 	 */
-	function kill callback: type: id: =
+	function kill callback_type_id =
 	(
 		--format "\n"; print "Callback_v.start()"
-		_Callbacks = this.getCallbacks callback:callback type:type id:id
-
-		for Callback in _Callbacks do 
+		for Callback in (this.getCallbacks (callback_type_id)) do 
 			this.killCallback (Callback)
 	),
 	
@@ -191,13 +201,17 @@ struct CallbackManager_v
 	 *
 	 * @return #name E.G.: #callbackFn_nodeCreated
 	 */
-	function _getCallbackKey callback type id =
+	function _getCallbackKey callback type =
 	(
 		--format "\n"; print "Callback._getCallbackName()"
 
-		id_string = if id != unsupplied then "_" + id as string else ""
+		--id_string = if id != unsupplied then "_" + id as string else ""
 
-		(( trimRight (callback as string ) "()" ) +"_"+ (type as string ) + id_string ) as name --return
+		--( +"_"+ (type as string ) + id_string ) as name --return
+		
+		callback_fn = trimRight (callback as string ) "()" 
+		
+		(type as string +"_"+ callback_fn ) as name -- return
 	),
 
 	/**
