@@ -54,12 +54,14 @@ struct ControlCreator_v
 			--format "_CONTROL: %\n" _Control
 			ParamsCreator.mergeParams(_Control)
 			--format "_Control.Params	= % \n" _Control.Params
+			
 			ControlValue.setControlValue (_Control) (_Rollout.id)
 
 			ControlEventCreator.createEvents(_Control)
 
 			this._customizeControlTypes(_Control)
 		)
+		
 
 		/* modify ACROSS PARAMETER */
 		if not this.isGroupboxControls() then

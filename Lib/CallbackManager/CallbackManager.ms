@@ -9,7 +9,7 @@ filein( getFilenamePath(getSourceFileName()) + "/Callback/Callback.ms" )	--"./Ca
 	It can be used by mutliple scripts at once
 	
 --------------------------------------------------------------------------------*/
---if CALLBACKMANAGER == undefined then -- IMPORTANT: ENABLE THIS LINE IN PRODUCTION
+if CALLBACKMANAGER == undefined then -- IMPORTANT: ENABLE THIS LINE IN PRODUCTION
 	global CALLBACKMANAGER
 
 /*
@@ -163,8 +163,10 @@ struct CallbackManager_v
 	 */
 	function startCallback Callback =
 	(
-		--format "\n"; print "Callback_v.startCallback()"
-		--format "\n"; print ("CallbackManager_v.startCallback( "+Callback as string +" )")
+		format "\n"; print "Callback_v.startCallback()"
+		format "Callback: %\n" Callback.callback
+
+		--format "\n"; print ("CallbackManager_v.startCallback( "+ Callback as string +" )")
 		--format "classof Callback.type: %\n" (classof Callback.type)
 		--format "CallbackManager_v.START TYPE:% CALLBACK:% ID:% \n\n" Callback.type Callback.callback Callback.id
 		callbacks.addScript Callback.type Callback.callback id:Callback.id
@@ -175,8 +177,9 @@ struct CallbackManager_v
 	 */
 	function killCallback Callback =
 	(
-		--format "\n"; print ("CallbackManager_v.killCallback( "+Callback.id+" )")
-		--format "Callback.callback = % \n" Callback.callback
+		--format "\n"; print ("CallbackManager_v.killCallback( "+Callback.callback+" )")
+		format "\n"; print "Callback_v.killCallback()"
+		format "Callback.callback = % \n" Callback.callback
 		--format "Callback.type = % \n" Callback.type
 		--format "Callback.id   = % \n" Callback.id
 		try( callbacks.removeScripts Callback.type id:Callback.id )catch()
@@ -231,5 +234,5 @@ struct CallbackManager_v
 	
 --------------------------------------------------------------------------------*/
 
---if CALLBACKMANAGER == undefined then -- IMPORTANT: ENABLE THIS LINE IN PRODUCTION
+if CALLBACKMANAGER == undefined then -- IMPORTANT: ENABLE THIS LINE IN PRODUCTION
 	CALLBACKMANAGER = CallbackManager_v()

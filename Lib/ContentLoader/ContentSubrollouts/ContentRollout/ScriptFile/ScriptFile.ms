@@ -9,7 +9,7 @@ if QuadMenu_v == undefined then
 /*
 		TODO:
 
-		RENAME THIS TO ContentCotnrolCreator
+		RENAME THIS FILE TO ContentCotnrolCreator
 
 */
 
@@ -38,10 +38,11 @@ struct ScriptFile_Content_v
 	
 	
 	/*------------------------------------------------------------------------------
-		PROPAGATED PARAMETERS
+		INHERIT PARAMETERS
 	--------------------------------------------------------------------------------*/
-	inherit_params	= #( #width, #height, #across, #border ), -- parameters of controls which are propagated downnstream through macroscripts
+	inherit_by_type	= #( #WIDTH, #HEIGHT, #ACROSS, #BORDER, #OFFSET ), -- parameters of controls which are propagated to next control type
 
+	inherit_global	= #( #BORDER ), -- parameters of controls which are propagated to next control
 	
 	
 	
@@ -56,7 +57,7 @@ struct ScriptFile_Content_v
 	EventTypes = EventTypes_v(), 	-- "./../../../../RolloutCreator/ControlsCreator/EventTypes/EventTypes.ms"
 
 	/* Store */
-	InheritParams = List_v(),
+	InheritParams = Dictionary(),
 	
 
 	/** Load controls from .mcr file
@@ -124,25 +125,29 @@ struct ScriptFile_Content_v
 	function _createControlfromMacro Macro =
 	(
 		--format "\n"; print "ScriptFile_Content_v.createControlfromMacro()"
-		--format "Macro	= % \n" Macro
-
-		macro_params = Macro.getParamsArray()
 
 		_Control = _Controls.Control (Macro.getControlType()) Macro.buttontext params:(Macro.getParamsArray()) add_to_controls:false
 
-		this._addToMenu (Macro)(_Control.Params)
-
-		if(_Control_Exist = _Controls.get(_Control.id)) != undefined then
-			_Control = _Control_Exist -- update existing control
-
-		else
+		/* TRY GET CONTROL FOR MACRO */ 
+		if(_Control_Exist = _Controls.get(_Control.id)) == undefined then
+		
+			/* GET PARAMETERS FROM PREVIOUS CONTROL */ 
 			this._inheritParameters (_Control)
+		else
+			/* UPDATE EXISTING CONTROL */ 
+			_Control = _Control_Exist
 
-
+			
+		/* EVENTS */ 
 		this._setEvent (_Control) (Macro)
 
+		
+		/* ADD TO CONTROLS - if control is new */ 
 		if( _Control_Exist == undefined ) then
 			_Controls.add _Control
+		
+		/* ADD TO MENU */ 
+		this._addToMenu (Macro)(_Control.Params)
 	),
 
 	/** Add to quad menu or menu
@@ -222,7 +227,7 @@ struct ScriptFile_Content_v
 		( dotNetObject "System.Text.RegularExpressions.Regex" @"^[\d\.\s_-]+" ).Replace filename "" -- remove prefix & suffix E.G.: " 1-Foo Bar" >>> "" 1-Foo Bar"
 	),
 
-	/** Inherit parameters of previous same control type
+	/** INHERIT PARAMETERS of previous same control type
 	  * 	So in ".mcr" file is not necessary define for each control
 	  *
 	  * params types are defined in this.inherit_params
@@ -233,21 +238,43 @@ struct ScriptFile_Content_v
 		--format "_Control: %\n" _Control
 		--format "InheritParams	= % \n" InheritParams
 
-		inherit_values	= if (values_exists = InheritParams.getVal(_Control.type)) != undefined then values_exists else #()
-
-		for i = 1 to inherit_params.count do
+		
+		if InheritParams[_Control.type] == undefined then
+			InheritParams[_Control.type] = Dictionary()
+		
+		for key in inherit_by_type do 
 		(
-			param_type	= inherit_params[i]
-			param_value = _Control.Params.getVal (param_type)
-
-			if( param_value = _Control.Params.getVal (param_type) ) != undefined then -- if controls has parameter defined, then save if for next control
-				inherit_values[i] = param_value
-
-			else if inherit_values[i] != undefined then -- inherit param value
-				_Control.Params.setVal (param_type) (inherit_values[i])
+			inherit_val = if InheritParams[_Control.type] != undefined then InheritParams[_Control.type][key] 
+			
+			if( param_value = _Control.Params.getVal (key) ) != undefined then -- if controls has parameter defined, then save if for next control
+				/* SAVE VALUE FOR NEXT CONTROL */ 
+				InheritParams[_Control.type][key] = param_value
+			
+			else if inherit_val != undefined then
+				--_Control.Params.setVal (key) (inherit_val)
+				case key of
+				(
+					#OFFSET: _Control.Params.setVal (#OFFSET) ( [ 0, inherit_val[2] ] ) -- INHERT ONLY Y VALUE OF OFFSET
+					default: _Control.Params.setVal (key) (inherit_val)
+				)
 		)
-
-		InheritParams.setVal(_Control.type) (inherit_values)
+		
+		
+		
+		
+		--for i = 1 to inherit_params.count do
+		--(
+		--	param_type	= inherit_params[i]
+		--	param_value = _Control.Params.getVal (param_type)
+		--
+		--	if( param_value = _Control.Params.getVal (param_type) ) != undefined then -- if controls has parameter defined, then save if for next control
+		--		inherit_values[i] = param_value
+		--
+		--	else if inherit_values[i] != undefined then -- inherit param value
+		--		_Control.Params.setVal (param_type) (inherit_values[i])
+		--)
+		--
+		--InheritParams.setVal(_Control.type) (inherit_values)
 
 		_Control --return
 	),
