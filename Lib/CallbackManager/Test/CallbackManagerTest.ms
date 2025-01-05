@@ -1,6 +1,6 @@
 clearListener()
 
-filein( getFilenamePath(getSourceFileName()) + "/../CALLBACKMANAGER.ms" ) -- "./../CALLBACKMANAGER.ms"\
+filein( getFilenamePath(getSourceFileName()) + "/../CallbackManager.ms" ) -- "./../CallbackManager.ms"
 
 /** Callback test
  */
