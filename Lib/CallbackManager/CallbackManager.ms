@@ -1,7 +1,7 @@
 
 filein( getFilenamePath(getSourceFileName()) + "/Callback/Callback.ms" )	--"./Callback/Callback.ms"
 
-filein( getFilenamePath(getSourceFileName()) + "/Callbacks-Special/postNodesClonedEnd/postNodesClonedEnd.ms" )	--"./Callbacks-Default/postNodesClonedEnd/postNodesClonedEnd.ms"
+--filein( getFilenamePath(getSourceFileName()) + "/Callbacks-Special/postNodesClonedEnd/postNodesClonedEnd.ms" )	--"./Callbacks-Default/postNodesClonedEnd/postNodesClonedEnd.ms"
 
 /*------------------------------------------------------------------------------
 	
@@ -191,11 +191,11 @@ struct CallbackManager_v
 	 */
 	function exe callback_type_id =
 	(
-		--format "\n"; print "CallbackManager_v.exe()"
-		--format "callback_type_id: %\n" callback_type_id
-		--format "list: %\n" list
-		--format "callbacks: %\n" (this.getCallbacks (callback_type_id))
-		--
+		format "\n"; print "CallbackManager_v.exe()"
+		format "callback_type_id: %\n" callback_type_id
+		format "list: %\n" list
+		format "callbacks: %\n" (this.getCallbacks (callback_type_id))
+		
 		
 		for Callback in (this.getCallbacks (callback_type_id)) do
 			--format "Callback.callback: %\n" Callback.callback
@@ -233,20 +233,18 @@ struct CallbackManager_v
 		--format "classof Callback.type: %\n" (classof Callback.type)
 		--format "CallbackManager_v.START TYPE:% CALLBACK:% ID:% \n\n" Callback.type Callback.callback Callback.id
 		
-		Callback = deepCopy Callback
-		
-		if findItem special_events Callback.type > 0 then
-		(
-			Callback.callback = Callback.type as string + "()"
-			
-			Callback.type = case Callback.type of
-			(
-				#postNodesClonedEnd: #postNodesCloned
-			)
-		)
+		--callback_key = if id == unsupplied then this._getCallbackKey (callback_fn)(type) else id
+
+		if Callback.type == #postNodesClonedEnd then
+			callbacks.addScript #postNodesCloned "postNodesClonedEnd()" id:#postNodesCloned_postNodesClonedEnd
+
+		else if Callback.type == #onSelectionChangedModPanelReady then
+			callbacks.addScript #selectionSetChanged "testSelectionSet()" id:#selectionSetChanged_testSelectionSet
+
+		else
+			callbacks.addScript Callback.type Callback.callback id:Callback.id
 		--format "Callback: %\n" Callback
 		
-		callbacks.addScript Callback.type Callback.callback id:Callback.id
 	),
 	
 	/** Kill
@@ -328,6 +326,9 @@ struct CallbackManager_v
 		--format "\n"; print "CallbackManager.onCreate()"
 		--for prop in #(  ) where getProperty this prop == undefined do -- CHECK CONSTRUCT PROPERTIES -- Array of this struct properties necessary to run
 		--	throw ("\n\n\nUNDEFINED CONSTRUCT PROPERTY\n\n\nSTRUCT:\n\n"+ ((filterString( classof this as string )"(:")[2]) +"\n\n\nPROPERTY:\n\n"+ prop )
+		this.import( getFilenamePath(getSourceFileName()) + "/Callbacks-Special" )	
+
+		this.start "setSelectionLast" -- START CALLBACK for default - GLOBAL_SELECTION_LAST is used ACROSS MULTIPLE SCRIPTS
 	)
 
 )
