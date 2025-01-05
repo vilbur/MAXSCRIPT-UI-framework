@@ -129,13 +129,13 @@ struct ScriptFile_Content_v
 		_Control = _Controls.Control (Macro.getControlType()) Macro.buttontext params:(Macro.getParamsArray()) add_to_controls:false
 
 		/* TRY GET CONTROL FOR MACRO */ 
-		if(_Control_Exist = _Controls.get(_Control.id)) == undefined then
+		if(_Control_Exist = _Controls.get(_Control.id)) != undefined then
 		
-			/* GET PARAMETERS FROM PREVIOUS CONTROL */ 
-			this._inheritParameters (_Control)
-		else
 			/* UPDATE EXISTING CONTROL */ 
 			_Control = _Control_Exist
+		else
+			/* GET PARAMETERS FROM PREVIOUS CONTROL */ 
+			this._inheritParameters (_Control)
 
 			
 		/* EVENTS */ 
@@ -258,9 +258,6 @@ struct ScriptFile_Content_v
 					default: _Control.Params.setVal (key) (inherit_val)
 				)
 		)
-		
-		
-		
 		
 		--for i = 1 to inherit_params.count do
 		--(

@@ -27,11 +27,11 @@ struct StdScriptImporter_v
 	/* reference */
 	/* inhered */
 
-	/** Create Start Up File
+	/** Create Start Up File and import this file
 	 */
 	function createStartUpFile =
 	(
-		--format "\n"; print "StdScriptImporter_v.import()"
+		--format "\n"; print "StdScriptImporter_v.createStartUpFile()"
 		this._setFileName()
 		this._setRootPath()
 
@@ -40,6 +40,8 @@ struct StdScriptImporter_v
 		this._normalizePaths()
 		
 		this._writeToFile()
+		
+		filein (this._getStdFilePath())
 	),
 	
 	/** Delete file
@@ -72,9 +74,10 @@ struct StdScriptImporter_v
 		content += "file_in_files = #("+files_string+"\n)\n\n"
 		
 		content += "for file_path in file_in_files do\n"
-		content += "	if doesFileExist file_path then\n"
+		content += "if doesFileExist file_path then\n("
 		content += "		filein file_path\n"
-		content += "	else\n"
+		content += "		format \"FILE IN: %\\n\" file_path"
+		content += ")\nelse\n"
 		content += "		format \"\\n\\n----- WARNING: Missing file in: %\\n\\nERROR OF IMPORT FILE: %\\n\" (getSourceFileName()) file_path"
 		
 		try(
@@ -85,7 +88,6 @@ struct StdScriptImporter_v
 		catch
 			close std_file
 		
-		filein std_file_path
 	),
 	
 	/** Get std file path

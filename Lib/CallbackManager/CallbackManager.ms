@@ -198,15 +198,21 @@ struct CallbackManager_v
 	 */
 	function exe callback_type_id =
 	(
-		--format "\n"; print "CallbackManager_v.exe()"
+		format "\n"; print "CallbackManager_v.exe()"
 		--format "callback_type_id: %\n" callback_type_id
 		--format "list: %\n" list
 		--format "callbacks: %\n" (this.getCallbacks (callback_type_id))
 		
 		
 		for Callback in this.getCallbacks (callback_type_id) do
-			--format "execute: %\n" Callback.callback
-			execute Callback.callback
+		(
+			format "execute: %\n" Callback.callback
+			
+			try(
+					execute Callback.callback
+				
+				)catch()
+		)
 	),
 	
 	/** Start
@@ -234,29 +240,9 @@ struct CallbackManager_v
 	function startCallback Callback =
 	(
 		--format "\n"; print "Callback_v.startCallback()"
-		--format "Callback: %\n" Callback
-
-		--format "\n"; print ("CallbackManager_v.startCallback( "+ Callback as string +" )")
-		--format "classof Callback.type: %\n" (classof Callback.type)
-		--format "CallbackManager_v.START TYPE:% CALLBACK:% ID:% \n\n" Callback.type Callback.callback Callback.id
-		
-		--callback_key = if id == unsupplied then this._getCallbackKey (callback_fn)(type) else id
-		--
-		--if Callback.type == #postNodesClonedEnd then
-		--	callbacks.addScript #postNodesCloned "waitForNodesCloned()" id:#postNodesCloned_waitForNodesCloned
-		--
-		--else if Callback.type == #onSelectionChangedModPanelReady then
-		--	callbacks.addScript #selectionSetChanged "testSelectionSet()" id:#selectionSetChanged_testSelectionSet
-		--
-		--else
-		--	callbacks.addScript Callback.type Callback.callback id:Callback.id
-		--
-		
 		Callback = this._mutateCallback Callback
 		
 		callbacks.addScript Callback.type Callback.callback id:Callback.id
-		--format "Callback: %\n" Callback
-		
 	),
 	
 	/** Kill
@@ -266,26 +252,9 @@ struct CallbackManager_v
 	(
 		--format "\n"; print ("CallbackManager_v.killCallback( "+Callback.callback+" )")
 		--format "\n"; print "Callback_v.killCallback()"
-		--format "Callback.callback = % \n" Callback.callback
-		--format "Callback.type = % \n" Callback.type
-		--format "Callback.id   = % \n" Callback.id
-		
-		--if Callback.type == #postNodesClonedEnd then
-		--	try( callbacks.removeScripts #postNodesCloned id:#postNodesCloned_waitForNodesCloned )catch()
-		--
-		--	
-		--else if Callback.type == #onSelectionChangedModPanelReady then
-		--	try( callbacks.removeScripts #selectionSetChanged id:#selectionSetChanged_testSelectionSet )catch()
-		--
-		--
-		--else
-		--	try( callbacks.removeScripts Callback.type id:Callback.id )catch()
-		--
-		
 		Callback = this._mutateCallback Callback
 		
 		try( callbacks.removeScripts Callback.type id:Callback.id )catch()
-			
 	),
 
 	private
