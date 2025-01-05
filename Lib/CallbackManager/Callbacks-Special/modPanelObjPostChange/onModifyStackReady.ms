@@ -23,7 +23,7 @@
  */
 function onModifyStackReady =
 (
-	format "\n"; print "Callback: onModifyStackReady WAIT"
+	--format "\n"; print "Callback: onModifyStackReady WAIT"
 
 	max modify mode
 	

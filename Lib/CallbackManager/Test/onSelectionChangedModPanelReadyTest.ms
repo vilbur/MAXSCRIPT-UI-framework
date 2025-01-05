@@ -28,11 +28,20 @@ CALLBACKMANAGER.import( getFilenamePath(getSourceFileName()) + "/Callbacks" )
 
 --------------------------------------------------------------------------------*/
 
-/* START CALLBACK */ 
+/* START SPECIAL CALLBACK */ 
 CALLBACKMANAGER.start "onSelectionChangedModPanelReadyCalllback" --"./Callbacks/onSelectionChangedModPanelReady/onSelectionChangedModPanelReadyCalllback.ms"
+
+/* START STANDARD CALLBACK */ 
+CALLBACKMANAGER.start "selectionSetChangedCallback"
 
 /* TEST CALLLBACK */
 
 max modify mode
 
 select _box
+
+
+/* KILL CALLBACKS */ 
+
+-- CALLBACKMANAGER.kill "onSelectionChangedModPanelReadyCalllback"
+-- CALLBACKMANAGER.kill "selectionSetChangedCallback"

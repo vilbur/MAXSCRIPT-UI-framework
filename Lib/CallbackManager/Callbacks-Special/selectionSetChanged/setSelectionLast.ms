@@ -17,6 +17,8 @@ global GLOBAL_SELECTION_LAST_BUFFER
  */
 function setSelectionLast =
 (
+	--format "\n"; print "setSelectionLast()"
+
 	if GLOBAL_SELECTION_LAST_ENABLED then
 	(
 		--print "setSelectionLast()"

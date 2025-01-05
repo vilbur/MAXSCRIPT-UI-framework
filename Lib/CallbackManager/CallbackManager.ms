@@ -11,7 +11,7 @@ filein( getFilenamePath(getSourceFileName()) + "/Callback/Callback.ms" )	--"./Ca
 	It can be used by mutliple scripts at once
 	
 --------------------------------------------------------------------------------*/
---if CALLBACKMANAGER == undefined then -- IMPORTANT: ENABLE THIS LINE IN PRODUCTION
+if CALLBACKMANAGER == undefined then -- IMPORTANT: ENABLE THIS LINE IN PRODUCTION
 	global CALLBACKMANAGER
 
 /*
@@ -42,6 +42,7 @@ struct CallbackManager_v
 	function import dir =
 	(
 		--format "\n"; print "Callback_v.import()"
+		
 		for callback_subdir in  getDirectories (dir + "/*") recurse:true do
 			for callback_file in getFiles (callback_subdir + "/*.ms") do
 			(
@@ -80,8 +81,8 @@ struct CallbackManager_v
 		--format "type:	% \n" type
 
 		callback_key = if id == unsupplied then this._getCallbackKey (callback_fn)(type) else id
-
-		this.List[callback_key] = Callback_v callback:(this._getCallbackFn (callback_fn)) type:type id:callback_key
+		--format "callback_key: %\n" callback_key
+		this.List[callback_key] = Callback_v callback:(this._getCallbackFn callback_fn type) type:type id:callback_key
 		--format "list:	% \n" list
 
 		--this.startCallback (this.List[callback_key])
@@ -122,14 +123,20 @@ struct CallbackManager_v
 		function getCallbackByProperty key val option_key:undefined option_val:undefined =
 		(
 			--format "\n"; print "Callback_v.getCallbackByProperty()"
+			--format "key: %\n" key
+			--format "val: %\n" val
 
 			_callbacks = #()
 			
 			for dataPair in this.List do
 			(
 				prop_val = getProperty dataPair.value key
-				
-				if (key == #CALLBACK and matchPattern prop_val pattern:(val+"*")) or prop_val == val then
+				--format "\n"
+				--format "prop_val: %\n" prop_val
+				--format "MATCH: %\n" (matchPattern prop_val pattern:( val as string +"*" ))
+				if (key == #CALLBACK and matchPattern prop_val pattern:( val+"*")) or prop_val == val then
+				--if (key == #CALLBACK and matchPattern prop_val pattern:( val )) or prop_val == val then
+				--if prop_val == val then
 					append _callbacks dataPair.value
 			)
 			
@@ -160,8 +167,8 @@ struct CallbackManager_v
 		--format "callback_exist: %\n" callback_exist
 		--format "type_exist: %\n" type_exist
 		--format "id_exist: %\n" id_exist
-		--
-		callback = (this._getCallbackFn(callback))
+		
+		--callback = this._getCallbackFn callback type
 
 		_callbacks = if not ( callback_exist and type_exist and id_exist ) then
 			case of
@@ -191,14 +198,14 @@ struct CallbackManager_v
 	 */
 	function exe callback_type_id =
 	(
-		format "\n"; print "CallbackManager_v.exe()"
-		format "callback_type_id: %\n" callback_type_id
-		format "list: %\n" list
-		format "callbacks: %\n" (this.getCallbacks (callback_type_id))
+		--format "\n"; print "CallbackManager_v.exe()"
+		--format "callback_type_id: %\n" callback_type_id
+		--format "list: %\n" list
+		--format "callbacks: %\n" (this.getCallbacks (callback_type_id))
 		
 		
-		for Callback in (this.getCallbacks (callback_type_id)) do
-			--format "Callback.callback: %\n" Callback.callback
+		for Callback in this.getCallbacks (callback_type_id) do
+			--format "execute: %\n" Callback.callback
 			execute Callback.callback
 	),
 	
@@ -234,15 +241,20 @@ struct CallbackManager_v
 		--format "CallbackManager_v.START TYPE:% CALLBACK:% ID:% \n\n" Callback.type Callback.callback Callback.id
 		
 		--callback_key = if id == unsupplied then this._getCallbackKey (callback_fn)(type) else id
-
-		if Callback.type == #postNodesClonedEnd then
-			callbacks.addScript #postNodesCloned "postNodesClonedEnd()" id:#postNodesCloned_postNodesClonedEnd
-
-		else if Callback.type == #onSelectionChangedModPanelReady then
-			callbacks.addScript #selectionSetChanged "testSelectionSet()" id:#selectionSetChanged_testSelectionSet
-
-		else
-			callbacks.addScript Callback.type Callback.callback id:Callback.id
+		--
+		--if Callback.type == #postNodesClonedEnd then
+		--	callbacks.addScript #postNodesCloned "waitForNodesCloned()" id:#postNodesCloned_waitForNodesCloned
+		--
+		--else if Callback.type == #onSelectionChangedModPanelReady then
+		--	callbacks.addScript #selectionSetChanged "testSelectionSet()" id:#selectionSetChanged_testSelectionSet
+		--
+		--else
+		--	callbacks.addScript Callback.type Callback.callback id:Callback.id
+		--
+		
+		Callback = this._mutateCallback Callback
+		
+		callbacks.addScript Callback.type Callback.callback id:Callback.id
 		--format "Callback: %\n" Callback
 		
 	),
@@ -257,19 +269,64 @@ struct CallbackManager_v
 		--format "Callback.callback = % \n" Callback.callback
 		--format "Callback.type = % \n" Callback.type
 		--format "Callback.id   = % \n" Callback.id
+		
+		--if Callback.type == #postNodesClonedEnd then
+		--	try( callbacks.removeScripts #postNodesCloned id:#postNodesCloned_waitForNodesCloned )catch()
+		--
+		--	
+		--else if Callback.type == #onSelectionChangedModPanelReady then
+		--	try( callbacks.removeScripts #selectionSetChanged id:#selectionSetChanged_testSelectionSet )catch()
+		--
+		--
+		--else
+		--	try( callbacks.removeScripts Callback.type id:Callback.id )catch()
+		--
+		
+		Callback = this._mutateCallback Callback
+		
 		try( callbacks.removeScripts Callback.type id:Callback.id )catch()
+			
 	),
 
 	private
+	
+	/** Mutate callback
+	 */
+	function _mutateCallback Callback =
+	(
+		--format "\n"; print "CallbackManager_v._mutateCallback()"
+		
+		Callback = deepCopy Callback
+		
+		if Callback.type == #postNodesClonedEnd then
+		(
+			Callback.callback = "waitForNodesCloned()"
+			Callback.type = #postNodesCloned
+			Callback.id = #postNodesCloned_waitForNodesCloned
+		)
+		else if Callback.type == #onSelectionChangedModPanelReady then
+		(
+			Callback.callback = "testSelectionSet()"
+			Callback.type = #selectionSetChanged
+			Callback.id = #selectionSetChanged_testSelectionSet
+		)
+		--	try( callbacks.removeScripts #selectionSetChanged id:#selectionSetChanged_testSelectionSet )catch()
+		--
+		--
+		--else
+		
+		Callback --return
+	),
 
 	/** Turn #name to string and add suffix "()"
 	 *
 	 *
 	 * @return #name E.G.: "fooFn()"
 	 */
-	function _getCallbackFn callback =
+	function _getCallbackFn callback type =
 	(
 		--format "\n"; print "Callback._getCallbackFn()"
+		--format "type: %\n" type
 		--format "callback: %\n" callback
 		--if not matchPattern (callback) pattern:@"pattern"ignoreCase:false then
 		/** Callback has arguments
@@ -293,12 +350,23 @@ struct CallbackManager_v
 			RegEx.isMatch callback pattern IgnoreCase
 		)
 		
-		callback = callback as string
 		
-		if not callbackHasArguments callback then
-			callback += "()"
+		--if callback != undefined then
+		--(
+		--	callback = callback as string
+		--	
+		--	if not callbackHasArguments callback then
+		--		callback += "()"
+		--)
 		
-			
+		if callback != undefined and not callbackHasArguments callback then
+			case type of
+			(
+				#postNodesClonedEnd: callback += "(CLONED_NODES_BUFFER)"
+				--#postNodesClonedEnd: callback += "()"
+				default:  callback += "()"
+			)
+		
 		callback --return
 	),
 
@@ -324,8 +392,7 @@ struct CallbackManager_v
 	on create do
 	(
 		--format "\n"; print "CallbackManager.onCreate()"
-		--for prop in #(  ) where getProperty this prop == undefined do -- CHECK CONSTRUCT PROPERTIES -- Array of this struct properties necessary to run
-		--	throw ("\n\n\nUNDEFINED CONSTRUCT PROPERTY\n\n\nSTRUCT:\n\n"+ ((filterString( classof this as string )"(:")[2]) +"\n\n\nPROPERTY:\n\n"+ prop )
+
 		this.import( getFilenamePath(getSourceFileName()) + "/Callbacks-Special" )	
 
 		this.start "setSelectionLast" -- START CALLBACK for default - GLOBAL_SELECTION_LAST is used ACROSS MULTIPLE SCRIPTS

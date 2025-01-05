@@ -1,8 +1,8 @@
 /** Callback test
  */
-function postNodesClonedEndCallback =
+function postNodesClonedEndCallback cloned_nodes =
 (
 	format "\n"; print "CallbackManagerTest.ms.postNodesClonedEndCallback()"
 
-	format "CLONED_NODES: %\n" CLONED_NODES
+	format "cloned_nodes: %\n" cloned_nodes
 )

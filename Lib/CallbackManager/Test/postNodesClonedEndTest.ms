@@ -33,9 +33,8 @@ CALLBACKMANAGER.import( getFilenamePath(getSourceFileName()) + "/Callbacks" )
 
 --CALLBACKMANAGER.add "postNodesClonedEndCallback" #postNodesClonedEnd
 
-/* START CALLBACK */ 
-CALLBACKMANAGER.start "postNodesClonedEndCallback"
-
+/* START CALLBACK */
+CALLBACKMANAGER.start "postNodesClonedEndCallback" --"./Callbacks/postNodesClonedEnd/postNodesClonedEndCallback.ms"
 
 /* TEST CALLLBACK */ 
 copy _box
