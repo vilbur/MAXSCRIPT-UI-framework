@@ -239,8 +239,9 @@ struct CallbackManager_v
 	 */
 	function startCallback Callback =
 	(
-		--format "\n"; print "Callback_v.startCallback()"
+		format "\n"; print "Callback_v.startCallback()"
 		Callback = this._mutateCallback Callback
+		format "Callback: %\n" Callback
 		
 		callbacks.addScript Callback.type Callback.callback id:Callback.id
 	),
@@ -331,7 +332,7 @@ struct CallbackManager_v
 		if callback != undefined and not callbackHasArguments callback then
 			case type of
 			(
-				#postNodesClonedEnd: callback += "(CLONED_NODES_BUFFER)"
+				#postNodesClonedEnd: callback += "(CLONED_NODES_BUFFER)(CLONED_TYPE)"
 				--#postNodesClonedEnd: callback += "()"
 				default:  callback += "()"
 			)

@@ -1,6 +1,8 @@
 
 global CLONED_NODES_TIMER
 global CLONED_NODES_BUFFER	-- 2d Matrix of nodes E.G.: #( #(source objects) #(copies 1) #(copies 2) #(copies 3) )
+global CLONED_TYPE
+
 
 /*  */ 
 		
@@ -12,15 +14,17 @@ global CLONED_NODES_BUFFER	-- 2d Matrix of nodes E.G.: #( #(source objects) #(co
  */
 function executePostNodesClonedEndCallbacks =
 (
-	format "\n"; print ".executePostNodesClonedEndCallbacks()"
-	
-	CALLBACKMANAGER.exe #postNodesClonedEnd
+	--format "\n"; print ".executePostNodesClonedEndCallbacks()"
 	
 	CLONED_NODES_TIMER.stop()
+	
+	CALLBACKMANAGER.exe #postNodesClonedEnd
 		
 	CLONED_NODES_BUFFER = undefined
 	
 	CLONED_NODES_TIMER = undefined
+	
+	CLONED_TYPE = undefined
 )
 
 /** Create timeout with .dotNet timer
@@ -39,6 +43,10 @@ function waitForNodesCloned =
 	--format "params: %\n" (callbacks.notificationParam())
 	
 	params = callbacks.notificationParam()
+	--format "params[3]: %\n" params[3]
+	
+	
+	CLONED_TYPE = #( #COPY, #INSTANCE, #REFERENCE )[params[3] +1]
 	
 	if params != undefined then
 	(
@@ -55,7 +63,8 @@ function waitForNodesCloned =
 			
 			dotNet.addEventHandler CLONED_NODES_TIMER "tick" executePostNodesClonedEndCallbacks
 			
-			CLONED_NODES_TIMER.interval = 500
+			--CLONED_NODES_TIMER.interval = 500
+			CLONED_NODES_TIMER.interval = 1000
 		)
 		else
 			CLONED_NODES_TIMER.stop()
