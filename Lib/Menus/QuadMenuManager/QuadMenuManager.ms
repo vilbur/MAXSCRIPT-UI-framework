@@ -65,7 +65,7 @@ struct QuadMenuManager_v
 		for macro_path in all_macro_files where not isOnBlacklist macro_path blacklist do
 			try
 			(
-				format "CREATE MENUS FROM MACROSCRIPT FILE: %\n" (filenameFromPath(macro_path))
+				--format "CREATE MENUS FROM FILE: %\n" (filenameFromPath(macro_path))
 				
 				(ScriptFile_Content_v(macro_path)).importMacroscriptsToMenus()
 			)

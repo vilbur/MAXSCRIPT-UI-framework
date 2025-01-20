@@ -9,6 +9,7 @@
 	/* properties */
 	id,
 	parent_rollout_id,
+	nested_level = 0, -- 0-DIALOG ROLLOUT|1-MAIN ROLLOUT|3-SUBROLLOUT|4-SUBROLLOUT|...
 
 	/* dependency */
 	_Controls	= #(),
@@ -67,7 +68,7 @@
 		function getAutoRollUpOption = if not this.isDialog() then 1
 
 		--local Subrollouts = Subrollouts_v slot:(slot as name ) parent_rollout_id:(this.getFullId()) width:(if width != unsupplied then width else this.width) height:height
-		local Subrollouts = Subrollouts_v slot:slot parent_rollout_id:(this.id) width:(if width != unsupplied then width else this.width) height:height auto_roll_up:(getAutoRollUpOption()) DEBUG:DEBUG
+		local Subrollouts = Subrollouts_v slot:slot parent_rollout_id:(this.id) width:(if width != unsupplied then width else this.width) height:height nested_level:( nested_level + 1 ) auto_roll_up:(getAutoRollUpOption()) DEBUG:DEBUG
 
 		append _Controls Subrollouts
 
@@ -174,24 +175,6 @@
 		(this.getSubrollouts()).count > 0
 	),
 
-	/** Get nested level of rollout
-	  *
-	  * 1) Split full id by "."
-	  * 2) Divide by 2 to remove subrollouts slots
-	  * 3) Minus 1 to remove DialogRollout level
-	 */
-	function getNestedLevel = -- split parent_rollout_id and slot id E.G.: ROLLOUT_Parent.children
-	(
-		--format "\n"; print "RolloutBody.getNestedLevel()"
-		--format "this.GETFULLID()	= % \n" (this.getFullId())
-		--format "parent_rollout_id	= % \n" parent_rollout_id
-		--if( parent_rollout_id == undefined ) then 0 else ((filterString (this.getFullId()) ".").count - 1 ) / 2 --return
-		if( parent_rollout_id == undefined ) then 0 else floor ((filterString (this.getFullId()) ".").count  / 2) - 1 --return
-	),
-
-
-
-	
 	/** Save Rollout Definition to file
 	  * 
 	 */
@@ -327,6 +310,11 @@
 
 	/** Get title of rollout
 	  *
+	  * 1) Return title as it is If rollout is in dialog
+	  * 2) Return uppper case title with whitepsace if main rollout	E.G.:  "T I T L E"
+	  * 3) Return uppper case title if subrollout	E.G.:  "TITLE"
+	  * 
+	  *
 	  * @return string title with whitespace between each character E.G.: "ROLLOUT TITLE" >>> "R O L L O U T   T I T L E"
 	 */
 	function _getTitleString =
@@ -334,9 +322,15 @@
 		--format "\n"; print "RolloutCreator_v._getTitleString()"
 
 		/* modify only title of rollout, NOT title of dialog */
-		if this.parent_rollout_id != undefined then
-			( dotNetObject "System.Text.RegularExpressions.Regex" "(.)" ).Replace this.title "$1 "
+		--if this.parent_rollout_id != undefined then
+			--( dotNetObject "System.Text.RegularExpressions.Regex" "(.)" ).Replace this.title "$1 "
 
+		if nested_level == 1 then
+			( dotNetObject "System.Text.RegularExpressions.Regex" "(.)" ).Replace ( toUpper this.title) "$1 " --  E.G.: "ROLLOUT TITLE" >>> "R O L L O U T   T I T L E"
+			
+		else if nested_level > 1 then
+			toUpper this.title  --  E.G.: "Rollout Title" >>> "ROLLOUT TITLE" 
+		
 		else
 			this.title --return Dialog title as it is
 	),

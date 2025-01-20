@@ -10,7 +10,7 @@ filein( getFilenamePath(getSourceFileName()) + "/MacroscriptGenerator.ms" )	--".
  */
 function generateMacroscripts dir =
 (
-	--format "\n"; print "generateMacroscripts()"
+	format "\n"; print "generateMacroscripts()"
 	for ini_file in getFiles ( dir + "\\*.mcr.ini") recurse:true do
 	(
 		mcr_file = (MacroscriptGenerator_v(ini_file)).generateMacroscriptFile()
@@ -20,3 +20,4 @@ function generateMacroscripts dir =
 		filein  mcr_file
 	)
 )
+

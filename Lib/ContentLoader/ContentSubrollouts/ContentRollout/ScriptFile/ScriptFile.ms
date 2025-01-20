@@ -251,12 +251,12 @@ struct ScriptFile_Content_v
 				InheritParams[_Control.type][key] = param_value
 			
 			else if inherit_val != undefined then
-				--_Control.Params.setVal (key) (inherit_val)
-				case key of
-				(
-					#OFFSET: _Control.Params.setVal (#OFFSET) ( [ 0, inherit_val[2] ] ) -- INHERT ONLY Y VALUE OF OFFSET
-					default: _Control.Params.setVal (key) (inherit_val)
-				)
+				_Control.Params.setVal (key) (inherit_val)
+				--case key of
+				--(
+				--	#OFFSET: _Control.Params.setVal (#OFFSET) ( [ 0, inherit_val[2] ] ) -- INHERT ONLY Y VALUE OF OFFSET
+				--	default: _Control.Params.setVal (key) (inherit_val)
+				--)
 		)
 		
 		--for i = 1 to inherit_params.count do

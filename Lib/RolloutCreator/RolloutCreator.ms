@@ -171,7 +171,7 @@ struct RolloutCreator_v
 
 					
 					/* ======= PRODUCTION CODE =======*/
-					--CreateDialog ( _RolloutSub.RCI.def ) width:_RolloutParent.width height:_RolloutSub.height pos:[0,-8000] -- create subroullouts away from display
+					CreateDialog ( _RolloutSub.RCI.def ) width:_RolloutParent.width height:_RolloutSub.height pos:[0,-8000] -- create subroullouts away from display
 
 				)
 				 
@@ -304,7 +304,7 @@ struct RolloutCreator_v
 		if( _Rollout.width != unsupplied and _Rollout.width > 320 and ( IS_NOT_MAIN_ROLLOUT = _Rollout.parent_rollout_id) != undefined and (_Rollout.width != undefined and _Rollout.width != unsupplied ) and (max_version = (maxVersion())[8] )!= undefined and max_version > 2020  ) then
 		(
 			title_width	= _Rollout.title.count * px_per_character -- get difference in length of characters, longer title has shorter prefix and vice versa
-			rollout_width	= _Rollout.width - rollout_padding - ( _Rollout.getNestedLevel() * slot_padding )
+			rollout_width	= _Rollout.width - rollout_padding - ( _Rollout.nested_level * slot_padding )
 			prefix_lenght	= ((rollout_width - title_width) / 2) / px_per_space
 
 			for i = 1 to prefix_lenght do -- too width 200px

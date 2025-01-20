@@ -88,7 +88,7 @@ struct SubolloutsCreator_v
 			(
 				_Subrollout = Subrollouts.Rollouts[index]
 		
-				--try(destroyDialog _Subrollout.RCI.def )catch() -- destroy dialog of subrollout created for find of height
+				try(destroyDialog _Subrollout.RCI.def )catch() -- destroy dialog of subrollout created for find of height
 		
 		--		/*  DEBUG:
 		--				FOR FLOATEBLE SUBROLLOUTS disable AddSubRollout

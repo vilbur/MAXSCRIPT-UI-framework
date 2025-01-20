@@ -15,6 +15,8 @@ struct Subrollouts_v
 	width,
 	height,
 	
+	nested_level,
+	
 	auto_roll_up, -- undefined|integer -- number
 
 	Rollouts	= #(),
@@ -36,7 +38,7 @@ struct Subrollouts_v
 			--width = this.width - 4 -- make rollout wide as is possible
 
 		--local _Rollout = Rollout_v title:title id:id parent_rollout_id:( parent_rollout_id as string +"."+slot as string )
-		local _Rollout = Rollout_v title:title id:id width:width height:height parent_rollout_id:(parent_rollout_id as string + "." + slot as string ) rolledUp:rolledUp DEBUG:DEBUG
+		local _Rollout = Rollout_v title:title id:id width:width height:height parent_rollout_id:(parent_rollout_id as string + "." + slot as string ) nested_level:nested_level rolledUp:rolledUp DEBUG:DEBUG
 		--format "_Rollout:	% \n" _Rollout
 		append Rollouts _Rollout
 

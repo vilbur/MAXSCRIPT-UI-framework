@@ -35,7 +35,7 @@ struct StdScriptImporter_v
 		this._setFileName()
 		this._setRootPath()
 
-		this._removeLeadingSlash()
+		this._removeLeadingSlashFromPaths()
 		this._convertRelativeToAbsolutePaths()
 		this._normalizePaths()
 		
@@ -71,6 +71,9 @@ struct StdScriptImporter_v
 		
 		files_string	= trimRight files_string  ","
 		
+		--content += "format \"\\n\"; print \"FileInImporter_v._fileInFil	es()\""
+		--content += "format \"\\nFiles imported from file: %\\n\\n\" \""+std_file_path+"\""
+
 		content += "file_in_files = #("+files_string+"\n)\n\n"
 		
 		content += "for file_path in file_in_files do\n"
@@ -100,9 +103,9 @@ struct StdScriptImporter_v
 	
 	/** Remove leading slash
 	 */
-	function _removeLeadingSlash =
+	function _removeLeadingSlashFromPaths =
 	(
-		--format "\n"; print "StdScriptImporter_v._removeLeadingSlash()"
+		--format "\n"; print "StdScriptImporter_v._removeLeadingSlashFromPaths()"
 		for i = 1 to files.count where matchPattern files[i] pattern:("\\*") or matchPattern files[i] pattern:("/*") do
 			files[i]	= substring files[i] 2 -1
 	),
@@ -132,7 +135,7 @@ struct StdScriptImporter_v
 	 */
 	function _setRootPath =
 	(
-		format "\n"; print "StdScriptImporter_v._setRootPath()"
+		--format "\n"; print "StdScriptImporter_v._setRootPath()"
 		
 		if root != undefined and this._isPathToFile(root) then
 			root	= getFilenamePath(root)
@@ -157,7 +160,7 @@ struct StdScriptImporter_v
 	 */
 	on create do
 	(
-		format "\n"; print "StdScriptImporter.onCreate()"
+		--format "\n"; print "StdScriptImporter.onCreate()"
 		--for prop in #(  ) where getProperty this prop == undefined do -- CHECK CONSTRUCT PROPERTIES -- Array of this struct properties necessary to run
 		--	throw ("\n\n\nUNDEFINED CONSTRUCT PROPERTY\n\n\nSTRUCT:\n\n"+ ((filterString( classof this as string )"(:")[2]) +"\n\n\nPROPERTY:\n\n"+ prop )
 	

@@ -540,11 +540,14 @@ struct Dialog_v
 	  */
 	function _executeAutorunEvents =
 	(
-		--format "\n"; print "Dialog_v._executeAutorunEvents()"
+		format "\n"; print "Dialog_v._executeAutorunEvents()"
 		--format "\n-----------\nDICTIONARY:AUTORUN_EVENTS:%\n" AUTORUN_EVENTS; for data_pair in AUTORUN_EVENTS do format "%:	%\n" data_pair.key data_pair.value
 
 		 for data_pair in AUTORUN_EVENTS do
 		 try(
+			
+			format "execute: %\n" (data_pair.value)
+			
 			execute data_pair.value
 
 		 )catch(

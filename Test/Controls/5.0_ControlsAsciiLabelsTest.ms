@@ -37,7 +37,7 @@ Controls.control #button "➤ ➥ ➧ ➲ ⟲ ⥀ ⦽ ⧪ ⬲ ⧭ ♁ ☉ ☀ �
 
 Controls.control #button "◆ ⬟ ☰ ⬣ ⬡ ⬢ ▩ ⛞ ⌛ ⏰ ⏲" id:#button_iamegs
 
-Controls.control #button " ✅♻ ☼ ☀ ☉ ☢ ✔ ⬕" id:#button_items
+Controls.control #button "✅ × ♻ ☼ ☀ ☉ ☢ ✔ ⬕" id:#button_items
 
 Controls.control #button "⬆⬇ ⬅▲ ▼ ► ◄ ↑ ↓ → ← ↔ ↕ ↨  ➡  ⇦ ⇧ ⇨ ⇩ ➤ ➥ ➧ ➲ ⟲ ⥀ ⦽ ⧪ ⬲ ⧭" id:#button_arrows --https://www.alt-codes.net/arrow_alt_codes.php
 
