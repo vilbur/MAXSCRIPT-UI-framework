@@ -12,9 +12,9 @@ clearListener()
 
 string_is_defined_variable_also = 999
 
-input_values = #(
-	
-	/* executed strings bellow manifest as string */
+input_values =
+#(
+	/* EXECUTED VALUES BELLOW APPEAR AS STRING */
 	"Render X",
 	"classOf X",
 	"string_is_defined_variable_also",
@@ -31,7 +31,7 @@ input_values = #(
 	0,
 	123,
 	
-	/* executed strings bellow manifest correctly */ 
+	/* EXECUTED VALUES BELLOW ARE CORRECT */
 	1.0,
 	[1.1, 2.0],
 	[1, 2, 3.3],
@@ -44,8 +44,12 @@ input_values = #(
 	#(1, 2 ,3, "A", "B", "C"),
 	
 	
-	"END OF ARRAY"
-
+	/* BITMAP IS OBJECT - CANNOT BE CONVERTED TO STRING WITH "as string" command  */ 
+	"bitmap 256 32 color:green",
+	
+	
+	/* LAST ITEM IN ARRAY */ 
+	"END OF ARRAY" -- prevent last item comma error when testing
 )
 
 /*------------------------------------------------------------------------------
@@ -72,21 +76,6 @@ function formatOutput input_val val_converted =
 	format "classOf = % \n" (classOf val_converted)
 )
 
-/** Convert strings to datatypes
- */
-function convertStringsToDatatypes =
-(
-	--format "\n"; print ".convertStringsToDatatypes()"
-	strings = convertValuesToStrings(input_values)
-
-	for _string in strings do
-	(
-		correct_datatype = convertStringToDatatype(_string)
-		--format "correct_datatype	= % \n" correct_datatype
-		--format "classof correct_datatype	= % \n" (classof correct_datatype)
-		formatOutput (_string) (correct_datatype)
-	)
-)
 
 /** Join strings to string array
  */
@@ -124,24 +113,40 @@ function joinToStringArray strings =
 
 function convertStringToDatatype _string =
 (
-	--format "\n"; print "convertStringToDatatype()"
+	format "\n"; print "convertStringToDatatype()"
 	
 	rx	= dotNetClass "System.Text.RegularExpressions.RegEx"
 	rx_options	= dotNetClass "System.Text.RegularExpressions.RegexOptions"
 	
-	is_variable = (rx.match _string "^\s*(\d+|true|false|undefined|unsupplied|\(\s*color\s+\d+\s+\d+\s+\d+\s*\))\s*$" rx_options.IgnoreCase ).success
+	--is_variable = (rx.match _string "^\s*(\d+|true|false|undefined|unsupplied|\(\s*color\s+\d+\s+\d+\s+\d+\s*\))\s*$" rx_options.IgnoreCase ).success
+	is_variable = (rx.match _string "^\s*(\d+|true|false|undefined|unsupplied|\(*\s*color\s+\d+\s+\d+\s+\d+\s*\)*|\(*\s*bitmap\s+\d+\s+\d+)\s*$" rx_options.IgnoreCase ).success
 
-	if not is_variable and (is_string = ( rx.match _string "(^'*[A-Za-z0-1_\s]+'*$)" rx_options.IgnoreCase ).success ) then
-	(
-		@"" + _string -- IS STRING
-	)
-	else
+	if is_variable and (is_string = ( rx.match _string "(^'*[A-Za-z0-1_\s]+'*$)" rx_options.IgnoreCase ).success ) then
 	(
 		try((execute(_string)))catch(_string) -- IS VARIABLE
 	)
-
+	else
+	(
+		@"" + _string -- IS STRING
+	)
 )
 
+
+/** Convert strings to datatypes
+ */
+function convertStringsToDatatypes =
+(
+	--format "\n"; print ".convertStringsToDatatypes()"
+	strings = convertValuesToStrings(input_values)
+
+	for _string in strings do
+	(
+		correct_datatype = convertStringToDatatype(_string)
+		--format "correct_datatype	= % \n" correct_datatype
+		--format "classof correct_datatype	= % \n" (classof correct_datatype)
+		formatOutput (_string) (correct_datatype)
+	)
+)
 
 /** Test string array
  */

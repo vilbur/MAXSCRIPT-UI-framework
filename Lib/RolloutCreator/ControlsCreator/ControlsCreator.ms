@@ -25,35 +25,42 @@ struct ControlCreator_v
 	/* dependency */
 	Controls,
 
-	ControlValue 	= ControlValue_v(),
+	ControlValue 	= ControlValue_v(),	-- "./ControlValue/ControlValue.ms"
 	ParamsCreator	= ControlParamsCreator_v(), 	-- "./ControlParamsCreator/ControlParamsCreator.ms"
 	ControlEventCreator	= ControlEventCreator_v _Rollout:_Rollout, 	-- "./ControlEventCreator/ControlEventCreator.ms"
-	ControlEventBinder	= ControlEventBinder_v  _Rollout:_Rollout, -- "./ControlEventBinder/ControlEventBinder.ms"
+	ControlEventBinder	= ControlEventBinder_v  _Rollout:_Rollout,	-- "./ControlEventBinder/ControlEventBinder.ms"
 
 	/** Add controls to rollout
 	 */
 	function addControls _Controls =
 	(
+		DEBUG = true
+		
 		if DEBUG then format "\n\n-------------- ControlCreator_v.addControls() group:% --------------\n" _Controls.group
 		--if DEBUG then format "_Controls.list.count	= % \n" _Controls.list.count
 
+		/* EXIT IF ANY CONTROLS EXISTS */ 
 		if _Controls.list.count == 0 then
 			return false
-
+		
+		/* SET CONTROLS TO PROPERTY */ 
 		this.Controls = _Controls
 
+		/* ADD CONTROL TO GROUPBOX */ 
 		if not this.isGroupboxControls() then
 			GROUPBOXCREATOR.addGrouboxes (_Rollout.getFullId() as name ) (this.Controls.GroupBoxes)
 
+			
 		/* pass DEFAULT PARAMETERS to params creator */
 		ParamsCreator.setDefaultParameters(this.Controls.DefaultParameters)
-
+		
+		
+		
 		/* PREPARE EACH CONTROL */
 		for _Control in this.Controls.list do
 		(
 			--format "_CONTROL: %\n" _Control
 			ParamsCreator.mergeParams(_Control)
-			--format "_Control.Params	= % \n" _Control.Params
 			
 			ControlValue.setControlValue (_Control) (_Rollout.id)
 
@@ -63,6 +70,7 @@ struct ControlCreator_v
 		)
 		
 
+		
 		/* modify ACROSS PARAMETER */
 		if not this.isGroupboxControls() then
 			( AcrossParameterModifier = AcrossParameterModifier_v()).addFakeControls(this.Controls)
@@ -79,6 +87,7 @@ struct ControlCreator_v
 		/* add HANDLERS */
 		this._addHandlersToRollout()
 
+		
 		/* REMOVE FAKE CONTROLS -- it allows to add controls when dialog exists */
 		if AcrossParameterModifier != undefined then
 			AcrossParameterModifier.removeFakeControls(this.Controls)
@@ -158,16 +167,11 @@ struct ControlCreator_v
 	 */
 	function _addControlToRollout _Control =
 	(
-		--format "\n"; print "ControlCreator_v._addControlToRollout()"
+		format "\n"; print "ControlCreator_v._addControlToRollout()"
 		params = ParamsCreator.join(_Control.params)
 		--format "params	= % \n" params
 		/* DEBUG LOG */
-		if DEBUG then
-		(
-			format "\nControl:%.%" ( _Rollout.id as string ) _Control.id
-
-			format "	Params: % \n" params
-		)
+		if DEBUG then format "\NCONTROL:%.%		PARAMS: % \n" ( _Rollout.id as string ) _Control.id params
 
 		_Rollout.RCI.addControl (_Control.type) (_Control.id) (this._getCaption(_Control)) paramStr:params filter:true;
 	),
@@ -191,7 +195,7 @@ struct ControlCreator_v
 	function _addControlsGroup start_or_end =
 	(
 		--format "\n"; print "ControlCreator_v._addControlsGroup()"
-		--format "_Controls.group:-%-\n" _Controls.group
+		--format "_Controls.group:-%-\n" Controls.group
 		--format "MATCH: %\n" (matchPattern _Controls.group pattern:("[*]"))
 		if( Controls.group == undefined or matchPattern Controls.group pattern:("[*]") or Controls.group == "" ) do
 			return false

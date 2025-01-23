@@ -33,23 +33,51 @@ struct ControlValue_v
 	function setControlValue _Control rollout_id =
 	(
 		--print "ControlCreator_v._setControlValue()"
+		format "_Control.type: %\n" _Control.type
 		this._Control = _Control
 
-		/* if control type has value E.G.: #label or #groupbox HAS NOT VALUE */
-		if (value_param_name = this._getNameOfValueParameter() ) == undefined  then
-			return false
-
-		--ini_allowed = _Control.Params.getVal (#ini)
-		ini_allowed = if ( ini_val = _Control.Params.getVal (#ini) ) != undefined then ini_val else true
-
-		 if ini_allowed and ( ini_value = this._getIniValue (rollout_id)) != undefined then
-			this._setValue (value_param_name) (ini_value)
-
-		else if( _value = this._getValueParameter (value_param_name) ) != undefined then
-			this._setValue(value_param_name)(_value)
-
-		_Control.Params.delete (#value)
-		_Control.Params.delete (#ini)
+		if _Control.type != #BITMAP then
+		(
+			/* if control type has value E.G.: #label or #groupbox HAS NOT VALUE */
+			if (value_param_name = this._getNameOfValueParameter() ) == undefined  then
+				return false
+				
+			val = this._getValueParameter (value_param_name)
+			format "value_param_name: %\n" value_param_name
+			format "val: %\n" val
+			
+				
+			/* TEST IF COTNROL HAS INI SAVE ENABLED */ 
+			ini_enabled = if ( ini_param = _Control.Params.getVal (#ini) ) != undefined then ini_param else true
+			
+			
+			/* GET VALUE */ 
+			if ini_enabled and ( ini_value = this._getIniValue (rollout_id)) != undefined then
+				/* SET VALUE FROM INI */ 
+				this._setValue (value_param_name) (ini_value)
+	
+			else if( _value = this._getValueParameter (value_param_name) ) != undefined then
+				/* SET NEW VALUE */ 
+				this._setValue(value_param_name)(_value)
+	
+			
+			/* REMOVE REDUNTANT PARAMETERS */ 
+			_Control.Params.delete (#value)
+			_Control.Params.delete (#ini)
+		)
+		else
+		(
+			--this._setBitmapByColor()
+			
+			_bitmap = if ( color_param = _Control.Params.getVal (#COLOR) ) != undefined then (bitmap 256 32 color:color_param ) else this._getValueParameter (#VALUE) 
+			
+			--this._setValue(#BITMAP)( (bitmap 256 32 color:orange ) )
+			this._setValue(#BITMAP)( _bitmap )
+			
+			_Control.Params.delete (#VALUE)
+			_Control.Params.delete (#COLOR)
+		)
+			
 	),
 
 
@@ -111,7 +139,7 @@ struct ControlValue_v
 		_Control.Params.setVal (value_param_name) (_value)
 	),
 
-	/** Set value  correctto datatype
+	/** Set value correct to datatype
 	  *
 	  * Cover special cases as Range datatype, or number in text field, which is treaded as number, but IT MSUT be string for edit text for example
 	  *
@@ -120,8 +148,10 @@ struct ControlValue_v
 	  */
 	function _setValueToDatatype value_param_name _value  =
 	(
-		--format "\n"; print "ControlValue_v._setValueToDatatype()"
-
+		format "\n"; print "ControlValue_v._setValueToDatatype()"
+		format "value_param_name: %\n" value_param_name
+		format "_value: %\n" _value
+		
 		/** Format string value to valid datatype
 		  *
 		  * @return	point3
@@ -159,6 +189,14 @@ struct ControlValue_v
 	),
 
 
+	
+	/** Set bitmap by color
+	 */
+	function _setBitmapByColor =
+	(
+		--format "\n"; print "ControlValue_v._setBitmapByColor()"
+	),
+	
 	/**
 	 */
 	on create do

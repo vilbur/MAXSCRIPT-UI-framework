@@ -1,5 +1,5 @@
 
-global CONTROL_BITMAPS_STORE = #() -- buffer for controls bitmaps, because of i don`t know how to convert bitmap to string
+global CONTROL_BITMAPS_STORE = #() -- buffer for bitmaps of controls, because of bitmap cannot be converted to string passed to RolloutCreator
 
 /** Control Params http://help.autodesk.com/view/3DSMAX/2016/ENU/?guid=__files_GUID_EA37E7DB_1E74_4377_B3D8_EDAE19CE27E7_htm
   * 
@@ -59,7 +59,7 @@ struct ControlParamsCreator_v
 		_params = ""
 		
 		for k=1 to List.keys.count do
-			_params += List.keys[k] as string +":"+ this._formatToString(List.keys[k])(List.values[k]) + " "
+			_params += List.keys[k] as string +":"+ ( this._formatToString List.keys[k] List.values[k] ) + " "
 			
 		trimRight _params  --return
 	),
@@ -76,16 +76,41 @@ struct ControlParamsCreator_v
 	(
 		--print ("Params_v._formatToString() " + val as string )
 		
-		if( classOf val == name ) then
+		/** Stringify array
+		  *
+		  * Workoraund for "as string"
+		  * "as string" works only for array with max 20 items
+		  * https://help.autodesk.com/view/3DSMAX/2015/ENU/?guid=__files_GUID_92B98D11_60FF_4742_A1BA_692EE135E085_htm
+		  *
+		  * @return	string	
+		  */
+		function _stringifyArray arr =
+		(
+			if( arr.count > 20 ) then
+			(
+				items_string = ""
+				
+				for item in arr do items_string += "\"" + item + "\","
+				
+				"#("+( trimRight items_string ",")+")" --return
+			)
+			else
+				arr as string --return
+		)
+		
+		classof_val = classOf val
+		
+		/* CONVERT EACH DATATYPE TO STRING */ 
+		if( classof_val == name ) then
 			val = "#" + val as string -- Add "#" prefix to name
 		
-		else if( classOf val == string  and key != #bitmap  ) then
+		else if( classof_val == string  and key != #BITMAP  ) then
 			val = "\"" + val +"\"" -- Wrap string to escaped qoutes \"\"
 			
-		else if( classOf val == Array ) then
-			val = this._stringifyArray val -- Wrap string to escaped qoutes \"\"
+		else if( classof_val == Array ) then
+			val = _stringifyArray val -- Wrap string to escaped qoutes \"\"
 			
-		else if key == #bitmap  then 
+		else if key == #BITMAP then 
 		(
 			append CONTROL_BITMAPS_STORE val
 			
@@ -94,32 +119,11 @@ struct ControlParamsCreator_v
 		
 		val as string --return
 	),
-	
-	/** Stringify array
-	  *
-	  * Workoraund for "as string"
-	  * "as string" works only for array with max 20 items
-	  * https://help.autodesk.com/view/3DSMAX/2015/ENU/?guid=__files_GUID_92B98D11_60FF_4742_A1BA_692EE135E085_htm
-	  *
-	  * @return	string	
-	  */
-	function _stringifyArray arr =
-	(
-		if( arr.count > 20 ) then
-		(
-			items_string = ""
-			
-			for item in arr do items_string += "\"" + item + "\","
-			
-			"#("+( trimRight items_string ",")+")" --return
-		)
-		else
-			arr as string --return
-	),
+
 
 	on create do
 	(
 		--print "ControlParamsCreator_v.onCreate()"
-		CONTROL_BITMAPS_STORE = #() -- reset buffer arrat
+		CONTROL_BITMAPS_STORE = #() -- reset buffer array
 	)
 )

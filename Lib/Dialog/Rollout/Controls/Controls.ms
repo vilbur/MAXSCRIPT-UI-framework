@@ -21,10 +21,11 @@ struct Controls_v
 
 	/** Create new control
 	  *
-	  * @property	#name	type	Type of control
+	  * @property	name	type	Type of control
 	  * @property	string	caption	Caption of control, caption is hidden if it`s wrapped into brackets "[]" E.G.: "[Browse Path]"
-	  * @property	#name	id	Id of control
-	  * @property	#boolean	ini	Enable Disable save control value to ini
+	  * @property	name	id	Id of control
+	  * @property	array	params	Params for control #( #key1, "value1", #key2, "value2",... )
+	  * @property	boolean	ini	Enable Disable save control value to ini
 	  *
 	  *
 	  * CONTROLS GROUP: https://help.autodesk.com/view/MAXDEV/2021/ENU/?guid=GUID-5DFECB42-C452-457B-BAD4-B07767AE8C9E
@@ -37,53 +38,63 @@ struct Controls_v
 	  * @property	#float	scale	Spinner scale
 	  *
 	  *
-	  * @property	array	params	Params for control #( #key1, "value1", #key2, "value2" )
 	  *
 	  * @return Object _Control	"./Control/Control.ms"
 	 */
-	function Control control_type caption id:undefined params:#() pos: width: height: across: offset: align: tooltip: /*locals:*/ ini:true add_to_controls:true \ -- common params for all types
-				range:	ticks: orient:	\ -- slider
-				default:	unselect:	\ -- radiobutton
-				items:	columns:	\ -- radiobutton, lisbox, mutlilistbox
-				type:	scale:	\ -- spinner
-				checked:		\ -- checkbox, checkbutton
-				visible:		\
-				border:		\
-				value: =
+	function Control control_type caption id:undefined params:#() pos: width: height: across: offset: align: tooltip: ini:true add_to_controls:true \ -- common params for all types
+		range:	ticks: orient:	\ -- slider
+		default:	unselect:	\ -- radiobutton
+		items:	columns:	\ -- radiobutton, lisbox, mutlilistbox
+		type:	scale:	\ -- spinner
+		value:		\ -- current value of nost of all
+		color:		\ -- bitmap -- alias for "value" E.G.: color:green >>> value:(bitmap 256 32 color:green)
+		checked:		\ -- checkbox, checkbutton
+		border:		\
+		visible:		=
 	(
 		--format "\n"; print "Controls_v.Control()"
-		--format "caption:	 % \n" caption
-		--format "id:	 % \n" id
-		--format "PARAMS:	 % \n" params
-		if ( key_index = findItem params #id ) > 0 then
-			id = params[key_index +1]
+
+		/* PROCESS FUNCTION PARAMETERS */ 	
+		_param_names  = #( #pos, #checked, #width, #height, #offset, #align, #items, #range, #type, #ticks, #orient, #scale, #controller, #default, #unselect, #value, #color, #ini, #tooltip, #across, #columns,	#visible, #border)
+		_param_values = #(  pos,  checked,  width,  height,  offset,  align,  items,  range,  type,  ticks,  orient,  scale,  controller,  default,  unselect,  value,  color,  ini,  tooltip,  across,  columns,  visible,  border)
 
 
+		/* SET CONTROL ID BY VALUE IN PARAMS */ 
+		if ( index = findItem params #id ) > 0 then
+			id = params[index +1]
+
+		
+		
+			
+		/*------------------------------------------------------------------------------
+			CREATE NEW CONTROL
+		--------------------------------------------------------------------------------*/
 		_Control = Control_v type:control_type caption:caption id:id rollout_id:rollout_id /*add_locals:locals */
 
+		
 
-		--format "_Control.id = % \n" _Control.id
-		--format "_Control = % \n" _Control
-		_param_names  = #( #pos, #checked, #width, #height, #offset, #align, #items, #range, #type, #ticks, #orient, #scale, #controller, #default, #unselect, #value, #ini, #tooltip, #across, #columns,	#visible, #border)
-		_param_values = #(  pos,  checked,  width,  height,  offset,  align,  items,  range,  type,  ticks,  orient,  scale,  controller,  default,  unselect,  value,  ini,  tooltip,  across,  columns,  visible,  border)
-
-
-		for i = 1 to _param_values.count where _param_values[i]!= unsupplied do
+		/* PASS FUNCTION PARAMETERS TO CONTROL */ 
+		for i = 1 to _param_values.count where _param_values[i] != unsupplied do
 			_Control.Param (_param_names[i]) (_param_values[i])
 
-
+		/* SET CONTROL PARAMETERS FROM PARAMS ARRAY */ 
 		this._setParamsToControl(_Control)(params)
 
+		
 
+		/* ADD CONTROL TO GROUPBOX */ 
 		if _Control.type == #Groupbox  then
 			GroupBoxes.addGroupbox(this)(_Control)
 		else
 			GroupBoxes.addControlToGroupbox (this)(_Control)
-
-
+			
+			
+			
+		/* ADD CONTROL TO CONTROLS */ 
 		if( add_to_controls ) then
 			this.add _Control
 
+		
 		_Control --return
 	),
 
@@ -137,9 +148,12 @@ struct Controls_v
 	(
 		--format "\n"; print "Controls_v._setParamsToControl()"
 		--format "PARAMS:	% \n" params
+		--format "classOf params: %\n" (classOf params)
 
+		/* SPLIT PARAMS STRING AND CONERT TO CORRECT DATATYPES */ 
 		if classOf params == string then
 			params = this._splitParamsString (params)
+		--format "PARAMS: % \n" params
 
 		for i = 1 to params.count  by 2  do
 			_Control.Param params[i] params[i+1]
@@ -175,15 +189,15 @@ struct Controls_v
 		rx	= dotNetClass "System.Text.RegularExpressions.RegEx"
 		rx_options	= dotNetClass "System.Text.RegularExpressions.RegexOptions"
 
-		is_variable = (rx.match _string "^\s*(\d+|true|false|undefined|unsupplied|\(\s*color\s+\d+\s+\d+\s+\d+\s*\))\s*$" rx_options.IgnoreCase ).success
-
-		if not is_variable and (is_string = ( rx.match _string "(^'*[A-Za-z0-1_\s]+'*$)" rx_options.IgnoreCase ).success ) then
+		is_variable = (rx.match _string "^\s*(\d+|true|false|undefined|unsupplied|\(*\s*color\s+\d+\s+\d+\s+\d+\s*\)*|\(*\s*bitmap\s+\d+\s+\d+)\s*$" rx_options.IgnoreCase ).success
+	
+		if is_variable and (is_string = ( rx.match _string "(^'*[A-Za-z0-1_\s]+'*$)" rx_options.IgnoreCase ).success ) then
 		(
-			@"" + _string -- IS STRING
+			try((execute(_string)))catch(_string) -- IS VARIABLE
 		)
 		else
 		(
-			try((execute(_string)))catch(_string) -- IS VARIABLE
+			@"" + _string -- IS STRING
 		)
 	),
 

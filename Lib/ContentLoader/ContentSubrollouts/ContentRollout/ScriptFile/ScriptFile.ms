@@ -1,7 +1,7 @@
 filein( getFilenamePath(getSourceFileName()) + "/MacroScript/MacroScript.ms" ) -- "./MacroScript/MacroScript.ms"
 
 filein( getFilenamePath(getSourceFileName()) + "/MacroScriptFileParser/MacroScriptFileParser.ms" )	--"./MacroScriptFileParser/MacroScriptFileParser.ms"
---filein( getFilenamePath(getSourceFileName()) + "/ContentControlCreator/ContentControlCreator.ms" )
+
 
 if QuadMenu_v == undefined then 
 	filein( getFilenamePath(getSourceFileName()) + "/../../../../Menus/QuadMenu/QuadMenu.ms" ) -- "./../../../../Menus/QuadMenu/QuadMenu.ms"
@@ -69,7 +69,7 @@ struct ScriptFile_Content_v
 		(
 			filein path
 
-			MacroScripts = (MacroScriptFileParser_v path:path).MacroScripts
+			MacroScripts = (MacroScriptFileParser_v path:path).MacroScripts -- PARSE MACROSCRIPTS 	--"./MacroScriptFileParser/MacroScriptFileParser.ms"
 		)
 	),
 
@@ -77,11 +77,7 @@ struct ScriptFile_Content_v
 	 */
 	function addToUi &_Rollout =
 	(
-		--print "!!!!!!!!!!!!!!!!!!!!!!!!"
 		--print("ScriptFile_Content_v.addToUi() " +_Rollout.id)
-		--format "filename	= % \n" filename
-		--filename	= if( filename == undefined ) then "" else ""; -- ????????????
-		
 		
 		this.loadMacroscriptFile()
 
@@ -108,7 +104,7 @@ struct ScriptFile_Content_v
 	private
 	
 	
-	/** _create controls
+	/** CREATE CONTROLS
 	 */
 	function _createControls _Rollout =
 	(
@@ -120,7 +116,7 @@ struct ScriptFile_Content_v
 			this._createControlfromMacro (MacroScripts[i])
 	),
 
-	/** Create control from macro
+	/** CREATE CONTROL FROM MACRO
 	 */
 	function _createControlfromMacro Macro =
 	(

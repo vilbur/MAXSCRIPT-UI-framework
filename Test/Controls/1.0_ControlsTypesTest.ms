@@ -30,65 +30,71 @@ _Controls   = Dialog.Controls()
 --------------------------------------------------------------------------------*/
 
 /*------ GROUPBOX ------*/
-_Controls.control #Groupbox "Groupbox Test" height:64
-_Controls.control #button "Button in Groupbox" params:#(#groupbox, "Groupbox Test")
+--_Controls.control #Groupbox "Groupbox Test" height:64
+--_Controls.control #button "Button in Groupbox" params:#(#groupbox, "Groupbox Test")
+--
+--
+--_Controls.control #Groupbox "[Groupbox Hidden Label]" height:64
+--_Controls.control #button "Group Box without Label" params:#(#groupbox, "[Groupbox Hidden Label]") width:128 offset:[-32,0]
+--
+--
+--
+--/* ADD CONTROL AS OBJECT */
+--_Controls.add (Control_v #button "By struct")
+--
+--
+--/*------ BUTTON ------*/
+--_Controls.control #BUTTON "Button" id:#button_1
+--_Controls.control #BUTTON "Button ☑✅✓" id:#button_2
+--
+--
+--/*------ CECKBUTTON ------*/
+--_Controls.control #CHECKBUTTON "checkbutton"
+--
+--
+--/*------ CHECKBOX ------*/
+--_Controls.control #CHECKBOX "Checkbox"
+--
+--
+--/*------ RADIOBUTTONS ------*/
+--_Controls.control #radioButtons "RadioButtons" items:#("Item 1","Item 2") columns:2
+----_Controls.control #RADIOBUTTONS "RadioButtons 2" items:#("Item 1","Item 2") params:#( #UNSELECT, true ) default:2
+--
+--
+--/*------ DROPDOWN ------*/
+--_Controls.control #DROPDOWNLIST "Dropdownlist"
+--
+--
+--/*------ EDITTEXT ------*/
+--_Controls.control #EDITTEXT "Edittext"
+--
+--
+--/*------ SLIDER ------*/
+--_Slider = _Controls.control #SLIDER "Slider" ticks:3 width:256 range:[0,50,0] ticks:5 type:#integer
+--
+--/*------ SPINNER ------*/
+--_Controls.control #SPINNER "Spinner"
+--_Controls.control #SPINNER "Spinner 2" width:96 scale:0.01 range:[0,100,0.01]
+--
+--
+--/*------ LISTBOX ------*/
+--/*------ MULTILISTBOX ------*/
+--_multilistbox =  _Controls.control #MULTILISTBOX "Multilistbox" items:#("Item 1","Item 2", "It/*e*/m 3")
+--
+--
+--/*------ BROWSEATH ------*/
+--_Controls.control #BROWSEPATH "browsePathTest"
 
-
-_Controls.control #Groupbox "[Groupbox Hidden Label]" height:64
-_Controls.control #button "Group Box without Label" params:#(#groupbox, "[Groupbox Hidden Label]") width:128 offset:[-32,0]
-
-
-
-/* ADD CONTROL AS OBJECT */
-_Controls.add (Control_v #button "By struct")
-
-
-/*------ BUTTON ------*/
-_Controls.control #BUTTON "Button" id:#button_1
-_Controls.control #BUTTON "Button ☑✅✓" id:#button_2
-
-
-/*------ CECKBUTTON ------*/
-_Controls.control #CHECKBUTTON "checkbutton"
-
-
-/*------ CHECKBOX ------*/
-_Controls.control #CHECKBOX "Checkbox"
-
-
-/*------ RADIOBUTTONS ------*/
-_Controls.control #radioButtons "RadioButtons" items:#("Item 1","Item 2") columns:2
---_Controls.control #RADIOBUTTONS "RadioButtons 2" items:#("Item 1","Item 2") params:#( #UNSELECT, true ) default:2
-
-
-/*------ DROPDOWN ------*/
-_Controls.control #DROPDOWNLIST "Dropdownlist"
-
-
-/*------ EDITTEXT ------*/
-_Controls.control #EDITTEXT "Edittext"
-
-
-/*------ SLIDER ------*/
-_Slider = _Controls.control #SLIDER "Slider" ticks:3 width:256 range:[0,50,0] ticks:5 type:#integer
-
-/*------ SPINNER ------*/
-_Controls.control #SPINNER "Spinner"
-_Controls.control #SPINNER "Spinner 2" width:96 scale:0.01 range:[0,100,0.01]
-
-
-/*------ LISTBOX ------*/
-/*------ MULTILISTBOX ------*/
-_multilistbox =  _Controls.control #MULTILISTBOX "Multilistbox" items:#("Item 1","Item 2", "It/*e*/m 3")
-
-
-/*------ BROWSEATH ------*/
-_Controls.control #BROWSEPATH "browsePathTest"
 
 
 /*------ BITMAP ------*/
-_Controls.Control #BITMAP "_bitmap_test A" value: (bitmap 256 32 color:black ) across:1
-_Controls.Control #BITMAP "_bitmap_test B" params:#(#bitmap, (bitmap 128 16 color:gray) ) across:1 offset:[ 0, -40 ]
+_Controls.Control #BITMAP "Bitmap as value" value: (bitmap 256 32 color:green ) across:1 -- SIZE OF BITMAP IS SIZE OF CONTROL
+
+_Controls.Control #BITMAP "Bitmap ascolor" color:blue width:256 height:32 across:1
+
+
+--_Controls.Control #BITMAP "_bitmap_test B" params:#(#bitmap, (bitmap 128 16 color:blue) ) across:1 offset:[ 0, -40 ]
+
 
 /*------ COLORPICKER ------*/
 --_Controls.control #COLORPICKER "ColorPicker A" value:( color 255 0 0 )       	across:1

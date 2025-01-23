@@ -175,4 +175,43 @@
 ----	print "checkbox #changed"
 ----	format "EventFired	= % \n" EventFired
 ----)
-----	
+----
+
+
+/*------------------------------------------------------------------------------
+  BITMAP
+----------------------------------------------------------------------------*/	
+
+
+/*  
+*/ 
+macroscript macroFileTest_bitmap
+	category:	"MacroFileTest"
+	buttontext:	""
+	toolTip:	"Changed event tooltip"
+	icon:	"type:bitmap|value:(bitmap 256 32 color:green )|across:1|width:256|height:64"
+(
+	print "checkbox #changed"
+	format "EventFired	= % \n" EventFired
+)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
