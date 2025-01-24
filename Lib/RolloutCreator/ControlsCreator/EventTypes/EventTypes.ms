@@ -51,16 +51,18 @@ struct EventTypes_v
 		event_types[#Radiobuttons] 	= Dictionary #( #changed,  "val")	#( #rightclick, "" )
 		event_types[#PickButton] 	= Dictionary #( #picked,   "val")	#( #rightclick, "" )
 		event_types[#Materialbutton] 	= Dictionary #( #picked,   "val")	#( #rightclick, "" )
+		event_types[#Dropdownlist] 	= Dictionary #( #selected, "val")	#( #rightclick, "" )
 		event_types[#CheckButton]	= Dictionary #( #changed,  "val" )	#( #rightclick, "" )
 		event_types[#Angle] 	= Dictionary #( #changed,  "val")	#( #rightclick, "" )
 		event_types[#Edittext] 	= Dictionary #( #changed,  "val")	#( #entered,       "val")
 		event_types[#BrowsePath] 	= Dictionary #( #changed,  "val")	#( #entered,       "val")
+		
 		event_types[#Listbox] 	= Dictionary #( #selected, "val")	#( #doubleClicked, "val")	#( #rightClick, "val")
 		event_types[#Slider] 	= Dictionary #( #changed,  "val")	#( #rightclick, "" )	#( #buttondown, "" )	#( #buttonup, "" )
 		event_types[#Spinner]	= Dictionary #( #changed, "val inSpin" )	#( #entered, "inSpin inCancel" )	#( #buttonup, "inCancel")	#( #buttondown, "")
 		event_types[#MultiListBox] 	= Dictionary #( #selectionEnd, "")	#( #doubleClicked, "val")	#( #rightClick, "val")	#( #selected, "val")
 		event_types[#Combobox] 	= Dictionary #( #selected, "val")	#( #doubleClicked, "val")	#( #entered , "val")	#( #changed , "val")	#( #rightclick, "" )
-		event_types[#Dropdownlist] 	= Dictionary #( #selected, "val")	#( #rightclick, "" )
+		event_types[#imgTag]	= Dictionary #( #click ,  "" )	#( #rightclick, "" )	#( #dblclick , "" )	#( #lbuttondown, "Point2 Flags" )	#( #mousedown, "" )	#( #mouseup, "" )	#( #mouseover, "" )	#( #mouseout, "" )
 	),
 
 	/** Get next event

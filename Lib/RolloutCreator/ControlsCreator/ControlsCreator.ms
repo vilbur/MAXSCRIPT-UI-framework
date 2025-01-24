@@ -34,14 +34,12 @@ struct ControlCreator_v
 	 */
 	function addControls _Controls =
 	(
-		DEBUG = true
-		
 		if DEBUG then format "\n\n-------------- ControlCreator_v.addControls() group:% --------------\n" _Controls.group
-		--if DEBUG then format "_Controls.list.count	= % \n" _Controls.list.count
 
 		/* EXIT IF ANY CONTROLS EXISTS */ 
 		if _Controls.list.count == 0 then
 			return false
+		
 		
 		/* SET CONTROLS TO PROPERTY */ 
 		this.Controls = _Controls
@@ -59,13 +57,16 @@ struct ControlCreator_v
 		/* PREPARE EACH CONTROL */
 		for _Control in this.Controls.list do
 		(
-			--format "_CONTROL: %\n" _Control
+			/* MERGE DEFAULT NAD USER PARAMS */ 
 			ParamsCreator.mergeParams(_Control)
 			
+			/* SET VALUE OF CONTROL */ 
 			ControlValue.setControlValue (_Control) (_Rollout.id)
 
-			ControlEventCreator.createEvents(_Control)
+			/* PREPARE CONTROL EVENTS */ 
+			ControlEventCreator.prepareEvents(_Control)
 
+			/* MUTATE EXTRA CONTROL TYPYES TO STADARD CONTROLS */ 
 			this._customizeControlTypes(_Control)
 		)
 		
@@ -171,7 +172,7 @@ struct ControlCreator_v
 		params = ParamsCreator.join(_Control.params)
 		--format "params	= % \n" params
 		/* DEBUG LOG */
-		if DEBUG then format "\NCONTROL:%.%		PARAMS: % \n" ( _Rollout.id as string ) _Control.id params
+		if DEBUG then format "CONTROL:%.%		PARAMS: % \n" ( _Rollout.id as string ) _Control.id params
 
 		_Rollout.RCI.addControl (_Control.type) (_Control.id) (this._getCaption(_Control)) paramStr:params filter:true;
 	),

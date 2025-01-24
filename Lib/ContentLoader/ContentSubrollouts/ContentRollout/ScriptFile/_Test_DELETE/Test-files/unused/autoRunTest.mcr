@@ -14,9 +14,9 @@ macroscript macroFileTest_checkbox_autorun
 	category:	"MacroFileTest"
 	buttontext:	"Auto run on startup"
 	toolTip:	"Changed event tooltip"
-	--icon:	"type:checkbox"
-	icon:	"type:checkbox|checked:true"
-	--icon:	"type:checkbox|event:#rightClick"
+	--icon:	"control:checkbox"
+	icon:	"control:checkbox|checked:true"
+	--icon:	"control:checkbox|event:#rightClick"
 (
 	--print "AutoRun"
 	messageBox "Auto run on startup"  beep:false

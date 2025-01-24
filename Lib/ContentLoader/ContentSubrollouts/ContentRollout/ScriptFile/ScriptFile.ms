@@ -120,7 +120,7 @@ struct ScriptFile_Content_v
 	 */
 	function _createControlfromMacro Macro =
 	(
-		--format "\n"; print "ScriptFile_Content_v.createControlfromMacro()"
+		format "\n"; print "ScriptFile_Content_v.createControlfromMacro()"
 
 		_Control = _Controls.Control (Macro.getControlType()) Macro.buttontext params:(Macro.getParamsArray()) add_to_controls:false
 
@@ -133,7 +133,7 @@ struct ScriptFile_Content_v
 			/* GET PARAMETERS FROM PREVIOUS CONTROL */ 
 			this._inheritParameters (_Control)
 
-			
+		format "_CONTROL: %\n" _Control
 		/* EVENTS */ 
 		this._setEvent (_Control) (Macro)
 

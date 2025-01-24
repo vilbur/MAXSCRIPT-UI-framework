@@ -20,7 +20,7 @@ struct ControlValue_v
 		#( #DEFAULT,  	#RadioButtons			),
 		#( #MATERIAL,  	#Materialbutton			),
 		#( #COLOR,  	#ColorPicker			),
-		#( #BITMAP,  	#Bitmap			),
+		#( #BITMAP,  	#Bitmap,  	#imgTag		),
 		#( #ADDRESS,  	#hyperlink			)
 	),
 
@@ -34,9 +34,10 @@ struct ControlValue_v
 	(
 		--print "ControlCreator_v._setControlValue()"
 		format "_Control.type: %\n" _Control.type
+		format "TEST: %\n" (_Control.type != #BITMAP and _Control.type != #IMGTAG)
 		this._Control = _Control
 
-		if _Control.type != #BITMAP then
+		if _Control.type != #BITMAP and _Control.type != #IMGTAG then
 		(
 			/* if control type has value E.G.: #label or #groupbox HAS NOT VALUE */
 			if (value_param_name = this._getNameOfValueParameter() ) == undefined  then
@@ -65,14 +66,18 @@ struct ControlValue_v
 			_Control.Params.delete (#value)
 			_Control.Params.delete (#ini)
 		)
-		else
+		else /* SET BITMAP VALUE */ 
 		(
-			--this._setBitmapByColor()
-			
-			_bitmap = if ( color_param = _Control.Params.getVal (#COLOR) ) != undefined then (bitmap 256 32 color:color_param ) else this._getValueParameter (#VALUE) 
-			
-			--this._setValue(#BITMAP)( (bitmap 256 32 color:orange ) )
-			this._setValue(#BITMAP)( _bitmap )
+			--_bitmap = case of
+			--(
+			--	(( color_param  = _Control.Params.getVal (#COLOR) ) != undefined): (bitmap 256 32 color:(color_param as color ) )
+			--	(( value_param  = _Control.Params.getVal (#VALUE) ) != undefined): if classOf value_param == bitmap then value_param else if classOf value_param == color then (bitmap 256 32 color:value_param )
+			--)
+			--
+			--if _bitmap != undefined then 
+			--	this._setValue(#BITMAP)( _bitmap )
+				
+			this._setValue(#BITMAP)(bitmap 256 32 color:orange )
 			
 			_Control.Params.delete (#VALUE)
 			_Control.Params.delete (#COLOR)

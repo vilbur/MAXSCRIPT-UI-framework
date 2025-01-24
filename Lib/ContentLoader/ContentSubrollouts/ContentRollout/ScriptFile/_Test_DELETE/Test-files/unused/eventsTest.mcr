@@ -50,7 +50,7 @@ macroscript macroFileTest_checkbox
 	category:	"MacroFileTest"
 	buttontext:	"Checkbox"
 	toolTip:	"Changed event tooltip"
-	icon:	"type:checkbox|checked:true|border:false|columns:12"
+	icon:	"control:checkbox|checked:true|border:false|columns:12"
 (
 	print "checkbox #changed"
 	format "EventFired	= % \n" EventFired
@@ -62,7 +62,7 @@ macroscript macroFileTest_checkbox_right
 	category:	"MacroFileTest"
 	buttontext:	"Checkbox"
 	toolTip:	"Right click tooltip"
-	icon:	"type:#checkbox" 
+	icon:	"control:#checkbox" 
 
 (
 	print "checkbox #rightclick"

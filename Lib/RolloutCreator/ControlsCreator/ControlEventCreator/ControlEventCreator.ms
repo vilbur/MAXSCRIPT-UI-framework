@@ -11,7 +11,7 @@ struct ControlEventCreator_v
 	/* dependency */
 	DefaultControlEvents	= DefaultControlEvents_v(),
 	TooltipCreator	= TooltipCreator_v(),
-	EventTypes	= EventTypes_v(),
+	EventTypes	= EventTypes_v(),	--"./../EventTypes/EventTypes.ms"
 
 	/* properties */
 	event_types = EventTypes.event_types,
@@ -19,10 +19,13 @@ struct ControlEventCreator_v
 	/* reference */
 	/* inhered */
 
-	/** Create events
-	  *
+	/** Prepare events for bind to control
+	  * 
+	  * Merge default and user events
+	  * 
+	  * 
 	  */
-	function createEvents _Control =
+	function prepareEvents _Control =
 	(
 		--format "\n================\n"; print "ControlEventCreator_v.createEvents()"
 		--format "_Control:	% \n" _Control.caption
@@ -31,12 +34,19 @@ struct ControlEventCreator_v
 		 */
 		function getParams Event = if Event != undefined then Event.params else ""
 
-
+		
+		/* GET INSTANCE OF EventFiredCreator */ 
 		EventFiredCreator = EventFiredCreator_v _RolloutClass:(_Rollout.id as string ) _RolloutControl:( _Rollout.id as string +"."+ _Control.id as string )
 
 
+		/* PROCESS EACH EVENT BY PRIORITY */ 
 		for event_type in this.EventTypes.priority where ( event_params = event_types[_Control.type][event_type]) != undefined do
 		(
+			/* GET DEFAULT EVENT */ 
+			Event_default = DefaultControlEvents.getDefaultEvent (_Control) (event_type)
+			
+			
+			/* GET USER EVENT */ 
 			if ( Event = _Control.Events[event_type] ) != undefined then
 			(
 				Event.params = event_params
@@ -47,11 +57,9 @@ struct ControlEventCreator_v
 
 				TooltipCreator.addTooltip(_Control)(event_type)
 			)
-
-
-			Event_default = DefaultControlEvents.getDefaultEvent (_Control) (event_type)
-
-
+			
+			
+			/* MERGE DEFAULT AND USER EVENTS */ 
 			if  Event != undefined or Event_default != undefined then
 			(
 				/* GET NEW EVENT IF ONLY DEAFAULT CALLBACK EXIST */
