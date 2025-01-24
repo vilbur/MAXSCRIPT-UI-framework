@@ -42,17 +42,25 @@ struct ControlValue_v
 		/* EXIT IF CONTROL HAS NOT VALUE E.G.: #label or #groupbox HAS NOT VALUE */
 		if (value_param_name = this._getNameOfValueParameter() ) == undefined  then
 			return false
-		
-		val = if ini_value != undefined then ini_value else this._getValueParameter (value_param_name)
-		
-		if _Control.type == #BITMAP or _Control.type == #IMGTAG then
+
+		/* GET INI VALUE */ 
+		val = if ini_value != undefined then
+				ini_value
+				
+		/* GET BITMAP VALUE */ 
+		else if _Control.type == #BITMAP or _Control.type == #IMGTAG then
 		(
 			value_param_name = #BITMAP
-			
-			val = this._getBitmapValue()
+		   
+			this._getBitmapValue()
 		)
+		else /* GET DEFINED VALUE */ 
+		   this._getValueParameter (value_param_name)
+		   
 		
-		this._setValue(value_param_name)(val)
+		
+		if val != undefined then 
+			this._setValue(value_param_name)(val)
 		
 		this._removeReduntantParams()
 	),

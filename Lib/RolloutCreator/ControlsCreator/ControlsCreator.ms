@@ -57,11 +57,14 @@ struct ControlCreator_v
 		/* PREPARE EACH CONTROL */
 		for _Control in this.Controls.list do
 		(
+			--format "_Control.params: %\n" _Control.params
 			/* MERGE DEFAULT NAD USER PARAMS */ 
 			ParamsCreator.mergeParams(_Control)
-			
+			--format "_Control.params: %\n" _Control.params
+
 			/* SET VALUE OF CONTROL */ 
 			ControlValue.setControlValue (_Control) (this._getIniValue(_Control))
+			--format "_Control.params: %\n" _Control.params
 
 
 			/* PREPARE CONTROL EVENTS */ 
@@ -165,16 +168,15 @@ struct ControlCreator_v
 			this._addControlsGroup #end
 	),
 
-	/* Add control to RolloutCreator
+	/* ADD CONTROL TO RolloutCreator
 	 */
 	function _addControlToRollout _Control =
 	(
 		--format "\n"; print "ControlCreator_v._addControlToRollout()"
+		--format "_Control.params: %\n" _Control.params
 		params = ParamsCreator.join(_Control.params)
-		--format "params	= % \n" params
-		/* DEBUG LOG */
-		--if DEBUG then format "CONTROL:%.%		PARAMS: % \n" ( _Rollout.id as string ) _Control.id params
-
+		--format "CONTROL: %		PARAMS: %\n" ( _Control.id) params
+		
 		_Rollout.RCI.addControl (_Control.type) (_Control.id) (this._getCaption(_Control)) paramStr:params filter:true;
 	),
 

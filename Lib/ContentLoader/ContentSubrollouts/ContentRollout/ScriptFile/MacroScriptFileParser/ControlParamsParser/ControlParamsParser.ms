@@ -19,22 +19,19 @@ struct ControlParamsParser_v
 	/* dependency */
 	ImagesArrayParser 	= ImagesArrayParser_v(),
 	IconArrayParser 	= IconArrayParser_v(),
-
+	
 	/* private properties */
 	patterns = #(
 		"\d+.*\d*",	-- integer or float
 		"true|false",
 		"undefined|unsupplied",
-		"green",
+		"red|green|blue|white|black|orange|yellow|brown|gray",
 		"\[.*\]",	-- point2, point3
 		"\(*color\s+\d+\s+\d+\s+\d+\s*\)*",	-- color E.G.: "color 128 128 128" or "(color 128 128 128)"
 		"#[^\s\(]+",	-- #name but not array
 		"#\(.*\)",	--array
 		""
 	),
-
-	RegEx	= dotNetClass "System.Text.RegularExpressions.RegEx",
-	RegEx_options	= dotNetClass "System.Text.RegularExpressions.RegexOptions",
 
 	/** Parse params in "icon" param of macroscript
 	  *
@@ -148,7 +145,11 @@ struct ControlParamsParser_v
 
 			trimRight params_string "|"
 		)
+		
+		RegEx	= dotNetClass "System.Text.RegularExpressions.RegEx"
+		RegEx_options	= dotNetClass "System.Text.RegularExpressions.RegexOptions"
 
+	
 		is_variable = (RegEx.match _string ("^("+joinPatterns(patterns)+")$") RegEx_options.IgnoreCase ).success
 		--format "is_variable: %\n" is_variable
 

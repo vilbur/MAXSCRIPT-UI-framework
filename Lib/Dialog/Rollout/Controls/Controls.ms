@@ -65,7 +65,6 @@ struct Controls_v
 			id = params[index +1]
 
 		
-		
 			
 		/*------------------------------------------------------------------------------
 			CREATE NEW CONTROL
