@@ -61,7 +61,8 @@ struct ControlCreator_v
 			ParamsCreator.mergeParams(_Control)
 			
 			/* SET VALUE OF CONTROL */ 
-			ControlValue.setControlValue (_Control) (_Rollout.id)
+			ControlValue.setControlValue (_Control) (this._getIniValue(_Control))
+
 
 			/* PREPARE CONTROL EVENTS */ 
 			ControlEventCreator.prepareEvents(_Control)
@@ -276,7 +277,21 @@ struct ControlCreator_v
 		--format "\n"; print "ControlCreator_v._isControls()"
 		toLower (( filterString( classof _Struct as string ) "_*(:" )[2]) == "controls"  --return
 	),
-
+	
+	/** Get value from ini file
+	 */
+	function _getIniValue _Control =
+	(
+		--format "\n"; print "ControlValue_v._getIniValue()"
+		if Ini.isDefined() then
+		(
+			ini_enabled = if ( ini_param = _Control.Params.getVal (#ini) ) != undefined then ini_param else true
+			
+			if ini_enabled and (ini_value = Ini.load(_Rollout.id)(_Control.id)) != undefined then
+				ini_value --return
+		)
+	),
+	
 	/** If controls list is not temporary
 	 */
 	function isGroupboxControls =
@@ -292,8 +307,5 @@ struct ControlCreator_v
 	on create do
 	(
 		--print "ControlCreator_v.onCreate()"
-		ControlValue.Ini = Ini
-
-		--ControlEventBinder.ini_path	= Ini.getPath()
 	)
 )

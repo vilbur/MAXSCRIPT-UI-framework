@@ -3,7 +3,7 @@
 struct ControlValue_v
 (
 	/* properties */
-	Ini,
+	--Ini,
 	_Control,
 
 	/** Each control has different property where value is stored
@@ -20,7 +20,7 @@ struct ControlValue_v
 		#( #DEFAULT,  	#RadioButtons			),
 		#( #MATERIAL,  	#Materialbutton			),
 		#( #COLOR,  	#ColorPicker			),
-		#( #BITMAP,  	#Bitmap,  	#imgTag		),
+		#( #FILENAME,  	#Bitmap,  	#imgTag		),
 		#( #ADDRESS,  	#hyperlink			)
 	),
 
@@ -30,41 +30,28 @@ struct ControlValue_v
 	  * 	1) value from ini file - if control`s parameter ini: is not false
 	  * 	2) user defined value
 	 */
-	function setControlValue _Control rollout_id =
+	function setControlValue _Control ini_value =
 	(
-		--print "ControlCreator_v._setControlValue()"
+		print "ControlCreator_v._setControlValue()"
 		format "_Control.type: %\n" _Control.type
+		format "ini_value: %\n" ini_value
 		format "TEST: %\n" (_Control.type != #BITMAP and _Control.type != #IMGTAG)
+		
+		
 		this._Control = _Control
 
+		/* EXIT IF CONTROL HAS NOT VALUE E.G.: #label or #groupbox HAS NOT VALUE */
+		if (value_param_name = this._getNameOfValueParameter() ) == undefined  then
+			return false
+		
+		
 		if _Control.type != #BITMAP and _Control.type != #IMGTAG then
 		(
-			/* if control type has value E.G.: #label or #groupbox HAS NOT VALUE */
-			if (value_param_name = this._getNameOfValueParameter() ) == undefined  then
-				return false
-				
-			val = this._getValueParameter (value_param_name)
-			format "value_param_name: %\n" value_param_name
-			format "val: %\n" val
-			
-				
-			/* TEST IF COTNROL HAS INI SAVE ENABLED */ 
-			ini_enabled = if ( ini_param = _Control.Params.getVal (#ini) ) != undefined then ini_param else true
-			
-			
-			/* GET VALUE */ 
-			if ini_enabled and ( ini_value = this._getIniValue (rollout_id)) != undefined then
-				/* SET VALUE FROM INI */ 
-				this._setValue (value_param_name) (ini_value)
 	
-			else if( _value = this._getValueParameter (value_param_name) ) != undefined then
-				/* SET NEW VALUE */ 
-				this._setValue(value_param_name)(_value)
-	
+			val = if ini_value != undefined then ini_value else this._getValueParameter (value_param_name)
 			
-			/* REMOVE REDUNTANT PARAMETERS */ 
-			_Control.Params.delete (#value)
-			_Control.Params.delete (#ini)
+			this._setValue(value_param_name)(val)
+
 		)
 		else /* SET BITMAP VALUE */ 
 		(
@@ -78,11 +65,17 @@ struct ControlValue_v
 			--	this._setValue(#BITMAP)( _bitmap )
 				
 			this._setValue(#BITMAP)(bitmap 256 32 color:orange )
-			
-			_Control.Params.delete (#VALUE)
-			_Control.Params.delete (#COLOR)
 		)
-			
+		
+		this._removeReduntantParams()
+		
+	),
+	
+	/** Set common control
+	 */
+	function setCommonControl =
+	(
+		--format "\n"; print "ControlValue_v.setCommonControl()"
 	),
 
 
@@ -104,31 +97,16 @@ struct ControlValue_v
 			name_of_param[1] --return
 	),
 
-
-	/** Get value from ini file
-	 */
-	function _getIniValue rollout_id =
-	(
-		--format "\n"; print "ControlValue_v._getIniValue()"
-		if Ini.isDefined() and (ini_value = Ini.load(rollout_id)(_Control.id)) != undefined then
-			ini_value --return
-		--(
-		--	format "INI_VALUE	= % \n" ini_value
-		--	format "classOf ini_value	= % \n" (classOf ini_value)
-		--)
-	),
-
-
 	/** Get value parameter
 	 */
 	function _getValueParameter value_param_name =
 	(
 		--format "\n"; print "ControlValue_v.getValueParameter()"
 
-		if( ( _value = _Control.Params.getVal (#value) ) == undefined ) then --try get parameter #value  e.g.: params:#(#value, true)
-			_value = _Control.Params.getVal (value_param_name)	            --try get parameter by name e.g.: params:#(#checked, true)
+		if( ( val = _Control.Params.getVal (#value) ) == undefined ) then --try get parameter #value  e.g.: params:#(#value, true)
+			val = _Control.Params.getVal (value_param_name)	            --try get parameter by name e.g.: params:#(#checked, true)
 
-		_value --return
+		val --return
 	),
 
 	/** Set parameter of value with correct name for control type
@@ -137,11 +115,11 @@ struct ControlValue_v
  	  * E.G.: set #checked parameter and delete #value
 	  *
 	 */
-	function _setValue value_param_name _value =
+	function _setValue value_param_name val =
 	(
-		_value = this._setValueToDatatype(value_param_name)(_value)
+		val = this._setValueToDatatype(value_param_name)(val)
 
-		_Control.Params.setVal (value_param_name) (_value)
+		_Control.Params.setVal (value_param_name) (val)
 	),
 
 	/** Set value correct to datatype
@@ -151,38 +129,38 @@ struct ControlValue_v
 	  * Ini_v is converting string to datatype, but in some caseses error can occured, E.G.: 0 >>> "0"
 	  *
 	  */
-	function _setValueToDatatype value_param_name _value  =
+	function _setValueToDatatype value_param_name val  =
 	(
 		format "\n"; print "ControlValue_v._setValueToDatatype()"
 		format "value_param_name: %\n" value_param_name
-		format "_value: %\n" _value
+		format "val: %\n" val
 		
 		/** Format string value to valid datatype
 		  *
 		  * @return	point3
 		 */
-		function setValueIntoRange _value =
+		function setValueIntoRange val =
 		(
 			--format "\n"; print "ControlValue_v._setValueIntoRange()"
 
-			if classOf _value != point3  then
+			if classOf val != point3  then
 			(
 				_range = _Control.Params.getval #range
 
-				_range.z = _value
+				_range.z = val
 
 				_range --return
 			)
 			else
-				_value --return
+				val --return
 		)
 
 		case value_param_name of
 		(
-			#RANGE:	setValueIntoRange (_value)
-			#TEXT:	_value as string
-			#COLOR:	_value as point3
-			default:	_value
+			#RANGE:	setValueIntoRange (val)
+			#TEXT:	val as string
+			#COLOR:	val as point3
+			default:	val
 
 			/* BELOW ANOTHER CONTROLS DATATYPES */
 			--#SELECTION:
@@ -192,16 +170,16 @@ struct ControlValue_v
 			--#ADDRESS:
 		)
 	),
-
-
 	
-	/** Set bitmap by color
+	/** Remove reduntant params
 	 */
-	function _setBitmapByColor =
+	function _removeReduntantParams  =
 	(
-		--format "\n"; print "ControlValue_v._setBitmapByColor()"
+		--format "\n"; print "ControlValue_v.removeReduntantParams()"
+		for key in #( #VALUE, #INI, #VALUE, #COLOR ) do 
+			_Control.Params.delete (key)
 	),
-	
+
 	/**
 	 */
 	on create do
