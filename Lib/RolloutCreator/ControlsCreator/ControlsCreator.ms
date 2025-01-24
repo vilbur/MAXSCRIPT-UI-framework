@@ -34,7 +34,7 @@ struct ControlCreator_v
 	 */
 	function addControls _Controls =
 	(
-		if DEBUG then format "\n\n-------------- ControlCreator_v.addControls() group:% --------------\n" _Controls.group
+		--if DEBUG then format "\n\n-------------- ControlCreator_v.addControls() group:% --------------\n" _Controls.group
 
 		/* EXIT IF ANY CONTROLS EXISTS */ 
 		if _Controls.list.count == 0 then
@@ -169,11 +169,11 @@ struct ControlCreator_v
 	 */
 	function _addControlToRollout _Control =
 	(
-		format "\n"; print "ControlCreator_v._addControlToRollout()"
+		--format "\n"; print "ControlCreator_v._addControlToRollout()"
 		params = ParamsCreator.join(_Control.params)
 		--format "params	= % \n" params
 		/* DEBUG LOG */
-		if DEBUG then format "CONTROL:%.%		PARAMS: % \n" ( _Rollout.id as string ) _Control.id params
+		--if DEBUG then format "CONTROL:%.%		PARAMS: % \n" ( _Rollout.id as string ) _Control.id params
 
 		_Rollout.RCI.addControl (_Control.type) (_Control.id) (this._getCaption(_Control)) paramStr:params filter:true;
 	),

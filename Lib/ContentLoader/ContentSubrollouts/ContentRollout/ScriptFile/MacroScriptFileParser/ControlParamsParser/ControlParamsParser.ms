@@ -25,6 +25,7 @@ struct ControlParamsParser_v
 		"\d+.*\d*",	-- integer or float
 		"true|false",
 		"undefined|unsupplied",
+		"green",
 		"\[.*\]",	-- point2, point3
 		"\(*color\s+\d+\s+\d+\s+\d+\s*\)*",	-- color E.G.: "color 128 128 128" or "(color 128 128 128)"
 		"#[^\s\(]+",	-- #name but not array
@@ -58,7 +59,7 @@ struct ControlParamsParser_v
 		else
 			IconArrayParser.setIconParameter (params)(execute params_string)(macro_name)
 
-		--format "params	= % \n" params
+		--format "PARAMS	= % \n" params
 		params --return
 	),
 
@@ -93,8 +94,8 @@ struct ControlParamsParser_v
 			(
 				val = this._convertDatatype( this._trimWhiteSpace(val))
 
-				append params[1] ( this._sanitizeKey(key) as name )
-				append params[2] val
+				append this.params[1] ( this._sanitizeKey(key) as name )
+				append this.params[2] val
 			)
 			else
 				ImagesArrayParser.setImageParameter(params)(execute val)
@@ -134,6 +135,7 @@ struct ControlParamsParser_v
 	function _convertDatatype _string =
 	(
 		--format "\n"; print "ControlParamsParser_v._convertDatatype()"
+		--format "_string: %\n" _string
 
 		/** Join array
 		 */
@@ -148,12 +150,14 @@ struct ControlParamsParser_v
 		)
 
 		is_variable = (RegEx.match _string ("^("+joinPatterns(patterns)+")$") RegEx_options.IgnoreCase ).success
+		--format "is_variable: %\n" is_variable
 
 		if not is_variable  then
 			@"" + _string -- IS STRING
 
 		else
-			try((execute(_string)))catch(_string) -- IF STRING IS VARIABLE E.G.: "#( 1, 2 ,3 )|[1,2]"
+			execute(_string)
+			--try((execute(_string)))catch(_string) -- IF STRING IS VARIABLE E.G.: "#( 1, 2 ,3 )|[1,2]"
 
 	),
 

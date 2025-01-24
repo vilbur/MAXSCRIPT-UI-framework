@@ -186,8 +186,8 @@ struct MacroScriptFileParser_v
 
 	on create do
 	(
-		--format "\n"
-		--print ("MacroScriptFileParser_v.onCreate ")
+		--format "\n"; print "MacroScriptFileParser_v.onCreate()"
+		--format "PATH: %\n" path
 		this._checkConstctructProperties()
 
 		ControlParamsParser.ImagesArrayParser.path = path
@@ -195,7 +195,5 @@ struct MacroScriptFileParser_v
 		this._setFileContent()
 		--format "file_content = % \n" file_content
 		this._parseMacros()
-
-
 	)
 )

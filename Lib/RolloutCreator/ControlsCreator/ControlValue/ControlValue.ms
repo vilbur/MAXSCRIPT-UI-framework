@@ -3,7 +3,6 @@
 struct ControlValue_v
 (
 	/* properties */
-	--Ini,
 	_Control,
 
 	/** Each control has different property where value is stored
@@ -20,7 +19,8 @@ struct ControlValue_v
 		#( #DEFAULT,  	#RadioButtons			),
 		#( #MATERIAL,  	#Materialbutton			),
 		#( #COLOR,  	#ColorPicker			),
-		#( #FILENAME,  	#Bitmap,  	#imgTag		),
+		#( #FILENAME,  	#Bitmap  			),
+		#( #ICONNAME,  	#imgTag			),
 		#( #ADDRESS,  	#hyperlink			)
 	),
 
@@ -32,10 +32,9 @@ struct ControlValue_v
 	 */
 	function setControlValue _Control ini_value =
 	(
-		print "ControlCreator_v._setControlValue()"
-		format "_Control.type: %\n" _Control.type
-		format "ini_value: %\n" ini_value
-		format "TEST: %\n" (_Control.type != #BITMAP and _Control.type != #IMGTAG)
+		--print "ControlValue_v._setControlValue()"
+		--format "_Control.type: %\n" _Control.type
+		--format "ini_value: %\n" ini_value
 		
 		
 		this._Control = _Control
@@ -44,31 +43,18 @@ struct ControlValue_v
 		if (value_param_name = this._getNameOfValueParameter() ) == undefined  then
 			return false
 		
+		val = if ini_value != undefined then ini_value else this._getValueParameter (value_param_name)
 		
-		if _Control.type != #BITMAP and _Control.type != #IMGTAG then
+		if _Control.type == #BITMAP or _Control.type == #IMGTAG then
 		(
-	
-			val = if ini_value != undefined then ini_value else this._getValueParameter (value_param_name)
+			value_param_name = #BITMAP
 			
-			this._setValue(value_param_name)(val)
-
+			val = this._getBitmapValue()
 		)
-		else /* SET BITMAP VALUE */ 
-		(
-			--_bitmap = case of
-			--(
-			--	(( color_param  = _Control.Params.getVal (#COLOR) ) != undefined): (bitmap 256 32 color:(color_param as color ) )
-			--	(( value_param  = _Control.Params.getVal (#VALUE) ) != undefined): if classOf value_param == bitmap then value_param else if classOf value_param == color then (bitmap 256 32 color:value_param )
-			--)
-			--
-			--if _bitmap != undefined then 
-			--	this._setValue(#BITMAP)( _bitmap )
-				
-			this._setValue(#BITMAP)(bitmap 256 32 color:orange )
-		)
+		
+		this._setValue(value_param_name)(val)
 		
 		this._removeReduntantParams()
-		
 	),
 	
 	/** Set common control
@@ -131,9 +117,9 @@ struct ControlValue_v
 	  */
 	function _setValueToDatatype value_param_name val  =
 	(
-		format "\n"; print "ControlValue_v._setValueToDatatype()"
-		format "value_param_name: %\n" value_param_name
-		format "val: %\n" val
+		--format "\n"; print "ControlValue_v._setValueToDatatype()"
+		--format "value_param_name: %\n" value_param_name
+		--format "val: %\n" val
 		
 		/** Format string value to valid datatype
 		  *
@@ -171,6 +157,33 @@ struct ControlValue_v
 		)
 	),
 	
+
+	/** Get bitmap value
+	 */
+	function _getBitmapValue =
+	(
+		--format "\n"; print "ControlValue_v._getBitmapValue()"
+		
+		alias_params = #( #COLOR, #VALUE )
+		
+		for param in alias_params do
+		(
+			val = _Control.Params.getVal (#COLOR)
+			--format "VAL: % %\n" val (classOf val)
+		)
+		
+		--_bitmap = case of
+		--(
+		--	(( color_param  = _Control.Params.getVal (#COLOR) ) != undefined): (bitmap 256 32 color:(color_param as color ) )
+		--	(( value_param  = _Control.Params.getVal (#VALUE) ) != undefined): if classOf value_param == bitmap then value_param else if classOf value_param == color then (bitmap 256 32 color:value_param )
+		--)
+		--
+		--if _bitmap != undefined then 
+		--	this._setValue(#BITMAP)( _bitmap )
+			
+		bitmap 256 32 color:orange
+	),
+
 	/** Remove reduntant params
 	 */
 	function _removeReduntantParams  =

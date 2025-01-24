@@ -1,6 +1,6 @@
 
-/*------------------------------------------------------------------------------
-	BUTTON
+--/*------------------------------------------------------------------------------
+--	BUTTON
 ----------------------------------------------------------------------*/
 --macroscript MacroFileTest_A
 --	category:	"MacroFileTest"
@@ -11,13 +11,13 @@
 --	print "Button MacroFileTest A #pressed"
 --	--format "EventFired	= % \n" EventFired
 --)
-
-
+--
+--
 --/*------------------------------------------------------------------------------
 --  CHECKBOX
 --------------------------------------------------------------------------------*/	
-
-
+--
+--
 --/*  
 --*/ 
 --macroscript macroFileTest_checkbox
@@ -29,7 +29,7 @@
 --	print "checkbox #changed"
 --	format "EventFired	= % \n" EventFired
 --)
-
+--
 --/*
 --*/
 --macroscript macroFileTest_checkbox_right
@@ -42,11 +42,12 @@
 --	print "checkbox #rightclick"
 --	format "EventFired	= % \n" EventFired
 --)
-
-/*------------------------------------------------------------------------------
-  EditText
+--
+--
+--/*------------------------------------------------------------------------------
+--  EditText
 ----------------------------------------------------------------------------*/	
-
+--
 --/*  
 --*/ 
 --macroscript macroFileTest_edittext
@@ -59,7 +60,7 @@
 --	print "BrowsePath test"
 --	format " EventFired = % \n"  EventFired
 --)
-
+--
 --
 --/*------------------------------------------------------------------------------
 --  BROWSE PATH
@@ -78,26 +79,26 @@
 --	format "EventFired	= % \n" EventFired
 --	format " EventFired.value = % \n"  EventFired.value
 --)
---
---
---/*------------------------------------------------------------------------------
---  CHECKBUTTON
---------------------------------------------------------------------------------*/	
---
---/*  
---*/ 
---macroscript macroFileTest_checkbutton
---	category:	"MacroFileTest"
---	buttontext:	"Checkbutton"
---	toolTip:	"Checkbutton tooltip"
---	icon:	"control:checkbutton"
---	icon:	"control:checkbutton|highlightColor:(color 50 150 30)"
---(
---	print "Checkbutton #test"
---	format "EventFired = % \n" EventFired
---)
---
---
+
+
+/*------------------------------------------------------------------------------
+  CHECKBUTTON
+----------------------------------------------------------------------------*/	
+
+/*  
+*/ 
+macroscript macroFileTest_checkbutton
+	category:	"MacroFileTest"
+	buttontext:	"Checkbutton"
+	toolTip:	"Checkbutton tooltip"
+	icon:	"control:checkbutton"
+	icon:	"control:checkbutton|highlightColor:(color 50 150 30)"
+(
+	print "Checkbutton #test"
+	format "EventFired = % \n" EventFired
+)
+
+
 --
 --/*------------------------------------------------------------------------------
 --  LISTBOX
@@ -158,10 +159,10 @@
 --	print "Item doubleclicked"
 --	format "EventFired	= % \n" EventFired
 --)
---	
---/*------------------------------------------------------------------------------
---  DROPDOWN
---------------------------------------------------------------------------------*/	
+	
+/*------------------------------------------------------------------------------
+  DROPDOWN
+------------------------------------------------------------------------------*/	
 
 
 --/*  
@@ -183,20 +184,20 @@
 ----------------------------------------------------------------------------*/	
 
 
-/*  
-*/ 
-macroscript macroFileTest_bitmap
-	category:	"MacroFileTest"
-	buttontext:	"imgTag test"
-	toolTip:	"Changed event tooltip"
-	icon:	"control:imgTag|color:green|across:1|width:256|height:64"
-(
-	print "checkbox #changed"
-	format "EventFired	= % \n" EventFired
-)
-
-
-
+--/*  
+--*/ 
+--macroscript macroFileTest_bitmap
+--	category:	"MacroFileTest"
+--	buttontext:	"imgTag test"
+--	toolTip:	"Changed event tooltip"
+--	icon:	"control:imgTag|color:green|across:1|width:256|height:64"
+--(
+--	print "checkbox #changed"
+--	format "EventFired	= % \n" EventFired
+--)
+--
+--
+--
 
 
 

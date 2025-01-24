@@ -62,9 +62,9 @@ struct ScriptFile_Content_v
 
 	/** Load controls from .mcr file
 	 */
-	function loadMacroscriptFile =
+	function loadAndParseMacroscriptFile =
 	(
-		--print ("------------\nScriptFile.loadMacroscriptFile file:\n"+ (path)+"\n")
+		--print ("------------\n\nScriptFile.loadAndParseMacroscriptFile file:\n"+ (path) )
 		if ( this.isMacrosriptFile() ) then
 		(
 			filein path
@@ -78,9 +78,6 @@ struct ScriptFile_Content_v
 	function addToUi &_Rollout =
 	(
 		--print("ScriptFile_Content_v.addToUi() " +_Rollout.id)
-		
-		this.loadMacroscriptFile()
-
 		if( this.isMacrosriptFile() and MacroScripts.count > 0 ) then
 			this._createControls (_Rollout)
 
@@ -120,7 +117,7 @@ struct ScriptFile_Content_v
 	 */
 	function _createControlfromMacro Macro =
 	(
-		format "\n"; print "ScriptFile_Content_v.createControlfromMacro()"
+		--format "\n"; print "ScriptFile_Content_v.createControlfromMacro()"
 
 		_Control = _Controls.Control (Macro.getControlType()) Macro.buttontext params:(Macro.getParamsArray()) add_to_controls:false
 
@@ -133,7 +130,6 @@ struct ScriptFile_Content_v
 			/* GET PARAMETERS FROM PREVIOUS CONTROL */ 
 			this._inheritParameters (_Control)
 
-		format "_CONTROL: %\n" _Control
 		/* EVENTS */ 
 		this._setEvent (_Control) (Macro)
 
@@ -344,11 +340,13 @@ struct ScriptFile_Content_v
 
 	on create do
 	(
+		--format "\n"; print "ScriptFile_v.onCreate()"
+
 		this._setName()
 		--format "\n"
 		--print ("ScriptFile_v.onCreate " + path )
 
-		this.loadMacroscriptFile()
+		this.loadAndParseMacroscriptFile()
 	)
 )
 

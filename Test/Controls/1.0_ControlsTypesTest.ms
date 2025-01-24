@@ -86,21 +86,24 @@ _Controls   = Dialog.Controls()
 --_Controls.control #BROWSEPATH "browsePathTest"
 
 
-
-/*------ BITMAP ------*/
-_Controls.Control #BITMAP "Bitmap as value" value: (bitmap 256 32 color:green ) across:1 -- SIZE OF BITMAP IS SIZE OF CONTROL
-
-_Controls.Control #BITMAP "Bitmap ascolor" color:blue width:256 height:32 across:1
-
-
---_Controls.Control #BITMAP "_bitmap_test B" params:#(#bitmap, (bitmap 128 16 color:blue) ) across:1 offset:[ 0, -40 ]
-
-
 /*------ COLORPICKER ------*/
 --_Controls.control #COLORPICKER "ColorPicker A" value:( color 255 0 0 )       	across:1
 --_Controls.control #COLORPICKER "ColorPicker B"  params:#(#color, green)     	across:1
 --_Controls.control #COLORPICKER "ColorPicker C"  params:#(#color, [0,0,128 ] )	across:1
 
+--
+--/*------ BITMAP ------*/
+--_Controls.Control #BITMAP "Bitmap as value" value: (bitmap 256 32 color:green ) across:1 -- SIZE OF BITMAP IS SIZE OF CONTROL
+--
+--_Controls.Control #BITMAP "Bitmap ascolor" color:blue width:256 height:32 across:1
+--
+
+/*------ IMGTAG ------*/
+_Controls.Control #IMGTAG "imgTag Bitmap"   bitmap:(bitmap 256 32 color:green ) width:64 height:64 --across:1  align:#center -- SIZE OF IMGTAG IS SIZE OF CONTROL
+_Controls.Control #IMGTAG "Bitmap as value" value: (bitmap 256 32 color:yellow ) width:256 height:32 across:1
+
+_Controls.Control #IMGTAG "Bitmap as color" color:blue   width:256 height:32 across:1
+_Controls.Control #IMGTAG "color as value"  value:orange width:256 height:32 across:1
 
 
 
