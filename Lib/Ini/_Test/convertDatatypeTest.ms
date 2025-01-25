@@ -1,4 +1,4 @@
-clearListener()
+clearListener(); print("Cleared in:\n"+getSourceFileName())
 
 /*------------------------------------------------------------------------------
 	
@@ -114,14 +114,37 @@ function joinToStringArray strings =
 function convertStringToDatatype _string =
 (
 	format "\n"; print "convertStringToDatatype()"
-	
-	rx	= dotNetClass "System.Text.RegularExpressions.RegEx"
-	rx_options	= dotNetClass "System.Text.RegularExpressions.RegexOptions"
-	
-	--is_variable = (rx.match _string "^\s*(\d+|true|false|undefined|unsupplied|\(\s*color\s+\d+\s+\d+\s+\d+\s*\))\s*$" rx_options.IgnoreCase ).success
-	is_variable = (rx.match _string "^\s*(\d+|true|false|undefined|unsupplied|\(*\s*color\s+\d+\s+\d+\s+\d+\s*\)*|\(*\s*bitmap\s+\d+\s+\d+)\s*$" rx_options.IgnoreCase ).success
+	/** Join array
+	 */
+	function joinPatterns params_input =
+	(
+		--format "\n"; print ".joinArray()"
+		params_string = ""
 
-	if is_variable and (is_string = ( rx.match _string "(^'*[A-Za-z0-1_\s]+'*$)" rx_options.IgnoreCase ).success ) then
+		for param in params_input do params_string += param + "|"
+
+		trimRight params_string "|"
+	)
+	
+	patterns = #(
+		"-*\d+.*\d*",	-- integer or float
+		"true|false",
+		"undefined|unsupplied",
+		"red|green|blue|white|black|orange|yellow|brown|gray",
+		"\[.*\]",	-- point2, point3
+		"\(*color\s+\d+\s+\d+\s+\d+\s*\)*",	-- color E.G.: "color 128 128 128" or "(color 128 128 128)"
+		"#[^\s\(]+",	-- #name but not array
+		"#\(.*\)",	--array
+		""
+	)
+
+	RegEx	= dotNetClass "System.Text.RegularExpressions.RegEx"
+	RegEx_options	= dotNetClass "System.Text.RegularExpressions.RegexOptions"
+	
+	is_variable = (RegEx.match _string ("^("+joinPatterns(patterns)+")$") RegEx_options.IgnoreCase ).success
+
+	--if is_variable and not (is_string = ( RegEx.match _string "(^'*[A-Za-z0-1_\s]+'*$)" RegEx_options.IgnoreCase ).success ) then
+	if is_variable then
 	(
 		try((execute(_string)))catch(_string) -- IS VARIABLE
 	)

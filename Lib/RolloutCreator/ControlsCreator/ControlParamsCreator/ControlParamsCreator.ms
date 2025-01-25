@@ -124,6 +124,6 @@ struct ControlParamsCreator_v
 	on create do
 	(
 		--print "ControlParamsCreator_v.onCreate()"
-		CONTROL_BITMAPS_STORE = #() -- reset buffer array
+		--CONTROL_BITMAPS_STORE = #() -- reset buffer array
 	)
 )

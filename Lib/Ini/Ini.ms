@@ -52,7 +52,7 @@ struct Ini_v
 		--format "classOf default	= % \n" (classOf default)
 		val_from_ini = getINISetting _path ( _section	as string ) ( _key as string ) -- return
 		--format "\nval_from_ini = % \n" val_from_ini
-		if( val_from_ini == "" or val_from_ini == undefined ) then val else this._convertDatatype(val_from_ini) --return
+		if( val_from_ini == "" or val_from_ini == undefined ) then val else this.convertDatatype(val_from_ini) --return
 	),
 
 	/** Get keys of section
@@ -128,6 +128,50 @@ struct Ini_v
 		this.isDefined() and load_values_on_init
 	),
 
+	/** Format string value to valid datatype
+	 */
+	function convertDatatype _string =
+	(
+		--_string = substituteString _string "\\" "\\\\"
+		/** Join array
+		 */
+		function joinPatterns params_input =
+		(
+			--format "\n"; print ".joinArray()"
+			params_string = ""
+	
+			for param in params_input do params_string += param + "|"
+	
+			trimRight params_string "|"
+		)
+		
+		patterns = #(
+			"-*\d+.*\d*",	-- integer or float
+			"true|false",
+			"undefined|unsupplied",
+			"red|green|blue|white|black|orange|yellow|brown|gray",
+			"\[.*\]",	-- point2, point3
+			"\(*color\s+\d+\s+\d+\s+\d+\s*\)*",	-- color E.G.: "color 128 128 128" or "(color 128 128 128)"
+			"#[^\s\(]+",	-- #name but not array
+			"#\(.*\)",	--array
+			""
+		)
+		
+		RegEx	= dotNetClass "System.Text.RegularExpressions.RegEx"
+		RegEx_options	= dotNetClass "System.Text.RegularExpressions.RegexOptions"
+		
+		is_variable = (RegEx.match _string ("^("+joinPatterns(patterns)+")$") RegEx_options.IgnoreCase ).success
+	
+		--if is_variable and not (is_string = ( RegEx.match _string "(^'*[A-Za-z0-1_\s]+'*$)" RegEx_options.IgnoreCase ).success ) then
+		if is_variable then
+		(
+			try((execute(_string)))catch(_string) -- IS VARIABLE
+		)
+		else
+		(
+			@"" + _string -- IS STRING
+		)
+	),
 
 	private
 
@@ -175,26 +219,6 @@ struct Ini_v
 			getProperty this ( key as string ) --return
 	),
 
-	/** Format string value to valid datatype
-	 */
-	function _convertDatatype _string =
-	(
-		--_string = substituteString _string "\\" "\\\\"
-
-		rx	= dotNetClass "System.Text.RegularExpressions.RegEx"
-		rx_options	= dotNetClass "System.Text.RegularExpressions.RegexOptions"
-
-		is_variable = (rx.match _string "^\s*(\d+|true|false|undefined|unsupplied|\(\s*color\s+\d+\s+\d+\s+\d+\s*\))\s*$" rx_options.IgnoreCase ).success
-
-		if not is_variable and (is_string = ( rx.match _string "(^'*[A-Za-z0-1_\s]+'*$)" rx_options.IgnoreCase ).success ) then
-		(
-			@"" + _string -- IS STRING
-		)
-		else
-		(
-			try((execute(_string)))catch(_string) -- IS VARIABLE
-		)
-	),
 
 	/** Escape path
 	 */

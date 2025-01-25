@@ -43,6 +43,7 @@ struct ControlCreator_v
 		
 		/* SET CONTROLS TO PROPERTY */ 
 		this.Controls = _Controls
+		
 
 		/* ADD CONTROL TO GROUPBOX */ 
 		if not this.isGroupboxControls() then

@@ -36,7 +36,6 @@ struct ControlValue_v
 		--format "_Control.type: %\n" _Control.type
 		--format "ini_value: %\n" ini_value
 		
-		
 		this._Control = _Control
 
 		/* EXIT IF CONTROL HAS NOT VALUE E.G.: #label or #groupbox HAS NOT VALUE */
@@ -57,12 +56,12 @@ struct ControlValue_v
 		else /* GET DEFINED VALUE */ 
 		   this._getValueParameter (value_param_name)
 		   
-		
-		
+		--format "VALUE_PARAM_NAME: %\n" value_param_name
+		--format "val: %\n" val
 		if val != undefined then 
 			this._setValue(value_param_name)(val)
 		
-		this._removeReduntantParams()
+		--this._removeReduntantParams()
 	),
 	
 	/** Set common control
@@ -171,35 +170,30 @@ struct ControlValue_v
 	function _getBitmapValue =
 	(
 		--format "\n"; print "ControlValue_v._getBitmapValue()"
+		local _bitmap
 		
 		alias_params = #( #COLOR, #VALUE )
 		
-		for param in alias_params do
-		(
-			val = _Control.Params.getVal (#COLOR)
-			--format "VAL: % %\n" val (classOf val)
-		)
-		
-		--_bitmap = case of
-		--(
-		--	(( color_param  = _Control.Params.getVal (#COLOR) ) != undefined): (bitmap 256 32 color:(color_param as color ) )
-		--	(( value_param  = _Control.Params.getVal (#VALUE) ) != undefined): if classOf value_param == bitmap then value_param else if classOf value_param == color then (bitmap 256 32 color:value_param )
-		--)
-		--
-		--if _bitmap != undefined then 
-		--	this._setValue(#BITMAP)( _bitmap )
-			
-		bitmap 256 32 color:orange
+		for param in alias_params while _bitmap == undefined do
+			if ( value_param = _Control.Params.getVal(param) ) != undefined then 
+				_bitmap = case classOf value_param of
+				(
+					color: bitmap 256 256 color:value_param
+					bitmap: value_param
+				)
+
+		_bitmap --return
 	),
 
-	/** Remove reduntant params
-	 */
-	function _removeReduntantParams  =
-	(
-		--format "\n"; print "ControlValue_v.removeReduntantParams()"
-		for key in #( #VALUE, #INI, #VALUE, #COLOR ) do 
-			_Control.Params.delete (key)
-	),
+	--/** Remove reduntant params
+	-- */
+	--function _removeReduntantParams  =
+	--(
+	--	--format "\n"; print "ControlValue_v.removeReduntantParams()"
+	--	--for key in #( #VALUE, #INI, #VALUE, #COLOR ) do
+	--	for key in #( #VALUE, #INI, #VALUE, #COLOR ) do
+	--		_Control.Params.delete (key)
+	--),
 
 	/**
 	 */

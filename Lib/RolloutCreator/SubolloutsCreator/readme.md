@@ -5,4 +5,4 @@
 
 WIDTHS OF SUBROLLOUTS AND SLOTS ARE MAXIMIZED AS IS POSSIBLE 
 
-[include:\_readme\maximized_rollout_width.jpg]
+![maximized_rollout_width](_readme/maximized_rollout_width.jpg)

@@ -30,7 +30,6 @@ struct RolloutCreator_v
 	DEBUG = true,
 
 	/* properties */
-	closed_rollout_bar_height = 24,
 
 	/* dependency */
 	RolloutEventBinder = RolloutEventBinder_v ini_path:(Ini.getPath()), -- "./RolloutEventBinder/RolloutEventBinder.ms"
@@ -41,6 +40,8 @@ struct RolloutCreator_v
 	/* store */
 	subrollouts_heights	= Dictionary(),
 
+	/* private properties */
+	_closed_rollout_bar_height = 24, -- height of closed rollout
 
 	/** Create dialog
 	  *
@@ -218,7 +219,7 @@ struct RolloutCreator_v
 		--format "Subrollouts.height: %\n" Subrollouts.height
 		
 		if Subrollouts.height == unsupplied then
-			Subrollouts.height = subrollouts_heights[  Subrollouts.slot ] + (  Subrollouts.Rollouts.count  * this.closed_rollout_bar_height ) -- Slot height = Biggest subrollout OPEN and other subrollouts CLOSED
+			Subrollouts.height = subrollouts_heights[  Subrollouts.slot ] + (  Subrollouts.Rollouts.count  * this._closed_rollout_bar_height ) -- Slot height = Biggest subrollout OPEN and other subrollouts CLOSED
 		--format "Subrollouts.height: %\n" Subrollouts.height
 	),
 
