@@ -1,20 +1,24 @@
-/** Subollouts creator
+/** Create slots and add subrollouts 
+  *
+  *	IMPORRTANT:
+  *		WIDTHS OF SUBROLLOUTS AND SLOTS ARE MAXIMIZED AS IS POSSIBLE:  "./_readme/maximized_rollout_width.jpg"
+
+  * @method addSubrolloutSlot	Create subollouts slot
+  * @method addSubRollouts	Create subollouts slot
+  *
  */
 struct SubolloutsCreator_v
 (
 	--__construct = #( #property_name ),
 	/* construct */
 	/* properties */
-
 	ini_path,
 
 	padding_bottom = 8, -- slot is slightly shorter without this compesation
-	--padding_bottom = 0, -- slot is slightly shorter without this compesation
 
-	slot_width_fix = 2, -- make slot wide as possible, remove this value from width of parent rollout
-	--slot_width_fix = 0, -- make slot wide as possible, remove this value from width of parent rollout
+	slot_width_decrement = 14, -- amount of pixel removed from with of parent rollout
 
-	slot_offset_x = -12,
+	slot_offset_x = -12, -- move slot ( rollouts indeed ) to left side as possible
 
 	DEBUG = false,
 
@@ -28,7 +32,7 @@ struct SubolloutsCreator_v
 	 (
 		if DEBUG then format "\n\n===================================== SubolloutsCreator_v.addSubrolloutSlot() %.% =====================================\n\n" ( _Rollout.id as string ) ( Subrollouts.slot as string );
 		--format "\n\n===================================== SubolloutsCreator_v.addSubrolloutSlot() %.% =====================================\n\n" ( _Rollout.id as string ) ( Subrollouts.slot as string );
-
+		--format "_Rollout.nested_level: %\n" _Rollout.nested_level
 
 		slot_height = (Subrollouts.height + this.padding_bottom ) as string
 		--slot_height = 512 as string
@@ -37,9 +41,12 @@ struct SubolloutsCreator_v
 		slot_id = Subrollouts.slot as string
 		--format "SLOT: %\nHEIGHT: %\n" slot_id SLOT_HEIGHT
 
+		slot_offset = [slot_offset_x, 0]
+		
+		slot_width  = Subrollouts.width - (  _Rollout.nested_level * slot_width_decrement ) - 2
+		
 		--_Rollout.RCI.addText ("subRollout "+slot_id +" \""+slot_id+"\"  )
-		_Rollout.RCI.addText ("subRollout "+slot_id +" \""+(this._getSlotData(Subrollouts))+"\" height:"+ slot_height + " width:" + (Subrollouts.width - slot_width_fix) as string + " offset:["+slot_offset_x as string +", 0]" )
-
+		_Rollout.RCI.addText ("subRollout "+slot_id +" \""+(this._getSlotData(Subrollouts))+"\" height:"+ slot_height + " offset:" + slot_offset as string + " width:" + slot_width as string )
 	 ),
 
 	/** ADD SUBROLLOUTS TO ROLLOUT
@@ -90,9 +97,9 @@ struct SubolloutsCreator_v
 		
 				try(destroyDialog _Subrollout.RCI.def )catch() -- destroy dialog of subrollout created for find of height
 		
-		--		/*  DEBUG:
-		--				FOR FLOATEBLE SUBROLLOUTS disable AddSubRollout
-		--		*/
+				/*  DEBUG:
+						FOR FLOATEBLE SUBROLLOUTS disable AddSubRollout
+				*/
 				AddSubRollout SubrolloutsSlot	_Subrollout.RCI.def rolledUp:(this._getRolledUpState(_Subrollout)(subrollout_id))
 		
 				this.addSubRollouts (_Subrollout)
@@ -120,10 +127,6 @@ struct SubolloutsCreator_v
 		)
 		else
 			Subrollouts.slot as string --return
-		
-		
-		
-
 	),
 
 	/** Get rolled state from ini
