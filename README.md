@@ -26,6 +26,12 @@
             macroscript → CONTROL
 
 
+## Widths of rollouts are maiximized
+[SubolloutsCreator](Lib/RolloutCreator/SubolloutsCreator)
+
+![maximized_rollout_width](Lib/RolloutCreator/SubolloutsCreator/_readme/maximized_rollout_width.jpg)
+
+
 
 
 KNOWING ISSUES:
