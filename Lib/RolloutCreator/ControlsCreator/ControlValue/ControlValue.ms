@@ -64,14 +64,6 @@ struct ControlValue_v
 		--this._removeReduntantParams()
 	),
 	
-	/** Set common control
-	 */
-	function setCommonControl =
-	(
-		--format "\n"; print "ControlValue_v.setCommonControl()"
-	),
-
-
 	/** Each control type has different name of parameter for default value
 	  *
 	  * E.G.:
@@ -117,7 +109,7 @@ struct ControlValue_v
 
 	/** Set value correct to datatype
 	  *
-	  * Cover special cases as Range datatype, or number in text field, which is treaded as number, but IT MSUT be string for edit text for example
+	  * Cover special cases as Range datatype, or number in text field, which is treaded as number, but IT MUST be string for edit text control
 	  *
 	  * Ini_v is converting string to datatype, but in some caseses error can occured, E.G.: 0 >>> "0"
 	  *
@@ -128,7 +120,7 @@ struct ControlValue_v
 		--format "value_param_name: %\n" value_param_name
 		--format "val: %\n" val
 		
-		/** Format string value to valid datatype
+		/** Set value into range
 		  *
 		  * @return	point3
 		 */
@@ -139,9 +131,9 @@ struct ControlValue_v
 			if classOf val != point3  then
 			(
 				_range = _Control.Params.getval #range
-
+		
 				_range.z = val
-
+		
 				_range --return
 			)
 			else

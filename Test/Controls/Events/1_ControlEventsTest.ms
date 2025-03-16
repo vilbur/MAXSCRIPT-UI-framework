@@ -1,3 +1,12 @@
+/*
+
+	EVENT TYPES ARE MANAGED HERE:
+	
+		"./../../../Lib/RolloutCreator/ControlsCreator/EventTypes/EventTypes.ms"
+
+*/ 
+
+
 clearListener()
 
 filein( getFilenamePath(getSourceFileName()) + "/../../../Lib/Dialog/Dialog.ms" ) -- "./../../../Lib/Dialog/Dialog.ms"
@@ -117,7 +126,7 @@ function CallbackParams3 arg_1 arg_2 arg_3 = (
 
 
 /*------ CHECKBUTTON ------*/
-CheckButton = _Controls.control #CHECKBUTTON "CheckButton"
+--CheckButton = _Controls.control #CHECKBUTTON "CheckButton"
 
 /* DIFFERNET WAYS HOW TO PASS ARGUMENTS TO CALLBACK */
 --CheckButton.Event #CHANGED "CallbackNoParam()"	-- NO ARGUMENT
@@ -127,7 +136,7 @@ CheckButton = _Controls.control #CHECKBUTTON "CheckButton"
 
 --CheckButton.Event #CHANGED "CallbackParam2" params:#MY_CUSTOM_ARGUMENT	-- DEFAULT AND CUSTOM:	CallbackParam1 val custom_val
 --CheckButton.Event #CHANGED "CallbackParam2 val #MY_CUSTOM_ARGUMENT"	-- same as above
-CheckButton.Event #CHANGED "CallbackParams3" params:#("Value A", "Value B")
+--CheckButton.Event #CHANGED "CallbackParams3" params:#("Value A", "Value B")
 
 
 
@@ -182,7 +191,16 @@ CheckButton.Event #CHANGED "CallbackParams3" params:#("Value A", "Value B")
 --_multilistbox.Event #RIGHTCLICK  	("CallbackNoParam()")
 --_multilistbox.Event #DOUBLECLICKED  	("CallbackParam1")
 
+/*------ IMGTAG ------
 
+ALL EVENTS OF IMGTAG: https://help.autodesk.com/view/3DSMAX/2017/ENU/?guid=__files_GUID_0A492074_4A5B_4D18_B65A_E859FC8E2454_htm
+
+*/
+img_tag = _Controls.Control #IMGTAG "Bitmap as color" color:blue   width:256 height:32 across:1
+
+img_tag.Event #CLICK  "print \"CLICK\""
+img_tag.Event #RIGHTCLICK  "print \"RIGHTCLICK\""
+img_tag.Event #DBLCLICK   "print \"DBLCLICK \""
 
 
 

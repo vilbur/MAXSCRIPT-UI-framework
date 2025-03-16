@@ -51,13 +51,14 @@ struct Controls_v
 		checked:		\ -- checkbox, checkbutton
 		border:		\
 		bitmap:		\ -- bitmap, imgTag
+		groupbox:		\ -- add control to groupbox 
 		visible:		=
 	(
 		--format "\n"; print "Controls_v.Control()"
 
 		/* PROCESS FUNCTION PARAMETERS */ 	
-		_param_names  = #( #pos, #checked, #width, #height, #offset, #align, #items, #range, #type, #ticks, #orient, #scale, #controller, #default, #unselect, #value, #color, #bitmap, #ini, #tooltip, #across, #columns,	#visible, #border)
-		_param_values = #(  pos,  checked,  width,  height,  offset,  align,  items,  range,  type,  ticks,  orient,  scale,  controller,  default,  unselect,  value,  color,  bitmap,  ini,  tooltip,  across,  columns,  visible,  border)
+		_param_names  = #( #pos, #checked, #width, #height, #offset, #align, #items, #range, #type, #ticks, #orient, #scale, #controller, #default, #unselect, #value, #color, #bitmap, #ini, #tooltip, #across, #columns,	#visible, #border, #groupbox)
+		_param_values = #(  pos,  checked,  width,  height,  offset,  align,  items,  range,  type,  ticks,  orient,  scale,  controller,  default,  unselect,  value,  color,  bitmap,  ini,   tooltip,  across,  columns,  visible,   border,  groupbox)
 
 
 		/* SET CONTROL ID BY VALUE IN PARAMS */ 

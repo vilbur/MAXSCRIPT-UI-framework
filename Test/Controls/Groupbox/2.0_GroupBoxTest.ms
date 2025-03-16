@@ -19,7 +19,8 @@ filein( getFilenamePath(getSourceFileName()) + "/../../../Lib/RolloutCreator/_Te
 function createControls control_type:#button groupbox_name:"" count:1 =
 (
 	for i = 1 to count do
-		_Controls.control control_type ( groupbox_name + " "+i as string ) params:#(#groupbox, groupbox_name, #across, 2)
+		--_Controls.control control_type ( groupbox_name + " "+i as string ) params:#(#groupbox, groupbox_name, #across, 2)
+		_Controls.control control_type ( groupbox_name + " "+i as string ) groupbox:groupbox_name across:2
 )
 
 /** Create groupbox with default params

@@ -7,7 +7,7 @@ struct GroupBoxControlsSorter_v
 	padding	= [32, 8],
 	margin	= 8,
 	_first_control_offset_y	= 16,
-	--_control_default_height	= 24,
+	_control_default_height	= 24,
 
 	/* construct */
 	/* dependency */
@@ -56,6 +56,7 @@ struct GroupBoxControlsSorter_v
 		_control.pos = next_control_position = control_position
 
 		next_control_position.y +=  try( _control.height ) catch(_control_default_height)
+		--next_control_position.y +=  _control_default_height
 		next_control_position.y +=  margin
 		--
 		next_control_position --return
