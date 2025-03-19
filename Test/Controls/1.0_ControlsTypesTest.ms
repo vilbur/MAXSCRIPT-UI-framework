@@ -49,7 +49,7 @@ _Controls   = Dialog.Controls()
 --
 --
 --/*------ CECKBUTTON ------*/
---_Controls.control #CHECKBUTTON "checkbutton"
+--_Controls.control #CHECKBUTTON "checkbutton" highlightColor:red
 --
 --
 --/*------ CHECKBOX ------*/
@@ -95,15 +95,15 @@ _Controls   = Dialog.Controls()
 --/*------ BITMAP ------*/
 --_Controls.Control #BITMAP "Bitmap as value" value: (bitmap 256 32 color:green ) across:1 -- SIZE OF BITMAP IS SIZE OF CONTROL
 --
---_Controls.Control #BITMAP "Bitmap ascolor" color:blue width:256 height:32 across:1
+_Controls.Control #BITMAP "Bitmap ascolor" color:blue width:256 height:32 across:1
 --
 
 /*------ IMGTAG ------*/
-_Controls.Control #IMGTAG "imgTag Bitmap"   bitmap:(bitmap 256 32 color:green ) width:64 height:64 --across:1  align:#center -- SIZE OF IMGTAG IS SIZE OF CONTROL
-_Controls.Control #IMGTAG "Bitmap as value" value: (bitmap 256 32 color:yellow ) width:256 height:32 across:1
-
-_Controls.Control #IMGTAG "Bitmap as color" color:blue   width:256 height:32 across:1
-_Controls.Control #IMGTAG "color as value"  value:orange width:256 height:32 across:1
+--_Controls.Control #IMGTAG "imgTag Bitmap"   bitmap:(bitmap 256 32 color:green ) width:64 height:64 --across:1  align:#center -- SIZE OF IMGTAG IS SIZE OF CONTROL
+--_Controls.Control #IMGTAG "Bitmap as value" value: (bitmap 256 32 color:yellow ) width:256 height:32 across:1
+--
+--_Controls.Control #IMGTAG "Bitmap as color" color:blue   width:256 height:32 across:1
+--_Controls.Control #IMGTAG "color as value"  value:orange width:256 height:32 across:1
 
 
 

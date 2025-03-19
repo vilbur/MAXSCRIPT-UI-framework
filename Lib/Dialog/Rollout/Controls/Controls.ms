@@ -49,6 +49,7 @@ struct Controls_v
 		value:		\ -- current value of nost of all
 		color:		\ -- colorpicker, bitmap -- alias for "value" E.G.: color:green >>> value:(bitmap 256 32 color:green)
 		checked:		\ -- checkbox, checkbutton
+		highlightColor:		\ -- checkbutton
 		border:		\
 		bitmap:		\ -- bitmap, imgTag
 		groupbox:		\ -- add control to groupbox 
@@ -57,8 +58,8 @@ struct Controls_v
 		--format "\n"; print "Controls_v.Control()"
 
 		/* PROCESS FUNCTION PARAMETERS */ 	
-		_param_names  = #( #pos, #checked, #width, #height, #offset, #align, #items, #range, #type, #ticks, #orient, #scale, #controller, #default, #unselect, #value, #color, #bitmap, #ini, #tooltip, #across, #columns,	#visible, #border, #groupbox)
-		_param_values = #(  pos,  checked,  width,  height,  offset,  align,  items,  range,  type,  ticks,  orient,  scale,  controller,  default,  unselect,  value,  color,  bitmap,  ini,   tooltip,  across,  columns,  visible,   border,  groupbox)
+		_param_names  = #( #pos, #checked, #width, #height, #offset, #align, #items, #range, #type, #ticks, #orient, #scale, #controller, #default, #unselect, #value, #color, #bitmap, #ini, #tooltip, #across, #columns,	#visible, #border, #groupbox, #highlightColor)
+		_param_values = #(  pos,  checked,  width,  height,  offset,  align,  items,  range,  type,  ticks,  orient,  scale,  controller,  default,  unselect,  value,  color,  bitmap,  ini,   tooltip,  across,  columns,  visible,   border,  groupbox,  highlightColor)
 
 
 		/* SET CONTROL ID BY VALUE IN PARAMS */ 
