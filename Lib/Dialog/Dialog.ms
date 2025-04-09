@@ -108,7 +108,7 @@ struct Dialog_v
 		parent: =
 	(
 		--format "\n"; print "Dialog_v.create()"
-
+		
 		this.destroy()
 
 		_RolloutCreator = RolloutCreator_v Ini:Ini DEBUG:DEBUG
@@ -124,7 +124,7 @@ struct Dialog_v
 		this._setDialogMinimalSize()
 		this._setDialogSizeByIni()
 		this._setWithByMinimalSize()
-
+		--format "MIN_SIZE: %\n" min_size
 		height = this._getHeightOnCreate(height)
 		--format "width A: %\n" width
 		if classOf width != integer then
@@ -262,13 +262,13 @@ struct Dialog_v
 	 */
 	function register =
 	(
-		print "Dialog_v.register()"
+		--print "Dialog_v.register()"
 
 		min_size = if min_size != undefined then min_size as string else "[-1,-1]"
 		max_size = if max_size != undefined then max_size as string else "[-1,-1]"
 		--format "MIN_SIZE: %\n" min_size
 		--format "MAX_SIZE: %\n" max_size
-		format "STYLE: %\n" style_registred_dialog
+		--format "STYLE: %\n" style_registred_dialog
 
 		--execute ("cui.RegisterDialogBar "+ this.id +" minSize:"+min_size+" maxSize:"+max_size+" style:"+style_registred_dialog as string )
 		execute ("cui.RegisterDialogBar "+ this.id +" minSize:"+min_size+" style:"+style_registred_dialog as string )
@@ -379,7 +379,7 @@ struct Dialog_v
 			actionMan.executeAction 0 "50026"  -- Tools: Maximize Viewport Toggle
 
 		viewport_area_size = getViewSize()
-		--format "viewport_area_size	= % \n" viewport_area_size
+
 		if not( is_maximized ) then
 			actionMan.executeAction 0 "50026"  -- Tools: Maximize Viewport Toggle
 
@@ -402,11 +402,11 @@ struct Dialog_v
 	 */
 	function _setDialogMinimalSize =
 	(
-		--format "\n"; print "Dialog_v._setDialogMinimalSize()"
-		--format "MIN_SIZE:	% \n" min_size
+		format "\n"; print "Dialog_v._setDialogMinimalSize()"
+		format "MIN_SIZE:	% \n" min_size
 		if not this.isDefined (this.min_size) then
 		(
-			min_width	= if this.isDefined (this.width)	then this.width	 else -1
+			min_width	= if this.isDefined (this.width)	then this.width  else -1
 			min_height	= if this.isDefined (this.height)	then this.height else -1
 
 			min_size = [ min_width, min_height ]

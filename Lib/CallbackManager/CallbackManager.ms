@@ -11,10 +11,17 @@ filein( getFilenamePath(getSourceFileName()) + "/Callback/Callback.ms" )	--"./Ca
 	It can be used by mutliple scripts at once
 	
 --------------------------------------------------------------------------------*/
-if CALLBACKMANAGER == undefined then -- IMPORTANT: ENABLE THIS LINE IN PRODUCTION
-	global CALLBACKMANAGER
 
 /*
+
+	/* callback function and type are get from path:  "DIR_IS_TYPE/FILENAME_IS_CALLBACK.ms" 
+	CALLBACKMANAGER.import( getFilenamePath(getSourceFileName()) + "/Callbacks" ) --"./CallBacks/"	
+
+  
+	CALLBACKMANAGER.start(  "callBackFn"|#callback_type|#callback_id )
+	CALLBACKMANAGER.kill(  "callBackFn"|#callback_type|#callback_id )
+	
+  
   	[callback types]https://help.autodesk.com/view/3DSMAX/2015/ENU/?guid=__files_GUID_C1F6495F_5831_4FC8_A00C_667C5F2EAE36_htm
  */
 struct CallbackManager_v
@@ -26,13 +33,49 @@ struct CallbackManager_v
 
 	
 	special_events = #(
-					  #postNodesClonedEnd,
-					  #onSelectionChangedModPanelReady
-					  ),
+		#postNodesClonedEnd,
+		#onSelectionChangedModPanelReady
+	),
 	
 	/* dependency */
 	/* reference */
 	/* inhered */
+	/** Start
+	 */
+	function start callback_type_id =
+	(
+		--format "\n"; print "CallbackManager_v.start()"
+		--format "callback_type_id: %\n" callback_type_id
+		
+		for Callback in (this.getCallbacks (callback_type_id)) do 
+			this.startCallback (Callback)
+	),
+	
+	/** Kill
+	 */
+	function kill callback_type_id =
+	(
+		--format "\n"; print "CallbackManager_v.start()"
+		for Callback in (this.getCallbacks (callback_type_id)) do 
+			this.killCallback (Callback)
+	),	
+	/** Exe
+	 */
+	function exe callback_type_id =
+	(
+		format "\n"; print "CallbackManager_v.exe()"
+		--format "callback_type_id: %\n" callback_type_id
+		
+		for Callback in this.getCallbacks (callback_type_id) do
+		(
+			format "execute: %\n" Callback.callback
+			
+			try(
+					execute Callback.callback
+				
+			)catch()
+		)
+	),
 
 	/** Import callback files from directories
 	  *
@@ -41,34 +84,38 @@ struct CallbackManager_v
 	 */
 	function import dir =
 	(
-		--format "\n"; print "Callback_v.import()"
+		--format "\n"; print "CallbackManager_v.import()"
 		
 		for callback_subdir in  getDirectories (dir + "/*") recurse:true do
+		(
+			--format "\n-------------------------------\n"
+			--format "TYPE: %\n\n" (getFilenameFile( trimRight callback_subdir "\\" ) )
+
 			for callback_file in getFiles (callback_subdir + "/*.ms") do
 			(
 				--format "callback_subdir: %\n" callback_subdir
 				type = getFilenameFile( trimRight callback_subdir "\\" ) as name
-				--format "type: %\n" type
-				callback = getFilenameFile( callback_file )
-				--format "callback: %\n" callback
+
+				callbackFn = getFilenameFile( callback_file )
+				--format "callbackFn: %\n" callbackFn
 				--format "callback_file: %\n" callback_file
 				
 				filein callback_file
 				
-				--format "classOf callback: %\n" (classOf (execute callback))
+				--format "classOf callbackFn: %\n" (classOf (execute callbackFn))
 				
 				/* IF FILE CONTAINS FUNCTION WITH SAME NAME AS FILE */ 
-				if classOf (execute callback) != MAXScriptFunction then
+				if classOf (execute callbackFn) != MAXScriptFunction then
 				(
 					print ("------------------- CallbackManager_v.import() -------------------")
 					format "CALLBACK FUNCTION MISSING IN FILE: %\n" (callback_file)
-					format "MAKE SURE THAT FILE %.ms CONTAINS FUNCTION: %()\n" callback callback
+					format "MAKE SURE THAT FILE %.ms CONTAINS FUNCTION: %()\n" callbackFn callbackFn
 				)
 				else
-					this.add callback type
-				
+					this.add callbackFn type
 				
 			)
+		)
 	),
 	
 	/** Add Callback
@@ -77,15 +124,11 @@ struct CallbackManager_v
 	function add callback_fn type id: =
 	(
 		--format "\n"; print "CallbackManager_v.add()"
-		--format "callback_fn:	% \n" callback_fn
-		--format "type:	% \n" type
-
 		callback_key = if id == unsupplied then this._getCallbackKey (callback_fn)(type) else id
 		--format "callback_key: %\n" callback_key
 		this.List[callback_key] = Callback_v callback:(this._getCallbackFn callback_fn type) type:type id:callback_key
-		--format "list:	% \n" list
-
-		--this.startCallback (this.List[callback_key])
+		
+		----this.startCallback (this.List[callback_key])
 	),
 
 	/** Add Callback
@@ -108,67 +151,41 @@ struct CallbackManager_v
 	),
 
 	/** Get callbacks
-	 *
+	 * 
+	 * @param string|name "callBackFn"|#callback_type|#callback_id
+	 * 
 	 * @return #(Callback_v)
 	 */
 	function getCallbacks param =
 	(
-		--format "\n"; print "Callback_v.getCallbacks()"
-		--format "param: %\n" param
-		--format "list: %\n" list
 		--format "\n\n------------------------------------\n\n"
+		--format "\n"; print "CallbackManager_v.getCallbacks()"
 
 		/** Get callback by type
 		 */
 		function getCallbackByProperty key val option_key:undefined option_val:undefined =
 		(
-			--format "\n"; print "Callback_v.getCallbackByProperty()"
-			--format "key: %\n" key
-			--format "val: %\n" val
-
+			--format "\n"; print "CallbackManager_v.getCallbackByProperty()"
 			_callbacks = #()
 			
 			for dataPair in this.List do
 			(
 				prop_val = getProperty dataPair.value key
-				--format "\n"
-				--format "prop_val: %\n" prop_val
-				--format "MATCH: %\n" (matchPattern prop_val pattern:( val as string +"*" ))
+
 				if (key == #CALLBACK and matchPattern prop_val pattern:( val+"*")) or prop_val == val then
-				--if (key == #CALLBACK and matchPattern prop_val pattern:( val )) or prop_val == val then
-				--if prop_val == val then
 					append _callbacks dataPair.value
 			)
-			
-			--_callbacks = for dataPair in this.List
-			--	where getProperty dataPair.value key == val and ( if option_val != undefined then getProperty dataPair.value option_key == option_val else true )
-			--			collect dataPair.value
-			--format "_callbacks: %\n" _callbacks
+
 			_callbacks --return
 		)
-		
-		--/** Is id
-		-- */
-		--function isId val = classOf val == name and this.list[val] != undefined
-		--
 		
 		callback	= if classOf param == string then param
 		type	= if classOf param == name and this.list[param] == undefined then param
 		id	= if classOf param == name and this.list[param] != undefined then param
-		
-		--format "callback: %\n" callback
-		--format "type: %\n" type
-		--format "id: %\n" id
 
 		callback_exist	= callback	!= undefined
 		type_exist	= type	!= undefined
 		id_exist	= id	!= undefined
-
-		--format "callback_exist: %\n" callback_exist
-		--format "type_exist: %\n" type_exist
-		--format "id_exist: %\n" id_exist
-		
-		--callback = this._getCallbackFn callback type
 
 		_callbacks = if not ( callback_exist and type_exist and id_exist ) then
 			case of
@@ -194,52 +211,11 @@ struct CallbackManager_v
 		_callbacks --return
 	),
 	
-	/** Exe
-	 */
-	function exe callback_type_id =
-	(
-		format "\n"; print "CallbackManager_v.exe()"
-		--format "callback_type_id: %\n" callback_type_id
-		--format "list: %\n" list
-		--format "callbacks: %\n" (this.getCallbacks (callback_type_id))
-		
-		
-		for Callback in this.getCallbacks (callback_type_id) do
-		(
-			format "execute: %\n" Callback.callback
-			
-			try(
-					execute Callback.callback
-				
-				)catch()
-		)
-	),
-	
-	/** Start
-	 */
-	function start callback_type_id =
-	(
-		--format "\n"; print "Callback_v.start()"
-		--format "callback_type_id: %\n" callback_type_id
-		
-		for Callback in (this.getCallbacks (callback_type_id)) do 
-			this.startCallback (Callback)
-	),
-	
-	/** Kill
-	 */
-	function kill callback_type_id =
-	(
-		--format "\n"; print "Callback_v.start()"
-		for Callback in (this.getCallbacks (callback_type_id)) do 
-			this.killCallback (Callback)
-	),
-	
 	/** Start
 	 */
 	function startCallback Callback =
 	(
-		format "\n"; print "Callback_v.startCallback()"
+		format "\n"; print "CallbackManager_v.startCallback()"
 		Callback = this._mutateCallback Callback
 		format "Callback: %\n" Callback
 		
@@ -252,7 +228,7 @@ struct CallbackManager_v
 	function killCallback Callback =
 	(
 		--format "\n"; print ("CallbackManager_v.killCallback( "+Callback.callback+" )")
-		format "\n"; print "Callback_v.killCallback()"
+		format "\n"; print "CallbackManager_v.killCallback()"
 		Callback = this._mutateCallback Callback
 		format "Callback: %\n" Callback
 		
@@ -378,5 +354,6 @@ struct CallbackManager_v
 	
 --------------------------------------------------------------------------------*/
 
-if CALLBACKMANAGER == undefined then -- IMPORTANT: ENABLE THIS LINE IN PRODUCTION
-	CALLBACKMANAGER = CallbackManager_v()
+
+--if CALLBACKMANAGER == undefined then -- IMPORTANT: DISABLE for develop | ENABLE for production
+	global CALLBACKMANAGER = CallbackManager_v()

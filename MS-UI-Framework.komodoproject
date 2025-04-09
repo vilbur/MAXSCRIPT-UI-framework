@@ -9,6 +9,8 @@
 </livefolder>
 <livefolder id="61b546ad-abd8-4c7d-9d16-100d46a077e7" idref="0a2534c0-4e33-4331-9037-9f7d46588d24" name="ContentLoader" url="Lib/ContentLoader/">
 </livefolder>
+<file id="6514193b-9e2b-4a2b-bee8-e1177ae8ad3d" idref="0a2534c0-4e33-4331-9037-9f7d46588d24" name="test.ms" url="file:///C:/Users/vilbur/AppData/Local/Autodesk/3dsMax/2023%20-%2064bit/ENU/scripts/MAXSCRIPT-viltools3/test.ms">
+</file>
 <livefolder id="b955f8ca-751f-4829-be7d-0d0d34c8d5bb" idref="0a2534c0-4e33-4331-9037-9f7d46588d24" name="Dialog" url="Lib/Dialog/">
 </livefolder>
 <livefolder id="c5a1b039-1eeb-4e5a-852e-635484d5a834" idref="0a2534c0-4e33-4331-9037-9f7d46588d24" name="Menus" url="Lib/Menus/">

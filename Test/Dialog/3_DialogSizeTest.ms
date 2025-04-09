@@ -136,7 +136,7 @@ function createTestDialog slots:0 nested:0 rollouts:0 controls:0 controls_dialog
 
 
 /* WIDTH CONSTRUCT & MIN SIZE */
---createTestDialog  controls_dialog:5	construct_width:256	min_size:[128,128]
+createTestDialog  controls_dialog:5	construct_width:256	min_size:[128,128]
 
 
 /* ONLY CONTROLS */
@@ -181,7 +181,7 @@ function createTestDialog slots:0 nested:0 rollouts:0 controls:0 controls_dialog
 
 --------------------------------------------------------------------------------*/
 
-createTestDialog controls_dialog:5 width:512
+--createTestDialog controls_dialog:5 width:512
 
 
 

@@ -233,6 +233,7 @@
 	(
 		--format "\n"; format "RolloutBody.setRCI() % " this.id
 		this.RCI	= RolloutCreator (this.id) ( this._getTitleString() )
+		
 	),
 	
 
