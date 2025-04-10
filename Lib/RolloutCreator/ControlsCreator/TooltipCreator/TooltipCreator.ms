@@ -8,17 +8,25 @@ struct TooltipCreator_v
 	 */
 	function addTooltip &_Control event_type =
 	(
+		--format "\n-----------------------------\n"
 		--format "\n"; print "TooltipCreator_v.addTooltip()"
-		 event_tooltip = _Control.Events[event_type].tooltip
+		events_count = _Control.Events.keys.count
 
-		if ( event_tooltip = _Control.Events[event_type].tooltip ) != "" then
+		if ( tooltip_of_event = _Control.Events[event_type].tooltip ) != "" then
 		(
-			tooltip = if( tooltip_param = _Control.params.getVal #tooltip ) != undefined then tooltip_param + "\n" else ""
-
-			if tooltip != "" then
-				tooltip += "\n"
-
-			_Control.params.setVal #tooltip ( tooltip + this._getEventPrefix(_Control.type)(event_type) + event_tooltip )
+			delimeter = case _Control.type of
+			(
+				#imgtag: "    ||    " -- IMAGE
+				default: "\n\n"
+			)
+			
+			prefix = if events_count > 1 then this._getEventPrefix(_Control.type)(event_type) else ""
+			
+			tooltip_prevoious = if( tooltip_param = _Control.params.getVal #tooltip ) != undefined then tooltip_param + delimeter else ""
+			
+			
+			/* RE-SET TOOLTIP BACK TO PARAMS */ 
+			_Control.params.setVal #tooltip ( tooltip_prevoious + prefix + tooltip_of_event )
 		)
 
 		_Control --return

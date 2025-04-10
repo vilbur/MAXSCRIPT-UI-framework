@@ -38,9 +38,9 @@ struct ControlEventCreator_v
 		/* GET INSTANCE OF EventFiredCreator */ 
 		EventFiredCreator = EventFiredCreator_v _RolloutClass:(_Rollout.id as string ) _RolloutControl:( _Rollout.id as string +"."+ _Control.id as string )
 
-
+		
 		/* PROCESS EACH EVENT BY PRIORITY */ 
-		for event_type in this.EventTypes.priority where ( event_params = event_types[_Control.type][event_type]) != undefined do
+		for event_type in this.EventTypes.getEventTypesByPriority( _Control.type ) where ( event_params = event_types[_Control.type][event_type]) != undefined do
 		(
 			/* GET DEFAULT EVENT */ 
 			Event_default = DefaultControlEvents.getDefaultEvent (_Control) (event_type)
@@ -49,6 +49,7 @@ struct ControlEventCreator_v
 			/* GET USER EVENT */ 
 			if ( Event = _Control.Events[event_type] ) != undefined then
 			(
+				--format "EVENT_TYPE: %\n" event_type
 				Event.params = event_params
 
 				this._setArgumentsToCallback(Event)

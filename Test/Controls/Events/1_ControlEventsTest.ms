@@ -114,11 +114,11 @@ function CallbackParams3 arg_1 arg_2 arg_3 = (
 --
 --
 --/*------ BUTTON ------*/
---_Button = _Controls.control #button "Button"
 --_Button.Event #PRESSED	"macros.run @_Test@ @_test_control_callback_macro@" tooltip:"Test Tooltip"
---
---_Button.Event #PRESSED "CallbackNoParam"
---_Button.Event #RIGHTCLICK "CallbackNoParam()"
+--_Button = _Controls.control #button "Button"
+----
+--_Button.Event #PRESSED "CallbackNoParam"	tooltip:"PRESSED Tooltip"
+--_Button.Event #RIGHTCLICK "CallbackNoParam()"	tooltip:"RIGHTCLICK Tooltip"
 --_Button.Event #PRESSED "CallbackParam1(\"Value in callback\")"
 --_Button.Event #PRESSED "CallbackParam1" params:"Value in pram string"
 --_Button.Event #PRESSED "CallbackParams2" params:#("Value A", "Value B")
@@ -198,9 +198,9 @@ ALL EVENTS OF IMGTAG: https://help.autodesk.com/view/3DSMAX/2017/ENU/?guid=__fil
 */
 img_tag = _Controls.Control #IMGTAG "Bitmap as color" color:blue   width:256 height:32 across:1
 
-img_tag.Event #CLICK  "print \"CLICK\""
-img_tag.Event #RIGHTCLICK  "print \"RIGHTCLICK\""
-img_tag.Event #DBLCLICK   "print \"DBLCLICK \""
+img_tag.Event #CLICK  "print \"CLICK\"" tooltip:"Click tooltip"
+img_tag.Event #RIGHTCLICK  "print \"RIGHTCLICK\"" tooltip:"RighClick tooltip"
+img_tag.Event #DBLCLICK   "print \"DBLCLICK \""   tooltip:"Double click tooltip"
 
 
 

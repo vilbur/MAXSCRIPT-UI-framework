@@ -14,6 +14,7 @@ struct EventTypes_v
 		#leftclick,
 
 		/* Primary */
+		#click,
 		#pressed,
 		#changed,
 		#picked,
@@ -24,6 +25,7 @@ struct EventTypes_v
 		#entered,
 		#rightclick,
 		#doubleClicked,
+		#dblclick,
 
 		/* Others */
 		#buttondown,
@@ -76,6 +78,24 @@ struct EventTypes_v
 		event_types_by_priority = for event_type in priority where findItem control_event_types event_type > 0 collect event_type
 
 		event_types_by_priority[event_priority]--return
+	),
+	
+	/** Get event types by priority
+	 */
+	function getEventTypesByPriority control_type =
+	(
+		--format "\n"; print "EventTypes_v.getEventTypesByPriority()"
+		events_by_control = event_types[control_type].keys
+		
+		for i = priority.count to 1 by -1 do
+		(
+			--format "priority[i]: %\n" priority[i]
+			if findItem events_by_control priority[i] > 0 then
+				insertItem priority[i] events_by_control 1
+			
+		)
+		--format "priority_by_type: %\n" (makeUniqueArray events_by_control)
+		makeUniqueArray events_by_control
 	),
 
 
