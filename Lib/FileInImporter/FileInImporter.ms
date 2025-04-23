@@ -22,25 +22,25 @@ struct FileInImporter_v
 	function import =
 	(
 		--format "\n"; print "FileInImporter_v.import()"
+		files = for file in files where file != "" collect file
 		
 		this._removeLeadingSlashFromPaths()
 		this._convertRelativeToAbsolutePaths()
 		this._normalizePaths()
 		
 		this._fileInFiles()
-		
 	),
 
 	private
 
-	/** File in files
+	/** Import files to max
 	 */
 	function _fileInFiles =
 	(
 		format "\n"; print "FileInImporter_v._fileInFiles()"
 		for file_path in files where not matchPattern file_path pattern:blacklist do
 		(
-			format "FILE IN: % \n" (file_path)
+				format "FILE IN: % \n" (file_path)
 
 			if doesFileExist file_path then
 				try(

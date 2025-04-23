@@ -153,7 +153,8 @@ struct ControlParamsParser_v
 		is_variable = (RegEx.match _string ("^("+joinPatterns(patterns)+")$") RegEx_options.IgnoreCase ).success
 		--format "is_variable: %\n" is_variable
 
-		if not is_variable  then
+		if not is_variable then
+		--if not is_variable and classOf (execute _string) == UndefinedClass then
 			@"" + _string -- IS STRING
 
 		else

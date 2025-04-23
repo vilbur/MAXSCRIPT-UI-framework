@@ -215,9 +215,9 @@ struct CallbackManager_v
 	 */
 	function startCallback Callback =
 	(
-		format "\n"; print "CallbackManager_v.startCallback()"
+		--format "\n"; print "CallbackManager_v.startCallback()"
 		Callback = this._mutateCallback Callback
-		format "Callback: %\n" Callback
+		--format "Callback: %\n" Callback
 		
 		callbacks.addScript Callback.type Callback.callback id:Callback.id
 	),
@@ -228,9 +228,9 @@ struct CallbackManager_v
 	function killCallback Callback =
 	(
 		--format "\n"; print ("CallbackManager_v.killCallback( "+Callback.callback+" )")
-		format "\n"; print "CallbackManager_v.killCallback()"
+		--format "\n"; print "CallbackManager_v.killCallback()"
 		Callback = this._mutateCallback Callback
-		format "Callback: %\n" Callback
+		--format "Callback: %\n" Callback
 		
 		try( callbacks.removeScripts Callback.type id:Callback.id )catch()
 		--callbacks.removeScripts Callback.type id:Callback.id

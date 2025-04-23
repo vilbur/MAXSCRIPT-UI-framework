@@ -32,21 +32,22 @@ struct StartUpScriptImporter_v
 	function createStartUpFile files std:false =
 	(
 		--format "\n"; print "StartUpScriptImporter_v.createStartUpFile()"
-		this.files = files
+		this.files = for file in files where file != "" collect file
+
 
 		this._setFileName()
 		this._setRootPath()
 
-		std_file_path = this._getStdFilePath(std)
+		import_file_path = this._getStdFilePath(std)
 		
 		
 		this._removeLeadingSlashFromPaths()
 		this._convertRelativeToAbsolutePaths()
 		this._normalizePaths()
 		
-		this._writeToFile(std_file_path)
+		this._writeToFile(import_file_path)
 		
-		filein (std_file_path)
+		filein (import_file_path)
 	),
 	
 	/** Delete file
@@ -61,10 +62,10 @@ struct StartUpScriptImporter_v
 	
 	/** Write to file
 	 */
-	function _writeToFile std_file_path =
+	function _writeToFile import_file_path =
 	(
 		--format "\n"; print "StartUpScriptImporter_v._writeToFile()"
-		std_file = createFile std_file_path
+		std_file = createFile import_file_path
 		
 		content      = ""
 		files_string = ""
@@ -75,15 +76,17 @@ struct StartUpScriptImporter_v
 		files_string	= trimRight files_string  ","
 		
 		--content += "format \"\\n\"; print \"FileInImporter_v._fileInFil	es()\""
-		--content += "format \"\\nFiles imported from file: %\\n\\n\" \""+std_file_path+"\""
-
+		--content += "format \"\\nFiles imported from file: %\\n\\n\" \""+import_file_path+"\""
+		content += "format \"\\n\\n===============================\\n\\nIMPORT FILES FROM: %\\n\\n\" (getSourceFileName())\n\n"
+		
 		content += "file_in_files = #("+files_string+"\n)\n\n"
 		
 		content += "for file_path in file_in_files do\n"
-		content += "if doesFileExist file_path then\n("
+		content += "	if doesFileExist file_path then\n"
+		content += "	(\n"
 		content += "		filein file_path\n"
-		content += "		format \"FILE IN: %\\n\" file_path"
-		content += ")\nelse\n"
+		content += "		format \"FILE IN: %\\n\" file_path\n"
+		content += "    )\nelse\n"
 		content += "		format \"\\n\\n----- WARNING: Missing file in: %\\n\\nERROR OF IMPORT FILE: %\\n\" (getSourceFileName()) file_path"
 		
 		try(
