@@ -1,24 +1,22 @@
-rollout ui_imgtag "imgtag"
-(
-	local bm = bitmap 50 50 color:red
-	imgtag img_tag "imgtag" bitmap:bm align:#center
-	
-	
-	fn printButtonStates Flags =
-	(
-		LMB = bit.get Flags 1
-		RMB = bit.get Flags 2
-		SHIFT = bit.get Flags 3
-		CTRL = bit.get Flags 4
-		MMB = bit.get Flags 5
-		XB1 = bit.get Flags 6
-		XB2 = bit.get Flags 7
-		format "LMB:% MMB:% RMB:% SHIFT:% CTRL:% XB1:% XB2:%\n" LMB MMB RMB SHIFT CTRL XB1 XB2
-	)
+clearListener(); print("Cleared in:\n"+getSourceFileName())
 
-	on img_tag lbuttondown v1 v2 do printButtonStates v2
-	on img_tag mbuttondown v1 v2 do printButtonStates v2
-	on img_tag rbuttondown v1 v2 do printButtonStates v2
+--hwnd = (for child in ( windows.getChildrenHWND 0) where child[5] == "Window Tilte" collect child[1])[1]
 
-)
-createdialog ui_imgtag width:100
+for child in ( windows.getChildrenHWND 0 parent:#max ) do
+format "child[5]: %\n" child[5]
+
+--format "hwnd: %\n" hwnd
+--
+--if hwnd == undefined then
+--(
+--	actionMan.executeAction 0 "40024"  -- Snaps: Grid and Snap Settings Toggle
+--	
+--	hwnd = (for child in ( windows.getChildrenHWND #max) where child[5] == "Grid and Snap Settings" collect child[1])[1]
+--)
+--
+--	--children = windows.getChildrenHWND #max
+--	for child in ( windows.getChildrenHWND hwnd ) do
+--		format "child: %\n" child
+
+	--format "children: %\n" children
+	

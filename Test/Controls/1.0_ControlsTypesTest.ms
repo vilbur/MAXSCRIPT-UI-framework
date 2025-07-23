@@ -95,7 +95,7 @@ _Controls   = Dialog.Controls()
 --/*------ BITMAP ------*/
 --_Controls.Control #BITMAP "Bitmap as value" value: (bitmap 256 32 color:green ) across:1 -- SIZE OF BITMAP IS SIZE OF CONTROL
 --
-_Controls.Control #BITMAP "Bitmap ascolor" color:blue width:256 height:32 across:1
+--_Controls.Control #BITMAP "Bitmap ascolor" color:blue width:256 height:32 across:1
 --
 
 /*------ IMGTAG ------*/
@@ -107,6 +107,8 @@ _Controls.Control #BITMAP "Bitmap ascolor" color:blue width:256 height:32 across
 
 
 
+--/*------ ANGLE ------*/
+_Controls.control #ANGLE  "Angle" RANGE:[-90,270,90] color:green params:#( #DIR, #CW, #startdegrees, 90 )
 
 /*==============================================================================
 	CREATE DIALOG

@@ -142,9 +142,19 @@ function CallbackParams3 arg_1 arg_2 arg_3 = (
 
 
 --/*------ SPINNER ------*/
---Spinner	= _Controls.control #SPINNER "Spinner"
---Spinner.Event #CHANGED "CallbackParams2"
---Spinner.Event #CHANGED "CallbackParams3()" params:"Value in pram string"
+Spinner	= _Controls.control #SPINNER "Spinner"
+Spinner.Event #CHANGED "CallbackParams2"
+Spinner.Event #ENTERED "CallbackParams2"
+
+/*
+	BUG IN: spinner.Event #CHANGED "CallbackParams3()" params:"Value CHANGED"
+	
+	CUSTOM PARAMETER IS NOT ADDED AS 3RD PARAMETER
+	
+*/ 
+
+--Spinner.Event #CHANGED "CallbackParams3()" params:"Value CHANGED"
+--Spinner.Event #ENTERED "CallbackParams3()" params:"Value ENTERED"
 --
 --
 --
@@ -198,11 +208,11 @@ function CallbackParams3 arg_1 arg_2 arg_3 = (
 	ALL EVENTS OF IMGTAG: https://help.autodesk.com/view/3DSMAX/2017/ENU/?guid=__files_GUID_0A492074_4A5B_4D18_B65A_E859FC8E2454_htm
 
 */
-img_tag = _Controls.Control #IMGTAG "Bitmap as color" color:blue   width:256 height:32 across:1
-
-img_tag.Event #CLICK  "print \"CLICK\""           tooltip:"Click tooltip"
-img_tag.Event #RIGHTCLICK  "print \"RIGHTCLICK\"" tooltip:"RighClick tooltip"
-img_tag.Event #DBLCLICK   "print \"DBLCLICK \""   tooltip:"Double click tooltip"
+--img_tag = _Controls.Control #IMGTAG "Bitmap as color" color:blue   width:256 height:32 across:1
+--
+--img_tag.Event #CLICK  "print \"CLICK\""           tooltip:"Click tooltip"
+--img_tag.Event #RIGHTCLICK  "print \"RIGHTCLICK\"" tooltip:"RighClick tooltip"
+--img_tag.Event #DBLCLICK   "print \"DBLCLICK \""   tooltip:"Double click tooltip"
 
 
 

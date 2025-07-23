@@ -1,6 +1,5 @@
 filein( getFilenamePath(getSourceFileName()) + "/Menu/Menu.ms" ) -- "./Menu/Menu.ms"
 
---print "IMPORT QuadMenu_v !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
 
 /** Wrapper for <MixinInterface:QuadMenu>
   *

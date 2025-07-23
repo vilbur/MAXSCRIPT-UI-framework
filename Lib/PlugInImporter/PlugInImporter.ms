@@ -27,7 +27,7 @@ struct PlugInImporter_v
 	 */
 	function install =
 	(
-		--format "\n"; print "PlugInImpoerter_v.install()"
+		format "\n"; print "PlugInImpoerter_v.install()"
 		filename = filenameFromPath( source )
 		
 		max_plugins_path = max_plugins_dir + "\\" + filename
@@ -39,6 +39,8 @@ struct PlugInImporter_v
 			copyFile (source) (max_plugins_path)
 		
 			filein source
+			
+			format "\n\nPLUGIN INSTALLED: %\n" source
 		)
 		else
 			format "\n\n----- WARNING PlugInImporter_v -----\n\n: Missing plugin file: %\n" source

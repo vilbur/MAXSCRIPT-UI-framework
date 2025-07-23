@@ -40,6 +40,7 @@ struct StartUpScriptImporter_v
 
 		import_file_path = this._getStdFilePath(std)
 		
+		--this.delete std:std
 		
 		this._removeLeadingSlashFromPaths()
 		this._convertRelativeToAbsolutePaths()
@@ -54,7 +55,7 @@ struct StartUpScriptImporter_v
 	 */
 	function delete std:false =
 	(
-		--format "\n"; print "StartUpScriptImporter_v.deleteFile()"
+		format "\n"; print "StartUpScriptImporter_v.deleteFile()"
 		deleteFile (this._getStdFilePath(std))
 	),
 

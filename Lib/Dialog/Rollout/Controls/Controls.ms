@@ -149,13 +149,16 @@ struct Controls_v
 	function _setParamsToControl &_Control params =
 	(
 		--format "\n"; print "Controls_v._setParamsToControl()"
+		--format "_Control.type: %\n" _Control.type
 		--format "PARAMS:	% \n" params
 		--format "classOf params: %\n" (classOf params)
 
 		/* SPLIT PARAMS STRING AND CONERT TO CORRECT DATATYPES */ 
 		if classOf params == string then
 			params = this._splitParamsString (params)
-		--format "PARAMS: % \n" params
+		
+		/* DEBUG PRINT */ 	
+		--for i = 1 to params.count  by 2 do format "%: % \n" params[i] params[i+1]
 
 		for i = 1 to params.count  by 2  do
 			_Control.Param params[i] params[i+1]

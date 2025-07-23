@@ -121,6 +121,10 @@ struct ScriptFile_Content_v
 
 		_Control = _Controls.Control (Macro.getControlType()) Macro.buttontext params:(Macro.getParamsArray()) add_to_controls:false
 
+		
+		/* ADD TO MENU */ 
+		this._addToMenu (Macro)(_Control.Params)		
+		
 		/* TRY GET CONTROL FOR MACRO */ 
 		if(_Control_Exist = _Controls.get(_Control.id)) != undefined then
 		
@@ -137,9 +141,7 @@ struct ScriptFile_Content_v
 		/* ADD TO CONTROLS - if control is new */ 
 		if( _Control_Exist == undefined ) then
 			_Controls.add _Control
-		
-		/* ADD TO MENU */ 
-		this._addToMenu (Macro)(_Control.Params)
+
 	),
 
 	/** Add to quad menu or menu

@@ -215,7 +215,7 @@ struct CallbackManager_v
 	 */
 	function startCallback Callback =
 	(
-		--format "\n"; print "CallbackManager_v.startCallback()"
+		format "\n"; print "CallbackManager_v.startCallback()"
 		Callback = this._mutateCallback Callback
 		--format "Callback: %\n" Callback
 		
