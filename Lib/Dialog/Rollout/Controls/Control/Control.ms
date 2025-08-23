@@ -42,7 +42,7 @@ struct Control_v
 	function param param val =
 	(
 		--print "Control_v.param()"
-		--format "param	= % \nval	= % \n\n" param val
+		--format "PARAM: %	VALUE: % \n\n" param val
 		Params.setVal param val
 	),
 
@@ -107,6 +107,8 @@ struct Control_v
 		this._setIdByCaption()
 
 		this._setIdPrefixByControlType()
+		
+		id = id as name
 	),
 
 	/** Set id by control caption
@@ -187,6 +189,7 @@ struct Control_v
 	 */
 	on create do
 	(
+		--print "Control_v.create()"
 		this._setId()
 	)
 )

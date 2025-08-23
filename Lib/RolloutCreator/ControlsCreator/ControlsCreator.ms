@@ -35,6 +35,8 @@ struct ControlCreator_v
 	function addControls _Controls =
 	(
 		--if DEBUG then format "\n\n-------------- ControlCreator_v.addControls() group:% --------------\n" _Controls.group
+		--format "\n\n-------------- ControlCreator_v.addControls() group:% --------------\n" _Controls.group
+		--format "_Controls.list.count: %\n" _Controls.list.count
 
 		/* EXIT IF ANY CONTROLS EXISTS */ 
 		if _Controls.list.count == 0 then
@@ -137,7 +139,7 @@ struct ControlCreator_v
 		if( Controls_in_all_groupboxes.count > 0 ) then
 		(
 			--local _Controls_groupbox = _Rollout_.Controls group:( toUpper _Rollout_.title+" CONTROLS")
-			local _Controls_groupbox = _Rollout_.Controls group:#controls_in_groupboxes
+			_Controls_groupbox = _Rollout_.Controls group:#CONTROLS_IN_GROUPBOXES
 
 			--_Controls_groupbox.control #button (_Rollout_.title+" GOOOOOOD")
 			for Control_in_Groupbox in Controls_in_all_groupboxes do
@@ -149,28 +151,58 @@ struct ControlCreator_v
 
 	private
 
-	/** Add controls box to UI
+	/** ADD CONTROLS BOX TO UI
 	 */
 	function _addControlsToRollout =
 	(
 		--format "\n"; print "ControlCreator_v._addControlsToRollout()"
 		--format "this.isGroupboxControls()	= % \n" (this.isGroupboxControls())
-		--format "this.Controls	= % \n" this.Controls
-
+		
+		/** ADD START OR END OF GROUP
+		  *
+		  * wrap controls to "group(...)"
+		  *
+		  *
+		  * GROUP IS IGNORED IF
+		  * 		1) _Controls.group name is empty string E.G.: ""
+		  *		2) _Controls.group name is wraped in square brackets like [Foo Controls]
+		  *
+		  * HELP: https://help.autodesk.com/view/3DSMAX/2016/ENU/?guid=__files_GUID_1361B847_7878_4C52_98DE_5BC5CA830B40_htm&v=2015#WS73099CC142F48755-2231E4B3128E0E4A0FC-69B6
+		 */
+		function _addControlsGroup start_or_end =
+		(
+			--format "\n"; print "ControlCreator_v._addControlsGroup()"
+			--format "_Controls.group:-%-\n" Controls.group
+			--format "MATCH: %\n" (matchPattern _Controls.group pattern:("[*]"))
+			if( Controls.group == undefined or matchPattern Controls.group pattern:("[*]") or Controls.group == "" ) do
+				return false
+	
+			start_or_end_string = if( start_or_end == #START ) then "group @"+Controls.group+"@ (" else ")"
+	
+			_Rollout.RCI.addText ( start_or_end_string ) filter:on
+		)
+		
+		
+		/* BEGIN GROUP */ 
 		if not this.isGroupboxControls() then
-			this._addControlsGroup #start
+			_addControlsGroup #start
 
-
+			
+		/* ADD EACH CONTROL */ 
 		for _Control in this.Controls.list do
 			this._addControlToRollout (_Control) -- add control first before variables, functions and events
 
-
+			
+		/* END GROUP */ 
 		if not this.isGroupboxControls() then
-			this._addControlsGroup #end
+			_addControlsGroup #end
 	),
 
-	/* ADD CONTROL TO RolloutCreator
-	 */
+	/*------------------------------------------------------------------------------
+		
+		ADD CONTROL TO RolloutCreator
+		
+	--------------------------------------------------------------------------------*/
 	function _addControlToRollout _Control =
 	(
 		--format "\n"; print "ControlCreator_v._addControlToRollout()"
@@ -181,7 +213,7 @@ struct ControlCreator_v
 		_Rollout.RCI.addControl (_Control.type) (_Control.id) (this._getCaption(_Control)) paramStr:params filter:true;
 	),
 
-	/** Add Handlers of Events
+	/** ADD HANDLERS OF EVENTS
 	 */
 	function _addHandlersToRollout =
 	(
@@ -189,26 +221,26 @@ struct ControlCreator_v
 			ControlEventBinder.addHandlers(_Control)
 	),
 
-	/** Add controls group
-	  *
-	  * GROUP IS IGNORED IF
-	  * 		1) _Controls.group name is empty string E.G.: ""
-	  *		2) _Controls.group name is wraped in square brackets like [Foo Controls]
-	  *
-	  * https://help.autodesk.com/view/3DSMAX/2016/ENU/?guid=__files_GUID_1361B847_7878_4C52_98DE_5BC5CA830B40_htm
-	 */
-	function _addControlsGroup start_or_end =
-	(
-		--format "\n"; print "ControlCreator_v._addControlsGroup()"
-		--format "_Controls.group:-%-\n" Controls.group
-		--format "MATCH: %\n" (matchPattern _Controls.group pattern:("[*]"))
-		if( Controls.group == undefined or matchPattern Controls.group pattern:("[*]") or Controls.group == "" ) do
-			return false
-
-		start_or_end_string = if( start_or_end == #start ) then "group @"+Controls.group+"@ (" else ")"
-
-		_Rollout.RCI.addText ( start_or_end_string ) filter:on
-	),
+	--/** Add controls group
+	--  *
+	--  * GROUP IS IGNORED IF
+	--  * 		1) _Controls.group name is empty string E.G.: ""
+	--  *		2) _Controls.group name is wraped in square brackets like [Foo Controls]
+	--  *
+	--  * https://help.autodesk.com/view/3DSMAX/2016/ENU/?guid=__files_GUID_1361B847_7878_4C52_98DE_5BC5CA830B40_htm
+	-- */
+	--function _addControlsGroup start_or_end =
+	--(
+	--	--format "\n"; print "ControlCreator_v._addControlsGroup()"
+	--	--format "_Controls.group:-%-\n" Controls.group
+	--	--format "MATCH: %\n" (matchPattern _Controls.group pattern:("[*]"))
+	--	if( Controls.group == undefined or matchPattern Controls.group pattern:("[*]") or Controls.group == "" ) do
+	--		return false
+	--
+	--	start_or_end_string = if( start_or_end == #start ) then "group @"+Controls.group+"@ (" else ")"
+	--
+	--	_Rollout.RCI.addText ( start_or_end_string ) filter:on
+	--),
 
 	/** Empty caption if caption is in square brackets
 	  *
@@ -300,9 +332,7 @@ struct ControlCreator_v
 	function isGroupboxControls =
 	(
 		--format "\n"; print "ControlCreator_v.isGroupboxControls()"
-		--format "this.Controls.group	= % \n" (this.Controls.group  == #controls_in_groupboxes)
-		--this.Controls.group == #controls_in_groupboxes or this.Controls.group == #hotkeys_timers
-		this.Controls.group == #controls_in_groupboxes
+		this.Controls.group == #CONTROLS_IN_GROUPBOXES
 	),
 
 	/**

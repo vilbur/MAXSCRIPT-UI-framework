@@ -100,20 +100,20 @@ struct GroupBoxCreator_v
 			control_type != #GroupStartControl and control_type != #GroupEndControl --return
 		)
 
-
-		for i = groupbox_index to rollout_controls.count
-			where (rollout_controls_ids[i+1]	!= undefined	and -- if next control exist
-				findItem groupbox_controls rollout_controls[i+1]	== 0 and -- if control is not in groupbox
-			   (_isNotGroupbox(rollout_controls[i+1]))	== true )         -- if control is not  #GroupStartControl and #GroupEndControl
-			do
-			   if( next_control_index == undefined ) then -- get only first occurence
-				   next_control_index = i+1
+		/* GET INDEX OF NEXT CONTROL */ 
+        for i = groupbox_index to rollout_controls.count
+            where (rollout_controls_ids[i+1]	!= undefined	and	-- if next control exist
+               findItem groupbox_controls rollout_controls[i+1]	== 0 and	-- if control is not in groupbox
+               (_isNotGroupbox(rollout_controls[i+1]))	== true )	-- if control is not  #GroupStartControl and #GroupEndControl
+                    do
+						if( next_control_index == undefined ) then -- get only first occurence
+							next_control_index = i+1
 
 
 		 if( next_control_index != undefined ) then -- get only first occurence
 			GroupboxResizer.setGroupBoxSizeByNextControl (rollout_id_full)(rollout_controls[groupbox_index])(rollout_controls[next_control_index])
 
-		else
+		else if groupbox_controls.count > 0 then
 			GroupboxResizer.resizeByLastControl( rollout_controls[groupbox_index] )(groupbox_controls[groupbox_controls.count])
 
 		--format "next_control_index	= % \n" next_control_index

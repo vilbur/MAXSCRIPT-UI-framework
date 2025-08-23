@@ -15,7 +15,7 @@ struct Controls_v
 	/* dependency */
 	DefaultParameters = DefaultParameters_v(),
 
-	GroupBoxes 	= GroupBoxes_v(),
+	GroupBoxes 	= GroupBoxes_v(), -- "./GroupBoxes/GroupBoxes.ms"
 
 	rollout_id,
 
@@ -41,7 +41,7 @@ struct Controls_v
 	  *
 	  * @return Object _Control	"./Control/Control.ms"
 	 */
-	function Control control_type caption id:undefined params:#() pos: width: height: across: offset: align: tooltip: ini:true add_to_controls:true \ -- common params for all types
+	function Control control_type caption id:undefined params:#() pos: width: height: across: offset: align: tooltip: ini:true \ -- common params for all types
 		range:	ticks: orient:	\ -- slider
 		default:	unselect:	\ -- radiobutton
 		items:	columns:	\ -- radiobutton, lisbox, mutlilistbox
@@ -52,8 +52,9 @@ struct Controls_v
 		highlightColor:		\ -- checkbutton
 		border:		\
 		bitmap:		\ -- bitmap, imgTag
-		groupbox:		\ -- add control to groupbox 
-		visible:		=
+		groupbox:		\ -- add control to groupbox id or title of groupbox
+		visible:		\
+		add_to_controls:true =
 	(
 		--format "\n"; print "Controls_v.Control()"
 
@@ -65,7 +66,6 @@ struct Controls_v
 		/* SET CONTROL ID BY VALUE IN PARAMS */ 
 		if ( index = findItem params #id ) > 0 then
 			id = params[index +1]
-
 		
 			
 		/*------------------------------------------------------------------------------
@@ -79,16 +79,19 @@ struct Controls_v
 		for i = 1 to _param_values.count where _param_values[i] != unsupplied do
 			_Control.Param (_param_names[i]) (_param_values[i])
 
+			
+			
 		/* SET CONTROL PARAMETERS FROM PARAMS ARRAY */ 
 		this._setParamsToControl(_Control)(params)
 
 		
 
 		/* ADD CONTROL TO GROUPBOX */ 
-		if _Control.type == #Groupbox  then
-			GroupBoxes.addGroupbox(this)(_Control)
-		else
+		if _Control.type != #Groupbox  then
 			GroupBoxes.addControlToGroupbox (this)(_Control)
+		
+		else /* ADD GROUPBOX */ 
+			GroupBoxes.addGroupbox(this)(_Control)
 			
 			
 			
@@ -152,58 +155,51 @@ struct Controls_v
 		--format "_Control.type: %\n" _Control.type
 		--format "PARAMS:	% \n" params
 		--format "classOf params: %\n" (classOf params)
-
+		/** _split params string
+		  *
+		  * @param	string	params_string E.G.: "width:256|height:64, border:false"
+		  *
+		  * @return	array E.G.: #("width", 256, "height", 64, "border", false)
+		 */
+		function splitParamsString params_string =
+		(
+			--format "\n"; print "Controls_v.splitParamsString()"
+			
+			/** Format string value to valid datatype
+			 */
+			function convertDatatype _string =
+			(
+				rx	= dotNetClass "System.Text.RegularExpressions.RegEx"
+				rx_options	= dotNetClass "System.Text.RegularExpressions.RegexOptions"
+		
+				is_variable = (rx.match _string "^\s*(\d+|true|false|undefined|unsupplied|\(*\s*color\s+\d+\s+\d+\s+\d+\s*\)*|\(*\s*bitmap\s+\d+\s+\d+)\s*$" rx_options.IgnoreCase ).success
+			
+				if is_variable and (is_string = ( rx.match _string "(^'*[A-Za-z0-1_\s]+'*$)" rx_options.IgnoreCase ).success ) then
+					try((execute(_string)))catch(_string) -- IS VARIABLE
+				
+				else
+					@"" + _string -- IS STRING
+			)			
+			
+			params_splitted = #()
+	
+			for key_value_pair in filterString params_string "|," splitEmptyTokens:false do
+				for key_value in filterString key_value_pair ":"  do
+					append params_splitted (convertDatatype( trimRight ( trimLeft key_value )))
+	
+			params_splitted --return
+		)
+		
 		/* SPLIT PARAMS STRING AND CONERT TO CORRECT DATATYPES */ 
 		if classOf params == string then
-			params = this._splitParamsString (params)
-		
-		/* DEBUG PRINT */ 	
-		--for i = 1 to params.count  by 2 do format "%: % \n" params[i] params[i+1]
+			params = splitParamsString (params)
 
-		for i = 1 to params.count  by 2  do
+
+		/* ADD PATAMS AND VALUESD TO CONTROL */ 	
+		for i = 1 to params.count by 2  do
 			_Control.Param params[i] params[i+1]
 
 		_Control --return
-	),
-
-
-	/** _split params string
-	  *
-	  * @param	string	params_string E.G.: "width:256|height:64, border:false"
-	  *
-	  * @return	array E.G.: #("width", 256, "height", 64, "border", false)
-	 */
-	function _splitParamsString params_string =
-	(
-		--format "\n"; print "Controls_v._splitParamsString()"
-		params = #()
-
-		for key_value_pair in filterString params_string "|," splitEmptyTokens:false do
-			for key_value in filterString key_value_pair ":"  do
-				append params (this._convertDatatype( trimRight ( trimLeft key_value )))
-
-		params --return
-	),
-
-	/** Format string value to valid datatype
-	 */
-	function _convertDatatype _string =
-	(
-		--_string = substituteString _string "\\" "\\\\"
-
-		rx	= dotNetClass "System.Text.RegularExpressions.RegEx"
-		rx_options	= dotNetClass "System.Text.RegularExpressions.RegexOptions"
-
-		is_variable = (rx.match _string "^\s*(\d+|true|false|undefined|unsupplied|\(*\s*color\s+\d+\s+\d+\s+\d+\s*\)*|\(*\s*bitmap\s+\d+\s+\d+)\s*$" rx_options.IgnoreCase ).success
-	
-		if is_variable and (is_string = ( rx.match _string "(^'*[A-Za-z0-1_\s]+'*$)" rx_options.IgnoreCase ).success ) then
-		(
-			try((execute(_string)))catch(_string) -- IS VARIABLE
-		)
-		else
-		(
-			@"" + _string -- IS STRING
-		)
 	),
 
 	/**
