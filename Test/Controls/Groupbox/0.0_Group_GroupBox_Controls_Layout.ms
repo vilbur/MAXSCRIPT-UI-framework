@@ -1,0 +1,106 @@
+clearListener()
+
+filein( getFilenamePath(getSourceFileName()) + "/../../../Lib/Dialog/Dialog.ms" )
+
+
+/*	Use of GroupControl and GroupBox
+  
+	----------------------------------------------------------------------------------------------------------------------------------------------------
+	Group:    https://help.autodesk.com/view/3DSMAX/2016/ENU/?guid=__files_GUID_1361B847_7878_4C52_98DE_5BC5CA830B40_htm&v=2015
+	GroupBox: https://help.autodesk.com/view/3DSMAX/2015/ENU/?guid=__files_GUID_A8C801C7_BA79_448C_A1EE_28C40B16287C_htm
+	----------------------------------------------------------------------------------------------------------------------------------------------------
+
+	Hierarchy of controls:
+		Rollout
+			Group
+				Controls
+	
+	----------------------------------------------------------------------------------------------------------------------------------------------------
+	
+	Group    divide rollout HORIZONTALY 
+	GroupBox divide rollout VERTICALY
+
+	----------------------------------------------------------------------------------------------------------------------------------------------------
+
+	POSITION AND SIZE DIFERENCIES:
+
+		Group:
+			• Create "rows" in rollout 
+			
+			• SIZE BY CONTROLS in group
+				◦ Width is full width of rollout
+				◦ Height is set by position of last control in group
+	
+			• Position can be changed
+			
+			
+	
+		GroupBox:
+			• Create "columns" in GroupControl
+			
+			• Affected by #ACROSS parameter - works like other controls
+			
+			• Size can be defined and changed
+				• Width is set by parameters #ACROSS or #WIDTH
+			
+	----------------------------------------------------------------------------------------------------------------------------------------------------
+
+	
+	AUTO POSITION OF CONTROLS IN GRPOUPS:
+		
+		Group:
+		
+			DEFAULT:
+			• Controls are sorted VERTICALY in default
+			• Rows of controls are driven by #ACROSS parameter
+			• Across parameter define number of controls in row EXAMPLE: "./Dev/across_parameter_default_beahaviour.ms"
+			
+			UI-FRAMEWORK:
+				• 
+			
+			
+	
+		GroupBox:
+		
+			• CONTROLS ARE NOT PLACED INSIDE GROUPBOX by default
+				◦ WORKAROUND TO CORRECT LAYOUT:
+					A. Group box must be REPOSITIONED and RESIZED around controls 
+					B. Controls  must be PLACED INTO GroupBox
+					C. Or both A. and B.
+
+*/ 
+
+
+
+
+
+
+/* DIALOG */
+Dialog 	= Dialog_v title:(getFilenameFile(getSourceFileName()))
+
+/* CONTROLS */
+_Controls = Dialog.Controls group:"Test Dialog"
+
+/* GROUPBOX */
+_GroupBox_A1 = _Controls.control #GroupBox (groupbox_name = "Groupbox A 1") across:2 --params:#( #height, 128 )
+_GroupBox_A2 = _Controls.control #GroupBox (groupbox_name = "Groupbox A 2") across:2 --params:#( #height, 128 )
+
+--/* BUTTON */
+--_Controls.control #button ("Button 1") across:1 params:#(#groupbox, groupbox_name)
+--_Controls.control #button ("Button 2") across:1 params:#(#groupbox, groupbox_name)
+--
+--
+--/* CONTROLS */
+--_Controls_2 = Dialog.Controls group:"Controls 2"
+--
+--/* GROUPBOX */
+--_GroupBox = _Controls_2.control #GroupBox (groupbox_name_2 = "Groupbox 2") params:#( #height, 128 )
+--
+--/* BUTTON */
+--_Controls_2.control #button ("Button Controls 2") across:1 params:#(#groupbox, groupbox_name_2)
+
+
+/* CREATE DIALOG */
+Dialog.create()
+Dialog.create width:320
+

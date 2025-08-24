@@ -17,17 +17,17 @@ _Controls.control #button ("Button 1") across:1 params:#(#groupbox, groupbox_nam
 _Controls.control #button ("Button 2") across:1 params:#(#groupbox, groupbox_name)
 
 
---/* CONTROLS */
---_Controls_2 = Dialog.Controls group:"Controls 2"
---
---/* GROUPBOX */
---_GroupBox = _Controls_2.control #GroupBox (groupbox_name_2 = "Groupbox 2") params:#( #height, 128 )
---
---/* BUTTON */
---_Controls_2.control #button ("Button Controls 2") across:1 params:#(#groupbox, groupbox_name_2)
---
+/* CONTROLS */
+_Controls_2 = Dialog.Controls group:"Controls 2"
+
+/* GROUPBOX */
+_GroupBox = _Controls_2.control #GroupBox (groupbox_name_2 = "Groupbox 2") params:#( #height, 128 )
+
+/* BUTTON */
+_Controls_2.control #button ("Button Controls 2") across:1 params:#(#groupbox, groupbox_name_2)
+
 
 /* CREATE DIALOG */
---Dialog.create()
+Dialog.create()
 Dialog.create width:320
 
