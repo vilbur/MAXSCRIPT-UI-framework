@@ -9,10 +9,10 @@ global CONTROL_BITMAPS_STORE = #() -- buffer for bitmaps of controls, because of
 struct ControlParamsCreator_v
 (
 	/* inherit */
-	DefaultParameters, -- defaults parameters for controls
+	Defaults, -- defaults parameters for controls
 	
 	/* dependency */
-	ParamsListMerged,
+	--ParamsListMerged,
 
 	/* properties */ 
 	
@@ -20,53 +20,63 @@ struct ControlParamsCreator_v
 	  * 
 	  * Priority of params
 	  * 	1) User Defined parameters
-	  * 	2) Global per control type E.g.:  #(#multiListBox, #listbox, #list) // DEFINED IN DefaultParameters_v._getDefaultParamsList() in FILE:  "./../../../Dialog/Rollout/Controls/DefaultParameters/DefaultParameters.ms" 
+	  * 	2) Global per control type E.g.:  #(#multiListBox, #listbox, #list) // DEFINED IN DefaultParameters_v._getDefaultParamsList() in FILE:  "./../../../Dialog/Rollout/Controls/Defaults/Defaults.ms" 
 	  * 	3) Global for all controls
 	  * 
 	 */
 	function mergeParams &_Control =
 	(
 		--format "\n"; print "ContolParamsCreator_v.mergeParams()"
-		/* DEFAULTS PARMAS */ 
-		for control_type_key in DefaultParameters.getKeysForControlType(_Control.type) do
-			_Control.Params.merge ( DefaultParameters.getParametersForControlType(control_type_key) )
 		
-		/* MERGE Defaults.keys.#global */
+		/* DEFAULTS PARAMS FOR CONTROL TYPE */ 
+		this._mergeDictionaries (_Control)(Defaults.Params[_Control.type])
+		
+		/* GLOBAL PARAMS */
 		if _Control.type != #Groupbox then -- DO NOT USE GLOBAL PARAMETERS ON #groupbox control
-			_Control.Params.merge ( DefaultParameters.getVal(#global) )
+			this._mergeDictionaries (_Control)(Defaults.Params[#GLOBAL])
 		
 		_Control --return
 	),
 	
 	/** Set DefaultParameters_v from Controls_v
 	 */
-	function setDefaultParameters DefaultParameters =
+	function setDefaultParameters Defaults =
 	(
 		--print "ControlParamsCreator_v.setDefaultParameters()"
-		this.DefaultParameters = DefaultParameters
+		this.Defaults = Defaults
 		
-		this.DefaultParameters.setDefaultsForEachControlType()
+		--this.Defaults.setDefaultsForEachControlType()
 	),
 	
 	/** Join array
 	 */
 	function join List =
 	(
-		if( List == undefined ) then
-			return ""
+		params_string = ""
 		
-		--print "\nHOTFIX Params_v.join()"
-		_params = ""
-		
-		for k=1 to List.keys.count do
-			_params += List.keys[k] as string +":"+ ( this._formatToString List.keys[k] List.values[k] ) + " "
+		if List != undefined then
+			for key in List.keys do
+				params_string += key as string +":"+ ( this._formatToString key List[key] ) + " "
 			
-		trimRight _params  --return
+		trimRight params_string  --return
 	),
 
 	
 	private
 
+	/** Merge params
+	  * 
+	  * Old values are not overwritten
+	 */
+	function _mergeDictionaries &_Control params =
+	(
+		--format "\n"; print "ControlParamsCreator_v._mergeDictionaries()"
+		for key in params.keys do
+			if _Control.Params[key] == undefined then
+				_Control.Params[key] = params[key]
+
+		_Control --return
+	),
 
 	/** Format value to string
 	  *

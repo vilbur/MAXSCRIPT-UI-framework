@@ -12,17 +12,19 @@ _Controls = Dialog.Controls group:"Controls Group"
 
 
 /* GROUPBOX */
-_GroupBox = _Controls.control #GroupBox "Test groupbox" params:#( #height, 256 ) --id:#GB_test_groupbox
+_GroupBox = _Controls.control #GroupBox "Test groupbox" params:#( #height, 128 ) --id:#GB_test_groupbox
 
 
 
 /* ADD CONTROL BY ID of groupbox */
-_Controls.control #button ("Button 1") across:1 params:#(#groupbox, _GroupBox.id )
+--_Controls.control #button ("Button 1") groupbox:_GroupBox.id across:1 
  
 
 /* ADD CONTROL BY TITLE of groupbox */
-_Controls.control #button ("Button 2") across:1 params:#(#groupbox, _GroupBox.caption )
- 
+_Controls.control #button ("Button 2") groupbox:_GroupBox.caption across:1
+
+/* TEST SPINNER -  */ 
+_Controls.control #SPINNER "Spinner" params:#(#groupbox, _GroupBox.caption ) across:1 width:64 align:#LEFT
 
 /* CREATE DIALOG */
 Dialog.create height:256

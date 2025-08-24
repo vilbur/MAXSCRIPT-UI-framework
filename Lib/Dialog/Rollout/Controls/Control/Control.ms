@@ -1,5 +1,3 @@
-filein( getFilenamePath(getSourceFileName()) + "/ParamsList/ParamsList.ms" )	-- "./ParamsList/ParamsList.ms"
-
 /** Control
  */
 struct Control_v
@@ -13,7 +11,7 @@ struct Control_v
 
 	/* dependency */
 	Events = Dictionary(),
-	Params = ParamsList_v(),
+	Params = Dictionary(),
 
 
 	/* ControlCreator_v */
@@ -23,7 +21,9 @@ struct Control_v
 	add_text,		-- string added to rollout	// used in ControlCreator_v._addFunctionsVariablesToRollout	"../../../RolloutCreator/ControlCreator/ControlCreator.ms"
 
 	rollout_id,
-
+	
+	is_in_groupbox = false, -- USED: GroupBoxes_v.addControlToGroupbox() IN FILE: "./../GroupBoxes/GroupBoxes.ms"
+	
 	public
 
 	/** Focus control
@@ -41,9 +41,7 @@ struct Control_v
 	 */
 	function param param val =
 	(
-		--print "Control_v.param()"
-		--format "PARAM: %	VALUE: % \n\n" param val
-		Params.setVal param val
+		Params[param] = val
 	),
 
 	/** Add Event to control
@@ -93,6 +91,17 @@ struct Control_v
 		rollout_id as string +"."+ id as string --return
 	),
 
+
+
+	/* MEerge dictionaries
+	*/ 
+	function mergeParams dict_a dict_b =
+	(
+		for key in dict_a.keys do
+			dict_a[key] = dict_b[key]
+
+		dict_a-- return
+	),
 
 	private
 

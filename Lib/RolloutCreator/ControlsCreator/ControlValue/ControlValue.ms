@@ -87,9 +87,10 @@ struct ControlValue_v
 	function _getValueParameter value_param_name =
 	(
 		--format "\n"; print "ControlValue_v.getValueParameter()"
-
-		if( ( val = _Control.Params.getVal (#value) ) == undefined ) then --try get parameter #value  e.g.: params:#(#value, true)
-			val = _Control.Params.getVal (value_param_name)	            --try get parameter by name e.g.: params:#(#checked, true)
+		val = _Control.Params[#VALUE]
+		
+		if val == undefined then --try get parameter #value  e.g.: params:#(#value, true)
+			val = _Control.Params[value_param_name]	            --try get parameter by name e.g.: params:#(#checked, true)
 
 		val --return
 	),
@@ -104,7 +105,7 @@ struct ControlValue_v
 	(
 		val = this._setValueToDatatype(value_param_name)(val)
 
-		_Control.Params.setVal (value_param_name) (val)
+		_Control.Params[value_param_name] = val
 	),
 
 	/** Set value correct to datatype
@@ -117,9 +118,7 @@ struct ControlValue_v
 	function _setValueToDatatype value_param_name val  =
 	(
 		--format "\n"; print "ControlValue_v._setValueToDatatype()"
-		--format "value_param_name: %\n" value_param_name
-		--format "val: %\n" val
-		
+
 		/** Set value into range
 		  *
 		  * @return	point3
@@ -130,7 +129,7 @@ struct ControlValue_v
 
 			if classOf val != point3  then
 			(
-				_range = _Control.Params.getval #range
+				_range = _Control.Params[#RANGE]
 		
 				_range.z = val
 		
@@ -167,7 +166,7 @@ struct ControlValue_v
 		alias_params = #( #COLOR, #VALUE )
 		
 		for param in alias_params while _bitmap == undefined do
-			if ( value_param = _Control.Params.getVal(param) ) != undefined then 
+			if ( value_param = _Control.Params[param] ) != undefined then 
 				_bitmap = case classOf value_param of
 				(
 					color: bitmap 256 256 color:value_param

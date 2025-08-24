@@ -35,15 +35,15 @@ struct ControlTypes_v
 		#browsePath
 	),
 
-	/** Get all types
-	 */
-	function getAllTypes =
-	(
-		list --return
-	),
-
+	--/** Get all types
+	-- */
+	--function getAllTypes =
+	--(
+	--	list --return
+	--),
+	
 	private
-
+	
 	/**;
 	 */
 	on create do

@@ -18,33 +18,20 @@ struct DefaultParameters_v
 		this.values = #( List,	List,	List,	... ) -- list of parameters and values for each control type
 
 	*/
-	include "MAXSCRIPT-UI-framework/Lib/List/ListBody.ms"
+	--include "MAXSCRIPT-UI-framework/Lib/List/ListBody.ms"
 
-
-	control_types = (ControlTypes_v()).getAllTypes(),
+	--ParamsByControlType = Dictionary(),
+	Params	=  Dictionary(), -- 2D Dictionary: #( #GLOBAL, #( #PARAM, VALUE ) )
 
 	/** Set default param
 	 */
-	function setDefaultParam key val type: =
+	function setParam key val type:undefined  =
 	(
-		--print ("DefaultParameters_v.setDefaultParam("+Key as string +", "+val as string +", type:#"+type as string+")")
-		ParamsList = this._getParamsList(type)
-
-		ParamsList.setVal key val
-	),
-
-	/** Set this.keys & this.values
-	  *
-	  * this.keys   = #( #global,	#button )
-	  * this.values = #( #(#width, 96),	#(#across, 4) )
-	  *
-	 */
-	function setDefaultsForEachControlType =
-	(
-		--print "DefaultParameters_v._setDefaultsForAllTypes()"
-		this._setControlTypes()
-
-		this._setValuesForEachControlType()
+		--print ("DefaultParameters_v.setParam("+Key as string +", "+val as string +", type:#"+type as string+")")
+		if type == undefined then
+			type = #GLOBAL
+		
+		Params[type][key] = val
 	),
 
 	/** Get keys for control type
@@ -56,8 +43,8 @@ struct DefaultParameters_v
 	function getKeysForControlType control_type =
 	(
 		--format "\n"; print "DefaultParameters_v._getKeysForControlType()"
-
-		for control_type_key in this._keysSorted() where  matchPattern (control_type as string ) pattern:( "*" + (control_type_key as string ) + "*") collect control_type_key --return
+		Params[control_type].keys --return
+		--for control_type_key in sort this._keysSorted() where  matchPattern (control_type as string ) pattern:( "*" + (control_type_key as string ) + "*") collect control_type_key --return
 	),
 
 	/** Get parameters for control type
@@ -65,126 +52,84 @@ struct DefaultParameters_v
 	function getParametersForControlType control_type =
 	(
 		--format "\n"; print "DefaultParameters_v.getParametersForControlType()"
-		--format "this.getVal(control_type as name )	= % \n" (this.getVal(control_type as name ))
-		this.getVal(control_type as name )
+		Params[control_type]
 	),
 
 	private
 
-
-	/** Merge control types defined by user with all control types
-	  *
-	  * Add #global type if not defined by user
-	  */
-	function _setControlTypes =
-	(
-		--format "\n"; print "DefaultParameters_v.setControlTypes()"
-
-		control_types = control_types + this.keys
-
-		appendIfUnique control_types #global
-	),
-
-	/** Set values of parameters for each control type
-	 */
-	function _setValuesForEachControlType =
-	(
-		--format "\n"; print "DefaultParameters_v._setValuesForEachControlType()"
-		for control_type in control_types do
-			this.setVal (control_type) (this._getDefaultParamsList(control_type))
-	),
-
-	/**  Sort array items from longest to shortest one
-	  *	@return	array
-	  */
-	function _keysSorted =
-	(
-		--format "\n"; print "ControlParamsCreator_v._getControlTypesKeys()"'
-		arr = sort (deepCopy keys)
-
-		for i=arr.count to 1 by -1 collect arr[i]
-	),
+	--/** Get control class
+	--  *
+	--  * @return	#name|undefined	E.G.: return #button if control_type == #Checkbutton || #list if control_type == #multilistbox
+	-- */
+	--function _getControlTypeClass control_type type_classes =
+	--(
+	--	--print "DefaultParameters_v.getControlClass()"
+	--	rx         = dotNetClass "System.Text.RegularExpressions.RegEx"
+	--	rx_options = dotNetClass "System.Text.RegularExpressions.RegexOptions"
+	--
+	--	matches = rx.matches control_type type_classes rx_options.IgnoreCase
+	--
+	--	match_groups = (for matchIdx = 0 to matches.count-1 collect for groupIdx = 0 to matches.item[matchIdx].groups.count-1 collect ( matches.item[matchIdx].groups.item[groupIdx].value )) --return
+	--	--format "match_groups	= % \n" match_groups
+	--	if( match_groups.count > 0 ) then
+	--		match_groups[1][1] as name --return
+	--),
 
 	/** _get params by control type
 	 */
-	function _getDefaultParamsList control_type =
+	function _setDefaultParams =
 	(
-		--print "DefaultParameters_v._getDefaultParamsList()"
+		print "DefaultParameters_v._setDefaultParams()"
 		--format "control_type	= % \n" control_type
-		ParamsList = this._getParamsList(control_type)
-		--format "ParamsList	= % \n" ParamsList
-		keys_values = case control_type of
-		(
-			#Global:	#( #across,4 )
-			--#Groupbox:	#( )
-			--#Groupbox:	#( #across,1,	#height,128 )
-			#Button:	#( #width,96 )
-			--#Checkbox:	#( #across,4 )
-			#List:	#( #across,1 )
-			#Edittext:	#( #across,1 )
-			#BrowsePath:	#( #across,1 )
-			#Radiobuttons:	#( #across,1)
-			#Slider:	#( #range,[0,100,0])
-			#Spinner:	#( #range,[0,100,0])
-			#Angle:	#( #range,[0,360,0],	#dir,#cw,	#StartDegrees,-90 )
-			--default:	#( ) -- #global
+		format "Params: %\n" Params
+		format "this.Params: %\n" this.Params
+		--ParamsList = this._getParamsList(control_type)
+		--ParamsList = Dictionary()
+
+		/* GET ALL CONTROL TYPES */ 
+		all_control_types = (ControlTypes_v()).list + #(#GLOBAL)
+		
+		
+		/* INIT DICTIONARIES OF PARAMS FOR EACH CONTROL TYPE*/ 
+		for control_type in all_control_types do
+			Params[control_type] = Dictionary()
+		
+		for type in Params.keys do
+		format "%: %\n" type Params[type]
+		
+		/* GLOBAL ACROSS PARAMETER  */ 
+		Params[#Global][#ACROSS] = 4
+		
+
+		/* ACROSS PARAMS FOR CONTROL TYPE */
+		for control_type in #( #Listbox, #Edittext, #BrowsePath, #Radiobuttons ) do
+			Params[control_type][#ACROSS] = 1
+		
+		
+		/* PARAMS BY TYPE */ 
+		for type in Params.keys do
+			case type of
+			(
+				#BUTTON:	Params[type][#WIDTH] = 96
+	
+				#SLIDER:	Params[type][#RANGE] = [0,100,0]
+				#SPINNER:	Params[type][#RANGE] = [0,100,0]
+				
+				#SPINNER:
+				(
+					Params[type][#DIR] = #CW
+					
+					Params[type][#RANGE] = [0,100,0]
+					
+					Params[type][#STARTDEGREES] = [0,100,0]
+				)
 		)
-
-		if( keys_values != undefined ) then
-			for i = 1 to keys_values.count  by 2  do
-				ParamsList.setVal keys_values[i] keys_values[i+1] unique:true
-
-		--format "control_type	= % \n" control_type
-		--format "keys_values	= % \n" keys_values
-		--format "ParamsList	= % \n" ParamsList
-		ParamsList --return
-	),
-
-	/** Get control class
-	  *
-	  * @return	#name|undefined	E.G.: return #button if control_type == #Checkbutton || #list if control_type == #multilistbox
-	 */
-	function _getControlTypeClass control_type type_classes =
-	(
-		--print "DefaultParameters_v.getControlClass()"
-		rx         = dotNetClass "System.Text.RegularExpressions.RegEx"
-		rx_options = dotNetClass "System.Text.RegularExpressions.RegexOptions"
-
-		matches = rx.matches control_type type_classes rx_options.IgnoreCase
-
-		match_groups = (for matchIdx = 0 to matches.count-1 collect for groupIdx = 0 to matches.item[matchIdx].groups.count-1 collect ( matches.item[matchIdx].groups.item[groupIdx].value )) --return
-		--format "match_groups	= % \n" match_groups
-		if( match_groups.count > 0 ) then
-			match_groups[1][1] as name --return
-	),
-
-	/** Get params list
-	 */
-	function _getParamsList control_type =
-	(
-		--print "DefaultParameters_v._getParamsList()"
-		if( (ParamsList = this.getval control_type) == undefined ) then
-			ParamsList = this._setParamsList (control_type)
-
-		ParamsList --return
-	),
-
-	/** _set params list
-	 */
-	function _setParamsList control_type =
-	(
-		--print "DefaultParameters_v._setParamsList()"
-		ParamsList = List_v()
-
-		this.setVal control_type (ParamsList)
-
-		ParamsList --return
 	),
 
 	/**
 	 */
 	on create do
 	(
+		this._setDefaultParams()
 	)
-
 )

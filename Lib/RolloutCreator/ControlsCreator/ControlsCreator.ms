@@ -48,7 +48,7 @@ struct ControlCreator_v
 		
 
 		/* ADD CONTROL TO GROUPBOX */ 
-		if not this.isGroupboxControls() then
+		if not this.isGroupboxControl() then
 			GROUPBOXCREATOR.addGrouboxes (_Rollout.getFullId() as name ) (this.Controls.GroupBoxes)
 
 			
@@ -80,7 +80,7 @@ struct ControlCreator_v
 
 		
 		/* modify ACROSS PARAMETER */
-		if not this.isGroupboxControls() then
+		if not this.isGroupboxControl() then
 			( AcrossParameterModifier = AcrossParameterModifier_v()).addFakeControls(this.Controls)
 
 		/* add LOCAL VARIABLES */
@@ -126,7 +126,7 @@ struct ControlCreator_v
 
 		for _Controls in _Rollout_._Controls where this._isControls(_Controls) do
 		(
-			controls_in_groupboxes = for _Control in _Controls.list where _Control.Params.getVal #GroupBox != undefined and _Control.type != #GroupBox collect _Control -- Get controls with defined groupbox in params AND they are not groupbox
+			controls_in_groupboxes = for _Control in _Controls.list where _GroupBox.Params[#GROUPBOX] != undefined and _Control.type != #GROUPBOX collect _Control -- Get controls with defined groupbox in params AND they are not groupbox
 
 			_Controls.list = ( diffArray _Controls.list controls_in_groupboxes)
 
@@ -156,7 +156,7 @@ struct ControlCreator_v
 	function _addControlsToRollout =
 	(
 		--format "\n"; print "ControlCreator_v._addControlsToRollout()"
-		--format "this.isGroupboxControls()	= % \n" (this.isGroupboxControls())
+		--format "this.isGroupboxControl()	= % \n" (this.isGroupboxControl())
 		
 		/** ADD START OR END OF GROUP
 		  *
@@ -184,7 +184,7 @@ struct ControlCreator_v
 		
 		
 		/* BEGIN GROUP */ 
-		if not this.isGroupboxControls() then
+		if not this.isGroupboxControl() then
 			_addControlsGroup #start
 
 			
@@ -194,23 +194,34 @@ struct ControlCreator_v
 
 			
 		/* END GROUP */ 
-		if not this.isGroupboxControls() then
+		if not this.isGroupboxControl() then
 			_addControlsGroup #end
 	),
 
 	/*------------------------------------------------------------------------------
 		
-		ADD CONTROL TO RolloutCreator
+		ADD CONTROL TO UI
 		
 	--------------------------------------------------------------------------------*/
 	function _addControlToRollout _Control =
 	(
-		--format "\n"; print "ControlCreator_v._addControlToRollout()"
+		format "\n\n"; print "ControlCreator_v._addControlToRollout()"
 		--format "_Control.params: %\n" _Control.params
-		params = ParamsCreator.join(_Control.params)
-		--format "CONTROL: %		PARAMS: %\n" ( _Control.id) params
+		params = _Control.params
 		
-		_Rollout.RCI.addControl (_Control.type) (_Control.id) (this._getCaption(_Control)) paramStr:params filter:true;
+		if _Control.is_in_groupbox then
+		(
+			
+			
+			
+		)
+		
+		/* GET PARAMETRS STRING */ 
+		param_str = ParamsCreator.join(params)
+		format "CONTROL: %		PARAMS: %\n" ( _Control.id) params
+		format "_Control.is_in_groupbox: %\n" _Control.is_in_groupbox
+		/* ADD CONTROL */ 
+		_Rollout.RCI.addControl (_Control.type) (_Control.id) (this._getCaption(_Control)) paramStr:param_str filter:true;
 	),
 
 	/** ADD HANDLERS OF EVENTS
@@ -329,9 +340,9 @@ struct ControlCreator_v
 	
 	/** If controls list is not temporary
 	 */
-	function isGroupboxControls =
+	function isGroupboxControl =
 	(
-		--format "\n"; print "ControlCreator_v.isGroupboxControls()"
+		--format "\n"; print "ControlCreator_v.isGroupboxControl()"
 		this.Controls.group == #CONTROLS_IN_GROUPBOXES
 	),
 

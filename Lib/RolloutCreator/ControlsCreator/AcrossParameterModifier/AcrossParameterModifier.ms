@@ -75,7 +75,7 @@ struct AcrossParameterModifier_v
 	function _setAcrossOfCurrentControl _Control =
 	(
 		----format "\n"; print "AcrossParameterModifier_v._setAcrossOfCurrentControl()"
-		across_current = if( (across_param = _Control.Params.getVal #across) != undefined ) then across_param else across_last --return
+		across_current = if( (across_param = _Control.Params[#ACROSS]) != undefined ) then across_param else across_last --return
 	),
 
 	/** Fill end of row

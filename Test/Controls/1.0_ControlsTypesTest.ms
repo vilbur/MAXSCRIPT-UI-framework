@@ -62,8 +62,9 @@ _Controls   = Dialog.Controls()
 --
 --
 --/*------ DROPDOWN ------*/
+--_Controls.control #DROPDOWN "Dropdown"
 --_Controls.control #DROPDOWNLIST "Dropdownlist"
---
+
 --
 --/*------ EDITTEXT ------*/
 --_Controls.control #EDITTEXT "Edittext"
@@ -73,8 +74,8 @@ _Controls   = Dialog.Controls()
 --_Slider = _Controls.control #SLIDER "Slider" ticks:3 width:256 range:[0,50,0] ticks:5 type:#integer
 --
 --/*------ SPINNER ------*/
---_Controls.control #SPINNER "Spinner"
---_Controls.control #SPINNER "Spinner 2" width:96 scale:0.01 range:[0,100,0.01]
+_Controls.control #SPINNER "Spinner"
+_Controls.control #SPINNER "Spinner 2" width:96 scale:0.01 range:[0,100,0.01]
 --
 --
 --/*------ LISTBOX ------*/

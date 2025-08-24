@@ -75,7 +75,7 @@ struct GroupBoxCreator_v
 
 		groupbox_controls	= for i = 1 to rollout_controls_ids.count where findItem GroupBoxes.List[groupbox_id] rollout_controls_ids[i] collect rollout_controls[i]
 
-		GroupboxSorter.sortControlsInGroupBox(execute (rollout_id_full+"."+ groupbox_id as string ))(groupbox_controls)
+		GroupboxSorter.sortControlsInGroupBox(rollout_id_full)(execute (rollout_id_full+"."+ groupbox_id as string ))(groupbox_controls)
 
 
 		this._resizeGroupBox (rollout_controls) (rollout_controls_ids) (groupbox_controls) (groupbox_id)

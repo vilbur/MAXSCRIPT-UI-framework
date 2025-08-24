@@ -56,17 +56,25 @@ struct Controls_v
 		visible:		\
 		add_to_controls:true =
 	(
-		--format "\n"; print "Controls_v.Control()"
-
+		format "\n"; print "Controls_v.Control()"
+		format "control_type: %\n" control_type
+		
+		
+		/* SANITIZE PARAMETERS */
+		if control_type == #DROPDOWN then control_type = #DROPDOWNLIST
+		
+		/* SET DFAULT HIGHLIGHTCOLOR */ 
+		if control_type == #CHECKBUTTON and highlightColor == undefined then highlightColor = ::color 95 138 193 -- dot notation "::" is used because of "color" is maxscript reserved global kyeword
+		
 		/* PROCESS FUNCTION PARAMETERS */ 	
 		_param_names  = #( #pos, #checked, #width, #height, #offset, #align, #items, #range, #type, #ticks, #orient, #scale, #controller, #default, #unselect, #value, #color, #bitmap, #ini, #tooltip, #across, #columns,	#visible, #border, #groupbox, #highlightColor)
 		_param_values = #(  pos,  checked,  width,  height,  offset,  align,  items,  range,  type,  ticks,  orient,  scale,  controller,  default,  unselect,  value,  color,  bitmap,  ini,   tooltip,  across,  columns,  visible,   border,  groupbox,  highlightColor)
 
-
-		/* SET CONTROL ID BY VALUE IN PARAMS */ 
+		
+		
+		/* SET ID BY VALUE IN PARAMS */ 
 		if ( index = findItem params #id ) > 0 then
 			id = params[index +1]
-		
 			
 		/*------------------------------------------------------------------------------
 			CREATE NEW CONTROL
@@ -117,18 +125,6 @@ struct Controls_v
 		(for _Control in List where _Control.id == control_id collect _Control)[1]
 	),
 
-	/** Set controls Default params
-	  *
-	  * if type match control type, then be applied as default
-	  *
-	  * @param	#name	type is mask and must match control type E.G.: match #listbox|#multilistbox|#dropdownlist if type==#List
-	  *
-	 */
-	function Default key val type:#global =
-	(
-		--print ("Controls_v.Default("+Key as string +", "+val as string +", type:#"+type as string+")")
-		 DefaultParameters.setDefaultParam key val type:type
-	),
 
 	/** Wrapper of method this.Default() for mass assignment params in array
 	  *
@@ -140,6 +136,20 @@ struct Controls_v
 		for i = 1 to keys_values.count  by 2  do
 			this.Default keys_values[i] keys_values[i+1] type:type
 	),
+	
+	/** Set controls Default params
+	  *
+	  * if type match control type, then be applied as default
+	  *
+	  * @param	#name	type is mask and must match control type E.G.: match #listbox|#multilistbox|#dropdownlist if type==#List
+	  *
+	 */
+	function Default key val type:#global =
+	(
+		--print ("Controls_v.Default("+Key as string +", "+val as string +", type:#"+type as string+")")
+		 DefaultParameters.setParam key val type:type
+	),
+
 
 	private
 

@@ -6,6 +6,8 @@ struct GroupBoxControlsSorter_v
 	/* properties */
 	padding	= [32, 8],
 	margin	= 8,
+	rollout_width,
+	
 	_first_control_offset_y	= 16,
 	_control_default_height	= 24,
 
@@ -19,17 +21,20 @@ struct GroupBoxControlsSorter_v
 	  *
 	  * @return	array controls in groupbox
 	 */
-	function sortControlsInGroupBox GroupboxControl groupbox_controls =
+	function sortControlsInGroupBox rollout_id GroupboxControl groupbox_controls =
 	(
-		--format "\n"; print "GroupBoxControlsSorter_v._sortControlsInGroupBox()"
-		--format "GroupboxControl	= % \n" GroupboxControl
-		--format "groupbox_controls	= % \n" groupbox_controls
-
+		format "\n"; print "GroupBoxControlsSorter_v._sortControlsInGroupBox()"
+		format "ROLLOUT_ID: %\n" rollout_id
+		format "TEST: %\n" (execute (rollout_id+".width"))
+		
+		rollout_width = execute (rollout_id+".width")
+		
+		/* GET INIT POSITION OF CONTROLS IN GROUPBOX - top left corner of groupbox */ 
 		control_position = this._getControlBoxPosition(GroupboxControl.pos) -- get position of first control in groupbox
-		--format "control_position	= % \n" control_position
+
+		/* MOVE CONTROLS ON POSTIONS */ 
 		for groupbox_control in groupbox_controls do
 			this._moveControlToGroupbox (groupbox_control)(control_position)
-
 	),
 
 
@@ -51,15 +56,28 @@ struct GroupBoxControlsSorter_v
 	 */
 	function _moveControlToGroupbox _control &control_position =
 	(
-		--format "\n"; print "GroupBoxControlsSorter_v._moveControlToGroupbox()"
-		--format "_control	= % \n" _control
-		_control.pos = next_control_position = control_position
+		format "\n"; print "GroupBoxControlsSorter_v._moveControlToGroupbox()"
+		--format "_control: %\n" _control
+		
+		/*------------------------------------------------------------------------------
+			SET CONTROL POSITION 
+		--------------------------------------------------------------------------------*/
+		control_pos_current = copy control_position
+		
+		if classOf _control == SpinnerControl then
+			control_pos_current.x += _control.pos.x 
 
-		next_control_position.y +=  try( _control.height ) catch(_control_default_height)
-		--next_control_position.y +=  _control_default_height
-		next_control_position.y +=  margin
-		--
-		next_control_position --return
+		--_control.pos = control_pos_current
+		
+
+		/*------------------------------------------------------------------------------
+			NEXT CONTROL POSITION 
+		--------------------------------------------------------------------------------*/
+		control_position.y +=  try( _control.height ) catch(_control_default_height)
+
+		control_position.y +=  margin
+		
+		control_position --return
 	),
 
 

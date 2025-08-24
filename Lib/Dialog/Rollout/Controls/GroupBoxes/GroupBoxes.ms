@@ -8,6 +8,26 @@ struct GroupBoxes_v
 	List = Dictionary(), -- keys:#groupbox_id values:#(Control_ids)
 
 
+	/** ADD CONTROL TO GROUPBOX
+	 */
+	function addControlToGroupbox _Controls _Control =
+	(
+		--format "\n"; format ("GroupBoxes_v.addControlToGroupbox() " + _Control.caption)
+
+		/* IF CONTROL HAS GROUPBOX DEFINED IN PARAMS */
+		if( (groupbox_param = _GroupBox.Params[#GROUPBOX]) != undefined ) then
+		(
+			_GroupBox = this._createOrGetGroupBoxControl (_Controls) (_Control) (groupbox_param)
+		
+			--_Control.param #pos [0, 0] -- move controls aside, so they don`t mess up with layout
+			_Control.is_in_groupbox = true
+		
+			--_GroupBox.Params[#GROUPBOX] = _GroupBox.id -- reset groupbox id
+		
+			this._addControlToGroupboxList (_GroupBox.id as name ) (_Control.id as name )
+		)
+	),
+
 	/** Get controlcount in groupbox
 	 */
 	function getControlsInGroupbox groupbox_id =
@@ -31,25 +51,6 @@ struct GroupBoxes_v
 		this._setDefaultHeight(_Control)
 
 		this._saveGroupBox(_Control.id as name )
-	),
-
-	/** Try add control to Groupbox
-	 */
-	function addControlToGroupbox _Controls _Control =
-	(
-		--format "\n"; format ("GroupBoxes_v.addControlToGroupbox() " + _Control.caption)
-
-		/* IF CONTROL HAS GROUPBOX DEFINED IN PARAMS */
-		if( (groupbox_param = _Control.Params.getVal #Groupbox) != undefined ) then
-		(
-			_GroupBox = this._createOrGetGroupBoxControl (_Controls) (_Control) (groupbox_param)
-		
-			_Control.param #pos [0, 0] -- move controls aside, so they don`t mess up with layout
-		
-			_Control.Params.setVal #Groupbox _GroupBox.id
-		
-			this._addControlToGroupboxList (_GroupBox.id as name ) (_Control.id as name )
-		)
 	),
 
 
@@ -135,8 +136,8 @@ struct GroupBoxes_v
 	 */
 	function _setDefaultHeight _GroupBox =
 	(
-		if _GroupBox.Params.getVal #height == undefined  do -- 90px is default width of groupbox
-			_GroupBox.Params.setVal #height GROUPBOX_DEFAULT_HEIGHT
+		if _GroupBox.Params[#height] == undefined  do -- 90px is default width of groupbox
+			_GroupBox.Params[#height] = GROUPBOX_DEFAULT_HEIGHT
 	),
 
 	/**
