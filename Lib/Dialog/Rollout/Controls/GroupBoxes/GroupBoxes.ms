@@ -17,12 +17,9 @@ struct GroupBoxes_v
 		/* IF CONTROL HAS GROUPBOX DEFINED IN PARAMS */
 		if( (groupbox_param = _GroupBox.Params[#GROUPBOX]) != undefined ) then
 		(
-			_GroupBox = this._createOrGetGroupBoxControl (_Controls) (_Control) (groupbox_param)
-		
-			--_Control.param #pos [0, 0] -- move controls aside, so they don`t mess up with layout
 			_Control.is_in_groupbox = true
-		
-			--_GroupBox.Params[#GROUPBOX] = _GroupBox.id -- reset groupbox id
+			
+			_GroupBox = this._getOrNewGroupBoxControl (_Controls) (_Control) (groupbox_param)
 		
 			this._addControlToGroupboxList (_GroupBox.id as name ) (_Control.id as name )
 		)
@@ -59,7 +56,7 @@ struct GroupBoxes_v
 
 	/**
 	 */
-	function _createOrGetGroupBoxControl _Controls _Control groupbox_param =
+	function _getOrNewGroupBoxControl _Controls _Control groupbox_param =
 	(
 		--format "GroupBoxes_v._createCreateCreateOrGetGroupBox()"
 		if( (_GroupBox = this._findGroupboxInControls(_Controls)(groupbox_param) ) == undefined ) then

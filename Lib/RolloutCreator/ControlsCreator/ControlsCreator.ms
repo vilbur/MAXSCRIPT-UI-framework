@@ -48,7 +48,7 @@ struct ControlCreator_v
 		
 
 		/* ADD CONTROL TO GROUPBOX */ 
-		if not this.isGroupboxControl() then
+		if not this.isGroupControl() then
 			GROUPBOXCREATOR.addGrouboxes (_Rollout.getFullId() as name ) (this.Controls.GroupBoxes)
 
 			
@@ -80,7 +80,7 @@ struct ControlCreator_v
 
 		
 		/* modify ACROSS PARAMETER */
-		if not this.isGroupboxControl() then
+		if not this.isGroupControl() then
 			( AcrossParameterModifier = AcrossParameterModifier_v()).addFakeControls(this.Controls)
 
 		/* add LOCAL VARIABLES */
@@ -126,7 +126,7 @@ struct ControlCreator_v
 
 		for _Controls in _Rollout_._Controls where this._isControls(_Controls) do
 		(
-			controls_in_groupboxes = for _Control in _Controls.list where _GroupBox.Params[#GROUPBOX] != undefined and _Control.type != #GROUPBOX collect _Control -- Get controls with defined groupbox in params AND they are not groupbox
+			controls_in_groupboxes = for _Control in _Controls.list where _Control.Params[#GROUPBOX] != undefined and _Control.type != #GROUPBOX collect _Control -- Get controls with defined groupbox in params AND they are not groupbox
 
 			_Controls.list = ( diffArray _Controls.list controls_in_groupboxes)
 
@@ -156,7 +156,7 @@ struct ControlCreator_v
 	function _addControlsToRollout =
 	(
 		--format "\n"; print "ControlCreator_v._addControlsToRollout()"
-		--format "this.isGroupboxControl()	= % \n" (this.isGroupboxControl())
+		--format "this.isGroupControl()	= % \n" (this.isGroupControl())
 		
 		/** ADD START OR END OF GROUP
 		  *
@@ -171,20 +171,23 @@ struct ControlCreator_v
 		 */
 		function _addControlsGroup start_or_end =
 		(
-			--format "\n"; print "ControlCreator_v._addControlsGroup()"
+			format "\n"; print "ControlCreator_v._addControlsGroup()"
 			--format "_Controls.group:-%-\n" Controls.group
 			--format "MATCH: %\n" (matchPattern _Controls.group pattern:("[*]"))
 			if( Controls.group == undefined or matchPattern Controls.group pattern:("[*]") or Controls.group == "" ) do
 				return false
 	
 			start_or_end_string = if( start_or_end == #START ) then "group @"+Controls.group+"@ (" else ")"
-	
+			
+			if( start_or_end == #START ) then
+				format "ADD GROUP: %" Controls.group
+				
 			_Rollout.RCI.addText ( start_or_end_string ) filter:on
 		)
 		
 		
 		/* BEGIN GROUP */ 
-		if not this.isGroupboxControl() then
+		if not this.isGroupControl() then
 			_addControlsGroup #start
 
 			
@@ -194,7 +197,7 @@ struct ControlCreator_v
 
 			
 		/* END GROUP */ 
-		if not this.isGroupboxControl() then
+		if not this.isGroupControl() then
 			_addControlsGroup #end
 	),
 
@@ -205,23 +208,31 @@ struct ControlCreator_v
 	--------------------------------------------------------------------------------*/
 	function _addControlToRollout _Control =
 	(
-		format "\n\n"; print "ControlCreator_v._addControlToRollout()"
+		--format "\n\n"; print "ControlCreator_v._addControlToRollout()"
 		--format "_Control.params: %\n" _Control.params
-		params = _Control.params
+		params = if _Control.is_in_groupbox then _Control.params else this._offsetControlsInGroupbox (_Control)
 		
-		if _Control.is_in_groupbox then
-		(
-			
-			
-			
-		)
-		
-		/* GET PARAMETRS STRING */ 
 		param_str = ParamsCreator.join(params)
-		format "CONTROL: %		PARAMS: %\n" ( _Control.id) params
-		format "_Control.is_in_groupbox: %\n" _Control.is_in_groupbox
+	
+		--format "CONTROL: %		PARAMS: %\n" ( _Control.id) params
+		--format "_Control.is_in_groupbox: %\n" _Control.is_in_groupbox
 		/* ADD CONTROL */ 
 		_Rollout.RCI.addControl (_Control.type) (_Control.id) (this._getCaption(_Control)) paramStr:param_str filter:true;
+	),
+	
+	/** Offset controls in groupbox
+	 */
+	function _offsetControlsInGroupbox _Control =
+	(
+		--format "\n"; print "ControlCreator_v._offsetControlsInGroupbox()"
+		
+		params = _Control.params
+
+		--params[#ACROSS] = 1
+		--params[#ACROSS] = #LEFT
+		--params[#POS] = [0,0]
+		
+		params --return
 	),
 
 	/** ADD HANDLERS OF EVENTS
@@ -340,9 +351,9 @@ struct ControlCreator_v
 	
 	/** If controls list is not temporary
 	 */
-	function isGroupboxControl =
+	function isGroupControl =
 	(
-		--format "\n"; print "ControlCreator_v.isGroupboxControl()"
+		--format "\n"; print "ControlCreator_v.isGroupControl()"
 		this.Controls.group == #CONTROLS_IN_GROUPBOXES
 	),
 

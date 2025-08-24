@@ -56,8 +56,8 @@ struct Controls_v
 		visible:		\
 		add_to_controls:true =
 	(
-		format "\n"; print "Controls_v.Control()"
-		format "control_type: %\n" control_type
+		--format "\n"; print "Controls_v.Control()"
+		--format "control_type: %\n" control_type
 		
 		
 		/* SANITIZE PARAMETERS */

@@ -5,22 +5,31 @@ filein( getFilenamePath(getSourceFileName()) + "/../../../Lib/Dialog/Dialog.ms" 
 
 /*	Use of GroupControl and GroupBox
   
-	----------------------------------------------------------------------------------------------------------------------------------------------------
+	===================================================================================================================================================
 	Group:    https://help.autodesk.com/view/3DSMAX/2016/ENU/?guid=__files_GUID_1361B847_7878_4C52_98DE_5BC5CA830B40_htm&v=2015
 	GroupBox: https://help.autodesk.com/view/3DSMAX/2015/ENU/?guid=__files_GUID_A8C801C7_BA79_448C_A1EE_28C40B16287C_htm
-	----------------------------------------------------------------------------------------------------------------------------------------------------
+	===================================================================================================================================================
 
 	Hierarchy of controls:
-		Rollout
-			Group
-				Controls
 	
-	----------------------------------------------------------------------------------------------------------------------------------------------------
+		Rollout
+		------------------------
+			Controls
+			Group
+			------------------------
+				Controls
+				GroupBox
+				------------------------
+					Controls
+	
+	--------------------------------------------------------------------------
 	
 	Group    divide rollout HORIZONTALY 
 	GroupBox divide rollout VERTICALY
 
-	----------------------------------------------------------------------------------------------------------------------------------------------------
+
+	===================================================================================================================================================
+
 
 	POSITION AND SIZE DIFERENCIES:
 
@@ -33,7 +42,8 @@ filein( getFilenamePath(getSourceFileName()) + "/../../../Lib/Dialog/Dialog.ms" 
 	
 			• Position can be changed
 			
-			
+		--------------------------------------------------------------------------
+
 	
 		GroupBox:
 			• Create "columns" in GroupControl
@@ -43,8 +53,9 @@ filein( getFilenamePath(getSourceFileName()) + "/../../../Lib/Dialog/Dialog.ms" 
 			• Size can be defined and changed
 				• Width is set by parameters #ACROSS or #WIDTH
 			
-	----------------------------------------------------------------------------------------------------------------------------------------------------
 
+	===================================================================================================================================================
+	
 	
 	AUTO POSITION OF CONTROLS IN GRPOUPS:
 		
@@ -55,19 +66,28 @@ filein( getFilenamePath(getSourceFileName()) + "/../../../Lib/Dialog/Dialog.ms" 
 			• Rows of controls are driven by #ACROSS parameter
 			• Across parameter define number of controls in row EXAMPLE: "./Dev/across_parameter_default_beahaviour.ms"
 			
-			UI-FRAMEWORK:
-				• 
+			UI-FRAMEWORK WORKAROUNDS:
+				• Use PLACEHOLDERS to fill row by count of across controls
 			
 			
+		--------------------------------------------------------------------------
 	
 		GroupBox:
 		
 			• CONTROLS ARE NOT PLACED INSIDE GROUPBOX by default
-				◦ WORKAROUND TO CORRECT LAYOUT:
+				◦ HOW TO REPAIR LAYOUT:
 					A. Group box must be REPOSITIONED and RESIZED around controls 
 					B. Controls  must be PLACED INTO GroupBox
 					C. Or both A. and B.
-
+					
+					
+			UI-FRAMEWORK WORKAROUNDS:
+				• Controls in GroupBox:
+					1) Move controls to pos [0,0] to prevent break of layout
+					2) Rendere controls in separated temp rollout to get layout of controls
+					3) Reposition controls by controls in temp rollout
+					4) Close temp rollout
+					
 */ 
 
 

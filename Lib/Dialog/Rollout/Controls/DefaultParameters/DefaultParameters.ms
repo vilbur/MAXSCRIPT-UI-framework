@@ -81,8 +81,8 @@ struct DefaultParameters_v
 	(
 		print "DefaultParameters_v._setDefaultParams()"
 		--format "control_type	= % \n" control_type
-		format "Params: %\n" Params
-		format "this.Params: %\n" this.Params
+		--format "Params: %\n" Params
+		--format "this.Params: %\n" this.Params
 		--ParamsList = this._getParamsList(control_type)
 		--ParamsList = Dictionary()
 
@@ -93,9 +93,6 @@ struct DefaultParameters_v
 		/* INIT DICTIONARIES OF PARAMS FOR EACH CONTROL TYPE*/ 
 		for control_type in all_control_types do
 			Params[control_type] = Dictionary()
-		
-		for type in Params.keys do
-		format "%: %\n" type Params[type]
 		
 		/* GLOBAL ACROSS PARAMETER  */ 
 		Params[#Global][#ACROSS] = 4
