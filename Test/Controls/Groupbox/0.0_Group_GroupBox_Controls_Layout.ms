@@ -81,12 +81,12 @@ filein( getFilenamePath(getSourceFileName()) + "/../../../Lib/Dialog/Dialog.ms" 
 					C. Or both A. and B.
 					
 					
-			UI-FRAMEWORK WORKAROUNDS:
-				• Controls in GroupBox:
-					1) Move controls to pos [0,0] to prevent break of layout
-					2) Rendere controls in separated temp rollout to get layout of controls
-					3) Reposition controls by controls in temp rollout
-					4) Close temp rollout
+			• UI-FRAMEWORK WORKAROUNDS:
+				◦ Controls in GroupBox:
+					1. Move controls to pos [0,0] to prevent break of layout
+					2. Rendere controls in separated temp rollout to get layout of controls
+					3. Reposition controls by controls in temp rollout
+					4. Close temp rollout
 					
 */ 
 
@@ -102,13 +102,13 @@ Dialog 	= Dialog_v title:(getFilenameFile(getSourceFileName()))
 _Controls = Dialog.Controls group:"Test Dialog"
 
 /* GROUPBOX */
-_GroupBox_A1 = _Controls.control #GroupBox (groupbox_name = "Groupbox A 1") across:2 --params:#( #height, 128 )
-_GroupBox_A2 = _Controls.control #GroupBox (groupbox_name = "Groupbox A 2") across:2 --params:#( #height, 128 )
+_GroupBox_A1 = _Controls.control #GroupBox "Groupbox A 1" across:2 --params:#( #height, 128 )
+_GroupBox_A2 = _Controls.control #GroupBox "Groupbox A 2" across:2 --params:#( #height, 128 )
 
 --/* BUTTON */
---_Controls.control #button ("Button 1") across:1 params:#(#groupbox, groupbox_name)
---_Controls.control #button ("Button 2") across:1 params:#(#groupbox, groupbox_name)
---
+_Controls.control #button ("Button 1") across:1 groupbox:groupbox_name
+_Controls.control #button ("Button 2") across:1 groupbox:groupbox_name
+
 --
 --/* CONTROLS */
 --_Controls_2 = Dialog.Controls group:"Controls 2"

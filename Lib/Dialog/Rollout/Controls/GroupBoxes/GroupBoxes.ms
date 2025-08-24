@@ -15,7 +15,7 @@ struct GroupBoxes_v
 		--format "\n"; format ("GroupBoxes_v.addControlToGroupbox() " + _Control.caption)
 
 		/* IF CONTROL HAS GROUPBOX DEFINED IN PARAMS */
-		if( (groupbox_param = _GroupBox.Params[#GROUPBOX]) != undefined ) then
+		if( (groupbox_param = _Control.Params[#GROUPBOX]) != undefined ) then
 		(
 			_Control.is_in_groupbox = true
 			
