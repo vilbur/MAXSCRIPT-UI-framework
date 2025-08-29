@@ -103,7 +103,7 @@ struct ControlEventCreator_v
 	(
 		--format "\n"; print "ControlEventCreator_v._addToAutoRunEvents()"
 		if Event.autorun then
-			if ( control_state = _Control.Params.getVal (#checked) ) != undefined and control_state == true then
+			if ( control_state = _Control.Params[#checked] ) != undefined and control_state == true then
 				AUTORUN_EVENTS[ ( _Control.id as string + "_" + Event.type as string  )as name ] = Event.callback
 	),
 

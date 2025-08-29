@@ -1,3 +1,5 @@
+filein( getFilenamePath(getSourceFileName()) + "/GroupBox/GroupBox.ms" )	--"./GroupBox/GroupBox.ms"
+
 global GROUPBOX_DEFAULT_HEIGHT = 24
 
 /** GroupBoxes_v
@@ -6,23 +8,35 @@ struct GroupBoxes_v
 (
 
 	List = Dictionary(), -- keys:#groupbox_id values:#(Control_ids)
+		
+	/* reference*/ 
+	Controls,
+	
+	
+	/** Set group box
+	 */
+	function addGroupbox _GroupBox =
+	(
+		--format ("GroupBoxes_v.addGroupbox() " + _GroupBox.caption)
+		this._setDefaultHeight(_GroupBox)
+
+		this._saveGroupBox(_GroupBox)
+	),
 
 
 	/** ADD CONTROL TO GROUPBOX
 	 */
-	function addControlToGroupbox _Controls _Control =
+	function addControlToGroupbox &_Control =
 	(
 		--format "\n"; format ("GroupBoxes_v.addControlToGroupbox() " + _Control.caption)
-
-		/* IF CONTROL HAS GROUPBOX DEFINED IN PARAMS */
-		if( (groupbox_param = _Control.Params[#GROUPBOX]) != undefined ) then
-		(
-			_Control.is_in_groupbox = true
-			
-			_GroupBox = this._getOrNewGroupBoxControl (_Controls) (_Control) (groupbox_param)
+		/* MARK */ 
+		--_Control.is_in_groupbox = true
 		
-			this._addControlToGroupboxList (_GroupBox.id as name ) (_Control.id as name )
-		)
+		_GroupBox = this._getOrNewGroupBoxControl (_Control) (_Control.Params[#GROUPBOX])
+	
+		this._addControlToGroupbox (_GroupBox.id ) (_Control)
+		
+		_Control --return
 	),
 
 	/** Get controlcount in groupbox
@@ -37,44 +51,72 @@ struct GroupBoxes_v
 
 	),
 
-	/** Set group box
+
+
+	
+	/** Createa temp groupbox rollout
 	 */
-	function addGroupbox _Controls _Control =
+	function createGroupboxRollout rollout_width =
 	(
-		--format ("GroupBoxes_v.addGroupbox() " + _Control.caption)
-		--format "**************************************\n"
-		--format "_Control.id: %\n" _Control.id
-		--format "ADD GROUPBOX = % \n" _Control
-		this._setDefaultHeight(_Control)
+		--clearListener(); print("Cleared in:\n"+getSourceFileName())
+		format "\n"; print "GroupBoxCreator_v.createGroupboxRollout()"
+		format "**************************************\n"
+		format "rollout_width: %\n" rollout_width
 
-		this._saveGroupBox(_Control.id as name )
+		for groupbox_id in List.keys do
+			 List[groupbox_id].createTemporaryRollout(rollout_width)
+		
 	),
-
-
+	
+	/** Classify groupboxes and controls
+	 */
+	function setGroupboxesAndControls  =
+	(
+		format "\n"; print "GroupBoxes_v.setGroupboxesAndControls()"
+		--for Controls in this.Controls where this._isControls(Controls) do
+			--for _Control in this.Controls.list where _Control.Params[#GROUPBOX] != undefined or _Control.type == #GROUPBOX do
+		for _Control in this.Controls.list do
+		(
+			if (_Control.type == #GROUPBOX) then
+				format "++++++++++++++++++++_Control++++++++++++++++++++: %\n" _Control.id
+			case of
+			(
+				/* ADD CONTROL TO GROUPBOX */
+				(_Control.Params[#GROUPBOX] != undefined ):
+					this.addControlToGroupbox(_Control)
+				
+				/* ADD GROUPBOX */ 
+				(_Control.type == #GROUPBOX):
+					this.addGroupbox(_Control)
+			)
+			
+		)
+	),
+	
 	private
-
+	
 
 	/**
 	 */
-	function _getOrNewGroupBoxControl _Controls _Control groupbox_param =
+	function _getOrNewGroupBoxControl _Control groupbox_param =
 	(
 		--format "GroupBoxes_v._createCreateCreateOrGetGroupBox()"
-		if( (_GroupBox = this._findGroupboxInControls(_Controls)(groupbox_param) ) == undefined ) then
+		if( (_GroupBox = this._findGroupboxInControls(groupbox_param) ) == undefined ) then
 
-			_GroupBox = this._createGroupboxByControl (this._createNewGroupBox(_Controls)(groupbox_param)) (_Control)
+			_GroupBox = this._createGroupboxByControl (this._createNewGroupBox(groupbox_param)) (_Control)
 
 		_GroupBox --return
 	),
 	
 	/** _find groupbox in controls by id or caption
 	 */
-	function _findGroupboxInControls _Controls groupbox_param =
+	function _findGroupboxInControls groupbox_param =
 	(
 		--format "GroupBoxes_v._findGroupboxInControls()"
 
 		local _GroupBox_found
 
-		for _Control in _Controls.List while _GroupBox_found == undefined \
+		for _Control in Controls.List while _GroupBox_found == undefined \
 			where _Control.type == #groupbox \
 			and  (_Control.caption == groupbox_param or _Control.id == groupbox_param ) \
 		do
@@ -87,46 +129,40 @@ struct GroupBoxes_v
 	 */
 	function _createGroupboxByControl _GroupBox _Control =
 	(
-		--if( ( control_across = _Control.Params.getVal #across ) != undefined ) then
-			--_GroupBox.Params.setVal #across control_across
+		--if( ( control_across = _Control.Params[#across] ) != undefined ) then
+			--_GroupBox.Params[#across] = control_across
 		this._setDefaultHeight(_GroupBox)
 
-		this._saveGroupBox(_GroupBox.id)
+		this._saveGroupBox(_GroupBox)
 
 		_GroupBox --return
 	),
 
 	/**
 	 */
-	function _addControlToGroupboxList groupbox_id _Control_id =
+	function _addControlToGroupbox groupbox_id _Control =
 	(
-		--format "\n"; format "GroupBoxes_v._addControlToGroupboxList()"
-		--format "groupbox_id	= % \n" groupbox_id
-		--format "_Control_id	= % \n" _Control_id
-		--format "this.List	= % \n" this.List
-
-		--append  (this.getVal(groupbox_id)) _Control_id
-		this.List[groupbox_id] += #(_Control_id)
+		--format "\n"; format "GroupBoxes_v._addControlToGroupbox()"
+		append List[groupbox_id].Controls _Control
 	),
-
 
 	/** Set groupbox id as key and empty array as value, array will store ids of controls in groupbox
 	  *
 	 */
-	function _saveGroupBox groupbox_id =
+	function _saveGroupBox _GroupBox =
 	(
 		--format "\n"; format "GroupBoxes_v._saveGroupBox()"
-		--format "groupbox_id	= % \n" groupbox_id
-		----this.setVal (groupbox_id) #()
-		--format "this.keys	= % \n" this.keys
-		this.List[ groupbox_id as name ] = #()
+		this.List[ _GroupBox.id ] = GroupBox_v(_GroupBox)
 	),
 
 	/** Craete new
 	 */
-	function _createNewGroupBox _Controls groupbox_caption =
+	function _createNewGroupBox groupbox_caption =
 	(
-		 _Controls.control #Groupbox groupbox_caption
+		--format "\n"; format "GroupBoxes_v._createNewGroupBox()"
+		--format "!!!!!!!!!!!!!!!!!!!!!!!! \n"
+		
+		 Controls.control #Groupbox groupbox_caption
 	),
 
 	/** _save group box

@@ -13,6 +13,7 @@ struct Control_v
 	Events = Dictionary(),
 	Params = Dictionary(),
 
+	params_str = "", -- sore parameters forRolloutCreator
 
 	/* ControlCreator_v */
 	--add_locals, 	= #(),	-- #(#variable_name1, init_value1, #variable_name2, init_value2)	// used in ControlCreator_v._addLocalVariablesToRollout 	"../../../RolloutCreator/ControlCreator/ControlCreator.ms"
@@ -22,7 +23,8 @@ struct Control_v
 
 	rollout_id,
 	
-	is_in_groupbox = false, -- USED: GroupBoxes_v.addControlToGroupbox() IN FILE: "./../GroupBoxes/GroupBoxes.ms"
+	
+	--is_in_groupbox = false, -- USED: GroupBoxes_v.addControlToGroupbox() IN FILE: "./../GroupBoxes/GroupBoxes.ms"
 	
 	public
 
@@ -103,6 +105,7 @@ struct Control_v
 		dict_a-- return
 	),
 
+
 	private
 
 
@@ -125,7 +128,9 @@ struct Control_v
 	function _setIdByCaption =
 	(
 		--print "Control_v._setIdByCaption()"
-		id  = toLower caption
+		--format "id: %\n" id
+		--format "caption: %\n" caption
+		id  = toLower (caption as string )
 
 		id	= trimRight ( trimLeft id )
 

@@ -15,7 +15,7 @@ struct Controls_v
 	/* dependency */
 	DefaultParameters = DefaultParameters_v(),
 
-	GroupBoxes 	= GroupBoxes_v(), -- "./GroupBoxes/GroupBoxes.ms"
+	GroupBoxes 	= GroupBoxes_v Controls:this, -- "./GroupBoxes/GroupBoxes.ms"
 
 	rollout_id,
 
@@ -41,73 +41,73 @@ struct Controls_v
 	  *
 	  * @return Object _Control	"./Control/Control.ms"
 	 */
-	function Control control_type caption id:undefined params:#() pos: width: height: across: offset: align: tooltip: ini:true \ -- common params for all types
-		range:	ticks: orient:	\ -- slider
+	function Control control_type caption id:undefined pos: width: height: across: offset: align: tooltip: \ -- common params for all types
+		params:#()		\ -- pass any paramater to control - HIGHER PRIORITY then PARAMS BELLOW
+		groupbox:		\ -- add control to groupbox id or title of groupbox
+		border:		\
+		visible:		\
+		value:		\ -- current value 
+		checked:		\ -- checkbox, checkbutton
+		color:		\ -- colorpicker, bitmap -- alias for "value" E.G.: color:green >>> value:(bitmap 256 32 color:green)
+		bitmap:		\ -- bitmap, imgTag
+		highlightColor:		\ -- checkbutton
+		ini:true		\ -- save control value to ini
 		default:	unselect:	\ -- radiobutton
 		items:	columns:	\ -- radiobutton, lisbox, mutlilistbox
 		type:	scale:	\ -- spinner
-		value:		\ -- current value of nost of all
-		color:		\ -- colorpicker, bitmap -- alias for "value" E.G.: color:green >>> value:(bitmap 256 32 color:green)
-		checked:		\ -- checkbox, checkbutton
-		highlightColor:		\ -- checkbutton
-		border:		\
-		bitmap:		\ -- bitmap, imgTag
-		groupbox:		\ -- add control to groupbox id or title of groupbox
-		visible:		\
-		add_to_controls:true =
+		range:	ticks: orient:	\ -- slider
+		add_to_controls:	true		=
 	(
 		--format "\n"; print "Controls_v.Control()"
-		--format "control_type: %\n" control_type
-		
-		
 		/* SANITIZE PARAMETERS */
 		if control_type == #DROPDOWN then control_type = #DROPDOWNLIST
 		
+		
 		/* SET DFAULT HIGHLIGHTCOLOR */ 
 		if control_type == #CHECKBUTTON and highlightColor == undefined then highlightColor = ::color 95 138 193 -- dot notation "::" is used because of "color" is maxscript reserved global kyeword
+		
 		
 		/* PROCESS FUNCTION PARAMETERS */ 	
 		_param_names  = #( #pos, #checked, #width, #height, #offset, #align, #items, #range, #type, #ticks, #orient, #scale, #controller, #default, #unselect, #value, #color, #bitmap, #ini, #tooltip, #across, #columns,	#visible, #border, #groupbox, #highlightColor)
 		_param_values = #(  pos,  checked,  width,  height,  offset,  align,  items,  range,  type,  ticks,  orient,  scale,  controller,  default,  unselect,  value,  color,  bitmap,  ini,   tooltip,  across,  columns,  visible,   border,  groupbox,  highlightColor)
 
 		
-		
-		/* SET ID BY VALUE IN PARAMS */ 
+		/* EXPOSE ID FROM PARAMS ARRAY */ 
 		if ( index = findItem params #id ) > 0 then
 			id = params[index +1]
-			
+		
+		
 		/*------------------------------------------------------------------------------
-			CREATE NEW CONTROL
+		  
+			CREATE CONTROL
 		--------------------------------------------------------------------------------*/
+			
 		_Control = Control_v type:control_type caption:caption id:id rollout_id:rollout_id /*add_locals:locals */
-
 		
 
-		/* PASS FUNCTION PARAMETERS TO CONTROL */ 
+		/*------------------------------------------------------------------------------
+		
+			PASS PARAMETERS TO CONTROL
+		
+		--------------------------------------------------------------------------------*/
+
 		for i = 1 to _param_values.count where _param_values[i] != unsupplied do
 			_Control.Param (_param_names[i]) (_param_values[i])
+			
+			
+		/*------------------------------------------------------------------------------
+		
+			PASS PARAMETERS TO ARRAY CONTROL
+		
+		--------------------------------------------------------------------------------*/
 
-			
-			
-		/* SET CONTROL PARAMETERS FROM PARAMS ARRAY */ 
 		this._setParamsToControl(_Control)(params)
-
 		
 
-		/* ADD CONTROL TO GROUPBOX */ 
-		if _Control.type != #Groupbox  then
-			GroupBoxes.addControlToGroupbox (this)(_Control)
-		
-		else /* ADD GROUPBOX */ 
-			GroupBoxes.addGroupbox(this)(_Control)
-			
-			
-			
 		/* ADD CONTROL TO CONTROLS */ 
-		if( add_to_controls ) then
-			this.add _Control
-
-		
+		if add_to_controls then
+			append List _Control
+	
 		_Control --return
 	),
 
@@ -155,16 +155,13 @@ struct Controls_v
 
 
 	/** Set params to control
-	 * @property	array|string	params	E.G.: #( #key1, "value1", #key2, "value2" ) | "#key1:value1, #key2:value2"
 	 *
+	 * @property	array|string	params	E.G.: #( #key1, "value1", #key2, "value2" ) | "#key1:value1, #key2:value2"
 	 *
 	 */
 	function _setParamsToControl &_Control params =
 	(
 		--format "\n"; print "Controls_v._setParamsToControl()"
-		--format "_Control.type: %\n" _Control.type
-		--format "PARAMS:	% \n" params
-		--format "classOf params: %\n" (classOf params)
 		/** _split params string
 		  *
 		  * @param	string	params_string E.G.: "width:256|height:64, border:false"
@@ -205,7 +202,7 @@ struct Controls_v
 			params = splitParamsString (params)
 
 
-		/* ADD PATAMS AND VALUESD TO CONTROL */ 	
+		/* ADD PARAMS AND VALUESD TO CONTROL */ 	
 		for i = 1 to params.count by 2  do
 			_Control.Param params[i] params[i+1]
 

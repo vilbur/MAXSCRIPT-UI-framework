@@ -50,7 +50,7 @@ struct RolloutCreator_v
 	function createRollout _Rollout width: =
 	(
 		--if DEBUG then format "\n\n-------------------------------------	RolloutCreator_v.createRollout() id:#%	-------------------------------------\n"  ( _Rollout.id as string );
-		--format "\n\n-------------------------------------	RolloutCreator_v.createRollout() id:#%	-------------------------------------\n"  ( (_Rollout.getFullId()) as string );
+		format "\n\n-------------------------------------	RolloutCreator_v.createRollout() id:#%	-------------------------------------\n"  ( (_Rollout.getFullId()) as string );
 
 		if _Rollout.RCI == undefined then -- RCI is defined WHEN chache is loaded
 		(
@@ -123,6 +123,26 @@ struct RolloutCreator_v
 
 
 	private
+
+	 /*------------------------------------------------------------------------------
+	 
+		CREATE CONTROLS AND SUBROLLOUT SLOTS
+	 
+	 --------------------------------------------------------------------------------*/
+	 function _addControlsAndSubrolloutSlots _Rollout =
+	 (
+		format "\n"; print "RolloutCreator_v._addControlsAndSubrolloutSlots()"
+		for Controls_or_Subrollouts in _Rollout._Controls do
+		(
+			format "\n\nCONTROLS_OR_SUBROLLOUTS: %\n" Controls_or_Subrollouts
+			
+			if( this._is(Controls_or_Subrollouts)("Controls") ) then
+				ControlsCreator.addControls(Controls_or_Subrollouts)
+
+			else if _Rollout.hasSubrollouts() then
+				SubolloutsCreator.addSubrolloutSlot(_Rollout)(Controls_or_Subrollouts)
+		)
+	 ),
 
 	/** Create subrollouts recursively from most nested to dialog level
 	  * 
@@ -236,19 +256,6 @@ struct RolloutCreator_v
 		for i = 1 to (Subrollouts_all = _Rollout.getSubrollouts()).count where slotIdIsUndefined(Subrollouts_all[i].slot) do
 			Subrollouts_all[i].slot = if Subrollouts_all.count == 1 then #SUBROLLOUTS else  ("Subrollouts_" + i as string ) as name
 	),
-
-	 /** Create controls and subrollout slots
-	  */
-	 function _addControlsAndSubrolloutSlots _Rollout =
-	 (
-		--format "\n"; print "RolloutCreator_v._addControlsAndSubrolloutSlots()"
-		for Controls_or_Subrollouts in _Rollout._Controls do
-			if( this._is(Controls_or_Subrollouts)("Controls") ) then
-				ControlsCreator.addControls(Controls_or_Subrollouts)
-
-			else if _Rollout.hasSubrollouts() then
-				SubolloutsCreator.addSubrolloutSlot(_Rollout)(Controls_or_Subrollouts)
-	 ),
 
 	/** Add local variables from Control_v to rollout
 	  *

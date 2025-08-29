@@ -183,7 +183,7 @@ struct ControlValue_v
 	--	--format "\n"; print "ControlValue_v.removeReduntantParams()"
 	--	--for key in #( #VALUE, #INI, #VALUE, #COLOR ) do
 	--	for key in #( #VALUE, #INI, #VALUE, #COLOR ) do
-	--		_Control.Params.delete (key)
+	--		RemoveDictValue _Control.Params key
 	--),
 
 	/**

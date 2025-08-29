@@ -32,14 +32,16 @@ struct DefaultEvents_v
 
 
 
-		
+		format "\n"; print "DefaultEvents_v.getRolloutEvents() !!!!!!!!!!!!!! DISABLED EVENT"
+
 		/* MOVE CONTROLS TO GROUPBOXES */
 		--appendEvent #OPEN "GROUPBOXCREATOR.sortControlsToGroupBoxes(\""+rollout_id+"\")"
-		Event =  Event_v type:#OPEN
-
-		Event.callback = "GROUPBOXCREATOR.sortControlsToGroupBoxes(\""+rollout_id+"\")"
-
-		append EventsList.list Event
+		
+		--Event =  Event_v type:#OPEN
+		--
+		--Event.callback = "GROUPBOXCREATOR.sortControlsToGroupBoxes(\""+rollout_id+"\")"
+		--
+		--append EventsList.list Event
 
 
 		/* HANDLE WITH #RESIZE|#DOCKED|#UNDOCKED events */

@@ -107,8 +107,8 @@ struct Dialog_v
 		lockWidth:true	\
 		parent: =
 	(
-		--format "\n"; print "Dialog_v.create()"
-		
+		format "\n"; print "Dialog_v.create()"
+
 		this.destroy()
 
 		_RolloutCreator = RolloutCreator_v Ini:Ini DEBUG:DEBUG

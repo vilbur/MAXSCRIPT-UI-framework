@@ -32,23 +32,23 @@ struct ControlCreator_v
 
 	/** Add controls to rollout
 	 */
-	function addControls _Controls =
+	function addControls Controls =
 	(
-		--if DEBUG then format "\n\n-------------- ControlCreator_v.addControls() group:% --------------\n" _Controls.group
-		--format "\n\n-------------- ControlCreator_v.addControls() group:% --------------\n" _Controls.group
-		--format "_Controls.list.count: %\n" _Controls.list.count
+		--if DEBUG then format "\n\n-------------- ControlCreator_v.addControls() group:% --------------\n" Controls.group
+		format "\n\n-------------- ControlCreator_v.addControls() group:% --------------\n" Controls.group
+		--format "Controls.list.count: %\n" Controls.list.count
 
 		/* EXIT IF ANY CONTROLS EXISTS */ 
-		if _Controls.list.count == 0 then
+		if Controls.list.count == 0 then
 			return false
 		
 		
 		/* SET CONTROLS TO PROPERTY */ 
-		this.Controls = _Controls
+		this.Controls = Controls
 		
 
 		/* ADD CONTROL TO GROUPBOX */ 
-		if not this.isGroupControl() then
+		--if not this.isGroupControl() then
 			GROUPBOXCREATOR.addGrouboxes (_Rollout.getFullId() as name ) (this.Controls.GroupBoxes)
 
 			
@@ -61,7 +61,11 @@ struct ControlCreator_v
 		for _Control in this.Controls.list do
 		(
 			--format "_Control.params: %\n" _Control.params
-			/* MERGE DEFAULT NAD USER PARAMS */ 
+			
+			/* SET CAPTION */ 
+			this._setCaption(_Control)
+			
+			/* MERGE DEFAULT AND USER PARAMS */ 
 			ParamsCreator.mergeParams(_Control)
 			--format "_Control.params: %\n" _Control.params
 
@@ -76,13 +80,35 @@ struct ControlCreator_v
 			/* MUTATE EXTRA CONTROL TYPYES TO STADARD CONTROLS */ 
 			this._customizeControlTypes(_Control)
 		)
-		
 
 		
 		/* modify ACROSS PARAMETER */
-		if not this.isGroupControl() then
+		--if not this.isGroupControl() then
 			( AcrossParameterModifier = AcrossParameterModifier_v()).addFakeControls(this.Controls)
 
+		
+		/* JOIN PARAMETERS */ 
+		this._joinParamsToString()
+		
+		
+		
+		
+		
+		
+		
+		this.Controls.GroupBoxes.setGroupboxesAndControls()
+		
+		this.Controls.GroupBoxes.createGroupboxRollout(_Rollout.width)
+		
+		
+		
+		
+		
+		
+		
+		
+			
+			
 		/* add LOCAL VARIABLES */
 		this._addLocalVariablesToRollout()
 
@@ -95,6 +121,7 @@ struct ControlCreator_v
 		/* add HANDLERS */
 		this._addHandlersToRollout()
 
+		
 		
 		/* REMOVE FAKE CONTROLS -- it allows to add controls when dialog exists */
 		if AcrossParameterModifier != undefined then
@@ -109,50 +136,49 @@ struct ControlCreator_v
 	function moveGrouboxControlsToEnd &_Rollout_ =
 	(
 		--format "\n"; print ("ControlCreator_v.createControslInGroupboxAsLast() "+_Rollout_.id as string)
-		Controls_in_all_groupboxes = #()
-
-		fn diffArray a b =
-		(
-			retArray = #()
-			for element in a do
-			(
-				idx = finditem b element
-				if idx == 0 then
-				append retArray element
-			)
-			return retArray
-		)
-		--format "_Rollout_._Controls.count	= % \n" _Rollout_._Controls.count
-
-		for _Controls in _Rollout_._Controls where this._isControls(_Controls) do
-		(
-			controls_in_groupboxes = for _Control in _Controls.list where _Control.Params[#GROUPBOX] != undefined and _Control.type != #GROUPBOX collect _Control -- Get controls with defined groupbox in params AND they are not groupbox
-
-			_Controls.list = ( diffArray _Controls.list controls_in_groupboxes)
-
-			Controls_in_all_groupboxes += controls_in_groupboxes
-		)
-
-		/** CREATE CONTROLS LIST WHICH IS NOT RENDERED
-		  *
-		  */
-		if( Controls_in_all_groupboxes.count > 0 ) then
-		(
-			--local _Controls_groupbox = _Rollout_.Controls group:( toUpper _Rollout_.title+" CONTROLS")
-			_Controls_groupbox = _Rollout_.Controls group:#CONTROLS_IN_GROUPBOXES
-
-			--_Controls_groupbox.control #button (_Rollout_.title+" GOOOOOOD")
-			for Control_in_Groupbox in Controls_in_all_groupboxes do
-				_Controls_groupbox.add Control_in_Groupbox
-		)
-
+		--Controls_in_all_groupboxes = #()
+		--
+		--fn diffArray array_to_remove items_to_remove =
+		--(
+		--	for item_to_remove in items_to_remove where ( index = findItem array_to_remove item_to_remove ) > 0 do 
+		--		deleteItem array_to_remove index
+		--	
+		--	array_to_remove --return
+		--)
+		--
+		--/*  */ 
+		--for Controls in _Rollout_.Controls where this._isControls(Controls) do
+		--(
+		--	controls_in_groupboxes = for _Control in Controls.list where _Control.Params[#GROUPBOX] != undefined and _Control.type != #GROUPBOX collect _Control -- Get controls with defined groupbox in params AND they are not groupbox
+		--
+		--	Controls.list = ( diffArray Controls.list controls_in_groupboxes)
+		--
+		--	Controls_in_all_groupboxes += controls_in_groupboxes
+		--)
+		--
+		--/** CREATE CONTROLS LIST WHICH IS NOT RENDERED
+		--  *
+		--  */
+		--if( Controls_in_all_groupboxes.count > 0 ) then
+		--(
+		--	--local _Controls_groupbox = _Rollout_.Controls group:( toUpper _Rollout_.title+" CONTROLS")
+		--	_Controls_groupbox = _Rollout_.Controls group:#CONTROLS_IN_GROUPBOXES
+		--
+		--	--_Controls_groupbox.control #button (_Rollout_.title+" GOOOOOOD")
+		--	for Control_in_Groupbox in Controls_in_all_groupboxes do
+		--		_Controls_groupbox.add Control_in_Groupbox
+		--)
+		--
 		_Rollout_ --return
 	),
 
 	private
 
-	/** ADD CONTROLS BOX TO UI
-	 */
+	/*------------------------------------------------------------------------------
+	
+		ADD CONTROLS TO UI
+	
+	--------------------------------------------------------------------------------*/
 	function _addControlsToRollout =
 	(
 		--format "\n"; print "ControlCreator_v._addControlsToRollout()"
@@ -164,16 +190,17 @@ struct ControlCreator_v
 		  *
 		  *
 		  * GROUP IS IGNORED IF
-		  * 		1) _Controls.group name is empty string E.G.: ""
-		  *		2) _Controls.group name is wraped in square brackets like [Foo Controls]
+		  * 		1) Controls.group name is empty string E.G.: ""
+		  *		2) Controls.group name is wraped in square brackets like [Foo Controls]
 		  *
 		  * HELP: https://help.autodesk.com/view/3DSMAX/2016/ENU/?guid=__files_GUID_1361B847_7878_4C52_98DE_5BC5CA830B40_htm&v=2015#WS73099CC142F48755-2231E4B3128E0E4A0FC-69B6
 		 */
 		function _addControlsGroup start_or_end =
 		(
 			format "\n"; print "ControlCreator_v._addControlsGroup()"
-			--format "_Controls.group:-%-\n" Controls.group
-			--format "MATCH: %\n" (matchPattern _Controls.group pattern:("[*]"))
+			format "start_or_end: %\n" start_or_end
+			--format "Controls.group:-%-\n" Controls.group
+			--format "MATCH: %\n" (matchPattern Controls.group pattern:("[*]"))
 			if( Controls.group == undefined or matchPattern Controls.group pattern:("[*]") or Controls.group == "" ) do
 				return false
 	
@@ -186,17 +213,27 @@ struct ControlCreator_v
 		)
 		
 		
-		/* BEGIN GROUP */ 
+		/*------------------------------------------------------------------------------
+			GROUP BEGIN
+		--------------------------------------------------------------------------------*/
 		if not this.isGroupControl() then
 			_addControlsGroup #start
 
 			
-		/* ADD EACH CONTROL */ 
+		/*------------------------------------------------------------------------------
+		  
+			ADD EACH CONTROL
+			
+		--------------------------------------------------------------------------------*/
+		
 		for _Control in this.Controls.list do
 			this._addControlToRollout (_Control) -- add control first before variables, functions and events
 
 			
-		/* END GROUP */ 
+			
+		/*------------------------------------------------------------------------------
+			GROUP END
+		--------------------------------------------------------------------------------*/
 		if not this.isGroupControl() then
 			_addControlsGroup #end
 	),
@@ -208,61 +245,38 @@ struct ControlCreator_v
 	--------------------------------------------------------------------------------*/
 	function _addControlToRollout _Control =
 	(
-		--format "\n\n"; print "ControlCreator_v._addControlToRollout()"
-		--format "_Control.params: %\n" _Control.params
-		params = if _Control.is_in_groupbox then _Control.params else this._offsetControlsInGroupbox (_Control)
+		format "\n\n"; print "ControlCreator_v._addControlToRollout()"
+		format "_Control.id: %\n" _Control.id
+		format "\n%: %\n" _Control.id _Control.params_str
+
+		params_str = _Control.params_str
 		
-		param_str = ParamsCreator.join(params)
-	
-		--format "CONTROL: %		PARAMS: %\n" ( _Control.id) params
-		--format "_Control.is_in_groupbox: %\n" _Control.is_in_groupbox
+		if _Control.Params[#GROUPBOX] != undefined then
+			params_str = "pos:[ 0, 0 ]" + _Control.params_str
+		
 		/* ADD CONTROL */ 
-		_Rollout.RCI.addControl (_Control.type) (_Control.id) (this._getCaption(_Control)) paramStr:param_str filter:true;
+		_Rollout.RCI.addControl (_Control.type) (_Control.id) (_Control.caption) paramStr:params_str filter:true;
 	),
 	
-	/** Offset controls in groupbox
+	/** Join params to string
 	 */
-	function _offsetControlsInGroupbox _Control =
+	function _joinParamsToString =
 	(
-		--format "\n"; print "ControlCreator_v._offsetControlsInGroupbox()"
-		
-		params = _Control.params
-
-		--params[#ACROSS] = 1
-		--params[#ACROSS] = #LEFT
-		--params[#POS] = [0,0]
-		
-		params --return
+		--format "\n"; print "ControlCreator_v._joinParamsToString()"
+		for _Control in this.Controls.list do
+			_Control.params_str = ParamsCreator.join(_Control.params)
 	),
 
-	/** ADD HANDLERS OF EVENTS
-	 */
+	/*------------------------------------------------------------------------------
+	
+		ADD HANDLERS OF EVENTS
+	
+	--------------------------------------------------------------------------------*/
 	function _addHandlersToRollout =
 	(
 		for _Control in this.Controls.list do
 			ControlEventBinder.addHandlers(_Control)
 	),
-
-	--/** Add controls group
-	--  *
-	--  * GROUP IS IGNORED IF
-	--  * 		1) _Controls.group name is empty string E.G.: ""
-	--  *		2) _Controls.group name is wraped in square brackets like [Foo Controls]
-	--  *
-	--  * https://help.autodesk.com/view/3DSMAX/2016/ENU/?guid=__files_GUID_1361B847_7878_4C52_98DE_5BC5CA830B40_htm
-	-- */
-	--function _addControlsGroup start_or_end =
-	--(
-	--	--format "\n"; print "ControlCreator_v._addControlsGroup()"
-	--	--format "_Controls.group:-%-\n" Controls.group
-	--	--format "MATCH: %\n" (matchPattern _Controls.group pattern:("[*]"))
-	--	if( Controls.group == undefined or matchPattern Controls.group pattern:("[*]") or Controls.group == "" ) do
-	--		return false
-	--
-	--	start_or_end_string = if( start_or_end == #start ) then "group @"+Controls.group+"@ (" else ")"
-	--
-	--	_Rollout.RCI.addText ( start_or_end_string ) filter:on
-	--),
 
 	/** Empty caption if caption is in square brackets
 	  *
@@ -271,24 +285,19 @@ struct ControlCreator_v
 	  *
 	  * @return	string return empty string if caption is for instance "[Foo Control Caption]"
 	 */
-	function _getCaption _Control =
+	function _setCaption &_Control =
 	(
-		--format "\n"; print "ControlCreator_v._getCaption()"
-		--format "caption	= % \n" caption
-		--format "_Control.type	= % \n" _Control.type
-
-		caption = _Control.caption
+		--format "\n"; print "ControlCreator_v._setCaption()"
 
 		if( matchPattern _Control.caption pattern:("[*]")  ) then
-			caption	= case _Control.type of
+			_Control.caption	= case _Control.type of
 			(
 				#Groupbox:	" "
 
 				default:	""
 			)
 
-
-		caption --return
+		_Control --return
 	),
 
 	/** Add local variables from Control_v to rollout
@@ -342,7 +351,7 @@ struct ControlCreator_v
 		--format "\n"; print "ControlValue_v._getIniValue()"
 		if Ini.isDefined() then
 		(
-			ini_enabled = if ( ini_param = _Control.Params.getVal (#ini) ) != undefined then ini_param else true
+			ini_enabled = if ( ini_param = _Control.Params[#ini] ) != undefined then ini_param else true
 			
 			if ini_enabled and (ini_value = Ini.load(_Rollout.id)(_Control.id)) != undefined then
 				ini_value --return

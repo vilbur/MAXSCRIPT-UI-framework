@@ -134,7 +134,7 @@ struct BrowsePath_v
 		--print "BrowsePath_v._setDefaultParams()"
 
 		for param in browse_params do
-			this._Control.Params.setVal(param)(
+			this._Control.Params[param] = (
 				case param of
 				(
 					#mode:	#getSavePath
@@ -180,7 +180,7 @@ struct BrowsePath_v
 	function _getParam key =
 	(
 		--print "BrowsePath_v._getParam()"
-		(_Control.Params.getVal key )--return
+		(_Control.Params[key] )--return
 	),
 
 	/**

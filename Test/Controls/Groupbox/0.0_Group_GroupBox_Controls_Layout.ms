@@ -1,6 +1,6 @@
 clearListener()
 
-filein( getFilenamePath(getSourceFileName()) + "/../../../Lib/Dialog/Dialog.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/../../../Lib/Dialog/Dialog.ms" )	--"./../../../Lib/Dialog/Dialog.ms"
 
 
 /*	Use of GroupControl and GroupBox
@@ -103,13 +103,17 @@ _Controls = Dialog.Controls group:"Test Dialog"
 
 /* GROUPBOX */
 _GroupBox_A1 = _Controls.control #GroupBox "Groupbox A 1" across:2 --params:#( #height, 128 )
-_GroupBox_A2 = _Controls.control #GroupBox "Groupbox A 2" across:2 --params:#( #height, 128 )
+--_GroupBox_A2 = _Controls.control #GroupBox "Groupbox A 2" across:2 --params:#( #height, 128 )
 
---/* BUTTON */
-_Controls.control #button ("Button 1") across:1 groupbox:groupbox_name
-_Controls.control #button ("Button 2") across:1 groupbox:groupbox_name
+/* CONTROLS */
+_across = 1
+_across = 2
 
---
+_Controls.control #button ("Button 1") groupbox:_GroupBox_A1.id across:_across
+_Controls.control #button ("Button 2") groupbox:_GroupBox_A1.id across:_across
+
+_Spinner = _Controls.control #spinner "Spinner params"  groupbox:_GroupBox_A1.id across:1
+
 --/* CONTROLS */
 --_Controls_2 = Dialog.Controls group:"Controls 2"
 --
@@ -121,6 +125,6 @@ _Controls.control #button ("Button 2") across:1 groupbox:groupbox_name
 
 
 /* CREATE DIALOG */
-Dialog.create()
-Dialog.create width:320
+-- Dialog.create()
+Dialog.create width:512
 

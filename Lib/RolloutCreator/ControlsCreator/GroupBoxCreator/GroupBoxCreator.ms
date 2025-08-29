@@ -39,7 +39,7 @@ struct GroupBoxCreator_v
 	 */
 	function addGrouboxes rollout_id_full GroupBoxes =
 	(
-		--format "\n>>>>>>>>>>>><<<<<<<<<<<<\n\n"; print "GroupBoxCreator_v.addGrouboxes()"
+		format "\n>>>>>>>>>>>><<<<<<<<<<<<\n\n"; print "GroupBoxCreator_v.addGrouboxes()"
 		if GroupBoxes.List.count == 0 then
 			return false
 
@@ -54,14 +54,15 @@ struct GroupBoxCreator_v
 	 */
 	function sortControlsToGroupBoxes rollout_id_full =
 	(
-		--format "\n\n\n******************\n\n\n"; print ("GroupBoxCreator_v.sortControlsToGroupBoxes() Rollout:" + rollout_id_full as string )
-		GroupBoxes = this.RolloutList[rollout_id_full as string ]
-
-		if GroupBoxes != undefined then
-			for i = GroupBoxes.List.count to 1 by -1 do
-				this._sortControlsInGroupBox (execute(rollout_id_full+".controls"))(GroupBoxes.List.keys[i])(rollout_id_full)
+		format "\n\n\n******************\n\n\n"; print ("GroupBoxCreator_v.sortControlsToGroupBoxes() Rollout:" + rollout_id_full as string )
+		--GroupBoxes = this.RolloutList[rollout_id_full as string ]
+		--
+		--if GroupBoxes != undefined then
+		--	for i = GroupBoxes.List.count to 1 by -1 do
+		--		this._sortControlsInGroupBox (execute(rollout_id_full+".controls"))(GroupBoxes.List.keys[i])(rollout_id_full)
 
 	),
+
 
 	private
 

@@ -22,11 +22,11 @@ struct TooltipCreator_v
 			
 			prefix = if events_count > 1 then this._getEventPrefix(_Control.type)(event_type) else ""
 			
-			tooltip_prevoious = if( tooltip_param = _Control.params.getVal #tooltip ) != undefined then tooltip_param + delimeter else ""
+			tooltip_prevoious = if( tooltip_param = _Control.params[#tooltip] ) != undefined then tooltip_param + delimeter else ""
 			
 			
 			/* RE-SET TOOLTIP BACK TO PARAMS */ 
-			_Control.params.setVal #tooltip ( tooltip_prevoious + prefix + tooltip_of_event )
+			_Control.params[#tooltip] = ( tooltip_prevoious + prefix + tooltip_of_event )
 		)
 
 		_Control --return

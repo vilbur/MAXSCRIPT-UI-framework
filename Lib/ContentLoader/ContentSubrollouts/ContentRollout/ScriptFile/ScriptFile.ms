@@ -147,18 +147,18 @@ struct ScriptFile_Content_v
 	/** Add to quad menu or menu
 	  *
 	  * @param MacroScript_Content_v	Macro
-	  * @param ParamsList_v	ParamsList
+	  * @param ParamsList_v	Paramss
 	  *
 	 */
-	function _addToMenu Macro ParamsList =
+	function _addToMenu Macro Paramss =
 	(
 		--format "\n\n"; print "ScriptFile_Content_v.addToQuadMenu()"
-		--quad_name	= ParamsList.getVal #quad
+		--quad_name	= Paramss[#quad]
 
-		if (menu_param = ParamsList.getVal #menu) == undefined or (classOf menu_param == BooleanClass and menu_param != true) then
+		if (menu_param = Paramss[#menu]) == undefined or (classOf menu_param == BooleanClass and menu_param != true) then
 			return false
 
-		index	= ParamsList.getVal #index
+		index	= Paramss[#index]
 		menu_name	= Macro.category
 
 		title =  case of
@@ -240,32 +240,32 @@ struct ScriptFile_Content_v
 		(
 			inherit_val = if InheritParams[_Control.type] != undefined then InheritParams[_Control.type][key] 
 			
-			if( param_value = _Control.Params.getVal (key) ) != undefined then -- if controls has parameter defined, then save if for next control
+			if( param_value = _Control.Params[key] ) != undefined then -- if controls has parameter defined, then save if for next control
 				/* SAVE VALUE FOR NEXT CONTROL */ 
 				InheritParams[_Control.type][key] = param_value
 			
 			else if inherit_val != undefined then
-				_Control.Params.setVal (key) (inherit_val)
+				_Control.Params[key] = (inherit_val)
 				--case key of
 				--(
-				--	#OFFSET: _Control.Params.setVal (#OFFSET) ( [ 0, inherit_val[2] ] ) -- INHERT ONLY Y VALUE OF OFFSET
-				--	default: _Control.Params.setVal (key) (inherit_val)
+				--	#OFFSET: _Control.Params[#OFFSET] ) ( [ 0, inherit_val[2] ] ) -- INHERT ONLY Y VALUE OF OFFSET
+				--	default: _Control.Params[key] = (inherit_val)
 				--)
 		)
 		
 		--for i = 1 to inherit_params.count do
 		--(
 		--	param_type	= inherit_params[i]
-		--	param_value = _Control.Params.getVal (param_type)
+		--	param_value = _Control.Params[param_type]
 		--
-		--	if( param_value = _Control.Params.getVal (param_type) ) != undefined then -- if controls has parameter defined, then save if for next control
+		--	if( param_value = _Control.Params[param_type] ) != undefined then -- if controls has parameter defined, then save if for next control
 		--		inherit_values[i] = param_value
 		--
 		--	else if inherit_values[i] != undefined then -- inherit param value
-		--		_Control.Params.setVal (param_type) (inherit_values[i])
+		--		_Control.Params[param_type] = (inherit_values[i])
 		--)
 		--
-		--InheritParams.setVal(_Control.type) (inherit_values)
+		--InheritParams[Control] =type) (inherit_values)
 
 		_Control --return
 	),

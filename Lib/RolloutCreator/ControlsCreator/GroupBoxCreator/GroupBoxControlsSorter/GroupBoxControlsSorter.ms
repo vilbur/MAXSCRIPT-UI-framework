@@ -24,17 +24,18 @@ struct GroupBoxControlsSorter_v
 	function sortControlsInGroupBox rollout_id GroupboxControl groupbox_controls =
 	(
 		format "\n"; print "GroupBoxControlsSorter_v._sortControlsInGroupBox()"
-		format "ROLLOUT_ID: %\n" rollout_id
-		format "TEST: %\n" (execute (rollout_id+".width"))
-		
-		rollout_width = execute (rollout_id+".width")
-		
-		/* GET INIT POSITION OF CONTROLS IN GROUPBOX - top left corner of groupbox */ 
-		control_position = this._getControlBoxPosition(GroupboxControl.pos) -- get position of first control in groupbox
-
-		/* MOVE CONTROLS ON POSTIONS */ 
-		for groupbox_control in groupbox_controls do
-			this._moveControlToGroupbox (groupbox_control)(control_position)
+		format "\n          DISABLED\n"
+		--format "ROLLOUT_ID: %\n" rollout_id
+		--format "TEST: %\n" (execute (rollout_id+".width"))
+		--
+		--rollout_width = execute (rollout_id+".width")
+		--
+		--/* GET INIT POSITION OF CONTROLS IN GROUPBOX - top left corner of groupbox */ 
+		--control_position = this._getControlBoxPosition(GroupboxControl.pos) -- get position of first control in groupbox
+		--
+		--/* MOVE CONTROLS ON POSTIONS */ 
+		--for groupbox_control in groupbox_controls do
+		--	this._moveControlToGroupbox (groupbox_control)(control_position)
 	),
 
 
@@ -67,7 +68,7 @@ struct GroupBoxControlsSorter_v
 		if classOf _control == SpinnerControl then
 			control_pos_current.x += _control.pos.x 
 
-		--_control.pos = control_pos_current
+		_control.pos = control_pos_current
 		
 
 		/*------------------------------------------------------------------------------

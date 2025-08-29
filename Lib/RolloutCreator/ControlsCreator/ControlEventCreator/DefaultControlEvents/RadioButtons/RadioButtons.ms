@@ -44,7 +44,7 @@ struct RadioButtons_v
 		--format "\n"; print "ControlEventCreator_v.getCallback()"
 
 		/* MAKE UNSELECTABLE if param #UNSELECTABLE == true  */
-		if event_type == #CHANGED and ( unselectable = _Control.Params.getVal #UNSELECT ) != undefined and unselectable == true then
+		if event_type == #CHANGED and ( unselectable = _Control.Params[#UNSELECT] ) != undefined and unselectable == true then
 		(
 			Event = Event_v type:event_type
 
@@ -78,11 +78,12 @@ struct RadioButtons_v
 	function _setLabels =
 	(
 		--format "\n"; print "RadioButtons_v.setLabels()"
-		if _Control.Params.getVal #labels == undefined then
+		if _Control.Params[#labels] == undefined then
 		(
-			_Control.Params.setVal #labels (_Control.Params.getVal #items)
+			_Control.Params[#labels] = (_Control.Params[#items] )
 
-			_Control.Params.delete #items
+			RemoveDictValue _Control.Params #items
+			--_Control.Params.delete #items
 		)
 	),
 
@@ -90,10 +91,10 @@ struct RadioButtons_v
 	  */
 	function _setButtonsToRow =
 	(
-		labels	= _Control.Params.getVal #labels
+		labels	= _Control.Params[#labels] 
 
-		if _Control.Params.getVal #columns == undefined then
-			_Control.Params.setVal #columns labels.count
+		if _Control.Params[#columns] == undefined then
+			_Control.Params[#columns] = labels.count
 	),
 
 	/** Set offsets for each button
@@ -103,9 +104,9 @@ struct RadioButtons_v
 		--format "\n"; print "RadioButtons_v.setOffsets()"
 		--format "_Control	= % \n" _Control.caption
 
-		labels  = _Control.Params.getVal #labels
-		columns = _Control.Params.getVal #columns
-		offsets = _Control.Params.getVal #offsets
+		labels  = _Control.Params[#labels] 
+		columns = _Control.Params[#columns] 
+		offsets = _Control.Params[#offsets] 
 
 		offsets_all = #()
 
@@ -123,7 +124,7 @@ struct RadioButtons_v
 				append offsets_all [offsets.x, row_offset]
 			 )
 
-			_Control.Params.setVal #offsets offsets_all
+			_Control.Params[#offsets] = offsets_all
 		)
 	),
 
@@ -136,15 +137,16 @@ struct RadioButtons_v
 	(
 		--format "\n"; print "RadioButtons_v._makeUnselectAble()"
 
-		if( ( unselectable = _Control.Params.getVal #UNSELECT ) != undefined and unselectable == true ) then
+		if( ( unselectable = _Control.Params[#UNSELECT] ) != undefined and unselectable == true ) then
 		(
-			default	= _Control.Params.getVal #default
+			default	= _Control.Params[#default] 
 
 			init_state = if( default != undefined ) then default else 1
 
 			_Control.addLocal( this._getSaveStateVariableName(_Control.id) as name ) init_state
 
-			_Control.Params.delete #unselect
+			RemoveDictValue _Control.Params #unselect
+			--_Control.Params.delete #unselect
 		)
 	),
 
