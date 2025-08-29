@@ -35,7 +35,7 @@ struct ControlCreator_v
 	function addControls Controls =
 	(
 		--if DEBUG then format "\n\n-------------- ControlCreator_v.addControls() group:% --------------\n" Controls.group
-		format "\n\n-------------- ControlCreator_v.addControls() group:% --------------\n" Controls.group
+		--format "\n\n-------------- ControlCreator_v.addControls() group:% --------------\n" Controls.group
 		--format "Controls.list.count: %\n" Controls.list.count
 
 		/* EXIT IF ANY CONTROLS EXISTS */ 
@@ -181,6 +181,7 @@ struct ControlCreator_v
 	--------------------------------------------------------------------------------*/
 	function _addControlsToRollout =
 	(
+		--clearListener(); print("Cleared in:\n"+getSourceFileName())
 		--format "\n"; print "ControlCreator_v._addControlsToRollout()"
 		--format "this.isGroupControl()	= % \n" (this.isGroupControl())
 		
@@ -197,8 +198,8 @@ struct ControlCreator_v
 		 */
 		function _addControlsGroup start_or_end =
 		(
-			format "\n"; print "ControlCreator_v._addControlsGroup()"
-			format "start_or_end: %\n" start_or_end
+			--format "\n"; print "ControlCreator_v._addControlsGroup()"
+			--format "start_or_end: %\n" start_or_end
 			--format "Controls.group:-%-\n" Controls.group
 			--format "MATCH: %\n" (matchPattern Controls.group pattern:("[*]"))
 			if( Controls.group == undefined or matchPattern Controls.group pattern:("[*]") or Controls.group == "" ) do
@@ -206,16 +207,16 @@ struct ControlCreator_v
 	
 			start_or_end_string = if( start_or_end == #START ) then "group @"+Controls.group+"@ (" else ")"
 			
-			if( start_or_end == #START ) then
-				format "ADD GROUP: %" Controls.group
+			--if( start_or_end == #START ) then
+				--FORMAT "ADD GROUP: %" Controls.group
 				
 			_Rollout.RCI.addText ( start_or_end_string ) filter:on
 		)
 		
-		
 		/*------------------------------------------------------------------------------
 			GROUP BEGIN
 		--------------------------------------------------------------------------------*/
+		
 		if not this.isGroupControl() then
 			_addControlsGroup #start
 
@@ -230,10 +231,10 @@ struct ControlCreator_v
 			this._addControlToRollout (_Control) -- add control first before variables, functions and events
 
 			
-			
 		/*------------------------------------------------------------------------------
 			GROUP END
 		--------------------------------------------------------------------------------*/
+			
 		if not this.isGroupControl() then
 			_addControlsGroup #end
 	),
@@ -245,14 +246,18 @@ struct ControlCreator_v
 	--------------------------------------------------------------------------------*/
 	function _addControlToRollout _Control =
 	(
-		format "\n\n"; print "ControlCreator_v._addControlToRollout()"
-		format "_Control.id: %\n" _Control.id
-		format "\n%: %\n" _Control.id _Control.params_str
+		--format "\n\n"; print "ControlCreator_v._addControlToRollout()"
+		--format "_Control.id: %\n" _Control.id
+		--format "\n%: %\n" _Control.id _Control.params_str
 
 		params_str = _Control.params_str
 		
-		if _Control.Params[#GROUPBOX] != undefined then
-			params_str = "pos:[ 0, 0 ]" + _Control.params_str
+		if (groupbox_id = _Control.Params[#GROUPBOX]) != undefined then
+		(
+			
+			params_str = "pos:[ 0, 0 ] " + _Control.params_str
+
+		)
 		
 		/* ADD CONTROL */ 
 		_Rollout.RCI.addControl (_Control.type) (_Control.id) (_Control.caption) paramStr:params_str filter:true;

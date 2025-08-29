@@ -51,17 +51,14 @@ struct GroupBoxes_v
 
 	),
 
-
-
-	
 	/** Createa temp groupbox rollout
 	 */
 	function createGroupboxRollout rollout_width =
 	(
 		--clearListener(); print("Cleared in:\n"+getSourceFileName())
-		format "\n"; print "GroupBoxCreator_v.createGroupboxRollout()"
-		format "**************************************\n"
-		format "rollout_width: %\n" rollout_width
+		--format "\n"; print "GroupBoxCreator_v.createGroupboxRollout()"
+		--format "**************************************\n"
+		--format "rollout_width: %\n" rollout_width
 
 		for groupbox_id in List.keys do
 			 List[groupbox_id].createTemporaryRollout(rollout_width)
@@ -70,15 +67,16 @@ struct GroupBoxes_v
 	
 	/** Classify groupboxes and controls
 	 */
-	function setGroupboxesAndControls  =
+	function setGroupboxesAndControls =
 	(
-		format "\n"; print "GroupBoxes_v.setGroupboxesAndControls()"
+		--format "\n"; print "GroupBoxes_v.setGroupboxesAndControls()"
 		--for Controls in this.Controls where this._isControls(Controls) do
 			--for _Control in this.Controls.list where _Control.Params[#GROUPBOX] != undefined or _Control.type == #GROUPBOX do
 		for _Control in this.Controls.list do
 		(
-			if (_Control.type == #GROUPBOX) then
-				format "++++++++++++++++++++_Control++++++++++++++++++++: %\n" _Control.id
+			--format "_Control: %\n" _Control
+			--if (_Control.type == #GROUPBOX) then
+				--us "++++++++++++++++++++_Control++++++++++++++++++++: %\n" _Control.id
 			case of
 			(
 				/* ADD CONTROL TO GROUPBOX */
@@ -89,7 +87,6 @@ struct GroupBoxes_v
 				(_Control.type == #GROUPBOX):
 					this.addGroupbox(_Control)
 			)
-			
 		)
 	),
 	

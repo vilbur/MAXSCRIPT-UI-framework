@@ -21,18 +21,18 @@ struct GroupBox_v
 	function createTemporaryRollout rollout_width =
 	(
 		--clearListener(); print("Cleared in:\n"+getSourceFileName())
-		format "\n"; print "GroupBox_v.createTemporaryRollout()"
-		format "rollout_width: %\n" rollout_width
+		--format "\n"; print "GroupBox_v.createTemporaryRollout()"
+		--format "rollout_width: %\n" rollout_width
 		
 		/* CLOSE ON DEVELOPMENT  */ 
 		execute ("try( destroyDialog "+Groupbox.id as string +" )catch()")
 		
-		format "Controls_in_groupbox: %\n" Controls_in_groupbox
+		--format "Controls_in_groupbox: %\n" Controls_in_groupbox
 		
 		groupbox_across = Groupbox.Params[#ACROSS]
 		groupbox_width  = rollout_width / groupbox_across
-		format "groupbox_across: %\n" groupbox_across
-		format "groupbox_width: %\n" groupbox_width
+		--format "groupbox_across: %\n" groupbox_across
+		--format "groupbox_width: %\n" groupbox_width
 		
 		RCI = rolloutCreator ( Groupbox.id as string  ) ( Groupbox.id as string  )
 		RCI.begin()
@@ -40,7 +40,7 @@ struct GroupBox_v
 		for _Control in Controls do
 		(
 			
-			format "\n%: %\n" _Control.id _Control.params_str
+			--format "\n%: %\n" _Control.id _Control.params_str
 			
 			RCI.addControl (_Control.type) (_Control.id) (_Control.caption) paramStr:_Control.params_str filter:true;
 		)
@@ -48,24 +48,21 @@ struct GroupBox_v
 
 		createDialog (RCI.end()) pos:[ (getMAXWindowPos()).x +512, 512 ] width:groupbox_width
 		
-		groupbox_dialog = execute (Groupbox.id as string )
+		--groupbox_dialog = execute (Groupbox.id as string )
 		
-		format "################### GROUPBOX_DIALOG: %\n" groupbox_dialog
+		--format "################### GROUPBOX_DIALOG: %\n" groupbox_dialog
 		--format "groupbox_dialog.controls: %\n" groupbox_dialog.controls
-		
-		for _control in groupbox_dialog.controls do
-		(
-			format "\n\n\n"
-			format "_control: %\n" _control
-			format "_control.pos: %\n" _control.pos
-			
-			--try( format "_control.width: %\n" _control.width )catch()
-			
-		)
+		--
+		--for _control in groupbox_dialog.controls do
+		--(
+		--	format "\n\n\n"
+		--	format "_control: %\n" _control
+		--	format "_control.pos: %\n" _control.pos
+		--	
+		--	--try( format "_control.width: %\n" _control.width )catch()
+		--	
+		--)
 		--format "GB_groupbox_a_1.btn_Button_1.width: %\n" GB_groupbox_a_1.btn_Button_1.width
-		
-
-		
 		
 	),
 

@@ -50,11 +50,12 @@ struct Controls_v
 		checked:		\ -- checkbox, checkbutton
 		color:		\ -- colorpicker, bitmap -- alias for "value" E.G.: color:green >>> value:(bitmap 256 32 color:green)
 		bitmap:		\ -- bitmap, imgTag
+		fieldWidth:		\ -- spinner, edittext 
 		highlightColor:		\ -- checkbutton
 		ini:true		\ -- save control value to ini
 		default:	unselect:	\ -- radiobutton
 		items:	columns:	\ -- radiobutton, lisbox, mutlilistbox
-		type:	scale:	\ -- spinner
+		type:	scale: 	\ -- spinner
 		range:	ticks: orient:	\ -- slider
 		add_to_controls:	true		=
 	(
@@ -68,8 +69,8 @@ struct Controls_v
 		
 		
 		/* PROCESS FUNCTION PARAMETERS */ 	
-		_param_names  = #( #pos, #checked, #width, #height, #offset, #align, #items, #range, #type, #ticks, #orient, #scale, #controller, #default, #unselect, #value, #color, #bitmap, #ini, #tooltip, #across, #columns,	#visible, #border, #groupbox, #highlightColor)
-		_param_values = #(  pos,  checked,  width,  height,  offset,  align,  items,  range,  type,  ticks,  orient,  scale,  controller,  default,  unselect,  value,  color,  bitmap,  ini,   tooltip,  across,  columns,  visible,   border,  groupbox,  highlightColor)
+		_param_names  = #( #pos, #checked, #width, #height, #offset, #align, #items, #range, #type, #ticks, #orient, #scale, #controller, #default, #unselect, #value, #color, #bitmap, #fieldWidth, #ini, #tooltip, #across, #columns,	#visible, #border, #groupbox, #highlightColor)
+		_param_values = #(  pos,  checked,  width,  height,  offset,  align,  items,  range,  type,  ticks,  orient,  scale,  controller,  default,  unselect,  value,  color,  bitmap,   fieldWidth,  ini,   tooltip,  across,  columns,  visible,   border,  groupbox,  highlightColor)
 
 		
 		/* EXPOSE ID FROM PARAMS ARRAY */ 
@@ -97,7 +98,7 @@ struct Controls_v
 			
 		/*------------------------------------------------------------------------------
 		
-			PASS PARAMETERS TO ARRAY CONTROL
+			PASS PARAMETERS ARRAY TO CONTROL
 		
 		--------------------------------------------------------------------------------*/
 

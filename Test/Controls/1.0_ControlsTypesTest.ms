@@ -73,9 +73,10 @@ _Controls   = Dialog.Controls()
 --/*------ SLIDER ------*/
 --_Slider = _Controls.control #SLIDER "Slider" ticks:3 width:256 range:[0,50,0] ticks:5 type:#integer
 --
+
 --/*------ SPINNER ------*/
-_Controls.control #SPINNER "Spinner"
-_Controls.control #SPINNER "Spinner 2" width:96 scale:0.01 range:[0,100,0.01]
+--_Controls.control #SPINNER "Spinner"
+--_Controls.control #SPINNER "Spinner 2" width:96 scale:0.01 range:[0,100,0.01]
 --
 --
 --/*------ LISTBOX ------*/
@@ -84,7 +85,7 @@ _Controls.control #SPINNER "Spinner 2" width:96 scale:0.01 range:[0,100,0.01]
 --
 --
 --/*------ BROWSEATH ------*/
---_Controls.control #BROWSEPATH "browsePathTest"
+_Controls.control #BROWSEPATH "browsePathTest"
 
 
 /*------ COLORPICKER ------*/
@@ -109,7 +110,7 @@ _Controls.control #SPINNER "Spinner 2" width:96 scale:0.01 range:[0,100,0.01]
 
 
 --/*------ ANGLE ------*/
-_Controls.control #ANGLE  "Angle" RANGE:[-90,270,90] color:green params:#( #DIR, #CW, #startdegrees, 90 )
+--_Controls.control #ANGLE  "Angle" RANGE:[-90,270,90] color:green params:#( #DIR, #CW, #startdegrees, 90 )
 
 /*==============================================================================
 	CREATE DIALOG

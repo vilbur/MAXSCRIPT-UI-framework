@@ -56,7 +56,7 @@ struct BrowsePath_v
 
 		this.prev_value_variable = (_Control.id as string + "_prev_state")
 
-		tooltip = if( tooltip_param = _Control.params.getVal #tooltip ) != undefined then tooltip_param else ""
+		tooltip = if( tooltip_param = _Control.params[#tooltip] ) != undefined then tooltip_param else ""
 
 		this._setDefaultParams()
 
@@ -145,9 +145,7 @@ struct BrowsePath_v
 					default: undefined
 				)
 
-			)  unique:true
-
-		this._Control.Params.filter undefined  test:true
+			)
 	),
 
 	/** Get dialog getSaveFileName|getOpenFileName  https://help.autodesk.com/view/MAXDEV/2021/ENU/?guid=GUID-D4B43A33-8342-4BC9-80AB-91460861D37C

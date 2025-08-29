@@ -79,7 +79,7 @@ struct DefaultParameters_v
 	 */
 	function _setDefaultParams =
 	(
-		print "DefaultParameters_v._setDefaultParams()"
+		--print "DefaultParameters_v._setDefaultParams()"
 		--format "control_type	= % \n" control_type
 		--format "Params: %\n" Params
 		--format "this.Params: %\n" this.Params
@@ -110,10 +110,13 @@ struct DefaultParameters_v
 				#BUTTON:	Params[type][#WIDTH] = 96
 	
 				#SLIDER:	Params[type][#RANGE] = [0,100,0]
-				#SPINNER:	Params[type][#RANGE] = [0,100,0]
 				
+				#EDITTEXT:	Params[type][#FIELDWIDTH] = 96
+
 				#SPINNER:
 				(
+					Params[type][#FIELDWIDTH] = 48
+					
 					Params[type][#DIR] = #CW
 					
 					Params[type][#RANGE] = [0,100,0]

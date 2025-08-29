@@ -55,16 +55,12 @@ struct SubolloutsCreator_v
 	(
 		--format "\n"; print "SubolloutsCreator_v.addSubRollouts()"
 		--print "============================================================="
-		timer_addSubRollouts = timeStamp()
-		--format "_ROLLOUT:	% \n" _Rollout.id
 
 		/** Get subrollouts slot
 		 *
 		 */
 		function getSubrolloutsSlot SubrolloutsSlots slot =
 		(
-			--format "\n"; print "SubolloutsCreator_v.getSubrolloutsSlot()"
-
 			local SubrolloutsSlot
 
 			for Subrollouts in SubrolloutsSlots where matchPattern (Subrollouts as string ) pattern:( "SubRollout:"+slot as string ) do
@@ -81,7 +77,6 @@ struct SubolloutsCreator_v
 		all_subrollouts = _Rollout.getSubrollouts()
 		
 		for Subrollouts in all_subrollouts do
-		--for Subrollouts in _Rollout.getSubrollouts() do
 		(
 			SubrolloutsSlot = getSubrolloutsSlot(SubrolloutsSlots)(Subrollouts.slot)
 		

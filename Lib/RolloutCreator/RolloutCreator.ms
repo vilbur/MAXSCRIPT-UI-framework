@@ -49,8 +49,8 @@ struct RolloutCreator_v
 	 */
 	function createRollout _Rollout width: =
 	(
-		--if DEBUG then format "\n\n-------------------------------------	RolloutCreator_v.createRollout() id:#%	-------------------------------------\n"  ( _Rollout.id as string );
-		format "\n\n-------------------------------------	RolloutCreator_v.createRollout() id:#%	-------------------------------------\n"  ( (_Rollout.getFullId()) as string );
+		--if DEBUG then format "\n\n------------------------------------- RolloutCreator_v.createRollout() id:#%	-------------------------------------\n"  ( _Rollout.id as string );
+		--format "\n\n------------------------------------- RolloutCreator_v.createRollout() id:#%	-------------------------------------\n"  ( (_Rollout.getFullId()) as string );
 
 		if _Rollout.RCI == undefined then -- RCI is defined WHEN chache is loaded
 		(
@@ -77,9 +77,9 @@ struct RolloutCreator_v
 			if _Rollout.width == unsupplied and width != unsupplied then
 				_Rollout.width = width
 	
-			ControlsCreator.moveGrouboxControlsToEnd(_Rollout)
-	
-	
+			
+			--ControlsCreator.moveGrouboxControlsToEnd(_Rollout)
+
 			/*==============================================================================
 				EVENTS
 			================================================================================*/
@@ -131,10 +131,10 @@ struct RolloutCreator_v
 	 --------------------------------------------------------------------------------*/
 	 function _addControlsAndSubrolloutSlots _Rollout =
 	 (
-		format "\n"; print "RolloutCreator_v._addControlsAndSubrolloutSlots()"
+		--format "\n"; print "RolloutCreator_v._addControlsAndSubrolloutSlots()"
 		for Controls_or_Subrollouts in _Rollout._Controls do
 		(
-			format "\n\nCONTROLS_OR_SUBROLLOUTS: %\n" Controls_or_Subrollouts
+			--format "\n\nCONTROLS_OR_SUBROLLOUTS: %\n" Controls_or_Subrollouts
 			
 			if( this._is(Controls_or_Subrollouts)("Controls") ) then
 				ControlsCreator.addControls(Controls_or_Subrollouts)

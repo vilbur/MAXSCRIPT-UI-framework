@@ -17,34 +17,36 @@ struct DefaultEvents_v
 	(
 		--format "\n"; print ("DefaultEvents_v.getEvents()" + rollout_id as string )
 
-		--/** Append event
-		-- */
-		--function appendEvent type callback =
-		--(
-		--	--format "\n"; print "DefaultEvents_v.appendEvent()"
-		--	Event =  Event_v type:type
-		--
-		--	Event.callback = callback
-		--
-		--	append this.Events Event
-		--)
+		----/** Append event
+		---- */
+		----function appendEvent type callback =
+		----(
+		----	--format "\n"; print "DefaultEvents_v.appendEvent()"
+		----	Event =  Event_v type:type
+		----
+		----	Event.callback = callback
+		----
+		----	append this.Events Event
+		----)
+
 		EventsList = EventsList_v()
 
 
-
-		format "\n"; print "DefaultEvents_v.getRolloutEvents() !!!!!!!!!!!!!! DISABLED EVENT"
-
-		/* MOVE CONTROLS TO GROUPBOXES */
-		--appendEvent #OPEN "GROUPBOXCREATOR.sortControlsToGroupBoxes(\""+rollout_id+"\")"
+		/*------------------------------------------------------------------------------
+			MOVE CONTROLS TO GROUPBOXES
+		--------------------------------------------------------------------------------*/
+		------appendEvent #OPEN "GROUPBOXCREATOR.sortControlsToGroupBoxes(\""+rollout_id+"\")"
 		
-		--Event =  Event_v type:#OPEN
-		--
-		--Event.callback = "GROUPBOXCREATOR.sortControlsToGroupBoxes(\""+rollout_id+"\")"
-		--
-		--append EventsList.list Event
+		Event =  Event_v type:#OPEN
+		
+		Event.callback = "GROUPBOXCREATOR.sortControlsToGroupBoxes( "+rollout_id+" )"
+		
+		append EventsList.list Event
 
 
-		/* HANDLE WITH #RESIZE|#DOCKED|#UNDOCKED events */
+		/*------------------------------------------------------------------------------
+			HANDLE WITH #RESIZE|#DOCKED|#UNDOCKED events
+		--------------------------------------------------------------------------------*/
 		Event =  Event_v type:#RESIZED
 
 		Event.callback = "waitForResizeEndTimer(#"+rollout_id+")( #resized )"
@@ -52,7 +54,9 @@ struct DefaultEvents_v
 		append EventsList.list Event
 
 
-		/* SAVE DIALOG STATE IF INI FILE EXISTS */
+		/*------------------------------------------------------------------------------
+			SAVE DIALOG STATE IF INI FILE EXISTS
+		--------------------------------------------------------------------------------*/
 		if( ini_path != undefined ) then
 		(
 			ini_path	= ( dotNetObject "System.Text.RegularExpressions.Regex" @"[\\/]+" ).Replace ini_path "/"
