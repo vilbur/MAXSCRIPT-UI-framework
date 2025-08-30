@@ -97,14 +97,14 @@ filein( getFilenamePath(getSourceFileName()) + "/../../../Lib/Dialog/Dialog.ms" 
 
 /* DIALOG */
 --Dialog 	= Dialog_v title:(getFilenameFile(getSourceFileName()))
-Dialog 	= Dialog_v title:(getFilenameFile(getSourceFileName())) width:1024
+Dialog 	= Dialog_v title:(getFilenameFile(getSourceFileName())) width:512
 
 /* CONTROLS */
 _Controls = Dialog.Controls group:"Test Dialog"
 
 /* GROUPBOX */
 _GroupBox_A1 = _Controls.control #GroupBox "Groupbox A 1" across:2 --params:#( #height, 128 )
---_GroupBox_A2 = _Controls.control #GroupBox "Groupbox A 2" across:2 --params:#( #height, 128 )
+_GroupBox_A2 = _Controls.control #GroupBox "Groupbox A 2" across:2 --params:#( #height, 128 )
 
 /* CONTROLS */
 _across = 1
@@ -113,11 +113,14 @@ _across = 2
 _Controls.control #button ("Button 1") groupbox:_GroupBox_A1.id across:_across align:#LEFT
 _Controls.control #button ("Button 2") groupbox:_GroupBox_A1.id across:_across align:#RIGHT
 
-_Spinner = _Controls.control #spinner "Spinner params"  groupbox:_GroupBox_A1.id across:1 align:#LEFT --fieldWidth:64
+_Spinner = _Controls.control #SPINNER "Spinner params"  groupbox:_GroupBox_A1.id across:1 align:#RIGHT --fieldWidth:64
 
---/* CONTROLS */
+_EditText = _Controls.control #EDITTEXT "[EditText]"  groupbox:_GroupBox_A2.id across:1 --align:#RIGHT --fieldWidth:64
+
+
+/* CONTROLS */
 --_Controls_2 = Dialog.Controls group:"Controls 2"
---
+
 --/* GROUPBOX */
 --_GroupBox = _Controls_2.control #GroupBox (groupbox_name_2 = "Groupbox 2") params:#( #height, 128 )
 --
@@ -126,6 +129,6 @@ _Spinner = _Controls.control #spinner "Spinner params"  groupbox:_GroupBox_A1.id
 
 
 /* CREATE DIALOG */
- Dialog.create()
---Dialog.create width:512
+ --Dialog.create()
+Dialog.create height:128
 

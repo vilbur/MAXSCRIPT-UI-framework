@@ -72,55 +72,64 @@ struct GroupBoxCreator_v
 		(
 			max_pos = [0,0]
 			
-			--format "GroupBox: %\n" GroupBox
-			--format "GroupBox.pos: %\n" GroupBox.pos
-			
+			/* GET CONTROLS INIT POS */ 			
 			groupbox_controls_pos = GroupBox.pos
 			
+			groupbox_controls_pos.x -= groupbox_margin / 2
 			groupbox_controls_pos.y += groupbox_margin
 			
 			rollout_temp = execute ( GroupBox.name as string )
 
+			/* PLACE EACH CONTROL ON POSITION BY TEMP ROLLOUT */ 
 			for ctrl_temp in rollout_temp.controls where not matchPattern ( ctrl as string ) pattern:("Group*") do
 			(
-				--format "CTRL: %\n" ctrl_temp
+				ctrl_rollout = getProperty _rollout (ctrl_temp.name as name )
 				
-				ctrl_rollout =  getProperty _rollout (ctrl_temp.name as name )
-				
-				
-				--for prop in #( #POS, #WIDTH ) do 
-				temp_pos  = getProperty ctrl_temp #POS
 				has_width = isProperty ctrl_temp #WIDTH
 				
+				/* GET POSITION OF CONTROL FROM TEMP ROLLOUT */ 
+				temp_pos  = getProperty ctrl_temp #POS
+				
+				/* GET SIZE OF CONTROL FROM TEMP ROLLOUT */ 
 				temp_width  = if has_width then  getProperty ctrl_temp #WIDTH else 96
 				temp_height = this._getControlSize( ctrl_temp )
 				
-				--format "TEMP_WIDTH: %\n" temp_width
-				--if ctrl_rollout != undefined then 
+				/*------------------------------------------------------------------------------
+					MOVE CONTROL
+				--------------------------------------------------------------------------------*/
 				setProperty ctrl_rollout #POS ( groupbox_controls_pos + temp_pos )
 				
+				/*------------------------------------------------------------------------------
+					RESIZE CONTROL
+				--------------------------------------------------------------------------------*/
 				if has_width then 
 					setProperty ctrl_rollout #WIDTH ( temp_width )
 				
-				--max_x = temp_pos.x + temp_width
-				max_x  = temp_pos.x
+				/* GET POSITION OF CONTROL */ 
+				max_x = temp_pos.x
 				max_y = temp_pos.y + temp_height
 					
+				/* FIX SPINNER POSITION */ 
 				if classOf ctrl_temp != SpinnerControl then
 					max_x += temp_width
-					
+				
+				/* CAPTURE MAX POSTION OF CONTROLS */ 
 				if max_x > max_pos.x then max_pos.x = max_x
 				
 				if max_y > max_pos.y then max_pos.y = max_y 
 			)
 			
+			/* DESTROY TEMP ROLLOUT */ 
 			try( destroyDialog rollout_temp )catch()
 			
+			/*------------------------------------------------------------------------------
+				RESIZE GROUPBOX
+			--------------------------------------------------------------------------------*/
 			new_width  = max_pos.x + groupbox_margin
 			new_height = max_pos.y + groupbox_margin
 			
-			if GroupBox.width < new_width then
-				GroupBox.width = new_width
+			--if GroupBox.width < new_width then
+				--GroupBox.width = new_width
 			
 			if GroupBox.height < new_height then
 				GroupBox.height = new_height
@@ -168,64 +177,64 @@ struct GroupBoxCreator_v
 	),
 	
 	
-	/** Sort cotntrols in group box
-	 */
-	function _sortControlsInGroupBox rollout_controls groupbox_id rollout_id_full =
-	(
-		--format "\n"; print "GroupBoxCreator_v._sortCtontrolsInGroupBox()"
-
-		groupbox_dialog_controls = execute ( groupbox_id as string + ".controls" )
-		
-		control_pos = execute ( groupbox_id as string + "." + _Control.id as string + ".pos" )
-
-		--rollout_controls_ids	=  for rollout_control in rollout_controls collect (filterString ( rollout_control as string ) ":")[2] as name
-		--
-		--groupbox_controls	= for i = 1 to rollout_controls_ids.count where findItem GroupBoxes.List[groupbox_id] rollout_controls_ids[i] collect rollout_controls[i]
-		--
-		--GroupboxSorter.sortControlsInGroupBox(rollout_id_full)(execute (rollout_id_full+"."+ groupbox_id as string ))(groupbox_controls)
-		--
-		--
-		--this._resizeGroupBox (rollout_controls) (rollout_controls_ids) (groupbox_controls) (groupbox_id)
-	),
-
-	/** Resize group box
-	 */
-	function _resizeGroupBox rollout_controls rollout_controls_ids groupbox_controls groupbox_id =
-	(
-		--format "\n"; print "GroupBoxCreator_v._resizeGroupBox()"
-		local next_control_index
-
-		groupbox_index = findItem (rollout_controls_ids) (groupbox_id)
-
-		/** Split control identifier and test if it is #GroupStartControl or #GroupEndControl
-		 */
-		function _isNotGroupbox _control =
-		(
-			--format "\n"; print "GroupBoxCreator_v._isNotGroupbox()"
-			control_type = (filterString ( _control as string) ":")[1] as name
-
-			control_type != #GroupStartControl and control_type != #GroupEndControl --return
-		)
-
-		/* GET INDEX OF NEXT CONTROL */ 
-        for i = groupbox_index to rollout_controls.count
-            where (rollout_controls_ids[i+1]	!= undefined	and	-- if next control exist
-               findItem groupbox_controls rollout_controls[i+1]	== 0 and	-- if control is not in groupbox
-               (_isNotGroupbox(rollout_controls[i+1]))	== true )	-- if control is not  #GroupStartControl and #GroupEndControl
-                    do
-						if( next_control_index == undefined ) then -- get only first occurence
-							next_control_index = i+1
-
-
-		 if( next_control_index != undefined ) then -- get only first occurence
-			GroupboxResizer.setGroupBoxSizeByNextControl (rollout_id_full)(rollout_controls[groupbox_index])(rollout_controls[next_control_index])
-
-		else if groupbox_controls.count > 0 then
-			GroupboxResizer.resizeByLastControl( rollout_controls[groupbox_index] )(groupbox_controls[groupbox_controls.count])
-
-		--format "next_control_index	= % \n" next_control_index
-
-	),
+--	/** Sort cotntrols in group box
+--	 */
+--	function _sortControlsInGroupBox rollout_controls groupbox_id rollout_id_full =
+--	(
+--		--format "\n"; print "GroupBoxCreator_v._sortCtontrolsInGroupBox()"
+--
+--		groupbox_dialog_controls = execute ( groupbox_id as string + ".controls" )
+--		
+--		control_pos = execute ( groupbox_id as string + "." + _Control.id as string + ".pos" )
+--
+--		--rollout_controls_ids	=  for rollout_control in rollout_controls collect (filterString ( rollout_control as string ) ":")[2] as name
+--		--
+--		--groupbox_controls	= for i = 1 to rollout_controls_ids.count where findItem GroupBoxes.List[groupbox_id] rollout_controls_ids[i] collect rollout_controls[i]
+--		--
+--		--GroupboxSorter.sortControlsInGroupBox(rollout_id_full)(execute (rollout_id_full+"."+ groupbox_id as string ))(groupbox_controls)
+--		--
+--		--
+--		--this._resizeGroupBox (rollout_controls) (rollout_controls_ids) (groupbox_controls) (groupbox_id)
+--	),
+--
+--	/** Resize group box
+--	 */
+--	function _resizeGroupBox rollout_controls rollout_controls_ids groupbox_controls groupbox_id =
+--	(
+--		--format "\n"; print "GroupBoxCreator_v._resizeGroupBox()"
+--		local next_control_index
+--
+--		groupbox_index = findItem (rollout_controls_ids) (groupbox_id)
+--
+--		/** Split control identifier and test if it is #GroupStartControl or #GroupEndControl
+--		 */
+--		function _isNotGroupbox _control =
+--		(
+--			--format "\n"; print "GroupBoxCreator_v._isNotGroupbox()"
+--			control_type = (filterString ( _control as string) ":")[1] as name
+--
+--			control_type != #GroupStartControl and control_type != #GroupEndControl --return
+--		)
+--
+--		/* GET INDEX OF NEXT CONTROL */ 
+--        for i = groupbox_index to rollout_controls.count
+--            where (rollout_controls_ids[i+1]	!= undefined	and	-- if next control exist
+--               findItem groupbox_controls rollout_controls[i+1]	== 0 and	-- if control is not in groupbox
+--               (_isNotGroupbox(rollout_controls[i+1]))	== true )	-- if control is not  #GroupStartControl and #GroupEndControl
+--                    do
+--						if( next_control_index == undefined ) then -- get only first occurence
+--							next_control_index = i+1
+--
+--
+--		 if( next_control_index != undefined ) then -- get only first occurence
+--			GroupboxResizer.setGroupBoxSizeByNextControl (rollout_id_full)(rollout_controls[groupbox_index])(rollout_controls[next_control_index])
+--
+--		else if groupbox_controls.count > 0 then
+--			GroupboxResizer.resizeByLastControl( rollout_controls[groupbox_index] )(groupbox_controls[groupbox_controls.count])
+--
+--		--format "next_control_index	= % \n" next_control_index
+--
+--	),
 
 
 
