@@ -58,7 +58,7 @@ struct GroupBoxCreator_v
 		format "\n"; print "GroupBoxCreator_v.createTempRollouts()"
 		
 		/* FOR EACH GROUPBOX */ 
-		for Groupbox in Controls.list where Groupbox.type == #GROUPBOX do
+		for Groupbox in Controls where Groupbox.type == #GROUPBOX do
 		(
 			format "\n"
 			format "Groupbox.id: %\n" Groupbox.id
@@ -85,15 +85,17 @@ struct GroupBoxCreator_v
 			RCI = rolloutCreator ( Groupbox.id as string  ) ( Groupbox.id as string  )
 			
 			RCI.begin()
-			
-			--for _Control in Controls.List where _Control.type != #GROUPBOX do
+--			
+			for _Control in Controls where _Control.hasParam #GROUPBOX do
+			format "%: %\n" _Control.id _Control.params_str 
 				--format "_Control.Params[#GROUPBOX]: %\n" _Control.Params[#GROUPBOX]
 
 			/* ADD CONTROLS TO ROLLOUT */ 
-			for _Control in Controls.List
-				where _Control.type != #GROUPBOX \	            -- is not groupbox 
-				and _Control.Params[#GROUPBOX] == Groupbox.id do -- control is in this groupbox
+			for _Control in Controls where  _Control.hasParam #GROUPBOX do -- is not groupbox
+				if _Control.Params[#GROUPBOX] == Groupbox.id then -- control is in this groupbox
 					RCI.addControl (_Control.type) (_Control.id) (_Control.caption) paramStr:_Control.params_str filter:true;
+					
+			
 	
 			
 			/* CREATE DIALOG */ 
@@ -120,19 +122,20 @@ struct GroupBoxCreator_v
 		
 		for GroupBox in GroupBoxes do
 		(
-
-			
 			max_pos = [0,0]
 			
-			/* GET CONTROLS INIT POS */ 			
-			groupbox_controls_pos = GroupBox.pos
+			/* GET TEMPORARY DIALOG */ 
+			rollout_temp = execute ( GroupBox.name as string )
 			
-			groupbox_controls_pos.x -= groupbox_margin / 2
-			groupbox_controls_pos.y += groupbox_margin
+			/* GET CONTROLS INIT POS */ 			
+			controls_origin = GroupBox.pos
+			format "CONTROLS_ORIGIN: %\n" controls_origin
+			
+			--controls_origin.x -= groupbox_margin / 2
+			controls_origin.y += groupbox_margin
 			
 			--try( destroyDialog rollout_temp )catch()
-			
-			rollout_temp = execute ( GroupBox.name as string )
+			--controls_origin = [0,0]
 			format "ROLLOUT_TEMP: %\n" rollout_temp
 
 			/* PLACE EACH CONTROL ON POSITION BY TEMP ROLLOUT */ 
@@ -148,12 +151,12 @@ struct GroupBoxCreator_v
 				format "temp_pos: %\n" temp_pos
 				/* GET SIZE OF CONTROL FROM TEMP ROLLOUT */ 
 				temp_width  = if has_width then  getProperty ctrl_temp #WIDTH else 96
-				temp_height = this._getControlSize( ctrl_temp )
-				
+				temp_height = this._getControlHeight( ctrl_temp )(temp_pos)
+				format "temp_height: %\n" temp_height
 				/*------------------------------------------------------------------------------
 					MOVE CONTROL
 				--------------------------------------------------------------------------------*/
-				setProperty ctrl #POS ( groupbox_controls_pos + temp_pos )
+				setProperty ctrl #POS ( controls_origin + temp_pos )
 				
 				/*------------------------------------------------------------------------------
 					RESIZE CONTROL
@@ -199,7 +202,7 @@ struct GroupBoxCreator_v
 	
 	/** Get control size
 	 */
-	function _getControlSize _control =
+	function _getControlHeight _control control_pos =
 	(
 		/** Split control identifier
 		  *
@@ -208,7 +211,7 @@ struct GroupBoxCreator_v
 		 */
 		function _controlType _control =
 		(
-			(filterString ( _control as string) ":")[1] as name --return
+			(filterString ( _control as string ) ":")[1] as name --return
 		)
 
 		/** Get true height of listbox
@@ -224,7 +227,7 @@ struct GroupBoxCreator_v
 
 		case _controlType(_control) of
 		(
-			--(#GroupboxControl):	control_height
+			(#ComboBoxControl):	control_pos.y + ( if _control.text == "" then 30 else 16 ) -- ComboBoxControl is DropdownList in existing UI
 			(#buttonControl):	control_default_height
 			(#ListBoxControl):	_getListboxHeight(_control)
 			(#MultiListBoxControl):	_getListboxHeight(_control)

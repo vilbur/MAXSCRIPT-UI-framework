@@ -20,20 +20,21 @@ struct ControlParamsCreator_v
 	  * 
 	  * Priority of params
 	  * 	1) User Defined parameters
-	  * 	2) Global per control type E.g.:  #(#multiListBox, #listbox, #list) // DEFINED IN DefaultParameters_v._getDefaultParamsList() in FILE:  "./../../../Dialog/Rollout/Controls/Defaults/Defaults.ms" 
+	  * 	2) By type of control E.g.:  #(#multiListBox, #listbox, #list) // DEFINED IN DefaultParameters_v._getDefaultParamsList() in FILE:  "./../../../Dialog/Rollout/Controls/Defaults/Defaults.ms" 
 	  * 	3) Global for all controls
 	  * 
 	 */
-	function mergeParams &_Control =
+	function mergeDefaultParams &_Control =
 	(
-		--format "\n"; print "ContolParamsCreator_v.mergeParams()"
+		format "\n----------------------------------------------\n"
+		format "\n"; print "ContolParamsCreator_v.mergeDefaultParams()"
+		format "% PARAMS: %\n" _Control.id _Control.Params
 		
 		/* DEFAULTS PARAMS FOR CONTROL TYPE */ 
 		this._mergeDictionaries (_Control)(Defaults.Params[_Control.type])
 		
 		/* GLOBAL PARAMS */
-		if _Control.type != #Groupbox then -- DO NOT USE GLOBAL PARAMETERS ON #groupbox control
-			this._mergeDictionaries (_Control)(Defaults.Params[#GLOBAL])
+		this._mergeDictionaries (_Control)(Defaults.Params[#GLOBAL])
 		
 		_Control --return
 	),
@@ -72,7 +73,7 @@ struct ControlParamsCreator_v
 	(
 		--format "\n"; print "ControlParamsCreator_v._mergeDictionaries()"
 		for key in params.keys do
-			if _Control.Params[key] == undefined then
+			if not _Control.hasParam(key) then
 				_Control.Params[key] = params[key]
 
 		_Control --return

@@ -105,7 +105,11 @@ struct Controls_v
 		this._setParamsToControl(_Control)(params)
 		
 
-		/* ADD CONTROL TO CONTROLS */ 
+		/*------------------------------------------------------------------------------
+		
+			 ADD CONTROL TO CONTROLS
+		
+		--------------------------------------------------------------------------------*/
 		if add_to_controls then
 			append List _Control
 	

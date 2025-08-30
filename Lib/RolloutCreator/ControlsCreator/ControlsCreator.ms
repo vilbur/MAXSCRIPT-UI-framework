@@ -60,8 +60,9 @@ struct ControlCreator_v
 			/* SET CAPTION */ 
 			this._setCaption(_Control)
 			
+			
 			/* MERGE DEFAULT AND USER PARAMS */ 
-			ParamsCreator.mergeParams(_Control)
+			ParamsCreator.mergeDefaultParams(_Control)
 			--format "_Control.params: %\n" _Control.params
 
 			/* SET VALUE OF CONTROL */ 
@@ -88,15 +89,7 @@ struct ControlCreator_v
 		
 
 		/* ADD CONTROLS TO GROUPBOX */ 
-		--if not this.isGroupControl() then
-			--GROUPBOXCREATOR.addGrouboxes (_Rollout.getFullId() as name ) (this.Controls.GroupBoxes)
-
-				
-		
-		--this.Controls.GroupBoxes.setGroupboxesAndControls()
-		
-		GROUPBOXCREATOR.createTempRollouts( Controls )(_Rollout.width)
-		
+		GROUPBOXCREATOR.createTempRollouts( this.Controls.List)(_Rollout.width)
 		
 			
 		/* add LOCAL VARIABLES */
@@ -118,49 +111,49 @@ struct ControlCreator_v
 			AcrossParameterModifier.removeFakeControls(this.Controls)
 	),
 
-	/** Controls to groupbox will be rendered as last
-
-			TODO: MOVE moveGrouboxControlsToEnd() TO GroupboxCreator and REFRACT IT
-
-	 */
-	function moveGrouboxControlsToEnd &_Rollout_ =
-	(
-		format "\n"; print ("ControlCreator_v.createControslInGroupboxAsLast() "+_Rollout_.id as string)
-		Controls_in_all_groupboxes = #()
-		
-		fn diffArray array_to_remove items_to_remove =
-		(
-			for item_to_remove in items_to_remove where ( index = findItem array_to_remove item_to_remove ) > 0 do 
-				deleteItem array_to_remove index
-			
-			array_to_remove --return
-		)
-		
-		/*  */ 
-		for Controls in _Rollout_.Controls where this._isControls(Controls) do
-		(
-			controls_in_groupboxes = for _Control in Controls.list where _Control.Params[#GROUPBOX] != undefined and _Control.type != #GROUPBOX collect _Control -- Get controls with defined groupbox in params AND they are not groupbox
-		
-			Controls.list = ( diffArray Controls.list controls_in_groupboxes)
-		
-			Controls_in_all_groupboxes += controls_in_groupboxes
-		)
-		
-		/** CREATE CONTROLS LIST WHICH IS NOT RENDERED
-		  *
-		  */
-		if( Controls_in_all_groupboxes.count > 0 ) then
-		(
-			--local _Controls_groupbox = _Rollout_.Controls group:( toUpper _Rollout_.title+" CONTROLS")
-			_Controls_groupbox = _Rollout_.Controls group:#CONTROLS_IN_GROUPBOXES
-		
-			--_Controls_groupbox.control #button (_Rollout_.title+" GOOOOOOD")
-			for Control_in_Groupbox in Controls_in_all_groupboxes do
-				_Controls_groupbox.add Control_in_Groupbox
-		)
-		
-		_Rollout_ --return
-	),
+	--/** Controls to groupbox will be rendered as last
+	--
+	--		TODO: MOVE moveGrouboxControlsToEnd() TO GroupboxCreator and REFRACT IT
+	--
+	-- */
+	--function moveGrouboxControlsToEnd &_Rollout_ =
+	--(
+	--	format "\n"; print ("ControlCreator_v.createControslInGroupboxAsLast() "+_Rollout_.id as string)
+	--	Controls_in_all_groupboxes = #()
+	--	
+	--	fn diffArray array_to_remove items_to_remove =
+	--	(
+	--		for item_to_remove in items_to_remove where ( index = findItem array_to_remove item_to_remove ) > 0 do 
+	--			deleteItem array_to_remove index
+	--		
+	--		array_to_remove --return
+	--	)
+	--	
+	--	/*  */ 
+	--	for Controls in _Rollout_._Controls where this._isControls(Controls) do
+	--	(
+	--		controls_in_groupboxes = for _Control in Controls.list where _Control.Params[#GROUPBOX] != undefined and _Control.type != #GROUPBOX collect _Control -- Get controls with defined groupbox in params AND they are not groupbox
+	--	
+	--		Controls.list = ( diffArray Controls.list controls_in_groupboxes)
+	--	
+	--		Controls_in_all_groupboxes += controls_in_groupboxes
+	--	)
+	--	
+	--	/** CREATE CONTROLS LIST WHICH IS NOT RENDERED
+	--	  *
+	--	  */
+	--	if( Controls_in_all_groupboxes.count > 0 ) then
+	--	(
+	--		--local _Controls_groupbox = _Rollout_.Controls group:( toUpper _Rollout_.title+" CONTROLS")
+	--		_Controls_groupbox = _Rollout_.Controls group:#CONTROLS_IN_GROUPBOXES
+	--	
+	--		--_Controls_groupbox.control #button (_Rollout_.title+" GOOOOOOD")
+	--		for Control_in_Groupbox in Controls_in_all_groupboxes do
+	--			_Controls_groupbox.add Control_in_Groupbox
+	--	)
+	--	
+	--	_Rollout_ --return
+	--),
 
 	private
 
@@ -243,11 +236,8 @@ struct ControlCreator_v
 		params_str = _Control.params_str
 		
 		if (groupbox_id = _Control.Params[#GROUPBOX]) != undefined then
-		(
-			
 			params_str = "pos:[ 0, 0 ] " + _Control.params_str
-
-		)
+			
 		
 		/* ADD CONTROL */ 
 		_Rollout.RCI.addControl (_Control.type) (_Control.id) (_Control.caption) paramStr:params_str filter:true;

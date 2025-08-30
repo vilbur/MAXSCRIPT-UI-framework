@@ -96,10 +96,11 @@ struct DefaultParameters_v
 		
 		/* GLOBAL ACROSS PARAMETER  */ 
 		Params[#Global][#ACROSS] = 4
+		--Params[#Global][#ACROSS] = 1
 		
 
 		/* ACROSS PARAMS FOR CONTROL TYPE */
-		for control_type in #( #Listbox, #Edittext, #BrowsePath, #Radiobuttons ) do
+		for control_type in #( #Listbox, #Edittext, #BrowsePath, #Radiobuttons, #dropdownList ) do
 			Params[control_type][#ACROSS] = 1
 		
 		
@@ -111,15 +112,16 @@ struct DefaultParameters_v
 				(
 					Params[type][#ACROSS] = 2
 					
-					Params[type][#HEIGHT] = 96
+					Params[type][#HEIGHT] = 48
 				)
 				
 				#BUTTON:	Params[type][#WIDTH] = 96
-	
+				
+		
 				#SLIDER:	Params[type][#RANGE] = [0,100,0]
 				
 				#EDITTEXT:	Params[type][#FIELDWIDTH] = 96
-
+		
 				#SPINNER:
 				(
 					Params[type][#FIELDWIDTH] = 48
@@ -130,6 +132,8 @@ struct DefaultParameters_v
 					
 					Params[type][#STARTDEGREES] = [0,100,0]
 				)
+				
+				#DROPDOWNLIST:	Params[type][#WIDTH] = 128
 		)
 	),
 
