@@ -108,23 +108,33 @@ struct DefaultParameters_v
 		for type in Params.keys do
 			case type of
 			(
-				#GROUPBOX:
-				(
-					Params[type][#ACROSS] = 2
-					
-					Params[type][#HEIGHT] = 48
-				)
-				
+				#GROUPBOX: Params[type][#HEIGHT] = 48
+
 				#BUTTON:	Params[type][#WIDTH] = 96
 				
 		
 				#SLIDER:	Params[type][#RANGE] = [0,100,0]
 				
+				
 				#EDITTEXT:	Params[type][#FIELDWIDTH] = 96
+				
 		
 				#SPINNER:
 				(
+					Params[type][#WIDTH] = 192
+					
 					Params[type][#FIELDWIDTH] = 48
+					--Params[type][#HEIGHT] = 48
+				)				
+				
+				
+		
+				#DROPDOWNLIST:	Params[type][#WIDTH] = 128
+				
+		
+				#ANGLE:
+				(
+					--Params[type][#FIELDWIDTH] = 48
 					
 					Params[type][#DIR] = #CW
 					
@@ -133,7 +143,6 @@ struct DefaultParameters_v
 					Params[type][#STARTDEGREES] = [0,100,0]
 				)
 				
-				#DROPDOWNLIST:	Params[type][#WIDTH] = 128
 		)
 	),
 

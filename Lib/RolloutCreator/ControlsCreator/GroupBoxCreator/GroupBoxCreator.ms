@@ -111,8 +111,8 @@ struct GroupBoxCreator_v
 	 */
 	function sortControlsToGroupBoxes _rollout =
 	(
-		----format "\n\n\n******************\n\n\n"; print ("GroupBoxCreator_v.sortControlsToGroupBoxes() Rollout:" + _rollout.name as string )
-		
+		format "\n\n\n******************\n\n\n"; print ("GroupBoxCreator_v.sortControlsToGroupBoxes() Rollout:" + _rollout.name as string )
+		--return false
 		--format "_rollout: %\n" _rollout
 		
 		--getProperty GB_groupbox_a_1 #BTN_button_1 #POS [ 0 , 16 ]
@@ -169,8 +169,8 @@ struct GroupBoxCreator_v
 				max_y = temp_pos.y + temp_height
 					
 				/* FIX SPINNER POSITION */ 
-				if classOf ctrl_temp != SpinnerControl then
-					max_x += temp_width
+				--if classOf ctrl_temp != SpinnerControl then
+					--max_x += temp_width
 				
 				/* CAPTURE MAX POSTION OF CONTROLS */ 
 				if max_x > max_pos.x then max_pos.x = max_x
@@ -179,7 +179,7 @@ struct GroupBoxCreator_v
 			)
 			
 			/* DESTROY TEMP ROLLOUT */ 
-			--try( destroyDialog rollout_temp )catch()
+			try( destroyDialog rollout_temp )catch()
 			
 			/*------------------------------------------------------------------------------
 				RESIZE GROUPBOX

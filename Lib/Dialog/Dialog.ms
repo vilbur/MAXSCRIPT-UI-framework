@@ -68,12 +68,12 @@ struct Dialog_v
 	),
 
 	style_registred_dialog = #(
-		#cui_floatable,	-- Dialogbar can float
 		#cui_handles,	-- Show gripper handles when docked
-		#cui_dock_vert	-- Can dock vertically (left and right)
+		#cui_dock_all,	-- Dialog bar can dock on all 4 edges of the frame.
+		#cui_floatable	-- Dialogbar can float
 
 		/* ALLOWED but not DEFAULT styles */
-		--#cui_dock_all,	-- Dialog bar can dock on all 4 edges of the frame.
+		--#cui_dock_vert,	-- Can dock vertically (left and right)
 		--#cui_dock_horz,	-- Can dock horizontally (top and bottom)
 		--#cui_dock_left ,	-- Can dock to the left
 		--#cui_dock_top,	-- Can dock to the top

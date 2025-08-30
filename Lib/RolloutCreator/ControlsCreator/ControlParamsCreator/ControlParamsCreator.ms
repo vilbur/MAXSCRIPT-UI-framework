@@ -26,9 +26,9 @@ struct ControlParamsCreator_v
 	 */
 	function mergeDefaultParams &_Control =
 	(
-		format "\n----------------------------------------------\n"
-		format "\n"; print "ContolParamsCreator_v.mergeDefaultParams()"
-		format "% PARAMS: %\n" _Control.id _Control.Params
+		--format "\n----------------------------------------------\n"
+		--format "\n"; print "ContolParamsCreator_v.mergeDefaultParams()"
+		--format "% PARAMS: %\n" _Control.id _Control.Params
 		
 		/* DEFAULTS PARAMS FOR CONTROL TYPE */ 
 		this._mergeDictionaries (_Control)(Defaults.Params[_Control.type])
@@ -69,12 +69,21 @@ struct ControlParamsCreator_v
 	  * 
 	  * Old values are not overwritten
 	 */
-	function _mergeDictionaries &_Control params =
+	function _mergeDictionaries &_Control params_to_merge =
 	(
 		--format "\n"; print "ControlParamsCreator_v._mergeDictionaries()"
-		for key in params.keys do
+		for key in params_to_merge.keys do
+		(
+			--format "\n\n_Control: %\n" _Control.id
+			--format "% : %\n" key (not(_Control.hasParam(key)))
+			
+			--format "WIDTH: %\n" (_Control.Params[#WIDTH])
+			
 			if not _Control.hasParam(key) then
-				_Control.Params[key] = params[key]
+				_Control.Params[key] = params_to_merge[key]
+			
+			--format "WIDTH: %\n" (_Control.Params[#WIDTH])
+		)
 
 		_Control --return
 	),
