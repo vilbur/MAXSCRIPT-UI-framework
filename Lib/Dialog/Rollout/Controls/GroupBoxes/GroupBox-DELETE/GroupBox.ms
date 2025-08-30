@@ -18,11 +18,11 @@ struct GroupBox_v
 
 	/** Create temporary rollout
 	 */
-	function createTemporaryRollout rollout_width =
+	function createTemporaryRollout groupbox_width =
 	(
 		--clearListener(); print("Cleared in:\n"+getSourceFileName())
 		--format "\n"; print "GroupBox_v.createTemporaryRollout()"
-		--format "rollout_width: %\n" rollout_width
+		--format "groupbox_width: %\n" groupbox_width
 		
 		/* CLOSE ON DEVELOPMENT  */ 
 		execute ("try( destroyDialog "+Groupbox.id as string +" )catch()")
@@ -30,7 +30,8 @@ struct GroupBox_v
 		--format "Controls_in_groupbox: %\n" Controls_in_groupbox
 		
 		groupbox_across = Groupbox.Params[#ACROSS]
-		groupbox_width  = rollout_width / groupbox_across
+		--groupbox_width  = (groupbox_width / groupbox_across) as integer
+		
 		--format "groupbox_across: %\n" groupbox_across
 		--format "groupbox_width: %\n" groupbox_width
 		
@@ -44,7 +45,8 @@ struct GroupBox_v
 			
 			RCI.addControl (_Control.type) (_Control.id) (_Control.caption) paramStr:_Control.params_str filter:true;
 		)
-
+		
+		format "GROUPBOX_WIDTH: %\n" groupbox_width
 
 		createDialog (RCI.end()) pos:[ (getMAXWindowPos()).x +512, 512 ] width:groupbox_width
 		

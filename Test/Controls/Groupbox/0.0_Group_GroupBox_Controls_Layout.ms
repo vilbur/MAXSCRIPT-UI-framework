@@ -102,30 +102,23 @@ Dialog 	= Dialog_v title:(getFilenameFile(getSourceFileName())) width:512
 /* CONTROLS */
 _Controls = Dialog.Controls group:"Test Dialog"
 
-/* GROUPBOX */
-_GroupBox_A1 = _Controls.control #GroupBox "Groupbox A 1" across:2 --params:#( #height, 128 )
-_GroupBox_A2 = _Controls.control #GroupBox "Groupbox A 2" across:2 --params:#( #height, 128 )
+/* GROUPBOXES */
+_GroupBox_A = _Controls.control #GroupBox "Width by across" across:2 --params:#( #height, 128 )
+_GroupBox_B = _Controls.control #GroupBox "With defined"   width: 128 --across:2 --params:#( #height, 128 )
 
 /* CONTROLS */
 _across = 1
 _across = 2
 
-_Controls.control #button ("Button 1") groupbox:_GroupBox_A1.id across:_across align:#LEFT
-_Controls.control #button ("Button 2") groupbox:_GroupBox_A1.id across:_across align:#RIGHT
+/* CONTROLS OF GROUPBOX A */
+_Controls.control #button ("Button 1") groupbox:_GroupBox_A.id across:_across align:#LEFT
+_Controls.control #button ("Button 2") groupbox:_GroupBox_A.id across:_across align:#RIGHT
 
-_Spinner = _Controls.control #SPINNER "Spinner params"  groupbox:_GroupBox_A1.id across:1 align:#RIGHT --fieldWidth:64
+_Spinner = _Controls.control #SPINNER "Spinner"  groupbox:_GroupBox_A.id across:1 align:#RIGHT --fieldWidth:64
 
-_EditText = _Controls.control #EDITTEXT "[EditText]"  groupbox:_GroupBox_A2.id across:1 --align:#RIGHT --fieldWidth:64
+/* CONTROLS OF GROUPBOX B */
+_EditText = _Controls.control #EDITTEXT "[EditText]"  groupbox:_GroupBox_B.id across:1 --align:#RIGHT --fieldWidth:64
 
-
-/* CONTROLS */
---_Controls_2 = Dialog.Controls group:"Controls 2"
-
---/* GROUPBOX */
---_GroupBox = _Controls_2.control #GroupBox (groupbox_name_2 = "Groupbox 2") params:#( #height, 128 )
---
---/* BUTTON */
---_Controls_2.control #button ("Button Controls 2") across:1 params:#(#groupbox, groupbox_name_2)
 
 
 /* CREATE DIALOG */

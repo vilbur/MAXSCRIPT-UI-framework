@@ -1,6 +1,6 @@
 filein( getFilenamePath(getSourceFileName()) + "/Control/Control.ms" )	-- "./Control/Control.ms"
 filein( getFilenamePath(getSourceFileName()) + "/DefaultParameters/DefaultParameters.ms" )	-- "./DefaultParameters/DefaultParameters.ms"
-filein( getFilenamePath(getSourceFileName()) + "/GroupBoxes/GroupBoxes.ms" )	-- "./GroupBoxes/GroupBoxes.ms"
+--filein( getFilenamePath(getSourceFileName()) + "/GroupBoxes/GroupBoxes.ms" )	-- "./GroupBoxes/GroupBoxes.ms"
 
 
 /** Controls
@@ -15,7 +15,7 @@ struct Controls_v
 	/* dependency */
 	DefaultParameters = DefaultParameters_v(),
 
-	GroupBoxes 	= GroupBoxes_v Controls:this, -- "./GroupBoxes/GroupBoxes.ms"
+	--GroupBoxes 	= GroupBoxes_v Controls:this, -- "./GroupBoxes/GroupBoxes.ms"
 
 	rollout_id,
 

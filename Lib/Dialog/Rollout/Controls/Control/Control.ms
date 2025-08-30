@@ -46,6 +46,13 @@ struct Control_v
 		Params[param] = val
 	),
 
+	/** Has param
+	 */
+	function hasParam param =
+	(
+		Params[param] != undefined --return
+	),
+	
 	/** Add Event to control
 	  *
 	  *

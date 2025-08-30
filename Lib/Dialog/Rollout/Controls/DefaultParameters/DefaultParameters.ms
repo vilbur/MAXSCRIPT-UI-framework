@@ -107,6 +107,13 @@ struct DefaultParameters_v
 		for type in Params.keys do
 			case type of
 			(
+				#GROUPBOX:
+				(
+					Params[type][#ACROSS] = 2
+					
+					Params[type][#HEIGHT] = 96
+				)
+				
 				#BUTTON:	Params[type][#WIDTH] = 96
 	
 				#SLIDER:	Params[type][#RANGE] = [0,100,0]

@@ -1,5 +1,5 @@
-filein( getFilenamePath(getSourceFileName()) + "/GroupBoxControlsSorter/GroupBoxControlsSorter.ms" )	-- "./GroupBoxControlsSorter/GroupBoxControlsSorter.ms"
-filein( getFilenamePath(getSourceFileName()) + "/GroupboxResizer/GroupboxResizer.ms" )	-- "./GroupboxResizer/GroupboxResizer.ms"
+--filein( getFilenamePath(getSourceFileName()) + "/GroupBoxControlsSorter/GroupBoxControlsSorter.ms" )	-- "./GroupBoxControlsSorter/GroupBoxControlsSorter.ms"
+--filein( getFilenamePath(getSourceFileName()) + "/GroupboxResizer/GroupboxResizer.ms" )	-- "./GroupboxResizer/GroupboxResizer.ms"
 global GROUPBOXCREATOR
 
 /** Group box creator
@@ -18,8 +18,8 @@ struct GroupBoxCreator_v
 	
 	/* required */
 	/* dependency */
-	GroupboxSorter 	= GroupBoxControlsSorter_v(),
-	GroupboxResizer 	= GroupboxResizer_v(),
+	--GroupboxSorter 	= GroupBoxControlsSorter_v(),
+	--GroupboxResizer 	= GroupboxResizer_v(),
 
 	/* reference */
 	/* ListBody is defining these variables
@@ -31,24 +31,74 @@ struct GroupBoxCreator_v
 
 	--GroupBoxes, -- List of groupboxes where key is groupbox id and value is list of control ids in groupbox
 	--rollouts	= keys,
-
-	GroupBoxList = Dictionary #NAME,
-
-	/** Add grouboxes for rollout
-	  *
-	  * @param	#name	rollout_id_full
-	  * @param	#( #("groupbox_ids"), #(#control_ids )	GroupBoxes
-	  *
+	--
+	--GroupBoxList = Dictionary #NAME,
+	--
+	--/** Add grouboxes for rollout
+	--  *
+	--  * @param	#name	rollout_id_full
+	--  * @param	#( #("groupbox_ids"), #(#control_ids )	GroupBoxes
+	--  *
+	-- */
+	--function addGrouboxes rollout_id_full GroupBoxes =
+	--(
+	--	--format "\n>>>>>>>>>>>><<<<<<<<<<<<\n\n"; print "GroupBoxCreator_v.addGrouboxes()"
+	--	--rollout_id_full = rollout_id_full
+	--	
+	--	--if GroupBoxes.List.count == 0 then
+	--		--return false
+	--
+	--	this.GroupBoxList[rollout_id_full] = GroupBoxes
+	--),
+	
+	/** Create temp rollouts
 	 */
-	function addGrouboxes rollout_id_full GroupBoxes =
+	function createTempRollouts Controls rollout_width =
 	(
-		--format "\n>>>>>>>>>>>><<<<<<<<<<<<\n\n"; print "GroupBoxCreator_v.addGrouboxes()"
-		--rollout_id_full = rollout_id_full
+		format "\n"; print "GroupBoxCreator_v.createTempRollouts()"
 		
-		--if GroupBoxes.List.count == 0 then
-			--return false
+		/* FOR EACH GROUPBOX */ 
+		for Groupbox in Controls.list where Groupbox.type == #GROUPBOX do
+		(
+			format "\n"
+			format "Groupbox.id: %\n" Groupbox.id
+			
+			execute ("try( destroyDialog "+Groupbox.id as string +" )catch()")
+			
+			--format "Controls_in_groupbox: %\n" Controls_in_groupbox
+			
+			/* GET WIDTH OF GROUPBOX  */ 
+			groupbox_width = if not Groupbox.hasParam #WIDTH then
+							(
+								if Groupbox.hasParam #ACROSS then 
+									rollout_width / Groupbox.Params[#ACROSS]
+							)
+							else
+								Groupbox.Params[#WIDTH]
+			
+			
+			
+			format "GROUPBOX_ACROSS: %\n" groupbox_across
+			format "GROUPBOX_WIDTH: %\n" groupbox_width
+			
+			/* DEFINE ROLLOUT CREATOR */ 
+			RCI = rolloutCreator ( Groupbox.id as string  ) ( Groupbox.id as string  )
+			
+			RCI.begin()
+			
+			--for _Control in Controls.List where _Control.type != #GROUPBOX do
+				--format "_Control.Params[#GROUPBOX]: %\n" _Control.Params[#GROUPBOX]
 
-		this.GroupBoxList[rollout_id_full] = GroupBoxes
+			/* ADD CONTROLS TO ROLLOUT */ 
+			for _Control in Controls.List
+				where _Control.type != #GROUPBOX \	            -- is not groupbox 
+				and _Control.Params[#GROUPBOX] == Groupbox.id do -- control is in this groupbox
+					RCI.addControl (_Control.type) (_Control.id) (_Control.caption) paramStr:_Control.params_str filter:true;
+	
+			
+			/* CREATE DIALOG */ 
+			createDialog (RCI.end()) pos:[ (getMAXWindowPos()).x +512, 512 ] width:groupbox_width			
+		)
 	),
 
 	/** Sort controls in group box callback.
@@ -70,6 +120,8 @@ struct GroupBoxCreator_v
 		
 		for GroupBox in GroupBoxes do
 		(
+
+			
 			max_pos = [0,0]
 			
 			/* GET CONTROLS INIT POS */ 			
@@ -78,18 +130,22 @@ struct GroupBoxCreator_v
 			groupbox_controls_pos.x -= groupbox_margin / 2
 			groupbox_controls_pos.y += groupbox_margin
 			
+			--try( destroyDialog rollout_temp )catch()
+			
 			rollout_temp = execute ( GroupBox.name as string )
+			format "ROLLOUT_TEMP: %\n" rollout_temp
 
 			/* PLACE EACH CONTROL ON POSITION BY TEMP ROLLOUT */ 
 			for ctrl_temp in rollout_temp.controls where not matchPattern ( ctrl as string ) pattern:("Group*") do
 			(
-				ctrl_rollout = getProperty _rollout (ctrl_temp.name as name )
-				
+				format "\n"
+				ctrl = getProperty _rollout (ctrl_temp.name as name )
+				format "CTRL: %\n" ctrl
 				has_width = isProperty ctrl_temp #WIDTH
 				
 				/* GET POSITION OF CONTROL FROM TEMP ROLLOUT */ 
 				temp_pos  = getProperty ctrl_temp #POS
-				
+				format "temp_pos: %\n" temp_pos
 				/* GET SIZE OF CONTROL FROM TEMP ROLLOUT */ 
 				temp_width  = if has_width then  getProperty ctrl_temp #WIDTH else 96
 				temp_height = this._getControlSize( ctrl_temp )
@@ -97,13 +153,13 @@ struct GroupBoxCreator_v
 				/*------------------------------------------------------------------------------
 					MOVE CONTROL
 				--------------------------------------------------------------------------------*/
-				setProperty ctrl_rollout #POS ( groupbox_controls_pos + temp_pos )
+				setProperty ctrl #POS ( groupbox_controls_pos + temp_pos )
 				
 				/*------------------------------------------------------------------------------
 					RESIZE CONTROL
 				--------------------------------------------------------------------------------*/
 				if has_width then 
-					setProperty ctrl_rollout #WIDTH ( temp_width )
+					setProperty ctrl #WIDTH ( temp_width )
 				
 				/* GET POSITION OF CONTROL */ 
 				max_x = temp_pos.x
@@ -120,7 +176,7 @@ struct GroupBoxCreator_v
 			)
 			
 			/* DESTROY TEMP ROLLOUT */ 
-			try( destroyDialog rollout_temp )catch()
+			--try( destroyDialog rollout_temp )catch()
 			
 			/*------------------------------------------------------------------------------
 				RESIZE GROUPBOX
@@ -137,8 +193,9 @@ struct GroupBoxCreator_v
 
 	),
 
-
 	private
+	
+	
 	
 	/** Get control size
 	 */
