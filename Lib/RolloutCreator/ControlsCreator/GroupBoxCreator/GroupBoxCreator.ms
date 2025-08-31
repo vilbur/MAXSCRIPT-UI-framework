@@ -72,6 +72,8 @@ struct GroupBoxCreator_v
 							(
 								if Groupbox.hasParam #ACROSS then 
 									rollout_width / Groupbox.Params[#ACROSS]
+								else
+									rollout_width
 							)
 							else
 								Groupbox.Params[#WIDTH]

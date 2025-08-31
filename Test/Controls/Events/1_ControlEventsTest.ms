@@ -126,10 +126,10 @@ function CallbackParams3 arg_1 arg_2 arg_3 = (
 
 
 /*------ CHECKBUTTON ------*/
---CheckButton = _Controls.control #CHECKBUTTON "CheckButton"
+CheckButton = _Controls.control #CHECKBUTTON "CheckButton"
 
 /* DIFFERNET WAYS HOW TO PASS ARGUMENTS TO CALLBACK */
---CheckButton.Event #CHANGED "CallbackNoParam()"	-- NO ARGUMENT
+CheckButton.Event #CHANGED "CallbackNoParam()"	-- NO ARGUMENT
 
 --CheckButton.Event #CHANGED "CallbackParam1"	-- DEFAULT ARGUMENT:	CallbackParam1 val
 --CheckButton.Event #CHANGED "CallbackParam1 #MY_CUSTOM_ARGUMENT"	-- CUSTOM ARGUEMNT:	CallbackParam1 custom_val
@@ -185,8 +185,8 @@ function CallbackParams3 arg_1 arg_2 arg_3 = (
 
 
 /* TIMER */ 
-_Timer = _Controls.control #TIMER "Timer" interval:500 active:true
-_Timer.Event #TICK ("format \"TICK: %\n\" EventFired.Control.ticks")
+--_Timer = _Controls.control #TIMER "Timer" interval:500 active:true
+--_Timer.Event #TICK ("format \"TICK: %\n\" EventFired.Control.ticks")
 
 
 
