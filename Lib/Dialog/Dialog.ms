@@ -4,7 +4,8 @@ if DIALOG_GLOBAL_DATA == undefined then
 filein( getFilenamePath(getSourceFileName()) + "/../Menus/RcMenu/RcMenu.ms" )	--"./../Menus/RcMenu/RcMenu.ms"
 
 filein( getFilenamePath(getSourceFileName()) + "/../ConstructPropeties/ConstructPropeties.ms" )	-- "./../ConstructPropeties/ConstructPropeties.ms"
-filein( getFilenamePath(getSourceFileName()) + "/../EventsList/EventsList.ms" )	-- "./../EventsList/EventsList.ms"
+--filein( getFilenamePath(getSourceFileName()) + "/../EventsList/EventsList.ms" )	-- "./../EventsList/EventsList.ms"
+filein( getFilenamePath(getSourceFileName()) + "/../Event/Event.ms" )	--"./../Event/Event.ms"
 filein( getFilenamePath(getSourceFileName()) + "/../RolloutCreator/RolloutCreator.ms" )	-- "./../RolloutCreator/RolloutCreator.ms"
 filein( getFilenamePath(getSourceFileName()) + "/../Ini/Ini.ms" )	-- "./../Ini/Ini.ms"
 

@@ -30,20 +30,21 @@ function dialogRolloutCallbackParam val =
   */
 function dialogEventsTest =
 (
-	--format "\n"; print "1_DialogEventsTest.ms.dialogEventsTest()"
-	DialogTest.Events.add #open	"dialogRolloutCallback()"
-	DialogTest.Events.add #close	"dialogRolloutCallback()"
+	format "\n"; print "1_DialogEventsTest.ms.dialogEventsTest()"
+	DialogTest.Event #open	"dialogRolloutCallback()"
+	DialogTest.Event #close	"dialogRolloutCallback()"
 
-	DialogTest.Events.add #MOVED	"dialogRolloutCallback()"
+	DialogTest.Event #MOVED	"dialogRolloutCallback()"
+	DialogTest.Event #FOCUS	"dialogRolloutCallback()"
 
-	DialogTest.Events.add #RESIZED	"dialogRolloutCallback()"
+	DialogTest.Event #RESIZED	"dialogRolloutCallback()"
 
-   --DialogTest.Events.add #docked	"dialogRolloutCallback()"
-   -- DialogTest.Events.add #undocked	"dialogRolloutCallback()"
+   --DialogTest.Event #docked	"dialogRolloutCallback()"
+   -- DialogTest.Event #undocked	"dialogRolloutCallback()"
 
-	DialogTest.Events.add #RBUTTONDOWN	"dialogRolloutCallbackParam(@#RBUTTONDOWN@)"
+	DialogTest.Event #RBUTTONDOWN	"dialogRolloutCallbackParam(@#RBUTTONDOWN@)"
 
-	DialogTest.Events.add #okToClose	"dialogRolloutCallbackParam(@#okToClose@)"
+	DialogTest.Event #okToClose	"dialogRolloutCallbackParam(@#okToClose@)"
 
 )
 
@@ -62,9 +63,9 @@ function rolloutEventsTest =
 	_Button      = _Controls.control #button "Rollout Btn" id:#button_3
 
 	/* ROLLOUT EVENTS */
-	_Rollout.Events.add #ROLLEDUP	"dialogRolloutCallbackParam #ROLLEDUP"
-	_Rollout.Events.add #OPEN	"dialogRolloutCallbackParam #OPEN"
-	_Rollout.Events.add #CLOSE	"dialogRolloutCallbackParam #CLOSE"
+	_Rollout.Event #ROLLEDUP	"dialogRolloutCallbackParam #ROLLEDUP"
+	_Rollout.Event #OPEN	"dialogRolloutCallbackParam #OPEN"
+	_Rollout.Event #CLOSE	"dialogRolloutCallbackParam #CLOSE"
 )
 
 /** Test all event
@@ -98,8 +99,8 @@ function testAllEvents _Rollout =
 
 	for event_type in event_types do
 	(
-		--_Rollout.Events.add event_type	("print(\"Custom dialog event #"+ event_type as string +"\")")
-		_Rollout.Events.add event_type ("dialogRolloutCallback()")
+		--_Rollout.Event event_type	("print(\"Custom dialog event #"+ event_type as string +"\")")
+		_Rollout.Event event_type ("dialogRolloutCallback()")
 	)
 
 )
@@ -111,7 +112,7 @@ function testAllEvents _Rollout =
 --------------------------------------------------------------------------------*/
 
 
---dialogEventsTest()
+dialogEventsTest()
 rolloutEventsTest()
 
 --testAllEvents(DialogTest)
@@ -119,6 +120,13 @@ rolloutEventsTest()
 
 
 /* CREATE DIALOG */
-DialogTest.create width:256
+DialogTest.create width:256 height:256
 
---DialogTest.register()
+/*------------------------------------------------------------------------------
+	
+	IMPORTANT:
+		SOME EVENT TYPES DOESN'T WORK ON REGISDTRED DIALOG and vice versa
+	
+--------------------------------------------------------------------------------*/
+
+DialogTest.register()

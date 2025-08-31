@@ -47,16 +47,17 @@ struct Controls_v
 		border:		\
 		visible:		\
 		value:		\ -- current value 
-		checked:		\ -- checkbox, checkbutton
-		color:		\ -- colorpicker, bitmap -- alias for "value" E.G.: color:green >>> value:(bitmap 256 32 color:green)
-		bitmap:		\ -- bitmap, imgTag
-		fieldWidth:		\ -- spinner, edittext 
-		highlightColor:		\ -- checkbutton
+		checked:		\ -- CHECKBOX, CHECKBUTTON
+		color:		\ -- COLORPICKER, BITMAP -- alias for "value" E.G.: color:green >>> value:(bitmap 256 32 color:green)
+		bitmap:		\ -- BITMAP, IMGTAG
+		fieldWidth:		\ -- SPINNER, EDITTEXT 
+		highlightColor:		\ -- CHECKBUTTON
+		default:	unselect:	\ -- RADIOBUTTON
+		items:	columns:	\ -- RADIOBUTTON, LISBOX, MUTLILISTBOX
+		type:	scale: 	\ -- SPINNER
+		interval:	active:	\ -- TIMER
+		range:	ticks: orient:	\ -- SLIDER
 		ini:true		\ -- save control value to ini
-		default:	unselect:	\ -- radiobutton
-		items:	columns:	\ -- radiobutton, lisbox, mutlilistbox
-		type:	scale: 	\ -- spinner
-		range:	ticks: orient:	\ -- slider
 		add_to_controls:	true		=
 	(
 		--format "\n"; print "Controls_v.Control()"
@@ -69,8 +70,8 @@ struct Controls_v
 		
 		
 		/* PROCESS FUNCTION PARAMETERS */ 	
-		_param_names  = #( #pos, #checked, #width, #height, #offset, #align, #items, #range, #type, #ticks, #orient, #scale, #controller, #default, #unselect, #value, #color, #bitmap, #fieldWidth, #ini, #tooltip, #across, #columns,	#visible, #border, #groupbox, #highlightColor)
-		_param_values = #(  pos,  checked,  width,  height,  offset,  align,  items,  range,  type,  ticks,  orient,  scale,  controller,  default,  unselect,  value,  color,  bitmap,   fieldWidth,  ini,   tooltip,  across,  columns,  visible,   border,  groupbox,  highlightColor)
+		_param_names  = #( #pos, #checked, #width, #height, #offset, #align, #items, #range, #type, #ticks, #orient, #scale, #controller, #default, #unselect, #value, #color, #bitmap, #fieldWidth, #ini, #tooltip, #across, #columns,	#visible, #border, #groupbox, #highlightColor, #interval, #active )
+		_param_values = #(  pos,  checked,  width,  height,  offset,  align,  items,  range,  type,  ticks,  orient,  scale,  controller,  default,  unselect,  value,  color,  bitmap,   fieldWidth,  ini,   tooltip,  across,  columns,  visible,   border,  groupbox,  highlightColor, interval,  active )
 
 		
 		/* EXPOSE ID FROM PARAMS ARRAY */ 

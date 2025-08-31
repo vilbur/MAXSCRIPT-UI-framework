@@ -141,10 +141,10 @@ function CallbackParams3 arg_1 arg_2 arg_3 = (
 
 
 
---/*------ SPINNER ------*/
-Spinner	= _Controls.control #SPINNER "Spinner"
-Spinner.Event #CHANGED "CallbackParams2"
-Spinner.Event #ENTERED "CallbackParams2"
+----/*------ SPINNER ------*/
+--Spinner	= _Controls.control #SPINNER "Spinner"
+--Spinner.Event #CHANGED "CallbackParams2"
+--Spinner.Event #ENTERED "CallbackParams2"
 
 /*
 	BUG IN: spinner.Event #CHANGED "CallbackParams3()" params:"Value CHANGED"
@@ -182,8 +182,15 @@ Spinner.Event #ENTERED "CallbackParams2"
 --/*------ SLIDER ------*/
 --_Slider = _Controls.control #SLIDER "Slider" ticks:10 type:#integer across:1
 --_Slider.Event #CHANGED ("CallbackParam1")
---
---
+
+
+/* TIMER */ 
+_Timer = _Controls.control #TIMER "Timer" interval:500 active:true
+_Timer.Event #TICK ("format \"TICK: %\n\" EventFired.Control.ticks")
+
+
+
+
 --
 --/*------ CHECKBOX ------*/
 --/*------ DROPDOWN ------*/

@@ -101,9 +101,9 @@ struct RolloutEventBinder_v
 	(
 		--format "\n";	print "RolloutEventBinder_v._addHandler()"
 
-		if  (Event_rolledup	= _Rollout.Events.get(#ROLLEDUP)) != undefined \
-		or (Event_open   	= _Rollout.Events.get(#OPEN))     != undefined \
-		or (Event_close  	= _Rollout.Events.get(#CLOSE))    != undefined then
+		if  (Event_rolledup = _Rollout.Events[#ROLLEDUP]	) != undefined \
+		or (Event_open      = _Rollout.Events[#OPEN] 	) != undefined \
+		or (Event_close     = _Rollout.Events[#CLOSE]	) != undefined then
 		(
 			_Rollout.addlocal #rolledup_initilazied false
 
@@ -121,7 +121,7 @@ struct RolloutEventBinder_v
 
 
 			--format "EVENT_ROLLEDUP.CALLBACK: %\n" Event_rolledup.callback
-			_Rollout.Events.replace	(Event_rolledup)
+			_Rollout.Events[#ROLLEDUP] = Event_rolledup
 		)
 	),
 
@@ -198,6 +198,7 @@ struct RolloutEventBinder_v
 		--_Rollout.addLocal #open_rollouts #()
 		--_Rollout.addLocal #auto_roll_up (if parent_is_dialog then undefined else 2 ) -- keep only single opened subrollout
 		
+		/*------ DIALOG OR ROLLOUT ------*/
 		EventsCombiner.EventsLists[#DEFAULTS] = if parent_is_dialog then
 		
 			/* DIALOG EVENTS */ 

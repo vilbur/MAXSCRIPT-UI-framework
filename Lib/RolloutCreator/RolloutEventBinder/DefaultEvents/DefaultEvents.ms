@@ -29,7 +29,7 @@ struct DefaultEvents_v
 		----	append this.Events Event
 		----)
 
-		EventsList = EventsList_v()
+		EventsList = Dictionary()
 
 
 		/*------------------------------------------------------------------------------
@@ -41,7 +41,7 @@ struct DefaultEvents_v
 		
 		Event.callback = "GROUPBOXCREATOR.sortControlsToGroupBoxes( "+rollout_id+" )"
 		
-		append EventsList.list Event
+		EventsList[#OPEN] = Event
 
 
 		/*------------------------------------------------------------------------------
@@ -51,7 +51,8 @@ struct DefaultEvents_v
 
 		Event.callback = "waitForResizeEndTimer(#"+rollout_id+")( #resized )"
 
-		append EventsList.list Event
+		--append EventsList.list Event
+		EventsList[#RESIZED] = Event
 
 
 		/*------------------------------------------------------------------------------
@@ -65,7 +66,8 @@ struct DefaultEvents_v
 
 			Event.callback = "(IniSaver_v ini_file:\""+ini_path+"\").saveRollout(\""+rollout_id+"\")"
 
-			append EventsList.list Event
+			--append EventsList.list Event
+			EventsList[#OKTOCLOSE] = Event
 		)
 
 		EventsList --return
@@ -76,9 +78,11 @@ struct DefaultEvents_v
 	function getRolloutEvents _Rollout =
 	(
 		--format "\n"; print "DefaultEvents_v.getRolloutEvents()"
-		EventsList = EventsList_v()
+		Event = this._getAutoRollUpRolloutEvent(_Rollout)
 		
-		append EventsList.list (this._getAutoRollUpRolloutEvent(_Rollout))
+		EventsList = Dictionary()
+		--append EventsList.list (this._getAutoRollUpRolloutEvent(_Rollout))
+		EventsList[Event.type] = Event
 		
 		EventsList --return
 	),

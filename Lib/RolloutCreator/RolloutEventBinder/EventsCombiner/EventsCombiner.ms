@@ -19,7 +19,7 @@ struct EventsCombiner_v
 
 		if event_type != #RESIZED then
 		(
-			Events = for key in EventsLists.keys where EventsLists[key] != undefined and (Event = EventsLists[key].get(event_type))!= undefined collect Event
+			Events = for key in EventsLists.keys where EventsLists[key] != undefined and (Event = EventsLists[key][event_type])!= undefined collect Event
 			--Events = for key in EventsLists.keys where EventsLists[key] != undefined collect EventsLists[key]
 
 			if( Events.count > 0 ) then
@@ -38,7 +38,7 @@ struct EventsCombiner_v
 
 		else /* CUSTOM RESIZE EVENT IS FIRED BY findResizeEventType(), binded is only default */
 			if this.EventsLists[#DEFAULTS] != undefined then
-			this.EventsLists[#DEFAULTS].get(#RESIZED)
+			this.EventsLists[#DEFAULTS][#RESIZED]
 	),
 
 	--/** Get events

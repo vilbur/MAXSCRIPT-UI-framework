@@ -54,20 +54,17 @@ struct Control_v
 	),
 	
 	/** Add Event to control
-	  *
-	  *
 	 */
 	function Event type callback params:"" tooltip:"" autorun:false =
 	(
 		--print "Control_v.event()"
+		--this.Events.add type callback params:params tooltip:tooltip
+		
 		_Event = Event_v type:type tooltip:tooltip autorun:autorun
-
+		
 		_Event.callback	= callback
 		_Event.arguments	= params --- NOTICE: "arguments" are "params" FOR FRONT END USER
-
-		--_Event.callback[#arguments]	= params
-
-		--format "_Event:	% \n" _Event
+		
 		this.Events[type] = _Event
 	),
 

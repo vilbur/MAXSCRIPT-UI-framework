@@ -13,7 +13,8 @@
 
 	/* dependency */
 	_Controls	= #(),
-	Events	= EventsList_v(),	-- "./../../EventsList/EventsList.ms"
+	--Events	= EventsList_v(),	-- "./../../EventsList/EventsList.ms"
+	Events	= Dictionary(),
 	RolloutResizer	= RolloutResizer_v(),	-- "./RolloutResizer/RolloutResizer.ms"
 
 	/* extended control params */
@@ -84,7 +85,21 @@
 		--format "height	= % \n" height
 		this.Subrollouts slot:slot height:height --return
 	),
-
+	
+	/** Add Event to rollout
+	 */
+	function Event type callback params:"" tooltip:"" =
+	(
+		--print "Control_v.event()"
+		--this.Events.add type callback params:params tooltip:tooltip
+		_Event = Event_v type:type tooltip:tooltip autorun:autorun
+		
+		_Event.callback	= callback
+		_Event.arguments	= params --- NOTICE: "arguments" are "params" FOR FRONT END USER
+		
+		this.Events[type] = _Event
+	),
+	
 	/** Get Subrollouts_v or RolloutBody
 	  * works for nested subrollouts as well
 	  *

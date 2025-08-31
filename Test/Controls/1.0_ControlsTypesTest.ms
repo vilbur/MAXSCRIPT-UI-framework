@@ -85,7 +85,7 @@ _Controls   = Dialog.Controls()
 --
 --
 --/*------ BROWSEATH ------*/
-_Controls.control #BROWSEPATH "browsePathTest"
+--_Controls.control #BROWSEPATH "browsePathTest"
 
 
 /*------ COLORPICKER ------*/
@@ -111,6 +111,12 @@ _Controls.control #BROWSEPATH "browsePathTest"
 
 --/*------ ANGLE ------*/
 --_Controls.control #ANGLE  "Angle" RANGE:[-90,270,90] color:green params:#( #DIR, #CW, #startdegrees, 90 )
+
+
+/* TIMER */ 
+_Timer = _Controls.control #TIMER "Timer"
+
+
 
 /*==============================================================================
 	CREATE DIALOG
