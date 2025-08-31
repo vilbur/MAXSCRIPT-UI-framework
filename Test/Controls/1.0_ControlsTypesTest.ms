@@ -62,8 +62,8 @@ _Controls   = Dialog.Controls()
 --
 --
 --/*------ DROPDOWN ------*/
---_Controls.control #DROPDOWN "Dropdown"
---_Controls.control #DROPDOWNLIST "Dropdownlist"
+--_Controls.control #DROPDOWN "Dropdown"  items:#("Item 1","Item 2") 
+--_Controls.control #DROPDOWNLIST "Dropdownlist"  items:#("Item 1","Item 2") 
 
 --
 --/*------ EDITTEXT ------*/

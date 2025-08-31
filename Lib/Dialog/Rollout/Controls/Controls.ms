@@ -48,26 +48,40 @@ struct Controls_v
 		visible:		\
 		value:		\ -- current value 
 		checked:		\ -- CHECKBOX, CHECKBUTTON
-		color:		\ -- COLORPICKER, BITMAP -- alias for "value" E.G.: color:green >>> value:(bitmap 256 32 color:green)
+		color:		\ -- COLORPICKER, BITMAP.bitmap ,CHECKBUTTON.highlightColor
+		highlightColor:		\ -- CHECKBUTTON
 		bitmap:		\ -- BITMAP, IMGTAG
 		fieldWidth:		\ -- SPINNER, EDITTEXT 
-		highlightColor:		\ -- CHECKBUTTON
 		default:	unselect:	\ -- RADIOBUTTON
 		items:	columns:	\ -- RADIOBUTTON, LISBOX, MUTLILISTBOX
 		type:	scale: 	\ -- SPINNER
 		interval:	active:	\ -- TIMER
 		range:	ticks: orient:	\ -- SLIDER
-		ini:true		\ -- save control value to ini
-		add_to_controls:	true		=
+		ini:	true	\ -- save control value to ini
+		add_to_controls:	true	=
 	(
 		--format "\n"; print "Controls_v.Control()"
 		/* SANITIZE PARAMETERS */
-		if control_type == #DROPDOWN then control_type = #DROPDOWNLIST
-		
-		
-		/* SET DFAULT HIGHLIGHTCOLOR */ 
-		if control_type == #CHECKBUTTON and highlightColor == undefined then highlightColor = ::color 95 138 193 -- dot notation "::" is used because of "color" is maxscript reserved global kyeword
-		
+		case control_type of
+		(
+			#DROPDOWN: control_type = #DROPDOWNLIST
+
+			#CHECKBUTTON:
+			(
+				/* SWAP OF ALIAS PARAM NAME #color >>> #highlightColor */ 
+				if color != unsupplied then
+				(
+					highlightColor = color
+					--format "HIGHLIGHTCOLOR: %\n" highlightColor
+					color = undefined
+				)
+				/* SET DFAULT HIGHLIGHTCOLOR */ 
+				if highlightColor == undefined then
+					highlightColor = ::color 95 138 193
+				
+			)
+		)
+				
 		
 		/* PROCESS FUNCTION PARAMETERS */ 	
 		_param_names  = #( #pos, #checked, #width, #height, #offset, #align, #items, #range, #type, #ticks, #orient, #scale, #controller, #default, #unselect, #value, #color, #bitmap, #fieldWidth, #ini, #tooltip, #across, #columns,	#visible, #border, #groupbox, #highlightColor, #interval, #active )

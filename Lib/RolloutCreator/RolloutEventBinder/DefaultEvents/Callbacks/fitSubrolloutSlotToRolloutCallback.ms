@@ -50,7 +50,7 @@ function fitSubrolloutSlotToRolloutCallback sender evt =
 			print ( toUpper(event_type as string ) ) -- DEV
 
 			/* FIRE CUSTOM EVENT */
-			if ( Event = DataSaved.Dialog.Events.get(event_type) ) != undefined then
+			if ( Event = DataSaved.Dialog.Events[event_type] ) != undefined then
 				execute(Event.callback)
 
 		)

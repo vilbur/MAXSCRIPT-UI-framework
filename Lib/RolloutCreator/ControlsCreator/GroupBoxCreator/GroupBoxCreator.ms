@@ -55,13 +55,13 @@ struct GroupBoxCreator_v
 	 */
 	function createTempRollouts Controls rollout_width =
 	(
-		format "\n"; print "GroupBoxCreator_v.createTempRollouts()"
+		--format "\n"; print "GroupBoxCreator_v.createTempRollouts()"
 		
 		/* FOR EACH GROUPBOX */ 
 		for Groupbox in Controls where Groupbox.type == #GROUPBOX do
 		(
-			format "\n"
-			format "Groupbox.id: %\n" Groupbox.id
+			--format "\n"
+			--format "Groupbox.id: %\n" Groupbox.id
 			
 			execute ("try( destroyDialog "+Groupbox.id as string +" )catch()")
 			
@@ -80,16 +80,16 @@ struct GroupBoxCreator_v
 			
 			
 			
-			format "GROUPBOX_ACROSS: %\n" groupbox_across
-			format "GROUPBOX_WIDTH: %\n" groupbox_width
+			--format "GROUPBOX_ACROSS: %\n" groupbox_across
+			--format "GROUPBOX_WIDTH: %\n" groupbox_width
 			
 			/* DEFINE ROLLOUT CREATOR */ 
 			RCI = rolloutCreator ( Groupbox.id as string  ) ( Groupbox.id as string  )
 			
 			RCI.begin()
 --			
-			for _Control in Controls where _Control.hasParam #GROUPBOX do
-			format "%: %\n" _Control.id _Control.params_str 
+			--for _Control in Controls where _Control.hasParam #GROUPBOX do
+			--FORMAT "%: %\n" _Control.id _Control.params_str 
 				--format "_Control.Params[#GROUPBOX]: %\n" _Control.Params[#GROUPBOX]
 
 			/* ADD CONTROLS TO ROLLOUT */ 
@@ -113,7 +113,7 @@ struct GroupBoxCreator_v
 	 */
 	function sortControlsToGroupBoxes _rollout =
 	(
-		format "\n\n\n******************\n\n\n"; print ("GroupBoxCreator_v.sortControlsToGroupBoxes() Rollout:" + _rollout.name as string )
+		--format "\n\n\n******************\n\n\n"; print ("GroupBoxCreator_v.sortControlsToGroupBoxes() Rollout:" + _rollout.name as string )
 		--return false
 		--format "_rollout: %\n" _rollout
 		
@@ -131,30 +131,30 @@ struct GroupBoxCreator_v
 			
 			/* GET CONTROLS INIT POS */ 			
 			controls_origin = GroupBox.pos
-			format "CONTROLS_ORIGIN: %\n" controls_origin
+			--format "CONTROLS_ORIGIN: %\n" controls_origin
 			
 			--controls_origin.x -= groupbox_margin / 2
 			controls_origin.y += groupbox_margin
 			
 			--try( destroyDialog rollout_temp )catch()
 			--controls_origin = [0,0]
-			format "ROLLOUT_TEMP: %\n" rollout_temp
+			--format "ROLLOUT_TEMP: %\n" rollout_temp
 
 			/* PLACE EACH CONTROL ON POSITION BY TEMP ROLLOUT */ 
 			for ctrl_temp in rollout_temp.controls where not matchPattern ( ctrl as string ) pattern:("Group*") do
 			(
-				format "\n"
+				--format "\n"
 				ctrl = getProperty _rollout (ctrl_temp.name as name )
-				format "CTRL: %\n" ctrl
+				--format "CTRL: %\n" ctrl
 				has_width = isProperty ctrl_temp #WIDTH
 				
 				/* GET POSITION OF CONTROL FROM TEMP ROLLOUT */ 
 				temp_pos  = getProperty ctrl_temp #POS
-				format "temp_pos: %\n" temp_pos
+				--format "temp_pos: %\n" temp_pos
 				/* GET SIZE OF CONTROL FROM TEMP ROLLOUT */ 
 				temp_width  = if has_width then  getProperty ctrl_temp #WIDTH else 96
 				temp_height = this._getControlHeight( ctrl_temp )(temp_pos)
-				format "temp_height: %\n" temp_height
+				--format "temp_height: %\n" temp_height
 				/*------------------------------------------------------------------------------
 					MOVE CONTROL
 				--------------------------------------------------------------------------------*/

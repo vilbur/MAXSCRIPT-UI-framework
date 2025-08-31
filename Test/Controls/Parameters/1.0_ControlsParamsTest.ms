@@ -18,14 +18,20 @@ _Controls.Default #across 1
 /*------ BUTTON ------*/
 --_Controls.control #button "Button" params:#(#border, false, #tooltip, "Test Tooltip")
 --_Controls.control #button "Button offset" params:#( #offset, [ 32, 128] )
---
+
+
+/*------ CECKBUTTON ------*/
+_Controls.control #CHECKBUTTON "Orange" highlightColor:orange
+_Controls.control #CHECKBUTTON "Green" color:green
+
+
 /*------ CHECKBOX ------*/
 --_Controls.control #checkbox "Checkbox value" value:true
---_Controls.control #checkbox "Checkbox param" params:#(#checked, true)
+--_Controls.control #checkbox "Checkbox param" checked:true 
 
 /*------ SPINNER ------*/
 
-_Spinner = _Controls.control #spinner "Spinner params" range:[0,10.0,3]
+--_Spinner = _Controls.control #spinner "Spinner params" range:[0,10.0,3]
 --_Spinner = _Controls.control #spinner "Spinner params"  value:10.0
 --_Spinner = _Controls.control #spinner "Spinner params" range:[0,10,0] value:3 -- value ovverides value in range
 
@@ -65,7 +71,7 @@ _Spinner = _Controls.control #spinner "Spinner params" range:[0,10.0,3]
 --_Controls.control #browsePath "OpenFileName" params:#( #mode, #getOpenFileName )
 
 
-/*------ CECKBUTTON ------*/
+
 /*------ DROPDOWN ------*/
 /*------ EDITTEXT ------*/
 /*------ COLORPICKER ------*/

@@ -129,7 +129,7 @@ function CallbackParams3 arg_1 arg_2 arg_3 = (
 CheckButton = _Controls.control #CHECKBUTTON "CheckButton"
 
 /* DIFFERNET WAYS HOW TO PASS ARGUMENTS TO CALLBACK */
-CheckButton.Event #CHANGED "CallbackNoParam()"	-- NO ARGUMENT
+--CheckButton.Event #CHANGED "CallbackNoParam()"	-- NO ARGUMENT
 
 --CheckButton.Event #CHANGED "CallbackParam1"	-- DEFAULT ARGUMENT:	CallbackParam1 val
 --CheckButton.Event #CHANGED "CallbackParam1 #MY_CUSTOM_ARGUMENT"	-- CUSTOM ARGUEMNT:	CallbackParam1 custom_val
@@ -190,11 +190,14 @@ CheckButton.Event #CHANGED "CallbackNoParam()"	-- NO ARGUMENT
 
 
 
+--/*------ CHECKBOX ------*/
 
 --
---/*------ CHECKBOX ------*/
 --/*------ DROPDOWN ------*/
---
+_Dropdown = _Controls.control #DROPDOWN "Dropdown"  items:#("Item 1","Item 2") 
+_Dropdown.Event #SELECTED ("CallbackParam1")
+_Dropdown.Event #RIGHTCLICK ("CallbackNoParam")
+
 --
 --/*------ COLORPICKER ------*/
 --/*------ BITMAP ------*/
