@@ -49,17 +49,27 @@ struct IniSaver_v
 	 */
 	function saveDialogDockState rollout_id =
 	(
-		--format "\n"; print "IniSaver_v.saveDialogDockState()"
+		format "\n"; print "IniSaver_v.saveDialogDockState()"
+		format "isRegistered: %\n" ( this.isRegistered rollout_id )
 		--format "rollout_id	= % \n" rollout_id
 
 		if ( _Rollout = execute( rollout_id as string )) != undefined then
 		(
 			if( dialog_is_not_closed = GetDialogSize _Rollout) != [0,0] then -- if dialog is closed by user, exists but it is not displayed , then it`s size is [0,0,]
 			(
-
+				
+				dialog_position = GetDialogPos _Rollout 
+				
+				/* AVOID OFFSETING OF REGISTERED DIALOG */ 
+				if this.isRegistered rollout_id then
+				(
+					dialog_position.x -= 6
+					dialog_position.y -= 29
+				)
+				
 				this._saveToIni _Rollout.name "size"	(GetDialogSize _Rollout )
 
-				this._saveToIni _Rollout.name "position"	(GetDialogPos _Rollout )
+				this._saveToIni _Rollout.name "position"	( dialog_position )
 
 				this._saveToIni _Rollout.name "dock_state"	(try(cui.getDockState _Rollout )catch())
 			)
@@ -68,7 +78,22 @@ struct IniSaver_v
 	),
 
 	private
-
+	
+	/** Is registered
+	 */
+	function isRegistered dialog_id =
+	(
+		--format "\n"; print "if.isRegistered()"
+		try(
+			execute ("cui.getDockState "+ dialog_id )
+			
+			true --return
+		)
+		catch
+		(
+			false --return
+		)
+	),
 
 	/** _save controls and subrollouts
 	 */

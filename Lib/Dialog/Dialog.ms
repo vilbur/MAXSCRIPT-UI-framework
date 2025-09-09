@@ -282,6 +282,22 @@ struct Dialog_v
 		--format "\n"; print "Dialog_v.unregister()"
 		execute ("try(cui.UnRegisterDialogBar "+ id +")catch()")
 	),
+	
+	/** Is registered
+	 */
+	function isRegistered =
+	(
+		--format "\n"; print "if.isRegistered()"
+		try(
+			execute ("cui.getDockState "+ this.id )
+			
+			true --return
+		)
+		catch
+		(
+			false --return
+		)
+	),
 
 	/** Dock\Undock dialog
 	  *
