@@ -133,7 +133,8 @@ struct Menu_v
 		(
 			format "\n\n\n*********** WARNING: MENU HAS NOT ANY ITEMS **********************\nMenu: \"%\"\n" (submenu.getTitle() )
 
-			return false
+			--return false
+			--return (Menu_v())
 		)
 
 		/* ADD AS LAST ITEM */

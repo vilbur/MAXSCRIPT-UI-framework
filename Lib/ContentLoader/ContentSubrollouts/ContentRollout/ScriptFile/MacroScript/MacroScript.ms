@@ -15,22 +15,14 @@ struct MacroScript_Content_v
 
 	tooltip = "",
 	icon    = "",
-	params = #( #(), #() ), -- 2D matrix #( #(keys), #(values) )
+
+	params	= Dictionary #NAME, -- KEY: #PARAM_NAME VALUE:"Param Value"
+	
 	silentErrors = false,
 	autoUndoEnabled = false,
 
 	public
 
-	--/** Get id of control
-	--  *
-	--  * Id is generated from button text because of one control can consist of multiple macroscripts E.G.: Left\Righclick
-	--  *
-	--  * @return	#name e.g.: #BUTTON_buttontext
-	-- */
-	--function getControlId =
-	--(
-	--	(this._prefixByType()) + "_"+ (( dotNetObject "System.Text.RegularExpressions.Regex" @"[^A-Za-z0-9-_]" ).Replace ( toLower buttontext ) "_") as name --return
-	--),
 
 	/** Get full id
 	 */
@@ -45,14 +37,10 @@ struct MacroScript_Content_v
 	 */
 	function getControlType =
 	(
-		--print "MacroScript_Content_v.getParamsArray()"
-		if( (control_type = this.getParam(#control)) != undefined ) then
-		(
-			--format "control_type	= % \n" control_type
-			--format "classof control_type	= % \n" (classof control_type)
-			--format "control_type as name	= % \n" (control_type as name)
-			(control_type as name )--return
-		)
+		--print "MacroScript_Content_v.getControlType()"
+		if( (control_type = this.params[#control]) != undefined ) then
+			control_type as name --return
+
 		else
 			#button
 	),
@@ -67,25 +55,15 @@ struct MacroScript_Content_v
 		--print "MacroScript_Content_v.getParamsArray()"
 		params_array = #()
 
-		for i = 1 to params[1].count do
+		for param_data in params do
 		(
-			append params_array params[1][i]
-			append params_array params[2][i]
+			append params_array param_data.key
+			append params_array param_data.value
 		)
 
 		params_array --return
 	),
 
-	/** Get param
-	  *
-	  * @property	string|name param E.G.: "width|#width
-	 */
-	function getParam param =
-	(
-		--print "MacroScript_Content_v.getParam()"
-		if (index = findItem params[1] param ) > 0 then
-			params[2][index] --return
-	),
 
 	/**
 	 */

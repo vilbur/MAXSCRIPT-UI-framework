@@ -57,8 +57,7 @@ struct ImagesArrayParser_v
 			if images[7] == undefined then images[7] = images[4]
 
 
-			append params[1] #images
-			append params[2] images
+			params[#IMAGES] = images
 
 			this._setButtonWidthByIcon (params)
 		)

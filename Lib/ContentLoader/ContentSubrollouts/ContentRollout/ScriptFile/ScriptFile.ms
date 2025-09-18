@@ -91,10 +91,15 @@ struct ScriptFile_Content_v
 	 */
 	function importMacroscriptsToMenus =
 	(
-		--format "\n"; print "ScriptFile_Content_v.importToMenus()"
+		format "\n"; print "ScriptFile_Content_v.importMacroscriptsToMenus()"
 		--format "filename: %\n" filename
+		
 		for i = 1 to MacroScripts.count do
-			this._addToMenu(MacroScripts[i]) ( ParamsList_v keys:MacroScripts[i].Params[1] values:MacroScripts[i].Params[2] )
+		(
+			
+			
+		)
+			--this._addToMenu (MacroScripts[i] ) ( ParamsList_v keys:MacroScripts[i].Params[1] values:MacroScripts[i].Params[2] )
 	),
 
 	
@@ -152,8 +157,8 @@ struct ScriptFile_Content_v
 	 */
 	function _addToMenu Macro Paramss =
 	(
-		--format "\n\n"; print "ScriptFile_Content_v.addToQuadMenu()"
-		--quad_name	= Paramss[#quad]
+		format "\n\n"; print "ScriptFile_Content_v._addToMenu()"
+		format "Macro: %\n" Macro
 
 		if (menu_param = Paramss[#menu]) == undefined or (classOf menu_param == BooleanClass and menu_param != true) then
 			return false
@@ -278,7 +283,7 @@ struct ScriptFile_Content_v
 		(
 			callback = "(macros.run \""+Macro.category+"\" \""+Macro.macro_name+"\")"
 
-			autorun = ( autorun_param = Macro.getParam(#autorun) ) != undefined and autorun_param == true
+			autorun = ( autorun_param = Macro.params[#AUTORUN] ) != undefined and autorun_param == true
 
 			_Control.Event event_type callback tooltip:Macro.toolTip autorun:autorun
 		)
@@ -297,7 +302,7 @@ struct ScriptFile_Content_v
 		--print "ScriptFile_Content_v._getEventType()"
 		--format "event_type	= % \n" (Macro.getParam #event)
 
-		if (event_type = Macro.getParam #event) == undefined then
+		if (event_type = Macro.params[#event]) == undefined then
 			event_type = this.EventTypes.getNextEvent(_Control.type)(_Control.Events.count +1)
 
 		event_type --return

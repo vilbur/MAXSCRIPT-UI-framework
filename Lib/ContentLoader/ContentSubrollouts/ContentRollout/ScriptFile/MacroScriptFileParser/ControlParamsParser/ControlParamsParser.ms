@@ -14,7 +14,8 @@ struct ControlParamsParser_v
 	/* required */
 
 	/* properties */
-	params, -- #( #(), #() ) 2D matrix
+	params,
+	--params	= Dictionary #NAME, -- KEY: #PARAM_NAME VALUE:"Param Value"
 
 	/* dependency */
 	ImagesArrayParser 	= ImagesArrayParser_v(),
@@ -38,20 +39,21 @@ struct ControlParamsParser_v
 	  * @property	string	params_string	E.G.: "event: #rightclick| width:128 | height : 64|border:true|items: #('item1', 'item2')"
 	  * @property	string	macro_name	just for easier debug if error occures
 	  *
-	  * @return	2D matrix E.G.: #( #( #param1, #param2), #( 'value1', 123 )	 )
+	  * @return	Dictionary 
 	 */
 	function parse params_string macro_name =
 	(
 		--format "\n"; print "ControlParamsParser_v.parse()"
 		--format "params_string	= % \n" params_string
 		--format "classOf execute params_string	= % \n" (classOf (execute params_string))
-		params = #( #(), #() )
+		--params = #( #(), #() )
+		params	= Dictionary #NAME
 
 		params_string = this._replaceSingleQuotes(params_string)
 
 		if not this._isIconArray (params_string) then
 			for key_value in (filterString params_string "|" splitEmptyTokens:false) do
-				this._splitKeyAndValue (key_value)
+				this._splitKeyAndValue (params)(key_value)
 
 		else
 			IconArrayParser.setIconParameter (params)(execute params_string)(macro_name)
@@ -76,29 +78,29 @@ struct ControlParamsParser_v
 	/** Split key and value
 	  *
 	 */
-	function _splitKeyAndValue key_value_string =
+	function _splitKeyAndValue &params key_value_string =
 	(
 		--format "\n"; print "ControlParamsParser_v.splitKeyAndValue()"
 		--format "key_value_string	= % \n" key_value_string
 		colon_index = findString key_value_string ":" -- split string by firt occurencce of ":"
 
-		--if colon_index != undefined then
+		----if colon_index != undefined then
 		(
 			key	= substring key_value_string 1 (colon_index-1)
 			val	= substring key_value_string   (colon_index+1)	-1
 
-			if key as name != #images then
+			if key as name != #IMAGES then
 			(
-				val = this._convertDatatype( this._trimWhiteSpace(val))
+				param	= this._sanitizeKey(key) as name
+				val	= this._convertDatatype( this._trimWhiteSpace(val))
 
-				append this.params[1] ( this._sanitizeKey(key) as name )
-				append this.params[2] val
+				this.params[param] = val
 			)
 			else
 				ImagesArrayParser.setImageParameter(params)(execute val)
-
 		)
-
+		
+		params --return
 	),
 
 	/**  Leading "#" is removed, avoid doubled E.G.: "##id"

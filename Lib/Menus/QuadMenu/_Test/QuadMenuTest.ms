@@ -157,7 +157,7 @@ function cleanSeparator =
 	Quad_1.addSeparator index:4 -- add double separator
 	Quad_1.addSeparator()
 
-	Quad_1.cleanSeparators()
+	Quad_1.clearSeparators()
 )
 
 /** Get item
@@ -199,48 +199,48 @@ getDefaultQuadMenu()
 
 
 /* QUAD MENU */
---createQuadMenu()
+createQuadMenu()
 
---addItemsToQuad()
---
---moveItemInQuad()
---
---
---/* MENU */
---createMenuInMenuList()
---
---addMenuToQuad2()
---
---moveItemsInMenu()
---
---
---/* SUBMENU */
---addSubmenu()
---
---
---/* SEPARATOR */
---addSeparator()
---
---removeSeparator()
---cleanSeparator()
---
---/* ITEMS OPERATIONS */
+addItemsToQuad()
+
+moveItemInQuad()
+
+
+/* MENU */
+createMenuInMenuList()
+
+addMenuToQuad2()
+
+moveItemsInMenu()
+
+
+/* SUBMENU */
+addSubmenu()
+
+
+/* SEPARATORS */
+addSeparator()
+
+removeSeparator()
+cleanSeparator()
+
+/* ITEMS OPERATIONS */
 --getItems()
---
+
 --removeItems()
---
---
-----/* QUAD RIGHT CLICK */
---QuadMenuTest.setRightClick() -- only rightclick
---QuadMenuTest.setRightClick which: #controlPressed
---
---
---/* SET HOTKEY */ 
+
+
+--/* QUAD RIGHT CLICK */
+QuadMenuTest.setRightClick() -- only rightclick
+QuadMenuTest.setRightClick which: #controlPressed
+
+
+/* SET HOTKEY */ 
 --QuadMenuTest.setHotkey "shift"
---QuadMenuTest.setHotkey #shiftPressed
---
---
---/* SHOW ALL QUADS */ 
---QuadMenuTest.showAllQuads()
+QuadMenuTest.setHotkey #shiftPressed
+
+
+/* SHOW ALL QUADS */ 
+QuadMenuTest.showAllQuads()
 
 

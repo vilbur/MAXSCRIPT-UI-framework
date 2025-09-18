@@ -55,13 +55,13 @@ struct QuadMenuManager_v
 	function createMenusFromMacroscriptFiles dir blacklist:#() =
 	(
 		format "\n"; print "QuadMenuManager_v.createMenusFromMacroscriptFiles()"
-		
+		format "dir: %\n" dir
 		/** Test if path is on blacklist
 		 */
 		function isOnBlacklist macro_path blacklist = (for pattern in blacklist where matchPattern macro_path pattern:pattern collect pattern).count > 0
 		--format "dir: %\n" dir
 		all_macro_files = getFiles ( dir + "/*.mcr" ) recurse:true  -- "./../../slot_properties.ini"
-		--format "all_macro_files: %\n" all_macro_files
+		format "ALL_MACRO_FILES: %\n" all_macro_files
 		for macro_path in all_macro_files where not isOnBlacklist macro_path blacklist do
 			try
 			(
