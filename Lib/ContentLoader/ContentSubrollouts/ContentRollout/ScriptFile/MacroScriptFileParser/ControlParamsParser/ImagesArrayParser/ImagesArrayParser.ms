@@ -127,12 +127,11 @@ struct ImagesArrayParser_v
 	(
 		--format "\n"; print "ImagesArrayParser_v._setButtonWidthByIcon()"
 
-		if findItem params[1] #width == 0 then
+		if params[#width] == undefined then 
 		(
 			this._setSpriteSize()
 
-			append params[1] #width
-			append params[2] (img_size[2] as integer )
+			params[#width] = (img_size[2] as integer )
 		)
 
 		params --return

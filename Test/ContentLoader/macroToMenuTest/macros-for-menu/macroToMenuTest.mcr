@@ -59,8 +59,8 @@ icon:	"MENU:ITEM TITLE"
 */
 macroscript	_test_menu_title_by_tooltip
 category:	"_Test Menu"
-buttontext:	"This is not menu title"
-toolTip:	"TITLE IS TOOLTIP"
+buttontext:	"Menu title is tooltip"
+toolTip:	"TOOLTIP IS TITLE"
 icon:	"MENU:tooltip"
 (
 	on execute do messageBox "Voila"
@@ -120,6 +120,10 @@ buttontext:	"RESET MENUS"
 		if queryBox "REST ALL MENUS AND QUADMENUS ?" title:"RESET MENUS" then
 			(QuadMenuManager_v()).resetMenusAndHotkeys()
 )
+
+
+
+
 
 
 /*------------------------------------------------------------------------------

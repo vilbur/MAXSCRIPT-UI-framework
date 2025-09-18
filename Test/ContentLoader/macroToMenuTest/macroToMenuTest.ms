@@ -1,4 +1,4 @@
-clearListener()
+clearListener(); print("Cleared in:\n"+getSourceFileName())
 
 filein( getFilenamePath(getSourceFileName()) + "/../../../Lib/ContentLoader/ContentLoader.ms" ) -- "./../../../Lib/ContentLoader/ContentLoader.ms"
 
@@ -7,14 +7,9 @@ filein( getFilenamePath(getSourceFileName()) + "/../../../Lib/Menus/QuadMenuMana
 --DEBUG = false
 DEBUG = true
 
---try( destroyDialog Groupbox_test )catch()
-
---current_dir	= getFilenamePath(getSourceFileName())
-
 
 /* LOAD CONTENT FROM FOLDERS */
-ContentLoader	= ContentLoader_v path:( getFilenamePath(getSourceFileName()) + "\\content" ) --ini:( getSourceFileName()) DEBUG:DEBUG
---ContentLoader	= ContentLoader_v path:(current_dir+"/Groupbox-Test")
+ContentLoader	= ContentLoader_v path:( getFilenamePath(getSourceFileName()) + "\\macros-for-menu" ) --ini:( getSourceFileName()) DEBUG:DEBUG
 
 
 /* CREATE UI */

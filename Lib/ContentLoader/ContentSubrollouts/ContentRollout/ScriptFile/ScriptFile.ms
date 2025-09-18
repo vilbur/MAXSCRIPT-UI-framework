@@ -91,15 +91,12 @@ struct ScriptFile_Content_v
 	 */
 	function importMacroscriptsToMenus =
 	(
-		format "\n"; print "ScriptFile_Content_v.importMacroscriptsToMenus()"
+		--format "\n"; print "ScriptFile_Content_v.importMacroscriptsToMenus()"
 		--format "filename: %\n" filename
 		
 		for i = 1 to MacroScripts.count do
-		(
+			this._addToMenu (MacroScripts[i]) (MacroScripts[i].Params)
 			
-			
-		)
-			--this._addToMenu (MacroScripts[i] ) ( ParamsList_v keys:MacroScripts[i].Params[1] values:MacroScripts[i].Params[2] )
 	),
 
 	
@@ -152,25 +149,30 @@ struct ScriptFile_Content_v
 	/** Add to quad menu or menu
 	  *
 	  * @param MacroScript_Content_v	Macro
-	  * @param ParamsList_v	Paramss
+	  * @param ParamsList_v	Params
 	  *
 	 */
-	function _addToMenu Macro Paramss =
+	function _addToMenu Macro Params =
 	(
-		format "\n\n"; print "ScriptFile_Content_v._addToMenu()"
-		format "Macro: %\n" Macro
+		--format "\n\n"; print "ScriptFile_Content_v._addToMenu()"
+		--format "Macro: %\n" Macro
 
-		if (menu_param = Paramss[#menu]) == undefined or (classOf menu_param == BooleanClass and menu_param != true) then
-			return false
-
-		index	= Paramss[#index]
 		menu_name	= Macro.category
-
+		
+		menu_name_param = Params[#menu]
+		
+		
+		if menu_name_param == undefined or (classOf menu_name_param == BooleanClass and menu_name_param != true) then
+			return false
+		
+		
 		title =  case of
 		(
-			(menu_param	== true ): 	Macro.buttontext
-			(menu_param as name	== #tooltip ):	if Macro.tooltip != undefined then Macro.tooltip else Macro.buttontext
-			default: 	menu_param
+			(menu_name_param	== true ): 	Macro.buttontext
+			
+			(menu_name_param as name	== #TOOLTIP ):	if Macro.tooltip != undefined then Macro.tooltip else Macro.buttontext
+			
+			default: 	menu_name_param
 		)
 
 			/* DEBUG */
@@ -184,11 +186,11 @@ struct ScriptFile_Content_v
 		--	format "menu_name = % \n" menu_name
 		--
 		--)
-
+		--format "TITLE: %\n" title
 		/*
 			ADD TO MENU
 		*/
-		(Menu_v (menu_name)).addItem (Macro.category) Macro.macro_name title:title index:index
+		(Menu_v (menu_name)).addItem (Macro.category) Macro.macro_name title:title index:Macro.Params[#index]
 
 		/*------------------------------------------------------------------------------
 
