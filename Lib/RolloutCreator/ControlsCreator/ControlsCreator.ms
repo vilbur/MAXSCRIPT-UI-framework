@@ -52,7 +52,9 @@ struct ControlCreator_v
 		
 		
 		
-		/* PREPARE EACH CONTROL */
+		/*------------------------------------------------------------------------------
+			PREPARE EACH CONTROL
+		--------------------------------------------------------------------------------*/
 		for _Control in this.Controls.list do
 		(
 			--format "_Control.params: %\n" _Control.params
@@ -230,8 +232,8 @@ struct ControlCreator_v
 	function _addControlToRollout _Control =
 	(
 		--format "\n\n"; print "ControlCreator_v._addControlToRollout()"
-		--format "_Control.id: %\n" _Control.id
-		--format "\n%: %\n" _Control.id _Control.params_str
+		format "_Control.id: %\n" _Control.id
+		format "\n%: %\n" _Control.id _Control.params_str
 
 		params_str = _Control.params_str
 		
@@ -315,9 +317,10 @@ struct ControlCreator_v
 		--print "ControlCreator_v._customizeControlTypes()"
 		case _Control.type of
 		(
-			#BROWSEPATH:	(BrowsePath_v()).convertToEditText(_Control)	-- "./BrowsePath/BrowsePath.ms"
-			#RADIOBUTTONS:	(RadioButtons_v()).setParams(_Control)	-- "./RadioButtons/RadioButtons.ms"
-			--#SLIDER:	(Slider_v()).setLocalsForCustomEvents(_Control)	-- "./Slider/Slider.ms"
+			#BROWSEPATH:	(BrowsePath_v()).convertToEditText(_Control)	
+			#RADIOBUTTONS:	(RadioButtons_v()).setParams(_Control)	
+			#DROPDOWNLIST:	(DropdownList_v()).setHeightByItemsCount(_Control)	
+			--#SLIDER:	(Slider_v()).setLocalsForCustomEvents(_Control)	
 		)
 	),
 

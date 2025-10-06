@@ -180,8 +180,13 @@ struct GroupBoxCreator_v
 				if max_y > max_pos.y then max_pos.y = max_y 
 			)
 			
-			/* DESTROY TEMP ROLLOUT */ 
+			/*==============================================================================
+				 
+				DESTROY TEMP ROLLOUT
+				 
+			================================================================================*/
 			try( destroyDialog rollout_temp )catch()
+			
 			
 			/*------------------------------------------------------------------------------
 				RESIZE GROUPBOX

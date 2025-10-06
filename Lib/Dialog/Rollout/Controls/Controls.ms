@@ -61,6 +61,7 @@ struct Controls_v
 		add_to_controls:	true	=
 	(
 		--format "\n"; print "Controls_v.Control()"
+		
 		/* SANITIZE PARAMETERS */
 		case control_type of
 		(
@@ -81,6 +82,18 @@ struct Controls_v
 				
 			)
 		)
+		
+		if not (ControlTypes_v()).exists(control_type) then
+		(
+			messageBox ("ERROR:\n\nControl type: "+control_type as string + " is not supported.\n\nControl: " +caption + "\n\nRollout: " + rollout_id as string ) title:"CONTROL TYPE ERRORR"  beep:false
+			
+			format "\n\n---------------------------\n\nLIST OF CONTROLS:\n"
+				for type in (ControlTypes_v()).list do
+					format "type: %\n" type
+			
+			return false
+		)
+		
 				
 		
 		/* PROCESS FUNCTION PARAMETERS */ 	

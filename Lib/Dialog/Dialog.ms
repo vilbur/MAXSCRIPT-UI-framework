@@ -63,9 +63,9 @@ struct Dialog_v
 
 		/* ALLOWED but not DEFAULT styles */
 		--#style_toolwindow, 	-- Creates a tool window, which has a title bar and is intended to be used as a floating toolbar. A tool window has a title bar that is shorter than a normal title bar, and the window title is drawn using a smaller font.
+		--#style_sunkenedge, 	-- Specifies that a window has a 3D look in the form of a border with a sunken edge.
 		--#style_minimizebox, 	-- Creates a window that has a minimize button.
 		--#style_maximizebox, 	-- Creates a window that has a maximize button.
-		--#style_sunkenedge, 	-- Specifies that a window has a 3D look in the form of a border with a sunken edge.
 	),
 
 	style_registred_dialog = #(

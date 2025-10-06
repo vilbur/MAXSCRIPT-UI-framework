@@ -131,7 +131,6 @@ struct DefaultParameters_v
 		
 				#DROPDOWNLIST:	Params[type][#WIDTH] = 128
 				
-				#TIMER:	Params[type][#WIDTH] = 500
 		
 				#ANGLE:
 				(
@@ -144,6 +143,7 @@ struct DefaultParameters_v
 					Params[type][#STARTDEGREES] = [0,100,0]
 				)
 				
+				#TIMER:	Params[type][#WIDTH] = 500
 		)
 	),
 
