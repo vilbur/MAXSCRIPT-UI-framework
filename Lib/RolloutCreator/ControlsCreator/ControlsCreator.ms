@@ -236,19 +236,10 @@ struct ControlCreator_v
 		--format "_Control.type: %\n" _Control.type
 		--format "\n%: %\n" _Control.id _Control.params_str
 
-		if _Control.type != #TIMER then
-		(
 		params_str = _Control.params_str
 		
 		if (groupbox_id = _Control.Params[#GROUPBOX]) != undefined then
 			params_str = "pos:[ 0, 0 ] " + _Control.params_str
-			
-
-		)
-		else
-		params_str = ""
-		
-			
 		
 		/* ADD CONTROL */ 
 		_Rollout.RCI.addControl (_Control.type) (_Control.id) (_Control.caption) paramStr:params_str filter:true;

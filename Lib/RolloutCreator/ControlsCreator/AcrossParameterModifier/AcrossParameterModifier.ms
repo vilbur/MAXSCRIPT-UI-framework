@@ -10,7 +10,7 @@ struct AcrossParameterModifier_v
 (
 	Controls,
 
-	List_new = #(),
+	--List_new = #(),
 
 	index,
 	across_current,
@@ -21,42 +21,46 @@ struct AcrossParameterModifier_v
 	--DEBUG = true, -- SHOW PLACEHOLDER CONTROLS
 	DEBUG = false,
 
-	invisible_controls_for_layout = #( #TIMER ),
+	hidden_controls_in_layout = #( #TIMER ),
 	
 	/** Fill end of row with fake controls to keep layout
 	 */
 	function addFakeControls &_Controls =
 	(
 		----format "\n\n\n"; print ("AcrossParameterModifier_v.addFakeControls()" )
-		--List_new = #()
+		List_new = #()
+		hidden_controls = #()
 
 		this.Controls = _Controls
 
 		controls_count = Controls.list.count
 
-		--for i = 1 to Controls.list.count do
-		for i = 1 to Controls.list.count where findItem invisible_controls_for_layout Controls.list[i].type == 0 do
-		(
-			--format "\n--------------------------------------\n\n_CONTROL: % \n\n" Controls.list[i].caption
-			index = i
+		
+		for i = 1 to Controls.list.count do
+			if findItem hidden_controls_in_layout Controls.list[i].type == 0 then
+			(
+				--format "\n--------------------------------------\n\n_CONTROL: % \n\n" Controls.list[i].caption
+				index = i
+	
+				this._setAcrossOfCurrentControl(Controls.list[i])
+	
+				controls_left	= across_last - position_in_row
+	
+				this._setPositionInRow()
+	
+				this._fillEndOfRowBeforeControl(controls_left)
+	
+				across_last = across_current
+	
+				append List_new Controls.list[i]
+	
+				if this._isLastControl() then
+					this._fillEndOfGroup()
+			)
+			else
+				append hidden_controls Controls.list[i]
 
-			this._setAcrossOfCurrentControl(Controls.list[i])
-
-			controls_left	= across_last - position_in_row
-
-			this._setPositionInRow()
-
-			this._fillEndOfRowBeforeControl(controls_left)
-
-			across_last = across_current
-
-			append List_new Controls.list[i]
-
-			if this._isLastControl() then
-				this._fillEndOfGroup()
-		)
-
-		this.Controls.List = List_new
+		this.Controls.List = List_new + hidden_controls
 
 		this.Controls --return
 	),
