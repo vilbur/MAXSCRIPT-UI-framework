@@ -21,6 +21,8 @@ struct AcrossParameterModifier_v
 	--DEBUG = true, -- SHOW PLACEHOLDER CONTROLS
 	DEBUG = false,
 
+	invisible_controls_for_layout = #( #TIMER ),
+	
 	/** Fill end of row with fake controls to keep layout
 	 */
 	function addFakeControls &_Controls =
@@ -32,7 +34,8 @@ struct AcrossParameterModifier_v
 
 		controls_count = Controls.list.count
 
-		for i = 1 to Controls.list.count do
+		--for i = 1 to Controls.list.count do
+		for i = 1 to Controls.list.count where findItem invisible_controls_for_layout Controls.list[i].type == 0 do
 		(
 			--format "\n--------------------------------------\n\n_CONTROL: % \n\n" Controls.list[i].caption
 			index = i

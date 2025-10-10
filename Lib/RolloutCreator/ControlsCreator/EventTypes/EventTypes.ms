@@ -72,8 +72,8 @@ struct EventTypes_v
 	  */
 	function getNextEvent control_type event_priority =
 	(
-		format "\n"; print "EventTypes_v.getNextEvent()"
-		format "control_type: %\n" control_type
+		--format "\n"; print "EventTypes_v.getNextEvent()"
+		--format "control_type: %\n" control_type
 
 		control_event_types = event_types[control_type].keys
 

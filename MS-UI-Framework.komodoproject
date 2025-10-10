@@ -3,9 +3,9 @@
 <project id="0a2534c0-4e33-4331-9037-9f7d46588d24" kpf_version="5" name="MS-UI-Framework.komodoproject">
 <livefolder id="2779f4ea-e95f-46bf-8d23-d4a2dd75ed35" idref="0a2534c0-4e33-4331-9037-9f7d46588d24" name="Lib" url="Lib/">
 </livefolder>
+<folder id="2930627c-6bbb-4565-9531-0fdd88609e76" idref="0a2534c0-4e33-4331-9037-9f7d46588d24" name="RolloutCreator">
+</folder>
 <livefolder id="484f6493-5cbb-4f2a-832d-30ef4c65b484" idref="0a2534c0-4e33-4331-9037-9f7d46588d24" name="CallbackManager" url="Lib/CallbackManager/">
-</livefolder>
-<livefolder id="50356b3b-8359-4a1b-b6c6-6f731f0e9c30" idref="0a2534c0-4e33-4331-9037-9f7d46588d24" name="RolloutCreator" url="Lib/RolloutCreator/">
 </livefolder>
 <livefolder id="61b546ad-abd8-4c7d-9d16-100d46a077e7" idref="0a2534c0-4e33-4331-9037-9f7d46588d24" name="ContentLoader" url="Lib/ContentLoader/">
 </livefolder>
@@ -17,6 +17,18 @@
 </livefolder>
 <livefolder id="f1a7c246-8bf8-4b3d-b32c-2acbe4b913ba" idref="0a2534c0-4e33-4331-9037-9f7d46588d24" name="Test" url="Test/">
 </livefolder>
+<livefolder id="361bd815-b323-4dc1-b66f-9068fcb2f8bc" idref="2930627c-6bbb-4565-9531-0fdd88609e76" name="RolloutCreator" url="Lib/RolloutCreator/">
+</livefolder>
+<file id="4ef7ea03-3de1-457f-a4b3-d9b2ae95610d" idref="2930627c-6bbb-4565-9531-0fdd88609e76" name="RolloutCreator.ms" url="Lib/RolloutCreator/RolloutCreator.ms">
+</file>
+<livefolder id="4fceb8da-8351-418d-8c14-767f2e898691" idref="2930627c-6bbb-4565-9531-0fdd88609e76" name="ControlsCreator" url="Lib/RolloutCreator/ControlsCreator/">
+</livefolder>
+<file id="81353389-99d5-4441-9b20-111bb9b1f7ea" idref="2930627c-6bbb-4565-9531-0fdd88609e76" name="ControlsCreator.ms" url="Lib/RolloutCreator/ControlsCreator/ControlsCreator.ms">
+</file>
+<livefolder id="a06c8116-5e9c-43fb-966a-f7f017b98172" idref="2930627c-6bbb-4565-9531-0fdd88609e76" name="SubolloutsCreator" url="Lib/RolloutCreator/SubolloutsCreator/">
+</livefolder>
+<file id="adfc9b38-2d0a-450f-9741-dc431a1da036" idref="2930627c-6bbb-4565-9531-0fdd88609e76" name="SubolloutsCreator.ms" url="Lib/RolloutCreator/SubolloutsCreator/SubolloutsCreator.ms">
+</file>
 <preference-set idref="0a2534c0-4e33-4331-9037-9f7d46588d24" id="project" preftype="project">
   <long id="prefs_version">1</long>
 </preference-set>

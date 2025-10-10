@@ -232,13 +232,22 @@ struct ControlCreator_v
 	function _addControlToRollout _Control =
 	(
 		--format "\n\n"; print "ControlCreator_v._addControlToRollout()"
-		format "_Control.id: %\n" _Control.id
-		format "\n%: %\n" _Control.id _Control.params_str
+		--format "_Control.id: %\n" _Control.id
+		--format "_Control.type: %\n" _Control.type
+		--format "\n%: %\n" _Control.id _Control.params_str
 
+		if _Control.type != #TIMER then
+		(
 		params_str = _Control.params_str
 		
 		if (groupbox_id = _Control.Params[#GROUPBOX]) != undefined then
 			params_str = "pos:[ 0, 0 ] " + _Control.params_str
+			
+
+		)
+		else
+		params_str = ""
+		
 			
 		
 		/* ADD CONTROL */ 

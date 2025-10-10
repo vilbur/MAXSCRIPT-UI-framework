@@ -78,7 +78,7 @@ struct RolloutCreator_v
 				_Rollout.width = width
 	
 			
-			--ControlsCreator.moveGrouboxControlsToEnd(_Rollout)
+			----ControlsCreator.moveGrouboxControlsToEnd(_Rollout)
 
 			/*==============================================================================
 				EVENTS

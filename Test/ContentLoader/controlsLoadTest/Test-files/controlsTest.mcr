@@ -280,3 +280,21 @@ macroscript macroFileTest_button_rightclick
 --	format "EventFired	= % \n" EventFired
 --
 --)
+
+
+/*------------------------------------------------------------------------------
+	TIMER
+--------------------------------------------------------------------------------*/
+--/*
+--*
+--*/
+--macroscript	macroFileTest_timer
+--category:	"MacroFileTest"
+--buttonText:	"Timer Test"
+--tooltip:	"Colorpicker test"
+--icon:	"control:timer|interval:500|active:true"
+--(
+--	format "EventFired	= % \n" EventFired
+--
+--)
+
