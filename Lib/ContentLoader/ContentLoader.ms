@@ -26,6 +26,9 @@ struct ContentLoader_v
 	/*  properties */
 	Dialog, -- Dialog_v "./../Dialog/Dialog.ms"
 
+	
+	title,
+	
 	width  = unsupplied, -- unsupplied for compatibility with CreateDialog()
 	height = unsupplied,
 
@@ -93,7 +96,7 @@ struct ContentLoader_v
 
 		ConstructPropeties test:this
 
-		ContentRollout =  ContentRollout_v path:path
+		ContentRollout =  ContentRollout_v path:path title:title
 
 		Dialog	= Dialog_v title:ContentRollout.title ini:ini width:width height:height min_size:min_size max_size:max_size DEBUG:DEBUG
 		

@@ -37,7 +37,11 @@ if HOTKEYS_GLOBAL == undefined then
  */
 struct Dialog_v
 (
-	/*------ EXTEND ROLLOUT ------*/
+	/*------------------------------------------------------------------------------
+	
+		EXTEND ROLLOUT
+	
+	--------------------------------------------------------------------------------*/
 	include "MAXSCRIPT-UI-framework/Lib/Dialog/Rollout/RolloutBody.ms" --"./Rollout/RolloutBody.ms"
 
 	public
@@ -616,6 +620,7 @@ struct Dialog_v
 	on create do
 	(
 		--format "\n"; print "Dialog_v.onCreate()"
+		--format "title: %\n" title
 		--format "this.width: %\n" this.width
 		this._checkConstctructProperties #(#title)
 

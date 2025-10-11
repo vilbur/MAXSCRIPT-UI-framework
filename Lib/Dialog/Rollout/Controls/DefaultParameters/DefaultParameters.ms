@@ -143,13 +143,13 @@ struct DefaultParameters_v
 					Params[type][#STARTDEGREES] = [0,100,0]
 				)
 				
-				--#TIMER:	Params[type][#WIDTH] = 0
-				#TIMER:
-				(
-			Params[type][#ACROSS] = 2
-
-				Params[type][#WIDTH] = 0
-				)
+				#TIMER:	Params[type][#WIDTH] = 0
+			--	#TIMER:
+			--	(
+			--Params[type][#ACROSS] = 2
+			--
+			--	Params[type][#WIDTH] = 0
+			--	)
 		)
 	),
 

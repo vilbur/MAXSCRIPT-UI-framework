@@ -10,7 +10,7 @@ struct AcrossParameterModifier_v
 (
 	Controls,
 
-	--List_new = #(),
+	List_new = #(),
 
 	index,
 	across_current,
@@ -28,7 +28,6 @@ struct AcrossParameterModifier_v
 	function addFakeControls &_Controls =
 	(
 		----format "\n\n\n"; print ("AcrossParameterModifier_v.addFakeControls()" )
-		List_new = #()
 		hidden_controls = #()
 
 		this.Controls = _Controls

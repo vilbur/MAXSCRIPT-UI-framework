@@ -156,16 +156,19 @@ struct ContentRollout_v
 	 */
 	function _setRolloutTitle =
 	(
-		--print ("ContentRollout_v._sanitizeTitle() " )
-		title = filenameFromPath path
-
-		title = trimRight title "\\" --remove backslash from directory name
-
-		title = ( dotNetObject "System.Text.RegularExpressions.Regex" "^rollout-" ).Replace title "" -- remove prefix "rolout-" from directory name
-
-		title = ( dotNetObject "System.Text.RegularExpressions.Regex" @"^[\.\s_-]+|^[\d]+[_-]" ).Replace ( trimLeft title "_ " ) "" -- remove prefix
-
-		title = substituteString title "_" " " -- replace whitespace
+		--format "\n"; print "ContentRollout_v._setRolloutTitle()"
+		if title == undefined then
+		(
+			title = filenameFromPath path
+	
+			title = trimRight title "\\" --remove backslash from directory name
+	
+			title = ( dotNetObject "System.Text.RegularExpressions.Regex" "^rollout-" ).Replace title "" -- remove prefix "rolout-" from directory name
+	
+			title = ( dotNetObject "System.Text.RegularExpressions.Regex" @"^[\.\s_-]+|^[\d]+[_-]" ).Replace ( trimLeft title "_ " ) "" -- remove prefix
+	
+			title = substituteString title "_" " " -- replace whitespace
+		)
 	),
 
 	on create do
