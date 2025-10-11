@@ -57,6 +57,7 @@ struct MacroScript_Content_v
 
 		for param_data in params do
 		(
+			--format "%: %\n" param_data.key param_data.value
 			append params_array param_data.key
 			append params_array param_data.value
 		)

@@ -83,6 +83,9 @@ struct Controls_v
 			)
 		)
 		
+		/*------------------------------------------------------------------------------
+			CHECK CONTROL TYPE
+		--------------------------------------------------------------------------------*/
 		if not (ControlTypes_v()).exists(control_type) then
 		(
 			messageBox ("ERROR:\n\nControl type: "+control_type as string + " is not supported.\n\nControl: " +caption + "\n\nRollout: " + rollout_id as string ) title:"CONTROL TYPE ERRORR"  beep:false

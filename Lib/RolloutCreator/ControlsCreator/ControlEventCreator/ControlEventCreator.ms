@@ -54,6 +54,7 @@ struct ControlEventCreator_v
 
 				this._setArgumentsToCallback(Event)
 
+				/* ADD TO AUTORUN EVENTS */ 
 				this._addToAutoRunEvents(_Control)(Event)
 
 				TooltipCreator.addTooltip(_Control)(event_type)
@@ -103,8 +104,9 @@ struct ControlEventCreator_v
 	(
 		--format "\n"; print "ControlEventCreator_v._addToAutoRunEvents()"
 		if Event.autorun then
-			if ( control_state = _Control.Params[#checked] ) != undefined and control_state == true then
-				AUTORUN_EVENTS[ ( _Control.id as string + "_" + Event.type as string  )as name ] = Event.callback
+			if ( control_state = _Control.Params[#checked] ) == undefined \ -- IF CONTROL HAS NOT CHECKED PARAME	
+			or( control_state != undefined and control_state == true ) then  -- IF CONTROL IS CHECKED
+                 AUTORUN_EVENTS[ ( _Control.id as string + "_" + Event.type as string  )as name ] = Event.callback
 	),
 
 

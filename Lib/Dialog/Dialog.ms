@@ -168,17 +168,21 @@ struct Dialog_v
 			/* ADD SUBROLLOUTS */
 			_RolloutCreator.SubolloutsCreator.addSubRollouts (this)
 			--if this.DEBUG then format "addSubRollouts % ms\n" ((timestamp()) - timer_all)
-
+			
+			/* DOCK DIALOG */ 
 			this._setDockState()
 
 			this.RolloutResizer.fitSlotsToDialog(this.RCI.def)
-
+			
+			/* SET DIALOG TO GLOBAL CONTAINER OF DIALOGS OF FRAMEWORK */ 
 			DIALOG_GLOBAL_DATA[this.id] = DialogGlobalData_v(this.RCI.def)(this)
 
+			/* EXECUTE AUTORUN EVENTS OF CONTROLS */ 
 			this._executeAutorunEvents()
 
+			/* RESET BITMAPS */ 
 			CONTROL_BITMAPS_STORE = #() -- reset buffer array
-			
+
 			format "Dialog_v.create()% ms\n" ((timestamp()) - timer_createRollout)
 
 			format ("\n\nDIALOG \""+ id as string +"\" HAS BEEN CREATED\n\n" )
@@ -271,6 +275,7 @@ struct Dialog_v
 
 		min_size = if min_size != undefined then min_size as string else "[-1,-1]"
 		max_size = if max_size != undefined then max_size as string else "[-1,-1]"
+		--format "width: %\n" width
 		--format "MIN_SIZE: %\n" min_size
 		--format "MAX_SIZE: %\n" max_size
 		--format "STYLE: %\n" style_registred_dialog
@@ -423,8 +428,8 @@ struct Dialog_v
 	 */
 	function _setDialogMinimalSize =
 	(
-		format "\n"; print "Dialog_v._setDialogMinimalSize()"
-		format "MIN_SIZE:	% \n" min_size
+		--format "\n"; print "Dialog_v._setDialogMinimalSize()"
+		--format "MIN_SIZE:	% \n" min_size
 		if not this.isDefined (this.min_size) then
 		(
 			min_width	= if this.isDefined (this.width)	then this.width  else -1
@@ -565,12 +570,12 @@ struct Dialog_v
 	function _executeAutorunEvents =
 	(
 		format "\n"; print "Dialog_v._executeAutorunEvents()"
-		--format "\n-----------\nDICTIONARY:AUTORUN_EVENTS:%\n" AUTORUN_EVENTS; for data_pair in AUTORUN_EVENTS do format "%:	%\n" data_pair.key data_pair.value
+		format "\n-----------\nDICTIONARY:AUTORUN_EVENTS:%\n" AUTORUN_EVENTS; for data_pair in AUTORUN_EVENTS do format "%:	%\n" data_pair.key data_pair.value
 
 		 for data_pair in AUTORUN_EVENTS do
 		 try(
 			
-			format "execute: %\n" (data_pair.value)
+			format "EXECUTE AUTORUN: %\n" (data_pair.value)
 			
 			execute data_pair.value
 
@@ -632,8 +637,6 @@ struct Dialog_v
 		(IniSaver_v(this.Ini.getPath())).saveRollout(this.id)
 
 		this._setDialogDefaultWidth()
-		--this._setDialogMinimalSize()
-		--this._setDialogSizeByIni()
 
 		--/*------ DEV restart timer ------*/
 		if HOTKEYS_GLOBAL != undefined then

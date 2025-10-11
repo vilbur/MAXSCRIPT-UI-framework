@@ -119,8 +119,10 @@ struct ScriptFile_Content_v
 	 */
 	function _createControlfromMacro Macro =
 	(
+		--format "\n----------------------------------------------------------------------------------\n"
 		--format "\n"; print "ScriptFile_Content_v.createControlfromMacro()"
 
+		/* CREATE CONTROL */ 
 		_Control = _Controls.Control (Macro.getControlType()) Macro.buttontext params:(Macro.getParamsArray()) add_to_controls:false
 
 		
@@ -136,7 +138,8 @@ struct ScriptFile_Content_v
 			/* GET PARAMETERS FROM PREVIOUS CONTROL */ 
 			this._inheritParameters (_Control)
 
-		/* EVENTS */ 
+			
+		/* ADD EVENTS */ 
 		this._setEvent (_Control) (Macro)
 
 		
@@ -278,15 +281,22 @@ struct ScriptFile_Content_v
 	),
 
 	/** Set events which call macroscript
+	  
+		ADD AUTORUN EVENT
+	  
 	 */
 	function _setEvent &_Control Macro =
 	(
+		--format "\n\n"; print "ScriptFile_Content_v._setEvent()"
+		--format "%: %\n" _Control.caption _Control
+		--format "%: %\n" _Control.caption _Control.Params
+
 		if ( event_type = this._getEventType (_Control) (Macro)) != undefined then
 		(
 			callback = "(macros.run \""+Macro.category+"\" \""+Macro.macro_name+"\")"
 
 			autorun = ( autorun_param = Macro.params[#AUTORUN] ) != undefined and autorun_param == true
-
+			
 			_Control.Event event_type callback tooltip:Macro.toolTip autorun:autorun
 		)
 
