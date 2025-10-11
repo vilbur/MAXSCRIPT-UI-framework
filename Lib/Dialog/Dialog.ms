@@ -569,22 +569,22 @@ struct Dialog_v
 	  */
 	function _executeAutorunEvents =
 	(
-		format "\n"; print "Dialog_v._executeAutorunEvents()"
-		format "\n-----------\nDICTIONARY:AUTORUN_EVENTS:%\n" AUTORUN_EVENTS; for data_pair in AUTORUN_EVENTS do format "%:	%\n" data_pair.key data_pair.value
+		--format "\n"; print "Dialog_v._executeAutorunEvents()"
+		--format "\n-----------\nDICTIONARY:AUTORUN_EVENTS:%\n" AUTORUN_EVENTS; for data_pair in AUTORUN_EVENTS do format "%:	%\n" data_pair.key data_pair.value
 
 		 for data_pair in AUTORUN_EVENTS do
-		 try(
-			
-			format "EXECUTE AUTORUN: %\n" (data_pair.value)
-			
-			execute data_pair.value
-
-		 )catch(
-			format "\n——————————————— ERROR IN FILE ———————————————\n\n%\n" (getSourceFileName())
-			format "\n————————————————— EXCEPTION —————————————————\n\n%\n" (getCurrentException())
-			format "\n——————————————————— TRACE ———————————————————\n%\n"   (getCurrentExceptionStackTrace())
-			format "\n——————————————————— STACK ———————————————————\n%\n"   (getCurrentExceptionCallStack())
-		 )
+			try(
+				
+				format "\nEXECUTE AUTORUN EVENT: %\n" (data_pair.value)
+				
+				execute data_pair.value
+	
+			 )catch(
+				format "\n——————————————— ERROR IN FILE ———————————————\n\n%\n" (getSourceFileName())
+				format "\n————————————————— EXCEPTION —————————————————\n\n%\n" (getCurrentException())
+				format "\n——————————————————— TRACE ———————————————————\n%\n"   (getCurrentExceptionStackTrace())
+				format "\n——————————————————— STACK ———————————————————\n%\n"   (getCurrentExceptionCallStack())
+			 )
 	),
 
 	/** Is defined

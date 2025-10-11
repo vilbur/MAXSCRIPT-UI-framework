@@ -1,10 +1,11 @@
 clearListener()
 
-filein( "$userscripts\Library\MAXSCRIPT-UI-framework\Lib\Dialog\Dialog.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/../../../Lib/Dialog/Dialog.ms" )	--"./../../../Lib/Dialog/Dialog.ms"
 
 /* DIALOG */
 
-Dialog 	    = Dialog_v title:"Test"  ini:(getSourceFileName())
+--Dialog 	    = Dialog_v title:"Test"  ini:(getSourceFileName())
+Dialog 	    = Dialog_v title:"Test"  
 
 _Controls   = Dialog.Controls group:"Main Controls"
 
@@ -29,7 +30,7 @@ items = for i = 1 to 3 collect ("item "+ i as string )
 -- _Controls.control #listbox "Listbox"	items:items value:2
 -- _Controls.control #MultiListbox "MultiListbox"	items:items params:#(#selection, 3)
 
--- _Controls.control #dropdownList "dropdownList"	items:items value:2
+ _Controls.control #dropdownList "dropdownList"	items:items value:3
 
  --_Controls.control #radioButtons "RadioButtons value"	items:items value:2
  --_Controls.control #radioButtons "RadioButtons param"	params:#(#items,items, #default, 3)

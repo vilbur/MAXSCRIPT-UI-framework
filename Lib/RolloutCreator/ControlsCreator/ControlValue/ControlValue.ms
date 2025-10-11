@@ -32,7 +32,7 @@ struct ControlValue_v
 	 */
 	function setControlValue _Control ini_value =
 	(
-		--print "ControlValue_v._setControlValue()"
+		--format "\n"; print "ControlValue_v._setControlValue()"
 		--format "_Control.type: %\n" _Control.type
 		--format "ini_value: %\n" ini_value
 		
@@ -61,7 +61,7 @@ struct ControlValue_v
 		if val != undefined then 
 			this._setValue(value_param_name)(val)
 		
-		--this._removeReduntantParams()
+		------this._removeReduntantParams()
 	),
 	
 	/** Each control type has different name of parameter for default value
