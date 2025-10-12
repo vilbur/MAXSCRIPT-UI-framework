@@ -427,7 +427,8 @@ struct Dialog_v
 		 */
 		function _isRegistered dialog_id =(try(execute ("cui.getDockState "+ dialog_id as string ); true)catch(false))
 		
-		if align_to_dialog != undefined then
+		
+		if align_to_dialog != undefined and GetDialogPos align_to_dialog != [0,0] then
 		(
 			if (aligned_is_registered = this.isRegistered()) then
 				this.unregister()
@@ -506,7 +507,7 @@ struct Dialog_v
 				aligned_pos.y += case height of
 				(
 					#TOP:   -29
-					#BOTTOM: -28
+					#BOTTOM: -29
 				)	
 			)
 			
