@@ -297,6 +297,8 @@ struct Dialog_v
 	function isRegistered =
 	(
 		--format "\n"; print "if.isRegistered()"
+		
+		
 		try(
 			execute ("cui.getDockState "+ this.id )
 			
@@ -412,6 +414,112 @@ struct Dialog_v
 		(viewport_area_size[2] as integer) + height_of_ui - dialog_title_height --return
 	),
 
+
+	/*
+	Function to align 2 registered dialogs next to each other by their bottom borders
+	*/
+	function alignToDialog align_to_dialog side:#LEFT height:#TOP =
+	(
+		format "\n"; print "Dialog_v.alignToDialog()"
+		format "align_to_dialog: %\n" align_to_dialog
+		
+		/** Is registered
+		 */
+		function _isRegistered dialog_id =(try(execute ("cui.getDockState "+ dialog_id as string ); true)catch(false))
+		
+		if align_to_dialog != undefined then
+		(
+			if (aligned_is_registered = this.isRegistered()) then
+				this.unregister()
+		
+			align_to_is_registered = _isRegistered align_to_dialog.name
+			
+			aligned_pos	= [ 0, 0 ]
+
+			align_to_pos  = GetDialogPos align_to_dialog
+			align_to_size = GetDialogSize align_to_dialog
+			
+			aligned_size = execute ( "GetDialogSize "+ id as string )
+	
+			/*------------------------------------------------------------------------------
+				GET POSITION
+			--------------------------------------------------------------------------------*/
+			aligned_pos.x = case side of
+			(
+				#LEFT:  align_to_pos.x - aligned_size.x
+				#RIGHT: align_to_pos.x + align_to_size.x
+			)
+			
+			aligned_pos.y = case height of
+			(
+				#TOP:    align_to_pos.y
+				#BOTTOM: align_to_pos.y + align_to_size.y - aligned_size.y
+			)
+			
+			/*------------------------------------------------------------------------------
+				IF ALIGN TO IS REGISTRED
+			--------------------------------------------------------------------------------*/
+			if align_to_is_registered and not aligned_is_registered then
+			(
+				aligned_pos.x -= case side of
+				(
+					#LEFT:  14
+					#RIGHT: 2
+				)
+				
+				aligned_pos.y -= case height of
+				(
+					#TOP:  29
+					#BOTTOM: 26
+				)	
+				
+			)
+			/*------------------------------------------------------------------------------
+				IF ALIGNED IS REGISTRED
+			--------------------------------------------------------------------------------*/
+			if aligned_is_registered and not align_to_is_registered then
+			(
+				aligned_pos.x += case side of
+				(
+					#LEFT: -4
+					#RIGHT: 8
+				)
+				
+				aligned_pos.y += case height of
+				(
+					#TOP:  0
+					#BOTTOM: -3
+				)	
+			)
+
+			/*------------------------------------------------------------------------------
+				IF BOTH ARE REGISTRED
+			--------------------------------------------------------------------------------*/
+			if aligned_is_registered and align_to_is_registered then
+			(
+				aligned_pos.x += case side of
+				(
+					#LEFT: -17
+					#RIGHT: 6
+				)
+				
+				aligned_pos.y += case height of
+				(
+					#TOP:   -29
+					#BOTTOM: -28
+				)	
+			)
+			
+			/* UPDATE ALIGNED POSTION */ 
+			execute ( "SetDialogPos "+ id as string + " " + aligned_pos as string )
+			
+			/* REGISTER */ 
+			if aligned_is_registered then
+				this.register()
+		)
+	),
+
+
 	private
 
 	/** Set dialog default size
@@ -466,7 +574,7 @@ struct Dialog_v
 
 	/** Get ini dock state
 	 */
-	function _isIniDocked=
+	function _isIniDocked =
 	(
 		--format "\n"; print "if.getIniDockState()"
 		Ini.isDefined() and (dock_state = Ini.load( id as string )("dock_state")) != undefined and dock_state != "cui_floatable"
