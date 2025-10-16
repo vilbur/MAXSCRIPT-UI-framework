@@ -21,7 +21,7 @@ struct MacroScriptFileParser_v
 	RegEx	= dotNetClass "System.Text.RegularExpressions.Regex",
 	RegEx_options	= dotNetClass "System.Text.RegularExpressions.RegexOptions",
 
-	ControlParamsParser 	= ControlParamsParser_v(),
+	ControlParamsParser 	= ControlParamsParser_v(path),
 
 
 	/** Parse MacroScripts
@@ -190,7 +190,7 @@ struct MacroScriptFileParser_v
 		--format "PATH: %\n" path
 		this._checkConstctructProperties()
 
-		ControlParamsParser.ImagesArrayParser.path = path
+		--ControlParamsParser.ImagesArrayParser.path = path
 
 		this._setFileContent()
 		--format "file_content = % \n" file_content

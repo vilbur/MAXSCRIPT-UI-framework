@@ -1,5 +1,5 @@
-filein( getFilenamePath(getSourceFileName()) + "/ImagesArrayParser/ImagesArrayParser.ms" )
-filein( getFilenamePath(getSourceFileName()) + "/IconArrayParser/IconArrayParser.ms" )
+filein( getFilenamePath(getSourceFileName()) + "/ImagesArrayParser/ImagesArrayParser.ms" )	--"./ImagesArrayParser/ImagesArrayParser.ms"
+filein( getFilenamePath(getSourceFileName()) + "/IconArrayParser/IconArrayParser.ms" )	--"./IconArrayParser/IconArrayParser.ms"
 
 /** Parse parameters in 'icon' parameter of macroscript DOCUMENTATION:https://help.autodesk.com/view/MAXDEV/2021/ENU/?guid=GUID-6E21C768-7256-4500-AB1F-B144F492F055#icons
   *
@@ -12,14 +12,12 @@ filein( getFilenamePath(getSourceFileName()) + "/IconArrayParser/IconArrayParser
 struct ControlParamsParser_v
 (
 	/* required */
-
+	path,
+	
 	/* properties */
 	params,
-	--params	= Dictionary #NAME, -- KEY: #PARAM_NAME VALUE:"Param Value"
 
 	/* dependency */
-	ImagesArrayParser 	= ImagesArrayParser_v(),
-	IconArrayParser 	= IconArrayParser_v(),
 	
 	/* private properties */
 	patterns = #(
@@ -43,7 +41,7 @@ struct ControlParamsParser_v
 	 */
 	function parse params_string macro_name =
 	(
-		--format "\n"; print "ControlParamsParser_v.parse()"
+		format "\n"; print "ControlParamsParser_v.parse()"
 		--format "params_string	= % \n" params_string
 		--format "classOf execute params_string	= % \n" (classOf (execute params_string))
 		--params = #( #(), #() )
@@ -56,9 +54,10 @@ struct ControlParamsParser_v
 				this._splitKeyAndValue (params)(key_value)
 
 		else
-			IconArrayParser.setIconParameter (params)(execute params_string)(macro_name)
+			(IconArrayParser_v()).setIconParameter (params)(execute params_string)(macro_name)
 
-		--format "PARAMS	= % \n" params
+		format "params[#control]: %\n" params[#control]
+		format "PARAMS	= % \n" params
 		params --return
 	),
 
@@ -97,7 +96,7 @@ struct ControlParamsParser_v
 				this.params[param] = val
 			)
 			else
-				ImagesArrayParser.setImageParameter(params)(execute val)
+				(ImagesArrayParser_v( path )).setImageParameter(params)(execute val)
 		)
 		
 		params --return

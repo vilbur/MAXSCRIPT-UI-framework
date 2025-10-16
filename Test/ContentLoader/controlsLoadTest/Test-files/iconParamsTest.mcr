@@ -8,27 +8,27 @@
 --(
 --)
 --
---
---
---/** RELATIVE PATH to current .mcr file
---  *
---  * Only icon path is required, other values can be autofilled E.G.: "#('Icons.bmp')" >>> "#('Icons.bmp',undefined,3,1,1,1,1)"
---  *
---  * If button width is undefined, then HEIGHT of sprite is used as button WIDTH, it creates SQUARE image button
---  *
---  *		images: #(
---  *			<image>,	REQUIRED
---  *			<maskImage>,	-- if UNDEFINED
---  *			<count_integer>,	-- if UNDEFINED, count of icons in sprite, if undefined then: image width / image height = count of sqaure icons
---  *			<enabled_out_image_index>,	-- if UNDEFINED, then 1 is used
---  *			<enabled_in_image_index>,	-- if UNDEFINED, then icon index is used
---  *			<disabled_out_image_index>,	-- if UNDEFINED, then icon index is used
---  *			<disabled_in_image_index>,	-- if UNDEFINED, then icon index is used
---  *			<invert_boolean>,	-- optionable
---  *			<colortheme_boolean>	-- optionable
---  *		)
---  *
---  */
+
+
+/** RELATIVE PATH to current .mcr file
+  *
+  * Only icon path is required, other values can be autofilled E.G.: "#('Icons.bmp')" >>> "#('Icons.bmp',undefined,3,1,1,1,1)"
+  *
+  * If button width is undefined, then HEIGHT of sprite is used as button WIDTH, it creates SQUARE image button
+  *
+  *		images: #(
+  *			<image>,	REQUIRED
+  *			<maskImage>,	-- optionable
+  *			<count_integer>,	-- if UNDEFINED, count of icons in sprite, if undefined then: image width / image height = count of sqaure icons
+  *			<enabled_out_image_index>,	-- if UNDEFINED, then 1 is used
+  *			<enabled_in_image_index>,	-- if UNDEFINED, then next index is used if strip has more then 1 image
+  *			<disabled_out_image_index>,	-- if UNDEFINED, then icon index is used
+  *			<disabled_in_image_index>,	-- if UNDEFINED, then icon index is used
+  *			<invert_boolean>,	-- optionable DEFAULT:true ! Max has inverted alpha BLACK is OPAQUE but WHITE is TRANSPARENT
+  *			<colortheme_boolean>	-- optionable
+  *		)
+  *
+----  */
 --macroscript macrotest_parse_icon_params_relative_path
 --category:	"_macrotest"
 --buttontext:	"Relative icon path"
@@ -36,20 +36,21 @@
 --icon:	"images:#('/icons/icons_sprite.bmp')"
 --(
 --)
---
---
---
---/** RELATIVE PATH to current .mcr file
---  *
---  */
---macroscript macrotest_parse_icon_params_custom_height
---category:	"_macrotest"
---buttontext:	"Custom image button height"
---
---icon:	"images:#('/icons/icons_sprite.bmp', undefined, 9, 2, 3 )"
---(
---)
---
+
+
+
+/** ALPHA CHANNEL onc CHECKBUTTON 
+  *
+  */
+macroscript macrotest_parse_icon_params_alpha_test
+category:	"_macrotest"
+buttontext:	"image alpha"
+
+icon:	"control:#CHECKBUTTON|images:#('/icons/test.bmp', '/icons/testA.bmp' )|enabled:true|checked:false"
+(
+	
+)
+
 --
 --
 --/** SYSTEM PATH to icon file starts with "$" E.G.: $userScripts
@@ -64,18 +65,17 @@
 --(
 --)
 
-
-/** SYSTEM PATH MAX ROOT
-  *
-  *
-  */
-macroscript macrotest_parse_icon_params_system_path
-category:	"_macrotest"
-buttontext:	"System dir icon path"
-
-icon:	"images:#('$maxroot/UI_ln/Icons/Maintoolbar_24i.bmp', undefined, undefined, 4 )"
-(
-)
+----
+--/** SYSTEM PATH MAX ROOT
+--  *
+--  *
+--  */
+--macroscript macrotest_parse_icon_params_system_path
+--category:	"_macrotest"
+--buttontext:	"System dir icon path"
+--icon:	"images:#('$maxroot/UI_ln/Icons/AddPreset_16i.bmp' )"
+--(
+--)
 
 
 --/** ABSOLUTE PATH to icon file

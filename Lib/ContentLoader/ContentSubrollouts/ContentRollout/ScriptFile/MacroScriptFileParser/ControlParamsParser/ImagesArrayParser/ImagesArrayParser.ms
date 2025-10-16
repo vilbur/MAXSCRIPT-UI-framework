@@ -41,22 +41,33 @@ struct ImagesArrayParser_v
 	 */
 	function setImageParameter &params images =
 	(
-		--format "\n"; print "ImagesArrayParser_v.setImageParameter()"
+		format "\n"; print "ImagesArrayParser_v.setImageParameter()"
 		this.images	= images
 
-		this._setIconPath()
+		icon_path = images[1] = this._getIconPath(images[1])
 
-		if icon_path !=undefined and this._iconFileExist() then
+		if icon_path != undefined and this._iconFileExist() then
 		(
-			images[1] = icon_path
+			/* PATH TO ALPHA IMAGE */ 
+			images[2] = this._getIconPath(images[2])
 
+			/* COUNT OF ICONS IN STRIP */ 
 			if images[3] == undefined then images[3] = this._getIconsCountInSprite()
+			
+			/* ENABLED OUT INDEX */
 			if images[4] == undefined then images[4] = 1
-			if images[5] == undefined then images[5] = images[4]
-			if images[6] == undefined then images[6] = images[4]
-			if images[7] == undefined then images[7] = images[4]
+			/* ENABLED IN INDEX */
+			if images[5] == undefined then images[5] = if ( next_index = images[4] + 1 ) <= images[3] then next_index else images[4] -- next index is used if strip has more then 1 image
+			
+			/* DISABLED OUT INDEX */
+			if images[6] == undefined then images[6] = images[4] 
+			/* DISABLED IN INDEX */
+			if images[7] == undefined then images[7] = images[5]
+			
+			/* INVERT */ 
+			if images[8] == undefined then images[8] = true -- INVERT alpha by defaut -- Max has inverted alpha BLACK is OPAQUE but WHITE is TRANSPARENT
 
-
+			format "IMAGES: %\n" images
 			params[#IMAGES] = images
 
 			this._setButtonWidthByIcon (params)
@@ -72,23 +83,24 @@ struct ImagesArrayParser_v
 	  * 3) Absolute path
 	  *
 	 */
-	function _setIconPath =
+	function _getIconPath _path =
 	(
-		--format "\n"; print "ImagesArrayParser_v._setIconPath()"
-		--format "path	= % \n" images[1]
-
-		icon_path =
-			if matchPattern images[1] pattern:"/*" then -- test if path is relative and starts with "/" E.G.: /icons
-				getFilenamePath(path) +"/"+ images[1]
-
-			else if matchPattern images[1] pattern:"$*" or matchPattern images[1] pattern:"#*" then -- test if path starts with "$" E.G.: $userScripts
-				this._replaceSystemDir(images[1])
-
-			else
-				images[1] -- absolute path
-
-		--format "icon_path	= % \n" icon_path
-		this._sanitizePath()
+		--format "\n"; print "ImagesArrayParser_v._getIconPath()"
+		format "path	= % \n" _path
+		
+		if _path != undefined then
+		(
+			/* RELATIVE PATH */ 
+			if matchPattern _path pattern:"/*" then -- test if path is relative and starts with "/" E.G.: /icons
+				_path = getFilenamePath(path) +"/"+ _path
+	
+			/* SYSTEM DIR PATH */ 
+			else if matchPattern _path pattern:"$*" or matchPattern _path pattern:"#*" then -- test if path starts with "$" E.G.: $userScripts
+				_path = this._replaceSystemDir( _path )
+	
+			this._sanitizePath( _path ) --return
+		)
+		
 	),
 
 	/** Replace system dir with absolute path
@@ -112,10 +124,10 @@ struct ImagesArrayParser_v
 	 */
 	function _getIconsCountInSprite =
 	(
-		--format "\n"; print "ImagesArrayParser_v._getIconsCountInSprite()"
+		format "\n"; print "ImagesArrayParser_v._getIconsCountInSprite()"
 
 		this._setSpriteSize()
-
+		format "IMG_SIZE: %\n" img_size
 		(img_size[1] / img_size[2]) as integer -- return
 	),
 
@@ -156,11 +168,11 @@ struct ImagesArrayParser_v
 
 	/** Repalce salshes "\\" with "/"
 	 */
-	function _sanitizePath =
+	function _sanitizePath _path =
 	(
 		--format "\n"; print "ImagesArrayParser_v.sanitizePath()"
-		if icon_path != undefined then
-			icon_path = ( dotNetObject "System.Text.RegularExpressions.Regex" @"[\\/]+" ).Replace icon_path "/" --return
+		if _path != undefined then
+			( dotNetObject "System.Text.RegularExpressions.Regex" @"[\\/]+" ).Replace _path "/" --return
 	),
 
 	/** Test if icon file exist
