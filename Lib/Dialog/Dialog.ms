@@ -112,7 +112,7 @@ struct Dialog_v
 		lockWidth:true	\
 		parent: =
 	(
-		format "\n"; print "Dialog_v.create()"
+		--format "\n"; print "Dialog_v.create()"
 
 		this.destroy()
 
@@ -130,7 +130,9 @@ struct Dialog_v
 		this._setDialogSizeByIni()
 		this._setWithByMinimalSize()
 		--format "MIN_SIZE: %\n" min_size
+		/* HEIGHT */ 
 		height = this._getHeightOnCreate(height)
+		--format "height: %\n" height
 		--format "width A: %\n" width
 		if classOf width != integer then
 			width = this.width
@@ -183,12 +185,12 @@ struct Dialog_v
 			/* RESET BITMAPS */ 
 			CONTROL_BITMAPS_STORE = #() -- reset buffer array
 
-			format "Dialog_v.create()% ms\n" ((timestamp()) - timer_createRollout)
+			--format "Dialog_v.create()% ms\n" ((timestamp()) - timer_createRollout)
 
-			format ("\n\nDIALOG \""+ id as string +"\" HAS BEEN CREATED\n\n" )
+			--format ("\n\nDIALOG \""+ id as string +"\" HAS BEEN CREATED\n\n" )
 		)
 		else
-			format ("\n\nROLLOUT \""+ id as string +"\" HAS BEEN CREATED\n\n" )
+			--format ("\n\nROLLOUT \""+ id as string +"\" HAS BEEN CREATED\n\n" )
 
 
 		if this.DEBUG then format "Dialog Create % ms\n" ((timestamp()) - timer_createRollout)
@@ -420,8 +422,8 @@ struct Dialog_v
 	*/
 	function alignToDialog align_to_dialog side:#LEFT height:#TOP =
 	(
-		format "\n"; print "Dialog_v.alignToDialog()"
-		format "align_to_dialog: %\n" align_to_dialog
+		--format "\n"; print "Dialog_v.alignToDialog()"
+		--format "align_to_dialog: %\n" align_to_dialog
 		
 		/** Is registered
 		 */
@@ -539,10 +541,12 @@ struct Dialog_v
 	(
 		--format "\n"; print "Dialog_v._setDialogMinimalSize()"
 		--format "MIN_SIZE:	% \n" min_size
+		--format "this.height: %\n" this.height
+		
 		if not this.isDefined (this.min_size) then
 		(
-			min_width	= if this.isDefined (this.width)	then this.width  else -1
-			min_height	= if this.isDefined (this.height)	then this.height else -1
+			min_width	= if this.isDefined (this.width)  then this.width  else -1
+			min_height	= if this.isDefined (this.height) then this.height else -1
 
 			min_size = [ min_width, min_height ]
 		)
@@ -684,15 +688,15 @@ struct Dialog_v
 		 for data_pair in AUTORUN_EVENTS do
 			try(
 				
-				format "\nEXECUTE AUTORUN EVENT: %\n" (data_pair.value)
+				--format "\nEXECUTE AUTORUN EVENT: %\n" (data_pair.value)
 				
 				execute data_pair.value
 	
 			 )catch(
-				format "\n——————————————— ERROR IN FILE ———————————————\n\n%\n" (getSourceFileName())
-				format "\n————————————————— EXCEPTION —————————————————\n\n%\n" (getCurrentException())
-				format "\n——————————————————— TRACE ———————————————————\n%\n"   (getCurrentExceptionStackTrace())
-				format "\n——————————————————— STACK ———————————————————\n%\n"   (getCurrentExceptionCallStack())
+				--format "\n——————————————— ERROR IN FILE ———————————————\n\n%\n" (getSourceFileName())
+				--format "\n————————————————— EXCEPTION —————————————————\n\n%\n" (getCurrentException())
+				--format "\n——————————————————— TRACE ———————————————————\n%\n"   (getCurrentExceptionStackTrace())
+				--format "\n——————————————————— STACK ———————————————————\n%\n"   (getCurrentExceptionCallStack())
 			 )
 	),
 

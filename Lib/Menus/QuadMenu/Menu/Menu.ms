@@ -104,14 +104,20 @@ struct Menu_v
 		if menu_or_name == undefined or menu_or_name == "" then
 			return false
 
-		if classOf menu_or_name == MixinInterface then  -- IF <MixinInterface:menu>
+		/*------------------------------------------------------------------------------
+			IF <MixinInterface:menu>
+		--------------------------------------------------------------------------------*/
+		if classOf menu_or_name == MixinInterface then
 		(
 			submenu = menu_or_name
 
 			if title == unsupplied then
 				title = menu_or_name.getTitle()
 		)
-		else if classOf menu_or_name == string then  -- IF "Menu Name" is string
+		/*------------------------------------------------------------------------------
+			IF "Menu Name" is string
+		--------------------------------------------------------------------------------*/
+		else if classOf menu_or_name == string then
 		(
 			submenu = this._getOrCreateMenu(menu_or_name)
 
@@ -119,7 +125,10 @@ struct Menu_v
 				title = menu_or_name
 		)
 
-		else if superClassOf menu_or_name == StructDef then  -- IF Menu_v()
+		/*------------------------------------------------------------------------------
+			IF Menu_v()
+		--------------------------------------------------------------------------------*/
+		else if superClassOf menu_or_name == StructDef then
 		(
 			flat = menu_or_name.flat
 
@@ -129,6 +138,9 @@ struct Menu_v
 				title = menu_or_name.name
 		)
 
+		/*------------------------------------------------------------------------------
+			EXIT IF NO ITEMS EXISTS
+		--------------------------------------------------------------------------------*/
 		if submenu.numItems() == 0 then
 		(
 			format "\n\n\n*********** WARNING: MENU HAS NOT ANY ITEMS **********************\nMenu: \"%\"\n" (submenu.getTitle() )
@@ -141,18 +153,20 @@ struct Menu_v
 		if index == unsupplied then
 			index = menu.numItems() + 1
 
-		if this.getItem( title ) == undefined then -- if item with title does not exists yet
+		menu_item	= this.getItem( title )
+			
+		if menu_item == undefined then -- if item with title does not exists yet
 		(
 			menu_item = menuMan.createSubMenuItem (title) (submenu)
 
 			this._setTitleToItem(menu_item)(title)
 
-			if flat then
-				menu_item.setDisplayFlat(true)
+			--if flat then
 
 			menu.addItem menu_item (index)
 		)
 
+		menu_item.setDisplayFlat( flat )
 		--format "submenu = % \n" submenu
 
 		_Menu = Menu_v menu:submenu
@@ -204,6 +218,7 @@ struct Menu_v
 		else
 		(
 			index = index_or_title
+			
 			items_count = this.numItems()
 
 			if index > items_count then

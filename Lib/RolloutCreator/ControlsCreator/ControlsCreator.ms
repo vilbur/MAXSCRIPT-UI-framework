@@ -231,10 +231,10 @@ struct ControlCreator_v
 	--------------------------------------------------------------------------------*/
 	function _addControlToRollout _Control =
 	(
-		format "\n\n"; print "ControlCreator_v._addControlToRollout()"
-		format "_Control.id: %\n" _Control.id
+		--format "\n\n"; print "ControlCreator_v._addControlToRollout()"
+		--format "_Control.id: %\n" _Control.id
 		--format "_Control.type: %\n" _Control.type
-		format "\n%: %\n" _Control.id _Control.params_str
+		--format "\n%: %\n" _Control.id _Control.params_str
 
 		params_str = _Control.params_str
 		

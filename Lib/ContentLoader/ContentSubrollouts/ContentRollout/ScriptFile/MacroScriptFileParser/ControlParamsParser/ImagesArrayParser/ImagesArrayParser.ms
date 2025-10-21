@@ -41,7 +41,7 @@ struct ImagesArrayParser_v
 	 */
 	function setImageParameter &params images =
 	(
-		format "\n"; print "ImagesArrayParser_v.setImageParameter()"
+		--format "\n"; print "ImagesArrayParser_v.setImageParameter()"
 		this.images	= images
 
 		icon_path = images[1] = this._getIconPath(images[1])
@@ -67,7 +67,7 @@ struct ImagesArrayParser_v
 			/* INVERT */ 
 			if images[8] == undefined then images[8] = true -- INVERT alpha by defaut -- Max has inverted alpha BLACK is OPAQUE but WHITE is TRANSPARENT
 
-			format "IMAGES: %\n" images
+			--format "IMAGES: %\n" images
 			params[#IMAGES] = images
 
 			this._setButtonWidthByIcon (params)
@@ -86,7 +86,7 @@ struct ImagesArrayParser_v
 	function _getIconPath _path =
 	(
 		--format "\n"; print "ImagesArrayParser_v._getIconPath()"
-		format "path	= % \n" _path
+		--format "path	= % \n" _path
 		
 		if _path != undefined then
 		(
@@ -124,10 +124,10 @@ struct ImagesArrayParser_v
 	 */
 	function _getIconsCountInSprite =
 	(
-		format "\n"; print "ImagesArrayParser_v._getIconsCountInSprite()"
+		--format "\n"; print "ImagesArrayParser_v._getIconsCountInSprite()"
 
 		this._setSpriteSize()
-		format "IMG_SIZE: %\n" img_size
+		--format "IMG_SIZE: %\n" img_size
 		(img_size[1] / img_size[2]) as integer -- return
 	),
 
@@ -183,7 +183,7 @@ struct ImagesArrayParser_v
 		--format "icon_path	= % \n" icon_path
 		if not doesFileExist icon_path then
 		(
-			format "\n\n--------------------------------------------------------------------------------\n\n	ICON FILE DOES NOT EXISTS\n\n	%\n\n--------------------------------------------------------------------------------" icon_path
+			--format "\n\n--------------------------------------------------------------------------------\n\n	ICON FILE DOES NOT EXISTS\n\n	%\n\n--------------------------------------------------------------------------------" icon_path
 
 			false --return
 		) else

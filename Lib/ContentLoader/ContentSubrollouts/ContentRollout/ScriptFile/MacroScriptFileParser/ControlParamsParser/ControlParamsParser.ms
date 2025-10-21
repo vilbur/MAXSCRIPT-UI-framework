@@ -41,7 +41,7 @@ struct ControlParamsParser_v
 	 */
 	function parse params_string macro_name =
 	(
-		format "\n"; print "ControlParamsParser_v.parse()"
+		--format "\n"; print "ControlParamsParser_v.parse()"
 		--format "params_string	= % \n" params_string
 		--format "classOf execute params_string	= % \n" (classOf (execute params_string))
 		--params = #( #(), #() )
@@ -56,8 +56,8 @@ struct ControlParamsParser_v
 		else
 			(IconArrayParser_v()).setIconParameter (params)(execute params_string)(macro_name)
 
-		format "params[#control]: %\n" params[#control]
-		format "PARAMS	= % \n" params
+		--format "params[#control]: %\n" params[#control]
+		--format "PARAMS	= % \n" params
 		params --return
 	),
 

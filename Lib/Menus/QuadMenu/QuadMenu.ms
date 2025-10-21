@@ -109,7 +109,7 @@ struct QuadMenu_v
 		--format "which:	% \n" which
 		menuMan.setViewportRightClickMenu which QuadMenu
 		
-		format "ASSIGN HOTKEY TO QUADMENU: \"%\" HOTKEY: %\n" ( menuMan.getQuadMenuName  QuadMenu ) which
+		--format "ASSIGN HOTKEY TO QUADMENU: \"%\" HOTKEY: %\n" ( menuMan.getQuadMenuName  QuadMenu ) which
 	),
 
 	/** Reset right click to default
@@ -135,7 +135,7 @@ struct QuadMenu_v
 			this.setRightClick which:hotkey_name
 
 		else
-			format "WARNING - TRY TO ASSIGN NOT WALID HOTKEY TO QUAD MENU in file: QuadMenu_v.setHotkey( \"%\" )\n" hotkey
+			FORMAT "WARNING - TRY TO ASSIGN NOT WALID HOTKEY TO QUAD MENU in file: QuadMenu_v.setHotkey( \"%\" )\n" hotkey
 	),
 
 
@@ -151,6 +151,7 @@ struct QuadMenu_v
 		--format "\n"; print "QuadMenu_v._setQuadMenu()"
 		
 		full_name = if ( default_quad = this._getDefaultQuadName() ) != undefined then default_quad else this._getFullName()
+		--format "FULL_NAME: %\n" full_name
 
 		/* SEARCH QUAD MENU OR CREATE NEW ONE - if menu was not found */ 
 		QuadMenu = if (QuadMenu_found = menuMan.findQuadMenu full_name) != undefined then QuadMenu_found else this._createNewQuadMenu()  
@@ -166,15 +167,15 @@ struct QuadMenu_v
 		function quadTitle index = this.menu_name + "-" + index as string --return
 
 		full_name = this._getFullName()
-		
-		format "\nNEW QUAD MENU CREATED: \"%\" -- QuadMenu_v._createNewQuadMenu()\n\n" full_name
+		--format "FULL_NAME: %\n" full_name
+		--format "\nNEW QUAD MENU CREATED: \"%\" -- QuadMenu_v._createNewQuadMenu()\n\n" full_name
 		
 		menuMan.createQuadMenu (full_name) ( quadTitle 1 ) ( quadTitle 2 ) ( quadTitle 3 ) ( quadTitle 4 ) --return
 	),
 
 	/** Get default 3Ds Max quad menu
 	  *
-	  * @return string|undefined name of delaut quad
+	  * @return string|undefined name of default quad
 	 */
 	function _getDefaultQuadName =
 	(
@@ -218,17 +219,7 @@ struct QuadMenu_v
 			)
 	),
 	
-	--/** Get hotkey by name
-	-- */
-	--function _getHotkeyByQuadName =
-	--(
-	--	format "\n"; print "QuadMenu_v._getHotkeyByQuadName()"
-	--	hotkey = this._getHotkey(this.menu_name)
-	--	
-	--	if ( index = findItem hotkeys hotkey ) > 0 then
-	--		hotkeys[index] --return
-	--),
-	
+
 	/** Get hotkey from prefix of string
 	  * 
 	  * E.G.: "RightClick-foobar" >>> #RightClick
@@ -278,9 +269,24 @@ struct QuadMenu_v
 	function _getFullName =
 	(
 		--format "\n"; print "QuadMenu_v._getFullName()"
-		this.prefix + this.menu_name --return
+		
+		if not matchPattern menu_name pattern:( prefix + "*")ignoreCase:false then
+			prefix + menu_name --return
+		
+		else
+			menu_name --return
 	),
-	
+	--/** Get hotkey by name
+	-- */
+	--function _getHotkeyByQuadName =
+	--(
+	--	format "\n"; print "QuadMenu_v._getHotkeyByQuadName()"
+	--	hotkey = this._getHotkey(this.menu_name)
+	--	
+	--	if ( index = findItem hotkeys hotkey ) > 0 then
+	--		hotkeys[index] --return
+	--),
+		
 	/**
 	 */
 	on create do

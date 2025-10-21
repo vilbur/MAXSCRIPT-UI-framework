@@ -9,7 +9,7 @@ if QuadMenu_v == undefined then
 /*
 		TODO:
 
-		RENAME THIS FILE TO ContentCotnrolCreator
+		RENAME THIS FILE TO ContentControlCreator
 
 */
 
@@ -34,16 +34,12 @@ struct ScriptFile_Content_v
 	/* public properties */
 	path, -- path to *.mcr file
 	
-	
-	
-	
 	/*------------------------------------------------------------------------------
 		INHERIT PARAMETERS
 	--------------------------------------------------------------------------------*/
 	inherit_by_type	= #( #WIDTH, #HEIGHT, #ACROSS, #BORDER, #OFFSET ), -- parameters of controls which are propagated to next control type
 
 	inherit_global	= #( #BORDER ), -- parameters of controls which are propagated to next control
-	
 	
 	
 	/* private properties */
@@ -60,7 +56,7 @@ struct ScriptFile_Content_v
 	InheritParams = Dictionary(),
 	
 
-	/** Load controls from .mcr file
+	/** PARSE *.mcr FILE
 	 */
 	function loadAndParseMacroscriptFile =
 	(
@@ -92,11 +88,9 @@ struct ScriptFile_Content_v
 	function importMacroscriptsToMenus =
 	(
 		--format "\n"; print "ScriptFile_Content_v.importMacroscriptsToMenus()"
-		--format "filename: %\n" filename
-		
+		--format "path: %\n" path
 		for i = 1 to MacroScripts.count do
 			this._addToMenu (MacroScripts[i]) (MacroScripts[i].Params)
-			
 	),
 
 	
@@ -158,10 +152,9 @@ struct ScriptFile_Content_v
 	function _addToMenu Macro Params =
 	(
 		--format "\n\n"; print "ScriptFile_Content_v._addToMenu()"
-		--format "Macro: %\n" Macro
 
 		menu_name	= Macro.category
-		
+		--format "menu_name: %\n" menu_name
 		menu_name_param = Params[#menu]
 		
 		
