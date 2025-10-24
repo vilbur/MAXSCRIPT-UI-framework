@@ -30,7 +30,7 @@ struct McrFileWriter_v
         format "\n"; print "McrFileWriter_v.writeToFile()"
 		format "parent.macroscripts: %\n" parent.macroscripts
         /* CREATE FILE */
-        this.mcr_file = createFile parent.mcr_file_path
+        this.mcr_file = createFile parent.IniToMacroParser.mcr_file_path
 
         /* WRITE FILE START */
         --if general_params[#filein] != undefined then
@@ -106,7 +106,7 @@ struct McrFileWriter_v
      */
     function _writeParams MacroData =
     (
-        for key in parent.keys_params where (val = MacroData.getProp key) != undefined do
+        for key in parent.IniToMacroParser.keys_params where (val = MacroData.getProp key) != undefined do
 			format "%:\t\"%\"\n" ( key as string ) val to:mcr_file
     ),
 
@@ -114,7 +114,7 @@ struct McrFileWriter_v
      */
      function _writeFilters MacroData =
     (
-        for key in parent.keys_filter where (val = MacroData.getProp key) != undefined do
+        for key in parent.IniToMacroParser.keys_filter where (val = MacroData.getProp key) != undefined do
 			format "\ton %\tdo %\n" (key as string ) val to:mcr_file
     ),
 
@@ -124,7 +124,7 @@ struct McrFileWriter_v
     (
 		--format "\n"; print "McrFileWriter_v._writeCode()"
 
-        for key in parent.keys_code where (val = MacroData.getProp key) != undefined do
+        for key in parent.IniToMacroParser.keys_code where (val = MacroData.getProp key) != undefined do
 			format "\n\ton % do (\n\t\t%\n\t)\n" ( key as string + (if key == #altExecute then " type" else "")) val to:mcr_file
     ),
 
