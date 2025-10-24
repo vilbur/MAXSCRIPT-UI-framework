@@ -1,5 +1,7 @@
 filein( getFilenamePath(getSourceFileName()) + "/McrFileWriter/McrFileWriter.ms" )	--"./McrFileWriter/McrFileWriter.ms"
 
+filein( getFilenamePath(getSourceFileName()) + "/MacroData/MacroData_v.ms" )	--"./MacroData/MacroData_v.ms"
+
 /* Compile  *.ini files to  *.mcr files
    
    MacroscriptGenerator()

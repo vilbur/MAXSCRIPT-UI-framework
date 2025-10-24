@@ -146,15 +146,6 @@ struct McrFileWriter_v
         format ")\n\n"to:mcr_file
     ),
 
-    --/** Get value
-    --*
-    --*/
-    --function _getValue data key =
-    --(
-    --    --format "\n"; print "McrFileWriter_v.getValue()"
-    --    if data[key] != undefined then data[key] else ""
-    --),
-
     /**
      */
     on create do
