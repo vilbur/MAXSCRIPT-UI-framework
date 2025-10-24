@@ -39,8 +39,8 @@ struct McrFileWriter_v
         try(
 
             /* WRITE EACH MACROSCRIPT */
-            for macro_data in parent.macroscripts do
-				this.writeSectionsToFile(macro_data)
+            for MacroData in parent.macroscripts do
+				this.writeSectionsToFile(MacroData)
 
         )catch(
 
@@ -62,30 +62,30 @@ struct McrFileWriter_v
     /** Write to file
     *
     */
-    function writeSectionsToFile macro_data =
+    function writeSectionsToFile MacroData =
     (
 		format "\n------------------------------------------------------------------------------------\n"
         format "\n"; print "McrFileWriter_v.writeSectionsToFile()"
-		format "MACRO_DATA: %\n" macro_data
+		format "MACRO_DATA: %\n" MacroData
 		--format "mcr_file: %\n" mcr_file
 
         /* WRITE COMMENT */
-        format "/** %\n */\n" macro_data[#buttonText] to:mcr_file
+        format "/** %\n */\n" MacroData.buttonText to:mcr_file
         
         /* WRITE MACROSCRIPT NAME */
-        this.writeMacroscriptName( macro_data )
+        this.writeMacroscriptName( MacroData )
         
         /* WRITE PARAMS */
-        this._writeParams( macro_data )
+        this._writeParams( MacroData )
         
         /* OPEN MACROSCRIPT BRACKET */
         this.writeOpenBracket()
         
         /* WRITE FILTERS */
-        this._writeFilters( macro_data )
+        this._writeFilters( MacroData )
         
         /* WRITE COMMANDS */
-        this._writeCode( macro_data )
+        this._writeCode( MacroData )
         
         /* CLOSE MACROSCRIPT BRACKET */
         this.writeCloseBracket()
@@ -94,38 +94,38 @@ struct McrFileWriter_v
 	/** Write macroscript name
 	 *
 	 */
-	function writeMacroscriptName macro_data =
+	function writeMacroscriptName MacroData =
 	(
 		--format "\n"; print "McrFileWriter_v.writeMacroscriptName()"
-		--macroscript_name = substituteString (general_params[#macroscript] + macro_data[#macroscript]) " " "_"
+		--macroscript_name = substituteString (general_params[#macroscript] + MacroData[#macroscript]) " " "_"
 
-        format "macroscript %\n" macro_data[#macroscript] to:mcr_file
+        format "macroscript %\n" MacroData.name to:mcr_file
 	),
 
     /** Merge macroscript code
      */
-    function _writeParams macro_data =
+    function _writeParams MacroData =
     (
-        for key in parent.keys_params where macro_data[key] != undefined do
-			format "%:\t\"%\"\n" ( key as string ) (macro_data[key]) to:mcr_file
+        for key in parent.keys_params where (val = MacroData.getProp key) != undefined do
+			format "%:\t\"%\"\n" ( key as string ) val to:mcr_file
     ),
 
     /** Merge macroscript filters
      */
-     function _writeFilters macro_data =
+     function _writeFilters MacroData =
     (
-        for key in parent.keys_filter where macro_data[key] != undefined do
-			format "\ton %\tdo %\n" (key as string ) (macro_data[key]) to:mcr_file
+        for key in parent.keys_filter where (val = MacroData.getProp key) != undefined do
+			format "\ton %\tdo %\n" (key as string ) val to:mcr_file
     ),
 
     /** Merge macroscript code
      */
-    function _writeCode macro_data =
+    function _writeCode MacroData =
     (
 		--format "\n"; print "McrFileWriter_v._writeCode()"
 
-        for key in parent.keys_code where macro_data[key] != undefined do
-			format "\n\ton % do (\n\t\t%\n\t)\n" ( key as string + (if key == #altExecute then " type" else "")) (macro_data[key]) to:mcr_file
+        for key in parent.keys_code where (val = MacroData.getProp key) != undefined do
+			format "\n\ton % do (\n\t\t%\n\t)\n" ( key as string + (if key == #altExecute then " type" else "")) val to:mcr_file
     ),
 
     /** Write open bracket

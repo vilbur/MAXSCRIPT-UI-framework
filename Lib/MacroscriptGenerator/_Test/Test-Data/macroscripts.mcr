@@ -1,8 +1,8 @@
-/** Prefix Test Script
+/** Test Script
  */
-macroscript this_is_macroscript_name
+macroscript macro_prefix_this_is_macroscript_name
 category:	"_Foo-Category"
-buttonText:	"Prefix Test Script"
+buttonText:	"Test Script"
 toolTip:	"tooltip prefix tooltip text"
 icon:	"menu:true|across:4"
 (
@@ -20,11 +20,11 @@ icon:	"menu:true|across:4"
 	)
 )
 
-/** Prefix macroscript name is button text
+/** macroscript name is button text
  */
-macroscript macroscript_name_is_button_text
+macroscript macro_prefix_macroscript_name_is_button_text
 category:	"_Foo-Category"
-buttonText:	"Prefix macroscript name is button text"
+buttonText:	"macroscript name is button text"
 toolTip:	"tooltip prefix"
 icon:	"menu:true"
 (
@@ -37,11 +37,11 @@ icon:	"menu:true"
 	)
 )
 
-/** Prefix general keys used as variables
+/** general keys used as variables
  */
-macroscript general keys used as variables
+macroscript macro_prefix_general_keys_used_as_variables
 category:	"_Foo-Category"
-buttonText:	"Prefix general keys used as variables"
+buttonText:	"general keys used as variables"
 toolTip:	"tooltip prefix"
 icon:	"menu:true"
 (
@@ -50,20 +50,20 @@ icon:	"menu:true"
 	on isEnabled	do true
 
 	on execute do (
-		print "Prefix general keys used as variables"
+		print "general keys used as variables"
 	)
 
 	on AltExecute type do (
-		print "general keys used as variables"
+		print "macro_prefix_general_keys_used_as_variables"
 	)
 )
 
-/** Prefix [Prefix [{buttontext}]]
+/** [tooltip prefix Tooltip as hidden button text]
  */
-macroscript hidden button text
+macroscript macro_prefix_hidden_button_text
 category:	"_Foo-Category"
-buttonText:	"Prefix [Prefix [{buttontext}]]"
-toolTip:	"tooltip prefix"
+buttonText:	"[tooltip prefix Tooltip as hidden button text]"
+toolTip:	"tooltip prefix Tooltip as hidden button text"
 icon:	"menu:true"
 (
 	on isVisible	do 1 > 0

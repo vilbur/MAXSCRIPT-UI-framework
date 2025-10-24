@@ -1,9 +1,12 @@
 /* 
-Struct holds macro related data from given arrays.
+Struct MacroData_v macro related data from given arrays.
 */
 struct MacroData_v
 (
-    /* category and ui params */
+	/* name of maxscript  */ 
+    name,  -- 
+    
+	/* category and ui params */
     category,
     buttontext,
     tooltip,
@@ -19,7 +22,55 @@ struct MacroData_v
     --execute,
     exe,
     altExecute,
+	
+	/** Set prop
+	 */
+	function setProp key val =
+	(
+		--format "\n"; print "MacroData_v.setProp()"
+		--format "%: %\n" key val
+		 --key = this._getKey key
+		
+		if hasProperty this ( key = this._getKey key ) then
+			setProperty this key val
+			
+		--format "key: %\n" key
+	),
 
+	/** Get prop
+	 */
+	function getProp key =
+	(
+		--format "\n"; print "MacroData_v.getProp()"
+		if hasProperty this ( key = this._getKey key ) then
+			getProperty this key
+	),
+	
+	/** Get key
+	 */
+	function _getKey key =
+	(
+		--format "\n"; print "MacroData_v._getKey()"
+		--format "key: %\n" key
+		--format "classOf key: %\n" ( classOf key )
+	--	case (key as name ) of
+	--	(
+	--		#MACROSCRIPT:	"name"
+	--		#EXECUTE:	"exe"
+	--		#buttontext:	"text"
+	--		default: key as string
+	--	)
+	
+		case toUpper(key as string ) of
+		(
+			"MACROSCRIPT":	"name"
+			"EXECUTE":	"exe"
+			--"BUTTONTEXT":	"text"
+			default: key as string
+		)
+	
+	),
+	
     /* 
     on create initializes all properties as undefined 
     */
