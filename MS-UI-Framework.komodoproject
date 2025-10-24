@@ -13,6 +13,8 @@
 </file>
 <folder id="ad60566e-f9da-4452-97b4-905e34c8ce55" idref="0a2534c0-4e33-4331-9037-9f7d46588d24" name="ContentLoader">
 </folder>
+<livefolder id="c2120f31-b3fd-41ac-9725-5f366f77d9d4" idref="0a2534c0-4e33-4331-9037-9f7d46588d24" name="MacroscriptGenerator" url="Lib/MacroscriptGenerator/">
+</livefolder>
 <livefolder id="c5a1b039-1eeb-4e5a-852e-635484d5a834" idref="0a2534c0-4e33-4331-9037-9f7d46588d24" name="Menus" url="Lib/Menus/">
 </livefolder>
 <folder id="f8faf73a-620c-411a-834f-2888a3315efa" idref="0a2534c0-4e33-4331-9037-9f7d46588d24" name="Test">

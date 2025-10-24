@@ -1,5 +1,15 @@
+filein( getFilenamePath(getSourceFileName()) + "/McrFileWriter/McrFileWriter.ms" )	--"./McrFileWriter/McrFileWriter.ms"
 
-/* Compile  *.mcr.ini files to  *.mcr files
+/* Compile  *.ini files to  *.mcr files
+   
+   MacroscriptGenerator()
+		
+		→ generateIniFile()
+		→ generateMcrFile()
+		→ convertIniToMcr()
+		
+			→ McrFileWriter()
+   
  */
 struct MacroscriptGenerator_v
 (
@@ -7,7 +17,7 @@ struct MacroscriptGenerator_v
     ini_file,
 
     /* properties */
-    mcr_file,
+    --mcr_file,
     mcr_file_path,
 
     macroscripts = #(),
@@ -22,23 +32,28 @@ struct MacroscriptGenerator_v
 
 
     /* dependency */
+	
     /* reference */
     /* inhered */
 
 	
 	
-    /** Generate macroscript file
+    /** Generate .mcr file from .ini file
     *
     * @return path to *.mcr file
     */
-    function generateMacroscriptFile =
+    function convertIniToMcr =
     (
-        --format "\n"; print "MacroscriptGenerator_v.generateMacroscriptFile()"
-		--format "ini_file:	% \n" (filenameFromPath( ini_file ))
-		--format "all_keys:	% \n" all_keys
+        format "\n"; print "MacroscriptGenerator_v.convertIniToMcr()"
+		format "ini_file: %\n" ini_file
+
+		if not doesFileExist ini_file then
+			format "\n!!! MacroscriptGenerator_v: INI FILE DOES NOT EXISTS:\n%\n\n" ini_file
+		
 		this._setMcrFilePath()
 
         sections = for _section in getINISetting ini_file collect _section
+		format "sections: %\n" sections
 
         this.setGeneralValues(sections)
 
@@ -57,7 +72,9 @@ struct MacroscriptGenerator_v
 			append macroscripts (macro_data)
 		)
 
-		this.writeToFile(macro_data)
+		format "MACROSCRIPTS: %\n" macroscripts
+		
+		McrFileWriter_v(this)
 
 
 		this.mcr_file_path --return
@@ -133,6 +150,12 @@ struct MacroscriptGenerator_v
 		if macro_data[#execute] == undefined then
 			macro_data[#execute] =  "\"" +( substituteString macroscript_name " " "")+ "\""
 
+		
+		--if ( general_params[#macroscript] ) != undefined then 
+		--macroscript_name = substituteString (general_params[#macroscript] + macro_data[#macroscript]) " " "_"
+		macroscript_name = substituteString macro_data[#macroscript] " " "_"
+
+			
 		--format "MACRO_DATA:	% \n" macro_data
 		macro_data --return
 	),
@@ -266,146 +289,17 @@ struct MacroscriptGenerator_v
 		 "{(" + ( trimRight all_keys_string "|") + ")}"
 	),
 
-    /** Write to file
-    *
-    */
-    function writeToFile macro_data =
-    (
-        --format "\n"; print "MacroscriptGenerator_v.writeToFile()"
-
-        /* CREATE FILE */
-        this.mcr_file = createFile this.mcr_file_path
-
-        /* WRITE FILE START */
-        if general_params[#filein] != undefined then
-			format "filein %\n\n" general_params[#filein] to:mcr_file
-
-        try(
-
-            /* WRITE EACH MACROSCRIPT */
-            for macro_data in macroscripts do
-				this.writeSectionsToFile(macro_data)
-
-        )catch(
-
-            format "\n——————————————— ERROR IN FILE ———————————————\n\n%\n" (getSourceFileName())
-            format "\n————————————————— EXCEPTION —————————————————\n\n%\n" (getCurrentException())
-            format "\n——————————————————— TRACE ———————————————————\n%\n"(getCurrentExceptionStackTrace())
-            format "\n——————————————————— STACK ———————————————————\n%\n"(getCurrentExceptionCallStack())
-
-            close this.mcr_file
-        )
-
-        /* CLOSE FILE */
-        close this.mcr_file
-
-		free this.mcr_file
-    ),
-
-	/** Write macroscript name
-	 *
-	 */
-	function writeMacroscriptName macro_data =
-	(
-		--format "\n"; print "MacroscriptGenerator_v.writeMacroscriptName()"
-		macroscript_name = substituteString (general_params[#macroscript] + macro_data[#macroscript]) " " "_"
-
-        format "macroscript %\n" macroscript_name to:mcr_file
-	),
-
-    /** Write to file
-    *
-    */
-    function writeSectionsToFile macro_data =
-    (
-
-        /* WRITE COMMENT */
-        format "/** %\n */\n" macro_data[#buttonText] to:mcr_file
-
-        /* WRITE MACROSCRIPT NAME */
-        this.writeMacroscriptName( macro_data )
-
-        /* WRITE PARAMS */
-        this._writeParams( macro_data )
-
-        /* OPEN MACROSCRIPT BRACKET */
-        this.writeOpenBracket()
-
-        /* WRITE FILTERS */
-        this._writeFilters( macro_data )
-
-        /* WRITE COMMANDS */
-        this._writeCode( macro_data )
-
-        /* CLOSE MACROSCRIPT BRACKET */
-        this.writeCloseBracket()
-    ),
-
-
-    /** Merge macroscript code
-     */
-    function _writeParams macro_data =
-    (
-        for key in this.keys_params where macro_data[key] != undefined do
-			format "%:\t\"%\"\n" ( key as string ) (macro_data[key]) to:mcr_file
-    ),
-
-    /** Merge macroscript filters
-     */
-     function _writeFilters macro_data =
-    (
-        for key in this.keys_filter where macro_data[key] != undefined do
-			format "\ton %\tdo %\n" (key as string ) (macro_data[key]) to:mcr_file
-    ),
-
-    /** Merge macroscript code
-     */
-    function _writeCode macro_data =
-    (
-		--format "\n"; print "MacroscriptGenerator_v._writeCode()"
-
-        for key in this.keys_code where macro_data[key] != undefined do
-			format "\n\ton % do (\n\t\t%\n\t)\n" ( key as string + (if key == #altExecute then " type" else "")) (macro_data[key]) to:mcr_file
-    ),
-
 	/** Set mcr file
 	  *
 	  */
 	function _setMcrFilePath =
 	(
-		--format "\n"; print "MacroscriptGenerator_v._setMcrFilePath()"
+		--format "\n"; print "McrFileWriter_v._setMcrFilePath()"
 		this.mcr_file_path = ( trimRight this.ini_file ".ini" )
 
 		if not matchPattern  this.mcr_file_path pattern:"*.mcr" then
 			 this.mcr_file_path += ".mcr"
 	),
-
-    /** Write open bracket
-     *
-     */
-    function writeOpenBracket =
-    (
-        --format "\n"; print "MacroscriptGenerator_v.writeOpenBracket()"
-        format "(\n"to:mcr_file
-    ),
-
-    /** Write close bracket
-     *
-     */
-    function writeCloseBracket =
-    (
-        --format "\n"; print "MacroscriptGenerator_v.writeCloseBracket()"
-        format ")\n\n"to:mcr_file
-    ),
-
-    /** Get value
-    *
-    */
-    function _getValue data key =
-    (
-        --format "\n"; print "MacroscriptGenerator_v.getValue()"
-        if data[key] != undefined then data[key] else ""
-    ),
 
     /**
      */

@@ -4,5 +4,5 @@ filein( getFilenamePath(getSourceFileName()) + "/../MacroscriptGenerator.ms" ) -
 
 
 
-ini_file = ( getFilenamePath(getSourceFileName()) + "\\macroscripts.ini" ) -- "./macroscripts.ini"
-	(MacroscriptGenerator_v(ini_file)).generateMacroscriptFile()
+ini_file = ( getFilenamePath(getSourceFileName()) + "Test-Data\macroscripts.mcr.ini" ) -- "./macroscripts.ini"
+	(MacroscriptGenerator_v(ini_file)).convertIniToMcr()
