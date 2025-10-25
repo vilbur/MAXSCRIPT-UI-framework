@@ -22,7 +22,7 @@ struct McrFileWriter_v
     */
     function writeToFile =
     (
-        format "\n"; print "McrFileWriter_v.writeToFile()"
+        --format "\n"; print "McrFileWriter_v.writeToFile()"
 
         try(
 			/* CREATE FILE */
@@ -49,10 +49,10 @@ struct McrFileWriter_v
 				
         )catch(
 
-            format "\n——————————————— ERROR IN FILE ———————————————\n\n%\n" (getSourceFileName())
-            format "\n————————————————— EXCEPTION —————————————————\n\n%\n" (getCurrentException())
-            format "\n——————————————————— TRACE ———————————————————\n%\n"(getCurrentExceptionStackTrace())
-            format "\n——————————————————— STACK ———————————————————\n%\n"(getCurrentExceptionCallStack())
+            --format "\n——————————————— ERROR IN FILE ———————————————\n\n%\n" (getSourceFileName())
+            --format "\n————————————————— EXCEPTION —————————————————\n\n%\n" (getCurrentException())
+            --format "\n——————————————————— TRACE ———————————————————\n%\n"(getCurrentExceptionStackTrace())
+            --format "\n——————————————————— STACK ———————————————————\n%\n"(getCurrentExceptionCallStack())
 
             close this.mcr_file
         )
@@ -72,13 +72,13 @@ struct McrFileWriter_v
     */
     function writeSectionsToFile MacroData =
     (
-		format "\n------------------------------------------------------------------------------------\n"
-        format "\n"; print "McrFileWriter_v.writeSectionsToFile()"
-		format "MACRO_DATA: %\n" MacroData
+		--format "\n------------------------------------------------------------------------------------\n"
+        --format "\n"; print "McrFileWriter_v.writeSectionsToFile()"
+		--format "MACRO_DATA: %\n" MacroData
 		--format "mcr_file: %\n" mcr_file
 
         /* WRITE COMMENT */
-        format "/** %\n */\n" MacroData.buttonText to:mcr_file
+        FORMAT "/** %\n */\n" MacroData.buttonText to:mcr_file
         
         /* WRITE MACROSCRIPT NAME */
         this.writeMacroscriptName( MacroData )
@@ -109,7 +109,7 @@ struct McrFileWriter_v
 		/* CAMEL CASE macroscript name */ 
 		macroscript_name = substituteString MacroData.name " " "_"
 		
-        format "macroscript %\n" macroscript_name to:mcr_file
+        FORMAT "macroscript %\n" macroscript_name to:mcr_file
 	),
 
     /** Merge macroscript code
@@ -117,7 +117,7 @@ struct McrFileWriter_v
     function _writeParams MacroData =
     (
         for param_data in MacroData.getParams #PARAMETERS do
-			format "%:\t\"%\"\n" ( param_data.key as string ) param_data.value to:mcr_file
+			FORMAT "%:\t\"%\"\n" ( param_data.key as string ) param_data.value to:mcr_file
     ),
 
     /** Merge macroscript filters
@@ -125,7 +125,7 @@ struct McrFileWriter_v
      function _writeFilters MacroData =
     (
         for param_data in MacroData.getParams #FILTERS do
-			format "\ton %\tdo %\n" ( param_data.key as string ) param_data.value to:mcr_file
+			FORMAT "\ton %\tdo %\n" ( param_data.key as string ) param_data.value to:mcr_file
     ),
 
     /** Merge macroscript code
@@ -141,7 +141,7 @@ struct McrFileWriter_v
 			--cmd = param_data.key as string
 			cmd = if key == #altExecute then "altExecute type" else "execute"
 			
-			format "\n\ton % do\n\t(\n\t\t%\n\t)\n" cmd params[key]  to:mcr_file
+			FORMAT "\n\ton % do\n\t(\n\t\t%\n\t)\n" cmd params[key]  to:mcr_file
 		)
     ),
 
@@ -151,7 +151,7 @@ struct McrFileWriter_v
     function writeOpenBracket =
     (
         --format "\n"; print "McrFileWriter_v.writeOpenBracket()"
-        format "(\n"to:mcr_file
+        FORMAT "(\n"to:mcr_file
     ),
 
     /** Write close bracket
@@ -160,7 +160,7 @@ struct McrFileWriter_v
     function writeCloseBracket =
     (
         --format "\n"; print "McrFileWriter_v.writeCloseBracket()"
-        format ")\n\n"to:mcr_file
+        FORMAT ")\n\n"to:mcr_file
     ),
 
     /**

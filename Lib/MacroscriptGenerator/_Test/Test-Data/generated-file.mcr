@@ -5,6 +5,7 @@ category:	"_Test-Category"
 buttonText:	"Button Text"
 (
 	on isVisible	do true
+	on isChecked	do selection.count > 0
 
 	on execute do
 	(

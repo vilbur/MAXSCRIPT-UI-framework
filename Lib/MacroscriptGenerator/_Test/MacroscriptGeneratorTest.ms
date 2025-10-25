@@ -24,14 +24,16 @@ MacroData.buttontext = "Button Text"
 --MacroData.icon = "MyIcon.bmp"
 
 MacroData.IsVisible = true
---MacroData.IsChecked = false
+MacroData.IsChecked = "selection.count > 0"
 --MacroData.isEnabled = true
 --MacroData.isIndeterminate = false
 --
 MacroData.exe = "messageBox \"Macro Executed\""
 MacroData.altExecute = "messageBox \"Alternate Executed\""
 
-/* GENERATE FILE */ 
+
+/* GENERATE FILE */
+
 mcr_file = MacroscriptGenerator.generateMcrFile ( MacroData )( getFilenamePath(getSourceFileName()) + "Test-Data\generated-file.mcr" ) --file_in:#("C:\foo.mcr", "C:\bar.mcr")
 
 format "MCR_FILE: %\n" mcr_file

@@ -59,11 +59,11 @@ struct IniToMacroParser_v
      */
     function parseIniSection macroscript_name =
     (
-        --format "\n"; print "MacroscriptGenerator_v.parseIniSection()"
+        --format "\n"; print "IniToMacroParser_v.parseIniSection()"
 
         function getMacroscriptData macroscript_name macro_keys =
         (
-			--format "\n"; print "MacroscriptGenerator_v.getMacroscriptData()"
+			--format "\n"; print "IniToMacroParser_v.getMacroscriptData()"
 			--format "macro_keys: %\n" macro_keys
             MacroData = MacroData_v()
 			
@@ -84,7 +84,7 @@ struct IniToMacroParser_v
 	/** Auto fill values by script name */
 	function _autoFillValuesByScriptName macroscript_name &MacroData =
 	(
-        --format "\n"; print "MacroscriptGenerator_v._autoFillValuesByScriptName()"
+        --format "\n"; print "IniToMacroParser_v._autoFillValuesByScriptName()"
 		if MacroData.name == undefined then
 			MacroData.name = macroscript_name
 
@@ -103,7 +103,7 @@ struct IniToMacroParser_v
 	/** Merge macro and general data */
 	function _mergeMacroAndGeneralData &MacroData =
 	(
-        --format "\n"; print "MacroscriptGenerator_v._mergeMacroAndGeneralData()"
+        --format "\n"; print "IniToMacroParser_v._mergeMacroAndGeneralData()"
 		fn isParameter key = findItem this.keys_params key > 0
 		fn isFilter    key = findItem this.keys_filter key > 0
 		fn isCode      key = findItem this.keys_code   key > 0
@@ -176,7 +176,7 @@ struct IniToMacroParser_v
 	*/
 	function _replacePlaceholders &MacroData =
 	(
-        format "\n"; print "MacroscriptGenerator_v._replacePlaceholders()"
+        --format "\n"; print "IniToMacroParser_v._replacePlaceholders()"
 		pattern = this._getPatternForAllKeys()
 
         for key in this.all_keys where (val = MacroData.getProp key) != undefined do

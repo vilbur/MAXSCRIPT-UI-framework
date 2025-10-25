@@ -87,7 +87,8 @@ struct ScriptFile_Content_v
 	 */
 	function importMacroscriptsToMenus =
 	(
-		--format "\n"; print "ScriptFile_Content_v.importMacroscriptsToMenus()"
+		format "\n"; print "ScriptFile_Content_v.importMacroscriptsToMenus()"
+		format "MacroScripts.count: %\n" MacroScripts.count
 		--format "path: %\n" path
 		for i = 1 to MacroScripts.count do
 			this._addToMenu (MacroScripts[i]) (MacroScripts[i].Params)
@@ -151,12 +152,13 @@ struct ScriptFile_Content_v
 	 */
 	function _addToMenu Macro Params =
 	(
-		format "\n\n"; print "ScriptFile_Content_v._addToMenu()"
-
-		
+		--format "\n\n"; print "ScriptFile_Content_v._addToMenu()"
+		--format "Macro: %\n" Macro
+		--format "Params: %\n" Paramss
 		
 		menu_name	= Macro.category
 		--format "menu_name: %\n" menu_name
+		
 		menu_name_param = Params[#menu]
 		
 		
@@ -173,18 +175,6 @@ struct ScriptFile_Content_v
 			default: 	menu_name_param
 		)
 
-			/* DEBUG */
-		--if matchPattern Macro.category pattern:"*_Test*" then
-		--(
-		--	format "\n\n"; print "ScriptFile_Content_v.addToQuadMenu()"
-		--	format "Macro.category   = % \n" Macro.category
-		--	format "Macro.tooltip   = % \n" Macro.tooltip
-		--	format "Macro.macro_name = % \n" Macro.macro_name
-		--	--format "quad_name = % \n" quad_name
-		--	format "menu_name = % \n" menu_name
-		--
-		--)
-		--format "TITLE: %\n" title
 		/*
 			ADD TO MENU
 		*/
