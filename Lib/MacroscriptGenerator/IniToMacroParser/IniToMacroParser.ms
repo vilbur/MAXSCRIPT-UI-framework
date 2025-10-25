@@ -94,9 +94,9 @@ struct IniToMacroParser_v
 		if MacroData.exe == undefined then
 			MacroData.exe = "\"" + (substituteString macroscript_name " " "") + "\""
 
-		/* CAMEL CASE macroscript name */ 
-		MacroData.name = substituteString MacroData.name " " "_"
-		
+		--/* CAMEL CASE macroscript name */ 
+		--MacroData.name = substituteString MacroData.name " " "_"
+		--
 		MacroData --return
 	),
 
@@ -213,20 +213,12 @@ struct IniToMacroParser_v
 		 "{(" + (trimRight all_keys_string "|") + ")}"
 	),
 
-	
-	function _setMcrFilePath =
-	(
-		this.mcr_file_path = (trimRight this.ini_file ".ini")
-
-		if not matchPattern this.mcr_file_path pattern:"*.mcr" then
-			 this.mcr_file_path += ".mcr"
-	),
 
 	/**
 	 */
 	on create do
 	(
 		--format "\n"; print "IniToMacroParser.onCreate()"
-		this._setMcrFilePath()
+		--this._setMcrFilePath()
 	)
 )

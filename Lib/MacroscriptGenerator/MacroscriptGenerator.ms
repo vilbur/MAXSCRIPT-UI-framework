@@ -4,9 +4,9 @@ filein( getFilenamePath(getSourceFileName()) + "/IniToMacroParser/IniToMacroPars
 
 /* Compile  *.ini files to  *.mcr files
    MacroscriptGenerator()
-		→ generateIniFile()
-		→ generateMcrFile()
 		→ convertIniToMcr()
+		→ generateMcrFile()
+		--→ generateIniFile()
 			→ McrFileWriter()
 */
 struct MacroscriptGenerator_v
@@ -14,12 +14,13 @@ struct MacroscriptGenerator_v
     /* construct */
 
     /* properties */
-
-    macroscripts = #(),
+	mcr_file_path,
+    --MacroDataArray = #(),
 
 	
 	/* dependency */
 	IniToMacroParser,
+	--McrFileWriter = McrFileWriter_v(),
 	
     /** Generate .mcr file from .ini file
     *
@@ -29,11 +30,17 @@ struct MacroscriptGenerator_v
     (
         --format "\n"; print "MacroscriptGenerator_v.convertIniToMcr()"
 		--format "ini_file: %\n" ini_file
+		MacroDataArray = #()
 
 		if not doesFileExist ini_file then
 			FORMAT "\n!!! MacroscriptGenerator_v: INI FILE DOES NOT EXISTS:\n%\n\n" ini_file
 		
-        sections = for _section in getINISetting ini_file collect _section
+		mcr_file_path = ( trimRight ini_file ".ini")
+        
+		if not matchPattern this.mcr_file_path pattern:"*.mcr" then
+			 this.mcr_file_path += ".mcr"
+		
+		sections = for _section in getINISetting ini_file collect _section
 		--format "sections: %\n" sections
 
 		IniToMacroParser = IniToMacroParser_v(ini_file)
@@ -44,15 +51,27 @@ struct MacroscriptGenerator_v
 		(
 			MacroData = IniToMacroParser.getMacroData (macroscript_name)
 
-			append macroscripts (MacroData)
+			append MacroDataArray (MacroData)
 		)
 
-		--format "MACROSCRIPTS: %\n" macroscripts
+		--format "MACROSCRIPTS: %\n" MacroDataArray
 		
-		McrFileWriter_v(this)
+		McrFileWriter_v MacroDataArray mcr_file_path
 		
-		this.IniToMacroParser.mcr_file_path --return
+		mcr_file_path --return
     ),
+	
+	/** Generate mcr file
+	 */
+	function generateMcrFile MacroDataArray mcr_file_path =
+	(
+		--format "\n"; print "MacroscriptGenerator_v.generateMcrFile()"
+		this.mcr_file_path = mcr_file_path
+		
+		MacroDataArray = if classOf MacroDataArray != Array then #(MacroDataArray) else MacroDataArray
+
+		McrFileWriter_v MacroDataArray mcr_file_path
+	),
 
     private
 

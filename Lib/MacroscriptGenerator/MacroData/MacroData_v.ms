@@ -41,6 +41,56 @@ struct MacroData_v
 			getProperty this key
 	),
 	
+	/** Type
+	 */
+	function type key =
+	(
+		--format "\n"; print "MacroData_v.type()"		
+		type = case of
+		(
+			( findItem (this.keysParams()) key > 0 ): #PARAMETER
+			( findItem (this.keysFilter()) key > 0 ): #FILTER
+			( findItem (this.keysCode())   key > 0 ): #CODE
+			--default: 
+		)
+		
+		type --return
+	),
+	
+	/** Keys params
+	 */
+	function keysParams = #( #category, #buttontext, #tooltip, #icon ),
+	
+	/** Keys filter
+	 */
+	function keysFilter = #( #IsVisible, #IsChecked, #isEnabled, #isIndeterminate ),
+	
+	/** Keys code
+	 */
+	function keysCode = #( #execute, #altExecute ),
+
+	/** Get params
+	 */
+	function getParams type =
+	(
+		--format "\n"; print "MacroData_v.getParams()"
+		values	= Dictionary #NAME
+		
+		keys = case type of
+		(
+			#PARAMETERS:	#( #category, #buttontext, #tooltip, #icon )
+			#FILTERS:	#( #IsVisible, #IsChecked, #isEnabled, #isIndeterminate )
+			#CODE:	#( #execute, #altExecute )
+		)
+	
+		for key in keys \
+			where hasProperty this key \
+			and (val = getProperty this key) != undefined do
+				values[key] = val
+		
+		values --return
+	),
+	
 	/** Get property name
 	  
 	    "maxscript" & "execute" are preserved keywords

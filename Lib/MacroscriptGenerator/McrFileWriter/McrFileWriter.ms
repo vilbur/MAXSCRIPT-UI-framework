@@ -5,17 +5,11 @@
 struct McrFileWriter_v
 (
     /* construct */
-	parent,
+    MacroDataArray,
+    mcr_file_path,
 
     /* properties */
-    mcr_file,
-
---    keys_params = #( #category, #buttontext, #tooltip, #icon ),
---    keys_filter = #( #IsVisible, #IsChecked, #isEnabled, #isIndeterminate ),
---    keys_code   = #( #execute, #altExecute ),
---
---	all_keys = keys_params + keys_filter + keys_code + #(#macroscript),
-
+	mcr_file,
 
     /* dependency */
     /* reference */
@@ -28,18 +22,17 @@ struct McrFileWriter_v
     function writeToFile =
     (
         format "\n"; print "McrFileWriter_v.writeToFile()"
-		format "parent.macroscripts: %\n" parent.macroscripts
         /* CREATE FILE */
-        this.mcr_file = createFile parent.IniToMacroParser.mcr_file_path
 
         /* WRITE FILE START */
         --if general_params[#filein] != undefined then
 			--format "filein %\n\n" general_params[#filein] to:mcr_file
 
         try(
+			this.mcr_file = createFile mcr_file_path
 
             /* WRITE EACH MACROSCRIPT */
-            for MacroData in parent.macroscripts do
+            for MacroData in MacroDataArray do
 				this.writeSectionsToFile(MacroData)
 
         )catch(
@@ -53,9 +46,12 @@ struct McrFileWriter_v
         )
 
         /* CLOSE FILE */
-        close this.mcr_file
-
-		free this.mcr_file
+		if mcr_file != undefined then
+		(
+			close this.mcr_file
+	
+			free this.mcr_file
+		)
     ),
 
 
@@ -98,24 +94,26 @@ struct McrFileWriter_v
 	(
 		--format "\n"; print "McrFileWriter_v.writeMacroscriptName()"
 		--macroscript_name = substituteString (general_params[#macroscript] + MacroData[#macroscript]) " " "_"
-
-        format "macroscript %\n" MacroData.name to:mcr_file
+		/* CAMEL CASE macroscript name */ 
+		macroscript_name = substituteString MacroData.name " " "_"
+		
+        format "macroscript %\n" macroscript_name to:mcr_file
 	),
 
     /** Merge macroscript code
      */
     function _writeParams MacroData =
     (
-        for key in parent.IniToMacroParser.keys_params where (val = MacroData.getProp key) != undefined do
-			format "%:\t\"%\"\n" ( key as string ) val to:mcr_file
+        for param_data in MacroData.getParams #PARAMETERS do
+			format "%:\t\"%\"\n" ( param_data.key as string ) param_data.value to:mcr_file
     ),
 
     /** Merge macroscript filters
      */
      function _writeFilters MacroData =
     (
-        for key in parent.IniToMacroParser.keys_filter where (val = MacroData.getProp key) != undefined do
-			format "\ton %\tdo %\n" (key as string ) val to:mcr_file
+        for param_data in MacroData.getParams #FILTERS do
+			format "\ton %\tdo %\n" ( param_data.key as string ) param_data.value to:mcr_file
     ),
 
     /** Merge macroscript code
@@ -124,8 +122,15 @@ struct McrFileWriter_v
     (
 		--format "\n"; print "McrFileWriter_v._writeCode()"
 
-        for key in parent.IniToMacroParser.keys_code where (val = MacroData.getProp key) != undefined do
-			format "\n\ton % do (\n\t\t%\n\t)\n" ( key as string + (if key == #altExecute then " type" else "")) val to:mcr_file
+        for param_data in MacroData.getParams #CODE do
+		(
+			cmd = param_data.key as string
+			
+			if param_data.key == #altExecute then
+				cmd += " type"
+
+			format "\n\ton % do\n\t(\n\t\t%\n\t)\n" cmd param_data.value to:mcr_file
+		)
     ),
 
     /** Write open bracket
