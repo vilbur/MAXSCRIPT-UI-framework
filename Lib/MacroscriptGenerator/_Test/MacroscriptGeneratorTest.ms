@@ -9,7 +9,7 @@ MacroscriptGenerator = MacroscriptGenerator_v()
 /*------------------------------------------------------------------------------
 	TEST GENERATE .mcr FILE FROM .ini FILE
 --------------------------------------------------------------------------------*/
---MacroscriptGenerator.convertIniToMcr( getFilenamePath (getSourceFileName()) + "Test-Data\macroscripts.mcr.ini" )
+MacroscriptGenerator.convertIniToMcr( getFilenamePath (getSourceFileName()) + "Test-Data\macroscripts.mcr.ini" )
 
 
 
@@ -32,4 +32,6 @@ MacroData.exe = "messageBox \"Macro Executed\""
 MacroData.altExecute = "messageBox \"Alternate Executed\""
 
 /* GENERATE FILE */ 
-MacroscriptGenerator.generateMcrFile ( MacroData )( getFilenamePath(getSourceFileName()) + "Test-Data\generated-file.mcr" )
+mcr_file = MacroscriptGenerator.generateMcrFile ( MacroData )( getFilenamePath(getSourceFileName()) + "Test-Data\generated-file.mcr" ) --file_in:#("C:\foo.mcr", "C:\bar.mcr")
+
+format "MCR_FILE: %\n" mcr_file

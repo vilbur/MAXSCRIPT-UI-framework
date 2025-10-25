@@ -14,7 +14,7 @@ struct MacroscriptGenerator_v
     /* construct */
 
     /* properties */
-	mcr_file_path,
+	--mcr_file_path,
     --MacroDataArray = #(),
 
 	
@@ -37,8 +37,8 @@ struct MacroscriptGenerator_v
 		
 		mcr_file_path = ( trimRight ini_file ".ini")
         
-		if not matchPattern this.mcr_file_path pattern:"*.mcr" then
-			 this.mcr_file_path += ".mcr"
+		if not matchPattern mcr_file_path pattern:"*.mcr" then
+			 mcr_file_path += ".mcr"
 		
 		sections = for _section in getINISetting ini_file collect _section
 		--format "sections: %\n" sections
@@ -63,14 +63,16 @@ struct MacroscriptGenerator_v
 	
 	/** Generate mcr file
 	 */
-	function generateMcrFile MacroDataArray mcr_file_path =
+	function generateMcrFile MacroDataArray mcr_file_path file_in:undefined =
 	(
 		--format "\n"; print "MacroscriptGenerator_v.generateMcrFile()"
-		this.mcr_file_path = mcr_file_path
+		--this.mcr_file_path = mcr_file_path
 		
 		MacroDataArray = if classOf MacroDataArray != Array then #(MacroDataArray) else MacroDataArray
 
-		McrFileWriter_v MacroDataArray mcr_file_path
+		McrFileWriter_v MacroDataArray mcr_file_path file_in:file_in
+		
+		mcr_file_path --return
 	),
 
     private

@@ -9,6 +9,7 @@ struct McrFileWriter_v
     mcr_file_path,
 
     /* properties */
+	file_in,
 	mcr_file,
 
     /* dependency */
@@ -22,19 +23,30 @@ struct McrFileWriter_v
     function writeToFile =
     (
         format "\n"; print "McrFileWriter_v.writeToFile()"
-        /* CREATE FILE */
-
-        /* WRITE FILE START */
-        --if general_params[#filein] != undefined then
-			--format "filein %\n\n" general_params[#filein] to:mcr_file
 
         try(
+			/* CREATE FILE */
 			this.mcr_file = createFile mcr_file_path
-
-            /* WRITE EACH MACROSCRIPT */
+			
+		
+			/* WRITE FILE IN HEADER */
+			if file_in != undefined then
+			(
+				if classOf file_in != Array then
+					file_in = #(file_in)
+				
+				for file_path in file_in do
+					FORMAT "filein \"%\"\n" file_path to:mcr_file
+				
+				FORMAT "\n\n" file_path to:mcr_file
+			)
+			
+        
+		    /* WRITE EACH MACROSCRIPT */
             for MacroData in MacroDataArray do
 				this.writeSectionsToFile(MacroData)
 
+				
         )catch(
 
             format "\n——————————————— ERROR IN FILE ———————————————\n\n%\n" (getSourceFileName())
