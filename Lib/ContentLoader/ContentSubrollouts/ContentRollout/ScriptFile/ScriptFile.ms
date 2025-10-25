@@ -151,8 +151,10 @@ struct ScriptFile_Content_v
 	 */
 	function _addToMenu Macro Params =
 	(
-		--format "\n\n"; print "ScriptFile_Content_v._addToMenu()"
+		format "\n\n"; print "ScriptFile_Content_v._addToMenu()"
 
+		
+		
 		menu_name	= Macro.category
 		--format "menu_name: %\n" menu_name
 		menu_name_param = Params[#menu]

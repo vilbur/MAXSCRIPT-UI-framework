@@ -6,25 +6,30 @@ filein( getFilenamePath(getSourceFileName()) + "/../MacroscriptGenerator.ms" ) -
 MacroscriptGenerator = MacroscriptGenerator_v()
 
 
-/* GENERATE .mcr FILE FROM .ini FILE */ 
-MacroscriptGenerator.convertIniToMcr( getFilenamePath(getSourceFileName()) + "Test-Data\macroscripts.mcr.ini" )
+/*------------------------------------------------------------------------------
+	TEST GENERATE .mcr FILE FROM .ini FILE
+--------------------------------------------------------------------------------*/
+--MacroscriptGenerator.convertIniToMcr( getFilenamePath (getSourceFileName()) + "Test-Data\macroscripts.mcr.ini" )
 
 
 
+/*------------------------------------------------------------------------------
+	TEST GENERATE .mcr FILE
+--------------------------------------------------------------------------------*/
 
-/* test code */
+/*------ FILL MACROSCRIPT OBJECT ------*/
 MacroData = MacroData_v "Test macro 1" "_Test-Category" -- MacroData_v name: category:
---MacroData.buttontext = "Execute Tool"
+MacroData.buttontext = "Button Text"
 --MacroData.tooltip = "Runs the selected macro"
 --MacroData.icon = "MyIcon.bmp"
---
---MacroData.IsVisible = true
+
+MacroData.IsVisible = true
 --MacroData.IsChecked = false
 --MacroData.isEnabled = true
 --MacroData.isIndeterminate = false
 --
---MacroData.execute = (messageBox "Macro Executed")
---MacroData.altExecute = (messageBox "Alternate Execution")
+MacroData.exe = "messageBox \"Macro Executed\""
+MacroData.altExecute = "messageBox \"Alternate Executed\""
 
-
---MacroscriptGenerator.generateMcrFile ( MacroData )( getFilenamePath(getSourceFileName()) + "Test-Data\generated.mcr" )
+/* GENERATE FILE */ 
+MacroscriptGenerator.generateMcrFile ( MacroData )( getFilenamePath(getSourceFileName()) + "Test-Data\generated-file.mcr" )
