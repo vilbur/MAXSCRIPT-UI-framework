@@ -122,14 +122,14 @@ struct McrFileWriter_v
     (
 		--format "\n"; print "McrFileWriter_v._writeCode()"
 
-        for param_data in MacroData.getParams #CODE do
+		params = MacroData.getParams #CODE 
+		
+        for key in #( #exe, #altExecute ) where params[key] != undefined do
 		(
-			cmd = param_data.key as string
+			--cmd = param_data.key as string
+			cmd = if key == #altExecute then "altExecute type" else "execute"
 			
-			if param_data.key == #altExecute then
-				cmd += " type"
-
-			format "\n\ton % do\n\t(\n\t\t%\n\t)\n" cmd param_data.value to:mcr_file
+			format "\n\ton % do\n\t(\n\t\t%\n\t)\n" cmd params[key]  to:mcr_file
 		)
     ),
 

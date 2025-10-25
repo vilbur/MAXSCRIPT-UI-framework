@@ -80,7 +80,7 @@ struct MacroData_v
 		(
 			#PARAMETERS:	#( #category, #buttontext, #tooltip, #icon )
 			#FILTERS:	#( #IsVisible, #IsChecked, #isEnabled, #isIndeterminate )
-			#CODE:	#( #execute, #altExecute )
+			#CODE:	#( #exe, #altExecute )
 		)
 	
 		for key in keys \

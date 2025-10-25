@@ -11,7 +11,12 @@ buttonText:	"Test Script"
 	on isEnabled	do true or false
 	on isChecked	do true
 
-	on AltExecute type do
+	on execute do
+	(
+		print "Command executed"
+	)
+
+	on altExecute type do
 	(
 		print "Hello world"
 	)
@@ -28,6 +33,11 @@ buttonText:	"macroscript name is button text"
 	on isVisible	do 1 > 0
 	on isEnabled	do true
 	on isChecked	do true
+
+	on execute do
+	(
+		print "If command start with quotes, then double must be used quotes"
+	)
 )
 
 /** general keys used as variables
@@ -42,7 +52,12 @@ buttonText:	"general keys used as variables"
 	on isEnabled	do true
 	on isChecked	do true
 
-	on AltExecute type do
+	on execute do
+	(
+		print "general keys used as variables"
+	)
+
+	on altExecute type do
 	(
 		print "macro_prefix_general keys used as variables"
 	)
@@ -59,5 +74,10 @@ buttonText:	"[tooltip prefix Tooltip as hidden button text]"
 	on isVisible	do 1 > 0
 	on isEnabled	do true
 	on isChecked	do true
+
+	on execute do
+	(
+		print "hiddenbuttontext"
+	)
 )
 
