@@ -66,6 +66,8 @@ struct ScriptFile_Content_v
 			filein path
 
 			MacroScripts = (MacroScriptFileParser_v path:path).MacroScripts -- PARSE MACROSCRIPTS 	--"./MacroScriptFileParser/MacroScriptFileParser.ms"
+			
+			this.importMacroscriptsToMenus()
 		)
 	),
 
@@ -87,10 +89,12 @@ struct ScriptFile_Content_v
 	 */
 	function importMacroscriptsToMenus =
 	(
-		format "\n"; print "ScriptFile_Content_v.importMacroscriptsToMenus()"
-		format "MacroScripts.count: %\n" MacroScripts.count
+		--format "\n"; print "ScriptFile_Content_v.importMacroscriptsToMenus()"
+		--format "MacroScripts.count: %\n" MacroScripts.count
 		--format "path: %\n" path
-		for i = 1 to MacroScripts.count do
+		
+		--for i = 1 to MacroScripts.count do
+		for i = 1 to MacroScripts.count  do
 			this._addToMenu (MacroScripts[i]) (MacroScripts[i].Params)
 	),
 
@@ -98,15 +102,18 @@ struct ScriptFile_Content_v
 	private
 	
 	
-	/** CREATE CONTROLS
+	/** CREATE CONTROLS for each macroscript
+	  * 
 	 */
 	function _createControls _Rollout =
 	(
 		--format "\n"; print("ScriptFile_Content_v._createControls()" )
+		--format "MacroScripts.count: %\n" MacroScripts.count
 		_Controls	= _Rollout.Controls	group:(this._getControlsGroupName())
 		ControlEventBinder	= ControlEventBinder_v 	_Rollout:_Rollout
 
-		for i = 1 to MacroScripts.count do
+		/* ONLY macroscripts with BUTTONTEXT are created */ 
+		for i = 1 to MacroScripts.count where MacroScripts[i].buttontext != undefined do
 			this._createControlfromMacro (MacroScripts[i])
 	),
 
@@ -120,9 +127,8 @@ struct ScriptFile_Content_v
 		/* CREATE CONTROL */ 
 		_Control = _Controls.Control (Macro.getControlType()) Macro.buttontext params:(Macro.getParamsArray()) add_to_controls:false
 
-		
 		/* ADD TO MENU */ 
-		this._addToMenu (Macro)(_Control.Params)		
+		--this._addToMenu (Macro)(_Control.Params)		
 		
 		/* TRY GET CONTROL FOR MACRO */ 
 		if(_Control_Exist = _Controls.get(_Control.id)) != undefined then
@@ -168,7 +174,14 @@ struct ScriptFile_Content_v
 		
 		title =  case of
 		(
-			(menu_name_param	== true ): 	Macro.buttontext
+			(menu_name_param	== true ): case of
+			(
+				(Macro.buttontext	!= undefined):	Macro.buttontext
+				(Macro.tooltip	!= ""):	Macro.tooltip
+				
+				default: Macro.macro_name
+			)
+			
 			
 			(menu_name_param as name	== #TOOLTIP ):	if Macro.tooltip != undefined then Macro.tooltip else Macro.buttontext
 			

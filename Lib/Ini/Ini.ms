@@ -34,9 +34,14 @@ struct Ini_v
 	  * @property	string|name	key
 	  * @property	mixed	value
 	 */
-	function save _section key value =
+	function save _section key val =
 	(
-		setINISetting _path ( _section as string ) ( key as string ) ( value as string )
+		string_val = val as string
+		
+		if classOf val == name then
+			string_val = "#" + string_val
+		
+		setINISetting _path ( _section as string ) ( key as string ) string_val
 	),
 
 	/** Ini load control state
@@ -152,8 +157,8 @@ struct Ini_v
 			"red|green|blue|white|black|orange|yellow|brown|gray",
 			"\[.*\]",	-- point2, point3
 			"\(*color\s+\d+\s+\d+\s+\d+\s*\)*",	-- color E.G.: "color 128 128 128" or "(color 128 128 128)"
-			"#[^\s\(]+",	-- #name but not array
-			"#\(.*\)",	--array
+			"#[^\s\(\{]+",	-- #name but not array or bitarray
+			"#[\(\{].*[\)\}]",	--array or bitarray
 			""
 		)
 		
@@ -172,7 +177,7 @@ struct Ini_v
 			@"" + _string -- IS STRING
 		)
 	),
-
+	
 	private
 
 	/** Combine path

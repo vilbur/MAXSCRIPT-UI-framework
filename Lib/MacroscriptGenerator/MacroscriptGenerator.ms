@@ -1,5 +1,7 @@
+
+
 filein( getFilenamePath(getSourceFileName()) + "/McrFileWriter/McrFileWriter.ms" )	--"./McrFileWriter/McrFileWriter.ms"
-filein( getFilenamePath(getSourceFileName()) + "/MacroData/MacroData_v.ms" )	--"./MacroData/MacroData_v.ms"
+filein( getFilenamePath(getSourceFileName()) + "/MacroData/MacroData.ms" )	--"./MacroData/MacroData.ms"
 filein( getFilenamePath(getSourceFileName()) + "/IniToMacroParser/IniToMacroParser.ms" )	--"./IniToMacroParser/IniToMacroParser.ms"
 
 /* Compile  *.ini files to  *.mcr files

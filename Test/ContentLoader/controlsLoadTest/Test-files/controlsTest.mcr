@@ -1,4 +1,15 @@
-
+/*------------------------------------------------------------------------------
+	ONLY MAXSCRIPT 
+--------------------------------------------------------------------*/
+macroscript macroFileTest_without_ui_control
+	category:	"MacroFileTest"
+	buttontext:	"Button"
+	tooltip:	"Only macroscript is generated wihtout button"
+	icon:	"Tooltip:Tooltip of control"
+(
+	print "Button #pressed"
+	format "EventFired	= % \n" EventFired
+)
 
 /*------------------------------------------------------------------------------
 	BUTTON

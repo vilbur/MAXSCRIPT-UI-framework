@@ -1,4 +1,4 @@
-/** Ini saver
+/** SAve state of rollout and controls to ini file
  */
 struct IniSaver_v
 (

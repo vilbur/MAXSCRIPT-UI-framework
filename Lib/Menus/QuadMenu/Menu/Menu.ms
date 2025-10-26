@@ -142,12 +142,12 @@ struct Menu_v
 			EXIT IF NO ITEMS EXISTS
 		--------------------------------------------------------------------------------*/
 		if submenu.numItems() == 0 then
-		(
-			format "\n\n\n*********** WARNING: MENU HAS NOT ANY ITEMS **********************\nMenu: \"%\"\n" (submenu.getTitle() )
-
-			return false
-			--return (Menu_v())
-		)
+			FORMAT "\n\n\n*********** WARNING: MENU HAS NOT ANY ITEMS **********************\nMenu: \"%\"\n" (submenu.getTitle())
+		--(
+		--
+		--	return false
+		--	--return (Menu_v())
+		--)
 
 		/* ADD AS LAST ITEM */
 		if index == unsupplied then
