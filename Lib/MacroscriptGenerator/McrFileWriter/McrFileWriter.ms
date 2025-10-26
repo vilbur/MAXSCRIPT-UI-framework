@@ -116,8 +116,10 @@ struct McrFileWriter_v
      */
     function _writeParams MacroData =
     (
-        for param_data in MacroData.getParams #PARAMETERS do
-			FORMAT "%:\t\"%\"\n" ( param_data.key as string ) param_data.value to:mcr_file
+		params_data = MacroData.getParams #PARAMETERS
+		
+        for param in MacroData.keysParams() where params_data[param] != undefined do
+			FORMAT "%:\t\"%\"\n" ( param as string ) params_data[param] to:mcr_file
     ),
 
     /** Merge macroscript filters
@@ -136,7 +138,7 @@ struct McrFileWriter_v
 
 		params = MacroData.getParams #CODE 
 		
-        for key in #( #exe, #altExecute ) where params[key] != undefined do
+        for key in #( #exe, #altExecute ) where params[key] != undefined and (trimLeft(params[key])).count > 0 do
 		(
 			--cmd = param_data.key as string
 			cmd = if key == #altExecute then "altExecute type" else "execute"

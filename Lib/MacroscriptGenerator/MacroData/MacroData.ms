@@ -1,3 +1,4 @@
+
 /* 
 Struct MacroData_v macro related data from given arrays.
 */
@@ -67,7 +68,7 @@ struct MacroData_v
 	
 	/** Keys code
 	 */
-	function keysCode = #( #execute, #altExecute ),
+	function keysCode = #( #exe, #altExecute ),
 
 	/** Get params
 	 */
@@ -78,9 +79,9 @@ struct MacroData_v
 		
 		keys = case type of
 		(
-			#PARAMETERS:	#( #category, #buttontext, #tooltip, #icon )
-			#FILTERS:	#( #IsVisible, #IsChecked, #isEnabled, #isIndeterminate )
-			#CODE:	#( #exe, #altExecute )
+			#PARAMETERS:	this.keysParams()
+			#FILTERS:	this.keysFilter()
+			#CODE:	this.keysCode()
 		)
 	
 		for key in keys \

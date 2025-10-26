@@ -223,7 +223,7 @@ struct Menu_v
 
 			if index > items_count then
 			(
-				format "	%.getItem(%) -- WARNING - index % is higher then count of items %\n" this.name index index items_count
+				FORMAT "	%.getItem(%) -- WARNING - index % is higher then count of items %\n" this.name index index items_count
 
 				undefined --return
 			)
@@ -263,14 +263,15 @@ struct Menu_v
 	function removeItem index_title_item =
 	(
 		--format "\n"; print "Menu_v.removeItem()"
+		--format "classOf index_title_item: %\n" ( classOf index_title_item )
 
 		if classOf index_title_item == BitArray then
 			index_title_item = index_title_item as Array
 
 		if classOf index_title_item != Array then
 		(
-			menu_item = if classOf index_title_item != MixinInterface then this.getItem(index_title_item) else index_title_item
-
+			menu_item = if classOf index_title_item == MixinInterface then index_title_item else this.getItem(index_title_item) 
+			--format "menu_item: %\n" menu_item
 			if menu_item != undefined then
 				menu.removeItem menu_item
 
@@ -287,9 +288,18 @@ struct Menu_v
 	  */
 	function clearMenu =
 	(
+		--format "\nMenu_v.clearMenu(): %\n" this.name
+		--format "this.menu: %\n" this.menu
+		--format "this.numItems(): %\n" (this.numItems())
 		--format "\n"; print "Menu_v.clearMenu()"
+		--format "this: %\n" this
+		--format "\n"; ( print "Menu_v.clearMenu() " + (menu.getTitle()) )
+		format "\n"; print ( "Menu_v.clearMenu() " + this.name )
+		
 		for i = this.numItems() to 1 by -1 do
 			this.removeItem(i)
+			
+		--format "this.numItems(): %\n" (this.numItems())
 	),
 
 	/** Move item in menu
@@ -460,6 +470,14 @@ struct Menu_v
 		menu.numItems()
 	),
 
+	/** Get menu items
+	 */
+	function getItems =
+	(
+		--format "\n"; print "Menu_v.getMenuItems()"
+		this._getMenuItems()
+	),
+	
 	private
 
 	--/** Get item
@@ -490,28 +508,30 @@ struct Menu_v
 	),
 
 
-	/**
+	/** Add separator behind item of given index
 	  *
+	  * @param integer index of item before separator E.G.: index:3 place separator behind 3. item in menu
 	  */
 	function _addSeparator index =
 	(
 		--format "\n"; print "Menu_v._addSeparator()"
-		if (items_count = menu.numItems()) > 0 then
+		if (items_count = menu.numItems()) > 0 then-- if menus has some items
 		(
-			add_on_end_of_menu = index == unsupplied or index > items_count
+			add_on_end_of_menu = index == unsupplied or index > items_count 
 			
 			--format "items_count:	% \n" (items_count)
 			--format "index:	% \n" index
 			--format "add_on_end_of_menu:	% \n" add_on_end_of_menu
 			
-			if index != unsupplied and index > (menu.numItems() +1 ) then
-				format "\n\n----------- WARNING ----------------------\n\nSEPARATOR IS ADDED ON END OF MENU\n\n\tMenu: \"%\"\n\tindex: % \n\titems in menu: %\n\n" this.name index (menu.numItems())
+			if index != unsupplied and index > items_count then
+				FORMAT "\n\n----------- WARNING ----------------------\n\nSEPARATOR IS ADDED ON END OF MENU\n\n\tMenu: \"%\"\n\tindex: % \n\titems in menu: %\n\n" this.name index (items_count)
 			
 			if add_on_end_of_menu then
-				index = menu.numItems() +1
+				index = items_count
 			
-			this._isSeparator( if add_on_end_of_menu then menu.numItems() else index  )
-				menu.addItem (menuMan.createSeparatorItem()) (index)
+			--this._isSeparator( if add_on_end_of_menu then items_count else index  )
+			
+			menu.addItem (menuMan.createSeparatorItem()) (index +1 )
 			
 		)
 	),

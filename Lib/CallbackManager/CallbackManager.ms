@@ -63,7 +63,7 @@ struct CallbackManager_v
 	 */
 	function exe callback_type_id =
 	(
-		format "\n"; print "CallbackManager_v.exe()"
+		--format "\n"; print "CallbackManager_v.exe()"
 		--format "callback_type_id: %\n" callback_type_id
 		
 		for Callback in this.getCallbacks (callback_type_id) do
@@ -215,7 +215,9 @@ struct CallbackManager_v
 	 */
 	function startCallback Callback =
 	(
-		format "\n"; print "CallbackManager_v.startCallback()"
+		--format "\n"; print "CallbackManager_v.startCallback()"
+		format "\nCallbackManager_v.startCallback % %\n" Callback.type Callback.callback
+		
 		Callback = this._mutateCallback Callback
 		--format "Callback: %\n" Callback
 		
