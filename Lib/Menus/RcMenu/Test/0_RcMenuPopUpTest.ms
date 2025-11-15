@@ -35,7 +35,7 @@ menu_2.item "Item 3" "messagebox \"Item 3\""
 
 
 
-/** CREATE ROLLOUT
+/** POP UP MENU ON MOUSE POS
  *
  */
 popUpMenu (Menu.create())

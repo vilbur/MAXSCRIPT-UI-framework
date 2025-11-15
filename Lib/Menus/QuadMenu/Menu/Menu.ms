@@ -1,3 +1,5 @@
+filein( getFilenamePath(getSourceFileName()) + "/../../RcMenu/RcMenu.ms" )	--"./../../RcMenu/RcMenu.ms"
+
 global EMPTY_QUAD
 
 
