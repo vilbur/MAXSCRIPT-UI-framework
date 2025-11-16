@@ -1,6 +1,4 @@
-filein( getFilenamePath(getSourceFileName()) + "/../QuadMenu/QuadMenu.ms" )	--"./../QuadMenu/QuadMenu.ms"
-
---global LAST_CREATED_QUAD
+------global LAST_CREATED_QUAD
 
 
 /** Quad menu manager

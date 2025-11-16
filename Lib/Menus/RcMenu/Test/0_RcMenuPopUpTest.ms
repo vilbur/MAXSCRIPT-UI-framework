@@ -1,7 +1,6 @@
 clearListener()
 
-filein ( getFilenamePath(getSourceFileName()) + "/../RcMenu.ms" )
-
+filein( getFilenamePath(getSourceFileName()) + "/../../include-menus.ms" )	--"./../../include-menus.ms"
 
 /* DEFINE MAIN MENU */
 Menu = RcMenu_v name:"TestMenu"

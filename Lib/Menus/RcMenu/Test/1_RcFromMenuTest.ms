@@ -1,19 +1,18 @@
 clearListener()
 
-filein ( getFilenamePath(getSourceFileName()) + "/../RcMenu.ms" )
-
+filein( getFilenamePath(getSourceFileName()) + "/../../include-menus.ms" )	--"./../../include-menus.ms"
 
 /* DEFINE MAIN MENU */
-Menu = RcMenu_v name:"TestMenu"
+MenuRc = RcMenu_v name:"TestMenu"
 
+MenuRc.loadMenu "Helpers"
 
-
---Menu.item "&Main Item 1" "messagebox \"Main Item 1\""
+--MenuRc.item "&Main Item 1" "messagebox \"Main Item 1\""
 
 
 --/* DEFINE MENU */
---menu_1	= Menu.menu "Menu 1"
---menu_2	= Menu.menu "Menu 2"
+--menu_1	= MenuRc.menu "MenuRc 1"
+--menu_2	= MenuRc.menu "MenuRc 2"
 --
 --
 --/** MENU ITEMS
@@ -40,4 +39,7 @@ Menu = RcMenu_v name:"TestMenu"
 /** POP UP MENU ON MOUSE POS
  *
  */
-popUpMenu (Menu.create())
+try(
+popUpMenu (MenuRc.create())
+	   
+	   )catch()
