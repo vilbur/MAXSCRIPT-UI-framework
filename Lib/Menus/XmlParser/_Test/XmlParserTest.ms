@@ -34,7 +34,8 @@ for i = 1 to menus_mathcing_help.count do
 
 
 /* GET SIGNLE ELEMENT BY ATTRIBUTE */ 
-menu_helpers = XmlParser.getElements "Menu" attr:"title" val:"Helpers"
+--menu_helpers = XmlParser.getElement "Menu" attr:"title" val:"Helpers"
+menu_helpers = XmlParser.getElement "Menu" attr:"title" val:"Main Menu Bar"
 format "menu_helpers: %\n" menu_helpers
 
 
@@ -45,7 +46,7 @@ menu_items = XmlParser.getChildren menu_helpers
 
 for i = 1 to menu_items.count do
 (
-	actionID = XmlParser.getAttribute menu_items[i] "actionID"
+	modeName = XmlParser.getAttribute menu_items[i] "modeName"
 	
-	format "%: %\n" i actionID
+	format "%: %\n" i modeName
 )

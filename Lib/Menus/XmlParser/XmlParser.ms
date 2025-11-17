@@ -23,32 +23,44 @@ struct XmlParser_v
 	/* inhered */
 
 	/** Get element
-	  
-	  
-		@return Array|XmlElement return array of elements OR single element if parameter attribute is defined and count of founded elements is 1
+		
+		@return XmlElement 
+	 */
+	function getElement tag_name attr: val:  =
+	(
+		--format "\n"; print "XmlParser_v.getElement()"
+		( this.getElements tag_name attr:attr val:val )[1]
+	),
+	
+	/** Get elements
+
+		@return Array of elements
 	 */
 	function getElements tag_name attr: val: =
 	(
-		format "\n"; print "XmlParser_v.getElementsByTagName()"
+		format "\n"; print "XmlParser_v.getElements()"
 		format "attr: %\n" attr
 		/* GET XML ELEMENTS */ 
 		elements_xml = xml_doc.GetElementsByTagName (tag_name as string )
 
 		/* GETELEMENTS */ 
 		elements = for i = 0 to elements_xml.count - 1 where ( element = (elements_xml.item i)) != undefined collect element
-
+		format "elements.count: %\n" elements.count
+		
 		/* RETURN ELEMENTS BY ATTRIBUTE VALUE */ 
 		if attr != unsupplied then
-		(
-			elemnets_matching_attr =  this.filterElementsByAttribute elements attr:attr val:val --return
-			
-			/*  return array of elements OR single element if parameter attribute is defined and count of founded elements is 1 */ 
-			if elemnets_matching_attr.count == 1 then elemnets_matching_attr[1] else elemnets_matching_attr --return
-		)
+			this.filterElementsByAttribute elements attr:attr val:val --return
+		--(
+		--	elemnets_matching_attr =  this.filterElementsByAttribute elements attr:attr val:val --return
+		--	
+		--	/*  return array of elements OR single element if parameter attribute is defined and count of founded elements is 1 */ 
+		--	if elemnets_matching_attr.count == 1 then elemnets_matching_attr[1] else elemnets_matching_attr --return
+		--)
 		/* RETURN ALL ELEMENTS */ 
 		else
 			elements --return
 	),
+	
 	
 	/** Filter elements by attribute
 	 */
@@ -57,9 +69,10 @@ struct XmlParser_v
 		--format "\n"; print "XmlParser_v.filterElementsByAttribute()"
 		elements_found = #()
 		
-		for element in elements where ( element_inner = element.InnerXML) != "" do
+		--for element in elements where ( element_inner = element.InnerXML) != "" do
+		for element in elements do
 		(
-			found_element = this.getElement element attr:attr val:val
+			found_element = this.getElementByAttribute element attr:attr val:val
 			
 			if found_element != undefined then
 				append elements_found found_element
@@ -76,19 +89,10 @@ struct XmlParser_v
 		for c = 0 to element.ChildNodes.count - 1 collect
 			element.ChildNodes.ItemOf[c]
 	),
-	
-	/** Get element
-	 */
-	function getChild element attr: val: =
-	(
-		--format "\n"; print "XmlParser_v.getElement()"
-		
-		
-	),
-	
+
 	/** Get attribute
 	 */
-	function getElement element attr: val: =
+	function getElementByAttribute element attr: val: =
 	(
 		--format "\n"; print "XmlParser_v.getElement()"
 		found_element = undefined
@@ -106,17 +110,17 @@ struct XmlParser_v
 	function getAttribute element attr =
 	(
 		--format "\n"; print "XmlParser_v.getElement()"
-		found_element = undefined
+		val = undefined
 
-		for a = 0 to element.Attributes.count - 1 while found_element == undefined do
+		for a = 0 to element.Attributes.count - 1 while val == undefined do
 		(
 			attr_item = element.Attributes.ItemOf[a]
 			
 			if matchPattern attr_item.Name pattern:attr then
-				found_element = attr_item.Value
+				val = attr_item.Value
 		)
 		
-		found_element --return
+		val --return
 	),
 	
 	--/** Get most recent file

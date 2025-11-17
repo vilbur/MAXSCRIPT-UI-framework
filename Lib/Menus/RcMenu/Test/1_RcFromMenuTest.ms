@@ -1,11 +1,16 @@
 clearListener()
 
+filein( getFilenamePath(getSourceFileName()) + "/../../Menu/_Test/create-test-menu.ms" )	--"./../../Menu/_Test/create-test-menu.ms"
+
 filein( getFilenamePath(getSourceFileName()) + "/../../include-menus.ms" )	--"./../../include-menus.ms"
 
 /* DEFINE MAIN MENU */
 MenuRc = RcMenu_v name:"TestMenu"
-
-MenuRc.loadMenu "Helpers"
+--
+--MenuRc.loadMenu "Helpers"
+MenuRc.loadMenu menu_name
+-- MenuRc.loadMenu "Main Menu Bars"
+--MenuRc.loadMenu "*;File"
 
 --MenuRc.item "&Main Item 1" "messagebox \"Main Item 1\""
 
@@ -40,6 +45,7 @@ MenuRc.loadMenu "Helpers"
  *
  */
 try(
-popUpMenu (MenuRc.create())
+--popUpMenu (MenuRc.create())
 	   
 	   )catch()
+popUpMenu (MenuRc.create())

@@ -21,61 +21,45 @@ struct RcMenu_v
 	function loadMenu menu_name =
 	(
 		format "\n"; print "RcMenu_v.loadMenu()"
-
-		menus_xml_file = ((getDir #temp)+"\\XmlParser-Test.mnux")
+		format "menu_name: %\n" menu_name
+		this.setName menu_name
+		--this.name = menu_name
+		this.name += "Rc"
 		
+		menus_xml_file = ((getDir #temp)+"\\XmlParser-Test.mnux")
+		format "menus_xml_file:\n%\n" menus_xml_file
 		menuMan.saveMenuFile menus_xml_file
 		
 		XmlParser = XmlParser_v(menus_xml_file)
 		
-		
-		menus_found = XmlParser.getElementsByTagName "Menu" attr:"title" val:menu_name
+		menu_found = XmlParser.getElement "Menu" attr:"title" val:menu_name
 
-		--format "menus_found: %\n" menus_found
-
-		if ( menu_found = menus_found[1] ) != undefined then
+		if menu_found != undefined then
 		(
-			format "menu_found: %\n" menu_found
-			
-			format "menu_found.ChildNodes: %\n" menu_found.ChildNodes
-			
-			items = XmlParser.getChildren menu_found
-			
-			for item in items do
-			(
-				format "item: %\n" item
-				 title = XmlParser.getAttribute element attr:"title"
-				 format "title: %\n" title
-				
-			)
-			
-			
-		)
 
-		
-		
---		if (_menu = menuMan.findMenu menu_name) != undefined then
---		(
---		format "_menu: %\n" _menu
---			format "_menu.numItems(): %\n" (_menu.numItems())
---		
---			for i = 1 to _menu.numItems() do
---			(
---				menu_item = _menu.getItem(i)
---				format "menu_item: %\n" (menu_item.getTitle())
---				--format "menu_item.macroScript: %\n" menu_item.macroScript
-----getTitle() 
-----getIsSeparator() 
-----getSubMenu() 
-----				
---			)
---			 
---
---			
---			
---		)
-			--(Menu_v menu:_menu) --return
-		
+			menu_items = XmlParser.getChildren menu_found
+			
+			for item in menu_items do
+			(
+				format "\n"
+				--format "item: %\n" item
+				 --format "modeName: %\n" (XmlParser.getAttribute item "modeName")
+				customTitle = XmlParser.getAttribute item "customTitle"
+				format "customTitle: %\n" customTitle
+				
+				actionID = XmlParser.getAttribute item "actionID"
+				--format "actionID: %\n" actionID
+				format "modeName: %\n" ( XmlParser.getAttribute item "modeName")
+				
+				case XmlParser.getAttribute item "modeName" of
+				(
+					"AM_SEPARATOR":	this.separator()
+					"M_SUBMENU":	this.menu customTitle
+					"AM_ITEM":	this.item customTitle "messagebox \"Item 1\""
+					--default: ""
+				)
+			)
+		)
 	),
 	
 	
@@ -119,10 +103,13 @@ struct RcMenu_v
 	 */
 	function create =
 	(
-		--print "RcMenu_v.create()"
+		print "RcMenu_v.create()"
 		menu_def	= this._getMenuDefinition()
 		subitems	= this._getDefinitionsOfMenuItems()
 		commands	= this._getAllCommandsDefinitions()
+		format "menu_def: %\n" menu_def
+		format "subitems: %\n" subitems
+		format "commands: %\n" commands
 
 		definition = menu_def + "\n(\n" + subitems + commands + "\n)"
 		--format "\n\nDefinition = \n% \n" definition
@@ -130,6 +117,14 @@ struct RcMenu_v
 			(execute definition) -- return if menu
 		else
 			definition -- return if submenu
+	),
+	
+	/** Set name
+	 */
+	function setName menu_name =
+	(
+		--format "\n"; print "RcMenu_v.setName()"
+		this.name = substituteString menu_name " " ""
 	),
 
 	/** Add item
@@ -221,5 +216,7 @@ struct RcMenu_v
 	 */
 	on create do
 	(
+		this.setName this.name
+		
 	)
 )
