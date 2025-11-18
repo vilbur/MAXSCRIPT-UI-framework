@@ -47,7 +47,7 @@ struct Menu_v
 		--format "item = % \n" item
 		if item == undefined then
 		(
-			format "\n\n----------- WARNING - undefined menu item ---------------------- \n\n(%).addItem(\"%\")(\"%\")\n\n	MENU:   %\n	CATEGORY: %\n	SCRIPT NAME: %\n" this.name category macro_script_name this.name category macro_script_name
+			--format "\n\n----------- WARNING - undefined menu item ---------------------- \n\n(%).addItem(\"%\")(\"%\")\n\n	MENU:   %\n	CATEGORY: %\n	SCRIPT NAME: %\n" this.name category macro_script_name this.name category macro_script_name
 
 			return false
 		)
@@ -295,7 +295,7 @@ struct Menu_v
 		--format "\n"; print "Menu_v.clearMenu()"
 		--format "this: %\n" this
 		--format "\n"; ( print "Menu_v.clearMenu() " + (menu.getTitle()) )
-		format "\n"; print ( "Menu_v.clearMenu() " + this.name )
+		--format "\n"; print ( "Menu_v.clearMenu() " + this.name )
 		
 		for i = menu.numItems() to 1 by -1 do
 			this.removeItem(i)
@@ -456,11 +456,11 @@ struct Menu_v
 		(
 			item = menu_items[i]
 
-			format "\nitem %:	" i
+			--format "\nitem %:	" i
 
-			format "%" ( if item.getIsSeparator() then "--------" else item.getTitle() )
+			--format "%" ( if item.getIsSeparator() then "--------" else item.getTitle() )
 		)
-		format "\n"
+		--format "\n"
 	),
 
 	--/** Get menu items
@@ -571,7 +571,7 @@ struct Menu_v
 	function _createNewMenu menu_name =
 	(
 		--format "\n"; print "Menu_v._createNewMenu()"
-		format "NEW MENU CREATED: \"%\" -- Menu_v._createNewMenu()\n\n" menu_name
+		--format "NEW MENU CREATED: \"%\" -- Menu_v._createNewMenu()\n\n" menu_name
 		
 		menuMan.createMenu menu_name --return
 	),

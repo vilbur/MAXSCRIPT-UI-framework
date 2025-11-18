@@ -37,4 +37,4 @@ menu_2.item "Item 3" "messagebox \"Item 3\""
 /** POP UP MENU ON MOUSE POS
  *
  */
-popUpMenu (Menu.create())
+Menu.popUp()

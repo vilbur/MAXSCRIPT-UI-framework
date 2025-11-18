@@ -38,14 +38,14 @@ struct XmlParser_v
 	 */
 	function getElements tag_name attr: val: =
 	(
-		format "\n"; print "XmlParser_v.getElements()"
-		format "attr: %\n" attr
+		--format "\n"; print "XmlParser_v.getElements()"
+		--format "attr: %\n" attr
 		/* GET XML ELEMENTS */ 
 		elements_xml = xml_doc.GetElementsByTagName (tag_name as string )
 
 		/* GETELEMENTS */ 
 		elements = for i = 0 to elements_xml.count - 1 where ( element = (elements_xml.item i)) != undefined collect element
-		format "elements.count: %\n" elements.count
+		--format "elements.count: %\n" elements.count
 		
 		/* RETURN ELEMENTS BY ATTRIBUTE VALUE */ 
 		if attr != unsupplied then
