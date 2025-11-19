@@ -7,14 +7,15 @@ filein( getFilenamePath(getSourceFileName()) + "/../../include-menus.ms" )	--"./
 /* Convert existing menu to Rightclick menu
 
 */
---MenuRc = RcMenu_v()
-MenuRc = RcMenu_v name:menu_name
+(RcMenu_v(menu_name)).popUp()
 
-MenuRc.loadMenu menu_name
 
---MenuRc.loadMenu "menu_name"
 
-/** POP UP MENU ON MOUSE POS
- *
- */
-MenuRc.popUp()
+
+--MenuRc = RcMenu_v name:"Helpers"
+MenuRc = RcMenu_v("Helpers")
+--MenuRc = RcMenu_v("HelpersX")
+
+--MenuRc.loadMenu "Helpers"
+
+--MenuRc.popUp()

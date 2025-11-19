@@ -1,7 +1,7 @@
 
 filein( getFilenamePath(getSourceFileName()) + "/MenuItem.ms" )	--"./MenuItem.ms"
 
-filein( getFilenamePath(getSourceFileName()) + "/../XmlParser/XmlParser.ms" )	--"./../XmlParser/XmlParser.ms"
+filein( getFilenamePath(getSourceFileName()) + "/MenuToRcLoader/MenuToRcLoader.ms" )	--"./MenuToRcLoader/MenuToRcLoader.ms"
 
 /** Menu for rollout
  */
@@ -10,96 +10,28 @@ struct RcMenu_v
 	/* properties */
 	name = "MainRcMenu",
 
-	self	= this,
+	--self	= this,
 	type	= "RCmenu",
 	items	= #(),
-	
-	XmlParser,
-
-	--menu, -- <MixinInterface:menu>
-
-	/** Load existing menu to Rightclick menu
-	 */
-	function loadMenu menu_name =
-	(
-		format "\n"; print "RcMenu_v.loadMenu()"
-		format "menu_name: %\n" menu_name
-		--this.setName menu_name
-
-		/* RC menu must has different name then classic menu */ 
-		--this.name += "Rc"
-		format "this.name: %\n" this.name
-		/* Path to *.mnux file */ 
-		menus_xml_file = ((getDir #temp)+"\\XmlParser-Test.mnux")
-
-		/* SAVE MENUS TO FILE */ 
-		menuMan.saveMenuFile menus_xml_file
-		
-		/* LOAD FILE TO PARSER */ 
-		this.XmlParser = XmlParser_v(menus_xml_file)
-		
-		/* ADD MENU ITEMS */ 
-		this.addMenuXML menu_name this
-		
-		/* CLEANUP */ 
-		deleteFile menus_xml_file
-	),
-	
-	/** Add menu
-	 */
-	function addMenuXML menu_name &MenuRc =
-	(
-		--format "\n"; print "RcMenu_v.addMenuXML()"
-		
-		/* LOAD Menu from xml */ 
-		menu_xml = this.XmlParser.getElement "Menu" attr:"title" val:menu_name
-		
-		if menu_xml != undefined then
-		(
-			menu_items = this.XmlParser.getChildren menu_xml
-			
-			/* ADD ITEMS TO MENU */ 
-			for item in menu_items do
-			(
-				--format "\n"
-				customTitle = this.XmlParser.getAttribute item "customTitle"
-				
-				actionID = this.XmlParser.getAttribute item "actionID"
-
-				if actionID != undefined then
-					macro_category_and_name	= filterString actionID "`"
-				
-				case this.XmlParser.getAttribute item "modeName" of
-				(
-					"AM_ITEM":	MenuRc.item customTitle ("macros.run \""+macro_category_and_name[2]+"\" \""+macro_category_and_name[1]+"\"" )
-
-					"AM_SUBMENU":	MenuRc.addMenuXML (customTitle) (MenuRc.menu customTitle)
-					
-					"AM_SEPARATOR":	MenuRc.separator()
-				)
-			)
-		)
-		else
-			FORMAT "\nWARNING: RcMenu_v.addMenuXML() -> MENU DOES NOT EXISTS: RcMenu_v: \"%\"\n" menu_name
-		
-		
-		MenuRc --return
-	),
 	
 	/** Pop up
 	 */
 	function popUp =
 	(
 		--format "\n"; print "RcMenu_v.popUp()"
-		
-		popUpMenu (this.create())
+		--try(
+			if items.count > 0 then
+				popUpMenu (this.create())
+			else
+				FORMAT "\nWARNING: RcMenu_v HAS NOT ANY ITEMS. -> RcMenu.name: \"%\"\n" name
+		--)catch()
 	),
 	
 	/** Add submenu to rc menu
 	 */
 	function menu _name =
 	(
-		local _menu =  RcMenu_v name:_name type:"submenu" XmlParser:XmlParser
+		local _menu =  RcMenu_v name:_name type:"submenu" --XmlParser:XmlParser
 
 		this._addItem _menu
 
@@ -136,6 +68,7 @@ struct RcMenu_v
 	function create =
 	(
 		--format "\n"; print "RcMenu_v.create()"
+
 		menu_def	= this._getMenuDefinition()
 		subitems	= this._getDefinitionsOfMenuItems()
 		commands	= this._getAllCommandsDefinitions()
@@ -145,6 +78,7 @@ struct RcMenu_v
 
 		definition = menu_def + "\n(\n" + subitems + commands + "\n)"
 		--format "\n\nDefinition = \n% \n" definition
+		--format "type: %\n" type
 		if( type == "RCmenu" ) then
 			(execute definition) -- return if menu
 		else
@@ -170,10 +104,13 @@ struct RcMenu_v
 	 */
 	function _getMenuDefinition =
 	(
+		menu_name = substituteString this.name " " ""
+		
+		
 		if( type == "submenu" ) then
-			"\nsubMenu \"" + name + "\"" -- return
+			"\nsubMenu \"" + menu_name + "\"" -- return
 		else
-			"RcMenu " + name -- return
+			"RcMenu " + menu_name -- return
 	),
 
 	/** Get definitions of items
@@ -244,10 +181,24 @@ struct RcMenu_v
 			--menu.removeItemByPosition (indexes_to_remove[i])
 	),
 
+
 	/**
 	 */
 	on create do
 	(
-		this.setName this.name
+		--format "\n"; print "RcMenu_v.onCreate()"
+		
+		MenuToRcLoader_v(this)
+		
+		--if ( MenuRc = (MenuToRcLoader_v(this)).loadMenu() ) != undefined then
+		--(
+		--	
+		--)
+		--	format "MenuRc: %\n" MenuRc
+		--
+		--this.setName this.name
+		
 	)
 )
+
+
