@@ -49,7 +49,8 @@ struct MenuToRcLoader_v
 			this.addMenuXML MenuRc.name MenuRc
 			
 			/* ADD SUFFIX TO PREVENT ERROR - RC menu must has different name then classic menu */ 
-			MenuRc.name += "Rc"
+			if MenuRc.type == "RCmenu" then
+				MenuRc.name += "Rc"
 		
 			/* CLEANUP */ 
 			deleteFile menus_xml_file

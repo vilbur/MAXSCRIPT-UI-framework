@@ -4,18 +4,24 @@ filein( getFilenamePath(getSourceFileName()) + "/../../Menu/_Test/create-test-me
 
 filein( getFilenamePath(getSourceFileName()) + "/../../include-menus.ms" )	--"./../../include-menus.ms"
 
-/* Convert existing menu to Rightclick menu
+/* TEST MENU */ 
+--(RcMenu_v(menu_name)).popUp()
 
-*/
-(RcMenu_v(menu_name)).popUp()
+/* NATIVE MAX MENU TO RC MENU */ 
+ --(RcMenu_v("Helpers")).popUp()
 
 
 
+/*------------------------------------------------------------------------------
+	SUBMENU TEST
+--------------------------------------------------------------------------------*/
 
---MenuRc = RcMenu_v name:"Helpers"
-MenuRc = RcMenu_v("Helpers")
---MenuRc = RcMenu_v("HelpersX")
+MenuRc = RcMenu_v name:"Test Menu"
 
---MenuRc.loadMenu "Helpers"
+MenuRc.item "Menu Item 1"  "messagebox \"Menu Item 1\""
 
---MenuRc.popUp()
+/* NATIVE MAX MENU TO RC SUBMENU */ 
+SubMenuRc = MenuRc.menu "Helpers"
+
+
+MenuRc.popUp()
