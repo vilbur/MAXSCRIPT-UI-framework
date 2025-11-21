@@ -2,10 +2,11 @@ filein( getFilenamePath(getSourceFileName()) + "/MacroScript/MacroScript.ms" ) -
 
 filein( getFilenamePath(getSourceFileName()) + "/MacroScriptFileParser/MacroScriptFileParser.ms" )	--"./MacroScriptFileParser/MacroScriptFileParser.ms"
 
+	--filein( getFilenamePath(getSourceFileName()) + "/../../../../Menus/QuadMenu/QuadMenu.ms" ) -- "./../../../../Menus/QuadMenu/QuadMenu.ms"
 
 if QuadMenu_v == undefined then 
-	filein( getFilenamePath(getSourceFileName()) + "/../../../../Menus/QuadMenu/QuadMenu.ms" ) -- "./../../../../Menus/QuadMenu/QuadMenu.ms"
-	
+	filein( getFilenamePath(getSourceFileName()) + "/../../../../Menus/include-menus.ms" )	--"./../../../../Menus/include-menus.ms"
+
 /*
 		TODO:
 

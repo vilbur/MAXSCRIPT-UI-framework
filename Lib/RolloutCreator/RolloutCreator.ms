@@ -266,13 +266,14 @@ struct RolloutCreator_v
 	(
 		--print "ControlCreator_v._addLocalVariablesToRollout()"
 
-		if( _Rollout.add_locals != unsupplied ) then
-			for i = 1 to _Rollout.add_locals.count by 2 do
-			(
-				_value = if classOf _Rollout.add_locals[i+1] == string then "\""+_Rollout.add_locals[i+1] +"\"" else _Rollout.add_locals[i+1]
-				--format "_value	= % \n" _value
-				_Rollout.RCI.addLocal ( _Rollout.add_locals[i] as string )  init:_value
-			)
+		/** Format to string
+		 */
+		function formatToString val = if classOf val == string then "\""+ val +"\"" else val
+		
+		--if( _Rollout.add_locals != unsupplied ) then
+			for key in _Rollout.add_locals.keys do
+				_Rollout.RCI.addLocal ( key as string )  init:( formatToString _Rollout.add_locals[key] )
+				
 	),
 
 	/** Add functions variables to rollout
