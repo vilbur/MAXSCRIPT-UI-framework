@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Komodo Project File - DO NOT EDIT -->
 <project id="0a2534c0-4e33-4331-9037-9f7d46588d24" kpf_version="5" name="MS-UI-Framework.komodoproject">
+<folder id="18a33c0b-c6cd-4174-b3a6-6956c16b3d12" idref="0a2534c0-4e33-4331-9037-9f7d46588d24" name="Events">
+</folder>
+<file id="24479ea4-1dfa-44b1-a5c8-08d497f08bb7" idref="0a2534c0-4e33-4331-9037-9f7d46588d24" name="Event.ms" url="Lib/Event/Event.ms">
+</file>
 <livefolder id="2779f4ea-e95f-46bf-8d23-d4a2dd75ed35" idref="0a2534c0-4e33-4331-9037-9f7d46588d24" name="Lib" url="Lib/">
 </livefolder>
 <folder id="2930627c-6bbb-4565-9531-0fdd88609e76" idref="0a2534c0-4e33-4331-9037-9f7d46588d24" name="RolloutCreator">
@@ -19,6 +23,16 @@
 </livefolder>
 <folder id="f8faf73a-620c-411a-834f-2888a3315efa" idref="0a2534c0-4e33-4331-9037-9f7d46588d24" name="Test">
 </folder>
+<file id="488f4f22-8cde-4f80-9b5e-4bbee48c7e9a" idref="18a33c0b-c6cd-4174-b3a6-6956c16b3d12" name="EventsCombiner.ms" url="Lib/RolloutCreator/RolloutEventBinder/EventsCombiner/EventsCombiner.ms">
+</file>
+<file id="65f26197-8f32-4e5c-8633-55d0cffca653" idref="18a33c0b-c6cd-4174-b3a6-6956c16b3d12" name="fitSubrolloutSlotToRolloutCallback.ms" url="Lib/RolloutCreator/RolloutEventBinder/DefaultEvents/Callbacks/fitSubrolloutSlotToRolloutCallback.ms">
+</file>
+<file id="8db64baf-713b-46e0-9a1b-0cd5f5643b62" idref="18a33c0b-c6cd-4174-b3a6-6956c16b3d12" name="RolloutEventBinder.ms" url="Lib/RolloutCreator/RolloutEventBinder/RolloutEventBinder.ms">
+</file>
+<file id="b463bf67-b4b4-4ced-90d5-3d820cab9bbc" idref="18a33c0b-c6cd-4174-b3a6-6956c16b3d12" name="DefaultEvents.ms" url="Lib/RolloutCreator/RolloutEventBinder/DefaultEvents/DefaultEvents.ms">
+</file>
+<file id="e180a367-c0a6-4840-8024-43975ee81f6c" idref="18a33c0b-c6cd-4174-b3a6-6956c16b3d12" name="waitForResizeEndTimer.ms" url="Lib/RolloutCreator/RolloutEventBinder/DefaultEvents/waitForResizeEndTimer.ms">
+</file>
 <livefolder id="361bd815-b323-4dc1-b66f-9068fcb2f8bc" idref="2930627c-6bbb-4565-9531-0fdd88609e76" name="RolloutCreator" url="Lib/RolloutCreator/">
 </livefolder>
 <file id="4ef7ea03-3de1-457f-a4b3-d9b2ae95610d" idref="2930627c-6bbb-4565-9531-0fdd88609e76" name="RolloutCreator.ms" url="Lib/RolloutCreator/RolloutCreator.ms">

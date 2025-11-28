@@ -93,6 +93,9 @@ struct Dialog_v
 	  *		param #width WORKS AS WIDTH OF DOCKED DIALOG
 	  *
 	  * TODO add params for max 2022
+	  *
+	  *
+	  * @RETURN RolloutClass
 	 */
 	function create           \
 		create_dialog:true	\ -- boolean	create_dialog if false, then oly rollout without dialog is created
@@ -137,16 +140,18 @@ struct Dialog_v
 		if classOf width != integer then
 			width = this.width
 
-		/*
-		   CREATE DIALOG ROLLOUT AND NESTED ROLLOUTS
-		*/
-		timer_createRollout = timeStamp()
+		/*------------------------------------------------------------------------------
+			CREATE MAIN ROLLOUT AND NESTED ROLLOUTS
+		--------------------------------------------------------------------------------*/
+		
 		_RolloutCreator.createRollout (this) width:width  -- create nested rollouts
 		--if this.DEBUG then format "createRollout % ms\n" ((timestamp()) - timer_all)
-		--format "width B: %\n" width B
 
 		if create_dialog then
 		(
+			/*------------------------------------------------------------------------------
+				CREATE DIALOG
+			--------------------------------------------------------------------------------*/
 			
 			CreateDialog (this.RCI.def) \
 				width:	width                          	\
@@ -167,9 +172,17 @@ struct Dialog_v
 
 			--if this.DEBUG then format "CreateDialog % ms\n" ((timestamp()) - timer_all)
 
-			/* ADD SUBROLLOUTS */
+			/*------------------------------------------------------------------------------
+				ADD SUBROLLOUTS
+			--------------------------------------------------------------------------------*/
+			
 			_RolloutCreator.SubolloutsCreator.addSubRollouts (this)
 			--if this.DEBUG then format "addSubRollouts % ms\n" ((timestamp()) - timer_all)
+
+			
+			/*------------------------------------------------------------------------------
+				POST CREATE
+			--------------------------------------------------------------------------------*/
 			
 			/* DOCK DIALOG */ 
 			this._setDockState()
@@ -194,6 +207,8 @@ struct Dialog_v
 
 
 		if this.DEBUG then format "Dialog Create % ms\n" ((timestamp()) - timer_createRollout)
+		
+		RCI.def --return
 	),
 
 	/** Create rollout
@@ -271,7 +286,7 @@ struct Dialog_v
 
 	/** Register dialog bar
 	 */
-	function register =
+	function register style:style_registred_dialog =
 	(
 		--print "Dialog_v.register()"
 
@@ -283,7 +298,8 @@ struct Dialog_v
 		--format "STYLE: %\n" style_registred_dialog
 
 		--execute ("cui.RegisterDialogBar "+ this.id +" minSize:"+min_size+" maxSize:"+max_size+" style:"+style_registred_dialog as string )
-		execute ("cui.RegisterDialogBar "+ this.id +" minSize:"+min_size+" style:"+style_registred_dialog as string )
+		execute ("cui.RegisterDialogBar "+ this.id +" minSize:"+min_size+" style:"+style as string )
+
 	),
 
 	/** Unregister dialog bar
@@ -291,7 +307,7 @@ struct Dialog_v
 	function unregister =
 	(
 		--format "\n"; print "Dialog_v.unregister()"
-		execute ("try(cui.UnRegisterDialogBar "+ id +")catch()")
+		execute ("try( cui.UnRegisterDialogBar "+ id +" )catch()")
 	),
 	
 	/** Is registered
@@ -299,8 +315,6 @@ struct Dialog_v
 	function isRegistered =
 	(
 		--format "\n"; print "if.isRegistered()"
-		
-		
 		try(
 			execute ("cui.getDockState "+ this.id )
 			
@@ -312,6 +326,20 @@ struct Dialog_v
 		)
 	),
 
+	/** Is docked
+	 */
+	function isDocked =
+	(
+		--format "\n"; print "if.isDocked()"
+		try(
+			execute ("cui.getDockState "+ this.id ) != #cui_floatable 
+		)
+		catch
+		(
+			false --return
+		)
+	),
+	
 	/** Dock\Undock dialog
 	  *
 	  * Subrollouts and dialog are resized BEFORE docking
@@ -329,6 +357,7 @@ struct Dialog_v
 
 		EVENT_DOCKED_ENABLED = true
 	),
+	
 
 	/** Destroy dialog
 	 */

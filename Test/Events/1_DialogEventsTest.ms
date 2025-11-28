@@ -1,9 +1,7 @@
 clearListener(); print("Cleared in:"+getSourceFileName())
 
-
 filein( getFilenamePath(getSourceFileName()) + "/../../Lib/Dialog/Dialog.ms" )	-- "./../../Lib/Dialog/Dialog.ms"
 
---try( destroyDialog ROLLOUT_test )catch()
 /* SET DIALOG */
 --global DialogTest 	= Dialog_v title:"Test"
 global DialogTest 	= Dialog_v title:"Test" ini:(getSourceFileName())
@@ -31,8 +29,8 @@ function dialogRolloutCallbackParam val =
 function dialogEventsTest =
 (
 	format "\n"; print "1_DialogEventsTest.ms.dialogEventsTest()"
-	DialogTest.Event #open	"dialogRolloutCallback()"
-	DialogTest.Event #close	"dialogRolloutCallback()"
+	DialogTest.Event #OPEN	"dialogRolloutCallback()"
+	DialogTest.Event #CLOSE	"dialogRolloutCallback()"
 
 	DialogTest.Event #MOVED	"dialogRolloutCallback()"
 	DialogTest.Event #FOCUS	"dialogRolloutCallback()"
@@ -54,13 +52,13 @@ function dialogEventsTest =
 function rolloutEventsTest =
 (
 	--format "\n"; print ".rolloutEventsTest()"
-	_Rollouts	 = DialogTest.Rollouts()
+	_Rollouts = DialogTest.Rollouts()
 
-	_Rollout    = _Rollouts.Roll "Main Rollout" --height:256
+	_Rollout  = _Rollouts.Roll "Main Rollout" --height:256
 
-	_Controls   = _Rollout.Controls group:"Rollout Controls"
+	_Controls = _Rollout.Controls group:"Rollout Controls"
 
-	_Button      = _Controls.control #button "Rollout Btn" id:#button_3
+	_Button   = _Controls.control #button "Rollout Btn" id:#button_3
 
 	/* ROLLOUT EVENTS */
 	_Rollout.Event #ROLLEDUP	"dialogRolloutCallbackParam #ROLLEDUP"
@@ -108,13 +106,18 @@ function testAllEvents _Rollout =
 
 
 /*------------------------------------------------------------------------------
-	SET EVENTS
+	
+	TEST EVENTS
+	
 --------------------------------------------------------------------------------*/
 
-
+/* DIALOG */ 
 dialogEventsTest()
-rolloutEventsTest()
 
+/* ROLLOUT */ 
+--rolloutEventsTest()
+
+/* ALL TYPES OF EVENTS */ 
 --testAllEvents(DialogTest)
 
 

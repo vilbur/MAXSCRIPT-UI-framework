@@ -268,11 +268,13 @@ struct RolloutCreator_v
 
 		/** Format to string
 		 */
-		function formatToString val = if classOf val == string then "\""+ val +"\"" else val
+		--function formatToString val = if classOf val == string then "\""+ val +"\"" else val
+		--function formatToString val = val
 		
 		--if( _Rollout.add_locals != unsupplied ) then
 			for key in _Rollout.add_locals.keys do
-				_Rollout.RCI.addLocal ( key as string )  init:( formatToString _Rollout.add_locals[key] )
+				_Rollout.RCI.addLocal ( key as string )  init:_Rollout.add_locals[key]
+				--_Rollout.RCI.addLocal ( key as string )  init:( formatToString _Rollout.add_locals[key] )
 				
 	),
 

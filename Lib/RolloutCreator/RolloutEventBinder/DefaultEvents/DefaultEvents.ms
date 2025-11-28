@@ -1,6 +1,3 @@
---filein( getFilenamePath(getSourceFileName()) + "/Callbacks/fitSubrolloutSlotToRolloutCallback.ms" )	--"./Callbacks/fitSubrolloutSlotToRolloutCallback.ms"
---filein( getFilenamePath(getSourceFileName()) + "/Callbacks/autoRollUpRolloutCallback.ms" )	--"./Callbacks/autoRollUpRolloutCallback.ms"
-
 /** Events default for rollout\dialog
  */
 struct DefaultEvents_v
@@ -33,7 +30,7 @@ struct DefaultEvents_v
 
 
 		/*------------------------------------------------------------------------------
-			MOVE CONTROLS TO GROUPBOXES
+			on #OPEN - Move controls to groupboxes
 		--------------------------------------------------------------------------------*/
 		------appendEvent #OPEN "GROUPBOXCREATOR.sortControlsToGroupBoxes(\""+rollout_id+"\")"
 		
@@ -45,19 +42,20 @@ struct DefaultEvents_v
 
 
 		/*------------------------------------------------------------------------------
-			HANDLE WITH #RESIZE|#DOCKED|#UNDOCKED events
+			on #RESIZE | #DOCKED | #UNDOCKED -- All these types belongs to #resize event
 		--------------------------------------------------------------------------------*/
+
 		Event =  Event_v type:#RESIZED
 
-		Event.callback = "waitForResizeEndTimer(#"+rollout_id+")( #resized )"
+		Event.callback = "waitForResizeEndTimer(#"+rollout_id+")( #resized )" --"./waitForResizeEndTimer.ms"
 
-		--append EventsList.list Event
 		EventsList[#RESIZED] = Event
 
 
 		/*------------------------------------------------------------------------------
-			SAVE DIALOG STATE IF INI FILE EXISTS
+			on #OKTOCLOSE - Save dialog state if ini file exists
 		--------------------------------------------------------------------------------*/
+
 		if( ini_path != undefined ) then
 		(
 			ini_path	= ( dotNetObject "System.Text.RegularExpressions.Regex" @"[\\/]+" ).Replace ini_path "/"

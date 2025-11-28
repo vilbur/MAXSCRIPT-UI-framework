@@ -135,8 +135,8 @@ struct RolloutEventBinder_v
 		--format "\n"; print "RolloutEventBinder_v._addHandler()"
 		if (Event = EventsCombiner.combine (event_type)) != undefined then
 		(
-			--format "\n";	print "RolloutEventBinder_v._addHandler()"
-			--format "Event.callback: %\n" Event.callback
+			format "\n";	print "RolloutEventBinder_v._addHandler()"
+			format "Event.callback: %\n" Event.callback
 			--format "\n";	print "RolloutEventBinder_v._addHandler()"
 			--format "event_type:	% \n" event_type
 
@@ -146,7 +146,7 @@ struct RolloutEventBinder_v
 		)
 	),
 
-	/** Mutate #resized event to works as #resized event as well
+	/** Mutate #docked event to #resized event
 	  *
 	  * Callback from #docked event is bind to #resized handler
 
@@ -158,33 +158,33 @@ struct RolloutEventBinder_v
 	 */
 	function _mutateResizedEventToDocked =
 	( 
-		--print "global._mutateResizedEventToDocked()"
-		Event_resized	= EventsCombiner.combineOrGetNewEvent (#resized)
+		print "global._mutateResizedEventToDocked()"
+		--Event_resized	= EventsCombiner.combineOrGetNewEvent (#resized)
 		--format "Event_resized	= % \n" Event_resized
 
-		if( (Event_docked = EventsCombiner.combine (#docked)) != undefined ) then
-		(
-			prev_state_not_false	= " (DIALOG_PREVIOUS_STATE != false) "
-			current_state_changed	= " (dialog_current_state = try(cui.getDockState "+_Rollout.id+")catch(false)) != DIALOG_PREVIOUS_STATE "
-			current_state_match_cui	= " matchPattern (dialog_current_state as string) pattern:\"cui_*\" "
+		--if( (Event_docked = EventsCombiner.combine (#docked)) != undefined ) then
+		--(
+		--	prev_state_not_false	= " (DIALOG_PREVIOUS_STATE != false) "
+		--	current_state_changed	= " (dialog_current_state = try(cui.getDockState "+_Rollout.id+")catch(false)) != DIALOG_PREVIOUS_STATE "
+		--	current_state_match_cui	= " matchPattern (dialog_current_state as string) pattern:\"cui_*\" "
+		--
+		--	----if_resizing_enabled     =	" if(ENABLE_RESIZING != false) then\n" -- this is MUST WRAP ALL STRINGS BELOW IN ()
+		--	if_docked_event_enabled = " if(EVENT_DOCKED_ENABLED) then "
+		--
+		--	re_set_previous_state   	= " DIALOG_PREVIOUS_STATE = dialog_current_state "
+		--
+		--	--if( Event_docked != undefined ) then -- on move, if dialog is docked and change its state then call #docked callback
+		--	Event_resized.code = "if ( "+prev_state_not_false+" and "+current_state_changed+" and "+current_state_match_cui+")
+		--							then
+		--								( "+if_docked_event_enabled+" (" +Event_docked.code+ " )  -- Fire #docked event
+		--									EVENT_DOCKED_ENABLED = false
+		--								)
+		--							else "+
+		--								"(" +Event_resized.code+ ")"+ -- Fire #resized event
+		--							re_set_previous_state
+		--)
 
-			----if_resizing_enabled     =	" if(ENABLE_RESIZING != false) then\n" -- this is MUST WRAP ALL STRINGS BELOW IN ()
-			if_docked_event_enabled = " if(EVENT_DOCKED_ENABLED) then "
-
-			re_set_previous_state   	= " DIALOG_PREVIOUS_STATE = dialog_current_state "
-
-			--if( Event_docked != undefined ) then -- on move, if dialog is docked and change its state then call #docked callback
-			Event_resized.code = "if ( "+prev_state_not_false+" and "+current_state_changed+" and "+current_state_match_cui+")
-									then
-										( "+if_docked_event_enabled+" (" +Event_docked.code+ " )  -- Fire #docked event
-											EVENT_DOCKED_ENABLED = false
-										)
-									else "+
-										"(" +Event_resized.code+ ")"+ -- Fire #resized event
-									re_set_previous_state
-		)
-
-		Event_resized
+		--Event_resized
 	),
 
 	/** _combine events
