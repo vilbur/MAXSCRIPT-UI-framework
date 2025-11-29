@@ -29,6 +29,8 @@
 </file>
 <file id="8db64baf-713b-46e0-9a1b-0cd5f5643b62" idref="18a33c0b-c6cd-4174-b3a6-6956c16b3d12" name="RolloutEventBinder.ms" url="Lib/RolloutCreator/RolloutEventBinder/RolloutEventBinder.ms">
 </file>
+<file id="a9ccea3c-78af-4361-8bf9-07926397afd7" idref="18a33c0b-c6cd-4174-b3a6-6956c16b3d12" name="Event.ms" url="Lib/Event/Event.ms">
+</file>
 <file id="b463bf67-b4b4-4ced-90d5-3d820cab9bbc" idref="18a33c0b-c6cd-4174-b3a6-6956c16b3d12" name="DefaultEvents.ms" url="Lib/RolloutCreator/RolloutEventBinder/DefaultEvents/DefaultEvents.ms">
 </file>
 <file id="e180a367-c0a6-4840-8024-43975ee81f6c" idref="18a33c0b-c6cd-4174-b3a6-6956c16b3d12" name="waitForResizeEndTimer.ms" url="Lib/RolloutCreator/RolloutEventBinder/DefaultEvents/waitForResizeEndTimer.ms">

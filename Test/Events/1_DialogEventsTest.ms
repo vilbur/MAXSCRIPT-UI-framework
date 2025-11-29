@@ -11,7 +11,7 @@ global DialogTest 	= Dialog_v title:"Test" ini:(getSourceFileName())
  */
 function dialogRolloutCallback =
 (
-	format "\n"; print ".dialogRolloutCallback()"
+	format "\n"; print "dialogRolloutCallback()"
 	--format "EventFired: %\n" EventFired
 )
 
@@ -19,7 +19,7 @@ function dialogRolloutCallback =
  */
 function dialogRolloutCallbackParam val =
 (
-	format "\n"; print ".dialogRolloutCallbackParam()"
+	format "\n"; print "dialogRolloutCallbackParam()"
 	format "val: %\n" val
 )
 
@@ -32,18 +32,18 @@ function dialogEventsTest =
 	DialogTest.Event #OPEN	"dialogRolloutCallback()"
 	DialogTest.Event #CLOSE	"dialogRolloutCallback()"
 
-	DialogTest.Event #MOVED	"dialogRolloutCallback()"
-	DialogTest.Event #FOCUS	"dialogRolloutCallback()"
+    DialogTest.Event #RESIZED	"dialogRolloutCallback()"
+  
+    DialogTest.Event #DOCKED	"dialogRolloutCallback()"
+    DialogTest.Event #UNDOCKED	"dialogRolloutCallback()"
+		
+    DialogTest.Event #MOVED	"dialogRolloutCallback()"
+    DialogTest.Event #FOCUS	"dialogRolloutCallback()"
 
-	DialogTest.Event #RESIZED	"dialogRolloutCallback()"
-
-   --DialogTest.Event #docked	"dialogRolloutCallback()"
-   -- DialogTest.Event #undocked	"dialogRolloutCallback()"
 
 	DialogTest.Event #RBUTTONDOWN	"dialogRolloutCallbackParam(@#RBUTTONDOWN@)"
 
 	DialogTest.Event #okToClose	"dialogRolloutCallbackParam(@#okToClose@)"
-
 )
 
 
