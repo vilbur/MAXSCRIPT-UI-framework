@@ -3,9 +3,9 @@ global CALLBACK_DELAY_TIMER
 /**  START timer and wait then user stop resizing in --"./Callbacks/fireResizeDockUndockEvents.ms"
   *
   */
-function waitForResizeEndTimer dialog_id event_type =
+function waitForResizingEndsTimer dialog_id event_type =
 (
-	--format "\n"; print "DefaultEvents_v.waitForResizeEndTimer()"
+	--format "\n"; print "DefaultEvents_v.waitForResizingEndsTimer()"
 	
 	/*------------------------------------------------------------------------------
 		INTERVAL VALUE - for check rollout size 

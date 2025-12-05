@@ -35,8 +35,8 @@ function dialogEventsTest =
 
 	DialogTest.Event #RESIZED	"dialogRolloutCallbackParam(\"RESIZED\")"
   
-    DialogTest.Event #DOCKED	"dialogRolloutCallbackParam(@#MOVED@)"
-    DialogTest.Event #UNDOCKED	"dialogRolloutCallbackParam(@#MOVED@)"
+    DialogTest.Event #DOCKED	"dialogRolloutCallbackParam(@#DOCKED@)"
+    DialogTest.Event #UNDOCKED	"dialogRolloutCallbackParam(@#UNDOCKED@)"
 
 	DialogTest.Event #RBUTTONDOWN	"dialogRolloutCallbackParam(@#RBUTTONDOWN@)"
 
@@ -107,6 +107,18 @@ function testAllEvents _Rollout =
 
 
 
+
+/** Multiple events test
+ */
+function multipleEventsTest =
+(
+	--format "\n"; print ".multipleEventsTest()"
+	
+    DialogTest.Event #OPEN	"dialogRolloutCallbackParam(@EVENT 1@)"
+    DialogTest.Event #OPEN	"dialogRolloutCallbackParam(@EVENT 2@)"
+
+)
+
 /*------------------------------------------------------------------------------
 	
 	TEST EVENTS
@@ -114,13 +126,15 @@ function testAllEvents _Rollout =
 --------------------------------------------------------------------------------*/
 
 /* DIALOG */ 
-dialogEventsTest()
+--dialogEventsTest()
 
 /* ROLLOUT */ 
 --rolloutEventsTest()
 
 /* ALL TYPES OF EVENTS */ 
 --testAllEvents(DialogTest)
+
+multipleEventsTest()
 
 
 
