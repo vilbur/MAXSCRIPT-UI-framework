@@ -37,21 +37,14 @@ struct EventsCombiner_v
 			)
 		)
 
-		else /* CUSTOM RESIZE EVENT IS FIRED BY findResizeEventType(), binded is only default */
-			if this.EventsLists[#DEFAULTS] != undefined then
+		/* ONLY DEFAULT #RESIZE EVENT IS BINDED
+		   
+		    CUSTOM #RESIZE |#DOCK | #UNDOCKED EVENT IS FIRED IN  "./../DefaultEvents/Callbacks/fireResizeDockUndockEvents.ms"
+				
+		*/
+		else if this.EventsLists[#DEFAULTS] != undefined then
 			this.EventsLists[#DEFAULTS][#RESIZED]
 	),
-
-	--/** Get events
-	-- */
-	--function combineOrGetNewEvent event_type =
-	--(
-	--	--print "EventsCombiner_v.combineOrGetNewEvent()"
-	--	if( (Event = this.combine(event_type)) == undefined ) then
-	--		Event	= (Event_v type:event_type)
-	--
-	--	Event --return
-	--),
 
 
 	private

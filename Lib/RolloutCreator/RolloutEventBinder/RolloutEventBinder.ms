@@ -131,15 +131,21 @@ struct RolloutEventBinder_v
 		--format "\n"; print "RolloutEventBinder_v._addHandler()"
 		if (Event = EventsCombiner.combine (event_type)) != undefined then
 		(
-			--format "\n";	print "RolloutEventBinder_v._addHandler()"
-			--format "Event.callback: %\n" Event.callback
-			--format "\n";	print "RolloutEventBinder_v._addHandler()"
+			--format "\n\n";	print "RolloutEventBinder_v._addHandler()"
 			--format "event_type:	% \n" event_type
+			--format "Event.callback: %\n" Event.callback
+			
+			--callback = substituteString Event.callback "@" "\""
+			--format "callback: %\n" callback
+			--format "\n";	print "RolloutEventBinder_v._addHandler()"
 
 			handler = "on "+(this._Rollout.id)+" "+ event_type as string + this._getParams(event_type)+" do\n(" +Event.callback+ "\n)"
+			--handler = "on "+(this._Rollout.id)+" "+ event_type as string + this._getParams(event_type)+" do\n(" +callback+ "\n)"
 			--format "HANDLER:	% \n" handler
 			
-			this._Rollout.RCI.addText(handler)
+			this._Rollout.RCI.addText(handler) filter:true
+			
+			
 		)
 	),
 

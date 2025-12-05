@@ -4,7 +4,7 @@ filein( getFilenamePath(getSourceFileName()) + "/../../../../Dialog/DialogGlobal
 
    Maxscript fires #resized event when dialog is resized and docked\undocked
 
-	fitSubrolloutSlotToRolloutCallback() Waits while event is stoped to be fired
+	fireResizeDockUndockEvents() Waits while event is stoped to be fired
 	then compare values of dialog states and found which event has been really fired
 
 --------------------------------------------------------------------------------*/
@@ -14,14 +14,16 @@ filein( getFilenamePath(getSourceFileName()) + "/../../../../Dialog/DialogGlobal
   * Find out type of event based on change of dialog states
   *
   */
-function fitSubrolloutSlotToRolloutCallback sender evt =
+function fireResizeDockUndockEvents sender evt =
 (
-	--format "\n"; print "DefaultEvents_v.fitSubrolloutSlotToRolloutCallback()"
+	--format "\n"; print "DefaultEvents_v.fireResizeDockUndockEvents()"
 	dialog_id	= DIALOG_GLOBAL_DATA[#RUNNING_EVENT_DIALOG_ID]
 
 	DataSaved	= DIALOG_GLOBAL_DATA[dialog_id]
 	DataCurrent	= DialogGlobalData_v(DataSaved.DialogClass)
 
+	
+	
 	/*------------------------------------------------------------------------------
 		FIND EVENT TYPE
 	--------------------------------------------------------------------------------*/
@@ -29,6 +31,7 @@ function fitSubrolloutSlotToRolloutCallback sender evt =
 	event_type = case of
 	(
 		(DataSaved.dock_state	!= DataCurrent.dock_state):	if DataCurrent.dock_state == #CUI_FLOATABLE then #UNDOCKED else #DOCKED
+	
 		(DataSaved.size	== DataCurrent.size):	#RESIZED
 
 		default: undefined
@@ -51,11 +54,17 @@ function fitSubrolloutSlotToRolloutCallback sender evt =
 
 		CALLBACK_DELAY_TIMER = undefined
 
-		--print ( "DefaultEvents_v.fitSubrolloutSlotToRolloutCallback()\n" + toUpper(event_type as string ) ) -- DEV
+		--print ( "DefaultEvents_v.fireResizeDockUndockEvents()\n" + toUpper(event_type as string ) ) -- DEV
 
 		/* FIRE CUSTOM EVENT */
 		if ( Event = DataSaved.Dialog.Events[event_type] ) != undefined then
-			execute(Event.callback)
+		(
+			/* REPLACE @ WITH \" */ 
+			callback = substituteString Event.callback "@" "\""
+
+			/* FIRE UP CALLBACK */ 
+			execute(callback)
+		)
 	)
 
 	DataSaved.fill() --return

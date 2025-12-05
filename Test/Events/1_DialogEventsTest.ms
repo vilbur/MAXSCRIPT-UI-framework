@@ -29,22 +29,22 @@ function dialogRolloutCallbackParam val =
 function dialogEventsTest =
 (
 	format "\n"; print "1_DialogEventsTest.ms.dialogEventsTest()"
+
+    DialogTest.Event #OPEN	"dialogRolloutCallbackParam(@#OPEN@)"
+    DialogTest.Event #CLOSE	"dialogRolloutCallbackParam(@#CLOSE@)"
+
+	DialogTest.Event #RESIZED	"dialogRolloutCallbackParam(\"RESIZED\")"
+  
+    DialogTest.Event #DOCKED	"dialogRolloutCallbackParam(@#MOVED@)"
+    DialogTest.Event #UNDOCKED	"dialogRolloutCallbackParam(@#MOVED@)"
+
+	DialogTest.Event #RBUTTONDOWN	"dialogRolloutCallbackParam(@#RBUTTONDOWN@)"
+
+    DialogTest.Event #okToClose	"dialogRolloutCallbackParam(@#okToClose@)"
+
 	
-	--DialogTest.Event #OPEN	"dialogRolloutCallback()"
---	DialogTest.Event #CLOSE	"dialogRolloutCallback()"
---
-	DialogTest.Event #RESIZED	"dialogRolloutCallbackParam(@#RESIZED@)"
---  
---    DialogTest.Event #DOCKED	"dialogRolloutCallback()"
---    DialogTest.Event #UNDOCKED	"dialogRolloutCallback()"
---		
-    --DialogTest.Event #MOVED	"dialogRolloutCallbackParam(@#MOVED@)"
---    DialogTest.Event #FOCUS	"dialogRolloutCallback()"
---
---
---	DialogTest.Event #RBUTTONDOWN	"dialogRolloutCallbackParam(@#RBUTTONDOWN@)"
---
---	DialogTest.Event #okToClose	"dialogRolloutCallbackParam(@#okToClose@)"
+    /* EVENT #MOVED DOE NOT WORK ON REGISTRED DIALOG*/ 	
+    DialogTest.Event #MOVED "dialogRolloutCallbackParam(@#MOVED@)"
 )
 
 
@@ -134,4 +134,4 @@ DialogTest.create width:256 height:256
 	
 --------------------------------------------------------------------------------*/
 
---DialogTest.register()
+DialogTest.register()

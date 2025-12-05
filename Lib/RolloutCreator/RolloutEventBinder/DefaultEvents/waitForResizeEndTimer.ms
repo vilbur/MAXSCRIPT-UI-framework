@@ -1,6 +1,6 @@
 global CALLBACK_DELAY_TIMER
 
-/**  START timer and wait then user stop resizing in --"./Callbacks/fitSubrolloutSlotToRolloutCallback.ms"
+/**  START timer and wait then user stop resizing in --"./Callbacks/fireResizeDockUndockEvents.ms"
   *
   */
 function waitForResizeEndTimer dialog_id event_type =
@@ -21,7 +21,7 @@ function waitForResizeEndTimer dialog_id event_type =
 		
 		CALLBACK_DELAY_TIMER.Interval = timer_interval
 
-		dotNet.addEventHandler CALLBACK_DELAY_TIMER "Tick" fitSubrolloutSlotToRolloutCallback
+		dotNet.addEventHandler CALLBACK_DELAY_TIMER "Tick" fireResizeDockUndockEvents
 
 		CALLBACK_DELAY_TIMER.enabled = true
 

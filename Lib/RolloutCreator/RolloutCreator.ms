@@ -3,7 +3,7 @@
 filein( getFilenamePath(getSourceFileName()) + "/../Dialog/Rollout/Rollout.ms" ) 	-- "./../Dialog/Rollout/Rollout.ms"
 filein( getFilenamePath(getSourceFileName()) + "/../Dialog/Rollout/Subrollouts/Subrollouts.ms" )	-- "./../Dialog/Rollout/Subrollouts/Subrollouts.ms"
 
-filein( getFilenamePath(getSourceFileName()) + "/RolloutEventBinder/DefaultEvents/Callbacks/fitSubrolloutSlotToRolloutCallback.ms" )	--"./RolloutEventBinder/DefaultEvents/Callbacks/fitSubrolloutSlotToRolloutCallback.ms"
+filein( getFilenamePath(getSourceFileName()) + "/RolloutEventBinder/DefaultEvents/Callbacks/fireResizeDockUndockEvents.ms" )	--"./RolloutEventBinder/DefaultEvents/Callbacks/fireResizeDockUndockEvents.ms"
 filein( getFilenamePath(getSourceFileName()) + "/RolloutEventBinder/DefaultEvents/Callbacks/autoRollUpRolloutCallback.ms" )	--"./RolloutEventBinder/DefaultEvents/Callbacks/autoRollUpRolloutCallback.ms"
 filein( getFilenamePath(getSourceFileName()) + "/RolloutEventBinder/DefaultEvents/Callbacks/rollUpOtherRolloutsCallback.ms" )	--"./RolloutEventBinder/DefaultEvents/Callbacks/rollUpOtherRolloutsCallback.ms"
 filein( getFilenamePath(getSourceFileName()) + "/RolloutEventBinder/DefaultEvents/waitForResizeEndTimer.ms" )	-- "./RolloutEventBinder/DefaultEvents/waitForResizeEndTimer.ms"
