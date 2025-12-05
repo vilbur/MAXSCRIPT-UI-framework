@@ -13,8 +13,10 @@
 
 	/* dependency */
 	_Controls	= #(),
+	
 	--Events	= EventsList_v(),	-- "./../../EventsList/EventsList.ms"
-	Events	= Dictionary(),
+	Events	= Dictionary #NAME, -- KEY:#event_type VALUE:Event_v|#(Event_v)
+	
 	RolloutResizer	= RolloutResizer_v(),	-- "./RolloutResizer/RolloutResizer.ms"
 
 	/* extended control params */
@@ -91,13 +93,18 @@
 	function Event type callback params:"" tooltip:"" =
 	(
 		--print "Control_v.event()"
-		--this.Events.add type callback params:params tooltip:tooltip
+		
+		--if this.Events[type] == undefined then
+			--this.Events[type] = #()
+		
 		_Event = Event_v type:type tooltip:tooltip autorun:autorun
 		
 		_Event.callback	= callback
 		_Event.arguments	= params --- NOTICE: "arguments" are "params" FOR FRONT END USER
 		
 		this.Events[type] = _Event
+		--append this.Events[type] _Event
+		
 	),
 	
 	/** Get Subrollouts_v or RolloutBody

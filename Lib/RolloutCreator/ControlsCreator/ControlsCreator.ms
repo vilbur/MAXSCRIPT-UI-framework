@@ -77,6 +77,9 @@ struct ControlCreator_v
 
 			/* MUTATE EXTRA CONTROL TYPYES TO STADARD CONTROLS */ 
 			this._customizeControlTypes(_Control)
+			
+			/* ADJUST PARAMETERS */
+			this._editParams(_Control)
 		)
 
 		
@@ -87,7 +90,6 @@ struct ControlCreator_v
 		
 		/* JOIN PARAMETERS */ 
 		this._joinParamsToString()
-		
 		
 
 		/* ADD CONTROLS TO GROUPBOX */ 
@@ -324,6 +326,23 @@ struct ControlCreator_v
 		)
 	),
 
+	/** Edit params
+	 */
+	function _editParams &_Control =
+	(
+		--format "\n"; print "ControlCreator_v._editParams()"
+		
+		if _Control.type == #SPINNER then
+		(
+			if _Control.Params[#WIDTH] == undefined then
+				/* SET WIDTH OF SPINNER AS FILED WIDTH IF SPINNER TITLE IS "" */
+				_Control.Params[#WIDTH] = if _Control.caption == "" then _Control.Params[#FIELDWIDTH] else _Rollout.width / _Control.Params[#across] 
+		)
+
+		
+		_Control --retu!rn
+	),
+	
 	/** _is controls
 	 */
 	function _isControls _Struct =

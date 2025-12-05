@@ -1,4 +1,4 @@
-clearListener(); print("Cleared in:\n"+getSourceFileName())
+wclearListener(); print("Cleared in:\n"+getSourceFileName())
 
 filein( getFilenamePath(getSourceFileName()) + "/../../Lib/Dialog/Dialog.ms" ) -- "./../../Lib/Dialog/Dialog.ms"
 

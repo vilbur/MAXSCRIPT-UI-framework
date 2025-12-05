@@ -20,7 +20,7 @@ struct ControlParamsCreator_v
 	  * 
 	  * Priority of params
 	  * 	1) User Defined parameters
-	  * 	2) By type of control E.g.:  #(#multiListBox, #listbox, #list) // DEFINED IN DefaultParameters_v._getDefaultParamsList() in FILE:  "./../../../Dialog/Rollout/Controls/Defaults/Defaults.ms" 
+	  * 	2) By type of control E.g.:  #(#multiListBox, #listbox, #list) // DEFINED IN DefaultParameters_v._getDefaultParamsList() in FILE: --"./../../../Dialog/Rollout/Controls/DefaultParameters/DefaultParameters.ms"
 	  * 	3) Global for all controls
 	  * 
 	 */

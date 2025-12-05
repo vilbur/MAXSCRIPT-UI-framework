@@ -121,7 +121,7 @@ struct DefaultParameters_v
 		
 				#SPINNER:
 				(
-					Params[type][#WIDTH] = 192
+					--Params[type][#WIDTH] = 192
 					
 					Params[type][#FIELDWIDTH] = 48
 					--Params[type][#HEIGHT] = 48

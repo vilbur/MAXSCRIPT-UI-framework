@@ -4,6 +4,8 @@ struct ControlValue_v
 (
 	/* properties */
 	_Control,
+	
+	default_range = [ 0, 100, 0 ],
 
 	/** Each control has different property where value is stored
 	  *
@@ -129,7 +131,7 @@ struct ControlValue_v
 
 			if classOf val != point3  then
 			(
-				_range = _Control.Params[#RANGE]
+				_range = if ( control_range = _Control.Params[#RANGE] ) != undefined then control_range else this.default_range
 		
 				_range.z = val
 		

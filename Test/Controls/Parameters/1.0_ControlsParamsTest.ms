@@ -21,8 +21,8 @@ _Controls.Default #across 1
 
 
 /*------ CECKBUTTON ------*/
-_Controls.control #CHECKBUTTON "Orange" highlightColor:orange
-_Controls.control #CHECKBUTTON "Green" color:green
+--_Controls.control #CHECKBUTTON "Orange" highlightColor:orange
+--_Controls.control #CHECKBUTTON "Green" color:green
 
 
 /*------ CHECKBOX ------*/
@@ -31,9 +31,9 @@ _Controls.control #CHECKBUTTON "Green" color:green
 
 /*------ SPINNER ------*/
 
---_Spinner = _Controls.control #spinner "Spinner params" range:[0,10.0,3]
---_Spinner = _Controls.control #spinner "Spinner params"  value:10.0
---_Spinner = _Controls.control #spinner "Spinner params" range:[0,10,0] value:3 -- value ovverides value in range
+--_Spinner = _Controls.control #SPINNER "Spinner params" range:[0,10.0,3]
+--_Spinner = _Controls.control #SPINNER "Spinner params" value:10.0
+--_Spinner = _Controls.control #SPINNER "Spinner params" range:[0,10,0] value:3 -- value ovverides value in range
 
 
 /*------ LISTBOX ------*/

@@ -75,7 +75,8 @@ _Controls   = Dialog.Controls()
 --
 
 --/*------ SPINNER ------*/
-_Controls.control #SPINNER "Spinner" 
+_Controls.control #SPINNER ""
+--_Controls.control #SPINNER "Spinner"
 --_Controls.control #SPINNER "Spinner 2" width:96 scale:0.01 range:[0,100,0.01]
 --
 --

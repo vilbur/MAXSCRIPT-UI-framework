@@ -19,7 +19,8 @@ struct EventsCombiner_v
 
 		if event_type != #RESIZED then
 		(
-			Events = for key in EventsLists.keys where EventsLists[key] != undefined and (Event = EventsLists[key][event_type])!= undefined collect Event
+			/* GET EVENTS OF TYPE */ 
+			Events = for custom_or_default in EventsLists.keys where EventsLists[custom_or_default] != undefined and (Event = EventsLists[custom_or_default][event_type])!= undefined collect Event
 			--Events = for key in EventsLists.keys where EventsLists[key] != undefined collect EventsLists[key]
 
 			if( Events.count > 0 ) then

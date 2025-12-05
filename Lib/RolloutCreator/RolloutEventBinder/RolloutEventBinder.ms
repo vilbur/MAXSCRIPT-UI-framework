@@ -29,7 +29,7 @@ struct RolloutEventBinder_v
 
 	/* DIALOG Events
 	 *
-	 * Event #docled IS NOT NATIVE maxscript event, it is binded to #moved event
+	 * Event #DOCKED \ #UNDOCKED IS NOT NATIVE maxscript event, it is binded to #moved event
 	*/
 	events_dialog =
 	#(
@@ -48,7 +48,7 @@ struct RolloutEventBinder_v
 		#rbuttonup,
 		#rbuttondblclk,
 
-		/* NOT maxscript NATVIVE */
+		/* CSUTOM TYPES - NOT maxscript NATIVE */
 		#docked,
 		#undocked
 	),
@@ -105,6 +105,7 @@ struct RolloutEventBinder_v
 			if Event_rolledup == undefined then
 				Event_rolledup	= Event_v type:#ROLLEDUP
 
+			
 			if Event_open != undefined then
 				Event_rolledup.callback += "\n\n	if val == true then " + Event_open.callback
 
@@ -137,6 +138,7 @@ struct RolloutEventBinder_v
 
 			handler = "on "+(this._Rollout.id)+" "+ event_type as string + this._getParams(event_type)+" do\n(" +Event.callback+ "\n)"
 			--format "HANDLER:	% \n" handler
+			
 			this._Rollout.RCI.addText(handler)
 		)
 	),

@@ -5,7 +5,7 @@
 struct XmlParser_v
 (
 	/* construct */
-	file_path,
+	xml_file_path,
 	
 	/* required */	
 	/* private */
@@ -22,14 +22,35 @@ struct XmlParser_v
 	/* reference */
 	/* inhered */
 
+	/** Open
+	 */
+	function fileOpen =
+	(
+		--format "\n"; print "XmlParser_v.fileOpen()"
+		ShellLaunch xml_file_path ""
+	),
+	
 	/** Get element
 		
 		@return XmlElement 
 	 */
-	function getElement tag_name attr: val:  =
+	function getElement tag_name attr: val: content: ignoreCase:true =
 	(
-		--format "\n"; print "XmlParser_v.getElement()"
-		( this.getElements tag_name attr:attr val:val )[1]
+		format "\n"; print "XmlParser_v.getElement()"
+		
+		element_found = undefined 
+		
+		elements = this.getElements tag_name attr:attr val:val
+		format "elements: %\n" elements
+		if content != unsupplied then
+			for element in elements \
+				where matchPattern element.InnerXML pattern:content ignoreCase:true \
+					while element_found == undefined do
+						element_found = element
+		else
+			element_found = elements[1]
+		
+		element_found --return
 	),
 	
 	/** Get elements
@@ -38,26 +59,21 @@ struct XmlParser_v
 	 */
 	function getElements tag_name attr: val: =
 	(
-		--format "\n"; print "XmlParser_v.getElements()"
+		format "\n"; print "XmlParser_v.getElements()"
+		--format "tag_name: %\n" tag_name
 		--format "attr: %\n" attr
 		/* GET XML ELEMENTS */ 
 		elements_xml = xml_doc.GetElementsByTagName (tag_name as string )
-
+		format "elements_xml: %\n" elements_xml
 		/* GETELEMENTS */ 
 		elements = for i = 0 to elements_xml.count - 1 where ( element = (elements_xml.item i)) != undefined collect element
-		--format "elements.count: %\n" elements.count
-		
-		/* RETURN ELEMENTS BY ATTRIBUTE VALUE */ 
+		format "elements: %\n" elements
 		if attr != unsupplied then
+			/* RETURN ELEMENTS BY ATTRIBUTE VALUE */ 
 			this.filterElementsByAttribute elements attr:attr val:val --return
-		--(
-		--	elemnets_matching_attr =  this.filterElementsByAttribute elements attr:attr val:val --return
-		--	
-		--	/*  return array of elements OR single element if parameter attribute is defined and count of founded elements is 1 */ 
-		--	if elemnets_matching_attr.count == 1 then elemnets_matching_attr[1] else elemnets_matching_attr --return
-		--)
-		/* RETURN ALL ELEMENTS */ 
+	
 		else
+			/* RETURN ALL ELEMENTS */ 
 			elements --return
 	),
 	
@@ -109,7 +125,7 @@ struct XmlParser_v
 	 */
 	function getAttribute element attr =
 	(
-		--format "\n"; print "XmlParser_v.getElement()"
+		format "\n"; print "XmlParser_v.getAttribute()"
 		val = undefined
 
 		for a = 0 to element.Attributes.count - 1 while val == undefined do
@@ -121,6 +137,22 @@ struct XmlParser_v
 		)
 		
 		val --return
+	),
+	
+	/** Set attribute
+	 */
+	function setAttribute element attr val =
+	(
+		--format "\n"; print "XmlParser_v.setAttribute()"
+
+		attr = xml_doc.CreateAttribute attr
+		
+		attr.Value = val
+		
+		element.Attributes.Append attr
+
+		xml_doc.Save xml_file_path
+
 	),
 	
 	--/** Get most recent file
@@ -148,15 +180,15 @@ struct XmlParser_v
 	--
 	--	for i = 0 to file_paths.count - 1 where ( file_path_xml = (file_paths.item i)) != undefined  do
 	--	(
-	--		file_path = file_path_xml.InnerXML
+	--		xml_file_path = file_path_xml.InnerXML
 	--		
 	--		find_in_blacklist = false
 	--
-	--		for mask in blacklist while not find_in_blacklist where matchPattern file_path  pattern:( "*\\" + mask + ".max" ) do
+	--		for mask in blacklist while not find_in_blacklist where matchPattern xml_file_path  pattern:( "*\\" + mask + ".max" ) do
 	--			find_in_blacklist = true
 	--
 	--		if not find_in_blacklist then
-	--			return file_path
+	--			return xml_file_path
 	--	)
 	--
 	--	undefined --return
@@ -169,10 +201,14 @@ struct XmlParser_v
 	 */
 	on create do
 	(
-		--format "\n"; print "RecentFile.onCreate()"
-		--for prop in #(  ) where getProperty this prop == undefined do -- CHECK CONSTRUCT PROPERTIES -- Array of this struct properties necessary to run
-		--	throw ("\n\n\nUNDEFINED CONSTRUCT PROPERTY\n\n\nSTRUCT:\n\n"+ ((filterString( classof this as string )"(:")[2]) +"\n\n\nPROPERTY:\n\n"+ prop )
-		xml_doc.load file_path
+		format "\n"; print "RecentFile.onCreate()"
+
+		format "xml_file_path: %\n" xml_file_path
+		file_exists = doesFileExist xml_file_path
+		format "file_exists: %\n" file_exists
+		
+		if doesFileExist xml_file_path then
+			xml_doc.load xml_file_path
 	)
 
 )

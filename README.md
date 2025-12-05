@@ -1,4 +1,5 @@
 
+
 • **Painless coding maxscript dialogs**  
 
 • **Integrates many basic functionalities of dialog out of the box**  
@@ -22,7 +23,7 @@
 | Fix parameter across             | ☑         | ☐         |  
 
 
-
+## [Dialog & Rollout Events](Lib/RolloutCreator/RolloutEventBinder)
 
 ## Basic dialog features out of box  
 
@@ -30,7 +31,6 @@
   - **Dialog size, position and dock state**  
   - Open \ close state of rollouts  
   - **Values and states of controls**  
-
 
 ## Rollouts feautures  
 - Order of subrollouts is saved to ini file  
@@ -53,6 +53,6 @@
 
 
 KNOWING ISSUES:  
-	Contentloader has bug with loading file into menu if fiule is named: "Menus.mcr"  
+	Contentloader has bug with loading file into menu if file is named: "Menus.mcr"  
 
   

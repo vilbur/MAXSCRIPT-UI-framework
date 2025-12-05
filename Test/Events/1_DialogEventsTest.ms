@@ -19,7 +19,7 @@ function dialogRolloutCallback =
  */
 function dialogRolloutCallbackParam val =
 (
-	format "\n"; print "dialogRolloutCallbackParam()"
+	--format "\n"; print "dialogRolloutCallbackParam()"
 	format "val: %\n" val
 )
 
@@ -29,21 +29,22 @@ function dialogRolloutCallbackParam val =
 function dialogEventsTest =
 (
 	format "\n"; print "1_DialogEventsTest.ms.dialogEventsTest()"
-	DialogTest.Event #OPEN	"dialogRolloutCallback()"
-	DialogTest.Event #CLOSE	"dialogRolloutCallback()"
-
-    DialogTest.Event #RESIZED	"dialogRolloutCallback()"
-  
-    DialogTest.Event #DOCKED	"dialogRolloutCallback()"
-    DialogTest.Event #UNDOCKED	"dialogRolloutCallback()"
-		
-    DialogTest.Event #MOVED	"dialogRolloutCallback()"
-    DialogTest.Event #FOCUS	"dialogRolloutCallback()"
-
-
-	DialogTest.Event #RBUTTONDOWN	"dialogRolloutCallbackParam(@#RBUTTONDOWN@)"
-
-	DialogTest.Event #okToClose	"dialogRolloutCallbackParam(@#okToClose@)"
+	
+	--DialogTest.Event #OPEN	"dialogRolloutCallback()"
+--	DialogTest.Event #CLOSE	"dialogRolloutCallback()"
+--
+	DialogTest.Event #RESIZED	"dialogRolloutCallbackParam(@#RESIZED@)"
+--  
+--    DialogTest.Event #DOCKED	"dialogRolloutCallback()"
+--    DialogTest.Event #UNDOCKED	"dialogRolloutCallback()"
+--		
+    --DialogTest.Event #MOVED	"dialogRolloutCallbackParam(@#MOVED@)"
+--    DialogTest.Event #FOCUS	"dialogRolloutCallback()"
+--
+--
+--	DialogTest.Event #RBUTTONDOWN	"dialogRolloutCallbackParam(@#RBUTTONDOWN@)"
+--
+--	DialogTest.Event #okToClose	"dialogRolloutCallbackParam(@#okToClose@)"
 )
 
 
@@ -98,6 +99,7 @@ function testAllEvents _Rollout =
 	for event_type in event_types do
 	(
 		--_Rollout.Event event_type	("print(\"Custom dialog event #"+ event_type as string +"\")")
+		
 		_Rollout.Event event_type ("dialogRolloutCallback()")
 	)
 
@@ -132,4 +134,4 @@ DialogTest.create width:256 height:256
 	
 --------------------------------------------------------------------------------*/
 
-DialogTest.register()
+--DialogTest.register()

@@ -3,50 +3,54 @@ clearListener(); print("Cleared in:\n"+getSourceFileName())
 filein( getFilenamePath(getSourceFileName()) + "/../XmlParser.ms" )	--"./../XmlParser.ms"
 
 
-menus_xml_file = ((getDir #temp)+"\\XmlParser-Test.mnux")
 
-menuMan.saveMenuFile menus_xml_file
-
-XmlParser = XmlParser_v(menus_xml_file)
-
-
-
-/* GET ALL MENUS */ 
-menus_all = XmlParser.getElements "Menu"
-format "\nmenus_all.count: %\n" menus_all.count
-
-
-
-/* GET ALL MENUS MATCHING "Help*" */ 
-menus_mathcing_help = XmlParser.getElements "Menu" attr:"title" val:"Help*"
-format "\nmenus_mathcing_help.count: %\n" menus_mathcing_help.count
-
-
-
-/* GET ATTRIBUTE OF EACH ELEMENT */ 
-for i = 1 to menus_mathcing_help.count do
+/** Create test xml file
+ */
+function createTestXmlFile xml_path =
 (
-	title = XmlParser.getAttribute menus_mathcing_help[i] "title"
-	format "%: %\n" i title
-)
-
-
-
-
-/* GET SIGNLE ELEMENT BY ATTRIBUTE */ 
---menu_helpers = XmlParser.getElement "Menu" attr:"title" val:"Helpers"
-menu_helpers = XmlParser.getElement "Menu" attr:"title" val:"Main Menu Bar"
-format "menu_helpers: %\n" menu_helpers
-
-
-
-
-/* GET CHILD ELEMENT */ 
-menu_items = XmlParser.getChildren menu_helpers
-
-for i = 1 to menu_items.count do
-(
-	modeName = XmlParser.getAttribute menu_items[i] "modeName"
+	--format "\n"; print ".createTestXmlFile()"
 	
-	format "%: %\n" i modeName
+	xml_lines = #(
+		"<?xml version=\"1.0\" encoding=\"utf-8\"?>",
+		"<root>",
+		"  <item id=\"1\">",
+		"    <name>Alpha</name>",
+		"    <tag>one</tag>",
+		"    <tag>two</tag>",
+		"  </item>",
+		"</root>"
+	)
+	
+	f = createFile xml_path
+	for l in xml_lines do format "%\n" l to:f
+	close f	
+	
+	ShellLaunch xml_path ""
+
 )
+
+
+/* PREPARE TEST */ 
+xml_path = (getDir #temp) + "\\xml_test_ok.xml"
+
+createTestXmlFile(xml_path)
+
+
+/* GET PARSER ISNTANCE */ 
+XmlParser = XmlParser_v(xml_path)
+
+
+/* GET ELEMENT */ 
+element = XmlParser.getElement "tag" content:"one"
+format "ELEMENT: %\n" element
+
+
+
+
+/* SET ATTRIBUTE VALUE */ 
+XmlParser.setAttribute element "attribute_key" "attribute_value"
+
+
+/* GET ATTRIBUTE VALUE */ 
+attribute_val = XmlParser.getAttribute element "attribute_key"
+format "ATTRIBUTE_VAL: %\n" attribute_val

@@ -200,7 +200,7 @@ struct Dialog_v
 
 			--format "Dialog_v.create()% ms\n" ((timestamp()) - timer_createRollout)
 
-			--format ("\n\nDIALOG \""+ id as string +"\" HAS BEEN CREATED\n\n" )
+			FORMAT ("\n\nDIALOG \""+ id as string +"\" HAS BEEN CREATED\n\n" )
 		)
 		else
 			--format ("\n\nROLLOUT \""+ id as string +"\" HAS BEEN CREATED\n\n" )
