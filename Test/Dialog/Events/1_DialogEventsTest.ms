@@ -1,6 +1,7 @@
 clearListener(); print("Cleared in:"+getSourceFileName())
 
-filein( getFilenamePath(getSourceFileName()) + "/../../Lib/Dialog/Dialog.ms" )	-- "./../../Lib/Dialog/Dialog.ms"
+filein( getFilenamePath(getSourceFileName()) + "/../../../Lib/Dialog/Dialog.ms" )	--"./../../../Lib/Dialog/Dialog.ms"
+
 
 /* SET DIALOG */
 --global DialogTest 	= Dialog_v title:"Test"
@@ -30,20 +31,20 @@ function dialogEventsTest =
 (
 	format "\n"; print "1_DialogEventsTest.ms.dialogEventsTest()"
 
-    DialogTest.Event #OPEN	"dialogRolloutCallbackParam(@#OPEN@)"
-    DialogTest.Event #CLOSE	"dialogRolloutCallbackParam(@#CLOSE@)"
-
-	DialogTest.Event #RESIZED	"dialogRolloutCallbackParam(\"RESIZED\")"
-  
-    DialogTest.Event #DOCKED	"dialogRolloutCallbackParam(@#DOCKED@)"
-    DialogTest.Event #UNDOCKED	"dialogRolloutCallbackParam(@#UNDOCKED@)"
-
-	DialogTest.Event #RBUTTONDOWN	"dialogRolloutCallbackParam(@#RBUTTONDOWN@)"
-
-    DialogTest.Event #okToClose	"dialogRolloutCallbackParam(@#okToClose@)"
-
-	
-    /* EVENT #MOVED DOE NOT WORK ON REGISTRED DIALOG*/ 	
+--    DialogTest.Event #OPEN	"dialogRolloutCallbackParam(@#OPEN@)"
+--    DialogTest.Event #CLOSE	"dialogRolloutCallbackParam(@#CLOSE@)"
+--
+--	DialogTest.Event #RESIZED	"dialogRolloutCallbackParam(\"RESIZED\")"
+--  
+--    DialogTest.Event #DOCKED	"dialogRolloutCallbackParam(@#DOCKED@)"
+--    DialogTest.Event #UNDOCKED	"dialogRolloutCallbackParam(@#UNDOCKED@)"
+--
+--	DialogTest.Event #RBUTTONDOWN	"dialogRolloutCallbackParam(@#RBUTTONDOWN@)"
+--
+--    DialogTest.Event #okToClose	"dialogRolloutCallbackParam(@#okToClose@)"
+--
+--	
+--    /* EVENT #MOVED DOE NOT WORK ON REGISTRED DIALOG*/ 	
     DialogTest.Event #MOVED "dialogRolloutCallbackParam(@#MOVED@)"
 )
 
@@ -113,10 +114,9 @@ function testAllEvents _Rollout =
 function multipleEventsTest =
 (
 	--format "\n"; print ".multipleEventsTest()"
+    DialogTest.Event #OPEN	"dialogRolloutCallbackParam(@CALLBACK OF EVENT 1@)"
 	
-    DialogTest.Event #OPEN	"dialogRolloutCallbackParam(@EVENT 1@)"
-    DialogTest.Event #OPEN	"dialogRolloutCallbackParam(@EVENT 2@)"
-
+    DialogTest.Event #OPEN	"dialogRolloutCallbackParam(@CALLBACK OF EVENT 2@)"
 )
 
 /*------------------------------------------------------------------------------
@@ -148,4 +148,4 @@ DialogTest.create width:256 height:256
 	
 --------------------------------------------------------------------------------*/
 
-DialogTest.register()
+--DialogTest.register()

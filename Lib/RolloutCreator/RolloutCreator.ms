@@ -6,7 +6,7 @@ filein( getFilenamePath(getSourceFileName()) + "/../Dialog/Rollout/Subrollouts/S
 filein( getFilenamePath(getSourceFileName()) + "/RolloutEventBinder/DefaultEvents/Callbacks/fireResizeDockUndockEvents.ms" )	--"./RolloutEventBinder/DefaultEvents/Callbacks/fireResizeDockUndockEvents.ms"
 filein( getFilenamePath(getSourceFileName()) + "/RolloutEventBinder/DefaultEvents/Callbacks/autoRollUpRolloutCallback.ms" )	--"./RolloutEventBinder/DefaultEvents/Callbacks/autoRollUpRolloutCallback.ms"
 filein( getFilenamePath(getSourceFileName()) + "/RolloutEventBinder/DefaultEvents/Callbacks/rollUpOtherRolloutsCallback.ms" )	--"./RolloutEventBinder/DefaultEvents/Callbacks/rollUpOtherRolloutsCallback.ms"
-filein( getFilenamePath(getSourceFileName()) + "/RolloutEventBinder/DefaultEvents/waitForResizeEndTimer.ms" )	-- "./RolloutEventBinder/DefaultEvents/waitForResizeEndTimer.ms"
+filein( getFilenamePath(getSourceFileName()) + "/RolloutEventBinder/DefaultEvents/waitForResizingEndsTimer.ms" )	-- "./RolloutEventBinder/DefaultEvents/waitForResizingEndsTimer.ms"
 
 filein( getFilenamePath(getSourceFileName()) + "/RolloutEventBinder/RolloutEventBinder.ms" )	-- "./RolloutEventBinder/RolloutEventBinder.ms"
 
@@ -88,7 +88,7 @@ struct RolloutCreator_v
 			
 			RolloutEventBinder.combineEvents()
 			
-			RolloutEventBinder.mutateOpenCloseToRolledUp()
+			--RolloutEventBinder.mutateOpenCloseToRolledUp()
 	
 
 			/*==============================================================================

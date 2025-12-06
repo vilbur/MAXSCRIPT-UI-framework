@@ -92,18 +92,19 @@
 	 */
 	function Event type callback params:"" tooltip:"" =
 	(
-		--print "Control_v.event()"
+		print "RolloutBody.event()"
 		
-		--if this.Events[type] == undefined then
-			--this.Events[type] = #()
+		if this.Events[type] == undefined then
+			this.Events[type] = #()
 		
 		_Event = Event_v type:type tooltip:tooltip autorun:autorun
 		
 		_Event.callback	= callback
 		_Event.arguments	= params --- NOTICE: "arguments" are "params" FOR FRONT END USER
+		format "_Event: %\n" _Event
 		
-		this.Events[type] = _Event
-		--append this.Events[type] _Event
+		--this.Events[type] = _Event
+		append this.Events[type] _Event
 		
 	),
 	

@@ -17,6 +17,8 @@ Dialog 	    = Dialog_v title:"Events Test"
 _Controls   = Dialog.Controls group:"Main Controls"
 
 _Controls.Default #across 1
+
+
 /*------------------------------------------------------------------------------
 
 	CALLACKS
@@ -114,10 +116,11 @@ function CallbackParams3 arg_1 arg_2 arg_3 = (
 --
 --
 --/*------ BUTTON ------*/
---_Button.Event #PRESSED	"macros.run @_Test@ @_test_control_callback_macro@" tooltip:"Test Tooltip"
---_Button = _Controls.control #button "Button"
-----
---_Button.Event #PRESSED "CallbackNoParam"	tooltip:"PRESSED Tooltip"
+_Button = _Controls.control #button "Button"
+
+_Button.Event #PRESSED	"macros.run @_Test@ @_test_control_callback_macro@" tooltip:"Test Tooltip"
+_Button.Event #PRESSED "CallbackNoParam"	tooltip:"PRESSED Tooltip"
+
 --_Button.Event #RIGHTCLICK "CallbackNoParam()"	tooltip:"RIGHTCLICK Tooltip"
 --_Button.Event #PRESSED "CallbackParam1(\"Value in callback\")"
 --_Button.Event #PRESSED "CallbackParam1" params:"Value in pram string"
@@ -126,7 +129,7 @@ function CallbackParams3 arg_1 arg_2 arg_3 = (
 
 
 /*------ CHECKBUTTON ------*/
-CheckButton = _Controls.control #CHECKBUTTON "CheckButton"
+--CheckButton = _Controls.control #CHECKBUTTON "CheckButton"
 
 /* DIFFERNET WAYS HOW TO PASS ARGUMENTS TO CALLBACK */
 --CheckButton.Event #CHANGED "CallbackNoParam()"	-- NO ARGUMENT
@@ -194,9 +197,9 @@ CheckButton = _Controls.control #CHECKBUTTON "CheckButton"
 
 --
 --/*------ DROPDOWN ------*/
-_Dropdown = _Controls.control #DROPDOWN "Dropdown"  items:#("Item 1","Item 2") 
-_Dropdown.Event #SELECTED ("CallbackParam1")
-_Dropdown.Event #RIGHTCLICK ("CallbackNoParam")
+--_Dropdown = _Controls.control #DROPDOWN "Dropdown"  items:#("Item 1","Item 2") 
+--_Dropdown.Event #SELECTED ("CallbackParam1")
+--_Dropdown.Event #RIGHTCLICK ("CallbackNoParam")
 
 --
 --/*------ COLORPICKER ------*/

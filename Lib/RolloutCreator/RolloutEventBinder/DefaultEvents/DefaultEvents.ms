@@ -40,7 +40,7 @@ struct DefaultEvents_v
 		
 		Event.callback = "GROUPBOXCREATOR.sortControlsToGroupBoxes( "+rollout_id+" )"
 		
-		EventsList[#OPEN] = Event
+		EventsList[#OPEN] = #( Event )
 
 
 		/*------------------------------------------------------------------------------
@@ -51,7 +51,7 @@ struct DefaultEvents_v
 
 		Event.callback = "waitForResizeEndTimer(#"+rollout_id+")( #resized )" --"./waitForResizeEndTimer.ms"
 
-		EventsList[#RESIZED] = Event
+		EventsList[#RESIZED] = #( Event )
 
 
 		/*------------------------------------------------------------------------------
@@ -67,7 +67,7 @@ struct DefaultEvents_v
 			Event.callback = "(IniSaver_v ini_file:\""+ini_path+"\").saveRollout(\""+rollout_id+"\")"
 
 			--append EventsList.list Event
-			EventsList[#OKTOCLOSE] = Event
+			EventsList[#OKTOCLOSE] = #( Event )
 		)
 
 		EventsList --return

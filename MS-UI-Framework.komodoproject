@@ -3,8 +3,6 @@
 <project id="0a2534c0-4e33-4331-9037-9f7d46588d24" kpf_version="5" name="MS-UI-Framework.komodoproject">
 <folder id="18a33c0b-c6cd-4174-b3a6-6956c16b3d12" idref="0a2534c0-4e33-4331-9037-9f7d46588d24" name="Events">
 </folder>
-<file id="24479ea4-1dfa-44b1-a5c8-08d497f08bb7" idref="0a2534c0-4e33-4331-9037-9f7d46588d24" name="Event.ms" url="Lib/Event/Event.ms">
-</file>
 <livefolder id="2779f4ea-e95f-46bf-8d23-d4a2dd75ed35" idref="0a2534c0-4e33-4331-9037-9f7d46588d24" name="Lib" url="Lib/">
 </livefolder>
 <folder id="2930627c-6bbb-4565-9531-0fdd88609e76" idref="0a2534c0-4e33-4331-9037-9f7d46588d24" name="RolloutCreator">
@@ -62,8 +60,6 @@
 <livefolder id="dbd82612-d372-4815-ac67-ce221f968da4" idref="ad60566e-f9da-4452-97b4-905e34c8ce55" name="MacroScript" url="Lib/ContentLoader/ContentSubrollouts/ContentRollout/ScriptFile/MacroScript/">
 </livefolder>
 <livefolder id="6f12c503-d292-4c33-b9fb-d1c1623b0848" idref="f8faf73a-620c-411a-834f-2888a3315efa" name="Dialog" url="Test/Dialog/">
-</livefolder>
-<livefolder id="8eb18ccf-70ab-4999-90ac-498bed835dd7" idref="f8faf73a-620c-411a-834f-2888a3315efa" name="Events" url="Test/Events/">
 </livefolder>
 <livefolder id="d86860a5-9472-451f-baa2-28d50dbc5daf" idref="f8faf73a-620c-411a-834f-2888a3315efa" name="Test" url="Test/">
 </livefolder>

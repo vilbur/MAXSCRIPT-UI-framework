@@ -5,8 +5,8 @@
 struct EventsCombiner_v
 (
 
-	EventsLists = Dictionary(), --{ keys: #CUSTOM|#DEFAULT|#POST, values:#(EVENTS)  }
-
+	EventsLists = Dictionary(), -- EventsLists[#CUSTOM][#OPEN] = #( Event_v )
+	
 	/** Merge callbacks for each class of events
 	  *
 	  * @property	#name	event_type	#pressed|#rightclick|#changed etc.
@@ -15,35 +15,44 @@ struct EventsCombiner_v
 	 */
 	function combine event_type =
 	(
-		--format "\n";	print ( "EventsCombiner_v.combine() " + event_type as string )
-
-		if event_type != #RESIZED then
-		(
-			/* GET EVENTS OF TYPE */ 
-			Events = for custom_or_default in EventsLists.keys where EventsLists[custom_or_default] != undefined and (Event = EventsLists[custom_or_default][event_type])!= undefined collect Event
-			--Events = for key in EventsLists.keys where EventsLists[key] != undefined collect EventsLists[key]
-
-			if( Events.count > 0 ) then
-			(
-				Event_combined = this._mergeEvents (Events)
-
-				if( Event_combined.callback != "" ) then
-				(
-					if event_type == #okToClose then
-						Event_combined.callback += "\n\n	true -- IMPORTANT - #oktoclose MUST RETURN BOOLEAN"
-
-					Event_combined --return
-				)
-			)
-		)
+		--format "\n\n";	print ( "EventsCombiner_v.combine() #" + toUpper (event_type as string ))
 
 		/* ONLY DEFAULT #RESIZE EVENT IS BINDED
 		   
 		    CUSTOM #RESIZE |#DOCK | #UNDOCKED EVENT IS FIRED IN  "./../DefaultEvents/Callbacks/fireResizeDockUndockEvents.ms"
-				
 		*/
-		else if this.EventsLists[#DEFAULTS] != undefined then
-			this.EventsLists[#DEFAULTS][#RESIZED]
+		custom_or_defaults = if event_type == #RESIZED then #(#DEFAULTS) else #( #DEFAULTS, #CUSTOM )
+		
+		Event_combined = undefined 
+	
+		Events_to_combine = #()
+		--format "EventsLists[#DEFAULTS]: %\n" EventsLists[#DEFAULTS]
+
+		/* GET EVENTS OF TYPE */ 
+		--Events = for custom_or_default in EventsLists.keys where EventsLists[custom_or_default] != undefined and (Event = EventsLists[custom_or_default][event_type])!= undefined collect Event
+		for custom_or_default in custom_or_defaults \
+			where EventsLists[custom_or_default] != undefined \
+				and EventsLists[custom_or_default][event_type] != undefined \
+				and ( Events = EventsLists[custom_or_default][event_type] ).count > 0 do
+					join Events_to_combine Events
+		
+		
+		if( Events_to_combine.count > 0 ) then
+		(
+			
+			format "\n\n";	print ( "EventsCombiner_v.combine() #" + toUpper (event_type as string ))
+			format "Events_to_combine: %\n" Events_to_combine
+			
+			Event_combined = this._mergeEvents (Events_to_combine)(event_type)
+	
+			if event_type == #okToClose then
+				Event_combined.callback += "\n\n	true -- IMPORTANT - #oktoclose MUST RETURN BOOLEAN"
+		
+			--if( Event_combined.callback != "" ) then
+			--format "EVENT_COMBINED: %\n" Event_combined
+			--format "EVENT_COMBINED: %\n" Event_combined.callback
+			Event_combined --return
+		)
 	),
 
 
@@ -52,11 +61,11 @@ struct EventsCombiner_v
 
 	/** Combine events
 	 */
-	function _mergeEvents Events =
+	function _mergeEvents Events event_type =
 	(
 		--format "\n"; print "EventsCombiner_v._mergeEvents()"
 		--format "Events	= % \n" Events
-		Event_combined = (Event_v type:Events[1].type)
+		Event_combined = Event_v type:event_type
 
 		for Event in Events do
 		(
