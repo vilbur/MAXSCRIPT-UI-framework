@@ -11,10 +11,9 @@
 	parent_rollout_id,
 	nested_level = 0, -- 0-DIALOG ROLLOUT|1-MAIN ROLLOUT|3-SUBROLLOUT|4-SUBROLLOUT|...
 
-	/* dependency */
 	_Controls	= #(),
 	
-	--Events	= EventsList_v(),	-- "./../../EventsList/EventsList.ms"
+	/* DEPENDENCY */
 	Events	= Dictionary #NAME, -- KEY:#event_type VALUE:Event_v|#(Event_v)
 	
 	RolloutResizer	= RolloutResizer_v(),	-- "./RolloutResizer/RolloutResizer.ms"
@@ -92,8 +91,8 @@
 	 */
 	function Event type callback params:"" tooltip:"" =
 	(
-		print "RolloutBody.event()"
-		
+		--format "\n"; print "RolloutBody.event()"
+
 		if this.Events[type] == undefined then
 			this.Events[type] = #()
 		
@@ -101,11 +100,11 @@
 		
 		_Event.callback	= callback
 		_Event.arguments	= params --- NOTICE: "arguments" are "params" FOR FRONT END USER
-		format "_Event: %\n" _Event
+		--format "_Event: %\n" _Event
 		
 		--this.Events[type] = _Event
 		append this.Events[type] _Event
-		
+		--format "this.Events.keys.count: %\n" this.Events.keys.count
 	),
 	
 	/** Get Subrollouts_v or RolloutBody
@@ -217,7 +216,7 @@
 		--def	= ( dotNetObject "System.Text.RegularExpressions.Regex" "\"" ).Replace def "\\\""
 		
 		
-		format "%" def to:def_filestream
+		--format "%" def to:def_filestream
 		
 		close def_filestream
 	),
@@ -322,9 +321,9 @@
 
 			--format "classof executed_id	= % \n" (classof executed_id)
 			--print ("WARNING: Rollout id \"" + id + "\" is MaxScript variable, Rollout id has been changed to \"" + id_prefixed + "\"\n\n\n")
-			format "\n"
+			--format "\n"
 			print ("WARNING: Rollout id \"" + id + "\" is classof "+(classof executed_id) as string+", Rollout id has been changed to \"" + id_prefixed + "\"")
-			format "\n"
+			--format "\n"
 			id  = id_prefixed
 		)
 	),

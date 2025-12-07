@@ -49,25 +49,6 @@ function dialogEventsTest =
 )
 
 
-/** Test rollout events
- */
-function rolloutEventsTest =
-(
-	--format "\n"; print ".rolloutEventsTest()"
-	_Rollouts = DialogTest.Rollouts()
-
-	_Rollout  = _Rollouts.Roll "Main Rollout" --height:256
-
-	_Controls = _Rollout.Controls group:"Rollout Controls"
-
-	_Button   = _Controls.control #button "Rollout Btn" id:#button_3
-
-	/* ROLLOUT EVENTS */
-	_Rollout.Event #ROLLEDUP	"dialogRolloutCallbackParam #ROLLEDUP"
-	_Rollout.Event #OPEN	"dialogRolloutCallbackParam #OPEN"
-	_Rollout.Event #CLOSE	"dialogRolloutCallbackParam #CLOSE"
-)
-
 /** Test all event
   *
   */

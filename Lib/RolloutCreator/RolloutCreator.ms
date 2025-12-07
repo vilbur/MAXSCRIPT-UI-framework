@@ -88,7 +88,7 @@ struct RolloutCreator_v
 			
 			RolloutEventBinder.combineEvents()
 			
-			--RolloutEventBinder.mutateOpenCloseToRolledUp()
+			RolloutEventBinder.mutateOpenCloseToRolledUp()
 	
 
 			/*==============================================================================

@@ -27,10 +27,10 @@ struct DefaultEvents_v
 	 */
 	function getDialogEvents rollout_id =
 	(
-		--format "\n"; print ("DefaultEvents_v.getEvents()" + rollout_id as string )
+		format "\n"; print ("DefaultEvents_v.getEvents()" + rollout_id as string )
 
 		EventsList = Dictionary()
-
+		
 		/*------------------------------------------------------------------------------
 			on #OPEN - Move controls to groupboxes
 		--------------------------------------------------------------------------------*/
@@ -41,35 +41,35 @@ struct DefaultEvents_v
 		Event.callback = "GROUPBOXCREATOR.sortControlsToGroupBoxes( "+rollout_id+" )"
 		
 		EventsList[#OPEN] = #( Event )
-
-
+		
+		
 		/*------------------------------------------------------------------------------
 			on #RESIZE | #DOCKED | #UNDOCKED -- All these types belongs to #resize event
 		--------------------------------------------------------------------------------*/
-
+		
 		Event =  Event_v type:#RESIZED
-
+		
 		Event.callback = "waitForResizingEndsTimer(#"+rollout_id+")( #resized )" --"./waitForResizingEndsTimer.ms"
-
+		
 		EventsList[#RESIZED] = #( Event )
-
-
+		
+		
 		/*------------------------------------------------------------------------------
 			on #OKTOCLOSE - Save dialog state if ini file exists
 		--------------------------------------------------------------------------------*/
-
+		
 		if( ini_path != undefined ) then
 		(
 			ini_path	= ( dotNetObject "System.Text.RegularExpressions.Regex" @"[\\/]+" ).Replace ini_path "/"
-
+		
 			Event =  Event_v type:#OKTOCLOSE
-
+		
 			Event.callback = "(IniSaver_v ini_file:\""+ini_path+"\").saveRollout(\""+rollout_id+"\")"
-
+		
 			--append EventsList.list Event
 			EventsList[#OKTOCLOSE] = #( Event )
 		)
-
+		
 		EventsList --return
 	),
 	
@@ -82,7 +82,7 @@ struct DefaultEvents_v
 		
 		EventsList = Dictionary()
 		--append EventsList.list (this._getAutoRollUpRolloutEvent(_Rollout))
-		EventsList[Event.type] = Event
+		EventsList[#ROLLEDUP] = #( Event )
 		
 		EventsList --return
 	),

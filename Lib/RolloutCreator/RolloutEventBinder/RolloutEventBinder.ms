@@ -72,9 +72,14 @@ struct RolloutEventBinder_v
 		--format "\n"; print "RolloutEventBinder_v.combineEvents()"
 		--format "\n\n~~~~~~~~~	Rollout Events:%	~~~~~~~~~\n" _Rollout.id
 
+		--format "_Rollout.Events.keys: %\n" _Rollout.Events.keys
 		this._setDefaultEvents()
+		--format "_Rollout.Events.keys: %\n" _Rollout.Events.keys
 
 		this._setCustomEvents()  -- NOTE: callback will be fired in reversed order then has been added. Default event goes first
+		
+		--format "_Rollout.Events.keys: %\n" _Rollout.Events.keys
+
 	),
 
 	/** Add handlers
@@ -94,30 +99,37 @@ struct RolloutEventBinder_v
 	  */
 	function mutateOpenCloseToRolledUp =
 	(
-		--format "\n";	print "RolloutEventBinder_v._addHandler()"
-
-		if  (Event_rolledup = _Rollout.Events[#ROLLEDUP]	) != undefined \
-		or (Event_open      = _Rollout.Events[#OPEN] 	) != undefined \
-		or (Event_close     = _Rollout.Events[#CLOSE]	) != undefined then
+		--format "\n";	print "RolloutEventBinder_v.mutateOpenCloseToRolledUp()"
+		--format "_Rollout.Events.keys: %\n" _Rollout.Events.keys
+		/** Join array to string
+		 */
+		function arrayToString arr delimeter:"\n" = ( _string = ""; for Event in arr do _string += Event.callback  + delimeter; substring _string 1 (_string.count-delimeter.count))
+		
+		if  _Rollout.Events[#ROLLEDUP] != undefined \
+		or _Rollout.Events[#OPEN] 	  != undefined \
+		or _Rollout.Events[#CLOSE]	  != undefined then
 		(
-			_Rollout.addlocal #rolledup_initilazied false
 
-			if Event_rolledup == undefined then
-				Event_rolledup	= Event_v type:#ROLLEDUP
+			/* CREATE EVENT */ 
+			--if Event_rolledup == undefined then
+			Event_rolledup	= Event_v type:#ROLLEDUP
 
+			_Rollout.addlocal #ROLLEDUP_INITILAZIED false
 			
-			if Event_open != undefined then
-				Event_rolledup.callback += "\n\n	if val == true then " + Event_open.callback
+			if _Rollout.Events[#OPEN] != undefined then
+				Event_rolledup.callback += "\n\n	if val == true then " + arrayToString( _Rollout.Events[#OPEN] )
 
-			if Event_close != undefined then
-				Event_rolledup.callback += "\n\n	if val == false then " + Event_close.callback
+			if _Rollout.Events[#CLOSE] != undefined then
+				Event_rolledup.callback += "\n\n	if val == false then " + arrayToString( _Rollout.Events[#CLOSE] )
 
 			/* WRAP CALLBACK TO PREVENT FIRE ON ADDING OF SUBROLLOUT --"./_Dev/preventRolledUpEventOnAdding.ms" */
 			Event_rolledup.callback = 	"if rolledup_initilazied == true then\n	(\n\t\t" + Event_rolledup.callback + "\n\t)\n	else\n\t	rolledup_initilazied = true"
 
-
-			--format "EVENT_ROLLEDUP.CALLBACK: %\n" Event_rolledup.callback
-			_Rollout.Events[#ROLLEDUP] = Event_rolledup
+			/* ADD TO EVENTS */
+			if Events_rolledup == undefined then 
+				_Rollout.Events[#ROLLEDUP] = #()
+		
+			append _Rollout.Events[#ROLLEDUP] Event_rolledup
 		)
 	),
 
@@ -144,12 +156,15 @@ struct RolloutEventBinder_v
 	 */
 	function _setDefaultEvents =
 	(
+		--format "\n\n";	print "RolloutEventBinder_v._setDefaultEvents()"
 		DefaultEvents = DefaultEvents_v ini_path:ini_path
 
 		parent_is_dialog = _Rollout.parent_rollout_id == undefined
 		
-		--_Rollout.addLocal #open_rollouts #()
-		--_Rollout.addLocal #auto_roll_up (if parent_is_dialog then undefined else 2 ) -- keep only single opened subrollout
+		
+		-- if parent_is_dialog then
+		--	DefaultEvents.getDialogEvents(this._Rollout.id)
+
 		
 		/*------ DIALOG OR ROLLOUT ------*/
 		EventsCombiner.EventsLists[#DEFAULTS] = if parent_is_dialog then

@@ -40,8 +40,8 @@ struct EventsCombiner_v
 		if( Events_to_combine.count > 0 ) then
 		(
 			
-			format "\n\n";	print ( "EventsCombiner_v.combine() #" + toUpper (event_type as string ))
-			format "Events_to_combine: %\n" Events_to_combine
+			--format "\n\n";	print ( "EventsCombiner_v.combine() #" + toUpper (event_type as string ))
+			--format "Events_to_combine: %\n" Events_to_combine
 			
 			Event_combined = this._mergeEvents (Events_to_combine)(event_type)
 	

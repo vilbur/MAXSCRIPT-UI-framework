@@ -2,46 +2,38 @@ clearListener()
 
 filein( getFilenamePath(getSourceFileName()) + "/../../../Lib/Dialog/Dialog.ms" )	--"./../../../Lib/Dialog/Dialog.ms"
 
-
-/** Add rollouts
+/** Dialog rollout callback
  */
-function addRollouts _Rollouts title rollouts_in_slot: slot:slot =
+function dialogRolloutCallbackParam val =
 (
-	_Rollout_new = #()
-
-	for i = 1 to rollouts_in_slot do
-		append _Rollout_new (_Rollouts.Roll ( title + i as string ))
-
-	_Rollout_new --return
+	--format "\n"; print "dialogRolloutCallbackParam()"
+	format "val: %\n" val
 )
 
+/** Test rollout events
+ */
+function rolloutEventsTest =
+(
+	DialogTest = Dialog_v title:"Test" ini:(getSourceFileName())
+	
+	_Rollouts = DialogTest.Rollouts()
 
+	_Rollout  = _Rollouts.Roll "Main Rollout" --height:256
 
-/* DIALOG */
+	_Controls = _Rollout.Controls group:"Rollout Controls"
 
-Dialog 	= Dialog_v title:(getFilenameFile(getSourceFileName()))
+	_Button   = _Controls.control #button "Rollout Btn" id:#button_3
 
+	/* ROLLOUT EVENTS */
+	_Rollout.Event #ROLLEDUP	"dialogRolloutCallbackParam #ROLLEDUP"
+	
+	_Rollout.Event #OPEN	"dialogRolloutCallbackParam #OPEN"
+	_Rollout.Event #CLOSE	"dialogRolloutCallbackParam #CLOSE"
+	
 
-/* ROLLOUTS */
-
-_Rollouts_A = addRollouts ( Dialog.Rollouts slot:#rollouts_A height:256 )	("Rollout A") rollouts_in_slot: 1
-_Rollouts_B = addRollouts ( Dialog.Rollouts  height:128 )	("Rollout B") rollouts_in_slot: 2
-_Rollouts_C = addRollouts ( Dialog.Rollouts() )	("Rollout C") rollouts_in_slot: 3
-
-
-/* SUBROLLOUTS */
-
- _SubRollouts	= addRollouts (_Rollouts_A[1].Rollouts())("SubRollout A") rollouts_in_slot: 2
-
-
-/*  NESTED SUBROLLOUTS */
-
- _NestedSubRollouts	= addRollouts (_SubRollouts[1].Rollouts())("Nested SubRollout A") rollouts_in_slot: 3
-
-
-/*  SUPER NESTED SUBROLLOUTS */
-
- _SuperNestedSubRollouts	= addRollouts (_NestedSubRollouts[1].Rollouts())("Super Nested SubRollout A") rollouts_in_slot: 4
+	/* DIALOG CREATE */
+	DialogTest.create()
+)
 
 
 
@@ -61,8 +53,4 @@ _Rollouts_C = addRollouts ( Dialog.Rollouts() )	("Rollout C") rollouts_in_slot: 
 --(Dialog.get (#Super_nested_subrollout_a1)).height = 128
 
 
-
-
-/* CREATE DIALOG */
---Dialog.create()
-Dialog.create width:512
+rolloutEventsTest()
