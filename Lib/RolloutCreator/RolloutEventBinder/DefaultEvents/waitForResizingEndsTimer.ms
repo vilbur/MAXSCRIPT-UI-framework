@@ -21,7 +21,7 @@ function waitForResizingEndsTimer dialog_id event_type =
 		
 		CALLBACK_DELAY_TIMER.Interval = timer_interval
 
-		dotNet.addEventHandler CALLBACK_DELAY_TIMER "Tick" fireResizeDockUndockEvents
+		dotNet.addEventHandler CALLBACK_DELAY_TIMER "Tick" fireResizeDockUndockEvents --"./Callbacks/fireResizeDockUndockEvents.ms"
 
 		CALLBACK_DELAY_TIMER.enabled = true
 

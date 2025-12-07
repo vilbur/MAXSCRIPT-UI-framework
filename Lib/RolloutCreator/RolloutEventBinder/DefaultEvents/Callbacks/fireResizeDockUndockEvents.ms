@@ -16,7 +16,7 @@ filein( getFilenamePath(getSourceFileName()) + "/../../../../Dialog/DialogGlobal
   */
 function fireResizeDockUndockEvents sender evt =
 (
-	format "\n"; print "DefaultEvents_v.fireResizeDockUndockEvents()"
+	--format "\n"; print "DefaultEvents_v.fireResizeDockUndockEvents()"
 	dialog_id	= DIALOG_GLOBAL_DATA[#RUNNING_EVENT_DIALOG_ID]
 
 	DataSaved	= DIALOG_GLOBAL_DATA[dialog_id]

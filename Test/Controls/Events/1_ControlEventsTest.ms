@@ -119,7 +119,7 @@ function CallbackParams3 arg_1 arg_2 arg_3 = (
 _Button = _Controls.control #button "Button"
 
 _Button.Event #PRESSED	"macros.run @_Test@ @_test_control_callback_macro@" tooltip:"Test Tooltip"
-_Button.Event #PRESSED "CallbackNoParam"	tooltip:"PRESSED Tooltip"
+--_Button.Event #PRESSED "CallbackNoParam"	tooltip:"PRESSED Tooltip"
 
 --_Button.Event #RIGHTCLICK "CallbackNoParam()"	tooltip:"RIGHTCLICK Tooltip"
 --_Button.Event #PRESSED "CallbackParam1(\"Value in callback\")"

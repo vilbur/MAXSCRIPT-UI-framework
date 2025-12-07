@@ -7,7 +7,7 @@
 	Maxscript fires #RESIZED event when dialog is RESIZED OR DOCKED \ UNDOCKED
 	
 	  
-	1 ) Call waitForResizeEndTimer() #RESIZE event --"./waitForResizeEndTimer.ms"
+	1 ) Call waitForResizingEndsTimer() #RESIZE event --"./waitForResizingEndsTimer.ms"
 	  
 	2) Start timer and wait then user stop resizing rollout --"./Callbacks/fireResizeDockUndockEvents.ms"
 	
@@ -49,7 +49,7 @@ struct DefaultEvents_v
 
 		Event =  Event_v type:#RESIZED
 
-		Event.callback = "waitForResizeEndTimer(#"+rollout_id+")( #resized )" --"./waitForResizeEndTimer.ms"
+		Event.callback = "waitForResizingEndsTimer(#"+rollout_id+")( #resized )" --"./waitForResizingEndsTimer.ms"
 
 		EventsList[#RESIZED] = #( Event )
 
