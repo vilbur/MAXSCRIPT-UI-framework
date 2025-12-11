@@ -54,12 +54,17 @@ struct RcMenu_v
 	  * @param	string	command	Command of item
 	  * @param	string	[id]	Id of item, if empoty, then sanitized title is used
 	 */
-	function item title command id: =
+	function item title command id: enabled:true checked:false =
 	(
 		--format "\n"; print "RcMenu_v.item()"
-		--format "title	= % \n" title
-		--format "command	= % \n" command
-		this._addItem (MenuItem_v title:( title as string ) command:command id:id)
+		----format "title	= % \n" title
+		----format "command	= % \n" command
+		--format "enabled: %\n" enabled
+		--format "checked: %\n" checked
+		
+		menu_item = MenuItem_v title:( title as string ) command:command id:id enabled:enabled checked:checked
+		
+		this._addItem ( menu_item )
 	),
 
 	/** Set separator item
@@ -86,9 +91,9 @@ struct RcMenu_v
 		--format "menu_def: %\n" menu_def
 		--format "subitems: %\n" subitems
 		--format "commands: %\n" commands
-
 		definition = menu_def + "\n(\n" + subitems + commands + "\n)"
-		--format "\n\n\n\nDefinition = \n% \n" definition
+		--format "\n\n\n\NDEFINITION:\n\n% \n" definition
+
 		if( type == "RCmenu" ) then
 			(execute definition) -- return if menu
 		else

@@ -1,4 +1,3 @@
-
 /** Menu item_v
  */
 struct MenuItem_v
@@ -7,6 +6,9 @@ struct MenuItem_v
 	title,
 	command,
 
+	enabled = true,
+	checked = false,
+	
 	/** Create
 	  *
 	  * @return string Definition of menu item
@@ -20,7 +22,8 @@ struct MenuItem_v
 		if( title=="separator" ) then
 			return "\n	separator sep"+( (random 1 1000000000) as string )
 
-		"\n	menuItem " + id	 + " \"" + title + "\"" --return
+		--"\n	menuItem " + id	 + " \"" + title + "\"" --return
+		"\n	menuItem " + id	 + " \"" + title + "\" enabled:" + enabled as string + " checked:" + checked as string  --return
 	),
 
 	/** Get command definition
@@ -41,17 +44,10 @@ struct MenuItem_v
 		title == "separator" --return
 	),
 
-	--/** Get id
-	-- */
-	--function setId =
-	--(
-	--	--if( id=="" ) then
-	--		--id = ( dotNetObject "System.Text.RegularExpressions.Regex" @"\s+" ).Replace ( toLower title ) "_"
-	--
-	--),
-	--
+	
 	private
 
+	
 	/** _repleace string
 	 */
 	function _repleaceCharacters search replace =
