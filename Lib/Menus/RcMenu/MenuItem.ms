@@ -14,12 +14,13 @@ struct MenuItem_v
 	function create =
 	(
 		this.setId()
+		
 		this._addSuffix()
 
 		if( title=="separator" ) then
 			return "\n	separator sep"+( (random 1 1000000000) as string )
 
-		"\n	menuItem " + id + " \"" + title + "\"" --return
+		"\n	menuItem " + id	 + " \"" + title + "\"" --return
 	),
 
 	/** Get command definition
@@ -62,12 +63,12 @@ struct MenuItem_v
 	 */
 	function setId =
 	(
-		--print "Rollout_v._setId()"
+		--format "\n\n"; print "MenuItem_v.setId()"
+		
 		if ( id == undefined or id == unsupplied ) then
 			id = toLower title
 
-			--id = substituteString title "Rollout" "" -- remove "rollout" from title to avoid id like: "ROLLOUT_Rollout_A" if title is "Rollout A'
-			id += "_item"-- add suffix
+			id = "item_" + id -- add prefix
 
 			id = substituteString ( trimRight ( trimLeft id )) " " "_" -- replace whitespace with underscore
 
@@ -80,8 +81,6 @@ struct MenuItem_v
 			id = id as name
 	),
 
-
-
 	/** Add suffix to menu item
 	  *
 	  * PREVENT ERRORS when maxscript preserved keyword is used as item name E.G.: "Exit|Return|Rolllout"
@@ -93,7 +92,4 @@ struct MenuItem_v
 		--print "MenuItem_v._addSuffix()"
 		--id += "_item"
 	)
-
-
-
 )

@@ -1,4 +1,3 @@
-
 filein( getFilenamePath(getSourceFileName()) + "/MenuItem.ms" )	--"./MenuItem.ms"
 
 filein( getFilenamePath(getSourceFileName()) + "/MenuToRcLoader/MenuToRcLoader.ms" )	--"./MenuToRcLoader/MenuToRcLoader.ms"
@@ -10,7 +9,6 @@ struct RcMenu_v
 	/* properties */
 	name = "MainRcMenu",
 
-	--self	= this,
 	type	= "RCmenu",
 	items	= #(),
 	
@@ -19,12 +17,24 @@ struct RcMenu_v
 	function popUp =
 	(
 		--format "\n"; print "RcMenu_v.popUp()"
-		--try(
+		--format "items.count: %\n" items.count
+		try(
+			
 			if items.count > 0 then
-				popUpMenu (this.create())
+			(
+				menu_definition = this.create()
+
+				popUpMenu( menu_definition )
+			)
 			else
 				FORMAT "\nWARNING: RcMenu_v HAS NOT ANY ITEMS. -> RcMenu.name: \"%\"\n" name
-		--)catch()
+				
+		)
+		catch
+		(
+			FORMAT "\n************ EXCEPTION ************\n%\n***********************************\n" (getCurrentException())
+			FORMAT "\n**************** EXCEPTION File: % ****************\n\n%\n\n**************************************************************************************************************************************\n" filein_path (getCurrentException())
+		)
 	),
 	
 	/** Add submenu to rc menu
@@ -68,6 +78,7 @@ struct RcMenu_v
 	function create =
 	(
 		--format "\n"; print "RcMenu_v.create()"
+		--format "type: %\n" type
 
 		menu_def	= this._getMenuDefinition()
 		subitems	= this._getDefinitionsOfMenuItems()
@@ -77,8 +88,7 @@ struct RcMenu_v
 		--format "commands: %\n" commands
 
 		definition = menu_def + "\n(\n" + subitems + commands + "\n)"
-		--format "\n\nDefinition = \n% \n" definition
-		--format "type: %\n" type
+		--format "\n\n\n\nDefinition = \n% \n" definition
 		if( type == "RCmenu" ) then
 			(execute definition) -- return if menu
 		else
@@ -97,6 +107,7 @@ struct RcMenu_v
 	 */
 	function _addItem item =
 	(
+		--format "\n"; print "RcMenu_v._addItem()"
 		append items item
 	),
 
