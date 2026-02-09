@@ -100,14 +100,6 @@ struct RcMenu_v
 			definition -- return if submenu
 	),
 	
-	/** Set name of menu - avoid whitespace
-	 */
-	function setName menu_name =
-	(
-		--format "\n"; print "RcMenu_v.setName()"
-		this.name = substituteString menu_name " " ""
-	),
-
 	/** Add item
 	 */
 	function _addItem item =
@@ -120,13 +112,14 @@ struct RcMenu_v
 	 */
 	function _getMenuDefinition =
 	(
-		menu_name = substituteString this.name " " ""
-		
+		/** Remove whitespace
+		 */
+		function removeWhitespaceFromName = substituteString this.name " " ""
 		
 		if( type == "submenu" ) then
-			"\nsubMenu \"" + menu_name + "\"" -- return
+			"\nsubMenu \"" + this.name + "\"" -- return
 		else
-			"RcMenu " + menu_name -- return
+			"RcMenu " + ( removeWhitespaceFromName() ) -- return
 	),
 
 	/** Get definitions of items
@@ -205,16 +198,5 @@ struct RcMenu_v
 		--format "\n"; print "RcMenu_v.onCreate()"
 		
 		MenuToRcLoader_v(this)
-		
-		--if ( MenuRc = (MenuToRcLoader_v(this)).loadMenu() ) != undefined then
-		--(
-		--	
-		--)
-		--	format "MenuRc: %\n" MenuRc
-		--
-		--this.setName this.name
-		
 	)
 )
-
-

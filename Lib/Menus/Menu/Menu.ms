@@ -369,7 +369,6 @@ struct Menu_v
 			false --return
 	),
 
-
 	/** Remove double separators and separators on start or end of menu
 	 */
 	function clearSeparators =
@@ -463,13 +462,13 @@ struct Menu_v
 		--format "\n"
 	),
 
-	--/** Get menu items
-	-- */
-	--function numItems =
-	--(
-	--	--format "\n"; print "Menu_v._getMenuItems()"
-	--	menu.numItems()
-	--),
+	/** Get menu items
+	 */
+	function numItems =
+	(
+		--format "\n"; print "Menu_v._getMenuItems()"
+		menu.numItems()
+	),
 
 	/** Get menu items
 	 */
@@ -481,20 +480,20 @@ struct Menu_v
 	
 	private
 
-	--/** Get item
-	-- */
-	--function _getItem index =
-	--(
-	--	--format "\n"; print "Menu_v._getItem()"
-	--	if index > menu.numItems() then
-	--	(
-	--		format "Menu_v._getItem() index:% IS HIGHER THEN NUMBER OF ITEMS\n\n" index
-	--
-	--		undefined  --return
-	--	)
-	--	else
-	--		menu.getItem(index)
-	--),
+	----/** Get item
+	---- */
+	----function _getItem index =
+	----(
+	----	--format "\n"; print "Menu_v._getItem()"
+	----	if index > menu.numItems() then
+	----	(
+	----		format "Menu_v._getItem() index:% IS HIGHER THEN NUMBER OF ITEMS\n\n" index
+	----
+	----		undefined  --return
+	----	)
+	----	else
+	----		menu.getItem(index)
+	----),
 
 	/** Set menu
 	 */

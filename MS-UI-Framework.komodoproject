@@ -61,9 +61,15 @@
 </livefolder>
 <livefolder id="6f12c503-d292-4c33-b9fb-d1c1623b0848" idref="f8faf73a-620c-411a-834f-2888a3315efa" name="Dialog" url="Test/Dialog/">
 </livefolder>
+<livefolder id="86ba1d18-511d-4641-a9d6-0dc19e60e6fe" idref="f8faf73a-620c-411a-834f-2888a3315efa" name="Hotkeys" url="Test/Hotkeys/">
+</livefolder>
 <livefolder id="d86860a5-9472-451f-baa2-28d50dbc5daf" idref="f8faf73a-620c-411a-834f-2888a3315efa" name="Test" url="Test/">
 </livefolder>
+<livefolder id="e0946a05-360b-4fba-a729-04317576f45f" idref="f8faf73a-620c-411a-834f-2888a3315efa" name="Ini" url="Test/Ini/">
+</livefolder>
 <livefolder id="e46f718a-a5d2-4b02-b87e-00b2f9030cea" idref="f8faf73a-620c-411a-834f-2888a3315efa" name="ContentLoader" url="Test/ContentLoader/">
+</livefolder>
+<livefolder id="ee1a3dc5-9fbe-4847-89f7-b5f75e16189b" idref="f8faf73a-620c-411a-834f-2888a3315efa" name="Rollout" url="Test/Rollout/">
 </livefolder>
 <livefolder id="f6b9e3ea-2930-41b3-a6b3-8dca57bf6871" idref="f8faf73a-620c-411a-834f-2888a3315efa" name="Controls" url="Test/Controls/">
 </livefolder>

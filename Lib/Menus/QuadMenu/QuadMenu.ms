@@ -33,6 +33,7 @@ struct QuadMenu_v
         "User Defined 1         [Shift+Ctrl+RMB]",
         "Lighting | Render        [Ctrl+Alt+RMB]",
         "User Defined 2         [Shift+Ctrl+Alt+RMB]",
+		
         "Track View Key Quad (Classic)",
         "Trackbar Quad",
         "Viewports",
@@ -41,7 +42,19 @@ struct QuadMenu_v
         "SceneExplorer Quad",
         "Lock",
         "Windows",
-        "Texture Tools"
+        "Texture Tools",
+		
+		"ActiveShade Quad",
+		"Unwrap UVW Quad",
+		"Schematic View Quad",
+		"Track View Quad",
+		"Asset Tracking Quad",
+		"Retimer Span Type"
+			
+            --"Track View Key Quad (Classic)",
+            --"Trackbar Quad",
+            --"Track View Key Quad",
+
 	),
 	
 	--hotkeys = #( #nonePressed, #RightClick, #shiftPressed, #altPressed, #controlPressed, #shiftAndAltPressed, #shiftAndControlPressed, #controlAndAltPressed, #shiftAndAltAndControlPressed ),
@@ -101,12 +114,14 @@ struct QuadMenu_v
 	 */
 	function setRightClick which:#nonePressed  =
 	(
-		--format "\n"; print "QuadMenu_v.setRightClick()"
-		--format "this.menu_name:	% \n" this.menu_name
-		--format "which:	% \n" which
+		format "\n"; print "QuadMenu_v.setRightClick()"
+		format "this.menu_name:	% \n" this.menu_name
+		format "QuadMenu: %\n" QuadMenu
+		--format "QuadMenu.menu: %\n" QuadMenu.menu
+		format "which:	% \n" which
 		menuMan.setViewportRightClickMenu which QuadMenu
 		
-		--format "ASSIGN HOTKEY TO QUADMENU: \"%\" HOTKEY: %\n" ( menuMan.getQuadMenuName  QuadMenu ) which
+		format "ASSIGN HOTKEY TO QUADMENU: \"%\" HOTKEY: %\n" ( menuMan.getQuadMenuName  QuadMenu ) which
 	),
 
 	/** Reset right click to default
@@ -128,6 +143,9 @@ struct QuadMenu_v
 	 */
 	function setHotkey hotkey =
 	(
+		--format "\n"; print "QuadMenu_v.setHotkey()"
+		--format "menu_name: %\n" menu_name
+
 		if ( hotkey_name = this._getHotkey( hotkey) ) != undefined then
 			this.setRightClick which:hotkey_name
 
@@ -165,7 +183,7 @@ struct QuadMenu_v
 
 		full_name = this._getFullName()
 		--format "FULL_NAME: %\n" full_name
-		--format "\nNEW QUAD MENU CREATED: \"%\" -- QuadMenu_v._createNewQuadMenu()\n\n" full_name
+		FORMAT "\nNEW QUAD MENU CREATED: \"%\" -- QuadMenu_v._createNewQuadMenu()\n\n" full_name
 		
 		menuMan.createQuadMenu (full_name) ( quadTitle 1 ) ( quadTitle 2 ) ( quadTitle 3 ) ( quadTitle 4 ) --return
 	),
@@ -239,6 +257,7 @@ struct QuadMenu_v
 			hotkey = ( trimLeft prefix delimeters ) 
 			--format "hotkey: %\n" hotkey
 			
+			
 			if not matchPattern hotkey pattern:"RightClick" then
 			(
 				if not matchPattern ( hotkey ) pattern:( "*Pressed") then
@@ -251,14 +270,12 @@ struct QuadMenu_v
 				if ( index = findItem hotkeys hotkey ) > 0 then
 					hotkey --return
 			)
-			else
+			else /* RIGHTCLICK */ 
 				#nonePressed  --return
 			
 		)
 		else
 			hotkey_source as name  --return
-		
-		
 	),
 	
 	/** Get full name
@@ -305,4 +322,5 @@ struct QuadMenu_v
 		if ( hotkey = this._getHotkey(this.menu_name) ) != undefined then 
 			this.setHotkey (hotkey)
 	)
+	
 )

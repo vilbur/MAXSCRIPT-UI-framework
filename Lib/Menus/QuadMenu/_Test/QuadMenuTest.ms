@@ -1,7 +1,7 @@
 clearListener()
 
-filein( getFilenamePath(getSourceFileName()) + "/../QuadMenu.ms" )
-filein( getFilenamePath(getSourceFileName()) + "/../Menu/Menu.ms" )
+
+filein( getFilenamePath(getSourceFileName()) + "/../../include-menus.ms" )	--"./../../include-menus.ms"
 
 global QuadMenuTest
 global Quad_1
@@ -31,6 +31,7 @@ function getDefaultQuadMenu =
 (
 	--format "\n"; print ".getDefaultQuadMenu()"
 	DeafultQuadMenu 	= QuadMenu_v ("Snap")
+	--DeafultQuadMenu 	= QuadMenu_v ("Unwrap UVW Quad")
 	format "\nDeafultQuadMenu = % \n" DeafultQuadMenu
 	
 	SnapOptionsMenu	= DeafultQuadMenu.getMenu(#TOP_LEFT)
@@ -197,50 +198,51 @@ function removeItems =
 --/* DEFAULT QUAD MENU */
 getDefaultQuadMenu()
 
-
-/* QUAD MENU */
-createQuadMenu()
-
-addItemsToQuad()
-
-moveItemInQuad()
-
-
-/* MENU */
-createMenuInMenuList()
-
-addMenuToQuad2()
-
-moveItemsInMenu()
-
-
-/* SUBMENU */
-addSubmenu()
-
-
-/* SEPARATORS */
-addSeparator()
-
-removeSeparator()
-cleanSeparator()
-
-/* ITEMS OPERATIONS */
---getItems()
-
---removeItems()
-
-
---/* QUAD RIGHT CLICK */
-QuadMenuTest.setRightClick() -- only rightclick
-QuadMenuTest.setRightClick which: #controlPressed
-
-
-/* SET HOTKEY */ 
---QuadMenuTest.setHotkey "shift"
-QuadMenuTest.setHotkey #shiftPressed
-
-
-/* SHOW ALL QUADS */ 
-QuadMenuTest.showAllQuads()
+--
+--/* QUAD MENU */
+--createQuadMenu()
+--
+--addItemsToQuad()
+--
+--moveItemInQuad()
+--
+--
+--/* MENU */
+--createMenuInMenuList()
+--
+--addMenuToQuad2()
+--
+--moveItemsInMenu()
+--
+--
+--/* SUBMENU */
+--addSubmenu()
+--
+--
+--/* SEPARATORS */
+--addSeparator()
+--
+--removeSeparator()
+--cleanSeparator()
+--
+--/* ITEMS OPERATIONS */
+----getItems()
+--
+----removeItems()
+--
+--
+----/* QUAD RIGHT CLICK */
+----QuadMenuTest.setRightClick() -- only rightclick
+----QuadMenuTest.setRightClick which: #controlPressed
+--QuadMenuTest.setRightClick which: #shiftPressed
+--
+--
+--/* SET HOTKEY */ 
+----QuadMenuTest.setHotkey "shift"
+----QuadMenuTest.setHotkey #shiftPressed
+--
+--
+--/* SHOW ALL QUADS */ 
+--QuadMenuTest.showAllQuads()
 
 

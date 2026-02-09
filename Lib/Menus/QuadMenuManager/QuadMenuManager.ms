@@ -1,4 +1,4 @@
-------global LAST_CREATED_QUAD
+--global LAST_CREATED_QUAD
 
 
 /** Quad menu manager
@@ -31,7 +31,7 @@ struct QuadMenuManager_v
 		/* ISNTALL QUAD MENUS */ 
 		this.setDefaultQuadHotkey(#shiftAndAltAndControlPressed)
 
-		this._fileInSetupFiles( dir  )	--"./../../../QuadMenu/QuadMenus"
+		this._fileInQuadMenuSetupFiles( dir  )	--"./../../../QuadMenu/QuadMenus"
 		
 		this._saveMenusToMaxStartup()
 		
@@ -62,7 +62,7 @@ struct QuadMenuManager_v
 		format "ALL_MACRO_FILES: %\n" all_macro_files
 		for macro_path in all_macro_files where not isOnBlacklist macro_path blacklist do
 			try
-			(
+			( 
 				--format "CREATE MENUS FROM FILE: %\n" (filenameFromPath(macro_path))
 				
 				(ScriptFile_Content_v(macro_path)).importMacroscriptsToMenus()
@@ -92,21 +92,24 @@ struct QuadMenuManager_v
 	  *		E.G.: "-RightClick-Config-Quad.mcr" >>> hotkey is #RIGHTCLICK
 	  *
 	 */
-	function _fileInSetupFiles dir =
+	function _fileInQuadMenuSetupFiles dir =
 	(
-		format "\n"; print "QuadMenuManager_v._fileInSetupFiles()"
+		format "\n"; print "QuadMenuManager_v._fileInQuadMenuSetupFiles()"
 		
 		for menu_file in getFiles ( dir + "\\*.ms") do
 		(
 			menu_file = pathConfig.normalizePath menu_file
+			
+			menu_name = getFilenameFile( menu_file )
 
 			format "\n\n============================== SETUP QUAD MENU FILE ==========================================\n%\n" menu_file
 		
 			filein( menu_file )
 			
 			--format "LAST_CREATED_QUAD: %\n" (LAST_CREATED_QUAD)
-			
-			--this._setHotkeyByFilename(getFilenameFile(menu_file))
+			--QuadMenu = QuadMenu_v( menu_name )
+
+			--this._setHotkeyByFilename( getFilenameFile(menu_file) )
 			
 		)
 	),
