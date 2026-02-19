@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Komodo Project File - DO NOT EDIT -->
+<project id="0a2534c0-4e33-4331-9037-9f7d46588d24" kpf_version="5" name="MS   -   UI-Framework.komodoproject">
+<folder id="18a33c0b-c6cd-4174-b3a6-6956c16b3d12" idref="0a2534c0-4e33-4331-9037-9f7d46588d24" name="Events">
+</folder>
+<livefolder id="2779f4ea-e95f-46bf-8d23-d4a2dd75ed35" idref="0a2534c0-4e33-4331-9037-9f7d46588d24" name="Lib" url="Lib/">
+</livefolder>
+<folder id="2930627c-6bbb-4565-9531-0fdd88609e76" idref="0a2534c0-4e33-4331-9037-9f7d46588d24" name="RolloutCreator">
+</folder>
+<folder id="38a5d00f-dc9e-4a6e-b504-461abd8ebb54" idref="0a2534c0-4e33-4331-9037-9f7d46588d24" name="Dialog">
+</folder>
+<livefolder id="484f6493-5cbb-4f2a-832d-30ef4c65b484" idref="0a2534c0-4e33-4331-9037-9f7d46588d24" name="CallbackManager" url="Lib/CallbackManager/">
+</livefolder>
+<file id="6514193b-9e2b-4a2b-bee8-e1177ae8ad3d" idref="0a2534c0-4e33-4331-9037-9f7d46588d24" name="test.ms" url="file:///C:/Users/vilbur/AppData/Local/Autodesk/3dsMax/2023%20-%2064bit/ENU/scripts/MAXSCRIPT-viltools3/test.ms">
+</file>
+<folder id="ad60566e-f9da-4452-97b4-905e34c8ce55" idref="0a2534c0-4e33-4331-9037-9f7d46588d24" name="ContentLoader">
+</folder>
+<livefolder id="c2120f31-b3fd-41ac-9725-5f366f77d9d4" idref="0a2534c0-4e33-4331-9037-9f7d46588d24" name="MacroscriptGenerator" url="Lib/MacroscriptGenerator/">
+</livefolder>
+<livefolder id="c5a1b039-1eeb-4e5a-852e-635484d5a834" idref="0a2534c0-4e33-4331-9037-9f7d46588d24" name="Menus" url="Lib/Menus/">
+</livefolder>
+<folder id="f8faf73a-620c-411a-834f-2888a3315efa" idref="0a2534c0-4e33-4331-9037-9f7d46588d24" name="Test">
+</folder>
+<file id="488f4f22-8cde-4f80-9b5e-4bbee48c7e9a" idref="18a33c0b-c6cd-4174-b3a6-6956c16b3d12" name="EventsCombiner.ms" url="Lib/RolloutCreator/RolloutEventBinder/EventsCombiner/EventsCombiner.ms">
+</file>
+<file id="65f26197-8f32-4e5c-8633-55d0cffca653" idref="18a33c0b-c6cd-4174-b3a6-6956c16b3d12" name="fireResizeDockUndockEvents.ms" url="Lib/RolloutCreator/RolloutEventBinder/DefaultEvents/Callbacks/fireResizeDockUndockEvents.ms">
+</file>
+<file id="8db64baf-713b-46e0-9a1b-0cd5f5643b62" idref="18a33c0b-c6cd-4174-b3a6-6956c16b3d12" name="RolloutEventBinder.ms" url="Lib/RolloutCreator/RolloutEventBinder/RolloutEventBinder.ms">
+</file>
+<file id="a9ccea3c-78af-4361-8bf9-07926397afd7" idref="18a33c0b-c6cd-4174-b3a6-6956c16b3d12" name="Event.ms" url="Lib/Event/Event.ms">
+</file>
+<file id="b463bf67-b4b4-4ced-90d5-3d820cab9bbc" idref="18a33c0b-c6cd-4174-b3a6-6956c16b3d12" name="DefaultEvents.ms" url="Lib/RolloutCreator/RolloutEventBinder/DefaultEvents/DefaultEvents.ms">
+</file>
+<file id="e180a367-c0a6-4840-8024-43975ee81f6c" idref="18a33c0b-c6cd-4174-b3a6-6956c16b3d12" name="waitForResizingEndsTimer.ms" url="Lib/RolloutCreator/RolloutEventBinder/DefaultEvents/waitForResizingEndsTimer.ms">
+</file>
+<livefolder id="361bd815-b323-4dc1-b66f-9068fcb2f8bc" idref="2930627c-6bbb-4565-9531-0fdd88609e76" name="RolloutCreator" url="Lib/RolloutCreator/">
+</livefolder>
+<file id="4ef7ea03-3de1-457f-a4b3-d9b2ae95610d" idref="2930627c-6bbb-4565-9531-0fdd88609e76" name="RolloutCreator.ms" url="Lib/RolloutCreator/RolloutCreator.ms">
+</file>
+<livefolder id="4fceb8da-8351-418d-8c14-767f2e898691" idref="2930627c-6bbb-4565-9531-0fdd88609e76" name="ControlsCreator" url="Lib/RolloutCreator/ControlsCreator/">
+</livefolder>
+<file id="81353389-99d5-4441-9b20-111bb9b1f7ea" idref="2930627c-6bbb-4565-9531-0fdd88609e76" name="ControlsCreator.ms" url="Lib/RolloutCreator/ControlsCreator/ControlsCreator.ms">
+</file>
+<livefolder id="a06c8116-5e9c-43fb-966a-f7f017b98172" idref="2930627c-6bbb-4565-9531-0fdd88609e76" name="SubolloutsCreator" url="Lib/RolloutCreator/SubolloutsCreator/">
+</livefolder>
+<file id="adfc9b38-2d0a-450f-9741-dc431a1da036" idref="2930627c-6bbb-4565-9531-0fdd88609e76" name="SubolloutsCreator.ms" url="Lib/RolloutCreator/SubolloutsCreator/SubolloutsCreator.ms">
+</file>
+<file id="8ef376de-7a07-4915-a0e1-84d6ffec1a20" idref="38a5d00f-dc9e-4a6e-b504-461abd8ebb54" name="Event.ms" url="Lib/Event/Event.ms">
+</file>
+<livefolder id="aabcd33d-f712-4446-8af9-19ded65d83e0" idref="38a5d00f-dc9e-4a6e-b504-461abd8ebb54" name="Dialog" url="Lib/Dialog/">
+</livefolder>
+<livefolder id="b97f7108-c0d3-433f-bba3-a90fe3aab975" idref="38a5d00f-dc9e-4a6e-b504-461abd8ebb54" name="Controls" url="Lib/Dialog/Rollout/Controls/">
+</livefolder>
+<livefolder id="bc430bd2-28db-46db-bb2e-94326bc27855" idref="38a5d00f-dc9e-4a6e-b504-461abd8ebb54" name="Control" url="Lib/Dialog/Rollout/Controls/Control/">
+</livefolder>
+<livefolder id="0f9c409f-5b38-4e56-9299-3e7d9acf8e26" idref="ad60566e-f9da-4452-97b4-905e34c8ce55" name="ContentLoader" url="Lib/ContentLoader/">
+</livefolder>
+<livefolder id="b92a202d-e14e-4300-89bb-1f14e1e2c5df" idref="ad60566e-f9da-4452-97b4-905e34c8ce55" name="MacroScriptFileParser" url="Lib/ContentLoader/ContentSubrollouts/ContentRollout/ScriptFile/MacroScriptFileParser/">
+</livefolder>
+<livefolder id="dbd82612-d372-4815-ac67-ce221f968da4" idref="ad60566e-f9da-4452-97b4-905e34c8ce55" name="MacroScript" url="Lib/ContentLoader/ContentSubrollouts/ContentRollout/ScriptFile/MacroScript/">
+</livefolder>
+<livefolder id="6f12c503-d292-4c33-b9fb-d1c1623b0848" idref="f8faf73a-620c-411a-834f-2888a3315efa" name="Dialog" url="Test/Dialog/">
+</livefolder>
+<livefolder id="86ba1d18-511d-4641-a9d6-0dc19e60e6fe" idref="f8faf73a-620c-411a-834f-2888a3315efa" name="Hotkeys" url="Test/Hotkeys/">
+</livefolder>
+<livefolder id="d86860a5-9472-451f-baa2-28d50dbc5daf" idref="f8faf73a-620c-411a-834f-2888a3315efa" name="Test" url="Test/">
+</livefolder>
+<livefolder id="e0946a05-360b-4fba-a729-04317576f45f" idref="f8faf73a-620c-411a-834f-2888a3315efa" name="Ini" url="Test/Ini/">
+</livefolder>
+<livefolder id="e46f718a-a5d2-4b02-b87e-00b2f9030cea" idref="f8faf73a-620c-411a-834f-2888a3315efa" name="ContentLoader" url="Test/ContentLoader/">
+</livefolder>
+<livefolder id="ee1a3dc5-9fbe-4847-89f7-b5f75e16189b" idref="f8faf73a-620c-411a-834f-2888a3315efa" name="Rollout" url="Test/Rollout/">
+</livefolder>
+<livefolder id="f6b9e3ea-2930-41b3-a6b3-8dca57bf6871" idref="f8faf73a-620c-411a-834f-2888a3315efa" name="Controls" url="Test/Controls/">
+</livefolder>
+<preference-set idref="0a2534c0-4e33-4331-9037-9f7d46588d24" id="project" preftype="project">
+  <long id="prefs_version">1</long>
+</preference-set>
+</project>
