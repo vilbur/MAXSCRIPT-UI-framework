@@ -76,30 +76,29 @@ struct SubolloutsCreator_v
 		*/
 		all_subrollouts = _Rollout.getSubrollouts()
 		
-		for Subrollouts in all_subrollouts do
-		(
-			SubrolloutsSlot = getSubrolloutsSlot(SubrolloutsSlots)(Subrollouts.slot)
-		
-			subrollouts_in_slot	= for Subrollout in Subrollouts.Rollouts collect Subrollout.id
-		
-			rollouts_order	= this._getOrderOfsubrollouts(_Rollout)(Subrollouts)
-			
-			/* ADD EACH SUB ROLLOUT
-			*/ 
-			for subrollout_id in rollouts_order where ( index = findItem subrollouts_in_slot subrollout_id ) > 0 do
+		for Subrollouts in all_subrollouts
+			where (SubrolloutsSlot = getSubrolloutsSlot(SubrolloutsSlots)(Subrollouts.slot) ) != undefined do
 			(
-				_Subrollout = Subrollouts.Rollouts[index]
-		
-				try(destroyDialog _Subrollout.RCI.def )catch() -- destroy dialog of subrollout created for find of height
-		
-				/*  DEBUG:
-						FOR FLOATEBLE SUBROLLOUTS disable AddSubRollout
-				*/
-				AddSubRollout SubrolloutsSlot	_Subrollout.RCI.def rolledUp:(this._getRolledUpState(_Subrollout)(subrollout_id))
-		
-				this.addSubRollouts (_Subrollout)
+				subrollouts_in_slot	= for Subrollout in Subrollouts.Rollouts collect Subrollout.id
+			
+				rollouts_order	= this._getOrderOfsubrollouts(_Rollout)(Subrollouts)
+				
+				/* ADD EACH SUB ROLLOUT
+				*/ 
+				for subrollout_id in rollouts_order where ( index = findItem subrollouts_in_slot subrollout_id ) > 0 do
+				(
+					_Subrollout = Subrollouts.Rollouts[index]
+			
+					try(destroyDialog _Subrollout.RCI.def )catch() -- destroy dialog of subrollout created for find of height
+			
+					/*  DEBUG:
+							FOR FLOATEBLE SUBROLLOUTS disable AddSubRollout
+					*/
+					AddSubRollout SubrolloutsSlot	_Subrollout.RCI.def rolledUp:(this._getRolledUpState(_Subrollout)(subrollout_id))
+			
+					this.addSubRollouts (_Subrollout)
+				)
 			)
-		)
 	),
 
 

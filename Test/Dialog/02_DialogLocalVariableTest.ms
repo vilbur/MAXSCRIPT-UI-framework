@@ -22,7 +22,9 @@ Dialog 	= Dialog_v title:"Test"
 --------------------------------------------------------------------------------*/
 Dialog.addLocal #PROP_STRUCT (TestSctruct("CONSTRUCT VALUE"))
 
-Dialog.addLocal  "PROP_STR"  "Line 1\n\"Line 2\"" -- String with newlines and quotes
+Dialog.addLocal  "PROP_STRING"  "Line 1\n\"Line 2\"" -- String with newlines and quotes
+
+Dialog.addLocal  #PROP_NAME #NAME_TEST
 
 Dialog.addLocal  #PROP_ARRAY  #("Item A", 2 ) -- Array with strings and quotes
 
@@ -49,7 +51,9 @@ format "\n\n---------------- TEST RESULTS ----------------\n\n\n"
 format "DIALOG_test.prop_struct.prop_in_struct: %\n\n"	(classof DIALOG_test.prop_struct.prop_in_struct)
 
 
-format "DIALOG_test.prop_str: %\n\n"	(classof DIALOG_test.prop_str)
+format "DIALOG_test.prop_string:  %\n\n"	(classof DIALOG_test.prop_string)
+format "DIALOG_test.prop_name: %\n\n"	(classof DIALOG_test.prop_name)
+
 format "DIALOG_test.prop_num: %\n\n"	(classof DIALOG_test.prop_num)
 format "DIALOG_test.prop_float: %\n\n"	(classof DIALOG_test.prop_float)
 

@@ -6,8 +6,8 @@ clearListener(); print("Cleared in: "+getSourceFileName())
 
 ================================================================================*/
 
-win_pos	= getMAXWindowPos() + [512,512]
 win_width = 160
+win_pos	  = getMAXWindowPos() + [512,512]
 
 try( destroyDialog rollout_test )catch()
 try( destroyDialog rollout_rci )catch()
@@ -31,6 +31,7 @@ rollout rollout_test "Standard Rollout Test"
 	/* --- 1. Local Variable Definitions --- */
 	-- In a standard rollout, you declare these at the top level of the struct
 	local prop_string = "Hello World"
+	local prop_name = #NAME_TEST
 	local prop_number = 12
 	local prop_array  = #("Item A", "Item B", 3)
 	local prop_color  = (color 0 120 255)
@@ -39,16 +40,20 @@ rollout rollout_test "Standard Rollout Test"
 
 	/* --- 2. UI Controls --- */
 	button btn_str  "Test String" width:140
+	button btn_name "Test Name" width:140
 	button btn_num  "Test Number" width:140
 	button btn_arr  "Test Array"  width:140
 	button btn_col  "Test Color"  width:140
 	button btn_p3   "Test Point3" width:140
-	button btn_bool "Test Bool"   width:140
+	button btn_bool "Test Boolean"   width:140
 
 	/* --- 3. Event Handlers --- */
 	
 	on btn_str pressed do
 		messageBox prop_string title:"String Property"
+		
+	on btn_name pressed do
+		messageBox ( ( classOf prop_name) as string ) title:"Name Property"
 
 	on btn_num pressed do
 		messageBox ( ( classOf prop_number) as string ) title:"Number Property"
@@ -80,12 +85,18 @@ rci = rolloutCreator "rollout_rci" "RCI Rollout"
 rci.begin()
 
 
-/* --- Previous String Example --- */
+/* --- String Example --- */
 rci.addLocal "prop_string" init:"\"String value\""
 rci.addControl #button #btn_prop_string "Test String"
 rci.addHandler #btn_prop_string #pressed codeStr:"messageBox ( (classOf rollout_rci.btn_prop_string ) as string )"
 
-/* --- Previous Number Example --- */
+/* --- Name Example --- */
+rci.addLocal "prop_name" init:"#NAME_TEST"
+rci.addControl #button #btn_prop_name "Test Name"
+rci.addHandler #btn_prop_name #pressed codeStr:"messageBox ( (classOf rollout_rci.prop_name ) as string )"
+
+
+/* --- Number Example --- */
 rci.addLocal "prop_number" init:12
 rci.addControl #button #btn_prop_number "Test Number"
 -- Note: Numbers are automatically converted in some contexts, but 'as string' is safer

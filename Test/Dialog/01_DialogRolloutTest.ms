@@ -4,8 +4,7 @@ filein( getFilenamePath(getSourceFileName()) + "/../../Lib/Dialog/Dialog.ms" ) -
 
 
 /* DIALOG */
---Dialog 	= Dialog_v title:"Test"
-Dialog 	= Dialog_v title:"Test X" width:512
+Dialog 	= Dialog_v title:"Test"
 --Dialog 	= Dialog_v title:"Test" ini:(getSourceFileName())
 
 -- _Controls_Dialog = Dialog.Controls group:"Dialog Controls"

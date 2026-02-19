@@ -108,13 +108,13 @@ struct RolloutCreator_v
 			this._addLocalVariablesToRollout(_Rollout)
 
 			/* add TEXT */
-			--this._addTextToRollout (_Rollout)
+			this._addTextToRollout (_Rollout)
 	
 			/* add CONTROLS and SUBROLLOUTS SLOTS */
-			--this._addControlsAndSubrolloutSlots(_Rollout)
+			this._addControlsAndSubrolloutSlots(_Rollout)
 	
 			/* add EVENTS */
-			--RolloutEventBinder.addHandlers()
+			RolloutEventBinder.addHandlers()
 
 			/* EDIT END */
 			_Rollout.RCI.end() --return _Rollout.RCI.def
@@ -280,6 +280,10 @@ struct RolloutCreator_v
 
 				val_string = "\"" + val_string + "\""
 			)
+			
+			if classOf val == name  then
+				val_string = "#" + val_string
+			
 
 			val_string --return
 		)
@@ -287,6 +291,7 @@ struct RolloutCreator_v
 		/* ADD EACH VARIABLE */ 
 		for key in _Rollout.add_locals.keys do
 			_Rollout.RCI.addLocal ( key as string )  init:(convertToString _Rollout.add_locals[key])
+			--_Rollout.RCI.addLocal ( key as string )  init:(_Rollout.add_locals[key] as string )
 				
 	),
 
