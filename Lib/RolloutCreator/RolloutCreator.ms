@@ -106,20 +106,19 @@ struct RolloutCreator_v
 	
 			/* add LOCAL VARIABLES */
 			this._addLocalVariablesToRollout(_Rollout)
-	
+
 			/* add TEXT */
-			this._addTextToRollout (_Rollout)
+			--this._addTextToRollout (_Rollout)
 	
 			/* add CONTROLS and SUBROLLOUTS SLOTS */
-			this._addControlsAndSubrolloutSlots(_Rollout)
+			--this._addControlsAndSubrolloutSlots(_Rollout)
 	
 			/* add EVENTS */
-			RolloutEventBinder.addHandlers()
-	
+			--RolloutEventBinder.addHandlers()
+
 			/* EDIT END */
 			_Rollout.RCI.end() --return _Rollout.RCI.def
-		)
-		
+		)		
 	),
 
 
@@ -268,13 +267,26 @@ struct RolloutCreator_v
 
 		/** Format to string
 		 */
-		--function formatToString val = if classOf val == string then "\""+ val +"\"" else val
-		--function formatToString val = val
+		function convertToString val =
+		(
+			val_string = val as string
+			
+			classOf_val = classOf val
+			
+			if classOf val == String  then
+			(
+				val_string = substituteString val_string "\\" "\\\\"
+				val_string = substituteString val_string "\"" "\\\""
+
+				val_string = "\"" + val_string + "\""
+			)
+
+			val_string --return
+		)
 		
-		--if( _Rollout.add_locals != unsupplied ) then
-			for key in _Rollout.add_locals.keys do
-				_Rollout.RCI.addLocal ( key as string )  init:_Rollout.add_locals[key]
-				--_Rollout.RCI.addLocal ( key as string )  init:( formatToString _Rollout.add_locals[key] )
+		/* ADD EACH VARIABLE */ 
+		for key in _Rollout.add_locals.keys do
+			_Rollout.RCI.addLocal ( key as string )  init:(convertToString _Rollout.add_locals[key])
 				
 	),
 

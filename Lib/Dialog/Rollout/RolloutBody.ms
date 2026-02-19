@@ -131,10 +131,15 @@
 	),
 
 	/** Addlocal
+		
+		@pram name|string	key
+		@pram mixed	val
+		
 	 */
 	function addLocal key val =
 	(
 		--print "RolloutBody.addlocal()"
+		--format "key: % val: %\n" key val
 		add_locals[ key as name ] = val
 	),
 
