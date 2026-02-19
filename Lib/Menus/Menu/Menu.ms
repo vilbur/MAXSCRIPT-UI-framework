@@ -22,6 +22,7 @@ struct Menu_v
 
 	quad_index,
 	quad_width = 26, -- width of quad menu in characters
+	
 	/** Get menu from menus list HELP:https://help.autodesk.com/view/3DSMAX/2022/ENU/?guid=GUID-F8993D95-943E-4031-B1C6-6B2BADE4DB9E#GUID-F8993D95-943E-4031-B1C6-6B2BADE4DB9E__WS73099CC142F4875546792D6511E39D97277-15A5
 	 */
 	function getMenu menu_name =

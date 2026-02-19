@@ -19,16 +19,14 @@ struct RcMenu_v
 		--format "\n"; print "RcMenu_v.popUp()"
 		--format "items.count: %\n" items.count
 		try(
-			
 			if items.count > 0 then
 			(
 				menu_definition = this.create()
 
-				popUpMenu( menu_definition )
+				PopupMenu ( menu_definition )
 			)
 			else
 				FORMAT "\nWARNING: RcMenu_v HAS NOT ANY ITEMS. -> RcMenu.name: \"%\"\n" name
-				
 		)
 		catch
 		(
@@ -83,21 +81,31 @@ struct RcMenu_v
 	function create =
 	(
 		--format "\n"; print "RcMenu_v.create()"
-		--format "type: %\n" type
+		
+		/* ITEMS ORDER */ 		
+		if not this._isEmptySpaceExists() then
+			this._reverseItemsOrder()
 
+		/* MENU DEFINITION */ 
 		menu_def	= this._getMenuDefinition()
 		subitems	= this._getDefinitionsOfMenuItems()
 		commands	= this._getAllCommandsDefinitions()
-		--format "menu_def: %\n" menu_def
-		--format "subitems: %\n" subitems
-		--format "commands: %\n" commands
+		
 		definition = menu_def + "\n(\n" + subitems + commands + "\n)"
-		--format "\n\n\n\NDEFINITION:\n\n% \n" definition
 
+		/* RETURN DEFINITION */ 
 		if( type == "RCmenu" ) then
 			(execute definition) -- return if menu
 		else
 			definition -- return if submenu
+	),
+	
+	/** Is separator
+	 */
+	function isSeparator =
+	(
+		--format "\n"; print "MenuItem_v.isSeparator()"
+		false --return
 	),
 	
 	/** Add item
@@ -128,8 +136,12 @@ struct RcMenu_v
 	(
 		_definition	= ""
 		--format "items.count = % \n" items.count
+		
 		for item in items do
 			_definition += item.create()
+			
+		--for i = items.count to 1 by -1 do 
+		--	_definition += items[i].create()
 
 		_definition -- return
 	),
@@ -155,6 +167,12 @@ struct RcMenu_v
 		for item in items do
 			commands += item._getCommandDefinition()
 
+			
+		--for i = items.count to 1 by -1 do 
+		--	commands += items[i]._getCommandDefinition()
+
+			
+			
 		commands --return
 	),
 
@@ -189,7 +207,37 @@ struct RcMenu_v
 			deleteItem items i
 			--menu.removeItemByPosition (indexes_to_remove[i])
 	),
+	
+	/** Reverse items order
+	 */
+	function _reverseItemsOrder =
+	(
+		--format "\n"; print "RcMenu_v._reverseItemsOrder()"
+		items = for i = items.count to 1 by -1 collect items[i]
+	),
 
+	/** Test if empty space for rightclick menu exists between menu pos and bottom pof screen
+	 */
+	function _isEmptySpaceExists =
+	(
+		--format "\n"; print "RcMenu_v._isEmptySpaceExists()"
+		item_height	= 23
+		separator_height	= 9
+		
+		cursor_to_bottom_space = ( sysInfo.desktopSize.y - mouse.screenpos.y ) as integer
+		
+
+		items_count = (for item in items where not item.isSeparator() collect item).count
+
+		separators_count = items.count - items_count
+--
+		
+		menu_height = (items_count * item_height) + ( separators_count * separator_height)
+		--format "menu_height: %\n" menu_height
+		--format "cursor_to_bottom_space: %\n" cursor_to_bottom_space
+		--format "_isEmptySpaceExists: %\n" (menu_height < cursor_to_bottom_space)
+		menu_height < cursor_to_bottom_space --return
+	),
 
 	/**
 	 */
