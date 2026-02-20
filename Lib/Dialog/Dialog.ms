@@ -4,7 +4,6 @@ if DIALOG_GLOBAL_DATA == undefined then
 filein( getFilenamePath(getSourceFileName()) + "/../Menus/RcMenu/RcMenu.ms" )	--"./../Menus/RcMenu/RcMenu.ms"
 
 filein( getFilenamePath(getSourceFileName()) + "/../ConstructPropeties/ConstructPropeties.ms" )	-- "./../ConstructPropeties/ConstructPropeties.ms"
---filein( getFilenamePath(getSourceFileName()) + "/../EventsList/EventsList.ms" )	-- "./../EventsList/EventsList.ms"
 filein( getFilenamePath(getSourceFileName()) + "/../Event/Event.ms" )	--"./../Event/Event.ms"
 filein( getFilenamePath(getSourceFileName()) + "/../RolloutCreator/RolloutCreator.ms" )	-- "./../RolloutCreator/RolloutCreator.ms"
 filein( getFilenamePath(getSourceFileName()) + "/../Ini/Ini.ms" )	-- "./../Ini/Ini.ms"
@@ -13,7 +12,9 @@ filein( getFilenamePath(getSourceFileName()) + "/Layout/Layout.ms" )	-- "./Layou
 filein( getFilenamePath(getSourceFileName()) + "/Hotkeys/Hotkeys.ms" )	-- "./Hotkeys/Hotkeys.ms"
 
 
-
+/*------------------------------------------------------------------------------
+	DEFINE GLOBALS
+--------------------------------------------------------------------------------*/
 global DIALOG_PREVIOUS_STATE = undefined -- this should be in struct
 
 if EVENT_DOCKED_ENABLED == undefined then
@@ -38,9 +39,7 @@ if HOTKEYS_GLOBAL == undefined then
 struct Dialog_v
 (
 	/*------------------------------------------------------------------------------
-	
 		EXTEND ROLLOUT
-	
 	--------------------------------------------------------------------------------*/
 	include "MAXSCRIPT-UI-framework/Lib/Dialog/Rollout/RolloutBody.ms" --"./Rollout/RolloutBody.ms"
 
@@ -59,25 +58,28 @@ struct Dialog_v
 	min_size,
 	max_size,
 
+	
+	/* STYLE OF UNREGISTRED DIALOG */ 
 	style = #(
 		#style_border, 	-- Creates a window with a double border, but no title.
 		#style_titlebar, 	-- Creates a dialog with a title bar.
 		#style_sysmenu, 	-- Creates a window that has a window menu in its title bar.
 		#style_resizing 	-- Creates a window with a thick frame that can be used to size the window.
 
-		/* ALLOWED but not DEFAULT styles */
+		/* OTHER not DEFAULT styles */
 		--#style_toolwindow, 	-- Creates a tool window, which has a title bar and is intended to be used as a floating toolbar. A tool window has a title bar that is shorter than a normal title bar, and the window title is drawn using a smaller font.
 		--#style_sunkenedge, 	-- Specifies that a window has a 3D look in the form of a border with a sunken edge.
 		--#style_minimizebox, 	-- Creates a window that has a minimize button.
 		--#style_maximizebox, 	-- Creates a window that has a maximize button.
 	),
 
+	/* STYLE OF REGISTRED DIALOG https://help.autodesk.com/view/MAXDEV/2022/ENU/?guid=GUID-8A9EEAEF-DDD7-40E2-875A-D344BF1DB991 */ 
 	style_registred_dialog = #(
 		#cui_handles,	-- Show gripper handles when docked
-		#cui_dock_all,	-- Dialog bar can dock on all 4 edges of the frame.
 		#cui_floatable	-- Dialogbar can float
 
-		/* ALLOWED but not DEFAULT styles */
+		/* OTHER styles */
+		--#cui_dock_all,	-- Dialog bar can dock on all 4 edges of the frame.
 		--#cui_dock_vert,	-- Can dock vertically (left and right)
 		--#cui_dock_horz,	-- Can dock horizontally (top and bottom)
 		--#cui_dock_left ,	-- Can dock to the left
@@ -102,20 +104,21 @@ struct Dialog_v
 		width:	\ -- integer	width of dialog INTEGER: definded width | UNSUPPLIED: width auto or by ini | UNDEFINED: width auto even if ini is defined
 		height:	\ -- integer|#AUTO	height
 		pos:	\ -- [x,y]|#MOUSE	position of dialog when created
-		origin:#WINDOW	\ -- #WINDOW|#SCREEN	origin of dialog position: Relative to 3Ds Max window | Absolute pos to screen
+		origin: #WINDOW	\ -- #WINDOW|#SCREEN	origin of dialog position: Relative to 3Ds Max window | Absolute pos to screen
 		bgcolor:	\
 		fgcolor:	\
 		bitmap:	\
-		bmpstyle:#bmp_tile	\
+		bmpstyle: #bmp_tile	\
 		style:	\
 		modal:	\
-		escapeEnable:false	\
-		escapekey:true	\
-		lockHeight:false	\
-		lockWidth:true	\
+		escapeEnable: false	\
+		escapekey:  true	\
+		lockHeight: false	\
+		lockWidth:  true	\
+		dock: #(#LEFT, #RIGHT)	\ -- #( #LEFT, #RIGHT, #TOP, #BOTTOM )
 		parent: =
 	(
-		--format "\n"; print "Dialog_v.create()"
+		format "\n"; print "Dialog_v.create()"
 
 		this.destroy()
 
@@ -184,6 +187,9 @@ struct Dialog_v
 				POST CREATE
 			--------------------------------------------------------------------------------*/
 			
+			/* SET DOCK STATES */ 		
+			this._setDockStyle (style) (dock)
+		
 			/* DOCK DIALOG */ 
 			this._setDockState()
 
@@ -285,8 +291,10 @@ struct Dialog_v
 	),
 
 	/** Register dialog bar
+	  
+	  @param array	style
 	 */
-	function register style:style_registred_dialog =
+	function register style: =
 	(
 		--print "Dialog_v.register()"
 
@@ -298,7 +306,8 @@ struct Dialog_v
 		--format "STYLE: %\n" style_registred_dialog
 
 		--execute ("cui.RegisterDialogBar "+ this.id +" minSize:"+min_size+" maxSize:"+max_size+" style:"+style_registred_dialog as string )
-		execute ("cui.RegisterDialogBar "+ this.id +" minSize:"+min_size+" style:"+style as string )
+		--execute ("cui.RegisterDialogBar "+ this.id +" minSize:"+min_size+" style:"+style as string )
+		execute ("cui.RegisterDialogBar "+ this.id +" minSize:"+min_size+" style:"+( this.style_registred_dialog as string  ) )
 
 	),
 
@@ -757,11 +766,44 @@ struct Dialog_v
 			deleteItem this.style ( findItem this.style #style_titlebar )
 			deleteItem this.style ( findItem this.style #style_sysmenu )
 			deleteItem this.style ( findItem this.style #style_border )
+        )
+    ),
 
+     /** Get style
+	  
+		#cui_dock_vert,	-- Can dock vertically (left and right)
+		#cui_dock_horz,	-- Can dock horizontally (top and bottom)
+		#cui_dock_left ,	-- Can dock to the left
+		#cui_dock_top,	-- Can dock to the top
+		#cui_dock_right,	-- Can dock to the right
+		#cui_dock_bottom,	-- Can dock to the bottom
+	
+		convert #( #LEFT ) >>> #( #CUI_DOCK_LEFT )
+		
+	 */
+	function _setDockStyle style dock_states =
+	(
+		format "\n"; print "_setDockStyle()"
+		format "dock_states: %\n"dock_states
+		format "style: %\n" style
+		--format "this.style: %\n" this.style
+		format "this.style_registred_dialog: %\n" this.style_registred_dialog
+		--
+		if style == unsupplied then 
+		(
+			if classOf dock_states != Array then
+				dock_states = #(dock_states)
+			
+			/* SET ALLOWED DOCK STATE E.G.: #LEFT >>> #CUI_DOCK_LEFT */ 
+			for state in dock_states do
+				appendIfUnique this.style_registred_dialog ( ( "cui_dock_" + state as string ) as name )
+			format "this.style_registred_dialog: %\n" this.style_registred_dialog
+			this.style_registred_dialog as string --return
 		)
-
+		else
+			style as string --return
 	),
-
+	
 	/**
 	 */
 	on create do

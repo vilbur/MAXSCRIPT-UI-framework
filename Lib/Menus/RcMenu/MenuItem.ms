@@ -64,17 +64,17 @@ struct MenuItem_v
 		if ( id == undefined or id == unsupplied ) then
 			id = toLower title
 
-			id = "item_" + id -- add prefix
+		id = "item_" + id -- add prefix
 
-			id = substituteString ( trimRight ( trimLeft id )) " " "_" -- replace whitespace with underscore
+		id = substituteString ( trimRight ( trimLeft id )) " " "_" -- replace whitespace with underscore
 
-			id = this._repleaceCharacters "^(\d*[_-]*)" "" -- remove number as first letter, global variable MUST NOT starts with number E.G.: "1_FooDialog|_FooDialog" >>> "FooDialog"
+		id = this._repleaceCharacters "^(\d*[_-]*)" "" -- remove number as first letter, global variable MUST NOT starts with number E.G.: "1_FooDialog|_FooDialog" >>> "FooDialog"
 
-			id = this._repleaceCharacters "[^A-Za-z0-9_]" "_" -- remove invalid characters E.G.: "Butt@n_&_1" >>> "Button_1"
+		id = this._repleaceCharacters "[^A-Za-z0-9_]" "_" -- remove invalid characters E.G.: "Butt@n_&_1" >>> "Button_1"
 
-			id = this._repleaceCharacters "[_]+" "_" -- remove multiple underscores E.G.: "button___1" >>> "button_1"
+		id = this._repleaceCharacters "[_]+" "_" -- remove multiple underscores E.G.: "button___1" >>> "button_1"
 
-			id = id as name
+		id = id as name
 	),
 
 	/** Add suffix to menu item
