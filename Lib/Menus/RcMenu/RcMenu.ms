@@ -2,7 +2,10 @@ filein( getFilenamePath(getSourceFileName()) + "/MenuItem.ms" )	--"./MenuItem.ms
 
 filein( getFilenamePath(getSourceFileName()) + "/MenuToRcLoader/MenuToRcLoader.ms" )	--"./MenuToRcLoader/MenuToRcLoader.ms"
 
-/** Menu for rollout
+/** RC menu is menu evalutaed on the fly
+	
+	@method popUp will popup window on mouse cursor position
+  
  */
 struct RcMenu_v
 (
@@ -12,6 +15,10 @@ struct RcMenu_v
 	type	= "RCmenu",
 	items	= #(),
 	
+	/* static */ 
+	item_height	= 23,
+	separator_height	= 9,
+		
 	/** Pop up
 	 */
 	function popUp =
@@ -49,7 +56,7 @@ struct RcMenu_v
 	/** Add item to menu
 	  *
 	  * @param	string	title	Title of item
-	  * @param	string	command	Command of item
+	  * @param	string	command	Event of item
 	  * @param	string	[id]	Id of item, if empoty, then sanitized title is used
 	 */
 	function item title command id: enabled:true checked:false =
@@ -78,20 +85,25 @@ struct RcMenu_v
 	  *
 	  * @return	RcMenu class|string	Return RcMenu for 'CreateDialog menu:RcMenu' or definition of submenu
 	 */
-	function create =
+	function create pos:(mouse.screenpos.y as integer ) =
 	(
-		--format "\n"; print "RcMenu_v.create()"
-		
+		format "\n---------------------------------------------\n"
+		format "\n"; print "RcMenu_v.create()"
+		format "this.name: %\n" this.name
+		format "pos: %\n" pos
+
 		/* ITEMS ORDER */ 		
-		if not this._isEmptySpaceExists() then
+		if not this._isEmptySpaceExists(pos) then
 			this._reverseItemsOrder()
 
 		/* MENU DEFINITION */ 
 		menu_def	= this._getMenuDefinition()
-		subitems	= this._getDefinitionsOfMenuItems()
-		commands	= this._getAllCommandsDefinitions()
-		
-		definition = menu_def + "\n(\n" + subitems + commands + "\n)"
+		menu_items	= this._getDefinitionsOfMenuItems(pos)
+		items_events	= this._getEventsDefinition()
+		--format "menu_items: %\n" menu_items
+		--format "items_events: %\n" items_events
+		/* CONCAT DEFINITION */ 
+		definition = menu_def + "\n(\n" + menu_items + items_events + "\n)"
 
 		/* RETURN DEFINITION */ 
 		if( type == "RCmenu" ) then
@@ -131,49 +143,51 @@ struct RcMenu_v
 	),
 
 	/** Get definitions of items
+	  
+	  @param integer pos
+	  
 	 */
-	function _getDefinitionsOfMenuItems =
+	function _getDefinitionsOfMenuItems pos =
 	(
+		format "\n"; print "RcMenu_v._getDefinitionsOfMenuItems()"
 		_definition	= ""
-		--format "items.count = % \n" items.count
 		
 		for item in items do
-			_definition += item.create()
+		(
+			--format "item.isSeparator(): %\n" (item.isSeparator())			
+			_definition += item.create pos:(pos as integer )
 			
-		--for i = items.count to 1 by -1 do 
-		--	_definition += items[i].create()
+			pos += if item.isSeparator() then separator_height else item_height 
+			format "% %\n" pos item
+			
+			--_definition += item.create()
+		)
 
 		_definition -- return
 	),
 
-	/** Get all commands definitions in RcMenu
+	/** Get all events definitions in RcMenu
 	 */
-	function _getAllCommandsDefinitions =
+	function _getEventsDefinition =
 	(
-		commands	= ""
+		events	= ""
 
 		if( type != "submenu" ) then
-			commands	= this._getCommandDefinition()
+			events	= this._getEventDefinition()
 
-		commands -- return
+		events -- return
 	),
 
-	/** Get commands definition of items in menu
+	/** Get events definition of items in menu
 	 */
-	function _getCommandDefinition =
+	function _getEventDefinition =
 	(
-		commands	= ""
+		events	= ""
 
 		for item in items do
-			commands += item._getCommandDefinition()
-
+			events += item._getEventDefinition()
 			
-		--for i = items.count to 1 by -1 do 
-		--	commands += items[i]._getCommandDefinition()
-
-			
-			
-		commands --return
+		events --return
 	),
 
 	/** Rem
@@ -218,24 +232,23 @@ struct RcMenu_v
 
 	/** Test if empty space for rightclick menu exists between menu pos and bottom pof screen
 	 */
-	function _isEmptySpaceExists =
+	function _isEmptySpaceExists pos =
 	(
-		--format "\n"; print "RcMenu_v._isEmptySpaceExists()"
-		item_height	= 23
-		separator_height	= 9
-		
-		cursor_to_bottom_space = ( sysInfo.desktopSize.y - mouse.screenpos.y ) as integer
-		
+		format "\n"; print "RcMenu_v._isEmptySpaceExists()"
 
+
+		
+		cursor_to_bottom_space = ( sysInfo.desktopSize.y - pos ) as integer
+		
+		format "items.count: %\n" items.count
 		items_count = (for item in items where not item.isSeparator() collect item).count
-
+		format "items_count: %\n" items_count
 		separators_count = items.count - items_count
---
 		
 		menu_height = (items_count * item_height) + ( separators_count * separator_height)
-		--format "menu_height: %\n" menu_height
-		--format "cursor_to_bottom_space: %\n" cursor_to_bottom_space
-		--format "_isEmptySpaceExists: %\n" (menu_height < cursor_to_bottom_space)
+		format "menu_height: %\n" menu_height
+		format "cursor_to_bottom_space: %\n" cursor_to_bottom_space
+		format "RESULT: %\n" (menu_height < cursor_to_bottom_space)
 		menu_height < cursor_to_bottom_space --return
 	),
 

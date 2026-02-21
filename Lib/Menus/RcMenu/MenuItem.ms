@@ -28,7 +28,7 @@ struct MenuItem_v
 
 	/** Get command definition
 	 */
-	function _getCommandDefinition =
+	function _getEventDefinition =
 	(
 		if( this.isSeparator() or command == "" ) then
 			return ""
