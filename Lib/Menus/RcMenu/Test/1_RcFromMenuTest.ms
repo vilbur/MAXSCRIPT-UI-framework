@@ -1,4 +1,4 @@
-clearListener()
+clearListener(); print("Cleared in: "+getSourceFileName())
 
 filein( getFilenamePath(getSourceFileName()) + "/../../Menu/_Test/create-test-menu.ms" )	--"./../../Menu/_Test/create-test-menu.ms"
 

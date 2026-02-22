@@ -36,12 +36,12 @@ struct XmlParser_v
 	 */
 	function getElement tag_name attr: val: content: ignoreCase:true =
 	(
-		format "\n"; print "XmlParser_v.getElement()"
+		--format "\n"; print "XmlParser_v.getElement()"
 		
 		element_found = undefined 
 		
 		elements = this.getElements tag_name attr:attr val:val
-		format "elements: %\n" elements
+		--format "elements: %\n" elements
 		if content != unsupplied then
 			for element in elements \
 				where matchPattern element.InnerXML pattern:content ignoreCase:true \
@@ -59,15 +59,15 @@ struct XmlParser_v
 	 */
 	function getElements tag_name attr: val: =
 	(
-		format "\n"; print "XmlParser_v.getElements()"
+		--format "\n"; print "XmlParser_v.getElements()"
 		--format "tag_name: %\n" tag_name
 		--format "attr: %\n" attr
 		/* GET XML ELEMENTS */ 
 		elements_xml = xml_doc.GetElementsByTagName (tag_name as string )
-		format "elements_xml: %\n" elements_xml
+		--format "elements_xml: %\n" elements_xml
 		/* GETELEMENTS */ 
 		elements = for i = 0 to elements_xml.count - 1 where ( element = (elements_xml.item i)) != undefined collect element
-		format "elements: %\n" elements
+		--format "elements: %\n" elements
 		if attr != unsupplied then
 			/* RETURN ELEMENTS BY ATTRIBUTE VALUE */ 
 			this.filterElementsByAttribute elements attr:attr val:val --return
@@ -125,7 +125,7 @@ struct XmlParser_v
 	 */
 	function getAttribute element attr =
 	(
-		format "\n"; print "XmlParser_v.getAttribute()"
+		--format "\n"; print "XmlParser_v.getAttribute()"
 		val = undefined
 
 		for a = 0 to element.Attributes.count - 1 while val == undefined do
@@ -201,11 +201,11 @@ struct XmlParser_v
 	 */
 	on create do
 	(
-		format "\n"; print "RecentFile.onCreate()"
+		--format "\n"; print "RecentFile.onCreate()"
 
-		format "xml_file_path: %\n" xml_file_path
+		--format "xml_file_path: %\n" xml_file_path
 		file_exists = doesFileExist xml_file_path
-		format "file_exists: %\n" file_exists
+		--format "file_exists: %\n" file_exists
 		
 		if doesFileExist xml_file_path then
 			xml_doc.load xml_file_path
