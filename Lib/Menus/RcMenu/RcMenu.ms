@@ -20,12 +20,14 @@ struct RcMenu_v
 	/* static */ 
 	item_height	= 23,
 	separator_height	= 9,
-		
+	
+	/* private */ 
+	
 	/** Pop up
 	 */
 	function popUp pos:mouse.screenpos =
 	(
-		format "\n"; print "RcMenu_v.popUp()"
+		--format "\n"; print "RcMenu_v.popUp()"
 		--format "items.count: %\n" items.count
 		try(
 			if items.count > 0 then
@@ -92,11 +94,14 @@ struct RcMenu_v
 		format "\n---------------------------------------------\n"
 		format "\n"; print "RcMenu_v.create()"
 		format "this.name: %\n" this.name
-		format "this.type: %\n" this.type
+		--format "this.type: %\n" this.type
 		format "pos_y: %\n" pos_y
 
-		items_order_reversed = not this._isEmptySpaceExists(pos_y)
-		format "items_order_reversed: %\n" items_order_reversed
+		menu_height = this._getMenuHeight()
+		--format "menu_height: %\n" menu_height
+
+		items_order_reversed = not this._isEmptySpaceExists(pos_y)(menu_height)
+		--format "items_order_reversed: %\n" items_order_reversed
 		/* ITEMS ORDER */ 		
 		--if items_order_reversed = not this._isEmptySpaceExists(pos_y) then
 		if items_order_reversed then
@@ -104,7 +109,7 @@ struct RcMenu_v
 
 		/* MENU DEFINITION */ 
 		menu_def	= this._getMenuDefinition()
-		menu_items	= this._getDefinitionsOfMenuItems(pos_y)(items_order_reversed)
+		menu_items	= this._getDefinitionsOfMenuItems(pos_y)(menu_height)(items_order_reversed)
 		items_events	= this._getEventsDefinition()
 		--format "menu_items: %\n" menu_items
 		--format "items_events: %\n" items_events
@@ -153,23 +158,34 @@ struct RcMenu_v
 	  @param integer pos
 	  
 	 */
-	function _getDefinitionsOfMenuItems pos_y items_order_reversed =
+	function _getDefinitionsOfMenuItems pos_y menu_height items_order_reversed =
 	(
 		format "\n"; print "RcMenu_v._getDefinitionsOfMenuItems()"
+		format "this.name: %\n" this.name
+		format "pos_y: %\n" pos_y
+		--format "menu_height: %\n" menu_height
+		--format "items_order_reversed: %\n" items_order_reversed
 		_definition	= ""
-		format "***** REVERSED: %\n" items_order_reversed
+		
+		--format "***** REVERSED: %\n" items_order_reversed
 		direction = if items_order_reversed then -1 else 1
+		
+		origin_y = if items_order_reversed then pos_y - menu_height else pos_y
+		format "origin_y: %\n" origin_y
 		
 		for item in items do
 		(
 			--format "item.isSeparator(): %\n" (item.isSeparator())			
 			--_definition += item.create()
-			_definition += item.create pos_y:pos_y
 			
 			height_increment = if item.isSeparator() then separator_height else item_height 
 			
-			pos_y += height_increment * direction
-			format "% %\n" pos_y item
+			--format "% %\n" origin_y item
+			_definition += item.create pos_y:origin_y
+			
+			--origin_y += height_increment * direction
+			origin_y += height_increment
+			
 			
 			--_definition += item.create()
 		)
@@ -241,28 +257,36 @@ struct RcMenu_v
 		items = for i = items.count to 1 by -1 collect items[i]
 	),
 
-	/** Test if empty space for rightclick menu exists between menu pos and bottom pof screen
+	/** Set menu height
 	 */
-	function _isEmptySpaceExists pos_y =
+	function _getMenuHeight =
 	(
-		format "\n"; print "RcMenu_v._isEmptySpaceExists()"
-		
-		free_space_from_cursor_to_bottom = ( sysInfo.desktopSize.y - pos_y ) as integer
+		--format "\n"; print "RcMenu_v._getMenuHeight()"
 		
 		--if this.type == "submenu" then
-			
+		--format "items.count: %\n" items.count
+		separators_count = (for item in items where item.isSeparator() collect item).count
+		--format "separators_count: %\n" separators_count
+		items_count = items.count - separators_count
+		--format "items_count: %\n" items_count
 		
+		(items_count * item_height) + ( separators_count * separator_height)
 		
-		format "items.count: %\n" items.count
-		items_count = (for item in items where not item.isSeparator() collect item).count
-		format "items_count: %\n" items_count
-		separators_count = items.count - items_count
+	),
+	
+	/** Test if empty space for rightclick menu exists between menu pos and bottom pof screen
+	 */
+	function _isEmptySpaceExists pos_y menu_height =
+	(
+		--format "\n"; print "RcMenu_v._isEmptySpaceExists()"
+		--format "pos_y: %\n" pos_y
+		--format "menu_height: %\n" menu_height
 		
-		menu_height = (items_count * item_height) + ( separators_count * separator_height)
-		format "menu_height: %\n" menu_height
-		format "free_space_from_cursor_to_bottom: %\n" free_space_from_cursor_to_bottom
-		format "RESULT: %\n" (menu_height <= free_space_from_cursor_to_bottom)
-		menu_height <= free_space_from_cursor_to_bottom --return
+		free_space_for_menu = ( sysInfo.desktopSize.y - pos_y ) as integer
+
+		--format "free_space_for_menu: %\n" free_space_for_menu
+		--format "RESULT: %\n" (menu_height <= free_space_for_menu)
+		menu_height <= free_space_for_menu --return
 	),
 
 	/**
