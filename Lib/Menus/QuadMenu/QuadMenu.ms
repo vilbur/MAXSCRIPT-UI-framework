@@ -114,14 +114,14 @@ struct QuadMenu_v
 	 */
 	function setRightClick which:#nonePressed  =
 	(
-		format "\n"; print "QuadMenu_v.setRightClick()"
-		format "this.menu_name:	% \n" this.menu_name
-		format "QuadMenu: %\n" QuadMenu
+		--format "\n"; print "QuadMenu_v.setRightClick()"
+		--format "this.menu_name:	% \n" this.menu_name
+		--format "QuadMenu: %\n" QuadMenu
 		--format "QuadMenu.menu: %\n" QuadMenu.menu
-		format "which:	% \n" which
+		--format "which:	% \n" which
 		menuMan.setViewportRightClickMenu which QuadMenu
 		
-		format "ASSIGN HOTKEY TO QUADMENU: \"%\" HOTKEY: %\n" ( menuMan.getQuadMenuName  QuadMenu ) which
+		FORMAT "ASSIGN HOTKEY TO QUADMENU: \"%\" HOTKEY: %\n" ( menuMan.getQuadMenuName  QuadMenu ) which
 	),
 
 	/** Reset right click to default

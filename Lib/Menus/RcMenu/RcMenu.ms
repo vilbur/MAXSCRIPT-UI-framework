@@ -82,20 +82,51 @@ struct RcMenu_v
 	(
 		this.item "separator" ""
 	),
+	
+	/** Remove double separators and separators on start or end of menu
+	 */
+	function clearSeparators =
+	(
+		--format "\n"; print "Menu_v.clearSeparators()"
+		indexes_to_remove 	= #()
+		next_item_is_separator	= false
 
+		--items = this._getMenuItems()
+		--format "items.count	= % \n" items.count
+		for i = 1 to items.count do
+		(
+			local item = items[i]
+			--format "item: %\n" item
+
+			item_is_separator = item.isSeparator()
+
+			next_item_is_separator = i < items.count and (items[i + 1]).isSeparator()
+
+			if (SEPARATOR_IS_FIRST = (item_is_separator and i == 1 ) or
+			  (SEPARATOR_IS_LAST  = (item_is_separator and i == items.count) )) or
+			  (SEPARATOR_IS_TWICE = (item_is_separator and next_item_is_separator )) then
+				append indexes_to_remove i
+
+		)
+
+		for i = indexes_to_remove.count to 1 by -1 do
+			deleteItem items i
+			--menu.removeItemByPosition (indexes_to_remove[i])
+	),
+	
 	/** Create menu
 	  *
 	  * [rcmenu ]](https://help.autodesk.com/view/3DSMAX/2017/ENU/?guid=__files_GUID_17DBC9E3_5B61_4738_B78B_D3D57A515CE8_htm)
 	  *
 	  * @return	RcMenu class|string	Return RcMenu for 'CreateDialog menu:RcMenu' or definition of submenu
 	 */
-	function create pos_y: =
+	function create pos_y:(mouse.screenpos.y as integer ) =
 	(
-		format "\n---------------------------------------------\n"
-		format "\n"; print "RcMenu_v.create()"
-		format "this.name: %\n" this.name
+		--format "\n---------------------------------------------\n"
+		--format "\n"; print "RcMenu_v.create()"
+		--format "this.name: %\n" this.name
 		--format "this.type: %\n" this.type
-		format "pos_y: %\n" pos_y
+		--format "pos_y: %\n" pos_y
 
 		menu_height = this._getMenuHeight()
 		--format "menu_height: %\n" menu_height
@@ -160,9 +191,9 @@ struct RcMenu_v
 	 */
 	function _getDefinitionsOfMenuItems pos_y menu_height items_order_reversed =
 	(
-		format "\n"; print "RcMenu_v._getDefinitionsOfMenuItems()"
-		format "this.name: %\n" this.name
-		format "pos_y: %\n" pos_y
+		--format "\n"; print "RcMenu_v._getDefinitionsOfMenuItems()"
+		--format "this.name: %\n" this.name
+		--format "pos_y: %\n" pos_y
 		--format "menu_height: %\n" menu_height
 		--format "items_order_reversed: %\n" items_order_reversed
 		_definition	= ""
@@ -171,7 +202,7 @@ struct RcMenu_v
 		direction = if items_order_reversed then -1 else 1
 		
 		origin_y = if items_order_reversed then pos_y - menu_height else pos_y
-		format "origin_y: %\n" origin_y
+		--format "origin_y: %\n" origin_y
 		
 		for item in items do
 		(
@@ -215,38 +246,6 @@ struct RcMenu_v
 			events += item._getEventDefinition()
 			
 		events --return
-	),
-
-	/** Rem
-	  ove double separators and separators on start or end of menu
-	 */
-	function clearSeparators =
-	(
-		--format "\n"; print "Menu_v.clearSeparators()"
-		indexes_to_remove 	= #()
-		next_item_is_separator	= false
-
-		--items = this._getMenuItems()
-		--format "items.count	= % \n" items.count
-		for i = 1 to items.count do
-		(
-			local item = items[i]
-			--format "item: %\n" item
-
-			item_is_separator = item.isSeparator()
-
-			next_item_is_separator = i < items.count and (items[i + 1]).isSeparator()
-
-			if (SEPARATOR_IS_FIRST = (item_is_separator and i == 1 ) or
-			  (SEPARATOR_IS_LAST  = (item_is_separator and i == items.count) )) or
-			  (SEPARATOR_IS_TWICE = (item_is_separator and next_item_is_separator )) then
-				append indexes_to_remove i
-
-		)
-
-		for i = indexes_to_remove.count to 1 by -1 do
-			deleteItem items i
-			--menu.removeItemByPosition (indexes_to_remove[i])
 	),
 	
 	/** Reverse items order

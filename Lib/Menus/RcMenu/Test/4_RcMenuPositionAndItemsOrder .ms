@@ -32,15 +32,12 @@ max_window_center = getMAXWindowPos() + (getMAXWindowSize () / 2 )
 Menu = RcMenu_v name:"TestMenu"
 
 
-/* MAIN MENU ITEMS */ 
---addMenuItems Menu prefix:"Main" items_count:1
-
-
 /* SUBMENUS */
 menu_1	= Menu.menu "Menu 1"
 menu_2	= Menu.menu "Menu 2"
 menu_3	= Menu.menu "Menu 3"
 menu_4	= Menu.menu "Menu 4"
+
 
 
 /* SUBMENUS ITEMS */
