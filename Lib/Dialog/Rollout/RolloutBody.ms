@@ -200,57 +200,57 @@
 		(this.getSubrollouts()).count > 0
 	),
 
-	/** Save Rollout Definition to file
-	  * 
-	 */
-	function saveRolloutDefinitionToCache def =
-	(
-		--format "\n"; print "RolloutBody.saveDefition()"
-
-		def_file = this._getDefinitionFilePath()
-		
-		if doesDirectoryExist (dir = getFilenamePath(def_file)) then
-			deleteFile def_file
-		else
-			makeDir dir all:true
-
-		def_filestream = createFile def_file
-
-		--format "def_file: %\n" def_file
-		
-		--def	= ( dotNetObject "System.Text.RegularExpressions.Regex" "\"" ).Replace def "\\\""
-		
-		
-		--format "%" def to:def_filestream
-		
-		close def_filestream
-	),
-	
-	/** Load definition
-	 */
-	function loadRolloutDefinitionFromCache =
-	(
-		--format "\n"; print "RolloutBody.loadDefinition()"
-		def_file = this._getDefinitionFilePath()
-
-		if (file_exists = doesFileExist def_file) then
-		(
-			def_filestream = openFile def_file mode:"rS"
-			--format "def_filestream: %\n" def_filestream
-			
-			rci_loaded = ""
-
-			try(
-				rci_loaded = execute def_filestream
-				
-				close def_filestream
-			)
-			catch
-				close def_filestream
-			
-			rci_loaded --return	
-		)
-	),
+	--/** Save Rollout Definition to file
+	--  * 
+	-- */
+	--function saveRolloutDefinitionToCache def =
+	--(
+	--	--format "\n"; print "RolloutBody.saveDefition()"
+	--
+	--	def_file = this._getDefinitionFilePath()
+	--	
+	--	if doesDirectoryExist (dir = getFilenamePath(def_file)) then
+	--		deleteFile def_file
+	--	else
+	--		makeDir dir all:true
+	--
+	--	def_filestream = createFile def_file
+	--
+	--	--format "def_file: %\n" def_file
+	--	
+	--	--def	= ( dotNetObject "System.Text.RegularExpressions.Regex" "\"" ).Replace def "\\\""
+	--	
+	--	
+	--	--format "%" def to:def_filestream
+	--	
+	--	close def_filestream
+	--),
+	--
+	--/** Load definition
+	-- */
+	--function loadRolloutDefinitionFromCache =
+	--(
+	--	--format "\n"; print "RolloutBody.loadDefinition()"
+	--	def_file = this._getDefinitionFilePath()
+	--
+	--	if (file_exists = doesFileExist def_file) then
+	--	(
+	--		def_filestream = openFile def_file mode:"rS"
+	--		--format "def_filestream: %\n" def_filestream
+	--		
+	--		rci_loaded = ""
+	--
+	--		try(
+	--			rci_loaded = execute def_filestream
+	--			
+	--			close def_filestream
+	--		)
+	--		catch
+	--			close def_filestream
+	--		
+	--		rci_loaded --return	
+	--	)
+	--),
 	
 	/** Set Rollout Createor
 	 */
@@ -264,22 +264,22 @@
 
 	private
 	
-	/** Get definition file path
-	  * 
-	  * FILE PATH E.G.:
-	  *		"C:\Users\%username%\AppData\Local\Autodesk\3dsMax\2023 - 64bit\ENU\temp\UI-Framework\RolloutCreator-Cache\{ROLLOUT_ID}.ms"
-	  * 
-	 */
-	function _getDefinitionFilePath =
-	(
-		--format "\n"; print "RolloutBody._getDefinitionFilePath()"
-		--format "id: %\n" id
-		--dialog_dir = if this.isDialog() then id else parent_rollout_id
-		
-		dir = getDir #temp + "\\UI-Framework\\RolloutCreator-Cache\\"
-		
-		dir + "\\" + id + ".ms" --return
-	),
+	--/** Get definition file path
+	--  * 
+	--  * FILE PATH E.G.:
+	--  *		"C:\Users\%username%\AppData\Local\Autodesk\3dsMax\2023 - 64bit\ENU\temp\UI-Framework\RolloutCreator-Cache\{ROLLOUT_ID}.ms"
+	--  * 
+	-- */
+	--function _getDefinitionFilePath =
+	--(
+	--	--format "\n"; print "RolloutBody._getDefinitionFilePath()"
+	--	--format "id: %\n" id
+	--	--dialog_dir = if this.isDialog() then id else parent_rollout_id
+	--	
+	--	dir = getDir #temp + "\\UI-Framework\\RolloutCreator-Cache\\"
+	--	
+	--	dir + "\\" + id + ".ms" --return
+	--),
 
 
 	/** Set id by title if not defined

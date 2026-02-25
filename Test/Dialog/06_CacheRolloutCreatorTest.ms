@@ -5,7 +5,8 @@ filein( getFilenamePath(getSourceFileName()) + "/../../Lib/Dialog/Dialog.ms" ) -
 
 /* DIALOG */
 
-Dialog 	= Dialog_v title:"Test"
+--Dialog 	= Dialog_v title:"Test"
+Dialog = Dialog_v title:"Test"  ini:(getSourceFileName())
 
 
 /*------------------------------------------------------------------------------
@@ -18,7 +19,7 @@ _Rollouts	 = Dialog.Rollouts()
 _Rollout    = _Rollouts.Roll "Main Rollout" --rolledUp:true --height:256
 
 _Controls   = _Rollout.Controls group:"Rollout Controls"
-
+ 
 _Button      = _Controls.control #button "Rollout Btn" id:#button_3
 
 

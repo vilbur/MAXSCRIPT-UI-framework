@@ -20,6 +20,8 @@ struct SubolloutsCreator_v
 
 	slot_offset_x = -12, -- move slot ( rollouts indeed ) to left side as possible
 
+	addSubRollouts_definition = "",
+	
 	DEBUG = false,
 
 	/* dependency */
@@ -59,25 +61,29 @@ struct SubolloutsCreator_v
 		/** Get subrollouts slot
 		 *
 		 */
-		function getSubrolloutsSlot SubrolloutsSlots slot =
+		function pairSubrolloutAndSlot SubrolloutsSlotControl slot =
 		(
 			local SubrolloutsSlot
 
-			for Subrollouts in SubrolloutsSlots where matchPattern (Subrollouts as string ) pattern:( "SubRollout:"+slot as string ) do
+			for Subrollouts in SubrolloutsSlotControl where matchPattern (Subrollouts as string ) pattern:( "SubRollout:"+slot as string ) do
 				SubrolloutsSlot = Subrollouts
 
 			SubrolloutsSlot --return
 		)
 
-		SubrolloutsSlots = for Subrollouts in _Rollout.RCI.Def.controls where classOf Subrollouts == SubRollout collect Subrollouts
-		
-		/* FOR EACH SUBROLLOUTS SLOT
-		
-		*/
+		/* GET CONTROLS OF SUBROLLOUT SLOTS  */ 
+		SubrolloutsSlotControl = for Subrollouts in _Rollout.RCI.Def.controls where classOf Subrollouts == SubRollout collect Subrollouts
+		--format "SubrolloutsSlotControl: %\n" SubrolloutsSlotControl
+
+		/* GET SUBROLLOUTS Subrollouts_v */ 
 		all_subrollouts = _Rollout.getSubrollouts()
+
 		
+		/*------------------------------------------------------------------------------
+			FOR EACH SUBROLLOUTS SLOT
+		--------------------------------------------------------------------------------*/
 		for Subrollouts in all_subrollouts
-			where (SubrolloutsSlot = getSubrolloutsSlot(SubrolloutsSlots)(Subrollouts.slot) ) != undefined do
+			where (SubrolloutsSlot = pairSubrolloutAndSlot(SubrolloutsSlotControl)(Subrollouts.slot) ) != undefined do
 			(
 				subrollouts_in_slot	= for Subrollout in Subrollouts.Rollouts collect Subrollout.id
 			
@@ -94,8 +100,16 @@ struct SubolloutsCreator_v
 					/*  DEBUG:
 							FOR FLOATEBLE SUBROLLOUTS disable AddSubRollout
 					*/
-					AddSubRollout SubrolloutsSlot	_Subrollout.RCI.def rolledUp:(this._getRolledUpState(_Subrollout)(subrollout_id))
-			
+					--AddSubRollout SubrolloutsSlot	_Subrollout.RCI.def rolledUp:(this._getRolledUpState(_Subrollout)(subrollout_id))
+
+					rolled_up_state = this._getRolledUpState(_Subrollout)(subrollout_id)
+					AddSubRollout SubrolloutsSlot	_Subrollout.RCI.def rolledUp:rolled_up_state
+					--format "Subrollouts: %\n" Subrollouts
+					
+					--format "_Subrollout.getSlotId(): %\n" (Subrollouts.getSlotId())
+					--format "_Subrollout: %\n" _Subrollout.id
+					this.addSubRollouts_definition += "AddSubRollout "+ Subrollouts.getSlotId() +"	"+ _Subrollout.id as string +" rolledUp:"+rolled_up_state as string + "\n"
+
 					this.addSubRollouts (_Subrollout)
 				)
 			)

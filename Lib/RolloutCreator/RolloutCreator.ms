@@ -44,15 +44,20 @@ struct RolloutCreator_v
 	/* private properties */
 	_closed_rollout_bar_height = 24, -- height of closed rollout
 
+	
+	dialog_definition = "",
+	
 	/** Create dialog
 	  *
 	  * @param	integer	width	for centered title
 	 */
 	function createRollout _Rollout width: =
 	(
-		--if DEBUG then format "\n\n------------------------------------- RolloutCreator_v.createRollout() id:#%	-------------------------------------\n"  ( _Rollout.id as string );
+		if DEBUG then format "\n\n------------------------------------- RolloutCreator_v.createRollout() id:#%	-------------------------------------\n"  ( _Rollout.id as string );
 		--format "\n\n------------------------------------- RolloutCreator_v.createRollout() id:#%	-------------------------------------\n"  ( (_Rollout.getFullId()) as string );
-
+		--format "Ini: %\n" Ini
+		--format "Ini: %\n" (Ini.getPath())
+		
 		if _Rollout.RCI == undefined then -- RCI is defined WHEN chache is loaded
 		(
 			_Rollout.setRCI()
@@ -73,6 +78,7 @@ struct RolloutCreator_v
 			/*==============================================================================
 				CONTROLS
 			================================================================================*/
+			
 			ControlsCreator	= ControlCreator_v _Rollout:_Rollout Ini:Ini DEBUG:DEBUG -- MUST BE AFTER SUBROLLOUT ARE CREATED
 	
 			if _Rollout.width == unsupplied and width != unsupplied then
@@ -84,6 +90,7 @@ struct RolloutCreator_v
 			/*==============================================================================
 				EVENTS
 			================================================================================*/
+			
 			RolloutEventBinder.setRollout(_Rollout)
 			
 			RolloutEventBinder.combineEvents()
@@ -116,8 +123,11 @@ struct RolloutCreator_v
 			/* add EVENTS */
 			RolloutEventBinder.addHandlers()
 
+			
 			/* EDIT END */
 			_Rollout.RCI.end() --return _Rollout.RCI.def
+			
+			this.dialog_definition += _Rollout.RCI.str + "\n"
 		)		
 	),
 

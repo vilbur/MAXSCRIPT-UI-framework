@@ -41,25 +41,30 @@ struct ContentRollout_v
 			
 		--------------------------------------------------------------------------------*/
 		
-		___DEV_USE_CACHE___ = false
+		--___DEV_USE_CACHE___ = false
+		--___DEV_USE_CACHE___ = true
 		
-		if ___DEV_USE_CACHE___ or ( rci_loaded = Rollout_new.loadRolloutDefinitionFromCache() ) == undefined then
-		(
+		--format "Rollout_new.RCI.def: %\n" Rollout_new.RCI.def
+		
+		--if ___DEV_USE_CACHE___ or ( rci_loaded = Rollout_new.loadRolloutDefinitionFromCache() ) == undefined then
+		--(
+		--Rollout_new.saveRolloutDefinitionToCache Rollout_new.RCI.def
+		
 			this._setRolloutPropertiesFromIniFile(Rollout_new)
-	
+		
 			for Subrollouts_or_Controls in Subrollouts_and_Controls do
 				Subrollouts_or_Controls.addToUi Rollout_new
-		)
-		else
-		(
-			--format "RCI_LOADED: %\n" rci_loaded
-			Rollout_new.setRCI()
-		
-			Rollout_new.RCI.def = rci_loaded
-		
-			for Subrollouts in Subrollouts_and_Controls where hasProperty Subrollouts "Rollouts" do
-				Subrollouts.addToUi Rollout_new
-		)
+		--)
+		--else
+		--(
+		--	--format "RCI_LOADED: %\n" rci_loaded
+		--	Rollout_new.setRCI()
+		--
+		--	Rollout_new.RCI.def = rci_loaded
+		--
+		--	for Subrollouts in Subrollouts_and_Controls where hasProperty Subrollouts "Rollouts" do
+		--		Subrollouts.addToUi Rollout_new
+		--)
 		
 		
 	),

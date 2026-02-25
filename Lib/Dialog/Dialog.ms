@@ -88,6 +88,34 @@ struct Dialog_v
 		--#cui_dock_bottom,	-- Can dock to the bottom
 		--#cui_max_sized,	-- When this flag is specified, docking the dialogbar on the top causes the dialogbar to expand to the full window width, docked to bottom it expands to full window width minus command panel width.
 	),
+	
+function updateFilePath oldPath suffix newExt =
+(
+    -- 1. Get the directory (e.g., "C:\Project\Scenes\")
+    local thePath = getFilenamePath oldPath
+    -- 2. Get the filename without the dot (e.g., "Building_01")
+    local theName = getFilenameFile oldPath
+    -- 3. Construct the new string
+    -- Note: newExt should include the "." (e.g., ".tga")
+    local newPath = thePath + theName + suffix + newExt
+    
+    return newPath
+),
+
+/** Write to deff file
+ */
+function writeToDeffFile defFilePath str =
+(
+	--format "\n"; print "if.writeToDeffFile()"
+	 local f = createFile defFilePath
+        if f != undefined do
+        (
+            -- Write children, then main, then the initialization sequence at the very end
+			FORMAT "%\n" str to:f
+            
+            close f
+        )
+),
 
 	/** CREATE DIALOG
 	  *
@@ -121,6 +149,9 @@ struct Dialog_v
 		format "\n"; print "Dialog_v.create()"
 
 		this.destroy()
+		local defFilePath = this.updateFilePath (Ini.getPath()) "-cache" ".ms"
+		deleteFile defFilePath
+		format "defFilePath: %\n" defFilePath
 
 		_RolloutCreator = RolloutCreator_v Ini:Ini DEBUG:DEBUG
 
@@ -149,7 +180,9 @@ struct Dialog_v
 		
 		_RolloutCreator.createRollout (this) width:width  -- create nested rollouts
 		--if this.DEBUG then format "createRollout % ms\n" ((timestamp()) - timer_all)
+		format "_RolloutCreator.dialog_definition: %\n" _RolloutCreator.dialog_definition
 
+		
 		if create_dialog then
 		(
 			/*------------------------------------------------------------------------------
@@ -176,13 +209,16 @@ struct Dialog_v
 			--if this.DEBUG then format "CreateDialog % ms\n" ((timestamp()) - timer_all)
 
 			/*------------------------------------------------------------------------------
-				ADD SUBROLLOUTS
+				ADD SUBROLLOUTS TO ROLLOUT
 			--------------------------------------------------------------------------------*/
 			
 			_RolloutCreator.SubolloutsCreator.addSubRollouts (this)
 			--if this.DEBUG then format "addSubRollouts % ms\n" ((timestamp()) - timer_all)
-
 			
+			create_dialog_str = "CreateDialog " + this.id as string + " width: " + width as string +" height: " + height as string + "\n"
+			
+			this.writeToDeffFile defFilePath (_RolloutCreator.dialog_definition + create_dialog_str +_RolloutCreator.SubolloutsCreator.addSubRollouts_definition )
+
 			/*------------------------------------------------------------------------------
 				POST CREATE
 			--------------------------------------------------------------------------------*/
