@@ -274,7 +274,7 @@ struct RolloutCreator_v
 	function _addLocalVariablesToRollout _Rollout =
 	(
 		--print "ControlCreator_v._addLocalVariablesToRollout()"
-
+ 
 		/** Format to string
 		 */
 		function convertToString val =

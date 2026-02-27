@@ -15,15 +15,16 @@ struct Ini_v
 	 */
 	function setIni ini_path =
 	(
+		--print "Ini.setIni()"
 		if( ini_path == undefined ) then
 			return false
 		--print "Ini_v.setIni()"
 		--format "ini_path	= % \n" ini_path
 		if( matchPattern ini_path pattern:@"*.ini" ) then
-			_path = ini_path
+			this._path = ini_path
 
 		else if( matchPattern ini_path pattern:@"*.ms" or matchPattern ini_path pattern:@"*.mcr" ) then
-			_path =  (getFilenamePath(ini_path) + getFilenameFile(ini_path) + ".ini")
+			this._path =  (getFilenamePath(ini_path) + getFilenameFile(ini_path) + ".ini")
 
 		else
 			messageBox ("Path to ini file is not valid\n\n"+ini_path) title:"Ini file error"
@@ -116,13 +117,6 @@ struct Ini_v
 	(
 		--format "\n"; print "Ini_v.isDefined()"
 		_path != undefined --return
-	),
-
-	/** Is defined
-	 */
-	function isDefined =
-	(
-		_path != undefined
 	),
 
 	/** Load values on init

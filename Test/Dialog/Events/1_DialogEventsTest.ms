@@ -31,20 +31,20 @@ function dialogEventsTest =
 (
 	format "\n"; print "1_DialogEventsTest.ms.dialogEventsTest()"
 
---    DialogTest.Event #OPEN	"dialogRolloutCallbackParam(@#OPEN@)"
---    DialogTest.Event #CLOSE	"dialogRolloutCallbackParam(@#CLOSE@)"
---
---	DialogTest.Event #RESIZED	"dialogRolloutCallbackParam(\"RESIZED\")"
---  
---    DialogTest.Event #DOCKED	"dialogRolloutCallbackParam(@#DOCKED@)"
---    DialogTest.Event #UNDOCKED	"dialogRolloutCallbackParam(@#UNDOCKED@)"
---
---	DialogTest.Event #RBUTTONDOWN	"dialogRolloutCallbackParam(@#RBUTTONDOWN@)"
---
---    DialogTest.Event #okToClose	"dialogRolloutCallbackParam(@#okToClose@)"
---
---	
---    /* EVENT #MOVED DOE NOT WORK ON REGISTRED DIALOG*/ 	
+    DialogTest.Event #OPEN	"dialogRolloutCallbackParam(@#OPEN@)"
+    DialogTest.Event #CLOSE	"dialogRolloutCallbackParam(@#CLOSE@)"
+
+	DialogTest.Event #RESIZED	"dialogRolloutCallbackParam(\"RESIZED\")"
+  
+    DialogTest.Event #DOCKED	"dialogRolloutCallbackParam(@#DOCKED@)"
+    DialogTest.Event #UNDOCKED	"dialogRolloutCallbackParam(@#UNDOCKED@)"
+
+	DialogTest.Event #RBUTTONDOWN	"dialogRolloutCallbackParam(@#RBUTTONDOWN@)"
+
+    DialogTest.Event #okToClose	"dialogRolloutCallbackParam(@#okToClose@)"
+
+	
+    /* EVENT #MOVED DOES NOT WORK ON REGISTRED DIALOG*/ 	
     DialogTest.Event #MOVED "dialogRolloutCallbackParam(@#MOVED@)"
 )
 
@@ -107,7 +107,7 @@ function multipleEventsTest =
 --------------------------------------------------------------------------------*/
 
 /* DIALOG */ 
---dialogEventsTest()
+dialogEventsTest()
 
 /* ROLLOUT */ 
 --rolloutEventsTest()
@@ -115,12 +115,15 @@ function multipleEventsTest =
 /* ALL TYPES OF EVENTS */ 
 --testAllEvents(DialogTest)
 
-multipleEventsTest()
+--multipleEventsTest()
+
+
 
 
 
 /* CREATE DIALOG */
-DialogTest.create width:256 height:256
+DialogTest.create width:256 height:256 lockHeight:false
+
 
 /*------------------------------------------------------------------------------
 	

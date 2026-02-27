@@ -20,7 +20,7 @@ global myChild1, myChild2, myChild3
         print "Success: Loaded definitions and built UI directly from the MS file."
     )
     else
-    (
+    ( 
         -- 2. FILE DOES NOT EXIST: Generate everything
         
         -- --- A. Generate Child Rollouts ---

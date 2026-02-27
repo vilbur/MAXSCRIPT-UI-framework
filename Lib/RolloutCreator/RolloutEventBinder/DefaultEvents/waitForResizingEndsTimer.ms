@@ -1,6 +1,8 @@
 global CALLBACK_DELAY_TIMER
 
-/**  START timer and wait then user stop resizing in --"./Callbacks/fireResizeDockUndockEvents.ms"
+/**  START timer and wait then user stop resizing in:
+		
+		--"./Callbacks/fireResizeDockUndockEvents.ms"
   *
   */
 function waitForResizingEndsTimer dialog_id event_type =
@@ -25,7 +27,7 @@ function waitForResizingEndsTimer dialog_id event_type =
 
 		CALLBACK_DELAY_TIMER.enabled = true
 
-		DIALOG_GLOBAL_DATA[#RUNNING_EVENT_DIALOG_ID]	= dialog_id
+		DIALOG_GLOBAL_DATA[#ID_RESIZING_DIALOG]	= dialog_id
 	)
 
 )

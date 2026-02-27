@@ -2,9 +2,11 @@ filein( getFilenamePath(getSourceFileName()) + "/../../../../Dialog/DialogGlobal
 
 /*------------------------------------------------------------------------------
 
-   Maxscript fires #resized event when dialog is resized and docked\undocked
+   Maxscript fires #RESIZED event when dialog is RESIZED and DOCKED\UNDOCKED
 
-	fireResizeDockUndockEvents() Waits while event is stoped to be fired
+	fireResizeDockUndockEvents() waits while resizing event stops.
+	
+	
 	then compare values of dialog states and found which event has been really fired
 
 --------------------------------------------------------------------------------*/
@@ -16,13 +18,17 @@ filein( getFilenamePath(getSourceFileName()) + "/../../../../Dialog/DialogGlobal
   */
 function fireResizeDockUndockEvents sender evt =
 (
-	--format "\n"; print "DefaultEvents_v.fireResizeDockUndockEvents()"
-	dialog_id	= DIALOG_GLOBAL_DATA[#RUNNING_EVENT_DIALOG_ID]
+	format "\n"; print "DefaultEvents_v.fireResizeDockUndockEvents()"
+	dialog_id	= DIALOG_GLOBAL_DATA[#ID_RESIZING_DIALOG]
 
 	DataSaved	= DIALOG_GLOBAL_DATA[dialog_id]
-	DataCurrent	= DialogGlobalData_v(DataSaved.DialogClass)
-
 	
+	if DataSaved != undefined then 
+	(
+		
+		DataCurrent	= DialogGlobalData_v(DataSaved.DialogClass)
+
+		format "DataCurrent: %\n" DataCurrent
 	
 	/*------------------------------------------------------------------------------
 		FIND EVENT TYPE
@@ -30,6 +36,8 @@ function fireResizeDockUndockEvents sender evt =
 	
 	event_type = case of
 	(
+		
+		
 		(DataSaved.dock_state	!= DataCurrent.dock_state):	if DataCurrent.dock_state == #CUI_FLOATABLE then #UNDOCKED else #DOCKED
 	
 		(DataSaved.size	== DataCurrent.size):	#RESIZED
@@ -57,15 +65,19 @@ function fireResizeDockUndockEvents sender evt =
 		--print ( "DefaultEvents_v.fireResizeDockUndockEvents()\n" + toUpper(event_type as string ) ) -- DEV
 
 		/* FIRE CUSTOM EVENT */
-		if ( Event = DataSaved.Dialog.Events[event_type] ) != undefined then
+		if ( Events = DataSaved.Dialog.Events[event_type] ) != undefined then
 		(
-			/* REPLACE @ WITH \" */ 
-			callback = substituteString Event.callback "@" "\""
-
-			/* FIRE UP CALLBACK */ 
-			execute(callback)
+			for Event in Events do
+			(
+				/* REPLACE @ WITH \" */ 
+				callback = substituteString Event.callback "@" "\""
+	
+				/* FIRE UP CALLBACK */ 
+				execute(callback)
+			)
 		)
 	)
 
 	DataSaved.fill() --return
+	)
 )

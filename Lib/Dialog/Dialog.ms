@@ -88,34 +88,6 @@ struct Dialog_v
 		--#cui_dock_bottom,	-- Can dock to the bottom
 		--#cui_max_sized,	-- When this flag is specified, docking the dialogbar on the top causes the dialogbar to expand to the full window width, docked to bottom it expands to full window width minus command panel width.
 	),
-	
-function updateFilePath oldPath suffix newExt =
-(
-    -- 1. Get the directory (e.g., "C:\Project\Scenes\")
-    local thePath = getFilenamePath oldPath
-    -- 2. Get the filename without the dot (e.g., "Building_01")
-    local theName = getFilenameFile oldPath
-    -- 3. Construct the new string
-    -- Note: newExt should include the "." (e.g., ".tga")
-    local newPath = thePath + theName + suffix + newExt
-    
-    return newPath
-),
-
-/** Write to deff file
- */
-function writeToDeffFile defFilePath str =
-(
-	--format "\n"; print "if.writeToDeffFile()"
-	 local f = createFile defFilePath
-        if f != undefined do
-        (
-            -- Write children, then main, then the initialization sequence at the very end
-			FORMAT "%\n" str to:f
-            
-            close f
-        )
-),
 
 	/** CREATE DIALOG
 	  *
@@ -144,113 +116,132 @@ function writeToDeffFile defFilePath str =
 		lockHeight: false	\
 		lockWidth:  true	\
 		dock: #(#LEFT, #RIGHT)	\ -- #( #LEFT, #RIGHT, #TOP, #BOTTOM )
+		cache: false	\ -- load generated dialog for fast startup -- true: PRODUCTION | false: DEVELOPMENT
 		parent: =
 	(
 		format "\n"; print "Dialog_v.create()"
-
+		format "cache: %\n" cache
+		
 		this.destroy()
-		local defFilePath = this.updateFilePath (Ini.getPath()) "-cache" ".ms"
-		deleteFile defFilePath
-		format "defFilePath: %\n" defFilePath
-
-		_RolloutCreator = RolloutCreator_v Ini:Ini DEBUG:DEBUG
-
-		--DEBUG = true
-		if this.DEBUG then timer_all = timestamp()
 		
-		/* WIDTH & HEIGHT MUST BE INTEGER - otherwise height of  dialog doesn't work */ 
-		if superClassOf width  == Number then width  = width as integer
-		if superClassOf height == Number then height = height as integer
+		cache_file = this._getPathToCacheFile()
 		
-		/* DIALOG SIZE */ 
-		this._setDialogMinimalSize()
-		this._setDialogSizeByIni()
-		this._setWithByMinimalSize()
-		--format "MIN_SIZE: %\n" min_size
-		/* HEIGHT */ 
-		height = this._getHeightOnCreate(height)
-		--format "height: %\n" height
-		--format "width A: %\n" width
-		if classOf width != integer then
-			width = this.width
-
-		/*------------------------------------------------------------------------------
-			CREATE MAIN ROLLOUT AND NESTED ROLLOUTS
-		--------------------------------------------------------------------------------*/
-		
-		_RolloutCreator.createRollout (this) width:width  -- create nested rollouts
-		--if this.DEBUG then format "createRollout % ms\n" ((timestamp()) - timer_all)
-		format "_RolloutCreator.dialog_definition: %\n" _RolloutCreator.dialog_definition
-
-		
-		if create_dialog then
+		if not cache or not doesFileExist (cache_file) then
 		(
+			format "cache_file: %\n" cache_file
+	
+			_RolloutCreator = RolloutCreator_v Ini:Ini DEBUG:DEBUG
+	
+			--DEBUG = true
+			if this.DEBUG then timer_all = timestamp()
+			
+			/* WIDTH & HEIGHT MUST BE INTEGER - otherwise height of  dialog doesn't work */ 
+			if superClassOf width  == Number then width  = width as integer
+			if superClassOf height == Number then height = height as integer
+			
+			/* DIALOG SIZE */ 
+			this._setDialogMinimalSize()
+			this._setDialogSizeByIni()
+			this._setWithByMinimalSize()
+			--format "MIN_SIZE: %\n" min_size
+			/* HEIGHT */ 
+			height = this._getHeightOnCreate(height)
+			--format "height: %\n" height
+			----format "width A: %\n" width
+			if classOf width != integer then
+				width = this.width
+	
 			/*------------------------------------------------------------------------------
-				CREATE DIALOG
+				CREATE MAIN ROLLOUT AND NESTED ROLLOUTS
 			--------------------------------------------------------------------------------*/
 			
-			CreateDialog (this.RCI.def) \
-				width:	width                          	\
-				height:	height                          	\
-				pos:	(this._getPosition(pos)(origin))	\
-				bgcolor:	bgcolor	\
-				fgcolor:	fgcolor	\
-				bitmap:	bitmap	\
-				bmpstyle:	bmpstyle	\
-				style:	(if( style == unsupplied ) then this.style else style)	\
-				modal:	modal	\
-				autoLayoutOnResize:	true	\
-				escapeEnable:	escapeEnable	\
-				lockHeight:	lockHeight	\
-				lockWidth:	lockWidth	\
-				parent:	parent
-
-
-			--if this.DEBUG then format "CreateDialog % ms\n" ((timestamp()) - timer_all)
-
-			/*------------------------------------------------------------------------------
-				ADD SUBROLLOUTS TO ROLLOUT
-			--------------------------------------------------------------------------------*/
+			_RolloutCreator.createRollout (this) width:width  -- create nested rollouts
+			--if this.DEBUG then format "createRollout % ms\n" ((timestamp()) - timer_all)
+			format "_RolloutCreator.dialog_definition: %\n" _RolloutCreator.dialog_definition
+	
 			
-			_RolloutCreator.SubolloutsCreator.addSubRollouts (this)
-			--if this.DEBUG then format "addSubRollouts % ms\n" ((timestamp()) - timer_all)
+			if create_dialog then
+			(
+				/*------------------------------------------------------------------------------
+					CREATE DIALOG
+				--------------------------------------------------------------------------------*/
+				
+				CreateDialog (this.RCI.def) \
+					width:	width                          	\
+					height:	height                          	\
+					pos:	(this._getPosition(pos)(origin))	\
+					bgcolor:	bgcolor	\
+					fgcolor:	fgcolor	\
+					bitmap:	bitmap	\
+					bmpstyle:	bmpstyle	\
+					style:	(if( style == unsupplied ) then this.style else style)	\
+					modal:	modal	\
+					autoLayoutOnResize:	true	\
+					escapeEnable:	escapeEnable	\
+					lockHeight:	lockHeight	\
+					lockWidth:	lockWidth	\
+					parent:	parent
+	
+	
+				--if this.DEBUG then format "CreateDialog % ms\n" ((timestamp()) - timer_all)
+	
+				/*------------------------------------------------------------------------------
+					ADD SUBROLLOUTS TO ROLLOUT
+				--------------------------------------------------------------------------------*/
+				
+				_RolloutCreator.SubolloutsCreator.addSubRollouts (this)
+				--if this.DEBUG then format "addSubRollouts % ms\n" ((timestamp()) - timer_all)
+				
+				create_dialog_str = "CreateDialog " + this.id as string + " width: " + width as string +" height: " + height as string + "\n"
+				
+				/* CACHE FILE */ 
+				this.writeToCacheFile cache_file (_RolloutCreator.dialog_definition + create_dialog_str +_RolloutCreator.SubolloutsCreator.addSubRollouts_definition )
+	
+				/*------------------------------------------------------------------------------
+					POST CREATE
+				--------------------------------------------------------------------------------*/
+				
+				/* SET DOCK STATES */ 		
+				this._setDockStyle (style) (dock)
 			
-			create_dialog_str = "CreateDialog " + this.id as string + " width: " + width as string +" height: " + height as string + "\n"
+				/* DOCK DIALOG */ 
+				this._setDockState()
+	
+				this.RolloutResizer.fitSlotsToDialog(this.RCI.def)
+				
+				/* SET DIALOG TO GLOBAL CONTAINER OF DIALOGS OF FRAMEWORK */ 
+				DIALOG_GLOBAL_DATA[this.id] = DialogGlobalData_v(this.RCI.def)(this)
+	
+				/* EXECUTE AUTORUN EVENTS OF CONTROLS */ 
+				this._executeAutorunEvents()
+	
+				/* RESET BITMAPS */ 
+				CONTROL_BITMAPS_STORE = #() -- reset buffer array
+	
+				--format "Dialog_v.create()% ms\n" ((timestamp()) - timer_createRollout)
+	
+				FORMAT ("\n\nDIALOG \""+ id as string +"\" HAS BEEN CREATED\n\n" )
+			)
+			else
+				--format ("\n\nROLLOUT \""+ id as string +"\" HAS BEEN CREATED\n\n" )
+	
+	
+			if this.DEBUG then format "Dialog Create % ms\n" ((timestamp()) - timer_createRollout)
 			
-			this.writeToDeffFile defFilePath (_RolloutCreator.dialog_definition + create_dialog_str +_RolloutCreator.SubolloutsCreator.addSubRollouts_definition )
-
-			/*------------------------------------------------------------------------------
-				POST CREATE
-			--------------------------------------------------------------------------------*/
+			--RCI.def --return
+			
+		)
+		else
+		(
+			filein cache_file
 			
 			/* SET DOCK STATES */ 		
 			this._setDockStyle (style) (dock)
 		
 			/* DOCK DIALOG */ 
 			this._setDockState()
-
-			this.RolloutResizer.fitSlotsToDialog(this.RCI.def)
-			
-			/* SET DIALOG TO GLOBAL CONTAINER OF DIALOGS OF FRAMEWORK */ 
-			DIALOG_GLOBAL_DATA[this.id] = DialogGlobalData_v(this.RCI.def)(this)
-
-			/* EXECUTE AUTORUN EVENTS OF CONTROLS */ 
-			this._executeAutorunEvents()
-
-			/* RESET BITMAPS */ 
-			CONTROL_BITMAPS_STORE = #() -- reset buffer array
-
-			--format "Dialog_v.create()% ms\n" ((timestamp()) - timer_createRollout)
-
-			FORMAT ("\n\nDIALOG \""+ id as string +"\" HAS BEEN CREATED\n\n" )
 		)
-		else
-			--format ("\n\nROLLOUT \""+ id as string +"\" HAS BEEN CREATED\n\n" )
-
-
-		if this.DEBUG then format "Dialog Create % ms\n" ((timestamp()) - timer_createRollout)
 		
-		RCI.def --return
 	),
 
 	/** Create rollout
@@ -332,14 +323,14 @@ function writeToDeffFile defFilePath str =
 	 */
 	function register style: =
 	(
-		--print "Dialog_v.register()"
+		print "Dialog_v.register()"
 
 		min_size = if min_size != undefined then min_size as string else "[-1,-1]"
 		max_size = if max_size != undefined then max_size as string else "[-1,-1]"
 		--format "width: %\n" width
 		--format "MIN_SIZE: %\n" min_size
 		--format "MAX_SIZE: %\n" max_size
-		--format "STYLE: %\n" style_registred_dialog
+		format "STYLE: %\n" style_registred_dialog
 
 		--execute ("cui.RegisterDialogBar "+ this.id +" minSize:"+min_size+" maxSize:"+max_size+" style:"+style_registred_dialog as string )
 		--execute ("cui.RegisterDialogBar "+ this.id +" minSize:"+min_size+" style:"+style as string )
@@ -819,7 +810,7 @@ function writeToDeffFile defFilePath str =
 	 */
 	function _setDockStyle style dock_states =
 	(
-		format "\n"; print "_setDockStyle()"
+		format "\n"; print "Dialog_v._setDockStyle()"
 		format "dock_states: %\n"dock_states
 		format "style: %\n" style
 		--format "this.style: %\n" this.style
@@ -839,7 +830,37 @@ function writeToDeffFile defFilePath str =
 		else
 			style as string --return
 	),
+		
+	function _getPathToCacheFile =
+	(
+		--format "\n"; print "Dialog_v._getPathToCacheFile()"
+		if Ini.isDefined() then
+
+		
+		
+		getDir #TEMP + "\\UI-Framework\\Dialog-Cache\\"  + this.id + "-cache" + ".ms"
+	),
 	
+	/** Write to deff file
+	 */
+	function writeToCacheFile cache_file str =
+	(
+		format "\n"; print "Dialog_v.writeToCacheFile()"
+		--format "\n"; print "if.writeToCacheFile()"
+		
+		deleteFile cache_file
+	
+		f = createFile cache_file
+		 
+		if f != undefined do
+		(
+			-- Write children, then main, then the initialization sequence at the very end
+			FORMAT "%\n" str to:f
+			
+			close f
+		)
+	),
+
 	/**
 	 */
 	on create do

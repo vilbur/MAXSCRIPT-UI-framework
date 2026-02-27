@@ -20,7 +20,7 @@ _Rollout    = _Rollouts.Roll "Main Rollout" --rolledUp:true --height:256
 
 _Controls   = _Rollout.Controls group:"Rollout Controls"
  
-_Button      = _Controls.control #button "Rollout Btn" id:#button_3
+--_Button      = _Controls.control #button "Rollout Btn" id:#button_3
 
 
 /*------------------------------------------------------------------------------
@@ -33,7 +33,7 @@ _SubRollout    = _SubRollouts.Roll "Sub Rollout"
 
 _Controls   = _SubRollout.Controls group:"SubRollout Controls"
 
-_Button      = _Controls.control #button "Subrollout Btn" id:#button_3
+--_Button      = _Controls.control #button "Subrollout Btn" id:#button_3
 
 
 /*------------------------------------------------------------------------------
@@ -46,9 +46,17 @@ _NestedSubRollout    = _NestedSubRollouts.Roll "Nested Sub Rollout"
 
 _Controls   = _NestedSubRollout.Controls group:"Nested SubRollout Controls"
 
-_Button      = _Controls.control #button "Nested Btn" id:#button_3
+--_Button      = _Controls.control #button "Nested Btn" id:#button_3
 
 
 /* CREATE DIALOG */
---Dialog.create()
 Dialog.create()
+
+--Dialog.destroy()
+--Dialog.create cache:true
+--clearListener(); print("Cleared in: "+getSourceFileName())
+--
+--Dialog.title = "XXX"
+--Dialog.create()
+
+--Dialog.zregister()

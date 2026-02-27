@@ -1,10 +1,9 @@
-clearListener()
+clearListener(); print("Cleared in: "+getSourceFileName())
 
 filein( getFilenamePath(getSourceFileName()) + "/../../Lib/Dialog/Dialog.ms" ) -- "./../../Lib/Dialog/Dialog.ms"
 
 /* DIALOG */
 Dialog 	= Dialog_v title:(getFilenameFile(getSourceFileName()))
-
 
 
 /*------------------------------------------------------------------------------
