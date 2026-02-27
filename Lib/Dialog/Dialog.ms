@@ -100,7 +100,7 @@ struct Dialog_v
 	  * @RETURN RolloutClass
 	 */
 	function create           \
-		create_dialog:true	\ -- boolean	create_dialog if false, then oly rollout without dialog is created
+		--create_dialog:true	\ -- boolean	create_dialog if false, then oly rollout without dialog is created
 		width:	\ -- integer	width of dialog INTEGER: definded width | UNSUPPLIED: width auto or by ini | UNDEFINED: width auto even if ini is defined
 		height:	\ -- integer|#AUTO	height
 		pos:	\ -- [x,y]|#MOUSE	position of dialog when created
@@ -120,16 +120,17 @@ struct Dialog_v
 		parent: =
 	(
 		format "\n"; print "Dialog_v.create()"
-		format "cache: %\n" cache
-		
+		timer_createRollout = timeStamp()
+
 		this.destroy()
 		
 		cache_file = this._getPathToCacheFile()
 		
+		/*------------------------------------------------------------------------------
+			GENERATE DIALOG
+		--------------------------------------------------------------------------------*/
 		if not cache or not doesFileExist (cache_file) then
 		(
-			format "cache_file: %\n" cache_file
-	
 			_RolloutCreator = RolloutCreator_v Ini:Ini DEBUG:DEBUG
 	
 			--DEBUG = true
@@ -143,11 +144,10 @@ struct Dialog_v
 			this._setDialogMinimalSize()
 			this._setDialogSizeByIni()
 			this._setWithByMinimalSize()
-			--format "MIN_SIZE: %\n" min_size
+
 			/* HEIGHT */ 
 			height = this._getHeightOnCreate(height)
-			--format "height: %\n" height
-			----format "width A: %\n" width
+			/* WIDTH */ 
 			if classOf width != integer then
 				width = this.width
 	
@@ -157,80 +157,68 @@ struct Dialog_v
 			
 			_RolloutCreator.createRollout (this) width:width  -- create nested rollouts
 			--if this.DEBUG then format "createRollout % ms\n" ((timestamp()) - timer_all)
-			format "_RolloutCreator.dialog_definition: %\n" _RolloutCreator.dialog_definition
 	
+			/*------------------------------------------------------------------------------
+				CREATE DIALOG
+			--------------------------------------------------------------------------------*/
 			
-			if create_dialog then
-			(
-				/*------------------------------------------------------------------------------
-					CREATE DIALOG
-				--------------------------------------------------------------------------------*/
-				
-				CreateDialog (this.RCI.def) \
-					width:	width                          	\
-					height:	height                          	\
-					pos:	(this._getPosition(pos)(origin))	\
-					bgcolor:	bgcolor	\
-					fgcolor:	fgcolor	\
-					bitmap:	bitmap	\
-					bmpstyle:	bmpstyle	\
-					style:	(if( style == unsupplied ) then this.style else style)	\
-					modal:	modal	\
-					autoLayoutOnResize:	true	\
-					escapeEnable:	escapeEnable	\
-					lockHeight:	lockHeight	\
-					lockWidth:	lockWidth	\
-					parent:	parent
-	
-	
-				--if this.DEBUG then format "CreateDialog % ms\n" ((timestamp()) - timer_all)
-	
-				/*------------------------------------------------------------------------------
-					ADD SUBROLLOUTS TO ROLLOUT
-				--------------------------------------------------------------------------------*/
-				
-				_RolloutCreator.SubolloutsCreator.addSubRollouts (this)
-				--if this.DEBUG then format "addSubRollouts % ms\n" ((timestamp()) - timer_all)
-				
-				create_dialog_str = "CreateDialog " + this.id as string + " width: " + width as string +" height: " + height as string + "\n"
-				
-				/* CACHE FILE */ 
-				this.writeToCacheFile cache_file (_RolloutCreator.dialog_definition + create_dialog_str +_RolloutCreator.SubolloutsCreator.addSubRollouts_definition )
-	
-				/*------------------------------------------------------------------------------
-					POST CREATE
-				--------------------------------------------------------------------------------*/
-				
-				/* SET DOCK STATES */ 		
-				this._setDockStyle (style) (dock)
+			CreateDialog (this.RCI.def) \
+				width:	width                          	\
+				height:	height                          	\
+				pos:	(this._getPosition(pos)(origin))	\
+				bgcolor:	bgcolor	\
+				fgcolor:	fgcolor	\
+				bitmap:	bitmap	\
+				bmpstyle:	bmpstyle	\
+				style:	(if( style == unsupplied ) then this.style else style)	\
+				modal:	modal	\
+				autoLayoutOnResize:	true	\
+				escapeEnable:	escapeEnable	\
+				lockHeight:	lockHeight	\
+				lockWidth:	lockWidth	\
+				parent:	parent
+			--if this.DEBUG then format "CreateDialog % ms\n" ((timestamp()) - timer_all)
+
+			/*------------------------------------------------------------------------------
+				ADD SUBROLLOUTS TO ROLLOUT
+			--------------------------------------------------------------------------------*/
 			
-				/* DOCK DIALOG */ 
-				this._setDockState()
-	
-				this.RolloutResizer.fitSlotsToDialog(this.RCI.def)
-				
-				/* SET DIALOG TO GLOBAL CONTAINER OF DIALOGS OF FRAMEWORK */ 
-				DIALOG_GLOBAL_DATA[this.id] = DialogGlobalData_v(this.RCI.def)(this)
-	
-				/* EXECUTE AUTORUN EVENTS OF CONTROLS */ 
-				this._executeAutorunEvents()
-	
-				/* RESET BITMAPS */ 
-				CONTROL_BITMAPS_STORE = #() -- reset buffer array
-	
-				--format "Dialog_v.create()% ms\n" ((timestamp()) - timer_createRollout)
-	
-				FORMAT ("\n\nDIALOG \""+ id as string +"\" HAS BEEN CREATED\n\n" )
-			)
-			else
-				--format ("\n\nROLLOUT \""+ id as string +"\" HAS BEEN CREATED\n\n" )
-	
-	
-			if this.DEBUG then format "Dialog Create % ms\n" ((timestamp()) - timer_createRollout)
+			_RolloutCreator.SubolloutsCreator.addSubRollouts (this)
+			--if this.DEBUG then format "addSubRollouts % ms\n" ((timestamp()) - timer_all)
 			
-			--RCI.def --return
+			/* CACHE FILE */ 
+			this.writeToCacheFile cache_file width height 
+
+			/*------------------------------------------------------------------------------
+				POST CREATE
+			--------------------------------------------------------------------------------*/
 			
+			/* SET DOCK STATES */ 		
+			this._setDockStyle (style) (dock)
+		
+			/* DOCK DIALOG */ 
+			this._setDockState()
+
+			this.RolloutResizer.fitSlotsToDialog(this.RCI.def)
+			
+			/* SET DIALOG TO GLOBAL CONTAINER OF DIALOGS OF FRAMEWORK */ 
+			DIALOG_GLOBAL_DATA[this.id] = DialogGlobalData_v(this.RCI.def)(this)
+
+			/* EXECUTE AUTORUN EVENTS OF CONTROLS */ 
+			this._executeAutorunEvents()
+
+			/* RESET BITMAPS */ 
+			CONTROL_BITMAPS_STORE = #() -- reset buffer array
+
+			FORMAT ("\n\nDIALOG \""+ id as string +"\" HAS BEEN CREATED\n\n" )
+	
+			format "\n\n====== Dialog Created % ms\n\n" ((timestamp()) - timer_createRollout)
+			
+			RCI.def --return
 		)
+		/*------------------------------------------------------------------------------
+			USE CACHE
+		--------------------------------------------------------------------------------*/
 		else
 		(
 			filein cache_file
@@ -240,6 +228,14 @@ struct Dialog_v
 		
 			/* DOCK DIALOG */ 
 			this._setDockState()
+
+			dialog_rollout = execute ( this.id as string )
+			
+			this.RolloutResizer.fitSlotsToDialog( dialog_rollout )
+			
+			format "\n\n====== Dialog Created % ms CACHE FILE: %\n\n" ((timestamp()) - timer_createRollout) cache_file
+			
+			dialog_rollout --return
 		)
 		
 	),
@@ -835,27 +831,32 @@ struct Dialog_v
 	(
 		--format "\n"; print "Dialog_v._getPathToCacheFile()"
 		if Ini.isDefined() then
-
-		
-		
-		getDir #TEMP + "\\UI-Framework\\Dialog-Cache\\"  + this.id + "-cache" + ".ms"
+		(
+			ini_path = Ini.getPath()
+			
+			(getFilenamePath ini_path) + (getFilenameFile ini_path) + "-cache" + ".ms"
+		)
+		else
+			getDir #TEMP + "\\UI-Framework\\Dialog-Cache\\"  + this.id + "-cache" + ".ms"
 	),
 	
 	/** Write to deff file
 	 */
-	function writeToCacheFile cache_file str =
+	function writeToCacheFile cache_file width height =
 	(
 		format "\n"; print "Dialog_v.writeToCacheFile()"
 		--format "\n"; print "if.writeToCacheFile()"
 		
+		create_dialog_str = "CreateDialog " + this.id as string + " width: " + width as string +" height: " + height as string + "\n"
+
 		deleteFile cache_file
 	
 		f = createFile cache_file
 		 
 		if f != undefined do
 		(
-			-- Write children, then main, then the initialization sequence at the very end
-			FORMAT "%\n" str to:f
+			
+			FORMAT "%\n" ( _RolloutCreator.dialog_definition + create_dialog_str + _RolloutCreator.SubolloutsCreator.addSubRollouts_definition ) to:f
 			
 			close f
 		)
