@@ -17,7 +17,7 @@ struct RolloutResizer_v
 	 */
 	function fitSlotsToDialog _Rollout  =
 	(
-		--format "\n"; print "RolloutResizer_v._resizeSubrollouts()"
+		format "\n"; print "RolloutResizer_v.fitSlotsToDialog()"
 		--format "_Rollout:	% \n" _Rollout
 		--if ( dialog_height = _Rollout.RCI.height ) == undefined then
 		--	dialog_height = execute( _Rollout.id as string + ".height" )
@@ -46,12 +46,19 @@ struct RolloutResizer_v
 		--format "subrollout_slots.count: %\n" subrollout_slots.count
 		if subrollout_slots.count > 0 then
 		(
+			format "dialog_controls: %\n" dialog_controls
 			removeControlsBeforeFirstSlot (dialog_controls)
 
 			last_control = this._getLastControl (dialog_controls)
+			format "last_control: %\n" last_control
+			format "classOf last_control: %\n" ( classOf last_control )
+			format "last_control.pos: %\n" last_control.pos
+			format "last_control.caption: %\n" last_control.caption
+			
+			if last_control.pos == undefined then return false
 
 			last_control_position = last_control.pos.y + last_control.height
-
+			format "last_control_position: %\n" last_control_position
 			empty_space_bottom = dialog_height - last_control_position - padding_bottom
 
 			size_offset_per_slot = (empty_space_bottom / subrollout_slots.count) as integer

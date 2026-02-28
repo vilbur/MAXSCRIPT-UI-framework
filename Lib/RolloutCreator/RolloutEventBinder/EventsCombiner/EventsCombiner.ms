@@ -19,7 +19,7 @@ struct EventsCombiner_v
 
 		/* ONLY DEFAULT #RESIZE EVENT IS BINDED
 		   
-		    CUSTOM #RESIZE |#DOCK | #UNDOCKED EVENT IS FIRED IN  "./../DefaultEvents/Callbacks/fireResizeDockUndockEvents.ms"
+		    CUSTOM #RESIZE |#DOCK | #UNDOCKED EVENT IS FIRED IN  "./../DefaultEvents/Callbacks/waitForResizingEnds.ms"
 		*/
 		custom_or_defaults = if event_type == #RESIZED then #(#DEFAULTS) else #( #DEFAULTS, #CUSTOM )
 		

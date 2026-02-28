@@ -4,7 +4,7 @@ filein( getFilenamePath(getSourceFileName()) + "/../../../../Dialog/DialogGlobal
 
    Maxscript fires #RESIZED event when dialog is RESIZED and DOCKED\UNDOCKED
 
-	fireResizeDockUndockEvents() waits while resizing event stops.
+	waitForResizingEnds() waits while resizing event stops.
 	
 	
 	then compare values of dialog states and found which event has been really fired
@@ -16,9 +16,9 @@ filein( getFilenamePath(getSourceFileName()) + "/../../../../Dialog/DialogGlobal
   * Find out type of event based on change of dialog states
   *
   */
-function fireResizeDockUndockEvents sender evt =
+function waitForResizingEnds sender evt =
 (
-	format "\n"; print "DefaultEvents_v.fireResizeDockUndockEvents()"
+	format "\n"; print "DefaultEvents_v.waitForResizingEnds()"
 	dialog_id	= DIALOG_GLOBAL_DATA[#ID_RESIZING_DIALOG]
 
 	DataSaved	= DIALOG_GLOBAL_DATA[dialog_id]
@@ -28,7 +28,7 @@ function fireResizeDockUndockEvents sender evt =
 		
 		DataCurrent	= DialogGlobalData_v(DataSaved.DialogClass)
 
-		format "DataCurrent: %\n" DataCurrent
+		--format "DataCurrent: %\n" DataCurrent
 	
 	/*------------------------------------------------------------------------------
 		FIND EVENT TYPE
@@ -62,7 +62,7 @@ function fireResizeDockUndockEvents sender evt =
 
 		CALLBACK_DELAY_TIMER = undefined
 
-		--print ( "DefaultEvents_v.fireResizeDockUndockEvents()\n" + toUpper(event_type as string ) ) -- DEV
+		--print ( "DefaultEvents_v.waitForResizingEnds()\n" + toUpper(event_type as string ) ) -- DEV
 
 		/* FIRE CUSTOM EVENT */
 		if ( Events = DataSaved.Dialog.Events[event_type] ) != undefined then

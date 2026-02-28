@@ -103,12 +103,15 @@ struct SubolloutsCreator_v
 					--AddSubRollout SubrolloutsSlot	_Subrollout.RCI.def rolledUp:(this._getRolledUpState(_Subrollout)(subrollout_id))
 
 					rolled_up_state = this._getRolledUpState(_Subrollout)(subrollout_id)
+					
 					AddSubRollout SubrolloutsSlot	_Subrollout.RCI.def rolledUp:rolled_up_state
 					--format "Subrollouts: %\n" Subrollouts
 					
 					--format "_Subrollout.getSlotId(): %\n" (Subrollouts.getSlotId())
 					--format "_Subrollout: %\n" _Subrollout.id
-					this.addSubRollouts_definition += "AddSubRollout "+ Subrollouts.getSlotId() +"	"+ _Subrollout.id as string +" rolledUp:"+rolled_up_state as string + "\n"
+					
+					--format "Subrollouts.nested_level: %\n" Subrollouts.nested_level
+					this.addSubRollouts_definition += this._addSubrolloutDefinition Subrollouts rolled_up_state
 
 					this.addSubRollouts (_Subrollout)
 				)
@@ -172,7 +175,20 @@ struct SubolloutsCreator_v
 		) else
 			all_rollouts --return
 	),
-
+	
+	/** Add subrollout definition
+	 */
+	function _addSubrolloutDefinition Subrollouts rolled_up_state =
+	(
+		--format "\n"; print "SubolloutsCreator_v._addSubrolloutDefinition()"
+		prefix = if Subrollouts.nested_level <= 1 then "\n" else ""
+		
+		for i = 1 to Subrollouts.nested_level do
+			prefix += "	"
+		
+		
+        prefix + "AddSubRollout "+ Subrollouts.getSlotId() +" "+ _Subrollout.id as string +" rolledUp:"+rolled_up_state as string + "\n"
+	),
 
 	/**
 	 */

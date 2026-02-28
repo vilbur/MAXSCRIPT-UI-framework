@@ -23,7 +23,7 @@
 </folder>
 <file id="488f4f22-8cde-4f80-9b5e-4bbee48c7e9a" idref="18a33c0b-c6cd-4174-b3a6-6956c16b3d12" name="EventsCombiner.ms" url="Lib/RolloutCreator/RolloutEventBinder/EventsCombiner/EventsCombiner.ms">
 </file>
-<file id="65f26197-8f32-4e5c-8633-55d0cffca653" idref="18a33c0b-c6cd-4174-b3a6-6956c16b3d12" name="fireResizeDockUndockEvents.ms" url="Lib/RolloutCreator/RolloutEventBinder/DefaultEvents/Callbacks/fireResizeDockUndockEvents.ms">
+<file id="65f26197-8f32-4e5c-8633-55d0cffca653" idref="18a33c0b-c6cd-4174-b3a6-6956c16b3d12" name="waitForResizingEnds.ms" url="Lib/RolloutCreator/RolloutEventBinder/DefaultEvents/Callbacks/waitForResizingEnds.ms">
 </file>
 <file id="8db64baf-713b-46e0-9a1b-0cd5f5643b62" idref="18a33c0b-c6cd-4174-b3a6-6956c16b3d12" name="RolloutEventBinder.ms" url="Lib/RolloutCreator/RolloutEventBinder/RolloutEventBinder.ms">
 </file>

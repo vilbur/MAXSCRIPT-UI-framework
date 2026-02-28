@@ -3,7 +3,7 @@
 filein( getFilenamePath(getSourceFileName()) + "/../Dialog/Rollout/Rollout.ms" ) 	-- "./../Dialog/Rollout/Rollout.ms"
 filein( getFilenamePath(getSourceFileName()) + "/../Dialog/Rollout/Subrollouts/Subrollouts.ms" )	-- "./../Dialog/Rollout/Subrollouts/Subrollouts.ms"
 
-filein( getFilenamePath(getSourceFileName()) + "/RolloutEventBinder/DefaultEvents/Callbacks/fireResizeDockUndockEvents.ms" )	--"./RolloutEventBinder/DefaultEvents/Callbacks/fireResizeDockUndockEvents.ms"
+filein( getFilenamePath(getSourceFileName()) + "/RolloutEventBinder/DefaultEvents/Callbacks/waitForResizingEnds.ms" )	--"./RolloutEventBinder/DefaultEvents/Callbacks/waitForResizingEnds.ms"
 filein( getFilenamePath(getSourceFileName()) + "/RolloutEventBinder/DefaultEvents/Callbacks/autoRollUpRolloutCallback.ms" )	--"./RolloutEventBinder/DefaultEvents/Callbacks/autoRollUpRolloutCallback.ms"
 filein( getFilenamePath(getSourceFileName()) + "/RolloutEventBinder/DefaultEvents/Callbacks/rollUpOtherRolloutsCallback.ms" )	--"./RolloutEventBinder/DefaultEvents/Callbacks/rollUpOtherRolloutsCallback.ms"
 filein( getFilenamePath(getSourceFileName()) + "/RolloutEventBinder/DefaultEvents/waitForResizingEndsTimer.ms" )	-- "./RolloutEventBinder/DefaultEvents/waitForResizingEndsTimer.ms"
@@ -45,7 +45,7 @@ struct RolloutCreator_v
 	_closed_rollout_bar_height = 24, -- height of closed rollout
 
 	
-	dialog_definition = "",
+	rollouts_definition = "",
 	
 	/** Create dialog
 	  *
@@ -127,7 +127,7 @@ struct RolloutCreator_v
 			/* EDIT END */
 			_Rollout.RCI.end() --return _Rollout.RCI.def
 			
-			this.dialog_definition += _Rollout.RCI.str + "\n"
+			this.rollouts_definition += _Rollout.RCI.str + "\n"
 		)		
 	),
 

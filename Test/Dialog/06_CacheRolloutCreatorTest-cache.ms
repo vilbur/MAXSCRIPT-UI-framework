@@ -1,5 +1,0 @@
-CreateDialog DIALOG_test width: 256.0 height: 996.0
-AddSubRollout DIALOG_test.Subrollouts	ROLLOUT_main_rollout rolledUp:false
-AddSubRollout ROLLOUT_main_rollout.Subrollouts	ROLLOUT_sub_rollout rolledUp:false
-AddSubRollout ROLLOUT_sub_rollout.Subrollouts	ROLLOUT_nested_sub_rollout rolledUp:false
-

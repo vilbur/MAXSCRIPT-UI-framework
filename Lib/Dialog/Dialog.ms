@@ -124,12 +124,13 @@ struct Dialog_v
 
 		this.destroy()
 		
-		cache_file = this._getPathToCacheFile()
-		
+		cache_file_path = this._getPathToCacheFile()
+		format "cache_file_path: %\n" cache_file_path
+		format "doesFileExist: %\n" (doesFileExist (cache_file_path))
 		/*------------------------------------------------------------------------------
 			GENERATE DIALOG
 		--------------------------------------------------------------------------------*/
-		if not cache or not doesFileExist (cache_file) then
+		if not cache or not doesFileExist (cache_file_path) then
 		(
 			_RolloutCreator = RolloutCreator_v Ini:Ini DEBUG:DEBUG
 	
@@ -187,7 +188,7 @@ struct Dialog_v
 			--if this.DEBUG then format "addSubRollouts % ms\n" ((timestamp()) - timer_all)
 			
 			/* CACHE FILE */ 
-			this.writeToCacheFile cache_file width height 
+			this.writeToCacheFile cache_file_path width height 
 
 			/*------------------------------------------------------------------------------
 				POST CREATE
@@ -221,7 +222,7 @@ struct Dialog_v
 		--------------------------------------------------------------------------------*/
 		else
 		(
-			filein cache_file
+			filein cache_file_path
 			
 			/* SET DOCK STATES */ 		
 			this._setDockStyle (style) (dock)
@@ -233,7 +234,7 @@ struct Dialog_v
 			
 			this.RolloutResizer.fitSlotsToDialog( dialog_rollout )
 			
-			format "\n\n====== Dialog Created % ms CACHE FILE: %\n\n" ((timestamp()) - timer_createRollout) cache_file
+			format "\n\n====== Dialog Created % ms CACHE FILE: %\n\n" ((timestamp()) - timer_createRollout) cache_file_path
 			
 			dialog_rollout --return
 		)
@@ -842,23 +843,41 @@ struct Dialog_v
 	
 	/** Write to deff file
 	 */
-	function writeToCacheFile cache_file width height =
+	function writeToCacheFile cache_file_path width height =
 	(
 		format "\n"; print "Dialog_v.writeToCacheFile()"
 		--format "\n"; print "if.writeToCacheFile()"
 		
 		create_dialog_str = "CreateDialog " + this.id as string + " width: " + width as string +" height: " + height as string + "\n"
+		destroy_dialog_str = "try( destroyDialog "+ this.id as string +" )catch()\n\n"
+		add_sub_rollouts_str = "try(\n"+ _RolloutCreator.SubolloutsCreator.addSubRollouts_definition +")catch()\n\n"
+		
 
-		deleteFile cache_file
+		deleteFile cache_file_path
 	
-		f = createFile cache_file
-		 
-		if f != undefined do
-		(
+		try(
+			makeDir ( getFilenamePath( cache_file_path )  ) all:true
 			
-			FORMAT "%\n" ( _RolloutCreator.dialog_definition + create_dialog_str + _RolloutCreator.SubolloutsCreator.addSubRollouts_definition ) to:f
+			cache_file = createFile cache_file_path
+			--format "cache_file: %\n" cache_file
+			if cache_file != undefined do
+			(
+				format "WRITE CACHE FILE: %\n" cache_file_path
+
+                FORMAT "%\n" ( destroy_dialog_str )                	to:cache_file
+                FORMAT "%\n" ( _RolloutCreator.rollouts_definition ) 	to:cache_file
+                FORMAT "%\n" ( create_dialog_str )                	to:cache_file
+                FORMAT "%\n" ( add_sub_rollouts_str )           	to:cache_file
+				
+				close cache_file
+			)
 			
-			close f
+		)catch(
+			
+			if cache_file != undefined do
+				close cache_file
+			
+			format "ERROR TO WRITE CACHE FILE: %\n" cache_file_path
 		)
 	),
 

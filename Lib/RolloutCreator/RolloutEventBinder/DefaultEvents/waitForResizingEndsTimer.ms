@@ -2,7 +2,7 @@ global CALLBACK_DELAY_TIMER
 
 /**  START timer and wait then user stop resizing in:
 		
-		--"./Callbacks/fireResizeDockUndockEvents.ms"
+		--"./Callbacks/waitForResizingEnds.ms"
   *
   */
 function waitForResizingEndsTimer dialog_id event_type =
@@ -23,7 +23,7 @@ function waitForResizingEndsTimer dialog_id event_type =
 		
 		CALLBACK_DELAY_TIMER.Interval = timer_interval
 
-		dotNet.addEventHandler CALLBACK_DELAY_TIMER "Tick" fireResizeDockUndockEvents --"./Callbacks/fireResizeDockUndockEvents.ms"
+		dotNet.addEventHandler CALLBACK_DELAY_TIMER "Tick" waitForResizingEnds --"./Callbacks/waitForResizingEnds.ms"
 
 		CALLBACK_DELAY_TIMER.enabled = true
 
