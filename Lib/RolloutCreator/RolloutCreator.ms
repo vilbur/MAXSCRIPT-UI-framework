@@ -45,7 +45,7 @@ struct RolloutCreator_v
 	_closed_rollout_bar_height = 24, -- height of closed rollout
 
 	
-	rollouts_definition = "",
+	RolloutsDefinition	= Dictionary #NAME, -- KEY:#ROLLOUT_ID VALUE:RCI.def
 	
 	/** Create dialog
 	  *
@@ -54,15 +54,15 @@ struct RolloutCreator_v
 	function createRollout _Rollout width: =
 	(
 		if DEBUG then format "\n\n------------------------------------- RolloutCreator_v.createRollout() id:#%	-------------------------------------\n"  ( _Rollout.id as string );
-		--format "\n\n------------------------------------- RolloutCreator_v.createRollout() id:#%	-------------------------------------\n"  ( (_Rollout.getFullId()) as string );
-		--format "Ini: %\n" Ini
-		--format "Ini: %\n" (Ini.getPath())
+
 		
 		if _Rollout.RCI == undefined then -- RCI is defined WHEN chache is loaded
 		(
-			_Rollout.setRCI()
+			this._keepUniqueRolloutID(_Rollout)
 			
 			execute( "global " + _Rollout.id as string )
+			
+			_Rollout.setRCI()
 			
 			/*==============================================================================
 				SUBROLLOUTS 
@@ -123,11 +123,12 @@ struct RolloutCreator_v
 			/* add EVENTS */
 			RolloutEventBinder.addHandlers()
 
+			/* SAVE DEFINITION TO CACHE */ 
+			RolloutsDefinition[_Rollout.id] = _Rollout.RCI.str 
 			
 			/* EDIT END */
 			_Rollout.RCI.end() --return _Rollout.RCI.def
 			
-			this.rollouts_definition += _Rollout.RCI.str + "\n"
 		)		
 	),
 
@@ -301,7 +302,6 @@ struct RolloutCreator_v
 		/* ADD EACH VARIABLE */ 
 		for key in _Rollout.add_locals.keys do
 			_Rollout.RCI.addLocal ( key as string )  init:(convertToString _Rollout.add_locals[key])
-			--_Rollout.RCI.addLocal ( key as string )  init:(_Rollout.add_locals[key] as string )
 				
 	),
 
@@ -356,6 +356,20 @@ struct RolloutCreator_v
 			_Rollout.title
 	),
 
+
+	/** Test unique rollout
+	 */
+	function _keepUniqueRolloutID _Rollout =
+	(
+		--format "\n"; print "RolloutCreator_v._keepUniqueRolloutID()"
+		if RolloutsDefinition[_Rollout.id] != undefined then
+		(
+			rollout_id = _Rollout.id as string
+			
+			for i = 1 to 999 while RolloutsDefinition[_Rollout.id] != undefined do
+				_Rollout.id = ( rollout_id + i as string ) as name
+		)
+	),
 	--/** Get title of rollout
 	--  *
 	--  * @return string title with whitespace between each character E.G.: "ROLLOUT TITLE" >>> "R O L L O U T   T I T L E"

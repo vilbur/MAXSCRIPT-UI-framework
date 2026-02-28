@@ -848,26 +848,29 @@ struct Dialog_v
 		format "\n"; print "Dialog_v.writeToCacheFile()"
 		--format "\n"; print "if.writeToCacheFile()"
 		
+		rollouts_definition = ""
 		create_dialog_str = "CreateDialog " + this.id as string + " width: " + width as string +" height: " + height as string + "\n"
 		destroy_dialog_str = "try( destroyDialog "+ this.id as string +" )catch()\n\n"
 		add_sub_rollouts_str = "try(\n"+ _RolloutCreator.SubolloutsCreator.addSubRollouts_definition +")catch()\n\n"
 		
-
+		for rollout_id in _RolloutCreator.RolloutsDefinition.keys do
+			rollouts_definition += _RolloutCreator.RolloutsDefinition[rollout_id]
+		
 		deleteFile cache_file_path
-	
-		try(
-			makeDir ( getFilenamePath( cache_file_path )  ) all:true
-			
-			cache_file = createFile cache_file_path
-			--format "cache_file: %\n" cache_file
-			if cache_file != undefined do
-			(
-				format "WRITE CACHE FILE: %\n" cache_file_path
 
-                FORMAT "%\n" ( destroy_dialog_str )                	to:cache_file
-                FORMAT "%\n" ( _RolloutCreator.rollouts_definition ) 	to:cache_file
-                FORMAT "%\n" ( create_dialog_str )                	to:cache_file
-                FORMAT "%\n" ( add_sub_rollouts_str )           	to:cache_file
+        try(
+            makeDir ( getFilenamePath( cache_file_path )  ) all:true
+
+            cache_file = createFile cache_file_path
+
+            if cache_file != undefined do
+            (
+                format "WRITE CACHE FILE: %\n" cache_file_path
+
+                FORMAT "%\n" ( destroy_dialog_str ) 	to:cache_file
+                FORMAT "%\n" ( rollouts_definition )	to:cache_file
+                FORMAT "%\n" ( create_dialog_str )  	to:cache_file
+                FORMAT "%\n" ( add_sub_rollouts_str )	to:cache_file
 				
 				close cache_file
 			)
