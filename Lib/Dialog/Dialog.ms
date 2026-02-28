@@ -25,6 +25,8 @@ global AUTORUN_EVENTS = Dictionary()
 if HOTKEYS_GLOBAL == undefined then
 	global HOTKEYS_GLOBAL = HotKeys_v()
 
+global createDialogFromCacheFile
+
 
 /** Create dialog [Maxscript help](https://help.autodesk.com/view/MAXDEV/2021/ENU/?guid=GUID-816D257C-CD2D-4753-A792-6E7AEFAFA6A7)
   *
@@ -119,39 +121,41 @@ struct Dialog_v
 		cache: false	\ -- load generated dialog for fast startup -- true: PRODUCTION | false: DEVELOPMENT
 		parent: =
 	(
-		format "\n"; print "Dialog_v.create()"
+		--format "\n"; print "Dialog_v.create()"
 		timer_createRollout = timeStamp()
 
 		this.destroy()
 		
 		cache_file_path = this._getPathToCacheFile()
-		format "cache_file_path: %\n" cache_file_path
-		format "doesFileExist: %\n" (doesFileExist (cache_file_path))
+
+		
+		/* WIDTH & HEIGHT MUST BE INTEGER - otherwise height of  dialog doesn't work */ 
+		if superClassOf width  == Number then width  = width as integer
+		if superClassOf height == Number then height = height as integer
+		
+		/* DIALOG SIZE */ 
+		this._setDialogMinimalSize()
+		this._setDialogSizeByIni()
+		this._setWithByMinimalSize()
+
+		/* HEIGHT */ 
+		height = this._getHeightOnCreate(height)
+		/* WIDTH */ 
+		if classOf width != integer then
+			width = this.width
+			
 		/*------------------------------------------------------------------------------
 			GENERATE DIALOG
 		--------------------------------------------------------------------------------*/
 		if not cache or not doesFileExist (cache_file_path) then
 		(
+			format "\n**** NO CACHE\n"
 			_RolloutCreator = RolloutCreator_v Ini:Ini DEBUG:DEBUG
 	
 			--DEBUG = true
 			if this.DEBUG then timer_all = timestamp()
 			
-			/* WIDTH & HEIGHT MUST BE INTEGER - otherwise height of  dialog doesn't work */ 
-			if superClassOf width  == Number then width  = width as integer
-			if superClassOf height == Number then height = height as integer
-			
-			/* DIALOG SIZE */ 
-			this._setDialogMinimalSize()
-			this._setDialogSizeByIni()
-			this._setWithByMinimalSize()
 
-			/* HEIGHT */ 
-			height = this._getHeightOnCreate(height)
-			/* WIDTH */ 
-			if classOf width != integer then
-				width = this.width
-	
 			/*------------------------------------------------------------------------------
 				CREATE MAIN ROLLOUT AND NESTED ROLLOUTS
 			--------------------------------------------------------------------------------*/
@@ -222,15 +226,20 @@ struct Dialog_v
 		--------------------------------------------------------------------------------*/
 		else
 		(
+			format "\n**** USE CACHE\n"
+			
 			filein cache_file_path
+			
+			dialog_rollout = createDialogFromCacheFile width height
 			
 			/* SET DOCK STATES */ 		
 			this._setDockStyle (style) (dock)
-		
+			
 			/* DOCK DIALOG */ 
 			this._setDockState()
-
-			dialog_rollout = execute ( this.id as string )
+			
+			/* CAST ROLLOUT TO VARIABLE */ 
+			--dialog_rollout = execute ( this.id as string )
 			
 			this.RolloutResizer.fitSlotsToDialog( dialog_rollout )
 			
@@ -844,21 +853,24 @@ struct Dialog_v
 	/** Write to deff file
 	 */
 	function writeToCacheFile cache_file_path width height =
-	(
-		format "\n"; print "Dialog_v.writeToCacheFile()"
+    (
+        format "\n"; print "Dialog_v.writeToCacheFile()"
 		--format "\n"; print "if.writeToCacheFile()"
 		
-		rollouts_definition = ""
-		create_dialog_str = "CreateDialog " + this.id as string + " width: " + width as string +" height: " + height as string + "\n"
-		destroy_dialog_str = "try( destroyDialog "+ this.id as string +" )catch()\n\n"
-		add_sub_rollouts_str = "try(\n"+ _RolloutCreator.SubolloutsCreator.addSubRollouts_definition +")catch()\n\n"
-		
-		for rollout_id in _RolloutCreator.RolloutsDefinition.keys do
-			rollouts_definition += _RolloutCreator.RolloutsDefinition[rollout_id]
+		rollouts_definition	= ""
+		fn_definition   	= "function createDialogFromCacheFile width height =\n(\n"
+		create_dialog_str	= "CreateDialog " + this.id as string + " width:width height:height \n"
+		destroy_dialog_str	= "try( destroyDialog "+ this.id as string +" )catch()\n\n"
+		add_rollouts_str	= "try(\n"+ _RolloutCreator.SubolloutsCreator.addSubRollouts_definition +")catch()\n\n"
+		return_rollout		= this.id as string + "-- return" 
 		
 		deleteFile cache_file_path
 
         try(
+			
+			for rollout_id in _RolloutCreator.RolloutsDefinition.keys do
+				rollouts_definition += _RolloutCreator.RolloutsDefinition[rollout_id]
+			
             makeDir ( getFilenamePath( cache_file_path )  ) all:true
 
             cache_file = createFile cache_file_path
@@ -866,11 +878,16 @@ struct Dialog_v
             if cache_file != undefined do
             (
                 format "WRITE CACHE FILE: %\n" cache_file_path
+				--format "rollouts_definition: %\n" rollouts_definition
 
-                FORMAT "%\n" ( destroy_dialog_str ) 	to:cache_file
-                FORMAT "%\n" ( rollouts_definition )	to:cache_file
-                FORMAT "%\n" ( create_dialog_str )  	to:cache_file
-                FORMAT "%\n" ( add_sub_rollouts_str )	to:cache_file
+                FORMAT "%\n" fn_definition 			to:cache_file
+                FORMAT "%\n" destroy_dialog_str 	to:cache_file
+                FORMAT "%\n" rollouts_definition 	to:cache_file
+                FORMAT "%\n" create_dialog_str  	to:cache_file
+                FORMAT "%\n" add_rollouts_str    	to:cache_file
+                FORMAT "%\n" return_rollout 		to:cache_file
+				
+                FORMAT ")" 	to:cache_file
 				
 				close cache_file
 			)

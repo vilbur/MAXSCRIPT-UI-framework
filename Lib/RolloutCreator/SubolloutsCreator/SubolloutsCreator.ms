@@ -111,7 +111,7 @@ struct SubolloutsCreator_v
 					--format "_Subrollout: %\n" _Subrollout.id
 					
 					--format "Subrollouts.nested_level: %\n" Subrollouts.nested_level
-					this.addSubRollouts_definition += this._addSubrolloutDefinition Subrollouts rolled_up_state
+					this.addSubRollouts_definition += this._addSubrolloutDefinition Subrollouts _Subrollout rolled_up_state
 
 					this.addSubRollouts (_Subrollout)
 				)
@@ -178,7 +178,7 @@ struct SubolloutsCreator_v
 	
 	/** Add subrollout definition
 	 */
-	function _addSubrolloutDefinition Subrollouts rolled_up_state =
+	function _addSubrolloutDefinition Subrollouts _Subrollout rolled_up_state =
 	(
 		--format "\n"; print "SubolloutsCreator_v._addSubrolloutDefinition()"
 		prefix = if Subrollouts.nested_level <= 1 then "\n" else ""

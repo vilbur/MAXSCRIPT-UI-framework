@@ -17,10 +17,8 @@ struct RolloutResizer_v
 	 */
 	function fitSlotsToDialog _Rollout  =
 	(
-		format "\n"; print "RolloutResizer_v.fitSlotsToDialog()"
-		--format "_Rollout:	% \n" _Rollout
-		--if ( dialog_height = _Rollout.RCI.height ) == undefined then
-		--	dialog_height = execute( _Rollout.id as string + ".height" )
+		--format "\n"; print "RolloutResizer_v.fitSlotsToDialog()"
+		--format "_Rollout.name: %\n" _Rollout.name
 
 		fit_rollouts_stamp = timestamp()
 
@@ -46,26 +44,36 @@ struct RolloutResizer_v
 		--format "subrollout_slots.count: %\n" subrollout_slots.count
 		if subrollout_slots.count > 0 then
 		(
-			format "dialog_controls: %\n" dialog_controls
+			--format "dialog_controls: %\n" dialog_controls
 			removeControlsBeforeFirstSlot (dialog_controls)
 
 			last_control = this._getLastControl (dialog_controls)
-			format "last_control: %\n" last_control
-			format "classOf last_control: %\n" ( classOf last_control )
-			format "last_control.pos: %\n" last_control.pos
-			format "last_control.caption: %\n" last_control.caption
 			
-			if last_control.pos == undefined then return false
-
-			last_control_position = last_control.pos.y + last_control.height
-			format "last_control_position: %\n" last_control_position
+			
+			subrollouts_id = _Rollout.name+"."+last_control.caption
+			--format "subrollouts_id: %\n" subrollouts_id
+			
+			/* GET POS AND */ 
+			last_control_pos	= execute ( subrollouts_id+".pos" )
+			last_control_height 	= execute ( subrollouts_id+".height" )
+			--format "last_control_pos: %\n" last_control_pos
+			--format "last_control_height: %\n" last_control_height
+			if last_control.pos == undefined then return true
+			
+			last_control_position = last_control_pos.y + last_control_height
+			--format "last_control_position: %\n" last_control_position
 			empty_space_bottom = dialog_height - last_control_position - padding_bottom
-
+			--format "empty_space_bottom: %\n" empty_space_bottom
 			size_offset_per_slot = (empty_space_bottom / subrollout_slots.count) as integer
 			--format "size_offset_per_slot: %\n" size_offset_per_slot
+			
+			/* OFFSET EACH CONTROL  */ 
 			for control in dialog_controls do
+				/* OFFSET SUBROLLOUTS */ 
 				if classOf control == subRollout then
 					this._resizeSubrolloutSlot (control)(size_offset_per_slot)
+				
+				/* OFFSET CONTROL */ 
 				else
 					this._offsetContrtol (control)
 		)

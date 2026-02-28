@@ -123,12 +123,12 @@ struct RolloutCreator_v
 			/* add EVENTS */
 			RolloutEventBinder.addHandlers()
 
-			/* SAVE DEFINITION TO CACHE */ 
-			RolloutsDefinition[_Rollout.id] = _Rollout.RCI.str 
 			
 			/* EDIT END */
 			_Rollout.RCI.end() --return _Rollout.RCI.def
 			
+			/* SAVE DEFINITION TO CACHE */ 
+			RolloutsDefinition[_Rollout.id] = _Rollout.RCI.str 
 		)		
 	),
 
@@ -359,7 +359,7 @@ struct RolloutCreator_v
 
 	/** Test unique rollout
 	 */
-	function _keepUniqueRolloutID _Rollout =
+	function _keepUniqueRolloutID &_Rollout =
 	(
 		--format "\n"; print "RolloutCreator_v._keepUniqueRolloutID()"
 		if RolloutsDefinition[_Rollout.id] != undefined then
@@ -369,6 +369,8 @@ struct RolloutCreator_v
 			for i = 1 to 999 while RolloutsDefinition[_Rollout.id] != undefined do
 				_Rollout.id = ( rollout_id + i as string ) as name
 		)
+		
+		_Rollout --return
 	),
 	--/** Get title of rollout
 	--  *

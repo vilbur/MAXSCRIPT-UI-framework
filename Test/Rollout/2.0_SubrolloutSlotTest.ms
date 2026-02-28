@@ -19,9 +19,7 @@ Rollouts_A_set_props	= Dialog.get (#Rollouts_A)
 
 /* SUB ROLLOUTS */
 _Subrollouts = Rollout_A1.Rollouts()
---_Subrollout = _Subrollouts.Roll "Subrollout" height:128
-_Subrollout = _Subrollouts.Roll "Subrollout A1" height:128
-
+_Subrollout = _Subrollouts.Roll "Subrollout A" height:128
 
 
 /* ROLLOUTS  NESTED */

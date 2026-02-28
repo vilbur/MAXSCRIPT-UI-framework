@@ -55,7 +55,7 @@ Dialog = Dialog_v title:"Test"  ini:(getSourceFileName())
 dialogEventsTest(Dialog)
 
 /*------------------------------------------------------------------------------
-	ROLLOUTS
+	ROLLOUTS A
 --------------------------------------------------------------------------------*/
 
 _Rollouts	 = Dialog.Rollouts()
@@ -92,6 +92,13 @@ _NestedSubRollout    = _NestedSubRollouts.Roll "Nested Sub Rollout"
 _Controls   = _NestedSubRollout.Controls group:"Nested SubRollout Controls"
 
 
+/*------------------------------------------------------------------------------
+	ROLLOUTS B
+--------------------------------------------------------------------------------*/
+Rollouts_B = Dialog.Rollouts slot:#Rollouts_B
+Rollout_B1 = Rollouts_B.Roll "Rollout B1" height:256
+
+
 
 /*------------------------------------------------------------------------------
 	CREATE DIALOG
@@ -102,7 +109,7 @@ _Controls   = _NestedSubRollout.Controls group:"Nested SubRollout Controls"
 
 /* USE CACHE */
 use_cache = true
---use_cache = false
+use_cache = false
 Dialog.create cache:use_cache
 
 Dialog.register()
