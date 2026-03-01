@@ -1,4 +1,5 @@
 *.bak
 *.ini
+test.ms
 
 !macroscripts.ini

@@ -12,6 +12,7 @@ struct FileInImporter_v
 	/* properties */
 	blacklist = "",
 
+	DEBUG = true,
 	/* private */
 	/* dependency */
 	/* reference */
@@ -37,10 +38,11 @@ struct FileInImporter_v
 	 */
 	function _fileInFiles =
 	(
-		format "\n"; print "FileInImporter_v._fileInFiles()"
+		--format "\n"; print "FileInImporter_v._fileInFiles()"
 		for file_path in files where not matchPattern file_path pattern:blacklist do
 		(
-				format "FILE IN: % \n" (file_path)
+			if DEBUG then
+				FORMAT "FILE IN: % \n" (file_path)
 
 			if doesFileExist file_path then
 				try(

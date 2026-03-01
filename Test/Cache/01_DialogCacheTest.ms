@@ -109,7 +109,7 @@ Rollout_B1 = Rollouts_B.Roll "Rollout B1" height:256
 
 /* USE CACHE */
 use_cache = true
-use_cache = false
+--use_cache = false
 Dialog.create cache:use_cache
 
 Dialog.register()

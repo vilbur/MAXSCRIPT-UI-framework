@@ -22,6 +22,7 @@ struct StartUpScriptImporter_v
 	/* properties */
 	filename, -- filename of std script in "#maxroot/stdplugs/stdscripts/viltools-startup.ms"
 	
+	DEBUG = true,
 	/* private */
 	/* dependency */
 	/* reference */
@@ -86,7 +87,10 @@ struct StartUpScriptImporter_v
 		content += "	if doesFileExist file_path then\n"
 		content += "	(\n"
 		content += "		filein file_path\n"
-		content += "		format \"FILE IN: %\\n\" file_path\n"
+		
+		if  DEBUG then
+			content += "		format \"FILE IN: %\\n\" file_path\n"
+		
 		content += "    )\nelse\n"
 		content += "		format \"\\n\\n----- WARNING: Missing file in: %\\n\\nERROR OF IMPORT FILE: %\\n\" (getSourceFileName()) file_path"
 		

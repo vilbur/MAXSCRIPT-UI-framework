@@ -1,3 +1,5 @@
+global createDialogFromCacheFile = undefined
+
 if DIALOG_GLOBAL_DATA == undefined then
 	global DIALOG_GLOBAL_DATA = Dictionary()
 
@@ -25,7 +27,6 @@ global AUTORUN_EVENTS = Dictionary()
 if HOTKEYS_GLOBAL == undefined then
 	global HOTKEYS_GLOBAL = HotKeys_v()
 
-global createDialogFromCacheFile
 
 
 /** Create dialog [Maxscript help](https://help.autodesk.com/view/MAXDEV/2021/ENU/?guid=GUID-816D257C-CD2D-4753-A792-6E7AEFAFA6A7)
@@ -217,7 +218,7 @@ struct Dialog_v
 
 			FORMAT ("\n\nDIALOG \""+ id as string +"\" HAS BEEN CREATED\n\n" )
 	
-			format "\n\n====== Dialog Created % ms\n\n" ((timestamp()) - timer_createRollout)
+			format "\n\n====== Dialog Created in %ms\n\n" ((timestamp()) - timer_createRollout)
 			
 			RCI.def --return
 		)
@@ -227,7 +228,7 @@ struct Dialog_v
 		else
 		(
 			format "\n**** USE CACHE\n"
-			
+			format "cache_file_path: %\n" cache_file_path
 			filein cache_file_path
 			
 			dialog_rollout = createDialogFromCacheFile width height
@@ -243,7 +244,7 @@ struct Dialog_v
 			
 			this.RolloutResizer.fitSlotsToDialog( dialog_rollout )
 			
-			format "\n\n====== Dialog Created % ms CACHE FILE: %\n\n" ((timestamp()) - timer_createRollout) cache_file_path
+			format "\n\n====== Dialog Created in %ms FROM CACHE FILE: %\n\n" ((timestamp()) - timer_createRollout) cache_file_path
 			
 			dialog_rollout --return
 		)
@@ -857,11 +858,21 @@ struct Dialog_v
         format "\n"; print "Dialog_v.writeToCacheFile()"
 		--format "\n"; print "if.writeToCacheFile()"
 		
-		rollouts_definition	= ""
+		subrollouts_def	= ""
+        addSubRollouts_def = ""
+		
+        addSubRollouts_array = _RolloutCreator.SubolloutsCreator.addSubRollouts_definition
+		
+		--for nested_level in _RolloutCreator.SubolloutsCreator.addSubRollouts_definition do
+        for nested_level = 1 to addSubRollouts_array.count do
+             addSubRollouts_def += addSubRollouts_array[nested_level]
+		
 		fn_definition   	= "function createDialogFromCacheFile width height =\n(\n"
 		create_dialog_str	= "CreateDialog " + this.id as string + " width:width height:height \n"
 		destroy_dialog_str	= "try( destroyDialog "+ this.id as string +" )catch()\n\n"
-		add_rollouts_str	= "try(\n"+ _RolloutCreator.SubolloutsCreator.addSubRollouts_definition +")catch()\n\n"
+		
+		add_rollouts_str	= "try(\n"+ addSubRollouts_def +")catch()\n\n"
+		
 		return_rollout		= this.id as string + "-- return" 
 		
 		deleteFile cache_file_path
@@ -869,7 +880,7 @@ struct Dialog_v
         try(
 			
 			for rollout_id in _RolloutCreator.RolloutsDefinition.keys do
-				rollouts_definition += _RolloutCreator.RolloutsDefinition[rollout_id]
+				subrollouts_def += _RolloutCreator.RolloutsDefinition[rollout_id]
 			
             makeDir ( getFilenamePath( cache_file_path )  ) all:true
 
@@ -878,11 +889,11 @@ struct Dialog_v
             if cache_file != undefined do
             (
                 format "WRITE CACHE FILE: %\n" cache_file_path
-				--format "rollouts_definition: %\n" rollouts_definition
+				--format "subrollouts_def: %\n" subrollouts_def
 
                 FORMAT "%\n" fn_definition 			to:cache_file
                 FORMAT "%\n" destroy_dialog_str 	to:cache_file
-                FORMAT "%\n" rollouts_definition 	to:cache_file
+                FORMAT "%\n" subrollouts_def 	to:cache_file
                 FORMAT "%\n" create_dialog_str  	to:cache_file
                 FORMAT "%\n" add_rollouts_str    	to:cache_file
                 FORMAT "%\n" return_rollout 		to:cache_file

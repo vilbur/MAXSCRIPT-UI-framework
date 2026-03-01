@@ -20,7 +20,7 @@ struct SubolloutsCreator_v
 
 	slot_offset_x = -12, -- move slot ( rollouts indeed ) to left side as possible
 
-	addSubRollouts_definition = "",
+	addSubRollouts_definition = #(),
 	
 	DEBUG = false,
 
@@ -111,7 +111,7 @@ struct SubolloutsCreator_v
 					--format "_Subrollout: %\n" _Subrollout.id
 					
 					--format "Subrollouts.nested_level: %\n" Subrollouts.nested_level
-					this.addSubRollouts_definition += this._addSubrolloutDefinition Subrollouts _Subrollout rolled_up_state
+					this._addSubrolloutDefinition Subrollouts _Subrollout rolled_up_state
 
 					this.addSubRollouts (_Subrollout)
 				)
@@ -181,13 +181,21 @@ struct SubolloutsCreator_v
 	function _addSubrolloutDefinition Subrollouts _Subrollout rolled_up_state =
 	(
 		--format "\n"; print "SubolloutsCreator_v._addSubrolloutDefinition()"
-		prefix = if Subrollouts.nested_level <= 1 then "\n" else ""
+		nested_level = Subrollouts.nested_level
 		
-		for i = 1 to Subrollouts.nested_level do
+		if addSubRollouts_definition[nested_level] == undefined then 
+			addSubRollouts_definition[nested_level] = ""
+		
+		
+		--prefix = if nested_level <= 1 then "\n" else ""
+		prefix = "\n"
+		
+		for i = 1 to nested_level do
 			prefix += "	"
 		
 		
-        prefix + "AddSubRollout "+ Subrollouts.getSlotId() +" "+ _Subrollout.id as string +" rolledUp:"+rolled_up_state as string + "\n"
+        --prefix + "AddSubRollout "+ Subrollouts.getSlotId() +" "+ _Subrollout.id as string +" rolledUp:"+rolled_up_state as string + "\n"
+        addSubRollouts_definition[nested_level] += prefix + "AddSubRollout "+ Subrollouts.getSlotId() +" "+ _Subrollout.id as string +" rolledUp:"+rolled_up_state as string + " --" +nested_level as string + "\n"
 	),
 
 	/**
