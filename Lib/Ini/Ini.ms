@@ -47,17 +47,13 @@ struct Ini_v
 
 	/** Ini load control state
 	 */
-	function load _section _key default:undefined =
+	function load _section key default:undefined =
 	(
 		--print "Ini.load()"
-		--format "_section	= % \n" _section
-		--format "_key	= % \n" _key
 		val	= default
-		--format "val	= % \n" val
-		--format "default	= % \n" default
-		--format "classOf default	= % \n" (classOf default)
-		val_from_ini = getINISetting _path ( _section	as string ) ( _key as string ) -- return
-		--format "\nval_from_ini = % \n" val_from_ini
+
+		val_from_ini = getINISetting _path ( _section	as string ) ( key as string ) -- return
+		
 		if( val_from_ini == "" or val_from_ini == undefined ) then val else this.convertDatatype(val_from_ini) --return
 	),
 
@@ -90,14 +86,14 @@ struct Ini_v
 	/** Delete ini entry
 	  *
 	  */
-	function delete _section _key: =
+	function delete _section key: =
 	(
 		--format "\n"; print "Ini_v.delete()"
 		if _path == undefined then
 			return false
 
-		if _key != unsupplied then
-			delINISetting  _path ( _section	as string ) ( _key as string )
+		if key != unsupplied then
+			delINISetting  _path ( _section	as string ) ( key as string )
 		else
 			delINISetting  _path ( _section	as string )
 	),

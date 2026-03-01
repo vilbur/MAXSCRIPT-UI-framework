@@ -1,13 +1,14 @@
-global CALLBACK_DELAY_TIMER
-
+global CALLBACK_DELAY_TIMER = undefined
+ 
 /**  START timer and wait then user stop resizing in:
 		
 		--"./Callbacks/waitForResizingEnds.ms"
   *
   */
-function waitForResizingEndsTimer dialog_id event_type =
+function waitForResizingEndsTimer dialog_id =
 (
 	--format "\n"; print "DefaultEvents_v.waitForResizingEndsTimer()"
+	--format "CALLBACK_DELAY_TIMER: %\n" CALLBACK_DELAY_TIMER
 	
 	/*------------------------------------------------------------------------------
 		INTERVAL VALUE - for check rollout size 

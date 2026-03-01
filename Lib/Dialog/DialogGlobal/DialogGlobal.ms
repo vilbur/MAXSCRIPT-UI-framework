@@ -19,9 +19,12 @@ struct DialogGlobalData_v
 	  */
 	function fill =
 	(
-		this.position	= GetDialogPos  this.DialogClass
+		--format "\n"; print "DialogGlobal.fill()"
+		if (this.position = GetDialogPos  this.DialogClass) == [0,0] then
+			this.position	= execute ("GetDialogPos " + this.DialogClass.name ) -- fallback if dialog is created with cach file
 
-		this.size	= GetDialogSize this.DialogClass
+		if (this.size = GetDialogSize  this.DialogClass) == [0,0] then
+			this.size	= execute ("GetDialogSize " + this.DialogClass.name )
 
 		this.dock_state = (try(cui.getDockState this.DialogClass )catch(#cui_floatable))
 	),

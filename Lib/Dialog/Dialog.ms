@@ -128,29 +128,20 @@ struct Dialog_v
 		this.destroy()
 		
 		cache_file_path = this._getPathToCacheFile()
-
 		
-		/* WIDTH & HEIGHT MUST BE INTEGER - otherwise height of  dialog doesn't work */ 
-		if superClassOf width  == Number then width  = width as integer
-		if superClassOf height == Number then height = height as integer
+		width_height = this._getWidthAndHeight width height
 		
-		/* DIALOG SIZE */ 
-		this._setDialogMinimalSize()
-		this._setDialogSizeByIni()
-		this._setWithByMinimalSize()
-
-		/* HEIGHT */ 
-		height = this._getHeightOnCreate(height)
-		/* WIDTH */ 
-		if classOf width != integer then
-			width = this.width
-			
-		/*------------------------------------------------------------------------------
-			GENERATE DIALOG
-		--------------------------------------------------------------------------------*/
+		dialog_pos = this._getPosition(pos)(origin)
+		dialog_style = if( style == unsupplied ) then this.style else style
+		--format "dialog_style: %\n" dialog_style
+		
+		
+		/*==============================================================================
+			COMPILE DIALOG
+		================================================================================*/
 		if not cache or not doesFileExist (cache_file_path) then
 		(
-			format "\n**** NO CACHE\n"
+			--format "\n**** NO CACHE\n"
 			_RolloutCreator = RolloutCreator_v Ini:Ini DEBUG:DEBUG
 	
 			--DEBUG = true
@@ -163,20 +154,21 @@ struct Dialog_v
 			
 			_RolloutCreator.createRollout (this) width:width  -- create nested rollouts
 			--if this.DEBUG then format "createRollout % ms\n" ((timestamp()) - timer_all)
-	
+	  
+			
 			/*------------------------------------------------------------------------------
 				CREATE DIALOG
 			--------------------------------------------------------------------------------*/
 			
 			CreateDialog (this.RCI.def) \
-				width:	width                          	\
-				height:	height                          	\
-				pos:	(this._getPosition(pos)(origin))	\
+				width:	this.width                         	\
+				height:	this.height                         	\
+				pos:	dialog_pos	\
 				bgcolor:	bgcolor	\
 				fgcolor:	fgcolor	\
 				bitmap:	bitmap	\
 				bmpstyle:	bmpstyle	\
-				style:	(if( style == unsupplied ) then this.style else style)	\
+				style:	dialog_style	\
 				modal:	modal	\
 				autoLayoutOnResize:	true	\
 				escapeEnable:	escapeEnable	\
@@ -218,7 +210,7 @@ struct Dialog_v
 
 			FORMAT ("\n\nDIALOG \""+ id as string +"\" HAS BEEN CREATED\n\n" )
 	
-			format "\n\n====== Dialog Created in %ms\n\n" ((timestamp()) - timer_createRollout)
+			FORMAT "\n\n====== Dialog Created in %ms\n\n" ((timestamp()) - timer_createRollout)
 			
 			RCI.def --return
 		)
@@ -227,11 +219,14 @@ struct Dialog_v
 		--------------------------------------------------------------------------------*/
 		else
 		(
-			format "\n**** USE CACHE\n"
-			format "cache_file_path: %\n" cache_file_path
+			--format "\n**** USE CACHE\n"
+			--format "cache_file_path: %\n" cache_file_path
+			--format "this.width: %\n" this.width
+			--format "this.height: %\n" this.height
+			
 			filein cache_file_path
 			
-			dialog_rollout = createDialogFromCacheFile width height
+			dialog_rollout = createDialogFromCacheFile this.width this.height dialog_pos bgcolor fgcolor bitmap bmpstyle dialog_style modal true escapeEnable lockHeight lockWidth parent
 			
 			/* SET DOCK STATES */ 		
 			this._setDockStyle (style) (dock)
@@ -244,7 +239,7 @@ struct Dialog_v
 			
 			this.RolloutResizer.fitSlotsToDialog( dialog_rollout )
 			
-			format "\n\n====== Dialog Created in %ms FROM CACHE FILE: %\n\n" ((timestamp()) - timer_createRollout) cache_file_path
+			FORMAT "\n\n====== Dialog Created in %ms FROM CACHE FILE: %\n\n" ((timestamp()) - timer_createRollout) cache_file_path
 			
 			dialog_rollout --return
 		)
@@ -330,18 +325,21 @@ struct Dialog_v
 	 */
 	function register style: =
 	(
-		print "Dialog_v.register()"
-
+		--print "Dialog_v.register()"
+		--format "this.style_registred_dialog: %\n" this.style_registred_dialog
 		min_size = if min_size != undefined then min_size as string else "[-1,-1]"
 		max_size = if max_size != undefined then max_size as string else "[-1,-1]"
 		--format "width: %\n" width
 		--format "MIN_SIZE: %\n" min_size
 		--format "MAX_SIZE: %\n" max_size
-		format "STYLE: %\n" style_registred_dialog
+		--format "STYLE: %\n" style_registred_dialog
 
 		--execute ("cui.RegisterDialogBar "+ this.id +" minSize:"+min_size+" maxSize:"+max_size+" style:"+style_registred_dialog as string )
 		--execute ("cui.RegisterDialogBar "+ this.id +" minSize:"+min_size+" style:"+style as string )
-		execute ("cui.RegisterDialogBar "+ this.id +" minSize:"+min_size+" style:"+( this.style_registred_dialog as string  ) )
+		
+		
+		execute ("cui.RegisterDialogBar "+ this.id as string +" minSize:"+min_size+" style:"+( this.style_registred_dialog as string  ) )
+		--print ("cui.RegisterDialogBar "+ this.id as string +" minSize:"+min_size+" style:"+( this.style_registred_dialog as string  ) )
 
 	),
 
@@ -458,7 +456,6 @@ struct Dialog_v
 		--format "\n"; print "Dialog_v.exists()"
 		execute( "GetDialogPos " + id as string ) != [0,0]
 	),
-
 
 	/** Get height of maximized viewport
 	  * Good to find out height of docked dialog
@@ -597,6 +594,34 @@ struct Dialog_v
 
 	private
 
+	/** Get width and height
+	 */
+	function _getWidthAndHeight width height =
+	(
+		--format "\n"; print "if._getWidthAndHeight()"
+				
+		/* WIDTH & HEIGHT MUST BE INTEGER - otherwise height of  dialog doesn't work */ 
+		if superClassOf width  == Number then width  = width as integer
+		if superClassOf height == Number then height = height as integer
+		
+		/* DIALOG SIZE */ 
+		this._setDialogMinimalSize()
+		this._setDialogSizeByIni()
+		this._setWithByMinimalSize()
+
+		/* HEIGHT */ 
+		this.height = this._getHeightOnCreate(height)
+		
+		--/* WIDTH */ 
+		--if classOf width != integer then
+		--	width = this.width
+		--
+		--format "width: %\n" width
+		--format "height: %\n" height
+		--
+		--#( width, height ) --return
+	),
+	
 	/** Set dialog default size
 	  *
 	  */
@@ -622,7 +647,6 @@ struct Dialog_v
 
 			min_size = [ min_width, min_height ]
 		)
-		--format "MIN_SIZE:	% \n" min_size
 	),
 
 	/** Set size of dialog
@@ -633,7 +657,6 @@ struct Dialog_v
 
 		if ( ini_size = this._getSizeFromIni() ) != undefined and not this._isIniDocked() then
 		(
-			--format "INI_SIZE:	% \n" INI_SIZE
 			this.width  = ini_size.x
 			this.height = ini_size.y
 		)
@@ -795,11 +818,11 @@ struct Dialog_v
 		--format "\n"; print "if._setDefaultStyle()"
 		--format "this.title: %\n" this.title
 
-		if this.title == "" then
+        if this.title == "" then
 		(
 			deleteItem this.style ( findItem this.style #style_titlebar )
 			deleteItem this.style ( findItem this.style #style_sysmenu )
-			deleteItem this.style ( findItem this.style #style_border )
+		deleteItem this.style ( findItem this.style #style_border )
         )
     ),
 
@@ -817,11 +840,11 @@ struct Dialog_v
 	 */
 	function _setDockStyle style dock_states =
 	(
-		format "\n"; print "Dialog_v._setDockStyle()"
-		format "dock_states: %\n"dock_states
-		format "style: %\n" style
+		--format "\n"; print "Dialog_v._setDockStyle()"
+		--format "dock_states: %\n"dock_states
+		--format "style: %\n" style
 		--format "this.style: %\n" this.style
-		format "this.style_registred_dialog: %\n" this.style_registred_dialog
+		--format "this.style_registred_dialog: %\n" this.style_registred_dialog
 		--
 		if style == unsupplied then 
 		(
@@ -831,7 +854,7 @@ struct Dialog_v
 			/* SET ALLOWED DOCK STATE E.G.: #LEFT >>> #CUI_DOCK_LEFT */ 
 			for state in dock_states do
 				appendIfUnique this.style_registred_dialog ( ( "cui_dock_" + state as string ) as name )
-			format "this.style_registred_dialog: %\n" this.style_registred_dialog
+			--format "this.style_registred_dialog: %\n" this.style_registred_dialog
 			this.style_registred_dialog as string --return
 		)
 		else
@@ -855,7 +878,7 @@ struct Dialog_v
 	 */
 	function writeToCacheFile cache_file_path width height =
     (
-        format "\n"; print "Dialog_v.writeToCacheFile()"
+        --format "\n"; print "Dialog_v.writeToCacheFile()"
 		--format "\n"; print "if.writeToCacheFile()"
 		
 		subrollouts_def	= ""
@@ -867,8 +890,8 @@ struct Dialog_v
         for nested_level = 1 to addSubRollouts_array.count do
              addSubRollouts_def += addSubRollouts_array[nested_level]
 		
-		fn_definition   	= "function createDialogFromCacheFile width height =\n(\n"
-		create_dialog_str	= "CreateDialog " + this.id as string + " width:width height:height \n"
+		fn_definition   	= "function createDialogFromCacheFile width height pos bgcolor fgcolor bitmap bmpstyle style modal autoLayoutOnResize escapeEnable lockHeight lockWidth parent =\n(\n"
+		create_dialog_str	= "CreateDialog " + this.id as string + " width:width height:height pos:pos bgcolor:bgcolor fgcolor:fgcolor bitmap:bitmap bmpstyle:bmpstyle style:style modal:modal autoLayoutOnResize:autoLayoutOnResize escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent \n"
 		destroy_dialog_str	= "try( destroyDialog "+ this.id as string +" )catch()\n\n"
 		
 		add_rollouts_str	= "try(\n"+ addSubRollouts_def +")catch()\n\n"
@@ -888,7 +911,7 @@ struct Dialog_v
 
             if cache_file != undefined do
             (
-                format "WRITE CACHE FILE: %\n" cache_file_path
+                --format "WRITE CACHE FILE: %\n" cache_file_path
 				--format "subrollouts_def: %\n" subrollouts_def
 
                 FORMAT "%\n" fn_definition 			to:cache_file
@@ -908,7 +931,7 @@ struct Dialog_v
 			if cache_file != undefined do
 				close cache_file
 			
-			format "ERROR TO WRITE CACHE FILE: %\n" cache_file_path
+			--format "ERROR TO WRITE CACHE FILE: %\n" cache_file_path
 		)
 	),
 

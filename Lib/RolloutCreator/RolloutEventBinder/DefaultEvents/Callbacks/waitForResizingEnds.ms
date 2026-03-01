@@ -21,12 +21,25 @@ function waitForResizingEnds sender evt =
 	--format "\n"; print "DefaultEvents_v.waitForResizingEnds()"
 	--format "CALLBACK_DELAY_TIMER: %\n" CALLBACK_DELAY_TIMER
 	dialog_id	= DIALOG_GLOBAL_DATA[#ID_RESIZING_DIALOG]
-
+	--format "dialog_id: %\n" dialog_id
 	DataSaved	= DIALOG_GLOBAL_DATA[dialog_id]
 
+	--format "DataSaved: %\n" DataSaved
+	
 	if DataSaved != undefined then 
 	(
 		DataCurrent	= DialogGlobalData_v(DataSaved.DialogClass)
+		--format "\n"
+		--format "DataSaved.position:   %\n" DataSaved.position
+		--format "DataCurrent.position: %\n" DataCurrent.position
+		--format "\n"
+		--format "DataSaved.size:   %\n" DataSaved.size
+		--format "DataCurrent.size: %\n" DataCurrent.size
+		--format "\n"
+		--format "DataSaved.dock_state:   %\n" DataSaved.dock_state
+		--format "DataCurrent.dock_state: %\n" DataCurrent.dock_state
+		
+		--format "DataCurrent: %\n" DataCurrent
 	
 		/*------------------------------------------------------------------------------
 			FIND EVENT TYPE
@@ -34,15 +47,13 @@ function waitForResizingEnds sender evt =
 		
 		event_type = case of
 		(
-			
-			
 			(DataSaved.dock_state	!= DataCurrent.dock_state):	if DataCurrent.dock_state == #CUI_FLOATABLE then #UNDOCKED else #DOCKED
 		
 			(DataSaved.size	== DataCurrent.size):	#RESIZED
 	
 			default: undefined
 		)
-		
+		--format "event_type: %\n" event_type
 		/*------------------------------------------------------------------------------
 			PROCESS CALLBACK
 		--------------------------------------------------------------------------------*/
@@ -75,9 +86,10 @@ function waitForResizingEnds sender evt =
 			)
 		)
 	
-		DataSaved.fill() --return
-		--DIALOG_GLOBAL_DATA[#ID_RESIZING_DIALOG].fill() --return
+		--DataSaved.fill() --return
 
 	)
+	
+	DIALOG_GLOBAL_DATA[dialog_id].fill() --return
 
 )

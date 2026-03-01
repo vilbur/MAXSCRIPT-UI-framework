@@ -49,7 +49,7 @@ struct DefaultEvents_v -- MAYBE RENAME THIS TO RolloutDefaultEvents_v
 		
 		Event =  Event_v type:#RESIZED
 		
-		Event.callback = "waitForResizingEndsTimer(#"+rollout_id+")( #resized )" --"./waitForResizingEndsTimer.ms"
+		Event.callback = "waitForResizingEndsTimer(#"+rollout_id+")" --"./waitForResizingEndsTimer.ms"
 		
 		EventsList[#RESIZED] = #( Event )
 		

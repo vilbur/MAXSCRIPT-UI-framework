@@ -20,25 +20,66 @@ function dialogRolloutCallbackParam val =
 /** Test each event
   *
   */
-function dialogEventsTest DialogTest =
+function dialogEventsTest &DialogTest =
 (
 	format "\n"; print "1_DialogEventsTest.ms.dialogEventsTest()"
 
-    DialogTest.Event #OPEN	"dialogRolloutCallbackParam(@#OPEN@)"
-    DialogTest.Event #CLOSE	"dialogRolloutCallbackParam(@#CLOSE@)"
-
-	DialogTest.Event #RESIZED	"dialogRolloutCallbackParam(\"RESIZED\")"
-  
-    DialogTest.Event #DOCKED	"dialogRolloutCallbackParam(@#DOCKED@)"
-    DialogTest.Event #UNDOCKED	"dialogRolloutCallbackParam(@#UNDOCKED@)"
-
-	DialogTest.Event #RBUTTONDOWN	"dialogRolloutCallbackParam(@#RBUTTONDOWN@)"
-
-    DialogTest.Event #okToClose	"dialogRolloutCallbackParam(@#okToClose@)"
-
+--    DialogTest.Event #OPEN	"dialogRolloutCallbackParam(@#OPEN@)"
+--    DialogTest.Event #CLOSE	"dialogRolloutCallbackParam(@#CLOSE@)"
+--
+    DialogTest.Event #RESIZED	"dialogRolloutCallbackParam(@#RESIZED@)"
+--	--DialogTest.Event #RESIZED	"dialogRolloutCallbackParam(\"RESIZED\")"
+--  
+--    DialogTest.Event #DOCKED	"dialogRolloutCallbackParam(@#DOCKED@)"
+--    DialogTest.Event #UNDOCKED	"dialogRolloutCallbackParam(@#UNDOCKED@)"
+--
+--	DialogTest.Event #RBUTTONDOWN	"dialogRolloutCallbackParam(@#RBUTTONDOWN@)"
+--
+--    DialogTest.Event #okToClose	"dialogRolloutCallbackParam(@#okToClose@)"
+--
+--	
+--    /* EVENT #MOVED DOES NOT WORK ON REGISTRED DIALOG*/ 	
+--    DialogTest.Event #MOVED "dialogRolloutCallbackParam(@#MOVED@)"
 	
-    /* EVENT #MOVED DOES NOT WORK ON REGISTRED DIALOG*/ 	
-    DialogTest.Event #MOVED "dialogRolloutCallbackParam(@#MOVED@)"
+	DialogTest --return
+)
+/** Test all event
+  *
+  */
+function testAllEvents _Rollout =
+(
+	--format "\n"; print "1_DialogEventsTest.ms.testAllEvent()"
+	event_types =
+	#(
+		#open,
+		#close,
+		#moved,  -- ONLY UNREGISTRED
+		#resized,
+		#help,
+
+		/* Mouse button events */
+		#lbuttondown,
+		#lbuttonup,
+		#lbuttondblclk,
+
+		#mbuttondown,
+		#mbuttonup,
+		#mbuttondblclk,
+
+		#rbuttondown,
+		#rbuttonup,
+		#rbuttondblclk,
+
+		/* NOT maxscript NATVIVE */
+		#docked,
+		#undocked
+	)
+
+
+	for event_type in event_types do
+		_Rollout.Event event_type	("print(\"Custom dialog event #"+ event_type as string +"\")")
+		--_Rollout.Event event_type ("dialogRolloutCallback()")
+
 )
 
 /*==============================================================================
@@ -108,15 +149,17 @@ Rollout_B1 = Rollouts_B.Roll "Rollout B1" height:256
 --Dialog.create() -- create dialog without cache by default
 
 /* USE CACHE */
+----use_cache = false
+use_cache = false
+Dialog.create cache:use_cache lockHeight:false
+
 use_cache = true
---use_cache = false
-Dialog.create cache:use_cache
+Dialog.create cache:use_cache lockHeight:false
 
 Dialog.register()
 
 
 
 
-
-
+ 
 
