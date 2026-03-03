@@ -1,12 +1,14 @@
-﻿/**
+﻿
+/**
  *
  */
 macroscript	vilTools3_test_1
 category:	"_vilTools3-Test"
 buttontext:	"Test 1"
+icon:	"control:spinner|across:2"
 (
 	--format "EventFired	= % \n" EventFired
-	messageBox "It is working" title:"Test"  beep:false
+	--messageBox "It is working" title:"Test"  beep:false
 )
 
 --/**

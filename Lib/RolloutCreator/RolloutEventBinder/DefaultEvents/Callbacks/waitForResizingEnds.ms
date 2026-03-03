@@ -88,8 +88,8 @@ function waitForResizingEnds sender evt =
 	
 		--DataSaved.fill() --return
 
+		DIALOG_GLOBAL_DATA[dialog_id].fill() --return
 	)
 	
-	DIALOG_GLOBAL_DATA[dialog_id].fill() --return
 
 )

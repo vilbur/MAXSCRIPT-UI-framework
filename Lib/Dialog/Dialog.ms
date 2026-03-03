@@ -3,7 +3,8 @@ global createDialogFromCacheFile = undefined
 if DIALOG_GLOBAL_DATA == undefined then
 	global DIALOG_GLOBAL_DATA = Dictionary()
 
-filein( getFilenamePath(getSourceFileName()) + "/../Menus/RcMenu/RcMenu.ms" )	--"./../Menus/RcMenu/RcMenu.ms"
+--filein( getFilenamePath(getSourceFileName()) + "/../Menus/RcMenu/RcMenu.ms" )	--"./../Menus/RcMenu/RcMenu.ms"
+filein( getFilenamePath(getSourceFileName()) + "/../Menus/include-menus.ms" )	--"./../Menus/include-menus.ms"
 
 filein( getFilenamePath(getSourceFileName()) + "/../ConstructPropeties/ConstructPropeties.ms" )	-- "./../ConstructPropeties/ConstructPropeties.ms"
 filein( getFilenamePath(getSourceFileName()) + "/../Event/Event.ms" )	--"./../Event/Event.ms"
@@ -19,10 +20,11 @@ filein( getFilenamePath(getSourceFileName()) + "/Hotkeys/Hotkeys.ms" )	-- "./Hot
 --------------------------------------------------------------------------------*/
 global DIALOG_PREVIOUS_STATE = undefined -- this should be in struct
 
+global AUTORUN_EVENTS = Dictionary()
+
+
 if EVENT_DOCKED_ENABLED == undefined then
 	global EVENT_DOCKED_ENABLED = true -- prevent crash on destroying  of dialog // RENAME THIS TO DIALOG_ENABLE_DOCKED_EVENT
-
-global AUTORUN_EVENTS = Dictionary()
 
 if HOTKEYS_GLOBAL == undefined then
 	global HOTKEYS_GLOBAL = HotKeys_v()
@@ -57,7 +59,12 @@ struct Dialog_v
 	--Menu	= DialogMenu_v Dialog:this,
 
 	/* inherit */
+	
+	
 	/* properties */
+	Dialog, 	-- RolloutClass
+
+	
 	min_size,
 	max_size,
 
@@ -191,59 +198,53 @@ struct Dialog_v
 				POST CREATE
 			--------------------------------------------------------------------------------*/
 			
-			/* SET DOCK STATES */ 		
-			this._setDockStyle (style) (dock)
-		
-			/* DOCK DIALOG */ 
-			this._setDockState()
-
-			this.RolloutResizer.fitSlotsToDialog(this.RCI.def)
-			
 			/* SET DIALOG TO GLOBAL CONTAINER OF DIALOGS OF FRAMEWORK */ 
 			DIALOG_GLOBAL_DATA[this.id] = DialogGlobalData_v(this.RCI.def)(this)
-
-			/* EXECUTE AUTORUN EVENTS OF CONTROLS */ 
-			this._executeAutorunEvents()
-
-			/* RESET BITMAPS */ 
-			CONTROL_BITMAPS_STORE = #() -- reset buffer array
-
-			FORMAT ("\n\nDIALOG \""+ id as string +"\" HAS BEEN CREATED\n\n" )
-	
-			FORMAT "\n\n====== Dialog Created in %ms\n\n" ((timestamp()) - timer_createRollout)
 			
-			RCI.def --return
+			/* EXECUTE AUTORUN EVENTS OF CONTROLS */ 
+			--this._executeAutorunEvents()
+			
+			Dialog = RCI.def --return
 		)
-		/*------------------------------------------------------------------------------
+		/*==============================================================================
 			USE CACHE
-		--------------------------------------------------------------------------------*/
+		================================================================================*/
 		else
 		(
-			--format "\n**** USE CACHE\n"
-			--format "cache_file_path: %\n" cache_file_path
-			--format "this.width: %\n" this.width
-			--format "this.height: %\n" this.height
-			
+			FORMAT "\n**** USE CACHE FILE: %\n" cache_file_path
+
 			filein cache_file_path
 			
-			dialog_rollout = createDialogFromCacheFile this.width this.height dialog_pos bgcolor fgcolor bitmap bmpstyle dialog_style modal true escapeEnable lockHeight lockWidth parent
-			
-			/* SET DOCK STATES */ 		
-			this._setDockStyle (style) (dock)
-			
-			/* DOCK DIALOG */ 
-			this._setDockState()
-			
-			/* CAST ROLLOUT TO VARIABLE */ 
-			--dialog_rollout = execute ( this.id as string )
-			
-			this.RolloutResizer.fitSlotsToDialog( dialog_rollout )
-			
-			FORMAT "\n\n====== Dialog Created in %ms FROM CACHE FILE: %\n\n" ((timestamp()) - timer_createRollout) cache_file_path
-			
-			dialog_rollout --return
+			Dialog = createDialogFromCacheFile this.width this.height dialog_pos bgcolor fgcolor bitmap bmpstyle dialog_style modal true escapeEnable lockHeight lockWidth parent
 		)
 		
+		/*==============================================================================
+			POST CREATE
+		================================================================================*/
+		
+		/* SET DOCK STATES */ 		
+		this._setDockStyle (style) (dock)
+		
+		/* DOCK DIALOG */ 
+		this._setDockState()
+		
+		/* FIT SUBROLLOUTS SLOT TO BOTTOM */ 
+		this.RolloutResizer.fitSlotsToDialog( Dialog )
+
+		
+		/* SET DIALOG TO GLOBAL CONTAINER OF DIALOGS OF FRAMEWORK */ 
+		--DIALOG_GLOBAL_DATA[this.id] = DialogGlobalData_v(Dialogs)(this)
+		
+		
+		/* RESET BITMAPS */ 
+		CONTROL_BITMAPS_STORE = #() -- reset buffer array
+		
+		FORMAT ("\n\n====== DIALOG "+ id as string +" CREATED in %ms\n\n") ((timestamp()) - timer_createRollout)
+
+		/* EXECUTE AUTORUN EVENTS OF CONTROLS */ 
+		this._executeAutorunEvents()
+		
+		Dialog --return
 	),
 
 	/** Create rollout
@@ -778,12 +779,13 @@ struct Dialog_v
 	function _executeAutorunEvents =
 	(
 		--format "\n"; print "Dialog_v._executeAutorunEvents()"
+		--format "AUTORUN_EVENTS.keys.count: %\n" AUTORUN_EVENTS.keys.count
 		--format "\n-----------\nDICTIONARY:AUTORUN_EVENTS:%\n" AUTORUN_EVENTS; for data_pair in AUTORUN_EVENTS do format "%:	%\n" data_pair.key data_pair.value
 
 		 for data_pair in AUTORUN_EVENTS do
 			try(
 				
-				--format "\nEXECUTE AUTORUN EVENT: %\n" (data_pair.value)
+				format "\nEXECUTE AUTORUN EVENT: %\n" (data_pair.value)
 				
 				execute data_pair.value
 	

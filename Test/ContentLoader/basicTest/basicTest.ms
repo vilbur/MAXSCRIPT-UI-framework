@@ -1,4 +1,4 @@
-clearListener()
+clearListener(); print("Cleared in: "+getSourceFileName())
 
 /** INCLUDE UI
  */
@@ -6,11 +6,11 @@ filein( getFilenamePath(getSourceFileName()) + "/../../../Lib/ContentLoader/Cont
 
 /** Load content from file tree
  */
-function loadContentTest dir_name =
+function loadContentTest dir_name ini=
 (
 	current_dir	= getFilenamePath(getSourceFileName())
 
-	ContentLoader	= ContentLoader_v path:(current_dir+"/"+dir_name)
+	ContentLoader	= ContentLoader_v path:(current_dir+"/"+dir_name) ini:ini
 
 	ContentLoader.Dialog.width  = 256
 	ContentLoader.Dialog.height = 1024
@@ -20,21 +20,12 @@ function loadContentTest dir_name =
 	ContentLoader.create() --return
 )
 
---/** Add extra rollout
--- */
---function addRolloutByCodeTest name =
---(
---	_rollout = DialogsGlobal.get(name)
---
---	_controls_A = _rollout.controls groupbox:"Groupbox A" -- get new container for controls
---	_controls_B = _rollout.controls groupbox:"Groupbox B" -- get new container for controls
---	_controls_A.button ("button by code")
---	_controls_B.button ("button by code B")
---)
 
 
 /*---------------------------------------
-	RUN TESTR
+	RUN TESTS
 -----------------------------------------*/
 
-Dialog = loadContentTest("Test-Content")
+Dialog = loadContentTest("Test Content") ini_file
+
+

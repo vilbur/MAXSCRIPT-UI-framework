@@ -17,17 +17,17 @@ else
 )
 )
 )
-rollout ROLLOUT_sub_rollout "SUB ROLLOUT"
+rollout ROLLOUT_main_rollout "M A I N   R O L L O U T "
 (
-	subRollout Subrollouts "Dictionary #name AUTOROLLUP:1 " height:37 offset:[-12,0] width:226
-	on ROLLOUT_sub_rollout rolledUp val do
+	subRollout Subrollouts "Dictionary #name AUTOROLLUP:1 " height:79 offset:[-12,0] width:240
+	on ROLLOUT_main_rollout rolledUp val do
 (
 	if val then
 	(
 		if keyboard.controlPressed then
-		rollUpOtherRolloutsCallback ( #ROLLOUT_main_rollout) ( #Subrollouts) ( #ROLLOUT_sub_rollout)
+		rollUpOtherRolloutsCallback ( #DIALOG_test) ( #Subrollouts_1) ( #ROLLOUT_main_rollout)
 else
-		autoRollUpRolloutCallback ( #ROLLOUT_main_rollout) ( #Subrollouts) ( #ROLLOUT_sub_rollout)
+		autoRollUpRolloutCallback ( #DIALOG_test) ( #Subrollouts_1) ( #ROLLOUT_main_rollout)
 )
 )
 )
@@ -44,17 +44,17 @@ else
 )
 )
 )
-rollout ROLLOUT_main_rollout "M A I N   R O L L O U T "
+rollout ROLLOUT_sub_rollout "SUB ROLLOUT"
 (
-	subRollout Subrollouts "Dictionary #name AUTOROLLUP:1 " height:79 offset:[-12,0] width:240
-	on ROLLOUT_main_rollout rolledUp val do
+	subRollout Subrollouts "Dictionary #name AUTOROLLUP:1 " height:37 offset:[-12,0] width:226
+	on ROLLOUT_sub_rollout rolledUp val do
 (
 	if val then
 	(
 		if keyboard.controlPressed then
-		rollUpOtherRolloutsCallback ( #DIALOG_test) ( #Subrollouts_1) ( #ROLLOUT_main_rollout)
+		rollUpOtherRolloutsCallback ( #ROLLOUT_main_rollout) ( #Subrollouts) ( #ROLLOUT_sub_rollout)
 else
-		autoRollUpRolloutCallback ( #DIALOG_test) ( #Subrollouts_1) ( #ROLLOUT_main_rollout)
+		autoRollUpRolloutCallback ( #ROLLOUT_main_rollout) ( #Subrollouts) ( #ROLLOUT_sub_rollout)
 )
 )
 )
