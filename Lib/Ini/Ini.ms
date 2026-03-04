@@ -1,3 +1,5 @@
+filein( getFilenamePath(getSourceFileName()) + "/../ParseStringToDatatype/ParseStringToDatatype.ms" )	--"./../ParseStringToDatatype/ParseStringToDatatype.ms"
+
 filein( getFilenamePath(getSourceFileName()) + "/IniSaver/IniSaver.ms" )	-- "./IniSaver/IniSaver.ms"
 
 /** Save Load ini settings
@@ -54,7 +56,7 @@ struct Ini_v
 
 		val_from_ini = getINISetting _path ( _section	as string ) ( key as string ) -- return
 		
-		if( val_from_ini == "" or val_from_ini == undefined ) then val else this.convertDatatype(val_from_ini) --return
+		if( val_from_ini == "" or val_from_ini == undefined ) then val else ParseStringToDatatype(val_from_ini) --return
 	),
 
 	/** Get keys of section
@@ -80,7 +82,8 @@ struct Ini_v
 	function open =
 	(
 		--format "\n"; print "Ini_v.open()"
-		ShellLaunch  "Notepad++" ("\""+_path+"\"")
+		--ShellLaunch  "Notepad++" ("\""+_path+"\"")
+		DOSCommand ("\""+_path+"\"")
 	),
 
 	/** Delete ini entry
@@ -121,51 +124,6 @@ struct Ini_v
 	(
 		--print ( "Ini_v.loadValuesOnInit()" )
 		this.isDefined() and load_values_on_init
-	),
-
-	/** Format string value to valid datatype
-	 */
-	function convertDatatype _string =
-	(
-		--_string = substituteString _string "\\" "\\\\"
-		/** Join array
-		 */
-		function joinPatterns params_input =
-		(
-			--format "\n"; print ".joinArray()"
-			params_string = ""
-	
-			for param in params_input do params_string += param + "|"
-	
-			trimRight params_string "|"
-		)
-		
-		patterns = #(
-			"-*\d+.*\d*",	-- integer or float
-			"true|false",
-			"undefined|unsupplied",
-			"red|green|blue|white|black|orange|yellow|brown|gray",
-			"\[.*\]",	-- point2, point3
-			"\(*color\s+\d+\s+\d+\s+\d+\s*\)*",	-- color E.G.: "color 128 128 128" or "(color 128 128 128)"
-			"#[^\s\(\{]+",	-- #name but not array or bitarray
-			"#[\(\{].*[\)\}]",	--array or bitarray
-			""
-		)
-		
-		RegEx	= dotNetClass "System.Text.RegularExpressions.RegEx"
-		RegEx_options	= dotNetClass "System.Text.RegularExpressions.RegexOptions"
-		
-		is_variable = (RegEx.match _string ("^("+joinPatterns(patterns)+")$") RegEx_options.IgnoreCase ).success
-	
-		--if is_variable and not (is_string = ( RegEx.match _string "(^'*[A-Za-z0-1_\s]+'*$)" RegEx_options.IgnoreCase ).success ) then
-		if is_variable then
-		(
-			try((execute(_string)))catch(_string) -- IS VARIABLE
-		)
-		else
-		(
-			@"" + _string -- IS STRING
-		)
 	),
 	
 	private

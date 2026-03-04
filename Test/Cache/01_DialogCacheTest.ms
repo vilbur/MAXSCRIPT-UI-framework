@@ -106,7 +106,7 @@ _Rollout    = _Rollouts.Roll "Main Rollout" --rolledUp:true --height:256
 
 _Controls   = _Rollout.Controls group:"Rollout Controls"
  
---_Button      = _Controls.control #button "Rollout Btn" id:#button_3
+--_Button      = _Controls.control #button "Rollout Btn" id:#edittext_3
 
 
 /*------------------------------------------------------------------------------
@@ -119,7 +119,7 @@ _SubRollout    = _SubRollouts.Roll "Sub Rollout"
 
 _Controls   = _SubRollout.Controls group:"SubRollout Controls"
 
---_Button      = _Controls.control #button "Subrollout Btn" id:#button_3
+_Button      = _Controls.control #EDITTEXT "Subrollout Btn" id:#edittext_3
 
 
 /*------------------------------------------------------------------------------
@@ -153,8 +153,8 @@ Rollout_B1 = Rollouts_B.Roll "Rollout B1" height:256
 use_cache = false
 Dialog.create cache:use_cache lockHeight:false
 
-use_cache = true
-Dialog.create cache:use_cache lockHeight:false
+--use_cache = true
+--Dialog.create cache:use_cache lockHeight:false
 
 Dialog.register()
 

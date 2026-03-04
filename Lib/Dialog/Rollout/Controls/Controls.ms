@@ -208,27 +208,11 @@ struct Controls_v
 		(
 			--format "\n"; print "Controls_v.splitParamsString()"
 			
-			/** Format string value to valid datatype
-			 */
-			function convertDatatype _string =
-			(
-				rx	= dotNetClass "System.Text.RegularExpressions.RegEx"
-				rx_options	= dotNetClass "System.Text.RegularExpressions.RegexOptions"
-		
-				is_variable = (rx.match _string "^\s*(\d+|true|false|undefined|unsupplied|\(*\s*color\s+\d+\s+\d+\s+\d+\s*\)*|\(*\s*bitmap\s+\d+\s+\d+)\s*$" rx_options.IgnoreCase ).success
-			
-				if is_variable and (is_string = ( rx.match _string "(^'*[A-Za-z0-1_\s]+'*$)" rx_options.IgnoreCase ).success ) then
-					try((execute(_string)))catch(_string) -- IS VARIABLE
-				
-				else
-					@"" + _string -- IS STRING
-			)			
-			
 			params_splitted = #()
 	
 			for key_value_pair in filterString params_string "|," splitEmptyTokens:false do
 				for key_value in filterString key_value_pair ":"  do
-					append params_splitted (convertDatatype( trimRight ( trimLeft key_value )))
+					append params_splitted ( parseStringToDatatype( trimRight ( trimLeft key_value )))
 	
 			params_splitted --return
 		)

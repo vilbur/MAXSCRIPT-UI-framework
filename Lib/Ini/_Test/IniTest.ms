@@ -2,63 +2,12 @@ clearListener(); print("Cleared in:\n"+getSourceFileName())
 
 filein( getFilenamePath(getSourceFileName()) + "/../Ini.ms" )	--"./../Ini.ms"
 
+
 /*------------------------------------------------------------------------------
-	
-	
-	
-		TEST OF CONVERTING STRINGS TO CORRECT DATATYPE
-	
-	
-	
+	DEFINE TEST VALUES
 --------------------------------------------------------------------------------*/
 
-string_is_defined_variable_also = 999
-
-input_values =
-#(
-	/* EXECUTED VALUES BELLOW APPEAR AS STRING */
-	"Render X",
-	"classOf X",
-	"string_is_defined_variable_also",
-	"simpleString",
-	"'single_quoted'",
-	"\"escaped_quotes\"",
-	"space in string",
-	@"C:\not escaped\path",
-	"C:/forward/slash/path",
-	
-	true,
-	false,
-	undefined,
-	unsupplied,
-	
-	0,
-	123,
-	1e9,
-	
-	1.0,
-	
-	[1.1, 2.0],
-	[1, 2, 3.3],
-	
-	color 128 64 0,
-	( color 128 32 256),
-	
-	#{},
-	#{1..3},
-	
-	#(),
-	#(#()),
-	#(1, 2 ,3, "A", "B", "C"),
-	
-	
-	/* BITMAP IS OBJECT - CANNOT BE CONVERTED TO STRING WITH "as string" command  */ 
-	"bitmap 256 32 color:green",
-	
-	
-	/* LAST ITEM IN ARRAY */ 
-	#END_OF_ARRAY -- prevent last item comma error when testing
-)
+filein( getFilenamePath(getSourceFileName()) + "/../../ParseStringToDatatype/Test/input_string_values.ms" )	--"./../../ParseStringToDatatype/Test/input_string_values.ms"
 
 /*------------------------------------------------------------------------------
 	TEST FUNCTIONS
@@ -66,10 +15,10 @@ input_values =
 
 /** Test ini save and loadIni
  */
-function testIniSaveAndLoad =
+function testIniSaveAndLoadDataTypes =
 (
-	format "\n--------------------- testIniSaveAndLoad ---------------------\n"
-	format "\n"; print ".testIniSaveAndLoad()"
+	format "\n--------------------- testIniSaveAndLoadDataTypes ---------------------\n"
+	format "\n"; print ".testIniSaveAndLoadDataTypes()"
 	
 	
 	Ini = Ini_v(getSourceFileName())
@@ -86,7 +35,7 @@ function testIniSaveAndLoad =
 		
 	)
 
-	
+	Ini --return
 )
 
 /*------------------------------------------------------------------------------
@@ -95,6 +44,11 @@ function testIniSaveAndLoad =
 
 --------------------------------------------------------------------------------*/
 
-testIniSaveAndLoad()
+Ini = testIniSaveAndLoadDataTypes()
+
+
+
+/* OPEN INI FILE */ 
+Ini.open()
 
 

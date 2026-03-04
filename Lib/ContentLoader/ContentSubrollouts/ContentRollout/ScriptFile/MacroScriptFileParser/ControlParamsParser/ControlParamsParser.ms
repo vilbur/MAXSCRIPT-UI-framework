@@ -20,17 +20,6 @@ struct ControlParamsParser_v
 	/* dependency */
 	
 	/* private properties */
-	patterns = #(
-		"\d+.*\d*",	-- integer or float
-		"true|false",
-		"undefined|unsupplied",
-		"red|green|blue|white|black|orange|yellow|brown|gray",
-		"\[.*\]",	-- point2, point3
-		"\(*color\s+\d+\s+\d+\s+\d+\s*\)*",	-- color E.G.: "color 128 128 128" or "(color 128 128 128)"
-		"#[^\s\(]+",	-- #name but not array
-		"#\(.*\)",	--array
-		""
-	),
 
 	/** Parse params in "icon" param of macroscript
 	  *
@@ -91,7 +80,7 @@ struct ControlParamsParser_v
 			if key as name != #IMAGES then
 			(
 				param	= this._sanitizeKey(key) as name
-				val	= this._convertDatatype( this._trimWhiteSpace(val))
+				val	= parseStringToDatatype( this._trimWhiteSpace(val))
 
 				this.params[param] = val
 			)
@@ -126,42 +115,6 @@ struct ControlParamsParser_v
 			params_string = substituteString params_string "'" "\""
 
 		params_string --return
-	),
-
-	/** Format string value to valid datatype
-	 */
-	function _convertDatatype _string =
-	(
-		--format "\n"; print "ControlParamsParser_v._convertDatatype()"
-		--format "_string: %\n" _string
-
-		/** Join array
-		 */
-		function joinPatterns params_input =
-		(
-			--format "\n"; print ".joinArray()"
-			params_string = ""
-
-			for param in params_input do params_string += param + "|"
-
-			trimRight params_string "|"
-		)
-		
-		RegEx	= dotNetClass "System.Text.RegularExpressions.RegEx"
-		RegEx_options	= dotNetClass "System.Text.RegularExpressions.RegexOptions"
-
-	
-		is_variable = (RegEx.match _string ("^("+joinPatterns(patterns)+")$") RegEx_options.IgnoreCase ).success
-		--format "is_variable: %\n" is_variable
-
-		if not is_variable then
-		--if not is_variable and classOf (execute _string) == UndefinedClass then
-			@"" + _string -- IS STRING
-
-		else
-			execute(_string)
-			--try((execute(_string)))catch(_string) -- IF STRING IS VARIABLE E.G.: "#( 1, 2 ,3 )|[1,2]"
-
 	),
 
 	/**
