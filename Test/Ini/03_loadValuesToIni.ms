@@ -1,7 +1,8 @@
-clearListener()	
+clearListener()
 
-filein( getFilenamePath(getSourceFileName()) + "/../../Lib/RolloutCreator/RolloutCreator.ms" )
-filein( getFilenamePath(getSourceFileName()) + "/../../Lib/Ini/Ini.ms" )
+
+filein( getFilenamePath(getSourceFileName()) + "/../../Lib/RolloutCreator/RolloutCreator.ms" )	--"./../../Lib/RolloutCreator/RolloutCreator.ms"
+filein( getFilenamePath(getSourceFileName()) + "/../../Lib/Ini/Ini.ms" )	--"./../../Lib/Ini/Ini.ms"
 
 try( destroyDialog Controls_test )catch()
 
@@ -35,7 +36,6 @@ control_types = #(
 	#Spinner,
 	#EditText,
 	#BrowsePath,
-	
 	#Listbox,
 	#MultiListBox,
 	#Dropdownlist,
@@ -46,25 +46,10 @@ control_types = #(
 	#Angle,
 	#hyperlink,
 	#Materialbutton,
-	
-	
-	/* NOT SUPPORTED YET
-	   
-		EDIT STEPS BELLOW WHEN ADDING NEW TYPE:
-			1) METHOD: EventTypes_v._setEventTypes()
-			2) PROPERTY: ControlValue_v.names_of_value_param
-	
-	*/ 
 	#imgTag,
 	#Bitmap,
 	#Mapbutton,
-	#ProgressBar,
-	#Curve,
-	#popupMenu,
-	#Timer,
-	
-	/* END OF ARRAY */ 
-	#GroupBox
+	#Curve
 
 )
 

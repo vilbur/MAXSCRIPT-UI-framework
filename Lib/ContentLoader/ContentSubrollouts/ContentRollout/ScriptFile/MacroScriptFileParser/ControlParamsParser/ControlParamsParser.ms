@@ -52,7 +52,7 @@ struct ControlParamsParser_v
 
 	private
 
-	/** Test if icon parameter is default icon array E.G.: #("Cameras",1)
+	/** Test if icon parameter is default ic on array E.G.: #("Cameras",1)
 	  *
 	  * IMAGE BUTTON PARAMETER:	https://help.autodesk.com/view/3DSMAX/2017/ENU/?guid=__files_GUID_E03EED5F_E21F_4C2F_AFA9_BA16A6602ACA_htm#WS73099CC142F487553098682E12AC2FC2BC7-7435
 	 */

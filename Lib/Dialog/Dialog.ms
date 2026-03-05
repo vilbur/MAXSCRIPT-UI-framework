@@ -656,8 +656,22 @@ struct Dialog_v
 	function _setDialogSizeByIni =
 	(
 		--format "\n\n"; print "Dialog_v._setDialogSizeByIni()"
-
-		if ( ini_size = this._getSizeFromIni() ) != undefined and not this._isIniDocked() then
+		/** Get ini dock state
+		 */
+		function isIniDocked = Ini.isDefined() and (dock_state = Ini.load( id as string )("dock_state")) != undefined and dock_state != "cui_floatable"
+		
+		
+		/** Get size from ini
+		  */
+		function getSizeFromIni =
+		(
+			--format "\n"; print "if.getSizeFromIni()"
+			if( Ini.isDefined() and (ini_size = Ini.load( id as string )("size")) != undefined) then
+				ini_size --return
+		)
+		
+		
+		if ( ini_size = getSizeFromIni() ) != undefined and not isIniDocked() then
 		(
 			this.width  = ini_size.x
 			this.height = ini_size.y
@@ -674,13 +688,6 @@ struct Dialog_v
 		--format "width: %\n" width
 	),
 
-	/** Get ini dock state
-	 */
-	function _isIniDocked =
-	(
-		--format "\n"; print "if.getIniDockState()"
-		Ini.isDefined() and (dock_state = Ini.load( id as string )("dock_state")) != undefined and dock_state != "cui_floatable"
-	),
 
 	/** Get size on create
 	  */
@@ -706,15 +713,6 @@ struct Dialog_v
 		else
 			val --return value if size is defined
 
-	),
-
-	/** Get size from ini
-	  */
-	function _getSizeFromIni =
-	(
-		--format "\n"; print "if._getSizeFromIni()"
-		if( Ini.isDefined() and (ini_size = Ini.load( id as string )("size")) != undefined) then
-			ini_size --return
 	),
 
 

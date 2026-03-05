@@ -47,7 +47,13 @@
 </livefolder>
 <file id="adfc9b38-2d0a-450f-9741-dc431a1da036" idref="2930627c-6bbb-4565-9531-0fdd88609e76" name="SubolloutsCreator.ms" url="Lib/RolloutCreator/SubolloutsCreator/SubolloutsCreator.ms">
 </file>
-<file id="8ef376de-7a07-4915-a0e1-84d6ffec1a20" idref="38a5d00f-dc9e-4a6e-b504-461abd8ebb54" name="Event.ms" url="Lib/Event/Event.ms">
+<livefolder id="1c283706-9a49-4256-ad67-ac1bf8a3ee14" idref="38a5d00f-dc9e-4a6e-b504-461abd8ebb54" name="Rollout" url="Lib/Dialog/Rollout/">
+</livefolder>
+<file id="1fdf8f2c-9630-407d-b3b0-127c2ca5ef05" idref="38a5d00f-dc9e-4a6e-b504-461abd8ebb54" name="RolloutBody.ms" url="Lib/Dialog/Rollout/RolloutBody.ms">
+</file>
+<file id="4ef90dce-ad79-4db0-beb6-2144b0b20c57" idref="38a5d00f-dc9e-4a6e-b504-461abd8ebb54" name="Control.ms" url="Lib/Dialog/Rollout/Controls/Control/Control.ms">
+</file>
+<file id="8962d006-4a00-4d78-962c-b3a75c57e17d" idref="38a5d00f-dc9e-4a6e-b504-461abd8ebb54" name="Dialog.ms" url="Lib/Dialog/Dialog.ms">
 </file>
 <livefolder id="aabcd33d-f712-4446-8af9-19ded65d83e0" idref="38a5d00f-dc9e-4a6e-b504-461abd8ebb54" name="Dialog" url="Lib/Dialog/">
 </livefolder>
@@ -55,6 +61,8 @@
 </livefolder>
 <livefolder id="bc430bd2-28db-46db-bb2e-94326bc27855" idref="38a5d00f-dc9e-4a6e-b504-461abd8ebb54" name="Control" url="Lib/Dialog/Rollout/Controls/Control/">
 </livefolder>
+<file id="fe38b9be-0b1e-4f97-80e9-c55ca9565e25" idref="38a5d00f-dc9e-4a6e-b504-461abd8ebb54" name="Controls.ms" url="Lib/Dialog/Rollout/Controls/Controls.ms">
+</file>
 <livefolder id="0f9c409f-5b38-4e56-9299-3e7d9acf8e26" idref="ad60566e-f9da-4452-97b4-905e34c8ce55" name="ContentLoader" url="Lib/ContentLoader/">
 </livefolder>
 <livefolder id="b92a202d-e14e-4300-89bb-1f14e1e2c5df" idref="ad60566e-f9da-4452-97b4-905e34c8ce55" name="MacroScriptFileParser" url="Lib/ContentLoader/ContentSubrollouts/ContentRollout/ScriptFile/MacroScriptFileParser/">

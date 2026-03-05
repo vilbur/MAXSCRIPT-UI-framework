@@ -29,12 +29,12 @@ struct IniSaver_v
 	 */
 	function saveRollout rollout_id =
 	(
-		--format "\n"; print "IniSaver_v.saveRollout()"
+		format "\n"; print "IniSaver_v.saveRollout()"
 		--format "EVENT_DOCKED_ENABLED	= % \n" EVENT_DOCKED_ENABLED
 		--format "rollout_id	= % \n" rollout_id
 		--format "ini_file	= % \n" ini_file
 
-		if (_Rollout = execute(rollout_id as string )) != undefined then
+		if (_Rollout = execute( rollout_id as string )) != undefined then
 		(
 			if EVENT_DOCKED_ENABLED != undefined and EVENT_DOCKED_ENABLED then
 				this.saveDialogDockState (rollout_id)
@@ -99,7 +99,10 @@ struct IniSaver_v
 	 */
 	function _saveControlsAndSubrollouts _RolloutClass =
 	(
-		--format "\n"; print "IniSaver_v._saveControlsAndSubrollouts()"
+		format "\n"; print "IniSaver_v._saveControlsAndSubrollouts()"
+		format "ini_file: %\n" ini_file
+		
+		
 		for control in _RolloutClass.controls do
 		(
 			if classOf control == SubRollout then
@@ -186,23 +189,36 @@ struct IniSaver_v
 	function _saveSubrolloutsOrder _SubRolloutClass rollout_id =
 	(
 		--format "\n"; print "IniSaver_v._saveSubrolloutsOrder()"
-		rollout_ids = for _rollout in (this._getOrderedRollouts(_SubRolloutClass.Rollouts)) collect _rollout.name as name
+		/** Get subrollouts by order in UI
+		 */
+		function _getOrderedRollouts rollouts =
+		(
+			fn sortByY A B = (windows.getWindowPos A.hWnd).y - (windows.getWindowPos B.hWnd).y
+	
+			qsort rollouts sortByY --> 'rollouts' will now be sorted based on Y
+	
+			rollouts --return
+		)
+		
+		
+		
+		rollout_ids = for _rollout in _getOrderedRollouts(_SubRolloutClass.Rollouts) collect _rollout.name as name
 
 		this._saveToIni (rollout_id) (_SubRolloutClass.name) (with printAllElements on (rollout_ids as string )) -- IMPORTANT: without "with printAllElements on" long array formated to ini end with "..." INFO:https://help.autodesk.com/view/MAXDEV/2022/ENU/?guid=GUID-92B98D11-60FF-4742-A1BA-692EE135E085
 	),
 
-	/**
-	  *
-	  */
-	function regexGetMatches string pattern ignorecase:true =
-	(
-		rx         = dotNetClass "System.Text.RegularExpressions.RegEx"
-		rx_options	= dotNetClass "System.Text.RegularExpressions.RegexOptions"
-
-		matches = if (ignorecase) then rx.matches string pattern rx_options.IgnoreCase else rx.matches string pattern
-
-		(for matchIdx = 0 to matches.count-1 collect for groupIdx = 0 to matches.item[matchIdx].groups.count-1 collect ( matches.item[matchIdx].groups.item[groupIdx].value )) --return
-	),
+	--/**
+	--  *
+	--  */
+	--function regexGetMatches string pattern ignorecase:true =
+	--(
+	--	rx         = dotNetClass "System.Text.RegularExpressions.RegEx"
+	--	rx_options	= dotNetClass "System.Text.RegularExpressions.RegexOptions"
+	--
+	--	matches = if (ignorecase) then rx.matches string pattern rx_options.IgnoreCase else rx.matches string pattern
+	--
+	--	(for matchIdx = 0 to matches.count-1 collect for groupIdx = 0 to matches.item[matchIdx].groups.count-1 collect ( matches.item[matchIdx].groups.item[groupIdx].value )) --return
+	--),
 
 	/** Set save to ini default event
 	 */
@@ -231,16 +247,7 @@ struct IniSaver_v
 		delIniSetting  ini_file section key
 	),
 
-	/** Get subrollouts by order in UI
-	 */
-	function _getOrderedRollouts rollouts =
-	(
-		fn sortByY A B = (windows.getWindowPos A.hWnd).y - (windows.getWindowPos B.hWnd).y
 
-		qsort rollouts sortByY --> 'rollouts' will now be sorted based on Y
-
-		rollouts --return
-	),
 
 	/**
 	 */
