@@ -47,13 +47,13 @@ struct IniSaver_v
 		
 		
 		for control in _RolloutClass.controls do
-		(
+		--(
 			if classOf control == SubRollout then
 				this._saveSubRollouts(control)(_RolloutClass.name)
 
 			else
 				this._saveControl(_RolloutClass)(control)
-		)
+		--)
 	),
 	
 	private
@@ -106,7 +106,8 @@ struct IniSaver_v
 	 */
 	function _saveControl _RolloutClass Ctrl =
 	(
-		--format "\n"; print "IniSaver_v._saveControl()"
+		format "\n"; print "IniSaver_v._saveControl()"
+		format "Ctrl: %\n" Ctrl
 
 		local val
 
@@ -128,18 +129,21 @@ struct IniSaver_v
 			ColorPickerControl:	Ctrl.color
 			RadioControl:	Ctrl.state
 
-			--BitmapControl:
+			MtlButtonControl: Ctrl.material
+			MapButtonControl: Ctrl.map
+			
+			ImgTag:	Ctrl.bitmap
+			BitmapControl:	Ctrl.fileName
+
 			--hyperlinkControl:
-			--imgTagControl:
-			--MapbuttonControl:
-			--MaterialbuttonControl:
 			--ProgressBarControl:
 			--CurveControl:		-- DOES NOT WORK YET
 			--popupMenuControl:		-- DOES NOT WORK YET
 			--TimerControl:
 
 		)
-		--format "val	= % \n" val
+		format "val	= % \n" val
+		
 		if( val != undefined ) then
 			this._saveToIni (_RolloutClass.name) Ctrl.name (val as string )
 	),
@@ -181,15 +185,15 @@ struct IniSaver_v
 	--	(for matchIdx = 0 to matches.count-1 collect for groupIdx = 0 to matches.item[matchIdx].groups.count-1 collect ( matches.item[matchIdx].groups.item[groupIdx].value )) --return
 	--),
 
-	/** Set save to ini default event
+	/** Save value to ini file
 	 */
 	function _saveToIni section key val =
 	(
-		--format "\n"; print "IniSaver_v._saveToIni()"
-		----format "ini_file	= % \n" ini_file
-		--format "section	= % \n" section
-		--format "key	= % \n" key
-		--format "val	= % \n" val
+		format "\n"; print "IniSaver_v._saveToIni()"
+		--format "ini_file	= % \n" ini_file
+		format "section	= % \n" section
+		format "key	= % \n" key
+		format "val	= % \n" val
 
 		if( ini_file != undefined  and val != undefined ) then
 		(

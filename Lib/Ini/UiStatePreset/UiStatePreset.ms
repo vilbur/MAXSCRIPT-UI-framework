@@ -1,4 +1,5 @@
 filein( getFilenamePath(getSourceFileName()) + "/IniSaver/IniSaver.ms" )	--"./IniSaver/IniSaver.ms"
+filein( getFilenamePath(getSourceFileName()) + "/UiStateLoader/UiStateLoader.ms" )	--"./UiStateLoader/UiStateLoader.ms"
 
 /** Ui state preset
  */
@@ -35,16 +36,28 @@ struct UiStatePreset_v
 		
 			IniSaver.saveControlsAndSubrollouts (_Rollout)
 		--)
-		
-		
 	),
-	
 	
 	/** Load
 	 */
-	function load rollout_id =
+	function load _Rollout =
 	(
-		--format "\n"; print "UiStatePreset_v.load()"
+		format "\n"; print "UiStatePreset_v.load()"
+		UiStateLoader = UiStateLoader_v ini_file
+		
+		_Rollout = this._getRollout( _Rollout )
+		
+		UiStateLoader.loadControlsAndSubrollouts (_Rollout)
+
+	),
+	
+	/** Open ini file in Notepad++
+	 */
+	function open =
+	(
+		--format "\n"; print "Ini_v.open()"
+		--ShellLaunch  "Notepad++" ("\""+_path+"\"")
+		DOSCommand ("\""+ini_file+"\"")
 	),
 	
 	private
