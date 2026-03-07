@@ -1,6 +1,12 @@
 /** SAVE STATE OF ROLLOUT AND CONTROLS TO INI FILE
+  
+	UNSUPPORT SAVE CONTROL VALUES 
+	
+	--"./../../_Dev/GET_bitmap.filename_PROPERTY_PROBLEM.ms"
+	
+  
  */
-struct IniSaver_v
+struct UiStateSaver_v
 (
 	/* construct */
 	ini_file,
@@ -13,28 +19,28 @@ struct IniSaver_v
 
 	/** Save dialog dock state
 	 */
-	function saveDialogDockState _Rollout =
+	function saveDialogDockState _RolloutClass =
 	(
-		format "\n"; print "IniSaver_v.saveDialogDockState()"
-		--format "isRegistered: %\n" ( this.isRegistered _Rollout )
-		--format "_Rollout	= % \n" _Rollout
+		format "\n"; print "UiStateSaver_v.saveDialogDockState()"
+		--format "isRegistered: %\n" ( this.isRegistered _RolloutClass )
+		--format "_RolloutClass	= % \n" _RolloutClass
 	
-		if( dialog_is_not_closed = GetDialogSize _Rollout) != [0,0] then -- if dialog is closed by user, exists but it is not displayed , then it`s size is [0,0,]
+		if( dialog_is_not_closed = GetDialogSize _RolloutClass) != [0,0] then -- if dialog is closed by user, exists but it is not displayed , then it`s size is [0,0,]
 		(
-			dialog_position = GetDialogPos _Rollout 
+			dialog_position = GetDialogPos _RolloutClass 
 			
 			/* AVOID OFFSETING OF REGISTERED DIALOG */ 
-			if this.isRegistered _Rollout then
+			if this.isRegistered _RolloutClass then
 			(
 				dialog_position.x -= 6
 				dialog_position.y -= 29
 			)
 			
-			this._saveToIni _Rollout.name "size"	(GetDialogSize _Rollout )
+			this._saveToIni _RolloutClass.name "size"	(GetDialogSize _RolloutClass )
 	
-			this._saveToIni _Rollout.name "position"	( dialog_position )
+			this._saveToIni _RolloutClass.name "position"	( dialog_position )
 	
-			this._saveToIni _Rollout.name "dock_state"	(try(cui.getDockState _Rollout )catch())
+			this._saveToIni _RolloutClass.name "dock_state"	(try(cui.getDockState _RolloutClass )catch())
 		)
 	),
 
@@ -42,7 +48,7 @@ struct IniSaver_v
 	 */
 	function saveControlsAndSubrollouts _RolloutClass =
 	(
-		format "\n"; print "IniSaver_v.saveControlsAndSubrollouts()"
+		format "\n"; print "UiStateSaver_v.saveControlsAndSubrollouts()"
 		format "ini_file: %\n" ini_file
 		
 		
@@ -76,11 +82,11 @@ struct IniSaver_v
 
 	/** _save rollout
 	 */
-	function _saveSubRollouts _SubRolloutClass _Rollout =
+	function _saveSubRollouts _SubRolloutClass _RolloutClass =
 	(
-		--format "\n"; print "IniSaver_v._saveSubRollouts()"
+		--format "\n"; print "UiStateSaver_v._saveSubRollouts()"
 
-		this._saveSubrolloutsOrder(_SubRolloutClass) (_Rollout)
+		this._saveSubrolloutsOrder(_SubRolloutClass) (_RolloutClass)
 
 
 		for control in _SubRolloutClass.Rollouts do
@@ -96,7 +102,7 @@ struct IniSaver_v
 	 */
 	function _saveRollout _RolloutClass =
 	(
-		--format "\n"; print "IniSaver_v._saveRollout()"
+		--format "\n"; print "UiStateSaver_v._saveRollout()"
 		this._saveToIni (_RolloutClass.name) ("rolledUp") ( (_RolloutClass.open == false) as string )
 
 		this.saveControlsAndSubrollouts(_RolloutClass)
@@ -106,10 +112,25 @@ struct IniSaver_v
 	 */
 	function _saveControl _RolloutClass Ctrl =
 	(
-		format "\n"; print "IniSaver_v._saveControl()"
+		format "\n"; print "UiStateSaver_v._saveControl()"
 		format "Ctrl: %\n" Ctrl
 
-		local val
+		/** Get image tag value
+		 */
+		function getImageTagValueWorkaround Ctrl =
+		(
+			format "\n"; print "UiStateSaver_v.getImageTagValueWorkaround()"
+			
+			format "Ctrl: %\n" Ctrl
+			format "Ctrl.name: %\n" Ctrl.name
+			format "Ctrl.BITMAP: %\n" Ctrl.bitmap
+			
+		)
+		
+		class_of_control = classOf Ctrl
+
+		local val = undefined 
+
 
 		val = case classOf Ctrl of
 		(
@@ -129,31 +150,52 @@ struct IniSaver_v
 			ColorPickerControl:	Ctrl.color
 			RadioControl:	Ctrl.state
 
+			
 			MtlButtonControl: Ctrl.material
 			MapButtonControl: Ctrl.map
+		
 			
-			ImgTag:	Ctrl.bitmap
-			BitmapControl:	Ctrl.fileName
+		/*------------------------------------------------------------------------------
 
-			--hyperlinkControl:
+			UNSUPPORT SAVE CONTROL VALUES 
+
+		--------------------------------------------------------------------------------*/	
+
 			--ProgressBarControl:
 			--CurveControl:		-- DOES NOT WORK YET
 			--popupMenuControl:		-- DOES NOT WORK YET
 			--TimerControl:
+			
+		/*------------------------------------------------------------------------------
+
+			POROBLEMATIC CONTROL TYPES TO GET THEIR VALUE
+			
+			--"./../../_Dev/GET_bitmap.filename_PROPERTY_PROBLEM.ms"
+			
+		--------------------------------------------------------------------------------*/
+		
+			--ImgTag:	getImageTagValueWorkaround Ctrl
+			--BitmapControl:	Ctrl.fileName
+			
+			HyperLinkControl: Ctrl.address
 
 		)
 		format "val	= % \n" val
+
+		/* materialButton and mapButton can save undefined value ( button must save empty state )
 		
-		if( val != undefined ) then
+		*/ 
+		
+		if( val != undefined or class_of_control == MtlButtonControl or class_of_control == MapButtonControl ) then
 			this._saveToIni (_RolloutClass.name) Ctrl.name (val as string )
 	),
 
 
 	/** Save subrollouts order
 	 */
-	function _saveSubrolloutsOrder _SubRolloutClass _Rollout =
+	function _saveSubrolloutsOrder _SubRolloutClass _RolloutClass =
 	(
-		--format "\n"; print "IniSaver_v._saveSubrolloutsOrder()"
+		--format "\n"; print "UiStateSaver_v._saveSubrolloutsOrder()"
 		/** Get subrollouts by order in UI
 		 */
 		function _getOrderedRollouts rollouts =
@@ -169,7 +211,7 @@ struct IniSaver_v
 		
 		rollout_ids = for _rollout in _getOrderedRollouts(_SubRolloutClass.Rollouts) collect _rollout.name as name
 
-		this._saveToIni (_Rollout) (_SubRolloutClass.name) (with printAllElements on (rollout_ids as string )) -- IMPORTANT: without "with printAllElements on" long array formated to ini end with "..." INFO:https://help.autodesk.com/view/MAXDEV/2022/ENU/?guid=GUID-92B98D11-60FF-4742-A1BA-692EE135E085
+		this._saveToIni (_RolloutClass) (_SubRolloutClass.name) (with printAllElements on (rollout_ids as string )) -- IMPORTANT: without "with printAllElements on" long array formated to ini end with "..." INFO:https://help.autodesk.com/view/MAXDEV/2022/ENU/?guid=GUID-92B98D11-60FF-4742-A1BA-692EE135E085
 	),
 
 	--/**
@@ -189,26 +231,23 @@ struct IniSaver_v
 	 */
 	function _saveToIni section key val =
 	(
-		format "\n"; print "IniSaver_v._saveToIni()"
+		format "\n"; print "UiStateSaver_v._saveToIni()"
 		--format "ini_file	= % \n" ini_file
 		format "section	= % \n" section
 		format "key	= % \n" key
 		format "val	= % \n" val
 
-		if( ini_file != undefined  and val != undefined ) then
-		(
-			if classof val == string then
-				val = substituteString val "\\" "\\\\"
+		if classof val == string then
+			val = substituteString val "\\" "\\\\"
 
-			setINISetting ini_file section key ( val as string )
-		)
+		setINISetting ini_file section key ( val as string )
 	),
 
 	--/** Remove from ini
 	-- */
 	--function _delIniSetting section key =
 	--(
-	--	--format "\n"; print "IniSaver_v._delIniSetting ()"
+	--	--format "\n"; print "UiStateSaver_v._delIniSetting ()"
 	--	delIniSetting  ini_file section key
 	--),
 
@@ -219,6 +258,6 @@ struct IniSaver_v
 	on create do
 	(
 		--clearListener()
-		--format "\n"; print("IniSaver_v.onCreate()")
+		--format "\n"; print("UiStateSaver_v.onCreate()")
 	)
 )

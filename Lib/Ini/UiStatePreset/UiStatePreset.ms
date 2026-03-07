@@ -1,4 +1,4 @@
-filein( getFilenamePath(getSourceFileName()) + "/IniSaver/IniSaver.ms" )	--"./IniSaver/IniSaver.ms"
+filein( getFilenamePath(getSourceFileName()) + "/UiStateSaver/UiStateSaver.ms" )	--"./UiStateSaver/UiStateSaver.ms"
 filein( getFilenamePath(getSourceFileName()) + "/UiStateLoader/UiStateLoader.ms" )	--"./UiStateLoader/UiStateLoader.ms"
 
 /** Ui state preset
@@ -29,12 +29,12 @@ struct UiStatePreset_v
 	
 		--if (_Rollout = this._getRollout( _Rollout )) != undefined then
 		--(
-			IniSaver = IniSaver_v ini_file
+			UiStateSaver = UiStateSaver_v ini_file
 			
 			--if EVENT_DOCKED_ENABLED != undefined and EVENT_DOCKED_ENABLED then
-				--IniSaver.saveDialogDockState (_Rollout)
+				--UiStateSaver.saveDialogDockState (_Rollout)
 		
-			IniSaver.saveControlsAndSubrollouts (_Rollout)
+			UiStateSaver.saveControlsAndSubrollouts (_Rollout)
 		--)
 	),
 	

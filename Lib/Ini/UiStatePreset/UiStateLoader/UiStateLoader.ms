@@ -138,7 +138,7 @@ struct UiStateLoader_v
 	 */
 	function _loadIni section key val =
 	(
-		--format "\n"; print "IniSaver_v._loadIni()"
+		--format "\n"; print "UiStateSaver_v._loadIni()"
 		----format "ini_file	= % \n" ini_file
 		--format "section	= % \n" section
 		--format "key	= % \n" key
