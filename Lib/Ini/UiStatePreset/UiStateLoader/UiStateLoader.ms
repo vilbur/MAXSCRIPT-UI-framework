@@ -19,9 +19,8 @@ struct UiStateLoader_v
 	 */
 	function loadControlsAndSubrollouts _RolloutClass =
 	(
-		format "\n"; print "UiStateLoader_v.loadControlsAndSubrollouts()"
-		format "ini_file: %\n" ini_file
-		
+		--format "\n"; print "UiStateLoader_v.loadControlsAndSubrollouts()"
+		--format "ini_file: %\n" ini_file
 		
 		for control in _RolloutClass.controls do
 			if classOf control != SubRollout then
@@ -37,12 +36,13 @@ struct UiStateLoader_v
 	 */
 	function _loadSubRollouts _RolloutClass _SubRolloutSlot =
 	(
-		format "\n"; print "UiStateLoader_v._loadSubRollouts()"
+		--format "\n"; print "UiStateLoader_v._loadSubRollouts()"
 
 		reordered_rollouts = #()
 		
 		loaded_order_ids = Ini.load _RolloutClass.name _SubRolloutSlot.name
 		
+		/* GET RIGHT ORDER */ 
 		for i = 1 to _SubRolloutSlot.Rollouts.count do
 		(
 			_SubRollout = _SubRolloutSlot.Rollouts[i]
@@ -52,9 +52,15 @@ struct UiStateLoader_v
 			reordered_rollouts[index] = _SubRollout
 		)
 		
-		format "reordered_rollouts: %\n" reordered_rollouts
+		--format "reordered_rollouts: %\n" reordered_rollouts
 		
+		/* REORDER SUBROLLOUTS */ 
 		this.reorderSubRollouts _SubRolloutSlot reordered_rollouts
+		
+		/* EDIT CONTROL AFTER REORDERING */ 
+		for _SubRollout in _SubRolloutSlot.Rollouts do
+			this.loadControlsAndSubrollouts _SubRollout
+		
 	),
 	
 	/*
@@ -70,7 +76,7 @@ struct UiStateLoader_v
 	*/
 	function reorderSubRollouts subUI targetRollouts =
 	(
-		format "\n"; print "UiStateLoader_v.reorderSubRollouts()"
+		--format "\n"; print "UiStateLoader_v.reorderSubRollouts()"
 		-- 1. CLEANUP: Remove any current rollouts that are NOT in the target array
 		for i = subUI.rollouts.count to 1 by -1 do
 		(
@@ -115,16 +121,6 @@ struct UiStateLoader_v
 			-- Append the rollout to its new correct position at the end
 			addSubRollout subUI ro
 		)
-	),
-
-	/** _load rollout
-	 */
-	function _loadRollout _RolloutClass =
-	(
-		format "\n"; print "UiStateLoader_v._loadRollout()"
-		--this._loadToIni (_RolloutClass.name) ("rolledUp") ( (_RolloutClass.open == false) as string )
-
-		--this.loadControlsAndSubrollouts(_RolloutClass)
 	),
 
 	/** _load control
@@ -186,45 +182,6 @@ struct UiStateLoader_v
 			--HyperLinkControl: Ctrl.address
 		)
 	),
-
-
-	/** Save subrollouts order
-	 */
-	function _loadSubrolloutsOrder _SubRolloutSlot _RolloutClass =
-	(
-		format "\n"; print "UiStateLoader_v._loadSubrolloutsOrder()"
-		/** Get subrollouts by order in UI
-		 */
-		function _getOrderedRollouts rollouts =
-		(
-			fn sortByY A B = (windows.getWindowPos A.hWnd).y - (windows.getWindowPos B.hWnd).y
-	
-			qsort rollouts sortByY --> 'rollouts' will now be sorted based on Y
-	
-			rollouts --return
-		)
-		
-		rollout_ids = for _rollout in _getOrderedRollouts(_SubRolloutSlot.Rollouts) collect _rollout.name as name
-
-		format "rollout_ids: %\n" rollout_ids
-		
-		loaded_order = this._loadIni (_RolloutClass.name) (_SubRolloutSlot.name)
-		
-		format "loaded_order: %\n" loaded_order
-	),
-
-	--/** Load ini value 
-	-- */
-	--function _loadIni section key =
-	--(
-	--	format "\n"; print "UiStateSaver_v._loadIni()"
-	--	----format "ini_file	= % \n" ini_file
-	--	format "section	= % \n" section
-	--	format "key	= % \n" key
-	--	--format "val	= % \n" val
-	--
-	--	getINISetting ini_file section key --return
-	--),
 
 	/**
 	 */
