@@ -24,31 +24,25 @@ struct UiStateLoader_v
 		
 		
 		for control in _RolloutClass.controls do
-			if classOf control == SubRollout then
-				this._loadSubRollouts(control)(_RolloutClass.name)
+			if classOf control != SubRollout then
+				this._loadControl(_RolloutClass)(control)
 			
 			else
-				this._loadControl(_RolloutClass)(control)
+				this._loadSubRollouts(_RolloutClass)(control)
 	),
 	
 	private
 	
 	/** _load rollout
 	 */
-	function _loadSubRollouts _SubRolloutClass _Rollout =
+	function _loadSubRollouts _RolloutClass _SubRolloutClass =
 	(
 		format "\n"; print "UiStateLoader_v._loadSubRollouts()"
-
-		--this._loadSubrolloutsOrder(_SubRolloutClass) (_Rollout)
-
-
-		for control in _SubRolloutClass.Rollouts do
-		(
-			--format "control	= % \n" control
-
-			--if classOf control == RolloutClass then
-				--this._loadRollout(control)
-		)
+		--
+		----this._loadSubrolloutsOrder(_SubRolloutClass) (_Rollout)
+		--
+		--for _SubRollout in _SubRolloutClass.Rollouts do
+		--	this._loadRollout(control)
 	),
 
 	/** _load rollout
@@ -66,46 +60,62 @@ struct UiStateLoader_v
 	function _loadControl _RolloutClass Ctrl =
 	(
 		format "\n"; print "UiStateLoader_v._loadControl()"
-		format "Ctrl: %\n" Ctrl
-
-		local val
+		--format "Ctrl: %\n" Ctrl
 
 		val = Ini.load _RolloutClass.name Ctrl.name
+		--format "val	= % \n" val
+		--format "classOf val: %\n" ( classOf val )
 		
-		--val = case classOf Ctrl of
-		--(
-		--	CheckBoxControl:	Ctrl.checked
-		--	CheckButtonControl:	Ctrl.checked
-		--
-		--	SpinnerControl:	Ctrl.value
-		--	SliderControl:	Ctrl.value
-		--	AngleControl:	Ctrl.degrees
-		--
-		--	ListboxControl:	Ctrl.selection
-		--	ComboboxControl:	Ctrl.selection -- ComboBox and DropdownList ALSO !!!
-		--	MultiListBoxControl:	Ctrl.selection
-		--
-		--	EdittextControl:	Ctrl.text
-		--	PickbuttonControl:	Ctrl.object
-		--	ColorPickerControl:	Ctrl.color
-		--	RadioControl:	Ctrl.state
-		--
-		--	MtlButtonControl: Ctrl.material
-		--	MapButtonControl: Ctrl.map
-		--	
-		--	ImgTag:	Ctrl.bitmap
-		--	BitmapControl:	Ctrl.fileName
-		--
-		--	--hyperlinkControl:
-		--	--ProgressBarControl:
-		--	--CurveControl:		-- DOES NOT WORK YET
-		--	--popupMenuControl:		-- DOES NOT WORK YET
-		--	--TimerControl:
-		--
-		--)
+		case classOf Ctrl of
+		(
+			CheckBoxControl:	Ctrl.checked = val
+			CheckButtonControl:	Ctrl.checked = val
+
+			SpinnerControl:	Ctrl.value = val
+			SliderControl:	Ctrl.value = val
+			AngleControl:	Ctrl.degrees = val
+
+			ListboxControl:	Ctrl.selection = val
+			ComboboxControl:	Ctrl.selection = val
+			MultiListBoxControl:	Ctrl.selection = val
+
+			EdittextControl:	Ctrl.text = val
+			PickbuttonControl:	Ctrl.object = val
+			ColorPickerControl:	Ctrl.color = val
+			RadioControl:	Ctrl.state = val
+
+			
+			--MtlButtonControl: Ctrl.material = val
+			--MapButtonControl: Ctrl.map
 		
-		format "val	= % \n" val
+			
+		/*------------------------------------------------------------------------------
+
+			UNSUPPORT SAVE CONTROL VALUES 
+
+		--------------------------------------------------------------------------------*/	
+
+			--ProgressBarControl:
+			--CurveControl:		-- DOES NOT WORK YET
+			--popupMenuControl:		-- DOES NOT WORK YET
+			--TimerControl:
+			
+		/*------------------------------------------------------------------------------
+
+			POROBLEMATIC CONTROL TYPES TO GET THEIR VALUE
+			
+			--"./../../_Dev/GET_bitmap.filename_PROPERTY_PROBLEM.ms"
+			
+		--------------------------------------------------------------------------------*/
 		
+			--ImgTag:	getImageTagValueWorkaround Ctrl
+			--BitmapControl:	Ctrl.fileName
+			
+			--HyperLinkControl: Ctrl.address
+
+		)
+		
+
 		--if( val != undefined ) then
 			--this._loadToIni (_RolloutClass.name) Ctrl.name (val as string )
 	),
