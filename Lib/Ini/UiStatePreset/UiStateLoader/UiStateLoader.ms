@@ -35,14 +35,86 @@ struct UiStateLoader_v
 	
 	/** _load rollout
 	 */
-	function _loadSubRollouts _RolloutClass _SubRolloutClass =
+	function _loadSubRollouts _RolloutClass _SubRolloutSlot =
 	(
 		format "\n"; print "UiStateLoader_v._loadSubRollouts()"
-		--
-		----this._loadSubrolloutsOrder(_SubRolloutClass) (_Rollout)
-		--
-		--for _SubRollout in _SubRolloutClass.Rollouts do
-		--	this._loadRollout(control)
+
+		reordered_rollouts = #()
+		
+		loaded_order_ids = Ini.load _RolloutClass.name _SubRolloutSlot.name
+		
+		for i = 1 to _SubRolloutSlot.Rollouts.count do
+		(
+			_SubRollout = _SubRolloutSlot.Rollouts[i]
+
+			index	= findItem loaded_order_ids ( _SubRollout.name as name )
+
+			reordered_rollouts[index] = _SubRollout
+		)
+		
+		format "reordered_rollouts: %\n" reordered_rollouts
+		
+		this.reorderSubRollouts _SubRolloutSlot reordered_rollouts
+	),
+	
+	/*
+	  Reorders a subRollout control to match a target array of rollouts.
+	  Optimized to prevent removing/adding rollouts that are already in a valid sequence.
+			
+	   Example Usage
+	   ReorderSubRollouts myMainRollout.mySubSlot #(rolloutC, rolloutA, rolloutB)
+ 
+	  Arguments:
+	  subUI          - The subRollout control (e.g., myDialog.mySubSlot)
+	  targetRollouts - An array of rollout definitions in the exact order you want them
+	*/
+	function reorderSubRollouts subUI targetRollouts =
+	(
+		format "\n"; print "UiStateLoader_v.reorderSubRollouts()"
+		-- 1. CLEANUP: Remove any current rollouts that are NOT in the target array
+		for i = subUI.rollouts.count to 1 by -1 do
+		(
+			ro = subUI.rollouts[i]
+			if (findItem targetRollouts ro) == 0 do
+			(
+				removeSubRollout subUI ro
+			)
+		)
+	
+		-- 2. OPTIMIZE: Find the longest prefix of the target array 
+		-- that already exists in the correct relative order inside the sub-rollout.
+		currentRollouts = subUI.rollouts
+		prefixCount = 0
+		cIndex = 1
+		prefixBroken = false
+	
+		for tRo in targetRollouts while not prefixBroken do
+		(
+			found = false
+			while cIndex <= currentRollouts.count and not found do
+			(
+				if currentRollouts[cIndex] == tRo then found = true
+				cIndex += 1
+			)
+	
+			if found then prefixCount += 1
+			else prefixBroken = true
+		)
+	
+		-- 3. REORDER: Move only the out-of-sequence rollouts to the end
+		for i = (prefixCount + 1) to targetRollouts.count do
+		(
+			ro = targetRollouts[i]
+	
+			-- If it's already in the slot (but out of order), remove it so it shifts
+			if (findItem subUI.rollouts ro) > 0 do
+			(
+				removeSubRollout subUI ro
+			)
+	
+			-- Append the rollout to its new correct position at the end
+			addSubRollout subUI ro
+		)
 	),
 
 	/** _load rollout
@@ -59,7 +131,7 @@ struct UiStateLoader_v
 	 */
 	function _loadControl _RolloutClass Ctrl =
 	(
-		format "\n"; print "UiStateLoader_v._loadControl()"
+		--format "\n"; print "UiStateLoader_v._loadControl()"
 		--format "Ctrl: %\n" Ctrl
 
 		val = Ini.load _RolloutClass.name Ctrl.name
@@ -112,20 +184,15 @@ struct UiStateLoader_v
 			--BitmapControl:	Ctrl.fileName
 			
 			--HyperLinkControl: Ctrl.address
-
 		)
-		
-
-		--if( val != undefined ) then
-			--this._loadToIni (_RolloutClass.name) Ctrl.name (val as string )
 	),
 
 
 	/** Save subrollouts order
 	 */
-	function _loadSubrolloutsOrder _SubRolloutClass _Rollout =
+	function _loadSubrolloutsOrder _SubRolloutSlot _RolloutClass =
 	(
-		--format "\n"; print "UiStateLoader_v._loadSubrolloutsOrder()"
+		format "\n"; print "UiStateLoader_v._loadSubrolloutsOrder()"
 		/** Get subrollouts by order in UI
 		 */
 		function _getOrderedRollouts rollouts =
@@ -137,31 +204,27 @@ struct UiStateLoader_v
 			rollouts --return
 		)
 		
-		
-		
-		rollout_ids = for _rollout in _getOrderedRollouts(_SubRolloutClass.Rollouts) collect _rollout.name as name
+		rollout_ids = for _rollout in _getOrderedRollouts(_SubRolloutSlot.Rollouts) collect _rollout.name as name
 
-		this._loadToIni (_Rollout) (_SubRolloutClass.name) (with printAllElements on (rollout_ids as string )) -- IMPORTANT: without "with printAllElements on" long array formated to ini end with "..." INFO:https://help.autodesk.com/view/MAXDEV/2022/ENU/?guid=GUID-92B98D11-60FF-4742-A1BA-692EE135E085
+		format "rollout_ids: %\n" rollout_ids
+		
+		loaded_order = this._loadIni (_RolloutClass.name) (_SubRolloutSlot.name)
+		
+		format "loaded_order: %\n" loaded_order
 	),
 
-	/** Load ini value 
-	 */
-	function _loadIni section key val =
-	(
-		--format "\n"; print "UiStateSaver_v._loadIni()"
-		----format "ini_file	= % \n" ini_file
-		--format "section	= % \n" section
-		--format "key	= % \n" key
-		--format "val	= % \n" val
-
-		if( ini_file != undefined  and val != undefined ) then
-		(
-			if classof val == string then
-				val = substituteString val "\\" "\\\\"
-
-			ltINISetting ini_file section key ( val as string )
-		)
-	),
+	--/** Load ini value 
+	-- */
+	--function _loadIni section key =
+	--(
+	--	format "\n"; print "UiStateSaver_v._loadIni()"
+	--	----format "ini_file	= % \n" ini_file
+	--	format "section	= % \n" section
+	--	format "key	= % \n" key
+	--	--format "val	= % \n" val
+	--
+	--	getINISetting ini_file section key --return
+	--),
 
 	/**
 	 */
