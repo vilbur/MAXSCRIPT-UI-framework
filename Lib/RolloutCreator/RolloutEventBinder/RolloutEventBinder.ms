@@ -3,9 +3,9 @@ filein( getFilenamePath(getSourceFileName()) + "/EventsCombiner/EventsCombiner.m
 
 /** RolloutEvent
   *
-  *		1) Available events for dialog|rollout are #open, #close, #resized, #moved, #docked, #undocked
+  *		1) Available events for dialog|rollout are #OPEN, #CLOSE, #RESIZED, #MOVED, #DOCKED, #UNDOCKED
   *
-  *		2) Events #open, #close and #docked fires save to ini callback before user defined callback, if ini file is defined then
+  *		2) Events #open, #CLOSE and #docked fires save to ini callback before user defined callback, if ini file is defined then
   *
   *		3) Each event fires global variable EventFired
   *
@@ -21,13 +21,13 @@ struct RolloutEventBinder_v
 	/* inhered */
 	ini_path,
 
-	/* ROLLOUT Events -- https://help.autodesk.com/view/MAXDEV/2021/ENU/?guid=GUID-DC435555-362D-4A03-BCF2-21179C5442F2
+	/* ROLLOUT Events https://help.autodesk.com/view/MAXDEV/2022/ENU/?guid=GUID-DC435555-362D-4A03-BCF2-21179C5442F2
 	 *
 	 * Event #rolledDown IS NOT NATIVE maxscript event
 	*/
 	events_rollout = #( #open, #close, #rolledUp ),
 
-	/* DIALOG Events
+	/* DIALOG Events https://help.autodesk.com/view/MAXDEV/2022/ENU/?guid=GUID-816D257C-CD2D-4753-A792-6E7AEFAFA6A7
 	 *
 	 * Event #DOCKED \ #UNDOCKED IS NOT NATIVE maxscript event, it is binded to #moved event
 	*/
@@ -36,6 +36,8 @@ struct RolloutEventBinder_v
 		#open, #close, #moved, #resized, #oktoclose, #help,
 
 		/* Mouse button events */
+		#mousemove,
+		
 		#lbuttondown,
 		#lbuttonup,
 		#lbuttondblclk,
@@ -69,27 +71,31 @@ struct RolloutEventBinder_v
 	 */
 	function combineEvents =
 	(
-		--format "\n"; print "RolloutEventBinder_v.combineEvents()"
-		--format "\n\n~~~~~~~~~	Rollout Events:%	~~~~~~~~~\n" _Rollout.id
+		format "\n"; print "RolloutEventBinder_v.combineEvents()"
+		format "\n\n~~~~~~~~~	Rollout Events:%	~~~~~~~~~\n" _Rollout.id
 
 		--format "_Rollout.Events.keys: %\n" _Rollout.Events.keys
 		this._setDefaultEvents()
 		--format "_Rollout.Events.keys: %\n" _Rollout.Events.keys
 
 		this._setCustomEvents()  -- NOTE: callback will be fired in reversed order then has been added. Default event goes first
-		
 		--format "_Rollout.Events.keys: %\n" _Rollout.Events.keys
-
+		
+		this._combineDockedEvents()
 	),
 
 	/** Add handlers
 	 */
 	function addHandlers =
 	(
-		--format "\n"; print "RolloutEventBinder_v.addHandlers()"
-		dialog_or_rollout_event_types = if( this._Rollout.isDialog() ) then events_dialog else #( #ROLLEDUP )
+		format "\n"; print "RolloutEventBinder_v.addHandlers()"
+		
+		/* GET DIALOG OR ROLLOUT EVENT TYPES */ 
+		event_types = if( this._Rollout.isDialog() ) then events_dialog else #( #ROLLEDUP )
+		format "event_types: %\n" event_types
 
-		for event_type in dialog_or_rollout_event_types do
+		/* ADD HANDLERS FOR EACH TYPE */ 
+		for event_type in event_types do
 			this._addHandler event_type
 	),
 
@@ -99,8 +105,8 @@ struct RolloutEventBinder_v
 	  */
 	function mutateOpenCloseToRolledUp =
 	(
-		--format "\n";	print "RolloutEventBinder_v.mutateOpenCloseToRolledUp()"
-		--format "_Rollout.Events.keys: %\n" _Rollout.Events.keys
+		format "\n";	print "RolloutEventBinder_v.mutateOpenCloseToRolledUp()"
+		format "_Rollout.Events.keys: %\n" _Rollout.Events.keys
 		/** Join array to string
 		 */
 		function arrayToString arr delimeter:"\n" = ( _string = ""; for Event in arr do _string += Event.callback  + delimeter; substring _string 1 (_string.count-delimeter.count))
@@ -142,8 +148,8 @@ struct RolloutEventBinder_v
 	(
 		if (Event = EventsCombiner.combine (event_type)) != undefined then
 		(
-			--format "\n\n";	print "RolloutEventBinder_v._addHandler()"
-			--format "Event: %\n" Event
+			format "\n\n";	print "RolloutEventBinder_v._addHandler()"
+			format "Event.type: %\n" Event.type
 
 			handler = "on "+(this._Rollout.id)+" "+ event_type as string + this._getParams(event_type)+" do\n(" +Event.callback+ "\n)"
 			--format "HANDLER:	% \n" handler
@@ -162,11 +168,9 @@ struct RolloutEventBinder_v
 		parent_is_dialog = _Rollout.parent_rollout_id == undefined
 		
 		
-		-- if parent_is_dialog then
-		--	DefaultEvents.getDialogEvents(this._Rollout.id)
-
-		
-		/*------ DIALOG OR ROLLOUT ------*/
+		/*------------------------------------------------------------------------------
+			GET EVENTS OF DIALOG OR ROLLOUT
+		--------------------------------------------------------------------------------*/
 		EventsCombiner.EventsLists[#DEFAULTS] = if parent_is_dialog then
 		
 			/* DIALOG EVENTS */ 
@@ -182,6 +186,25 @@ struct RolloutEventBinder_v
 	function _setCustomEvents =
 	(
 		EventsCombiner.EventsLists[#CUSTOM] = this._Rollout.Events
+	),
+	
+	/** Combine #DOCKED \ #UNDOCKED events and move them to _Rollout.Events
+		
+		
+		This makes callback executable in "./DefaultEvents/Callbacks/waitForResizingEnds.ms"
+		
+		
+		#DOCKED 	 🡶                                         🡵 #DOCKED
+		#RESIZED  🡲 #RESIZED 🡲 waitForResizingEnds()🡲 Fire 🡲 #RESIZED
+		#UNDOCKED 🡵                                         🡵 #UNDOCKED
+  
+	 */
+	function _combineDockedEvents =
+	(
+		--format "\n"; print "RolloutEventBinder_v._combineDockedEvents()"
+		for event_type in #( #UNDOCKED, #DOCKED ) where (Event = EventsCombiner.combine (event_type)) != undefined do
+			--_Rollout.Events[event_type] = Event
+			_Rollout.Events[event_type] = #(Event)
 	),
 
 	/** Get events for dialog rollout or subrollout

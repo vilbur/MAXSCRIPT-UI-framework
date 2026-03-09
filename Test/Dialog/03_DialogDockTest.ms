@@ -1,5 +1,7 @@
 clearListener(); print("Cleared in:"+getSourceFileName())
 
+format "DOCK_STATE: %\n" (execute ("try(cui.getDockState DIALOG_dock_test )catch( #WTF )"))
+
 filein( getFilenamePath(getSourceFileName()) + "/../../Lib/Dialog/Dialog.ms" ) -- "./../../Lib/Dialog/Dialog.ms"
 
 /* DEFINE INI FILE */ 
@@ -11,9 +13,10 @@ ini = (getSourceFileName())
 
 	param #width WORKS AS WIDTH OF DOCKED DIALOG
 */
-Dialog 	    = Dialog_v title:"Dock Test" ini:ini  min_size:[128, 128] max_size:[256, 128]
+Dialog 	    = Dialog_v title:"Test" ini:ini  min_size:[128, 128] max_size:[256, 128]
 
 
+format "DOCK_STATE: %\n" (execute ("try(cui.getDockState DIALOG_dock_test )catch( #WTF )"))
 
 /*------------------------------------------------------------------------------
 	DEFAULT DOCK SATES

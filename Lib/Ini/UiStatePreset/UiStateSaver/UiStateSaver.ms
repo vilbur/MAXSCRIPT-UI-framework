@@ -19,11 +19,15 @@ struct UiStateSaver_v
 
 	/** Save dialog dock state
 	 */
-	function saveDialogDockState _RolloutClass =
+	function saveDialogkState _RolloutClass =
 	(
-		format "\n"; print "UiStateSaver_v.saveDialogDockState()"
+		format "\n"; print "UiStateSaver_v.saveDialogkState()"
 		--format "isRegistered: %\n" ( this.isRegistered _RolloutClass )
 		--format "_RolloutClass	= % \n" _RolloutClass
+		_RolloutClass = this._getRollout( _RolloutClass )
+
+		dock_state = try(cui.getDockState _RolloutClass )catch( )
+		--format "DOCK_STATE: %\n" dock_state
 	
 		if( dialog_is_not_closed = GetDialogSize _RolloutClass) != [0,0] then -- if dialog is closed by user, exists but it is not displayed , then it`s size is [0,0,]
 		(
@@ -40,16 +44,26 @@ struct UiStateSaver_v
 	
 			this._saveToIni _RolloutClass.name "position"	( dialog_position )
 	
-			this._saveToIni _RolloutClass.name "dock_state"	(try(cui.getDockState _RolloutClass )catch())
+			this.saveDialogDockState (_RolloutClass)
 		)
+	),
+	
+	/** Save dialog dock state
+	 */
+	function saveDialogDockState _RolloutClass =
+	(
+		--format "\n"; print "UiStateSaver_v.saveDialogDockState()"
+		_RolloutClass = this._getRollout( _RolloutClass )
+
+		this._saveToIni _RolloutClass.name "dock_state"	(try(cui.getDockState _RolloutClass )catch( #cui_floatable ))
 	),
 
 	/** _save controls and subrollouts
 	 */
 	function saveControlsAndSubrollouts _RolloutClass =
 	(
-		format "\n"; print "UiStateSaver_v.saveControlsAndSubrollouts()"
-		format "ini_file: %\n" ini_file
+		--format "\n"; print "UiStateSaver_v.saveControlsAndSubrollouts()"
+		--format "ini_file: %\n" ini_file
 		
 		
 		for control in _RolloutClass.controls do
@@ -67,6 +81,8 @@ struct UiStateSaver_v
 	function saveRollout _RolloutClass =
 	(
 		--format "\n"; print "UiStateSaver_v.saveRollout()"
+		_RolloutClass = this._getRollout( _RolloutClass )
+		
 		this._saveToIni (_RolloutClass.name) ("rolledUp") ( (_RolloutClass.open == false) as string )
 
 		this.saveControlsAndSubrollouts(_RolloutClass)
@@ -112,18 +128,18 @@ struct UiStateSaver_v
 	 */
 	function _saveControl _RolloutClass Ctrl =
 	(
-		format "\n"; print "UiStateSaver_v._saveControl()"
-		format "Ctrl: %\n" Ctrl
+		--format "\n"; print "UiStateSaver_v._saveControl()"
+		--format "Ctrl: %\n" Ctrl
 
 		/** Get image tag value
 		 */
 		function getImageTagValueWorkaround Ctrl =
 		(
-			format "\n"; print "UiStateSaver_v.getImageTagValueWorkaround()"
+			--format "\n"; print "UiStateSaver_v.getImageTagValueWorkaround()"
 			
-			format "Ctrl: %\n" Ctrl
-			format "Ctrl.name: %\n" Ctrl.name
-			format "Ctrl.BITMAP: %\n" Ctrl.bitmap
+			--format "Ctrl: %\n" Ctrl
+			--format "Ctrl.name: %\n" Ctrl.name
+			--format "Ctrl.BITMAP: %\n" Ctrl.bitmap
 			
 		)
 		
@@ -180,7 +196,7 @@ struct UiStateSaver_v
 			HyperLinkControl: Ctrl.address
 
 		)
-		format "val	= % \n" val
+		--format "val	= % \n" val
 
 		/* materialButton and mapButton can save undefined value ( button must save empty state )
 		
@@ -231,11 +247,10 @@ struct UiStateSaver_v
 	 */
 	function _saveToIni section key val =
 	(
-		format "\n"; print "UiStateSaver_v._saveToIni()"
-		--format "ini_file	= % \n" ini_file
-		format "section	= % \n" section
-		format "key	= % \n" key
-		format "val	= % \n" val
+		--format "\n"; print "UiStateSaver_v._saveToIni()"
+		--format "section	= % \n" section
+		--format "key	= % \n" key
+		--format "val	= % \n" val
 
 		if classof val == string then
 			val = substituteString val "\\" "\\\\"
@@ -243,14 +258,17 @@ struct UiStateSaver_v
 		setINISetting ini_file section key ( val as string )
 	),
 
-	--/** Remove from ini
-	-- */
-	--function _delIniSetting section key =
-	--(
-	--	--format "\n"; print "UiStateSaver_v._delIniSetting ()"
-	--	delIniSetting  ini_file section key
-	--),
-
+	/** Get rollout
+	 */
+	function _getRollout _Rollout =
+	(
+		--format "\n"; print "UiStatePreset_v._getRollout()"
+		
+		if classOf _Rollout != RolloutClass then
+			execute( _Rollout as string ) --return
+		else
+			_Rollout --return
+	),
 
 
 	/**

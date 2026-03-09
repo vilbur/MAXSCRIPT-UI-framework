@@ -27,14 +27,14 @@ struct DefaultEvents_v -- MAYBE RENAME THIS TO RolloutDefaultEvents_v
 	 */
 	function getDialogEvents rollout_id =
 	(
-		format "\n"; print ("DefaultEvents_v.getEvents()" + rollout_id as string )
+		--format "\n"; print ("DefaultEvents_v.getDialogEvents(" + rollout_id as string +")")
 
 		EventsList = Dictionary()
 		
-		/*------------------------------------------------------------------------------
+		
+		/*--------------------------------------------------------------------------------------------------------------------------------------
 			on #OPEN - Move controls to groupboxes
-		--------------------------------------------------------------------------------*/
-		------appendEvent #OPEN "GROUPBOXCREATOR.sortControlsToGroupBoxes(\""+rollout_id+"\")"
+		----------------------------------------------------------------------------------------------------------------------------------------*/
 		
 		Event =  Event_v type:#OPEN
 		
@@ -43,9 +43,9 @@ struct DefaultEvents_v -- MAYBE RENAME THIS TO RolloutDefaultEvents_v
 		EventsList[#OPEN] = #( Event )
 		
 		
-		/*------------------------------------------------------------------------------
-			on #RESIZE | #DOCKED | #UNDOCKED -- All these types belongs to #resize event
-		--------------------------------------------------------------------------------*/
+		/*--------------------------------------------------------------------------------------------------------------------------------------
+			on #RESIZE - start timer to check size and wait for resizing ends, then fires callbacks
+		----------------------------------------------------------------------------------------------------------------------------------------*/
 		
 		Event =  Event_v type:#RESIZED
 		
@@ -54,9 +54,30 @@ struct DefaultEvents_v -- MAYBE RENAME THIS TO RolloutDefaultEvents_v
 		EventsList[#RESIZED] = #( Event )
 		
 		
-		/*------------------------------------------------------------------------------
-			on #OKTOCLOSE - Save dialog state if ini file exists
-		--------------------------------------------------------------------------------*/
+		/*--------------------------------------------------------------------------------------------------------------------------------------
+			on dialog #DOCKED -- save dock state to ini
+		----------------------------------------------------------------------------------------------------------------------------------------*/
+		
+		if( ini_path != undefined ) then
+			for event_type in #( #DOCKED, #UNDOCKED ) do
+			(
+				callback_fn = if event_type == #DOCKED then "saveDialogDockState" else "saveDialogkState"
+				
+				Event =  Event_v type:event_type
+				
+				Event.callback = "(UiStateSaver_v ini_file:\""+ini_path+"\")."+callback_fn+"(\""+rollout_id+"\")"
+				
+				Event.callback = "format \"DEFAULT EVENT: #"+event_type+"  Rollout: "+ rollout_id as name +"\n\";\n" + Event.callback
+	
+				EventsList[event_type] = #( Event )
+			)
+		
+		
+		/*--------------------------------------------------------------------------------------------------------------------------------------
+			on #OKTOCLOSE - Save dialog state when its closed
+			
+			IMPORTANT: #oktoclose MUST RETURN BOOLEAN - true:close dialog | false:cancel closing
+		----------------------------------------------------------------------------------------------------------------------------------------*/
 		
 		if( ini_path != undefined ) then
 		(
@@ -67,10 +88,14 @@ struct DefaultEvents_v -- MAYBE RENAME THIS TO RolloutDefaultEvents_v
 			Event.callback = "(UiStatePreset_v ini_file:\""+ini_path+"\").save(\""+rollout_id+"\")"
 		
 			--Event.callback = "format \"EVENT: #OKTOCLOSE  Rollout: "+ rollout_id as name +"\n\";\n" + Event.callback  
-		
+			
+			Event.callback += "\n\n	true -- IMPORTANT - #oktoclose MUST RETURN BOOLEAN"
+
 			--append EventsList.list Event
 			EventsList[#OKTOCLOSE] = #( Event )
 		)
+		
+		--format "EventsList.keys: %\n" EventsList.keys
 		
 		EventsList --return
 	),

@@ -75,33 +75,35 @@ function testAllEvents _Rollout =
 	--format "\n"; print "1_DialogEventsTest.ms.testAllEvent()"
 	event_types =
 	#(
-		#open,
-		#close,
-		#moved,  -- ONLY UNREGISTRED
+		--#moved,  -- WORKS ONLY ON UNREGISTRED DIALOG
+
+		/* MOUSE EVENTS */
+		--#lbuttondown,
+		--#lbuttonup,
+		--#lbuttondblclk,
+		--
+		--#mbuttondown,
+		--#mbuttonup,
+		--#mbuttondblclk,
+		--
+		--#rbuttondown,
+		--#rbuttonup,
+		--#rbuttondblclk,
+		--
+		--/* NOT maxscript NATVIVE */
+		--#docked,
+		--#undocked,
+		--
+		--/* NATIVE EVENTS */ 
+		--#open,
+		--#close,
 		#resized,
-		#help,
-
-		/* Mouse button events */
-		#lbuttondown,
-		#lbuttonup,
-		#lbuttondblclk,
-
-		#mbuttondown,
-		#mbuttonup,
-		#mbuttondblclk,
-
-		#rbuttondown,
-		#rbuttonup,
-		#rbuttondblclk,
-
-		/* NOT maxscript NATVIVE */
-		#docked,
-		#undocked
+		#help
 	)
 
 
 	for event_type in event_types do
-		_Rollout.Event event_type	("print(\"Custom dialog event #"+ event_type as string +"\")")
+		_Rollout.Event event_type	("print(\"CUSTOM DIALOG EVENT #"+ event_type as string +"\")")
 		--_Rollout.Event event_type ("dialogRolloutCallback()")
 
 )
@@ -145,3 +147,5 @@ testAllEvents(DialogTest)
 DialogTest.create width:256 height:256 lockHeight:false
 
 DialogTest.register()
+
+--DialogTest.ini.open()

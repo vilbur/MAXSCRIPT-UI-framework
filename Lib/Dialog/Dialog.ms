@@ -132,11 +132,13 @@ struct Dialog_v
 		cache: false	\ -- load generated dialog for fast startup -- true: PRODUCTION | false: DEVELOPMENT
 		parent: =
 	(
-		--format "\n"; print "Dialog_v.create()"
 		timer_createRollout = timeStamp()
-
-		this.destroy()
 		
+		this.destroy()
+
+		format "\n"; print "Dialog_v.create()"
+		format "this.Events.keys: %\n" this.Events.keys
+
 		cache_file_path = this._getPathToCacheFile()
 		
 		width_height = this._getWidthAndHeight width height
@@ -151,7 +153,7 @@ struct Dialog_v
 		================================================================================*/
 		if not cache or not doesFileExist (cache_file_path) then
 		(
-			--format "\n**** NO CACHE\n"
+			FORMAT "\n**** NO CACHE\n"
 			_RolloutCreator = RolloutCreator_v Ini:Ini DEBUG:DEBUG
 	
 			--DEBUG = true
@@ -236,7 +238,7 @@ struct Dialog_v
 
 		
 		/* SET DIALOG TO GLOBAL CONTAINER OF DIALOGS OF FRAMEWORK */ 
-		--DIALOG_GLOBAL_DATA[this.id] = DialogGlobalData_v(Dialogs)(this)
+		--DIALOG_GLOBAL_DATA[this.id] = DialogGlobalData_v(Dialog)(this)
 		
 		
 		/* RESET BITMAPS */ 
@@ -399,18 +401,23 @@ struct Dialog_v
 	 */
 	function destroy =
 	(
-		--print "Dialog_v.destroy()"
+		print "Dialog_v.destroy()"
 		--format "id	= % \n" id
 
 		--if  Ini.isDefined() then
-			--(IniSaver_v(Ini.getPath())).saveDialogDockState(id)
-
+			--(IniSaver_v(Ini.getPath())).saveDialogkState(id)
+		execute ("try(cui.getDockState DIALOG_dock_test )catch( #WTF )")
+		
 		this.unregister()
 
 		EVENT_DOCKED_ENABLED = false
 
 		execute ( "try( destroyDialog "+ id as string +" )catch()" )
 
+		print "Dialog_v.DESTROIED()"
+		
+		execute ("try(cui.getDockState DIALOG_dock_test )catch( #WTF )")
+		
 		EVENT_DOCKED_ENABLED = true
 	),
 
@@ -933,17 +940,18 @@ struct Dialog_v
 	 */
 	on create do
 	(
-		--format "\n"; print "Dialog_v.onCreate()"
+		format "\n"; print "Dialog_v.onCreate()"
 		--format "title: %\n" title
 		--format "this.width: %\n" this.width
+		
+		format "DOCK_STATE: %\n" (execute ("try(cui.getDockState DIALOG_dock_test )catch( #WTF )"))
+		
 		this._checkConstctructProperties #(#title)
 
 		Ini	= Ini_v _path:Ini
 
 		this._setId()
 		this._setDefaultStyle()
-
-		------(IniSaver_v(this.Ini.getPath())).saveRollout(this.id) -- DONT KNOW WHY NEED TO SAVE TO INI ? :)
 
 		this._setDialogDefaultWidth()
 

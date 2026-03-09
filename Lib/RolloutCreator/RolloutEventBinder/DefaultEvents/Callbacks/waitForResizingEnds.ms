@@ -9,6 +9,16 @@ filein( getFilenamePath(getSourceFileName()) + "/../../../../Dialog/DialogGlobal
 	
 	then compare values of dialog states and found which event has been really fired
 
+
+
+	DIAGRAM:
+		
+		  #DOCKED 	 🡶                                          🡵 #DOCKED
+		  #RESIZED  🡲 #RESIZED 🡲 waitForResizingEnds()🡲 Fire: 🡲 #RESIZED
+		  #UNDOCKED 🡵                                          🡵 #UNDOCKED
+		  
+
+
 --------------------------------------------------------------------------------*/
 
 /** Check dialog POSITION, SIZE and STATE
@@ -24,10 +34,11 @@ function waitForResizingEnds sender evt =
 	--format "dialog_id: %\n" dialog_id
 	DataSaved	= DIALOG_GLOBAL_DATA[dialog_id]
 
-	--format "DataSaved: %\n" DataSaved
+	--format "DataSaved.dialog.title: %\n" DataSaved.dialog.title
 	
 	if DataSaved != undefined then 
 	(
+		format "\n"; print "DefaultEvents_v.waitForResizingEnds()"
 		DataCurrent	= DialogGlobalData_v(DataSaved.DialogClass)
 		--format "\n"
 		--format "DataSaved.position:   %\n" DataSaved.position
@@ -53,7 +64,9 @@ function waitForResizingEnds sender evt =
 	
 			default: undefined
 		)
-		--format "event_type: %\n" event_type
+		format "EVENT_TYPE: %\n" event_type
+		format "DataSaved.Dialog.Events.keys: %\n" DataSaved.Dialog.Events.keys
+		
 		/*------------------------------------------------------------------------------
 			PROCESS CALLBACK
 		--------------------------------------------------------------------------------*/
@@ -80,7 +93,7 @@ function waitForResizingEnds sender evt =
 					/* REPLACE @ WITH \" */ 
 					callback = substituteString Event.callback "@" "\""
 		
-					/* FIRE UP CALLBACK */ 
+					/* FIRE CALLBACK */ 
 					execute(callback)
 				)
 			)
