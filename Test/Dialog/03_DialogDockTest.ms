@@ -2,7 +2,8 @@ clearListener(); print("Cleared in:"+getSourceFileName())
 
 filein( getFilenamePath(getSourceFileName()) + "/../../Lib/Dialog/Dialog.ms" ) -- "./../../Lib/Dialog/Dialog.ms"
 
-
+/* DEFINE INI FILE */ 
+ini = undefined
 ini = (getSourceFileName())
 
 
@@ -44,3 +45,10 @@ Dialog.register()
 
 /* DOCK DIALOG */ 
 --Dialog.dock #LEFT
+
+
+/*------------------------------------------------------------------------------
+	OPEN INI FILE
+--------------------------------------------------------------------------------*/
+
+--Dialog.Ini.open()

@@ -25,4 +25,4 @@ _Rollout_1 = _Rollouts.roll "Rollout 1"
 
 /* CREATE DIALOG */
 Dialog.create()
-Dialog.register()
+--Dialog.register()

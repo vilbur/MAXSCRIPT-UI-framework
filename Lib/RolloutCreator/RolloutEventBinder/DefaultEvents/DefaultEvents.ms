@@ -64,7 +64,9 @@ struct DefaultEvents_v -- MAYBE RENAME THIS TO RolloutDefaultEvents_v
 		
 			Event =  Event_v type:#OKTOCLOSE
 		
-			Event.callback = "(IniSaver_v ini_file:\""+ini_path+"\").saveRollout(\""+rollout_id+"\")"
+			Event.callback = "(UiStatePreset_v ini_file:\""+ini_path+"\").save(\""+rollout_id+"\")"
+		
+			--Event.callback = "format \"EVENT: #OKTOCLOSE  Rollout: "+ rollout_id as name +"\n\";\n" + Event.callback  
 		
 			--append EventsList.list Event
 			EventsList[#OKTOCLOSE] = #( Event )

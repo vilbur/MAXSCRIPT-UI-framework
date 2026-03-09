@@ -10,7 +10,9 @@ filein( getFilenamePath(getSourceFileName()) + "/../Menus/include-menus.ms" )	--
 filein( getFilenamePath(getSourceFileName()) + "/../ConstructPropeties/ConstructPropeties.ms" )	-- "./../ConstructPropeties/ConstructPropeties.ms"
 filein( getFilenamePath(getSourceFileName()) + "/../Event/Event.ms" )	--"./../Event/Event.ms"
 filein( getFilenamePath(getSourceFileName()) + "/../RolloutCreator/RolloutCreator.ms" )	-- "./../RolloutCreator/RolloutCreator.ms"
+
 filein( getFilenamePath(getSourceFileName()) + "/../Ini/Ini.ms" )	-- "./../Ini/Ini.ms"
+filein( getFilenamePath(getSourceFileName()) + "/../Ini/UiStatePreset/UiStatePreset.ms" )	--"./../Ini/UiStatePreset/UiStatePreset.ms"
 
 filein( getFilenamePath(getSourceFileName()) + "/Layout/Layout.ms" )	-- "./Layout/Layout.ms"
 filein( getFilenamePath(getSourceFileName()) + "/Hotkeys/Hotkeys.ms" )	-- "./Hotkeys/Hotkeys.ms"
@@ -223,7 +225,7 @@ struct Dialog_v
 			POST CREATE
 		================================================================================*/
 		
-		/* SET DOCK STATES */ 		
+		/* SET DOCK STATES */
 		this._setDockStyle (style) (dock)
 		
 		/* DOCK DIALOG */ 
@@ -328,21 +330,12 @@ struct Dialog_v
 	function register style: =
 	(
 		--print "Dialog_v.register()"
-		--format "this.style_registred_dialog: %\n" this.style_registred_dialog
+		
 		min_size = if min_size != undefined then min_size as string else "[-1,-1]"
 		max_size = if max_size != undefined then max_size as string else "[-1,-1]"
-		--format "width: %\n" width
-		--format "MIN_SIZE: %\n" min_size
-		--format "MAX_SIZE: %\n" max_size
-		--format "STYLE: %\n" style_registred_dialog
-
-		--execute ("cui.RegisterDialogBar "+ this.id +" minSize:"+min_size+" maxSize:"+max_size+" style:"+style_registred_dialog as string )
-		--execute ("cui.RegisterDialogBar "+ this.id +" minSize:"+min_size+" style:"+style as string )
 		
-		
-		execute ("cui.RegisterDialogBar "+ this.id as string +" minSize:"+min_size+" style:"+( this.style_registred_dialog as string  ) )
-		--print ("cui.RegisterDialogBar "+ this.id as string +" minSize:"+min_size+" style:"+( this.style_registred_dialog as string  ) )
-
+		if not this.isRegistered() then
+			execute ("cui.RegisterDialogBar "+ this.id as string +" minSize:"+min_size+" style:"+( this.style_registred_dialog as string  ) )
 	),
 
 	/** Unregister dialog bar
@@ -409,8 +402,8 @@ struct Dialog_v
 		--print "Dialog_v.destroy()"
 		--format "id	= % \n" id
 
-		if  Ini.isDefined() then
-			(IniSaver_v(Ini.getPath())).saveDialogDockState(id)
+		--if  Ini.isDefined() then
+			--(IniSaver_v(Ini.getPath())).saveDialogDockState(id)
 
 		this.unregister()
 

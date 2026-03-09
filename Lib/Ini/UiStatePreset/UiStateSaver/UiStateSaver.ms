@@ -61,6 +61,16 @@ struct UiStateSaver_v
 				this._saveControl(_RolloutClass)(control)
 		--)
 	),
+
+	/** _save rollout
+	 */
+	function saveRollout _RolloutClass =
+	(
+		--format "\n"; print "UiStateSaver_v.saveRollout()"
+		this._saveToIni (_RolloutClass.name) ("rolledUp") ( (_RolloutClass.open == false) as string )
+
+		this.saveControlsAndSubrollouts(_RolloutClass)
+	),
 	
 	private
 	
@@ -94,18 +104,8 @@ struct UiStateSaver_v
 			--format "control	= % \n" control
 
 			if classOf control == RolloutClass then
-				this._saveRollout(control)
+				this.saveRollout(control)
 		)
-	),
-
-	/** _save rollout
-	 */
-	function _saveRollout _RolloutClass =
-	(
-		--format "\n"; print "UiStateSaver_v._saveRollout()"
-		this._saveToIni (_RolloutClass.name) ("rolledUp") ( (_RolloutClass.open == false) as string )
-
-		this.saveControlsAndSubrollouts(_RolloutClass)
 	),
 
 	/** _save control

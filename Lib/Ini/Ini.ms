@@ -1,7 +1,5 @@
 filein( getFilenamePath(getSourceFileName()) + "/../ParseStringToDatatype/ParseStringToDatatype.ms" )	--"./../ParseStringToDatatype/ParseStringToDatatype.ms"
 
-filein( getFilenamePath(getSourceFileName()) + "/IniSaver/IniSaver.ms" )	-- "./IniSaver/IniSaver.ms"
-
 /** Save Load ini settings
   *
   *
