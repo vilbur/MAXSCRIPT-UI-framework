@@ -950,7 +950,7 @@ struct Dialog_v
 		this._setId()
 		this._setDefaultStyle()
 
-		(IniSaver_v(this.Ini.getPath())).saveRollout(this.id)
+		------(IniSaver_v(this.Ini.getPath())).saveRollout(this.id) -- DONT KNOW WHY NEED TO SAVE TO INI ? :)
 
 		this._setDialogDefaultWidth()
 

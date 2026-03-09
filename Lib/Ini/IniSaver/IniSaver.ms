@@ -25,52 +25,59 @@ struct IniSaver_v
 	--
 	--),
 
-	/** _save controls and subrollouts
+	/** Save to file
 	 */
-	function saveControlsAndSubrollouts _RolloutClass =
+	function saveRollout rollout_id =
 	(
-		format "\n"; print "IniSaver_v.saveControlsAndSubrollouts()"
-		format "ini_file: %\n" ini_file
-		
-		for control in _RolloutClass.controls do
+		format "\n"; print "IniSaver_v.saveRollout()"
+		--format "EVENT_DOCKED_ENABLED	= % \n" EVENT_DOCKED_ENABLED
+		--format "rollout_id	= % \n" rollout_id
+		--format "ini_file	= % \n" ini_file
+
+		if (_Rollout = execute( rollout_id as string )) != undefined then
 		(
-		--	if classOf control == SubRollout then
-		--		this._saveSubRollouts(control)(_RolloutClass.name)
-		--
-		--	else
-		--		this._saveControl(_RolloutClass)(control)
+			if EVENT_DOCKED_ENABLED != undefined and EVENT_DOCKED_ENABLED then
+				this.saveDialogDockState (rollout_id)
+
+			this._saveControlsAndSubrollouts (_Rollout)
 		)
+
+		true --return
 	),
 
 	/** Save dialog dock state
 	 */
-	function saveDialogDockState _Rollout =
+	function saveDialogDockState rollout_id =
 	(
 		----format "\n"; print "IniSaver_v.saveDialogDockState()"
-		--format "isRegistered: %\n" ( this.isRegistered _Rollout )
-		--format "_Rollout	= % \n" _Rollout
+		--format "isRegistered: %\n" ( this.isRegistered rollout_id )
+		--format "rollout_id	= % \n" rollout_id
 
-		if( dialog_is_not_closed = GetDialogSize _Rollout) != [0,0] then -- if dialog is closed by user, exists but it is not displayed , then it`s size is [0,0,]
+		if ( _Rollout = execute( rollout_id as string )) != undefined then
 		(
-			
-			dialog_position = GetDialogPos _Rollout 
-			
-			/* AVOID OFFSETING OF REGISTERED DIALOG */ 
-			if this.isRegistered _Rollout then
+			if( dialog_is_not_closed = GetDialogSize _Rollout) != [0,0] then -- if dialog is closed by user, exists but it is not displayed , then it`s size is [0,0,]
 			(
-				dialog_position.x -= 6
-				dialog_position.y -= 29
+				
+				dialog_position = GetDialogPos _Rollout 
+				
+				/* AVOID OFFSETING OF REGISTERED DIALOG */ 
+				if this.isRegistered rollout_id then
+				(
+					dialog_position.x -= 6
+					dialog_position.y -= 29
+				)
+				
+				this._saveToIni _Rollout.name "size"	(GetDialogSize _Rollout )
+
+				this._saveToIni _Rollout.name "position"	( dialog_position )
+
+				this._saveToIni _Rollout.name "dock_state"	(try(cui.getDockState _Rollout )catch())
 			)
-			
-			this._saveToIni _Rollout.name "size"	(GetDialogSize _Rollout )
 
-			this._saveToIni _Rollout.name "position"	( dialog_position )
-
-			this._saveToIni _Rollout.name "dock_state"	(try(cui.getDockState _Rollout )catch())
 		)
 	),
 
-	--private
+	private
 	
 	/** Is registered
 	 */
@@ -88,13 +95,31 @@ struct IniSaver_v
 		)
 	),
 
+	/** _save controls and subrollouts
+	 */
+	function _saveControlsAndSubrollouts _RolloutClass =
+	(
+		format "\n"; print "IniSaver_v._saveControlsAndSubrollouts()"
+		format "ini_file: %\n" ini_file
+		
+		
+		for control in _RolloutClass.controls do
+		(
+			if classOf control == SubRollout then
+				this._saveSubRollouts(control)(_RolloutClass.name)
+
+			else
+				this._saveControl(_RolloutClass)(control)
+		)
+	),
+
 	/** _save rollout
 	 */
-	function _saveSubRollouts _SubRolloutClass _Rollout =
+	function _saveSubRollouts _SubRolloutClass rollout_id =
 	(
 		--format "\n"; print "IniSaver_v._saveSubRollouts()"
 
-		this._saveSubrolloutsOrder(_SubRolloutClass) (_Rollout)
+		this._saveSubrolloutsOrder(_SubRolloutClass) (rollout_id)
 
 
 		for control in _SubRolloutClass.Rollouts do
@@ -113,7 +138,7 @@ struct IniSaver_v
 		--format "\n"; print "IniSaver_v._saveRollout()"
 		this._saveToIni (_RolloutClass.name) ("rolledUp") ( (_RolloutClass.open == false) as string )
 
-		this.saveControlsAndSubrollouts(_RolloutClass)
+		this._saveControlsAndSubrollouts(_RolloutClass)
 	),
 
 	/** _save control
@@ -161,7 +186,7 @@ struct IniSaver_v
 
 	/** Save subrollouts order
 	 */
-	function _saveSubrolloutsOrder _SubRolloutClass _Rollout =
+	function _saveSubrolloutsOrder _SubRolloutClass rollout_id =
 	(
 		--format "\n"; print "IniSaver_v._saveSubrolloutsOrder()"
 		/** Get subrollouts by order in UI
@@ -177,9 +202,9 @@ struct IniSaver_v
 		
 		
 		
-		rollout_ids = for _rollout in this._getOrderedRollouts(_SubRolloutClass.Rollouts) collect _rollout.name as name
+		rollout_ids = for _rollout in _getOrderedRollouts(_SubRolloutClass.Rollouts) collect _rollout.name as name
 
-		this._saveToIni (_Rollout) (_SubRolloutClass.name) (with printAllElements on (rollout_ids as string )) -- IMPORTANT: without "with printAllElements on" long array formated to ini end with "..." INFO:https://help.autodesk.com/view/MAXDEV/2022/ENU/?guid=GUID-92B98D11-60FF-4742-A1BA-692EE135E085
+		this._saveToIni (rollout_id) (_SubRolloutClass.name) (with printAllElements on (rollout_ids as string )) -- IMPORTANT: without "with printAllElements on" long array formated to ini end with "..." INFO:https://help.autodesk.com/view/MAXDEV/2022/ENU/?guid=GUID-92B98D11-60FF-4742-A1BA-692EE135E085
 	),
 
 	--/**
@@ -214,13 +239,13 @@ struct IniSaver_v
 		)
 	),
 
-	--/** Remove from ini
-	-- */
-	--function _delIniSetting section key =
-	--(
-	--	--format "\n"; print "IniSaver_v._delIniSetting ()"
-	--	delIniSetting  ini_file section key
-	--),
+	/** Remove from ini
+	 */
+	function _delIniSetting section key =
+	(
+		--format "\n"; print "IniSaver_v._delIniSetting ()"
+		delIniSetting  ini_file section key
+	),
 
 
 
