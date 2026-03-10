@@ -34,12 +34,16 @@ struct UiStateSaver_v
 	 */
 	function saveDialogState _RolloutClass =
 	(
-		--format "\n"; print "UiStateSaver_v.saveDialogState()"
+		format "\n"; print "UiStateSaver_v.saveDialogState()"
 		_RolloutClass = this._getRollout( _RolloutClass )
 
-		this.saveDialogSizeAndPosition (_RolloutClass)
+		/* SAVE nad GET current dock state of dialog */ 
+		dock_state = this.saveDialogDockState (_RolloutClass) 
+		format "DOCK_STATE: %\n" dock_state
 		
-		this.saveDialogDockState (_RolloutClass) 
+		/* SAVE SIZE AND POSITION - IF NOT DOCKED */ 
+		if dock_state == #cui_floatable then
+			this.saveDialogSizeAndPosition (_RolloutClass)
 	),
 
 	/** Save dialog dock state
@@ -50,12 +54,16 @@ struct UiStateSaver_v
 		--format "isRegistered: %\n" ( this.isRegistered _RolloutClass )
 		--format "_RolloutClass	= % \n" _RolloutClass
 		
+		/** Dialog is not closed
+		 */
+		function dialogIsNotClosed _RolloutClass = GetDialogSize _RolloutClass != [0,0]
+
+		
 		_RolloutClass = this._getRollout( _RolloutClass )
 
 	
-		if( dialog_is_not_closed = GetDialogSize _RolloutClass) != [0,0] then -- if dialog is closed by user, exists but it is not displayed , then it`s size is [0,0,]
+		if dialogIsNotClosed(_RolloutClass) then -- if dialog is closed by user, exists but it is not displayed , then it`s size is [0,0,]
 		(
-			
 			this._saveToIni _RolloutClass.name "size"	(GetDialogSize _RolloutClass )
 	
 			this._saveToIni _RolloutClass.name "position"	( this._getDialogPostion(_RolloutClass) )
@@ -69,7 +77,11 @@ struct UiStateSaver_v
 		--format "\n"; print "UiStateSaver_v.saveDialogDockState()"
 		_RolloutClass = this._getRollout( _RolloutClass )
 
-		this._saveToIni _RolloutClass.name "dock_state"	(try(cui.getDockState _RolloutClass )catch( #cui_floatable ))
+		dock_state = try( cui.getDockState _RolloutClass )catch( #cui_floatable )
+		
+		this._saveToIni _RolloutClass.name "dock_state"	dock_state
+		
+		dock_state --return
 	),
 
 	/** _save controls and subrollouts
@@ -225,7 +237,7 @@ struct UiStateSaver_v
 	 */
 	function _saveSubrolloutsOrder _SubRolloutClass _RolloutClass =
 	(
-		--format "\n"; print "UiStateSaver_v._saveSubrolloutsOrder()"
+		format "\n"; print "UiStateSaver_v._saveSubrolloutsOrder()"
 		/** Get subrollouts by order in UI
 		 */
 		function _getOrderedRollouts rollouts =
@@ -269,7 +281,7 @@ struct UiStateSaver_v
 		
 		/* AVOID POSITION OFFSET OF REGISTRED DIALOG */ 
 		if dock_state != undefined and dock_state == #cui_floatable then
-			dialog_position += [ -10, -33 ]
+			dialog_position += [ -12, -27 ]
 	
 		dialog_position --return	
 	),

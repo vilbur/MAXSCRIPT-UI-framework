@@ -67,7 +67,7 @@ struct DefaultEvents_v -- MAYBE RENAME THIS TO RolloutDefaultEvents_v
 				
 				Event.callback = "(UiStateSaver_v ini_file:\""+ini_path+"\")."+callback_fn+"(\""+rollout_id+"\")"
 				
-				--Event.callback = "format \"TEST DEFAULT EVENT: #"+event_type+"  Rollout: "+ rollout_id as name +"\n\";\n" + Event.callback
+				Event.callback = "format \"TEST DEFAULT EVENT: #"+event_type+"  Rollout: "+ rollout_id as name +"\n\";\n" + Event.callback
 	
 				EventsList[event_type] = #( Event )
 			)
@@ -87,7 +87,7 @@ struct DefaultEvents_v -- MAYBE RENAME THIS TO RolloutDefaultEvents_v
 		
 			Event.callback = "(UiStateSaver_v ini_file:\""+ini_path+"\").saveControlsAndSubrollouts(\""+rollout_id+"\")"
 		
-			--Event.callback = "format \"TEST EVENT: #OKTOCLOSE  Rollout: "+ rollout_id as name +"\n\";\n" + Event.callback  
+			Event.callback = "format \"TEST EVENT: #OKTOCLOSE  Rollout: "+ rollout_id as name +"\n\";\n" + Event.callback  
 			
 			Event.callback += "\n\n	true -- IMPORTANT - #oktoclose MUST RETURN BOOLEAN"
 

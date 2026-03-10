@@ -124,6 +124,7 @@ struct Dialog_v
 		bmpstyle: #bmp_tile	\
 		style:	\
 		modal:	\
+		menu:	\
 		escapeEnable: false	\
 		escapekey:  true	\
 		lockHeight: false	\
@@ -183,6 +184,7 @@ struct Dialog_v
 				bitmap:	bitmap	\
 				bmpstyle:	bmpstyle	\
 				style:	dialog_style	\
+				menu:	menu	\
 				modal:	modal	\
 				autoLayoutOnResize:	true	\
 				escapeEnable:	escapeEnable	\
@@ -340,6 +342,7 @@ struct Dialog_v
 		
 		if not this.isRegistered() then
 		(
+			/* FIX POSITION BEFORE REGISTER */ 
 			this._fixDialogPosOnDocking Dialog #REGISTER
 			
 			execute ("cui.RegisterDialogBar "+ this.id as string +" minSize:"+min_size+" style:"+( this.style_registred_dialog as string  ) )
@@ -356,7 +359,7 @@ struct Dialog_v
 			/* UNREGISTER */ 
 			execute ("try( cui.UnRegisterDialogBar "+ id +" )catch()")
 			
-			/* FIX POSITION */ 
+			/* FIX POSITION AFTER UNREGISTER */ 
 			if Dialog != undefined then
 				this._fixDialogPosOnDocking Dialog #UNREGISTER
 		)
@@ -378,24 +381,6 @@ struct Dialog_v
 		)
 	),
 
-	
-	/** Fix dialog pos on docking
-		
-		REGISTRED and UNREGISTRED dialog has different position to but must be visible on same place 
-	 */
-	function _fixDialogPosOnDocking Dialog register_or_unregister  =
-	(
-		--format "\n"; print "global.fixDialogPosOnDocking()"
-		
-		offset = if register_or_unregister == #REGISTER then [ 4, -2 ] else [ -6, 0 ]
-		
-		dialog_position = GetDialogPos Dialog 
-
-		dialog_position += offset
-		
-		SetDialogPos Dialog dialog_position		
-	),
-	
 	/** Is docked
 	 */
 	function isDocked =
@@ -793,6 +778,24 @@ struct Dialog_v
 		win_pos = windows.getWindowPos (windows.getMAXHWND())
 
 		[ win_pos.x+pos.x, win_pos.y+pos.y + toolbar_height]  --return
+	),
+
+	
+	/** Fix dialog pos on docking
+		
+		REGISTRED and UNREGISTRED dialog has different position to but must be visible on same place 
+	 */
+	function _fixDialogPosOnDocking Dialog register_or_unregister  =
+	(
+		--format "\n"; print "Dialog_v.fixDialogPosOnDocking()"
+		
+		offset = if register_or_unregister == #REGISTER then [ 6, -2 ] else [ -8, 0 ]
+		
+		dialog_position = GetDialogPos Dialog 
+
+		dialog_position += offset
+		
+		SetDialogPos Dialog dialog_position		
 	),
 
 	/** Load dock state from ini

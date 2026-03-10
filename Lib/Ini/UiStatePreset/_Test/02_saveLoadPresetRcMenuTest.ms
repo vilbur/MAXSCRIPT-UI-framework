@@ -7,19 +7,6 @@ filein( getFilenamePath(getSourceFileName()) + "/../../../Lib/Dialog/Dialog.ms" 
 --global DialogTest 	= Dialog_v title:"Test"
 global DialogTest 	= Dialog_v title:"Test" ini:(getSourceFileName())
 
-/** Add subrollouts
- */
-function addSubrollouts =
-(
-	format "\n"; print ".addSubrollouts()"
-	_Rollouts = DialogTest.Rollouts()
-	
-	_Rollout  = _Rollouts.Roll "Main Rollout" --height:256
-	
-	_Controls = _Rollout.Controls group:"Rollout Controls"
-	
-	_Button   = _Controls.control #button "Rollout Btn" id:#button_3
-)
 
 /** Dialog rollout callback
  */
@@ -83,15 +70,15 @@ function rolloutEventsTest DialogTest =
 /** Test all event
   *
   */
-function massTestAllEvents _Rollout =
+function testAllEvents _Rollout =
 (
 	--format "\n"; print "1_DialogEventsTest.ms.testAllEvent()"
 	event_types =
 	#(
 		--#moved,  -- WORKS ONLY ON UNREGISTRED DIALOG
 
-		/* MOUSE EVENTS - DOES NOT WORK INSIDE SUBROLLOUTS SLOT */
-		#lbuttondown,
+		/* MOUSE EVENTS */
+		--#lbuttondown,
 		--#lbuttonup,
 		--#lbuttondblclk,
 		--
@@ -99,8 +86,8 @@ function massTestAllEvents _Rollout =
 		--#mbuttonup,
 		--#mbuttondblclk,
 		--
-		#rbuttondown,
-		#rbuttonup,
+		--#rbuttondown,
+		--#rbuttonup,
 		--#rbuttondblclk,
 		--
 		--/* NOT maxscript NATVIVE */
@@ -142,17 +129,12 @@ function testOffsetPositionOfRegistredDialog =
 	)
 )
 
-/*==============================================================================
-	CONFIGURE
-================================================================================*/
+/*------------------------------------------------------------------------------
+	
+	TEST EVENTS
+	
+--------------------------------------------------------------------------------*/
 
-addSubrollouts()
-
-/*==============================================================================
-
-	RUN TESTS
-
-================================================================================*/
 /* DIALOG */ 
 --dialogEventsTest()
 
@@ -160,7 +142,7 @@ addSubrollouts()
 --rolloutEventsTest(DialogTest)
 
 /* ALL TYPES OF EVENTS */ 
-massTestAllEvents(DialogTest)
+testAllEvents(DialogTest)
 
 /* MULTIPLE CALLBACKS */ 
 --multipleCallbacksOnEventTest()

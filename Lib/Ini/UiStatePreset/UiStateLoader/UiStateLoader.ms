@@ -10,37 +10,77 @@ struct UiStateLoader_v
 	/* properties */
 	Ini,
 	
+	slots_and_order = #(),
+	
 	/* private */
 	/* dependency */
 	/* reference */
 	/* inhered */
+	
 	
 	/** Load controls and subrollouts
 	 */
 	function loadControlsAndSubrollouts _RolloutClass =
 	(
 		--format "\n"; print "UiStateLoader_v.loadControlsAndSubrollouts()"
-		--format "ini_file: %\n" ini_file
 		
-		for control in _RolloutClass.controls do
-			if classOf control != SubRollout then
-				this._loadControl(_RolloutClass)(control)
-			
-			else
-				this._loadSubRollouts(_RolloutClass)(control)
+		this._loadSubrolloutsOrder (_RolloutClass)
+
+		this._reorderAllSubrollouts()
+		
+		this.loadControls (_RolloutClass)
 	),
 	
+	/** Load controls
+	 */
+	function loadControls _RolloutClass =
+	(
+		--format "\n"; print "UiStateLoader_v.loadControls()"
+		for control in _RolloutClass.controls do
+			if classOf control == SubRollout then
+				for _SubRollout in control.rollouts do 
+					this.loadControls(_SubRollout)
+				
+			else
+				this._loadControl(_RolloutClass)(control)
+	),
+	
+
 	private
+	
+	
+	/** Load controls and subrollouts
+	 */
+	function _loadSubrolloutsOrder _RolloutClass =
+	(
+		--format "\n"; print "UiStateLoader_v._loadSubrolloutsOrder()"
+		
+		for control in _RolloutClass.controls do
+			if classOf control == SubRollout then
+				this._getSubrolloutsOrder(_RolloutClass)(control)
+				--this._loadControl(_RolloutClass)(control)
+	),
 	
 	/** _load rollout
 	 */
-	function _loadSubRollouts _RolloutClass _SubRolloutSlot =
+	function _reorderAllSubrollouts =
 	(
-		--format "\n"; print "UiStateLoader_v._loadSubRollouts()"
+		--format "\n"; print "UiStateLoader_v._reorderAllSubrollouts()"
+		/* REORDER SUBROLLOUTS IN EACH SLOT */
+		for slot_data in slots_and_order do 
+			this.reorderSubRollouts slot_data[#SLOT] slot_data[#SUBROLLOUTS]
 
+	),
+	
+	/** Get subrollouts order
+	 */
+	function _getSubrolloutsOrder _RolloutClass _SubRolloutSlot =
+	(
+		--format "\n"; print "UiStateLoader_v._getSubrolloutsOrder()"
 		reordered_rollouts = #()
 		
 		loaded_order_ids = Ini.load _RolloutClass.name _SubRolloutSlot.name
+		--format "LOADED_ORDER_IDS: %\n" loaded_order_ids
 		
 		/* GET RIGHT ORDER */ 
 		for i = 1 to _SubRolloutSlot.Rollouts.count do
@@ -52,16 +92,17 @@ struct UiStateLoader_v
 			reordered_rollouts[index] = _SubRollout
 		)
 		
-		--format "reordered_rollouts: %\n" reordered_rollouts
+		--format "REORDERED_ROLLOUTS: %\n" reordered_rollouts
 		
-		/* REORDER SUBROLLOUTS */ 
-		this.reorderSubRollouts _SubRolloutSlot reordered_rollouts
+		slot_data	= Dictionary #( #SLOT, _SubRolloutSlot ) #( #SUBROLLOUTS, reordered_rollouts )
 		
+		append slots_and_order slot_data
+
 		/* EDIT CONTROL AFTER REORDERING */ 
 		for _SubRollout in _SubRolloutSlot.Rollouts do
-			this.loadControlsAndSubrollouts _SubRollout
-		
+			this._loadSubrolloutsOrder _SubRollout
 	),
+	
 	
 	/*
 	  Reorders a subRollout control to match a target array of rollouts.
@@ -71,25 +112,27 @@ struct UiStateLoader_v
 	   ReorderSubRollouts myMainRollout.mySubSlot #(rolloutC, rolloutA, rolloutB)
  
 	  Arguments:
-	  subUI          - The subRollout control (e.g., myDialog.mySubSlot)
+	  _SubRolloutSlot          - The subRollout control (e.g., myDialog.mySubSlot)
 	  targetRollouts - An array of rollout definitions in the exact order you want them
 	*/
-	function reorderSubRollouts subUI targetRollouts =
+	function reorderSubRollouts _SubRolloutSlot targetRollouts =
 	(
-		--format "\n"; print "UiStateLoader_v.reorderSubRollouts()"
+		format "\n"; print "UiStateLoader_v.reorderSubRollouts()"
+		format "_SubRolloutSlot: %\n" _SubRolloutSlot
+		
 		-- 1. CLEANUP: Remove any current rollouts that are NOT in the target array
-		for i = subUI.rollouts.count to 1 by -1 do
+		for i = _SubRolloutSlot.rollouts.count to 1 by -1 do
 		(
-			ro = subUI.rollouts[i]
+			ro = _SubRolloutSlot.rollouts[i]
 			if (findItem targetRollouts ro) == 0 do
 			(
-				removeSubRollout subUI ro
+				removeSubRollout _SubRolloutSlot ro
 			)
 		)
 	
 		-- 2. OPTIMIZE: Find the longest prefix of the target array 
 		-- that already exists in the correct relative order inside the sub-rollout.
-		currentRollouts = subUI.rollouts
+		currentRollouts = _SubRolloutSlot.rollouts
 		prefixCount = 0
 		cIndex = 1
 		prefixBroken = false
@@ -113,13 +156,13 @@ struct UiStateLoader_v
 			ro = targetRollouts[i]
 	
 			-- If it's already in the slot (but out of order), remove it so it shifts
-			if (findItem subUI.rollouts ro) > 0 do
+			if (findItem _SubRolloutSlot.rollouts ro) > 0 do
 			(
-				removeSubRollout subUI ro
+				removeSubRollout _SubRolloutSlot ro
 			)
 	
 			-- Append the rollout to its new correct position at the end
-			addSubRollout subUI ro
+			addSubRollout _SubRolloutSlot ro
 		)
 	),
 

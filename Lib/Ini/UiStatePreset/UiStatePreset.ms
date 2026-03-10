@@ -27,15 +27,9 @@ struct UiStatePreset_v
 		--format "ini_file: %\n" ini_file
 		_Rollout = this._getRollout( _Rollout )
 	
-		--if (_Rollout = this._getRollout( _Rollout )) != undefined then
-		--(
-			UiStateSaver = UiStateSaver_v ini_file
+		UiStateSaver = UiStateSaver_v ini_file
 			
-			--if EVENT_DOCKED_ENABLED != undefined and EVENT_DOCKED_ENABLED then
-				--UiStateSaver.saveDialogSizeAndPosition (_Rollout)
-		
-			UiStateSaver.saveControlsAndSubrollouts (_Rollout)
-		--)
+		UiStateSaver.saveControlsAndSubrollouts (_Rollout)
 	),
 	
 	/** Load
