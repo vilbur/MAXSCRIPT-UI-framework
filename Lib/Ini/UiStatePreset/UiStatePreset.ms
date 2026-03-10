@@ -23,8 +23,7 @@ struct UiStatePreset_v
 	 */
 	function save _Rollout =
 	(
-		format "\n"; print "UiStatePreset_v.save()"
-		format "DOCK_STATE: %\n" (execute ("try(cui.getDockState DIALOG_dock_test )catch( #WTF )"))
+		--format "\n"; print "UiStatePreset_v.save()"
 		--format "ini_file: %\n" ini_file
 		_Rollout = this._getRollout( _Rollout )
 	
@@ -33,7 +32,7 @@ struct UiStatePreset_v
 			UiStateSaver = UiStateSaver_v ini_file
 			
 			--if EVENT_DOCKED_ENABLED != undefined and EVENT_DOCKED_ENABLED then
-				UiStateSaver.saveDialogkState (_Rollout)
+				--UiStateSaver.saveDialogSizeAndPosition (_Rollout)
 		
 			UiStateSaver.saveControlsAndSubrollouts (_Rollout)
 		--)
@@ -43,7 +42,7 @@ struct UiStatePreset_v
 	 */
 	function load _Rollout =
 	(
-		format "\n"; print "UiStatePreset_v.load()"
+		--format "\n"; print "UiStatePreset_v.load()"
 		UiStateLoader = UiStateLoader_v ini_file
 		
 		_Rollout = this._getRollout( _Rollout )

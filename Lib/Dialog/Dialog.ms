@@ -132,12 +132,14 @@ struct Dialog_v
 		cache: false	\ -- load generated dialog for fast startup -- true: PRODUCTION | false: DEVELOPMENT
 		parent: =
 	(
+		--format "\n"; print "Dialog_v.create()"
 		timer_createRollout = timeStamp()
-		
+
+		--format "DOCK_STATE: %\n" (execute ("try(cui.getDockState DIALOG_test )catch( #WTF )"))
+
 		this.destroy()
 
-		format "\n"; print "Dialog_v.create()"
-		format "this.Events.keys: %\n" this.Events.keys
+		--format "this.Events.keys: %\n" this.Events.keys
 
 		cache_file_path = this._getPathToCacheFile()
 		
@@ -244,7 +246,7 @@ struct Dialog_v
 		/* RESET BITMAPS */ 
 		CONTROL_BITMAPS_STORE = #() -- reset buffer array
 		
-		FORMAT ("\n\n====== DIALOG "+ id as string +" CREATED in %ms\n\n") ((timestamp()) - timer_createRollout)
+		FORMAT ("\n\n=================================================\n	DIALOG: "+ id as string +" CREATED in %ms\n=================================================\n") ((timestamp()) - timer_createRollout)
 
 		/* EXECUTE AUTORUN EVENTS OF CONTROLS */ 
 		this._executeAutorunEvents()
@@ -331,13 +333,17 @@ struct Dialog_v
 	 */
 	function register style: =
 	(
-		--print "Dialog_v.register()"
+		--format "\n"; print "global.register()"
 		
 		min_size = if min_size != undefined then min_size as string else "[-1,-1]"
 		max_size = if max_size != undefined then max_size as string else "[-1,-1]"
 		
 		if not this.isRegistered() then
+		(
+			this._fixDialogPosOnDocking Dialog #REGISTER
+			
 			execute ("cui.RegisterDialogBar "+ this.id as string +" minSize:"+min_size+" style:"+( this.style_registred_dialog as string  ) )
+		)
 	),
 
 	/** Unregister dialog bar
@@ -345,7 +351,15 @@ struct Dialog_v
 	function unregister =
 	(
 		--format "\n"; print "Dialog_v.unregister()"
-		execute ("try( cui.UnRegisterDialogBar "+ id +" )catch()")
+		if this.isRegistered() then
+		(
+			/* UNREGISTER */ 
+			execute ("try( cui.UnRegisterDialogBar "+ id +" )catch()")
+			
+			/* FIX POSITION */ 
+			if Dialog != undefined then
+				this._fixDialogPosOnDocking Dialog #UNREGISTER
+		)
 	),
 	
 	/** Is registered
@@ -364,6 +378,24 @@ struct Dialog_v
 		)
 	),
 
+	
+	/** Fix dialog pos on docking
+		
+		REGISTRED and UNREGISTRED dialog has different position to but must be visible on same place 
+	 */
+	function _fixDialogPosOnDocking Dialog register_or_unregister  =
+	(
+		--format "\n"; print "global.fixDialogPosOnDocking()"
+		
+		offset = if register_or_unregister == #REGISTER then [ 4, -2 ] else [ -6, 0 ]
+		
+		dialog_position = GetDialogPos Dialog 
+
+		dialog_position += offset
+		
+		SetDialogPos Dialog dialog_position		
+	),
+	
 	/** Is docked
 	 */
 	function isDocked =
@@ -401,24 +433,31 @@ struct Dialog_v
 	 */
 	function destroy =
 	(
-		print "Dialog_v.destroy()"
-		--format "id	= % \n" id
+		--print "Dialog_v.destroy()"
+		--format "this.exists(): %\n" (this.exists())
 
-		--if  Ini.isDefined() then
-			--(IniSaver_v(Ini.getPath())).saveDialogkState(id)
-		execute ("try(cui.getDockState DIALOG_dock_test )catch( #WTF )")
+		if this.exists() then
+		(
+			/* SAVE DIALOG SIZE POSITION AND DOCK STATE - #okToClose is event is fired to late on UNREGISTRED dialog
+			
+				REGISTRED DIALOG HAS DIFFERENT POSITION
+			*/ 
+			if Ini.isDefined() then
+				(UiStateSaver_v(Ini.getPath())).saveDialogState(id)
+				
+			/* UNREGISTER BEFOR DESTORY */ 
+			this.unregister()
+	
+			/* BLOCK DOCKED EVENT */ 
+			EVENT_DOCKED_ENABLED = false
+	
+			/* DESTROY DIALOG */ 
+			execute ( "try( destroyDialog "+ id as string +" )catch()" )
+	
+			EVENT_DOCKED_ENABLED = true
+			
+		)
 		
-		this.unregister()
-
-		EVENT_DOCKED_ENABLED = false
-
-		execute ( "try( destroyDialog "+ id as string +" )catch()" )
-
-		print "Dialog_v.DESTROIED()"
-		
-		execute ("try(cui.getDockState DIALOG_dock_test )catch( #WTF )")
-		
-		EVENT_DOCKED_ENABLED = true
 	),
 
 	/** Focus control
@@ -456,7 +495,8 @@ struct Dialog_v
 	function exists =
 	(
 		--format "\n"; print "Dialog_v.exists()"
-		execute( "GetDialogPos " + id as string ) != [0,0]
+		--execute( "GetDialogPos " + id as string ) != [0,0]
+		try( execute( "GetDialogPos " + id as string ) != [0,0] )catch( false )
 	),
 
 	/** Get height of maximized viewport
@@ -760,12 +800,14 @@ struct Dialog_v
 	 */
 	function _setDockState =
 	(
-		--format "\n"; print "global._setDockState()"
+		--format "\n"; print "Dialog_v._setDockState()"
+		
 		if Ini.isDefined() then
 		(
+			--format "DOCK_STATE: %\n" (Ini.load( id as string )("dock_state"))
+			
 			if( (dock_state = Ini.load( id as string )("dock_state")) == undefined or dock_state == "cui_floatable" ) then
 				return false
-
 			this.register()
 
 			execute("cui.DockDialogBar "+ this.id +" #"+ dock_state )
@@ -784,7 +826,7 @@ struct Dialog_v
 		 for data_pair in AUTORUN_EVENTS do
 			try(
 				
-				format "\nEXECUTE AUTORUN EVENT: %\n" (data_pair.value)
+				--format "\nEXECUTE AUTORUN EVENT: %\n" (data_pair.value)
 				
 				execute data_pair.value
 	
@@ -940,12 +982,12 @@ struct Dialog_v
 	 */
 	on create do
 	(
-		format "\n"; print "Dialog_v.onCreate()"
+		--format "\n"; print "Dialog_v.onCreate()"
 		--format "title: %\n" title
 		--format "this.width: %\n" this.width
-		
-		format "DOCK_STATE: %\n" (execute ("try(cui.getDockState DIALOG_dock_test )catch( #WTF )"))
-		
+				
+		--format "DOCK_STATE: %\n" (execute ("try(cui.getDockState DIALOG_test )catch( #WTF )"))
+
 		this._checkConstctructProperties #(#title)
 
 		Ini	= Ini_v _path:Ini

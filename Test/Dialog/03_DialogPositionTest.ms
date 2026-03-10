@@ -25,3 +25,11 @@ Dialog_mouse.create pos:#mouse
 Dialog_ini = Dialog_v title:"Ini saved position, TRY DOCK STATE"  ini:(getSourceFileName())
 Dialog_ini.create()
 Dialog_ini.register()
+
+
+/* REGISTRED and UNREGISTRED dialog has different position to but must be visible on same place  */ 
+for i = 1 to 3 do
+(
+	Dialog_ini.register()
+	Dialog_ini.unregister()
+)

@@ -38,7 +38,7 @@ function waitForResizingEnds sender evt =
 	
 	if DataSaved != undefined then 
 	(
-		format "\n"; print "DefaultEvents_v.waitForResizingEnds()"
+		--format "\n"; print "waitForResizingEnds()"
 		DataCurrent	= DialogGlobalData_v(DataSaved.DialogClass)
 		--format "\n"
 		--format "DataSaved.position:   %\n" DataSaved.position
@@ -57,15 +57,15 @@ function waitForResizingEnds sender evt =
 		--------------------------------------------------------------------------------*/
 		
 		event_type = case of
-		(
-			(DataSaved.dock_state	!= DataCurrent.dock_state):	if DataCurrent.dock_state == #CUI_FLOATABLE then #UNDOCKED else #DOCKED
-		
-			(DataSaved.size	== DataCurrent.size):	#RESIZED
+        (
+            (DataSaved.dock_state != DataCurrent.dock_state): if DataCurrent.dock_state == #CUI_FLOATABLE then #UNDOCKED else #DOCKED
+            
+            (DataSaved.size == DataCurrent.size):	#RESIZED
 	
-			default: undefined
+            default: undefined
 		)
-		format "EVENT_TYPE: %\n" event_type
-		format "DataSaved.Dialog.Events.keys: %\n" DataSaved.Dialog.Events.keys
+		--format "EVENT_TYPE: %\n" event_type
+		--format "DataSaved.Dialog.Events.keys: %\n" DataSaved.Dialog.Events.keys
 		
 		/*------------------------------------------------------------------------------
 			PROCESS CALLBACK

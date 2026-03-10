@@ -4,6 +4,20 @@
 	
 	--"./../../_Dev/GET_bitmap.filename_PROPERTY_PROBLEM.ms"
 	
+	
+	--------------------------------------------------------------------------------
+		                AUTO SAVING DIALOG STATE
+	
+		         WHEN          ->        WHAT HAPEN
+	--------------------------------------------------------------------------------
+	
+	on Dialog.destroy()       	-> Save dock state, size and position
+	
+	on Dialog event #OKTOCLOSE	-> Save Controls values and Subrollouts state and order
+
+	on Dialog event #DOCKED   	-> Save dock state
+	on Dialog event #UNDOCKED	-> Save dock state, size and position
+	
   
  */
 struct UiStateSaver_v
@@ -16,35 +30,35 @@ struct UiStateSaver_v
 	/* inhered */
 	/* properties */
 
+	/** Save dialog state
+	 */
+	function saveDialogState _RolloutClass =
+	(
+		--format "\n"; print "UiStateSaver_v.saveDialogState()"
+		_RolloutClass = this._getRollout( _RolloutClass )
+
+		this.saveDialogSizeAndPosition (_RolloutClass)
+		
+		this.saveDialogDockState (_RolloutClass) 
+	),
 
 	/** Save dialog dock state
 	 */
-	function saveDialogkState _RolloutClass =
+	function saveDialogSizeAndPosition _RolloutClass =
 	(
-		format "\n"; print "UiStateSaver_v.saveDialogkState()"
+		--format "\n"; print "UiStateSaver_v.saveDialogSizeAndPosition()"
 		--format "isRegistered: %\n" ( this.isRegistered _RolloutClass )
 		--format "_RolloutClass	= % \n" _RolloutClass
+		
 		_RolloutClass = this._getRollout( _RolloutClass )
 
-		dock_state = try(cui.getDockState _RolloutClass )catch( )
-		--format "DOCK_STATE: %\n" dock_state
 	
 		if( dialog_is_not_closed = GetDialogSize _RolloutClass) != [0,0] then -- if dialog is closed by user, exists but it is not displayed , then it`s size is [0,0,]
 		(
-			dialog_position = GetDialogPos _RolloutClass 
-			
-			/* AVOID OFFSETING OF REGISTERED DIALOG */ 
-			if this.isRegistered _RolloutClass then
-			(
-				dialog_position.x -= 6
-				dialog_position.y -= 29
-			)
 			
 			this._saveToIni _RolloutClass.name "size"	(GetDialogSize _RolloutClass )
 	
-			this._saveToIni _RolloutClass.name "position"	( dialog_position )
-	
-			this.saveDialogDockState (_RolloutClass)
+			this._saveToIni _RolloutClass.name "position"	( this._getDialogPostion(_RolloutClass) )
 		)
 	),
 	
@@ -64,7 +78,7 @@ struct UiStateSaver_v
 	(
 		--format "\n"; print "UiStateSaver_v.saveControlsAndSubrollouts()"
 		--format "ini_file: %\n" ini_file
-		
+		_RolloutClass = this._getRollout( _RolloutClass )
 		
 		for control in _RolloutClass.controls do
 		--(
@@ -223,8 +237,6 @@ struct UiStateSaver_v
 			rollouts --return
 		)
 		
-		
-		
 		rollout_ids = for _rollout in _getOrderedRollouts(_SubRolloutClass.Rollouts) collect _rollout.name as name
 
 		this._saveToIni (_RolloutClass) (_SubRolloutClass.name) (with printAllElements on (rollout_ids as string )) -- IMPORTANT: without "with printAllElements on" long array formated to ini end with "..." INFO:https://help.autodesk.com/view/MAXDEV/2022/ENU/?guid=GUID-92B98D11-60FF-4742-A1BA-692EE135E085
@@ -242,6 +254,26 @@ struct UiStateSaver_v
 	--
 	--	(for matchIdx = 0 to matches.count-1 collect for groupIdx = 0 to matches.item[matchIdx].groups.count-1 collect ( matches.item[matchIdx].groups.item[groupIdx].value )) --return
 	--),
+	
+	/** Get dialog postion
+		
+		REGISTRED and UNREGISTRED dialog has different position to but must be visible on same place
+		
+	 */
+	function _getDialogPostion _RolloutClass =
+	(
+		--format "\n"; print "UiStateSaver_v._getDialogPostion()"
+		dock_state = try(cui.getDockState _RolloutClass )catch( )
+
+		dialog_position = GetDialogPos _RolloutClass
+		
+		/* AVOID POSITION OFFSET OF REGISTRED DIALOG */ 
+		if dock_state != undefined and dock_state == #cui_floatable then
+			dialog_position += [ -10, -33 ]
+	
+		dialog_position --return	
+	),
+	
 
 	/** Save value to ini file
 	 */

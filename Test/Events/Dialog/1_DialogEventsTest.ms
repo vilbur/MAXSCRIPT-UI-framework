@@ -101,13 +101,10 @@ function testAllEvents _Rollout =
 		#help
 	)
 
-
 	for event_type in event_types do
 		_Rollout.Event event_type	("print(\"CUSTOM DIALOG EVENT #"+ event_type as string +"\")")
 		--_Rollout.Event event_type ("dialogRolloutCallback()")
-
 )
-
 
 
 
@@ -141,11 +138,18 @@ testAllEvents(DialogTest)
 
 
 
-
-
 /* CREATE DIALOG */
 DialogTest.create width:256 height:256 lockHeight:false
 
 DialogTest.register()
+
+
+
+/* REGISTRED and UNREGISTRED dialog has different position to but must be visible on same place  */ 
+--for i = 1 to 3 do
+--(
+--	DialogTest.register()
+--	DialogTest.unregister()
+--)
 
 --DialogTest.ini.open()

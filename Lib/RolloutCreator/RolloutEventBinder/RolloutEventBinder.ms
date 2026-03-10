@@ -71,28 +71,28 @@ struct RolloutEventBinder_v
 	 */
 	function combineEvents =
 	(
-		format "\n"; print "RolloutEventBinder_v.combineEvents()"
-		format "\n\n~~~~~~~~~	Rollout Events:%	~~~~~~~~~\n" _Rollout.id
+		--format "\n"; print "RolloutEventBinder_v.combineEvents()"
+		--format "\n\n~~~~~~~~~	Rollout Events:%	~~~~~~~~~\n" _Rollout.id
 
 		--format "_Rollout.Events.keys: %\n" _Rollout.Events.keys
 		this._setDefaultEvents()
 		--format "_Rollout.Events.keys: %\n" _Rollout.Events.keys
 
 		this._setCustomEvents()  -- NOTE: callback will be fired in reversed order then has been added. Default event goes first
-		--format "_Rollout.Events.keys: %\n" _Rollout.Events.keys
 		
 		this._combineDockedEvents()
+		--format "_Rollout.Events.keys: %\n" _Rollout.Events.keys
 	),
 
 	/** Add handlers
 	 */
 	function addHandlers =
 	(
-		format "\n"; print "RolloutEventBinder_v.addHandlers()"
+		--format "\n"; print "RolloutEventBinder_v.addHandlers()"
 		
 		/* GET DIALOG OR ROLLOUT EVENT TYPES */ 
 		event_types = if( this._Rollout.isDialog() ) then events_dialog else #( #ROLLEDUP )
-		format "event_types: %\n" event_types
+		--format "event_types: %\n" event_types
 
 		/* ADD HANDLERS FOR EACH TYPE */ 
 		for event_type in event_types do
@@ -105,8 +105,8 @@ struct RolloutEventBinder_v
 	  */
 	function mutateOpenCloseToRolledUp =
 	(
-		format "\n";	print "RolloutEventBinder_v.mutateOpenCloseToRolledUp()"
-		format "_Rollout.Events.keys: %\n" _Rollout.Events.keys
+		--format "\n";	print "RolloutEventBinder_v.mutateOpenCloseToRolledUp()"
+		--format "_Rollout.Events.keys: %\n" _Rollout.Events.keys
 		/** Join array to string
 		 */
 		function arrayToString arr delimeter:"\n" = ( _string = ""; for Event in arr do _string += Event.callback  + delimeter; substring _string 1 (_string.count-delimeter.count))
@@ -148,8 +148,8 @@ struct RolloutEventBinder_v
 	(
 		if (Event = EventsCombiner.combine (event_type)) != undefined then
 		(
-			format "\n\n";	print "RolloutEventBinder_v._addHandler()"
-			format "Event.type: %\n" Event.type
+			--format "\n\n";	print "RolloutEventBinder_v._addHandler()"
+			--format "Event.type: %\n" Event.type
 
 			handler = "on "+(this._Rollout.id)+" "+ event_type as string + this._getParams(event_type)+" do\n(" +Event.callback+ "\n)"
 			--format "HANDLER:	% \n" handler
@@ -196,7 +196,7 @@ struct RolloutEventBinder_v
 		
 		#DOCKED 	 🡶                                         🡵 #DOCKED
 		#RESIZED  🡲 #RESIZED 🡲 waitForResizingEnds()🡲 Fire 🡲 #RESIZED
-		#UNDOCKED 🡵                                         🡵 #UNDOCKED
+		#UNDOCKED 🡵                                         🡶 #UNDOCKED
   
 	 */
 	function _combineDockedEvents =

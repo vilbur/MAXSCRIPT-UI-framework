@@ -61,13 +61,13 @@ struct DefaultEvents_v -- MAYBE RENAME THIS TO RolloutDefaultEvents_v
 		if( ini_path != undefined ) then
 			for event_type in #( #DOCKED, #UNDOCKED ) do
 			(
-				callback_fn = if event_type == #DOCKED then "saveDialogDockState" else "saveDialogkState"
+				callback_fn = if event_type == #DOCKED then "saveDialogDockState" else "saveDialogState"
 				
 				Event =  Event_v type:event_type
 				
 				Event.callback = "(UiStateSaver_v ini_file:\""+ini_path+"\")."+callback_fn+"(\""+rollout_id+"\")"
 				
-				Event.callback = "format \"DEFAULT EVENT: #"+event_type+"  Rollout: "+ rollout_id as name +"\n\";\n" + Event.callback
+				--Event.callback = "format \"TEST DEFAULT EVENT: #"+event_type+"  Rollout: "+ rollout_id as name +"\n\";\n" + Event.callback
 	
 				EventsList[event_type] = #( Event )
 			)
@@ -85,9 +85,9 @@ struct DefaultEvents_v -- MAYBE RENAME THIS TO RolloutDefaultEvents_v
 		
 			Event =  Event_v type:#OKTOCLOSE
 		
-			Event.callback = "(UiStatePreset_v ini_file:\""+ini_path+"\").save(\""+rollout_id+"\")"
+			Event.callback = "(UiStateSaver_v ini_file:\""+ini_path+"\").saveControlsAndSubrollouts(\""+rollout_id+"\")"
 		
-			--Event.callback = "format \"EVENT: #OKTOCLOSE  Rollout: "+ rollout_id as name +"\n\";\n" + Event.callback  
+			--Event.callback = "format \"TEST EVENT: #OKTOCLOSE  Rollout: "+ rollout_id as name +"\n\";\n" + Event.callback  
 			
 			Event.callback += "\n\n	true -- IMPORTANT - #oktoclose MUST RETURN BOOLEAN"
 
