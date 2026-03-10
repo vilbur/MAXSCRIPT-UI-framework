@@ -252,7 +252,7 @@ function changeValuesOfControls =
 createTestControlsRollout()
 
 /* EDIT VALUES OF CONTROL */ 
-changeValuesOfControls()
+--changeValuesOfControls()
 
 --format "TESTROLLOUT: %\n" testRollout
 /* SAVE UI STATE */

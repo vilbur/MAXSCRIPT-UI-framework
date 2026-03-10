@@ -87,8 +87,12 @@ struct UiStateLoader_v
 		(
 			_SubRollout = _SubRolloutSlot.Rollouts[i]
 
+			--format "rolledUp: %\n" (classOf( Ini.load _SubRollout.name "rolledUp" ))
+			
+			--_SubRollout.open = Ini.load _SubRollout.name "rolledUp"
+			
 			index	= findItem loaded_order_ids ( _SubRollout.name as name )
-
+			
 			reordered_rollouts[index] = _SubRollout
 		)
 		
@@ -121,49 +125,54 @@ struct UiStateLoader_v
 		format "_SubRolloutSlot: %\n" _SubRolloutSlot
 		
 		-- 1. CLEANUP: Remove any current rollouts that are NOT in the target array
-		for i = _SubRolloutSlot.rollouts.count to 1 by -1 do
-		(
-			ro = _SubRolloutSlot.rollouts[i]
-			if (findItem targetRollouts ro) == 0 do
-			(
-				removeSubRollout _SubRolloutSlot ro
-			)
-		)
+		--for i = _SubRolloutSlot.rollouts.count to 1 by -1 do
+		--(
+		--	_rollout = _SubRolloutSlot.rollouts[i]
+		--	
+		--	if (findItem targetRollouts _rollout) == 0 do
+		--		removeSubRollout _SubRolloutSlot _rollout
+		--)
 	
 		-- 2. OPTIMIZE: Find the longest prefix of the target array 
 		-- that already exists in the correct relative order inside the sub-rollout.
-		currentRollouts = _SubRolloutSlot.rollouts
-		prefixCount = 0
+		current_rollouts = _SubRolloutSlot.rollouts
+		prefix_count = 0
 		cIndex = 1
-		prefixBroken = false
+		prefix_broken = false
 	
-		for tRo in targetRollouts while not prefixBroken do
+		for tRo in targetRollouts while not prefix_broken do
 		(
 			found = false
-			while cIndex <= currentRollouts.count and not found do
+			while cIndex <= current_rollouts.count and not found do
 			(
-				if currentRollouts[cIndex] == tRo then found = true
+				if current_rollouts[cIndex] == tRo then found = true
+				
 				cIndex += 1
 			)
 	
-			if found then prefixCount += 1
-			else prefixBroken = true
+			if found then
+				prefix_count += 1
+			else
+				prefix_broken = true
 		)
 	
 		-- 3. REORDER: Move only the out-of-sequence rollouts to the end
-		for i = (prefixCount + 1) to targetRollouts.count do
+		for i = (prefix_count + 1) to targetRollouts.count do
 		(
-			ro = targetRollouts[i]
+			_rollout = targetRollouts[i]
 	
 			-- If it's already in the slot (but out of order), remove it so it shifts
-			if (findItem _SubRolloutSlot.rollouts ro) > 0 do
-			(
-				removeSubRollout _SubRolloutSlot ro
-			)
+			if (findItem _SubRolloutSlot.rollouts _rollout) > 0 do
+				RemoveSubRollout _SubRolloutSlot _rollout
 	
 			-- Append the rollout to its new correct position at the end
-			addSubRollout _SubRolloutSlot ro
+			AddSubRollout _SubRolloutSlot _rollout
+			
 		)
+		
+		/* OPEN \ CLOSE subrollouts */ 
+		for _rollout in targetRollouts do 
+			_rollout.open = not (Ini.load _rollout.name "rolledUp")
 	),
 
 	/** _load control
