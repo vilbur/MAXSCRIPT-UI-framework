@@ -56,6 +56,7 @@ struct ContentLoader_v
 		fgcolor:	\
 		bitmap:	\
 		bmpstyle:#bmp_tile  style:	\
+		menu:unsupplied	\
 		modal:	\
 		escapeEnable:false	\
 		escapekey:true	\

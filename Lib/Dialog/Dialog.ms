@@ -124,7 +124,7 @@ struct Dialog_v
 		bmpstyle: #bmp_tile	\
 		style:	\
 		modal:	\
-		menu:	\
+		menu:unsupplied 	\
 		escapeEnable: false	\
 		escapekey:  true	\
 		lockHeight: false	\
@@ -133,7 +133,8 @@ struct Dialog_v
 		cache: false	\ -- load generated dialog for fast startup -- true: PRODUCTION | false: DEVELOPMENT
 		parent: =
 	(
-		--format "\n"; print "Dialog_v.create()"
+		format "\n"; print "Dialog_v.create()"
+		format "MENU: %\n" menu
 		timer_createRollout = timeStamp()
 
 		--format "DOCK_STATE: %\n" (execute ("try(cui.getDockState DIALOG_test )catch( #WTF )"))
@@ -174,7 +175,8 @@ struct Dialog_v
 			/*------------------------------------------------------------------------------
 				CREATE DIALOG
 			--------------------------------------------------------------------------------*/
-			
+		format "MENU: %\n" menu
+
 			CreateDialog (this.RCI.def) \
 				width:	this.width                         	\
 				height:	this.height                         	\
@@ -184,7 +186,7 @@ struct Dialog_v
 				bitmap:	bitmap	\
 				bmpstyle:	bmpstyle	\
 				style:	dialog_style	\
-				menu:	menu	\
+				menu:	menu 	\
 				modal:	modal	\
 				autoLayoutOnResize:	true	\
 				escapeEnable:	escapeEnable	\
@@ -248,7 +250,7 @@ struct Dialog_v
 		/* RESET BITMAPS */ 
 		CONTROL_BITMAPS_STORE = #() -- reset buffer array
 		
-		FORMAT ("\n\n=================================================\n	DIALOG: "+ id as string +" CREATED in %ms\n=================================================\n") ((timestamp()) - timer_createRollout)
+		FORMAT ("\n\n=========================================================\n	DIALOG: "+ id as string +" CREATED in %ms\n=========================================================\n") ((timestamp()) - timer_createRollout)
 
 		/* EXECUTE AUTORUN EVENTS OF CONTROLS */ 
 		this._executeAutorunEvents()
