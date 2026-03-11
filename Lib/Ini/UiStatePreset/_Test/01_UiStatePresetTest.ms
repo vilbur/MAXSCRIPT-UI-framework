@@ -21,13 +21,13 @@ function createTestControlsRollout =
 		/*------------------------------------------------------------------------------
 			CONTROLS FOR SAVE\LOAD PRESET
 		--------------------------------------------------------------------------------*/
-		button btn_preset_save "SAVE PRESET" offset:[-8,10] width:80 height:48 across:3
+		button btn_preset_save "SAVE DIALOG STATE" offset:[-10, 10] width:80 height:48 across:3 align:#LEFT
 		on btn_preset_save pressed do UiStatePreset.save (testRollout)
 		
-		button btn_preset_load "LOAD PRESET" offset:[0,10] width:80 height:48 across:3
+		button btn_preset_load "LOAD DIALOG STATE" offset:[0,10] width:80 height:48 across:3 align:#CENTER
 		on btn_preset_load pressed do UiStatePreset.load (testRollout)
 
-		button btn_open_ini "OPEN INI" offset:[8,10] width:80 height:48 across:3
+		button btn_open_ini "OPEN INI" offset:[ 10, 10] width:80 height:48 across:3 align:#RIGHT
 		on btn_open_ini pressed do UiStatePreset.open ()
 
 		

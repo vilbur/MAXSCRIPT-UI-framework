@@ -61,7 +61,7 @@ struct RcMenu_v
 	  *
 	  * @param	string	title	Title of item
 	  * @param	string	command	Event of item
-	  * @param	string	[id]	Id of item, if empoty, then sanitized title is used
+	  * @param	string	[id]	Id of item, if empty, then sanitized title is used
 	 */
 	function item title command id: enabled:true checked:false =
 	(

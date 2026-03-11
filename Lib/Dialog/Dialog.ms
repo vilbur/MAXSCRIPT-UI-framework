@@ -13,6 +13,7 @@ filein( getFilenamePath(getSourceFileName()) + "/../RolloutCreator/RolloutCreato
 
 filein( getFilenamePath(getSourceFileName()) + "/../Ini/Ini.ms" )	-- "./../Ini/Ini.ms"
 filein( getFilenamePath(getSourceFileName()) + "/../Ini/UiStatePreset/UiStatePreset.ms" )	--"./../Ini/UiStatePreset/UiStatePreset.ms"
+filein( getFilenamePath(getSourceFileName()) + "/../Ini/UiStatePreset/UiStatePresetMenu/UiStatePresetMenu.ms" )	--"./../Ini/UiStatePreset/UiStatePresetMenu/UiStatePresetMenu.ms"
 
 filein( getFilenamePath(getSourceFileName()) + "/Layout/Layout.ms" )	-- "./Layout/Layout.ms"
 filein( getFilenamePath(getSourceFileName()) + "/Hotkeys/Hotkeys.ms" )	-- "./Hotkeys/Hotkeys.ms"
@@ -151,11 +152,13 @@ struct Dialog_v
 		dialog_style = if( style == unsupplied ) then this.style else style
 		--format "dialog_style: %\n" dialog_style
 		
+		use_chache = cache and doesFileExist (cache_file_path)
 		
 		/*==============================================================================
 			COMPILE DIALOG
 		================================================================================*/
-		if not cache or not doesFileExist (cache_file_path) then
+		--if not cache or not doesFileExist (cache_file_path) then
+		if not use_chache then
 		(
 			FORMAT "\n**** NO CACHE\n"
 			_RolloutCreator = RolloutCreator_v Ini:Ini DEBUG:DEBUG
@@ -202,8 +205,9 @@ struct Dialog_v
 			_RolloutCreator.SubolloutsCreator.addSubRollouts (this)
 			--if this.DEBUG then format "addSubRollouts % ms\n" ((timestamp()) - timer_all)
 			
-			/* CACHE FILE */ 
-			this.writeToCacheFile cache_file_path width height 
+			/* CACHE FILE */
+			if cache then
+				this.writeToCacheFile cache_file_path width height 
 
 			/*------------------------------------------------------------------------------
 				POST CREATE
@@ -217,6 +221,7 @@ struct Dialog_v
 			
 			Dialog = RCI.def --return
 		)
+		
 		/*==============================================================================
 			USE CACHE
 		================================================================================*/
@@ -228,6 +233,7 @@ struct Dialog_v
 			
 			Dialog = createDialogFromCacheFile this.width this.height dialog_pos bgcolor fgcolor bitmap bmpstyle dialog_style modal true escapeEnable lockHeight lockWidth parent
 		)
+		
 		
 		/*==============================================================================
 			POST CREATE
@@ -242,10 +248,9 @@ struct Dialog_v
 		/* FIT SUBROLLOUTS SLOT TO BOTTOM */ 
 		this.RolloutResizer.fitSlotsToDialog( Dialog )
 
-		
-		/* SET DIALOG TO GLOBAL CONTAINER OF DIALOGS OF FRAMEWORK */ 
-		--DIALOG_GLOBAL_DATA[this.id] = DialogGlobalData_v(Dialog)(this)
-		
+		/* LOAD INI ON CACHED DIALOG */
+		if use_chache then
+			this._loadIniOnCachedDialog()
 		
 		/* RESET BITMAPS */ 
 		CONTROL_BITMAPS_STORE = #() -- reset buffer array
@@ -623,6 +628,19 @@ struct Dialog_v
 
 	private
 
+	/** Load ini on cached dialog
+	 */
+	function _loadIniOnCachedDialog =
+	(
+		--format "\n"; print "global._loadIniOnCachedDialog()"
+		if Ini.isDefined() then
+		(
+			UiStateLoader = UiStateLoader_v ( Ini.getPath() )
+	
+			UiStateLoader.loadControlsAndSubrollouts (Dialog)
+		)
+	),
+	
 	/** Get width and height
 	 */
 	function _getWidthAndHeight width height =
