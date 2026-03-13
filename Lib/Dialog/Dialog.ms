@@ -13,7 +13,7 @@ filein( getFilenamePath(getSourceFileName()) + "/../RolloutCreator/RolloutCreato
 
 filein( getFilenamePath(getSourceFileName()) + "/../Ini/Ini.ms" )	-- "./../Ini/Ini.ms"
 filein( getFilenamePath(getSourceFileName()) + "/../Ini/UiStatePreset/UiStatePreset.ms" )	--"./../Ini/UiStatePreset/UiStatePreset.ms"
-filein( getFilenamePath(getSourceFileName()) + "/../Ini/UiStatePreset/UiStatePresetMenu/UiStatePresetMenu.ms" )	--"./../Ini/UiStatePreset/UiStatePresetMenu/UiStatePresetMenu.ms"
+filein( getFilenamePath(getSourceFileName()) + "/../Ini/UiStatePreset/UiStatePresetManager/UiStatePresetManager.ms" )	--"./../Ini/UiStatePreset/UiStatePresetManager/UiStatePresetManager.ms"
 
 filein( getFilenamePath(getSourceFileName()) + "/Layout/Layout.ms" )	-- "./Layout/Layout.ms"
 filein( getFilenamePath(getSourceFileName()) + "/Hotkeys/Hotkeys.ms" )	-- "./Hotkeys/Hotkeys.ms"

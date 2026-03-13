@@ -82,7 +82,7 @@ _Controls.control #SPINNER ""
 --
 --/*------ LISTBOX ------*/
 --/*------ MULTILISTBOX ------*/
---_multilistbox =  _Controls.control #MULTILISTBOX "Multilistbox" items:#("Item 1","Item 2", "It/*e*/m 3")
+--_multilistbox =  _Controls.control #MULTILISTBOX "Multilistbox" items:#("Item 1","Item 2", "Item 3")
 --
 --
 --/*------ BROWSEATH ------*/

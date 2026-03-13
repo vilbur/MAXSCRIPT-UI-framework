@@ -97,28 +97,33 @@ function getPresetMenu dialog_id ini_file =
 	 */
 	function getCallback dialog_id ini_file method = "(UiStatePreset_v(@\""+ini_file +"\"))."+method+"( #"+dialog_id as string +") "
 	
-	presets = getFileNameSuffixes ini_file
+	presets_data = getFileNameSuffixes ini_file
 
 
 	/* DEFINE MAIN MENU */
-	Menu = RcMenu_v name:"Prest menu"
+	Menu = RcMenu_v name:"Preset menu"
 	
 	
+	Menu.item ( "Presets Maneger" ) ( "(UiStatePreset_v(@\""+ini_file +"\"))."+method+"( #"+dialog_id as string +") " ) 
+	
+	/* CREATE SUBMENUS */ 
 	for method in #( "Save", "Load" ) do
 	(
 		/* DEFINE MENU */
 		submenu = Menu.menu (method + " Preset")
 		
-		/* DEFAULT PRESETS */ 
-		submenu.item ( toUpper(method) + " Default") ( getCallback dialog_id ini_file method ) 
+		/* DEFAULT PRESETS */
+		if method == "Load" then
+			submenu.item ( toUpper(method) + " Default") ( getCallback dialog_id ini_file method ) 
+		
 		
 		/* SEPARATOR */ 
-		if presets.keys.count > 0 then
+		if presets_data.keys.count > 0 then
 			submenu.separator()
 		
 		/* PRESETS */ 
-		for preset_name in presets.keys do
-			submenu.item ( preset_name ) ( getCallback dialog_id presets[preset_name] method ) id:(method + "_"+preset_name)
+		for preset_name in presets_data.keys do
+			submenu.item ( preset_name ) ( getCallback dialog_id presets_data[preset_name] method ) id:(method + "_"+preset_name)
 	)
 	
 	Menu.create() --return
