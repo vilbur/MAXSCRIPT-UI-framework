@@ -110,13 +110,13 @@ struct DefaultParameters_v
 			(
 				#GROUPBOX: Params[type][#HEIGHT] = 48
 
-				#BUTTON:	Params[type][#WIDTH] = 96
+				--#BUTTON:	Params[type][#WIDTH] = 96
 				
 		
 				#SLIDER:	Params[type][#RANGE] = [0,100,0]
 				
 				
-				#EDITTEXT:	Params[type][#FIELDWIDTH] = 96
+				--#EDITTEXT:	Params[type][#FIELDWIDTH] = 96
 				
 		
 				#SPINNER:
@@ -129,7 +129,7 @@ struct DefaultParameters_v
 				
 				
 		
-				#DROPDOWNLIST:	Params[type][#WIDTH] = 128
+				--#DROPDOWNLIST:	Params[type][#WIDTH] = 128
 				
 		
 				#ANGLE:
@@ -144,13 +144,8 @@ struct DefaultParameters_v
 				)
 				
 				#TIMER:	Params[type][#WIDTH] = 0
-			--	#TIMER:
-			--	(
-			--Params[type][#ACROSS] = 2
-			--
-			--	Params[type][#WIDTH] = 0
-			--	)
-		)
+	
+			)
 	),
 
 	/**

@@ -79,7 +79,7 @@ struct ControlCreator_v
 			this._customizeControlTypes(_Control)
 			
 			/* ADJUST PARAMETERS */
-			this._editParams(_Control)
+			this._setControlWidth(_Control)
 		)
 
 		
@@ -244,7 +244,10 @@ struct ControlCreator_v
 			params_str = "pos:[ 0, 0 ] " + _Control.params_str
 		
 		/* ADD CONTROL */ 
-		_Rollout.RCI.addControl (_Control.type) (_Control.id) (_Control.caption) paramStr:params_str filter:true;
+		_Rollout.RCI.addControl (_Control.type) (_Control.id) (_Control.caption) paramStr:params_str filter:true
+		
+		if this.Controls.DEBUG and _Control.type != #LABEL then format "_Control: %   	ID: %    	\"%\" PARAMS: %\n" _Control.type _Control.id _Control.caption _Control.params
+
 	),
 	
 	/** Join params to string
@@ -328,18 +331,61 @@ struct ControlCreator_v
 
 	/** Edit params
 	 */
-	function _editParams &_Control =
+	function _setControlWidth &_Control =
 	(
-		--format "\n"; print "ControlCreator_v._editParams()"
+		--format "\n"; print "ControlCreator_v._setControlWidth()"
+		modified_width = undefined
 		
-		if _Control.type == #SPINNER then
-		(
-			if _Control.Params[#WIDTH] == undefined then
-				/* SET WIDTH OF SPINNER AS FILED WIDTH IF SPINNER TITLE IS "" */
-				_Control.Params[#WIDTH] = if _Control.caption == "" then _Control.Params[#FIELDWIDTH] else _Rollout.width / _Control.Params[#across] 
-		)
+		padding_right = 32
+		--format "_Control.id: %\n" _Control.id
+		--format "superClassOf _Rollout.width: %\n" (superClassOf _Rollout.width)
+		--format "_CONTROL.PARAMS: %\n" _Control.Params
 
 		
+		if superClassOf _Rollout.width == Number and _Control.Params[#WIDTH] == undefined then
+		(
+			across_width = (_Rollout.width - padding_right) / _Control.Params[#ACROSS] 
+			--format "across_width: %\n" across_width
+			--modified_width = case type of
+			case _Control.type of
+			(
+				--#GROUPBOX: Params[type][#HEIGHT] = 48
+				--
+				#BUTTON:	across_width
+				--
+				--
+				--#SLIDER:	Params[type][#RANGE] = [0,100,0]
+				--
+				--
+				#EDITTEXT: _Control.Params[#WIDTH] = across_width
+				--#EDITTEXT:
+				--(
+				--	_Control.Params[#WIDTH] = across_width
+				--	
+				--	if _Control.Params[#FIELDWIDTH] == undefined then
+				--	(
+				--		if _Control.caption != "" then
+				--		(
+				--			title_part = case _Control.Params[#ACROSS] of
+				--			(
+				--				4: 0.75
+				--				3: 0.66 
+				--				default: 0.5
+				--			)
+				--			
+				--			--_Control.Params[#FIELDWIDTH] = ( across_width * title_part )
+				--		)
+				--		--else
+				--			--_Control.Params[#FIELDWIDTH] = _Control.Params[#WIDTH]
+				--	)
+				--)
+	
+				#SPINNER: _Control.Params[#WIDTH] = if _Control.caption == "" then _Control.Params[#FIELDWIDTH] else across_width
+
+			)
+		)
+
+		--format "_CONTROL.PARAMS: %\n" _Control.Params
 		_Control --retu!rn
 	),
 	

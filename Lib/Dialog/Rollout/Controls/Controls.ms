@@ -13,11 +13,13 @@ struct Controls_v
 	List = #(),
 
 	/* dependency */
-	DefaultParameters = DefaultParameters_v(),
-
-	--GroupBoxes 	= GroupBoxes_v Controls:this, -- "./GroupBoxes/GroupBoxes.ms"
+	DefaultParameters = DefaultParameters_v(), -- "./DefaultParameters/DefaultParameters.ms"
 
 	rollout_id,
+	
+	/* developent  */
+	DEBUG = false,
+	--DEBUG = true,
 
 	/** Create new control
 	  *
@@ -52,6 +54,7 @@ struct Controls_v
 		highlightColor:		\ -- CHECKBUTTON
 		bitmap:		\ -- BITMAP, IMGTAG
 		fieldWidth:		\ -- SPINNER, EDITTEXT 
+		labelOnTop:	false	\ -- EDITTEXT 
 		default:	unselect:	\ -- RADIOBUTTON
 		items:	columns:	\ -- RADIOBUTTON, LISBOX, MUTLILISTBOX
 		type:	scale: 	\ -- SPINNER
@@ -100,8 +103,8 @@ struct Controls_v
 				
 		
 		/* PROCESS FUNCTION PARAMETERS */ 	
-		_param_names  = #( #pos, #checked, #width, #height, #offset, #align, #items, #range, #type, #ticks, #orient, #scale, #controller, #default, #unselect, #value, #color, #bitmap, #fieldWidth, #ini, #tooltip, #across, #columns,	#visible, #border, #groupbox, #highlightColor, #interval, #active )
-		_param_values = #(  pos,  checked,  width,  height,  offset,  align,  items,  range,  type,  ticks,  orient,  scale,  controller,  default,  unselect,  value,  color,  bitmap,   fieldWidth,  ini,   tooltip,  across,  columns,  visible,   border,  groupbox,  highlightColor, interval,  active )
+		_param_names  = #( #pos, #checked, #width, #height, #offset, #align, #items, #range, #type, #ticks, #orient, #scale, #controller, #default, #unselect, #value, #color, #bitmap, #fieldWidth, #ini, #tooltip, #across, #columns,	#visible, #border, #groupbox, #highlightColor, #interval, #active, #labelOnTop )
+		_param_values = #(  pos,  checked,  width,  height,  offset,  align,  items,  range,  type,  ticks,  orient,  scale,  controller,  default,  unselect,  value,  color,  bitmap,   fieldWidth,  ini,   tooltip,  across,  columns,  visible,   border,  groupbox,  highlightColor, interval,  active,  labelOnTop )
 
 		
 		/* EXPOSE ID FROM PARAMS ARRAY */ 

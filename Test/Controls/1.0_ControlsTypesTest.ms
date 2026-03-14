@@ -16,13 +16,14 @@ filein( getFilenamePath(getSourceFileName()) + "/../../Lib/Dialog/Dialog.ms" )	-
 --------------------------------------------------------------------------------*/
 
 /* DIALOG */
---Dialog 	    = Dialog_v title:"Test" ini:(getSourceFileName())
-Dialog 	    = Dialog_v title:"Test"	--WITHOUT INI FILE
+--Dialog 	    = Dialog_v title:"Test" width:320 ini:(getSourceFileName())
+Dialog 	    = Dialog_v title:"Test" width:320	--WITHOUT INI FILE
 
 
 /* CONTROLS */
+--_Controls   = Dialog.Controls()
 --_Controls   = Dialog.Controls group:"Main _Controls"
-_Controls   = Dialog.Controls()
+_Controls   = Dialog.Controls DEBUG:true -- DEBUG print control data when control is added to rollout
 
 
 /*------------------------------------------------------------------------------
@@ -65,17 +66,19 @@ _Controls   = Dialog.Controls()
 --_Controls.control #DROPDOWN "Dropdown"  items:#("Item 1","Item 2") 
 --_Controls.control #DROPDOWNLIST "Dropdownlist"  items:#("Item 1","Item 2") 
 
---
---/*------ EDITTEXT ------*/
---_Controls.control #EDITTEXT "Edittext"
---
+
+/*------ EDITTEXT ------*/
+_Controls.control #EDITTEXT "Edit Text" across:1
+_Controls.control #EDITTEXT "Label On Top" across:1 labelOnTop:true
+_Controls.control #EDITTEXT "[hidden label]" across:1
+
 --
 --/*------ SLIDER ------*/
 --_Slider = _Controls.control #SLIDER "Slider" ticks:3 width:256 range:[0,50,0] ticks:5 type:#integer
 --
 
 --/*------ SPINNER ------*/
-_Controls.control #SPINNER ""
+--_Controls.control #SPINNER ""
 --_Controls.control #SPINNER "Spinner"
 --_Controls.control #SPINNER "Spinner 2" width:96 scale:0.01 range:[0,100,0.01]
 --
@@ -135,6 +138,6 @@ _Controls.control #SPINNER ""
 
 
 /* DIALOG CREATE */
---Dialog.create()
-Dialog.create   width:320
+Dialog.create()
+--Dialog.create   width:320
 --Dialog.create   width:1024

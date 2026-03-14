@@ -46,10 +46,10 @@
 
 	/** Controls
 	 */
-	function Controls group:undefined =
+	function Controls group:undefined DEBUG:DEBUG =
 	(
 		--print "RolloutBody.controls()"
-		local Controls = Controls_v group:group rollout_id:id
+		local Controls = Controls_v group:group rollout_id:id DEBUG:DEBUG
 
 		append _Controls Controls
 

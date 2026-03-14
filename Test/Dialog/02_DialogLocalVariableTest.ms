@@ -7,59 +7,65 @@ clearListener(); print("Cleared in:\n"+getSourceFileName())
  */
 filein( getFilenamePath(getSourceFileName()) + "/../../Lib/Dialog/Dialog.ms" ) -- "./../../Lib/Dialog/Dialog.ms"
 
-/* HELPERS */ 
-struct TestSctruct
+
+/** Dialog creator
+ */
+struct DialogCreatorStruct_v
 (
-	prop_in_struct = "DEFAULT VALUE"
+	/* construct */
+	
+	/* required */
+	
+	/* properties */
+	
+	
+	/* private */
+	/* dependency */
+	/* reference */
+	/* inhered */
+	
+	/** Dialog create
+	 */
+	function dialogCreate =
+	(
+		--format "\n"; print "DialogCreatorStruct_v.dialogCreate()"
+		Dialog 	= Dialog_v title:"Test"
+		
+		Dialog.addLocal #DialogCreatorStruct this
+
+		_Controls   = Dialog.Controls()
+		
+		_Button = _Controls.control #BUTTON "Test"
+		
+		_Button.Event #Pressed ( "DIALOG_test.DialogCreatorStruct.testMethod()")
+
+		Dialog.create()
+	),
+	
+	/** Test method
+	 */
+	function testMethod =
+	(
+		format "\n"; print "DialogCreatorStruct_v.testMethod()"
+		format "getFilenameFile(getSourceFileName()): %\n" (getFilenameFile(getSourceFileName()))
+	),
+	
+	private
+	
+
+	/**
+	 */
+	on create do
+	(
+		--format "\n"; print "DialogCreatorStruct.onCreate()"
+		--for prop in #(  ) where getProperty this prop == undefined do -- CHECK CONSTRUCT PROPERTIES -- Array of this struct properties necessary to run
+		--	throw ("\n\n\nUNDEFINED CONSTRUCT PROPERTY\n\n\nSTRUCT:\n\n"+ ((filterString( classof this as string )"(:")[2]) +"\n\n\nPROPERTY:\n\n"+ prop )
+	)
+
 )
 
-/* DIALOG */
-Dialog 	= Dialog_v title:"Test"
 
+DialogCreatorStruct = DialogCreatorStruct_v()
 
-/*------------------------------------------------------------------------------
-	ADD VARIABLES
---------------------------------------------------------------------------------*/
-Dialog.addLocal #PROP_STRUCT (TestSctruct("CONSTRUCT VALUE"))
-
-Dialog.addLocal  "PROP_STRING"  "Line 1\n\"Line 2\"" -- String with newlines and quotes
-
-Dialog.addLocal  #PROP_NAME #NAME_TEST
-
-Dialog.addLocal  #PROP_ARRAY  #("Item A", 2 ) -- Array with strings and quotes
-
-Dialog.addLocal  #PROP_COLOR  (color 255 128 0)
-Dialog.addLocal  #PROP_POINT  [10, 20, 30]
-Dialog.addLocal  #PROP_NUM 12
-Dialog.addLocal  #PROP_FLOAT 12.7
-
-
-
-/*------------------------------------------------------------------------------
-	 CREATE DIALOG
---------------------------------------------------------------------------------*/
-dialog_rollout = Dialog.create()
-
-
-
-/*------------------------------------------------------------------------------
-	TEST OF RESULT
---------------------------------------------------------------------------------*/
-format "\n\n---------------- TEST RESULTS ----------------\n\n\n"
-
-
-format "DIALOG_test.prop_struct.prop_in_struct: %\n\n"	(classof DIALOG_test.prop_struct.prop_in_struct)
-
-
-format "DIALOG_test.prop_string:  %\n\n"	(classof DIALOG_test.prop_string)
-format "DIALOG_test.prop_name: %\n\n"	(classof DIALOG_test.prop_name)
-
-format "DIALOG_test.prop_num: %\n\n"	(classof DIALOG_test.prop_num)
-format "DIALOG_test.prop_float: %\n\n"	(classof DIALOG_test.prop_float)
-
-format "DIALOG_test.prop_array: %\n\n"	(classof DIALOG_test.prop_array)
-
-format "DIALOG_test.prop_color: %\n\n"	(classof DIALOG_test.prop_color)
-format "DIALOG_test.prop_point: %\n\n"	(classof DIALOG_test.prop_point)
-
+DialogCreatorStruct.dialogCreate()
 
