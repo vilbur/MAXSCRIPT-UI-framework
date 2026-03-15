@@ -39,7 +39,7 @@ struct UiStatePresetManager_v
 		--PresetDialog.addLocal #UiStatePresetManager this
 		
 		--_Controls   = PresetDialog.Controls()
-		_Controls   = PresetDialog.Controls DEBUG:true
+		_Controls   = PresetDialog.Controls DEBUG:false
 		
 		--_Controls.control #CHECKBUTTON "checkbutton" highlightColor:red across:1
 		--_Controls.control #CHECKBOX "Checkbox"

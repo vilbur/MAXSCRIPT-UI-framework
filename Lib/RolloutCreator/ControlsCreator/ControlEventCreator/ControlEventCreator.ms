@@ -34,19 +34,31 @@ struct ControlEventCreator_v
 		 */
 		function getParams Event = if Event != undefined then Event.params else ""
 
-		
-		/* GET INSTANCE OF EventFiredCreator */ 
-		EventFiredCreator = EventFiredCreator_v _RolloutClass:(_Rollout.id as string ) ControlString:( _Rollout.id as string +"."+ _Control.id as string )
+		/*==========================================================================================================
+			
+		   GET INSTANCE OF EventFiredCreator  --"./../ControlEventBinder/EventFiredCreator/EventFiredCreator.ms"
+		   
+		============================================================================================================*/
+
+		EventFiredCreator = EventFiredCreator_v _RolloutClass:(_Rollout.id as string ) ControlPath:( _Rollout.id as string +"."+ _Control.id as string ) control_type:_Control.type
 
 		
-		/* PROCESS EACH EVENT BY PRIORITY */ 
+		/*==============================================================================
+		
+			PROCESS EACH EVENT BY PRIORITY
+		
+		================================================================================*/
 		for event_type in this.EventTypes.getEventTypesByPriority( _Control.type ) where ( event_params = event_types[_Control.type][event_type]) != undefined do
 		(
-			/* GET DEFAULT EVENT */ 
+			/*------------------------------------------------------------------------------
+				GET DEFAULT EVENT
+			--------------------------------------------------------------------------------*/
 			Event_default = DefaultControlEvents.getDefaultEvent (_Control) (event_type)
 			
 			
-			/* GET USER EVENT */ 
+			/*------------------------------------------------------------------------------
+				GET USER EVENT
+			--------------------------------------------------------------------------------*/
 			if ( Event = _Control.Events[event_type] ) != undefined then
 			(
 				--format "EVENT_TYPE: %\n" event_type
@@ -61,7 +73,9 @@ struct ControlEventCreator_v
 			)
 			
 			
-			/* MERGE DEFAULT AND USER EVENTS */ 
+			/*------------------------------------------------------------------------------
+				MERGE DEFAULT AND USER EVENTS
+			--------------------------------------------------------------------------------*/
 			if  Event != undefined or Event_default != undefined then
 			(
 				/* GET NEW EVENT IF ONLY DEAFAULT CALLBACK EXIST */
@@ -70,7 +84,7 @@ struct ControlEventCreator_v
 				
 				/*================================================================================================
 					
-					GET EVENT FIRED --"./../ControlEventBinder/EventFiredCreator/EventFiredCreator.ms"
+					GET EVENT FIRED
 					
 				==================================================================================================*/
 				
@@ -98,7 +112,7 @@ struct ControlEventCreator_v
 				----format "EVENT:         %\n" Event
 				--format "EVENT.params:    %\n" Event.params
 				--format "EVENT.arguments: %\n" Event.arguments
-				format "EVENT.callback:  %\n" Event.callback
+				--format "EVENT.callback:  %\n" Event.callback
 
 
 				/* RETURN FINAL EVENT TO CONTROL */
@@ -228,10 +242,10 @@ struct ControlEventCreator_v
 		callback = ""
 
 		if Event_default != undefined and Event_default.callback != "" then
-			callback += "\n/* ---- DEFAULT CALLBACK ---- */\n" + Event_default.callback
+			callback += "\n/* ============= DEFAULT CALLBACK ============= */\n" + Event_default.callback
 
 		if Event.callback != "" then
-			callback +=  "\n\n/* ---- CUSTOM CALLBACK ---- */\n" + Event.callback
+			callback +=  "\n\n/* ============= CUSTOM CALLBACK ============= */\n" + Event.callback
 
 		callback --return
 	),
