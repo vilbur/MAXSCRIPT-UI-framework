@@ -63,7 +63,7 @@ struct ControlEventBinder_v
 	--	EventFiredCreator = EventFiredCreator_v _RolloutClass:(_Rollout.id as string ) _RolloutControl:( _Rollout.id as string +"."+ _Control.id as string )
 	--
 	--	--for Event_Data in _Control.Events do
-	--		Event.callback  = (EventFiredCreator.getEventFired(Event)) + "\n\n"+ Event.callback + ";EventFired = undefined"
+	--		Event.callback  = (EventFiredCreator.getStructDefinition(Event)) + "\n\n"+ Event.callback + ";EventFired = undefined"
 	--),
 
 	/*------------------------------------------------------------------------------

@@ -19,23 +19,34 @@ struct EventFiredCreator_v
 (
 	/* required */
 	_RolloutClass,	-- Rollout of control
-	_RolloutControl,	-- Control itself
+	ControlString,	-- Control
+	ControlClass,	-- Control object
 
 	/* properties */
 	params,
 
 	/** Get event
 	 */
-	function getEventFired event_type params =
+	function getStructDefinition event_type params =
 	(
-		--print "EventFiredCreator_v.getEventFired()"
+		--print "EventFiredCreator_v.getStructDefinition()"
+		
+		/* GET PARAMS ARERAY */ 
 		this.params = filterString params " "
+		
+		--ControlClass = execute ( _RolloutClass ControlString)
+		--
+		--format "classOf ControlClass: %\n" (  )
+		--if classOf ControlClass == MultiListBoxControl then
+		--	append this.params "selection"
+			append this.params "TEST"
+		--
+		
+		note_def	= "\n/*--- EventFired struct definition ---*/\n\n"
+		struct_def	= "execute \"struct EventFired_v( Type, Roll, Control"+(this._getProperties())+ "," + (this._getMethods())+")\""
 
-		note_def	= "\n/*--- EventFired definition ---*/\n\n"
-		note_set_global	= "\n/*--- EventFired global ---*/\n\n"
-
-		struct_def	= "execute \"struct EventFired_v(Type,Roll,Control"+(this._getProperties())+ "," + (this._getMethods())+")\""
-		set_global	= "global EventFired = EventFired_v Type:#"+event_type+" Roll:"+ _RolloutClass +" Control:"+ _RolloutControl +" "+(this._getParams())
+		note_set_global	= "\n/*--- CAST INSTANCE TO GLOBAL VARIABLE ---*/\n\n"
+		set_global	= "global EventFired = EventFired_v Type:#"+event_type+" Roll:"+ _RolloutClass +" Control:"+ ControlString +" "+(this._getParams())
 
 
 	   note_def + struct_def + "\n" + note_set_global + set_global
@@ -48,6 +59,8 @@ struct EventFiredCreator_v
 	 */
 	function _getProperties =
 	(
+		print "EventFiredCreator_v._getProperties()"
+		format "this.params: %\n" this.params
 		properties = ""
 
 		for param in this.params do
@@ -56,7 +69,7 @@ struct EventFiredCreator_v
 		properties --return
 	),
 
-	/** Get params passed to callback
+	/** Get construct properties for EventFired
 	 */
 	function _getParams =
 	(

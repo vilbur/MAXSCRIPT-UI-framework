@@ -37,15 +37,17 @@ category:	"_Test"
  */
 function CallbackNoParam =
 (
-	format "CallbackNoParam EventFired:	% \n" EventFired.type
+	format "EventFired: %\n" EventFired
+	--format "CallbackNoParam EventFired:	% \n" EventFired.type
 )
 
 /** 1 PARAMETER
  */
 function CallbackParam1 arg_1 =
 (
-	format "CallbackParam1 EventFired:	% \n" EventFired.type
-	format "arg_1: %\n" arg_1
+	format "EventFired: %\n" EventFired
+	--format "CallbackParam1 EventFired:	% \n" EventFired.type
+	--format "arg_1: %\n" arg_1
 )
 
 /** 2 PARAMETERS
@@ -116,9 +118,9 @@ function CallbackParams3 arg_1 arg_2 arg_3 = (
 --
 --
 --/*------ BUTTON ------*/
-_Button = _Controls.control #button "Button"
+--_Button = _Controls.control #button "Button"
 
-_Button.Event #PRESSED	"macros.run @_Test@ @_test_control_callback_macro@" tooltip:"Test Tooltip"
+--_Button.Event #PRESSED	"macros.run @_Test@ @_test_control_callback_macro@" tooltip:"Test Tooltip"
 --_Button.Event #PRESSED "CallbackNoParam"	tooltip:"PRESSED Tooltip"
 
 --_Button.Event #RIGHTCLICK "CallbackNoParam()"	tooltip:"RIGHTCLICK Tooltip"
@@ -207,10 +209,10 @@ _Button.Event #PRESSED	"macros.run @_Test@ @_test_control_callback_macro@" toolt
 --/*------ BROWSEATH ------*/
 --/*------ LISTBOX ------*/
 --/*------ MULTILISTBOX ------*/
---_multilistbox =  _Controls.control #MULTILISTBOX "Multilistbox" items:#("Item 1","Item 2", "Item 3")
+_multilistbox =  _Controls.control #MULTILISTBOX "Multilistbox" items:#("Item 1","Item 2", "Item 3")
 --
 --_multilistbox.Event #SELECTIONEND 	("CallbackNoParam()") -- called when select action ends
---_multilistbox.Event #SELECTED 	("CallbackParam1") -- called on SELECT AND DESELECT
+_multilistbox.Event #SELECTED 	("CallbackParam1") -- called on SELECT AND DESELECT
 --_multilistbox.Event #RIGHTCLICK  	("CallbackNoParam()")
 --_multilistbox.Event #DOUBLECLICKED  	("CallbackParam1")
 

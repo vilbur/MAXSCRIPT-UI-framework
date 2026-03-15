@@ -36,7 +36,7 @@ struct ControlEventCreator_v
 
 		
 		/* GET INSTANCE OF EventFiredCreator */ 
-		EventFiredCreator = EventFiredCreator_v _RolloutClass:(_Rollout.id as string ) _RolloutControl:( _Rollout.id as string +"."+ _Control.id as string )
+		EventFiredCreator = EventFiredCreator_v _RolloutClass:(_Rollout.id as string ) ControlString:( _Rollout.id as string +"."+ _Control.id as string )
 
 		
 		/* PROCESS EACH EVENT BY PRIORITY */ 
@@ -66,24 +66,39 @@ struct ControlEventCreator_v
 			(
 				/* GET NEW EVENT IF ONLY DEAFAULT CALLBACK EXIST */
 				if  Event == undefined then Event = Event_v type:event_type params:event_params
-
-				/*------ MERGE CALLBACKS CODE ------*/
+				
+				
+				/*================================================================================================
+					
+					GET EVENT FIRED --"./../ControlEventBinder/EventFiredCreator/EventFiredCreator.ms"
+					
+				==================================================================================================*/
+				
+				EVENT_FIRED = EventFiredCreator.getStructDefinition(event_type)( getParams Event + " " + getParams Event_default )
+				
+				
+				/*==============================================================================
+				
+					GET CALLBACKS CODE
+				
+				================================================================================*/
+				
 				callback = this._mergeCodeOfEvents (event_type) (Event) (Event_default)
 
-				/* GET EVENT FIRED */
-				event_fired = EventFiredCreator.getEventFired(event_type)( getParams Event + " " + getParams Event_default )
 
-				free_event_fired = "EventFired = undefined"
+				/*==============================================================================
+				
+					MERGE EVENT FIRED AND CALLBACK
+				
+				================================================================================*/
 
-				/*------ MERGE FINAL CALLABCK ------*/
-				Event.callback = "\n" + event_fired + "\n\n" + callback + "\n" + free_event_fired + "\n"
-
+				Event.callback = "\n" + EVENT_FIRED + "\n\n" + callback + "\nEventFired = undefined /* RESET GLOBAL VARIABLE */\n"
 
 				--format "\n----------------------------------------\n";
 				----format "EVENT:         %\n" Event
 				--format "EVENT.params:    %\n" Event.params
 				--format "EVENT.arguments: %\n" Event.arguments
-				--format "EVENT.callback:  %\n" Event.callback
+				format "EVENT.callback:  %\n" Event.callback
 
 
 				/* RETURN FINAL EVENT TO CONTROL */
