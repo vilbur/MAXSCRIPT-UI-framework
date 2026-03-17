@@ -3,7 +3,26 @@ clearListener(); print("Cleared in: "+getSourceFileName())
 filein( getFilenamePath(getSourceFileName()) + "/../../../../Dialog/Dialog.ms" )	--"./../../../../Dialog/Dialog.ms"
 
 
+/*
+Copy file and add suffix before extension.
 
+Example:
+"C:\cfg\settings.ini" -> "C:\cfg\settings_backup.ini"
+*/
+function copyIniWithSuffix src_path suffix =
+(
+    if doesFileExist src_path then
+    (
+        dir_path = getFilenamePath src_path
+        file_name = getFilenameFile src_path
+        ext = getFilenameType src_path
+        
+        new_path = dir_path + "INI-Presets\\" + file_name + "-" + suffix + ext
+        
+        copyFile src_path new_path
+        new_path -- return
+    )
+)
 
 
 /** Load prest callback
@@ -20,17 +39,30 @@ function loadPresetCallback preset_data =
 --------------------------------------------------------------------------------*/
 
 
-ini_file = getFilenamePath(getSourceFileName()) + getFilenameFile(getSourceFileName()) + ".ini"
---
---Dialog 	    = Dialog_v title:"Test" ini:ini_file
---
---_Controls   = Dialog.Controls()
---
+--ini_file = getFilenamePath(getSourceFileName()) + getFilenameFile(getSourceFileName()) + ".ini"
+ini_file = getFilenamePath(getSourceFileName()) + "test.ini"
+
+Dialog 	    = Dialog_v title:"Test" ini:ini_file
+
+_Controls   = Dialog.Controls()
+
 ----_Controls.control #CHECKBUTTON "checkbutton" highlightColor:red
---_Controls.control #CHECKBOX "Checkbox"
---
+_Controls.control #CHECKBOX "Checkbox"
+
+format "INI_FILE: %\n" ini_file
+
+/* DIALOG CREATE */
+Dialog.create()
+--Dialog.create height:undefined
+--Dialog.create menu:(getPresetMenu(#DIALOG_test)(ini_file))
 
 
+
+/*------------------------------------------------------------------------------
+	DEV -- create mockup preset files
+------------------------------------------------------------------------------*/
+copyIniWithSuffix ini_file "Preset A"
+copyIniWithSuffix ini_file "Preset B"
 
 /*------------------------------------------------------------------------------
 	UI STATE PRESET MANAGER
@@ -39,7 +71,7 @@ ini_file = getFilenamePath(getSourceFileName()) + getFilenameFile(getSourceFileN
 UiStatePresetManager = UiStatePresetManager_v(ini_file) 
 --UiStatePresetManager = UiStatePresetManager_v()
 
---UiStatePresetManager.callback #loadPreset "loadPresetCallback"
+UiStatePresetManager.callback #loadPreset "loadPresetCallback"
 
 UiStatePresetManager.dialogCreate()
 
@@ -50,13 +82,5 @@ UiStatePresetManager.dialogCreate()
 --CreateDialog rollout_test menu:(Menu.create())
 
 
---copyIniWithSuffix ini_file "Preset A"
---copyIniWithSuffix ini_file "Preset B"
-
-
-/* DIALOG CREATE */
---Dialog.create()
---Dialog.create height:undefined
---Dialog.create menu:(getPresetMenu(#DIALOG_test)(ini_file))
 
 
