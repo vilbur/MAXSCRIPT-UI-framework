@@ -1,7 +1,9 @@
 
+global DIALOG_presets_manager
+
 /** Ui state preset menu
  */
-struct UiStatePresetManager_v
+struct SuffixManagerDialog_v
 (
 	/* construct */
 	ini_file,
@@ -11,7 +13,7 @@ struct UiStatePresetManager_v
 	/* required */
 	
 	/* properties */
-	preset_dir_name = "INI-Presets",
+	preset_dir_name = "Presets",
 	ini_filename = "",
 	preset_dir = "",
 	delimeter = "-", -- delimenter in "{ini filename}delimenter{preset suffix}.ini" E.G.: "foo-file.ini" >>> "foo-file-preset-A.ini"
@@ -42,11 +44,11 @@ struct UiStatePresetManager_v
 	 */
 	function dialogCreate =
 	(
-		--format "\n"; print "UiStatePresetManager_v.dialogCreate()"
+		--format "\n"; print "SuffixManagerDialog_v.dialogCreate()"
 		
 		/** Get listbox height
 		 */
-		function getListboxHeight preset_names = if preset_names.keys.count < 5 then 5 else preset_names.keys.count
+		function getListboxHeight preset_names = if preset_names.keys.count < 3 then 5 else preset_names.keys.count + 3
 		
 		rows_count = 1
 		
@@ -56,9 +58,9 @@ struct UiStatePresetManager_v
 		
 		
 		/* DIALOG */ 
-		PresetDialog 	    = Dialog_v title:"Presets Manager" width:232  --ini:ini_file width:128
+		PresetDialog = Dialog_v title:"Presets Manager" id:#DIALOG_presets_manager width:232  --ini:ini_file width:128
 		
-		--PresetDialog.addLocal #UiStatePresetManager this
+		--PresetDialog.addLocal #SuffixManagerDialog this
 		
 		--_Controls   = PresetDialog.Controls()
 		_Controls   = PresetDialog.Controls DEBUG:true
@@ -77,7 +79,7 @@ struct UiStatePresetManager_v
 		
 		
 		/* PRESET LIST */ 
-		_multilistbox =  _Controls.control #MULTILISTBOX "[preset list]" items:preset_names.keys offset:[0, 0] width:200 height:( getListboxHeight(preset_names) ) across:1 ini:false
+		_multilistbox =  _Controls.control #MULTILISTBOX "[preset list]" items:( sort preset_names.keys ) offset:[0, 0] width:200 height:( getListboxHeight(preset_names) ) across:1 ini:false
 		
 		_multilistbox.Event #SELECTIONEND	( "PRESET_MANAGER.presetSelectedCallback()")
 		_multilistbox.Event #DOUBLECLICKED ( "PRESET_MANAGER.setOrLoadPresetCallback()")
@@ -119,7 +121,7 @@ struct UiStatePresetManager_v
 	 */
 	function callback callback action:#DEFAULT =
 	(
-		--format "\n"; print "UiStatePresetManager_v.callback()"
+		--format "\n"; print "SuffixManagerDialog_v.callback()"
 		this.callbacks[action] = callback as string
 	),
 
@@ -127,7 +129,7 @@ struct UiStatePresetManager_v
 	 */
 	function setOrLoadPresetCallback =
 	(
-		format "\n"; print "UiStatePresetManager_v.setOrLoadPresetCallback()"
+		--format "\n"; print "SuffixManagerDialog_v.setOrLoadPresetCallback()"
 		
 		this._setWrittenAndSelectedPreset()
 
@@ -142,7 +144,7 @@ struct UiStatePresetManager_v
 	 */
 	function _setChangedNewPresetName =
 	(
-		--format "\n"; print "UiStatePresetManager_v._setChangedNewPresetName()"
+		--format "\n"; print "SuffixManagerDialog_v._setChangedNewPresetName()"
 		preset_name_written =	edit_new_name.text
 	),
 	
@@ -150,12 +152,12 @@ struct UiStatePresetManager_v
 	 */
 	function presetSelectedCallback forced:false =
 	(
-		format "\n"; print "UiStatePresetManager_v.presetSelectedCallback()"
-		format "forced: %\n" forced
+		--format "\n"; print "SuffixManagerDialog_v.presetSelectedCallback()"
+		--format "forced: %\n" forced
 
 		this._setWrittenAndSelectedPreset()
 
-		format "EDIT: %\n" (preset_name_selected != "" and preset_name_written == "")
+		--format "EDIT: %\n" (preset_name_selected != "" and preset_name_written == "")
 		
 		  /* IF SOMETHING IS SELECTED */                                      /* BUT NEW PRESET NAME NOT EXIST */ 
 		if forced or ( preset_name_selected != "" and preset_name_written == "" ) then
@@ -170,7 +172,7 @@ struct UiStatePresetManager_v
 		ACTIONS
 	================================================================================*/
 	
-	/** Save
+	/** SAVE new preset file works as RENAME also
 	 */
 	function savePreset =
 	(
@@ -178,7 +180,7 @@ struct UiStatePresetManager_v
 		 */
 		function getSaveMethod all_presets preset_name_selected preset_name_written =
 		(
-			--format "\n"; print "UiStatePresetManager_v.getSaveMethod()"
+			--format "\n"; print "SuffixManagerDialog_v.getSaveMethod()"
 			--format "preset_name_selected: %\n" preset_name_selected
 			--format "preset_name_written: %\n" preset_name_written
 			
@@ -188,7 +190,8 @@ struct UiStatePresetManager_v
 					( preset_name_written == preset_name_selected ): #SAVE
 					
 					/* IF NOTHING SELECTED - TEST IF NEW NAME EXISTS */ 
-					( preset_name_selected == "" ): if findItem all_presets preset_name_written > 0 then #SAVE else #CREATE_NEW_PRESET
+					--( preset_name_selected == "" ): if findItem all_presets preset_name_written > 0 then #SAVE else #CREATE_NEW_PRESET
+					( preset_name_selected == "" ): #SAVE 
 					
 					
 					/* IF PRESET IS ONLY SELECTED */ 
@@ -198,13 +201,13 @@ struct UiStatePresetManager_v
 					( preset_name_written != preset_name_selected ): #RENAME_OR_CREATE_NEW
 				)
 		)
-		--format "\n"; print "UiStatePresetManager_v.SavePreset()"
+		--format "\n"; print "SuffixManagerDialog_v.SavePreset()"
 		this._setWrittenAndSelectedPreset()
 
 		
 		save_method = getSaveMethod (presets_list.items) (preset_name_selected) (preset_name_written)
 		
-		format "SAVE METHOD: %\n" save_method
+		--format "SAVE METHOD: %\n" save_method
 		
 		
 		if save_method != undefined then
@@ -220,25 +223,52 @@ struct UiStatePresetManager_v
 			if save_method == #RENAME_OR_CREATE_NEW then
 				save_method = case queryBox ("RENAME PRESET ?\n\n\"" + preset_name_selected +"\"\n\nTO\n\n\"" + preset_name_written +"\"" ) title:"RENAME PRESET" of
 				(
-					true: #RENAME
-					
-					default: #CREATE_NEW
+					--true: #RENAME
+					true:
+					(
+						if findItem presets_list.items preset_name_written == 0 or \
+							queryBox ("PRESET EXIST ALREADY\n\nOVERWRITE PRESET ?\n\n\"" + preset_name_written +"\"" ) title:"RENAME PRESET" then
+								#RENAME
+					)
+
+					default: #SAVE
 				)
 				
-			result = Dictionary #( save_method, preset_save_path )
+			if save_method != undefined then
+			(
+				
+				result = Dictionary #( save_method, preset_save_path )
+				
+				if save_method == #RENAME then
+					--result[#RENAME] = #(  preset_name_selected,  preset_name_written )
+					result[#RENAME] =  Dictionary #( #FROM, this._getPresetPath preset_name_selected ) #( #TO, preset_save_path )
+	
+					----result[#RENAME] = Dictionary #( #FROM, this._getPresetPath preset_name_selected ) #( #TO, this._getPresetPath preset_name_written )
+					--result[#RENAME] = Dictionary #( #FROM, "@" + this._getPresetPath preset_name_selected )-- #( #TO, this._getPresetPath preset_name_written )
+				/* POST CALLBACK */
 			
-			if save_method == #RENAME then
-				result[#RENAME] = Dictionary #( #FROM, this._getPresetPath preset_name_selected ) #( #TO, this._getPresetPath preset_name_written )
-			
-			this._executeCallback (result)
+				this._executeCallback (result)
+
+				/* RENAME FILE */ 
+				if save_method == #RENAME then
+				(
+					deleteFile result[#RENAME][#TO]
+					
+					renameFile result[#RENAME][#FROM] result[#RENAME][#TO]
+				)
+				
+				
+				/* EXECUTE CALLBACK */ 			
+				this._updatePresetList selected:preset_name_written
+			)
 		)
 	),
-	
+
 	/** Load
 	 */
 	function loadPreset =
 	(
-		--format "\n"; print "UiStatePresetManager_v.loadPreset()"
+		--format "\n"; print "SuffixManagerDialog_v.loadPreset()"
 		this._setWrittenAndSelectedPreset()
 
 		load_preset_name = if preset_name_selected == "" then preset_name_written else preset_name_selected
@@ -251,29 +281,11 @@ struct UiStatePresetManager_v
 		)
 	),
 	
-	
-	/** Rename preset
-	 */
-	function renamePreset =
-	(
-		--format "\n"; print "UiStatePresetManager_v.renamePreset()"
-		
-		this._setWrittenAndSelectedPreset()
-
-		if preset_name_selected != "" and preset_name_written != "" then
-		(
-			result = Dictionary #( #RENAME, Dictionary #( #FROM, this._getPresetPath preset_name_selected ) #( #TO, this._getPresetPath preset_name_written )  )
-			
-			this._executeCallback (result)
-		)
-	
-	),
-	
 	/** Delete preset
 	 */
 	function deletePreset =
 	(
-		--format "\n"; print "UiStatePresetManager_v.deletePreset()"
+		--format "\n"; print "SuffixManagerDialog_v.deletePreset()"
 		/** Join array to string
 		 */
 		function arrayToString arr delimeter = ( _string = ""; for item in arr do _string += item as string  + delimeter; substring _string 1 (_string.count-delimeter.count))
@@ -282,13 +294,30 @@ struct UiStatePresetManager_v
 		
 		presets_to_delete =  if selected_presets.count == 0 then presets_list.items else selected_presets
 		
-		if queryBox ( "Delete "+ (  if selected_presets.count == 0 then "ALL" else "" ) +" presets ?\n\n" + arrayToString presets_to_delete "\n" ) title:"Delete presets" then
+		query_msg = case selected_presets.count of
+		(
+			0: "ALL presets"
+			1: "preset" 
+			default: "presets" 
+		)
+		
+		/* COMFIRM DELETION */ 
+		if queryBox ( "Delete "+ query_msg +" ?\n\n" + arrayToString presets_to_delete "\n" ) title:"Delete presets" then
 		(
 			presets_paths = for preset_to_delete in presets_to_delete collect this._getPresetPath preset_to_delete
 			
 			result = Dictionary #( #DELETE, presets_paths )
 			
+			/* EXECUTE CALLBACK */ 			
 			this._executeCallback (result)
+			
+			/* DELETE PRESET FILES */ 
+			for presets_path in presets_paths do
+				deleteFile presets_path
+			
+
+			/* POST CALLBACK */ 			
+			this._updatePresetList()
 		)
 
 	),
@@ -300,37 +329,55 @@ struct UiStatePresetManager_v
 	 */
 	function _executeCallback data =
 	(
-		format "\n"; print "UiStatePresetManager_v._executeCallback()"
+		--format "\n"; print "SuffixManagerDialog_v._executeCallback()"
 		
-		--callback_key = data[data.keys[1]]
-		if ( callback_key = data.keys[1] ) == undefined then 
+		callback_key = data.keys[1]
+		
+		if callbacks[callback_key] == undefined then 
 			callback_key = #DEFAULT
-		format "callback_key: %\n" callback_key
-		format "data: %\n" data
+		--format "callback_key: %\n" callback_key
 		
-		if ( callbacks[callback_key] ) != undefined then 
-			execute ( callbacks[callback_key] + " " + data as string )
-		
+		if ( callbacks[callback_key] ) != undefined then
+		(
+			data_str = this._dictionaryToExecString data
+
+			execute ( callbacks[callback_key] + " (" + data_str +")" )
+		)
 	),
 	
+	/** Update preset list
+	 */
+	function _updatePresetList selected:undefined =
+	(
+		--format "\n"; print "SuffixManagerDialog_v._updatePresetList()"
+		preset_names = this.getFileNameSuffixes()
+		
+		--current_selection = presets_list.selection
+
+		presets_list.items = sort preset_names.keys
+
+		if selected != undefined then 
+			presets_list.selection = #{findItem presets_list.items selected}
+	),
+		
 	/** Get written and selected preset
 	 */
 	function _setWrittenAndSelectedPreset =
 	(
-		--format "\n"; print "UiStatePresetManager_v._setWrittenAndSelectedPreset()"
+		--format "\n"; print "SuffixManagerDialog_v._setWrittenAndSelectedPreset()"
 		preset_name_selected = this._getSelectedPresetFromListbox()
 		
 		preset_name_written = this._getNewNameFromEditText()
 		
-		format "preset_name_written: %\n" preset_name_written
-		format "preset_name_selected: %\n" preset_name_selected
+		--format "preset_name_written: %\n" preset_name_written
+		--format "preset_name_selected: %\n" preset_name_selected
 	),
 	
 	/** Get new name from edit text
 	 */
 	function _getNewNameFromEditText =
 	(
-		--format "\n"; print "UiStatePresetManager_v._getNewNameFromEditText()"
+		--format "\n"; print "SuffixManagerDialog_v._getNewNameFromEditText()"
 		trimLeft edit_new_name.text --return
 	),
 	
@@ -338,7 +385,7 @@ struct UiStatePresetManager_v
 	 */
 	function _getPresetPath preset_name =
 	(
-		--format "\n"; print "UiStatePresetManager_v._getPresetPath()"
+		--format "\n"; print "SuffixManagerDialog_v._getPresetPath()"
 		preset_dir + ini_filename + delimeter + preset_name + ".ini"
 	),
 	
@@ -350,7 +397,7 @@ struct UiStatePresetManager_v
 	 */
 	function _getSelectedPresetFromListbox =
 	(
-		--format "\n"; print "UiStatePresetManager_v._getSelectedPresetFromListbox()"
+		--format "\n"; print "SuffixManagerDialog_v._getSelectedPresetFromListbox()"
 
 		if ( selected_presets = this._getAllSelectedPresetsFromListbox() ).count > 0 then
 			selected_presets[1] --return
@@ -365,13 +412,60 @@ struct UiStatePresetManager_v
 	 */
 	function _getAllSelectedPresetsFromListbox =
 	(
-		--format "\n"; print "UiStatePresetManager_v._getSelectedPresetFromListbox()"
+		--format "\n"; print "SuffixManagerDialog_v._getSelectedPresetFromListbox()"
 		--selected_items = #()
 		--mlistbox = DIALOG_presets_manager.ML_preset_list
 		
 		for index in presets_list.selection collect presets_list.items[index] --return
 	),
 	
+	/** Convert nested dictionary to executable string
+	  *	
+	  */
+	function _dictionaryToExecString val =
+	(
+		if classOf val == Dictionary then
+		(
+			-- Start the dictionary constructor string
+			result = "(Dictionary"
+			keysArr = getDictKeys val
+			
+			-- Loop through all keys and recursively process values
+			for k in keysArr do
+			(
+				v = getDictValue val k
+				keyStr = "#" + (k as string)
+				valStr = this._dictionaryToExecString v
+				
+				-- Append as an array pair: #(#key, "value")
+				result += " #(" + keyStr + ", " + valStr + ")"
+			)
+			
+			result += ")"
+			
+			result -- return
+		)
+		else if classOf val == String then
+		(
+			-- Escape backslashes for file paths and escape quotes
+			escapedStr = substituteString val "\\" "\\\\"
+			escapedStr = substituteString escapedStr "\"" "\\\""
+			
+			-- Wrap the final string in quotes
+			("\"" + escapedStr + "\"") -- return
+		)
+		else if classOf val == name then
+		(
+			("#" + (val as string )) -- return
+		)
+		else
+		(
+			-- Fallback for numbers, booleans, etc.
+			(val as string ) -- return
+		)
+	),
+
+
 	function getFileNameSuffixes =
 	(
 		suffixes	= Dictionary #STRING -- KEY:"Preset Name" VALUE:"Preset file path"
@@ -407,7 +501,7 @@ struct UiStatePresetManager_v
 	 */
 	on create do
 	(
-		--format "\n"; print "UiStatePresetManager.onCreate()"
+		--format "\n"; print "SuffixManagerDialog.onCreate()"
 		--for prop in #(  ) where getProperty this prop == undefined do -- CHECK CONSTRUCT PROPERTIES -- Array of this struct properties necessary to run
 		--	throw ("\n\n\nUNDEFINED CONSTRUCT PROPERTY\n\n\nSTRUCT:\n\n"+ ((filterString( classof this as string )"(:")[2]) +"\n\n\nPROPERTY:\n\n"+ prop )
 		/* SET THIS GLOBAL FOR EXECUTION OF CALLBACKS */ 

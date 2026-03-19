@@ -2,6 +2,7 @@ clearListener(); print("Cleared in: "+getSourceFileName())
 
 filein( getFilenamePath(getSourceFileName()) + "/../../../../Dialog/Dialog.ms" )	--"./../../../../Dialog/Dialog.ms"
 
+global DIALOG_test
 
 /*
 Copy file and add suffix before extension.
@@ -17,26 +18,29 @@ function copyIniWithSuffix src_path suffix =
         file_name = getFilenameFile src_path
         ext = getFilenameType src_path
         
-        new_path = dir_path + "INI-Presets\\" + file_name + "-" + suffix + ext
+        new_path = dir_path + "Presets\\" + file_name + "-" + suffix + ext
         
         copyFile src_path new_path
         new_path -- return
     )
 )
 
-/** Default dialog callback
- */
-function defaultDialogCallback =
-(
-	--format "\n"; print ".defaultDialogCallback()"
-)
+
 
 /** Load prest callback
  */
 function testPresetCallback preset_data =
 (
 	format "\n"; print ".testPresetCallback()"
-	format "PRESET_DATA: %\n" preset_data
+	
+	format "CALLBACK METHOD: %\n" preset_data.keys[1]
+	
+	if preset_data[#SAVE] != undefined then 
+	(
+		UiStateSaver = UiStateSaver_v preset_data[#SAVE]
+		
+		UiStateSaver.saveDialogState DIALOG_test
+	)
 )
 
 
@@ -74,22 +78,24 @@ copyIniWithSuffix ini_file "Preset B"
 	UI STATE PRESET MANAGER
 --------------------------------------------------------------------------------*/
 
-UiStatePresetManager = UiStatePresetManager_v(ini_file) 
---UiStatePresetManager = UiStatePresetManager_v()
+SuffixManagerDialog = SuffixManagerDialog_v(ini_file) 
+--SuffixManagerDialog = SuffixManagerDialog_v()
 
 /*------------------------------------------------------------------------------
 	CALLBACKS
 --------------------------------------------------------------------------------*/
 
 /* DEFAULT CALLLBACK FOR ALL ACTIONS */ 
-UiStatePresetManager.callback "defaultDialogCallback"
+SuffixManagerDialog.callback "testPresetCallback"
 
 /* SPECFIFIC PER ACTION */ 
-UiStatePresetManager.callback "testPresetCallback" action:#LOAD -- type: #SAVE | #LOAD | #RENAME | #DELETE | #DEFAUT
-UiStatePresetManager.callback "testPresetCallback" action:#RENAME -- type: #SAVE | #LOAD | #RENAME | #DELETE | #DEFAUT
+--SuffixManagerDialog.callback "testPresetCallback" action:#SAVE -- type: #SAVE | #LOAD | #RENAME | #DELETE | #DEFAUT
+--SuffixManagerDialog.callback "testPresetCallback" action:#LOAD -- type: #SAVE | #LOAD | #RENAME | #DELETE | #DEFAUT
+--SuffixManagerDialog.callback "testPresetCallback" action:#RENAME -- type: #SAVE | #LOAD | #RENAME | #DELETE | #DEFAUT
+
 
 /* CREATE DIALOG */ 
-UiStatePresetManager.dialogCreate()
+SuffixManagerDialog.dialogCreate()
 
 
 /** CREATE ROLLOUT 
