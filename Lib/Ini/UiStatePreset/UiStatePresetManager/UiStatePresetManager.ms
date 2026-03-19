@@ -5,6 +5,7 @@ struct UiStatePresetManager_v
 (
 	/* construct */
 	ini_file,
+	
 	callbacks	= Dictionary #NAME, -- KEY:#methodName VALUE:"callbackFunction"
 	
 	/* required */
@@ -15,10 +16,21 @@ struct UiStatePresetManager_v
 	preset_dir = "",
 	delimeter = "-", -- delimenter in "{ini filename}delimenter{preset suffix}.ini" E.G.: "foo-file.ini" >>> "foo-file-preset-A.ini"
 	
-	/* private */
 	private
-	
+
+	/* controls */ 	
+	presets_list,
+	edit_new_name,
+
+	/* data */ 
 	preset_names,
+
+	preset_name_selected = "",
+	preset_name_written = "",
+	
+	
+	--result	= Dictionary #NAME -- KEY: #CALLBACK_ACTION DATA:#(string)|string
+	
 	
 	/* dependency */
 	/* reference */
@@ -42,6 +54,8 @@ struct UiStatePresetManager_v
 		
 		manage_button = #( "Save", "Load", "Delete" )
 		
+		
+		/* DIALOG */ 
 		PresetDialog 	    = Dialog_v title:"Presets Manager" width:232  --ini:ini_file width:128
 		
 		--PresetDialog.addLocal #UiStatePresetManager this
@@ -51,121 +65,189 @@ struct UiStatePresetManager_v
 		
 		--_Controls.control #CHECKBUTTON "checkbutton" highlightColor:red across:1
 		--_Controls.control #CHECKBOX "Checkbox"
-		_Controls.control #EDITTEXT "Preset name" across:1 labelOnTop:true ini:false
-
 		
+		/*------------------------------------------------------------------------------
+			CONTROLS 
+		--------------------------------------------------------------------------------*/
+		
+		/* EDIT PRESET NAME */ 
+		_edit_new_name =  _Controls.control #EDITTEXT "Preset name" across:1 labelOnTop:true ini:false
+
+		_edit_new_name.Event #CHANGED	( "PRESET_MANAGER._setChangedNewPresetName()")
+		
+		
+		/* PRESET LIST */ 
 		_multilistbox =  _Controls.control #MULTILISTBOX "[preset list]" items:preset_names.keys offset:[0, 0] width:200 height:( getListboxHeight(preset_names) ) across:1 ini:false
 		
+		_multilistbox.Event #SELECTIONEND	( "PRESET_MANAGER.presetSelectedCallback()")
+		_multilistbox.Event #DOUBLECLICKED ( "PRESET_MANAGER.setOrLoadPresetCallback()")
 		
-		_multilistbox.Event #selectionEnd  ( "UI_STATE_PRESET_MANAGER.presetSelectedCallback()")
-		_multilistbox.Event #doubleClicked ( "UI_STATE_PRESET_MANAGER.loadPreset()")
 		
+		/* BUTTONS  */ 
 		for method in manage_button do
 		(
 			_Button = _Controls.control #BUTTON method across:((manage_button.count / rows_count ) as integer ) width:64 height:32 border:false --width:( PresetDialog.width / manage_button.count )
 			--format "_Button: %\n" _Button
 			
-			_Button.Event #Pressed ( "UI_STATE_PRESET_MANAGER."+method+"Preset()")
+			_Button.Event #Pressed ( "PRESET_MANAGER."+method+"Preset()")
 			--_Button.Event #PRESSED ("format \""+PresetDialog.id as string +"\n\"")
 			--_Button.Event #PRESSED ("print \""+PresetDialog.id as string +"\"\n")
 			
 		)
 		
+		
+		/* CREATEDIALOG */ 
 		PresetDialog.create height:undefined
 
+		
+		/* SHORCUTS TO CONTROLS */ 
+		edit_new_name = DIALOG_presets_manager.ET_preset_name
+		presets_list = DIALOG_presets_manager.ML_preset_list
+		
 	),
 	
-	/** Callback
+	/*==============================================================================
+		CALLBACKS
+	================================================================================*/
+	
+	/** Add Callback executed after action
+		
+		@param string callback
+	  
+		@param name type #SAVE | #LOAD | #RENAME | #DELETE | #DEFAUT
+
 	 */
-	function callback type callback =
+	function callback callback action:#DEFAULT =
 	(
 		--format "\n"; print "UiStatePresetManager_v.callback()"
-		this.callbacks[type] = callback
+		this.callbacks[action] = callback as string
 	),
+
+	/** Set or load preset callback
+	 */
+	function setOrLoadPresetCallback =
+	(
+		format "\n"; print "UiStatePresetManager_v.setOrLoadPresetCallback()"
+		
+		this._setWrittenAndSelectedPreset()
+
+		--format "TEST: %\n" (preset_name_selected == preset_name_written)
+		if preset_name_selected == preset_name_written then
+			this.loadPreset()
+		else
+			this.presetSelectedCallback forced:true
+	),
+	
+	/** New name changed callback
+	 */
+	function _setChangedNewPresetName =
+	(
+		--format "\n"; print "UiStatePresetManager_v._setChangedNewPresetName()"
+		preset_name_written =	edit_new_name.text
+	),
+	
+	/** Fill edit text field with name of last selected preset
+	 */
+	function presetSelectedCallback forced:false =
+	(
+		format "\n"; print "UiStatePresetManager_v.presetSelectedCallback()"
+		format "forced: %\n" forced
+
+		this._setWrittenAndSelectedPreset()
+
+		format "EDIT: %\n" (preset_name_selected != "" and preset_name_written == "")
+		
+		  /* IF SOMETHING IS SELECTED */                                      /* BUT NEW PRESET NAME NOT EXIST */ 
+		if forced or ( preset_name_selected != "" and preset_name_written == "" ) then
+			edit_new_name.text = preset_name_selected /* FILL EDIT TEXT */
+			
+			
+		/* RESET THIS */ 
+		--this._resetNewAndSelectedPresets()
+	),
+	
+	/*==============================================================================
+		ACTIONS
+	================================================================================*/
 	
 	/** Save
 	 */
 	function savePreset =
 	(
-		format "\n"; print "UiStatePresetManager_v.SavePreset()"
-			
-		selected_preset = this._getSelectedPresetFromListbox()
-		
-		preset_new_name = this._getNewNameFromEditText()
-
-		--preset_path_selected = this._getPresetPath selected_preset
-		format "preset_new_name == selected_preset: %\n" (preset_new_name == selected_preset)
-		format "preset_new_name == '': %\n" (preset_new_name == "")
-		--format "preset_new_name: %\n" preset_new_name
-		--preset_path_selected = preset_dir + ini_filename + delimeter + selected_preset[1] + ".ini"
-		--format "preset_path_selected: %\n" preset_path_selected
-		
 		/** Get save method
 		 */
-		function getSaveMethod selected_preset preset_new_name =
+		function getSaveMethod all_presets preset_name_selected preset_name_written =
 		(
 			--format "\n"; print "UiStatePresetManager_v.getSaveMethod()"
-			if preset_new_name != "" or selected_preset != undefined then
-			(
-				if preset_new_name == "" then
+			--format "preset_name_selected: %\n" preset_name_selected
+			--format "preset_name_written: %\n" preset_name_written
+			
+			if preset_name_written != "" or preset_name_selected != "" then
+				case of
 				(
+					( preset_name_written == preset_name_selected ): #SAVE
+					
+					/* IF NOTHING SELECTED - TEST IF NEW NAME EXISTS */ 
+					( preset_name_selected == "" ): if findItem all_presets preset_name_written > 0 then #SAVE else #CREATE_NEW_PRESET
 					
 					
+					/* IF PRESET IS ONLY SELECTED */ 
+					( preset_name_written == "" ): #SAVE
+					
+					
+					( preset_name_written != preset_name_selected ): #RENAME_OR_CREATE_NEW
 				)
-				else if selected_preset == undefined then
+		)
+		--format "\n"; print "UiStatePresetManager_v.SavePreset()"
+		this._setWrittenAndSelectedPreset()
+
+		
+		save_method = getSaveMethod (presets_list.items) (preset_name_selected) (preset_name_written)
+		
+		format "SAVE METHOD: %\n" save_method
+		
+		
+		if save_method != undefined then
+		(
+			/* GET FINAL FILENAME - EDIT TEXT HAS PRIORITY */ 
+			preset_save_name = if preset_name_written == "" then preset_name_selected else preset_name_written
+			
+			/* GET FINAL PATH */ 
+			preset_save_path = this._getPresetPath preset_save_name
+			--format "PRESET_SAVE_PATH: %\n" preset_save_path
+
+			/* ASK USER TO "RENAME" OR "CREATE NEW" PRESET */ 
+			if save_method == #RENAME_OR_CREATE_NEW then
+				save_method = case queryBox ("RENAME PRESET ?\n\n\"" + preset_name_selected +"\"\n\nTO\n\n\"" + preset_name_written +"\"" ) title:"RENAME PRESET" of
 				(
+					true: #RENAME
 					
-					
+					default: #CREATE_NEW
 				)
 				
-			)
-		)
-		
-		save_method = getSaveMethod selected_preset preset_new_name
-		format "save_method: %\n" save_method
-		
-		--/* NEW OR RENAME PRESET */ 
-		--if preset_new_name != "" and preset_new_name != selected_preset then
-		--(
-		--	preset_path_new = this._getPresetPath preset_new_name
-		--
-		--	/* RENAME */ 
-		--	if queryBox ("RENAME PRESET ?\n\n" + selected_preset +"\n\nTO\n\n"+ preset_new_name ) title:"RENAME PRESET"  then
-		--		format "RENAME: %\n" preset_path_new
-		--	
-		--	
-		--	/* CREATE NEW PRESET */ 
-		--	else
-		--		format "NEW PRESET: %\n" preset_path_new
-		--	
-		--)
-		----/* RESAVE PRESET IF EDIT TEXT IS EMPTY OR TEXT IS SAME AS SELCTED PRESET */ 
-		--else if preset_new_name == selected_preset then
-		--	format "SAVE: %\n" (this._getPresetPath selected_preset)
-		--
-		--else
-		--	messageBox "NOTHING SELECTED \n\n    AND\n\n PRESET NAME IS MEPTY" beep:false
+			result = Dictionary #( save_method, preset_save_path )
 			
+			if save_method == #RENAME then
+				result[#RENAME] = Dictionary #( #FROM, this._getPresetPath preset_name_selected ) #( #TO, this._getPresetPath preset_name_written )
+			
+			this._executeCallback (result)
+		)
 	),
 	
 	/** Load
 	 */
 	function loadPreset =
 	(
-		format "\n"; print "UiStatePresetManager_v.loadPreset()"
-		format "EventFired: %\n" EventFired
-		if ( selected_preset = this._getSelectedPresetFromListbox() ) != "" then
+		--format "\n"; print "UiStatePresetManager_v.loadPreset()"
+		this._setWrittenAndSelectedPreset()
+
+		load_preset_name = if preset_name_selected == "" then preset_name_written else preset_name_selected
+		
+		if load_preset_name != "" then
 		(
-			format "SELECTED_PRESETS: %\n" selected_preset
+			result = Dictionary #( #LOAD, this._getPresetPath load_preset_name )
 			
-			DIALOG_presets_manager.ET_preset_name.text
-			
-			preset_path_selected = this._getPresetPath selected_preset[1]
-			preset_path_selected = preset_dir + ini_filename + delimeter + selected_preset[1] + ".ini"
-			format "preset_path_selected: %\n" preset_path_selected
-			format "callbacks: %\n" callbacks
-			format "CALLBACK: %\n" callbacks[#loadPreset]
-			execute ( callbacks[#loadPreset] + " @\"" + preset_path_selected + "\""  )
+			this._executeCallback (result)
 		)
 	),
 	
@@ -174,51 +256,82 @@ struct UiStatePresetManager_v
 	 */
 	function renamePreset =
 	(
-		format "\n"; print "UiStatePresetManager_v.renamePreset()"
+		--format "\n"; print "UiStatePresetManager_v.renamePreset()"
+		
+		this._setWrittenAndSelectedPreset()
+
+		if preset_name_selected != "" and preset_name_written != "" then
+		(
+			result = Dictionary #( #RENAME, Dictionary #( #FROM, this._getPresetPath preset_name_selected ) #( #TO, this._getPresetPath preset_name_written )  )
+			
+			this._executeCallback (result)
+		)
+	
 	),
 	
 	/** Delete preset
 	 */
 	function deletePreset =
 	(
-		format "\n"; print "UiStatePresetManager_v.deletePreset()"
-		if ( selected_preset = this._getSelectedPresetFromListbox() ) != "" then
+		--format "\n"; print "UiStatePresetManager_v.deletePreset()"
+		/** Join array to string
+		 */
+		function arrayToString arr delimeter = ( _string = ""; for item in arr do _string += item as string  + delimeter; substring _string 1 (_string.count-delimeter.count))
+		
+		selected_presets = this._getAllSelectedPresetsFromListbox()
+		
+		presets_to_delete =  if selected_presets.count == 0 then presets_list.items else selected_presets
+		
+		if queryBox ( "Delete "+ (  if selected_presets.count == 0 then "ALL" else "" ) +" presets ?\n\n" + arrayToString presets_to_delete "\n" ) title:"Delete presets" then
 		(
-			for selected_preset in selected_preset do
-			(
-				
-				preset_path_selected = this._getPresetPath selected_preset
-				format "preset_path_selected: %\n" preset_path_selected
-				
-				
-			)
+			presets_paths = for preset_to_delete in presets_to_delete collect this._getPresetPath preset_to_delete
 			
+			result = Dictionary #( #DELETE, presets_paths )
 			
+			this._executeCallback (result)
 		)
+
 	),
 	
-	/** Fill edit text field with name of last selected preset
-	 */
-	function presetSelectedCallback =
-	(
-		format "\n"; print "UiStatePresetManager_v.presetSelectedCallback()"
-		
-		/* IF NOTHING IS SELECTED */ 
-		if  ( selected_preset = this._getSelectedPresetFromListbox() ) != "" and  \
-		/* BUT NEW PRESET NAME EXIST */ 
-		this._getNewNameFromEditText() == "" then
-			/* FILL EDIT TEXT */ 
-			DIALOG_presets_manager.ET_preset_name.text = selected_preset
-	),
 	
 	private
+
+	/** Execute callback
+	 */
+	function _executeCallback data =
+	(
+		format "\n"; print "UiStatePresetManager_v._executeCallback()"
+		
+		--callback_key = data[data.keys[1]]
+		if ( callback_key = data.keys[1] ) == undefined then 
+			callback_key = #DEFAULT
+		format "callback_key: %\n" callback_key
+		format "data: %\n" data
+		
+		if ( callbacks[callback_key] ) != undefined then 
+			execute ( callbacks[callback_key] + " " + data as string )
+		
+	),
+	
+	/** Get written and selected preset
+	 */
+	function _setWrittenAndSelectedPreset =
+	(
+		--format "\n"; print "UiStatePresetManager_v._setWrittenAndSelectedPreset()"
+		preset_name_selected = this._getSelectedPresetFromListbox()
+		
+		preset_name_written = this._getNewNameFromEditText()
+		
+		format "preset_name_written: %\n" preset_name_written
+		format "preset_name_selected: %\n" preset_name_selected
+	),
 	
 	/** Get new name from edit text
 	 */
 	function _getNewNameFromEditText =
 	(
 		--format "\n"; print "UiStatePresetManager_v._getNewNameFromEditText()"
-		trimLeft DIALOG_presets_manager.ET_preset_name.text --return
+		trimLeft edit_new_name.text --return
 	),
 	
 	/** Get preset path
@@ -237,10 +350,11 @@ struct UiStatePresetManager_v
 	 */
 	function _getSelectedPresetFromListbox =
 	(
-		format "\n"; print "UiStatePresetManager_v._getSelectedPresetFromListbox()"
+		--format "\n"; print "UiStatePresetManager_v._getSelectedPresetFromListbox()"
 
 		if ( selected_presets = this._getAllSelectedPresetsFromListbox() ).count > 0 then
-			selected_presets[selected_presets.count] --return
+			selected_presets[1] --return
+			--selected_presets[selected_presets.count] --return
 		else
 			"" --return
 	),
@@ -251,17 +365,17 @@ struct UiStatePresetManager_v
 	 */
 	function _getAllSelectedPresetsFromListbox =
 	(
-		format "\n"; print "UiStatePresetManager_v._getSelectedPresetFromListbox()"
+		--format "\n"; print "UiStatePresetManager_v._getSelectedPresetFromListbox()"
 		--selected_items = #()
-		mlistbox = DIALOG_presets_manager.ML_preset_list
+		--mlistbox = DIALOG_presets_manager.ML_preset_list
 		
-		for index in mlistbox.selection collect mlistbox.items[index] --return
+		for index in presets_list.selection collect presets_list.items[index] --return
 	),
 	
 	function getFileNameSuffixes =
 	(
 		suffixes	= Dictionary #STRING -- KEY:"Preset Name" VALUE:"Preset file path"
-		format "ini_file: %\n" ini_file
+		--format "ini_file: %\n" ini_file
 		ini_dir = getFilenamePath ini_file
 		
 		preset_dir = ini_dir + preset_dir_name + "\\"
@@ -296,8 +410,8 @@ struct UiStatePresetManager_v
 		--format "\n"; print "UiStatePresetManager.onCreate()"
 		--for prop in #(  ) where getProperty this prop == undefined do -- CHECK CONSTRUCT PROPERTIES -- Array of this struct properties necessary to run
 		--	throw ("\n\n\nUNDEFINED CONSTRUCT PROPERTY\n\n\nSTRUCT:\n\n"+ ((filterString( classof this as string )"(:")[2]) +"\n\n\nPROPERTY:\n\n"+ prop )
-	
-		global UI_STATE_PRESET_MANAGER = this
+		/* SET THIS GLOBAL FOR EXECUTION OF CALLBACKS */ 
+		global PRESET_MANAGER = this
 	)
 
 )

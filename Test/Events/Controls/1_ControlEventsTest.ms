@@ -37,16 +37,16 @@ category:	"_Test"
  */
 function CallbackNoParam =
 (
-	format "EventFired: %\n" EventFired
-	--format "CallbackNoParam EventFired:	% \n" EventFired.type
+	--format "EventFired: %\n" EventFired
+	format "CallbackNoParam EventFired:	% \n" EventFired.type
 )
 
 /** 1 PARAMETER
  */
 function CallbackParam1 arg_1 =
 (
-	format "EventFired: %\n" EventFired
-	--format "CallbackParam1 EventFired:	% \n" EventFired.type
+	--format "EventFired: %\n" EventFired
+	format "CallbackParam1 EventFired:	% \n" EventFired.type
 	--format "arg_1: %\n" arg_1
 )
 
@@ -210,11 +210,12 @@ function CallbackParams3 arg_1 arg_2 arg_3 = (
 --/*------ LISTBOX ------*/
 --/*------ MULTILISTBOX ------*/
 _multilistbox =  _Controls.control #MULTILISTBOX "Multilistbox" items:#("Item 1","Item 2", "Item 3")
---
---_multilistbox.Event #SELECTIONEND 	("CallbackNoParam()") -- called when select action ends
+
+
 _multilistbox.Event #SELECTED 	("CallbackParam1") -- called on SELECT AND DESELECT
+_multilistbox.Event #SELECTIONEND 	("CallbackNoParam()") -- called when select action ends
+_multilistbox.Event #DOUBLECLICKED  	("CallbackParam1")
 --_multilistbox.Event #RIGHTCLICK  	("CallbackNoParam()")
---_multilistbox.Event #DOUBLECLICKED  	("CallbackParam1")
 
 /*------ IMGTAG ------
 	

@@ -68,14 +68,14 @@ _Controls   = Dialog.Controls DEBUG:true -- DEBUG print control data when contro
 
 
 /*------ EDITTEXT ------*/
-_Controls.control #EDITTEXT "Edit Text" across:1
-_Controls.control #EDITTEXT "Label On Top" across:1 labelOnTop:true
-_Controls.control #EDITTEXT "[hidden label]" across:1
+--_Controls.control #EDITTEXT "Edit Text" across:1
+--_Controls.control #EDITTEXT "Label On Top" across:1 labelOnTop:true
+--_Controls.control #EDITTEXT "[hidden label]" across:1
 
---
+
 --/*------ SLIDER ------*/
 --_Slider = _Controls.control #SLIDER "Slider" ticks:3 width:256 range:[0,50,0] ticks:5 type:#integer
---
+
 
 --/*------ SPINNER ------*/
 --_Controls.control #SPINNER ""

@@ -24,12 +24,18 @@ function copyIniWithSuffix src_path suffix =
     )
 )
 
+/** Default dialog callback
+ */
+function defaultDialogCallback =
+(
+	--format "\n"; print ".defaultDialogCallback()"
+)
 
 /** Load prest callback
  */
-function loadPresetCallback preset_data =
+function testPresetCallback preset_data =
 (
-	format "\n"; print ".loadPresetCallback()"
+	format "\n"; print ".testPresetCallback()"
 	format "PRESET_DATA: %\n" preset_data
 )
 
@@ -71,8 +77,18 @@ copyIniWithSuffix ini_file "Preset B"
 UiStatePresetManager = UiStatePresetManager_v(ini_file) 
 --UiStatePresetManager = UiStatePresetManager_v()
 
-UiStatePresetManager.callback #loadPreset "loadPresetCallback"
+/*------------------------------------------------------------------------------
+	CALLBACKS
+--------------------------------------------------------------------------------*/
 
+/* DEFAULT CALLLBACK FOR ALL ACTIONS */ 
+UiStatePresetManager.callback "defaultDialogCallback"
+
+/* SPECFIFIC PER ACTION */ 
+UiStatePresetManager.callback "testPresetCallback" action:#LOAD -- type: #SAVE | #LOAD | #RENAME | #DELETE | #DEFAUT
+UiStatePresetManager.callback "testPresetCallback" action:#RENAME -- type: #SAVE | #LOAD | #RENAME | #DELETE | #DEFAUT
+
+/* CREATE DIALOG */ 
 UiStatePresetManager.dialogCreate()
 
 
