@@ -103,8 +103,8 @@ struct SuffixManagerDialog_v
 
 		
 		/* SHORCUTS TO CONTROLS */ 
-		edit_new_name = DIALOG_presets_manager.ET_preset_name
-		presets_list = DIALOG_presets_manager.ML_preset_list
+		edit_new_name = PresetDialog.Dialog.ET_preset_name
+		presets_list = PresetDialog.Dialog.ML_preset_list
 		
 	),
 	

@@ -4,11 +4,23 @@ filein( getFilenamePath(getSourceFileName()) + "/../../../../Dialog/Dialog.ms" )
 
 global DIALOG_test
 
-/*
-Copy file and add suffix before extension.
+/** Create test file
+ */
+function createTestFile file_path =
+(
+	--format "\n"; print ".createTestFile()"
+	_file = createFile file_path
+	
+	format "Hello %!\n" "World" to:_file
+	
+	close _file
+)
 
-Example:
-"C:\cfg\settings.ini" -> "C:\cfg\settings_backup.ini"
+/*
+	Copy file and add suffix before extension.
+	
+	Example:
+	"C:\cfg\settings.ini" -> "C:\cfg\settings_backup.ini"
 */
 function copyIniWithSuffix src_path suffix =
 (
@@ -49,28 +61,31 @@ function testPresetCallback preset_data =
 --------------------------------------------------------------------------------*/
 
 
---ini_file = getFilenamePath(getSourceFileName()) + getFilenameFile(getSourceFileName()) + ".ini"
-ini_file = getFilenamePath(getSourceFileName()) + "test.ini"
-
-Dialog 	    = Dialog_v title:"Test" ini:ini_file
-
-_Controls   = Dialog.Controls()
-
-----_Controls.control #CHECKBUTTON "checkbutton" highlightColor:red
-_Controls.control #CHECKBOX "Checkbox"
-
-format "INI_FILE: %\n" ini_file
-
-/* DIALOG CREATE */
-Dialog.create()
---Dialog.create height:undefined
---Dialog.create menu:(getPresetMenu(#DIALOG_test)(ini_file))
-
+--Dialog 	    = Dialog_v title:"Test" ini:ini_file
+--
+--_Controls   = Dialog.Controls()
+--
+------_Controls.control #CHECKBUTTON "checkbutton" highlightColor:red
+--_Controls.control #CHECKBOX "Checkbox"
+--
+--format "INI_FILE: %\n" ini_file
+--
+--/* DIALOG CREATE */
+--Dialog.create()
+----Dialog.create height:undefined
+----Dialog.create menu:(getPresetMenu(#DIALOG_test)(ini_file))
+--
 
 
 /*------------------------------------------------------------------------------
 	DEV -- create mockup preset files
 ------------------------------------------------------------------------------*/
+ini_file = getFilenamePath(getSourceFileName()) + "test.ini"
+
+/* MAIN INI FILE */ 
+createTestFile ini_file
+
+/* PRESET FILES */ 
 copyIniWithSuffix ini_file "Preset A"
 copyIniWithSuffix ini_file "Preset B"
 
