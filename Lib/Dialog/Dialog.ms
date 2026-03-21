@@ -12,7 +12,7 @@ filein( getFilenamePath(getSourceFileName()) + "/../Event/Event.ms" )	--"./../Ev
 filein( getFilenamePath(getSourceFileName()) + "/../RolloutCreator/RolloutCreator.ms" )	-- "./../RolloutCreator/RolloutCreator.ms"
 
 filein( getFilenamePath(getSourceFileName()) + "/../Ini/Ini.ms" )	-- "./../Ini/Ini.ms"
-filein( getFilenamePath(getSourceFileName()) + "/../Ini/UiStatePreset/UiStatePreset.ms" )	--"./../Ini/UiStatePreset/UiStatePreset.ms"
+filein( getFilenamePath(getSourceFileName()) + "/../Ini/UiStatePreset/PresetManager.ms" )	--"./../Ini/UiStatePreset/PresetManager.ms"
 filein( getFilenamePath(getSourceFileName()) + "/../Ini/UiStatePreset/SuffixManagerDialog/SuffixManagerDialog.ms" )	--"./../Ini/UiStatePreset/SuffixManagerDialog/SuffixManagerDialog.ms"
 
 filein( getFilenamePath(getSourceFileName()) + "/Layout/Layout.ms" )	-- "./Layout/Layout.ms"
@@ -1005,25 +1005,30 @@ struct Dialog_v
 	 */
 	on create do
 	(
-		--format "\n"; print "Dialog_v.onCreate()"
-		--format "title: %\n" title
-		--format "this.width: %\n" this.width
-				
-		--format "DOCK_STATE: %\n" (execute ("try(cui.getDockState DIALOG_test )catch( #WTF )"))
-
+		format "\n"; print "Dialog_v.onCreate()"
+		/* CHECK REQUIRED CONSTRUCT PROPERTIES */ 
 		this._checkConstctructProperties #(#title)
-
+--format "Ini: %\n" Ini
+		/* SET INI */ 
 		Ini	= Ini_v _path:Ini
 
-		this._setId()
-		this._setDefaultStyle()
+		/* ADD PATH TO INI AS ROLLOUT VARIABLE */ 
+		this.addLocal #INI (Ini.getPath())
 
+		
+		/* CONFIG */ 
+		this._setId()
+		
+		this._setDefaultStyle()
+		
 		this._setDialogDefaultWidth()
 
+		
 		--/*------ DEV restart timer ------*/
 		if HOTKEYS_GLOBAL != undefined then
 			global HOTKEYS_GLOBAL = HotKeys_v()
-
+			
+		
 		/*------ ADD THIS TO SOMEWHERE ------*/
 		DialogHotkeys = HOTKEYS_GLOBAL.addDialog(title)
 	)

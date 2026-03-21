@@ -26,3 +26,16 @@ _Rollout_1 = _Rollouts.roll "Rollout 1"
 /* CREATE DIALOG */
 Dialog.create()
 --Dialog.register()
+
+
+/*==============================================================================
+
+	EVERY DIALOG ROLLOUT HOLDS LOCAL VARIABLE "ini"
+	
+	path to ini file stored is stored there
+
+================================================================================*/
+format "Dialog.ini: %\n" Dialog.Dialog.ini -- acces via Dialog_v class
+
+format "Dialog.ini: %\n" (execute ( Dialog.id as string + ".ini" )) -- access via rollout id E.G.: DIALOG_test.ini
+

@@ -18,9 +18,9 @@
 
 /** Get preset menu
  */
-function uiStatePresetMenu dialog_id ini_file =
+function presetManagerMenu dialog_id ini_file =
 (
-	--format "\n"; print ".uiStatePresetMenu()"
+	--format "\n"; print ".presetManagerMenu()"
 	function getFileNameSuffixes file_path delimeter:"-" =
 	(
 		dir = getFilenamePath file_path
@@ -50,7 +50,7 @@ function uiStatePresetMenu dialog_id ini_file =
 	
 	/** Get callback
 	 */
-	function getCallback dialog_id ini_file method = "(UiStatePreset_v(@\""+ini_file +"\"))."+method+"( #"+dialog_id as string +") "
+	function getCallback dialog_id ini_file method = "(PresetManager_v(@\""+ini_file +"\"))."+method+"( #"+dialog_id as string +") "
 	
 	presets_data = getFileNameSuffixes ini_file
 
@@ -59,7 +59,7 @@ function uiStatePresetMenu dialog_id ini_file =
 	Menu = RcMenu_v name:"Preset menu"
 	
 	
-	--Menu.item ( "Presets Maneger" ) ( "(UiStatePreset_v(@\""+ini_file +"\"))."+method+"( #"+dialog_id as string +") " ) 
+	--Menu.item ( "Presets Maneger" ) ( "(PresetManager_v(@\""+ini_file +"\"))."+method+"( #"+dialog_id as string +") " ) 
 	
 	/* CREATE SUBMENUS */ 
 	for method in #( "Save", "Load" ) do

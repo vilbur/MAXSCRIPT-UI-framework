@@ -306,7 +306,7 @@ struct UiStateSaver_v
 	 */
 	function _getRollout _Rollout =
 	(
-		--format "\n"; print "UiStatePreset_v._getRollout()"
+		--format "\n"; print "PresetManager_v._getRollout()"
 		
 		if classOf _Rollout != RolloutClass then
 			execute( _Rollout as string ) --return

@@ -1,6 +1,6 @@
-﻿clearListener(); print("Cleared in:\n"+getSourceFileName())
+clearListener(); print("Cleared in:\n"+getSourceFileName())
 
-filein( getFilenamePath(getSourceFileName()) + "/../UiStatePreset.ms" )	--"./../UiStatePreset.ms"
+filein( getFilenamePath(getSourceFileName()) + "/../PresetManager.ms" )	--"./../PresetManager.ms"
 
 try(destroyDialog testRollout)catch()
 
@@ -8,7 +8,7 @@ global testRollout = undefined
 global subRollout_1 = undefined
 global nestedSubRollout_1 = undefined
 
-global UiStatePreset = UiStatePreset_v (getFilenamePath(getSourceFileName()) + getFilenameFile(getSourceFileName()) + ".ini")
+global PresetManager = PresetManager_v (getFilenamePath(getSourceFileName()) + getFilenameFile(getSourceFileName()) + ".ini")
 
 /*------------------------------------------------------------
   Creates rollout with all common UI control types for testing.
@@ -22,13 +22,13 @@ function createTestControlsRollout =
 			CONTROLS FOR SAVE\LOAD PRESET
 		--------------------------------------------------------------------------------*/
 		button btn_preset_save "SAVE DIALOG STATE" offset:[-10, 10] width:80 height:48 across:3 align:#LEFT
-		on btn_preset_save pressed do UiStatePreset.save (testRollout)
+		on btn_preset_save pressed do PresetManager.save (testRollout)
 		
 		button btn_preset_load "LOAD DIALOG STATE" offset:[0,10] width:80 height:48 across:3 align:#CENTER
-		on btn_preset_load pressed do UiStatePreset.load (testRollout)
+		on btn_preset_load pressed do PresetManager.load (testRollout)
 
 		button btn_open_ini "OPEN INI" offset:[ 10, 10] width:80 height:48 across:3 align:#RIGHT
-		on btn_open_ini pressed do UiStatePreset.open ()
+		on btn_open_ini pressed do PresetManager.open ()
 
 		
 		
@@ -256,7 +256,7 @@ createTestControlsRollout()
 
 --format "TESTROLLOUT: %\n" testRollout
 /* SAVE UI STATE */
---UiStatePreset.save (rollout_param)
+--PresetManager.save (rollout_param)
 
 
 /*------------------------------------------------------------------------------
@@ -267,12 +267,8 @@ createTestControlsRollout()
 --createTestControlsRollout()
 
 /* LOAD UI STATE */ 
---UiStatePreset.load (testRollout)
+--PresetManager.load (testRollout)
 
 /* OPEN INI FILE */ 
---UiStatePreset.open()
-
-
-
-
+--PresetManager.open()
 

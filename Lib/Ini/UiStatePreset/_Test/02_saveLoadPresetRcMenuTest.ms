@@ -1,166 +1,82 @@
-clearListener(); print("Cleared in:"+getSourceFileName())
+clearListener(); print("Cleared in: "+getSourceFileName())
 
-filein( getFilenamePath(getSourceFileName()) + "/../../../Lib/Dialog/Dialog.ms" )	--"./../../../Lib/Dialog/Dialog.ms"
-
-
-/* SET DIALOG */
---global DialogTest 	= Dialog_v title:"Test"
-global DialogTest 	= Dialog_v title:"Test" ini:(getSourceFileName())
+filein( getFilenamePath(getSourceFileName()) + "/../../../Dialog/Dialog.ms" )	--"./../../../Dialog/Dialog.ms"
 
 
-/** Dialog rollout callback
+/*
+Copy file and add suffix before extension.
+
+Example:
+"C:\cfg\settings.ini" -> "C:\cfg\settings_backup.ini"
+*/
+function copyIniWithSuffix src_path suffix =
+(
+    if doesFileExist src_path then
+    (
+        dir_path = getFilenamePath src_path
+        file_name = getFilenameFile src_path
+        ext = getFilenameType src_path
+        
+        new_path = dir_path + file_name + "-" + suffix + ext
+        
+        copyFile src_path new_path
+        new_path -- return
+    )
+    else
+    (
+        undefined -- return
+    )
+)
+
+/** Show rc preset menu
  */
-function dialogRolloutCallback =
+function showRcPresetMenu =
 (
-	format "\n"; print "dialogRolloutCallback()"
-	--format "EventFired: %\n" EventFired
-)
-
-/** Dialog rollout callback
- */
-function dialogRolloutCallbackParam val =
-(
-	--format "\n"; print "dialogRolloutCallbackParam()"
-	format "val: %\n" val
-)
-
-/** Test each event
-  *
-  */
-function dialogEventsTest =
-(
-	format "\n"; print "1_DialogEventsTest.ms.dialogEventsTest()"
-
-    DialogTest.Event #OPEN	"dialogRolloutCallbackParam(@#OPEN@)"
-    DialogTest.Event #CLOSE	"dialogRolloutCallbackParam(@#CLOSE@)"
-
-    DialogTest.Event #RESIZED	"dialogRolloutCallbackParam(@#RESIZED@)"
-	--DialogTest.Event #RESIZED	"dialogRolloutCallbackParam(\"RESIZED\")"
-  
-    DialogTest.Event #DOCKED	"dialogRolloutCallbackParam(@#DOCKED@)"
-    DialogTest.Event #UNDOCKED	"dialogRolloutCallbackParam(@#UNDOCKED@)"
-
-	DialogTest.Event #RBUTTONDOWN	"dialogRolloutCallbackParam(@#RBUTTONDOWN@)"
-
-    DialogTest.Event #okToClose	"dialogRolloutCallbackParam(@#okToClose@)"
-
-	
-    /* EVENT #MOVED DOES NOT WORK ON REGISTRED DIALOG*/ 	
-    DialogTest.Event #MOVED "dialogRolloutCallbackParam(@#MOVED@)"
-)
-
-/** Test rollout events
- */
-function rolloutEventsTest DialogTest =
-(
-	--format "\n"; print ".rolloutEventsTest()"
-	_Rollouts = DialogTest.Rollouts()
-
-	_Rollout  = _Rollouts.Roll "Main Rollout" --height:256
-
-	_Controls = _Rollout.Controls group:"Rollout Controls"
-
-	_Button   = _Controls.control #button "Rollout Btn" id:#button_3
-
-	/* ROLLOUT EVENTS */
-	_Rollout.Event #OPEN	"dialogRolloutCallbackParam #OPEN"
-	_Rollout.Event #CLOSE	"dialogRolloutCallbackParam #CLOSE"
-)
-
-/** Test all event
-  *
-  */
-function testAllEvents _Rollout =
-(
-	--format "\n"; print "1_DialogEventsTest.ms.testAllEvent()"
-	event_types =
-	#(
-		--#moved,  -- WORKS ONLY ON UNREGISTRED DIALOG
-
-		/* MOUSE EVENTS */
-		--#lbuttondown,
-		--#lbuttonup,
-		--#lbuttondblclk,
-		--
-		--#mbuttondown,
-		--#mbuttonup,
-		--#mbuttondblclk,
-		--
-		--#rbuttondown,
-		--#rbuttonup,
-		--#rbuttondblclk,
-		--
-		--/* NOT maxscript NATVIVE */
-		--#docked,
-		--#undocked,
-		--
-		--/* NATIVE EVENTS */ 
-		--#open,
-		--#close,
-		--#resized,
-		#help
-	)
-
-	for event_type in event_types do
-		_Rollout.Event event_type	("print(\"CUSTOM DIALOG EVENT #"+ event_type as string +"\")")
-		--_Rollout.Event event_type ("dialogRolloutCallback()")
-)
-
-
-
-/** Multiple events test
- */
-function multipleCallbacksOnEventTest =
-(
-	--format "\n"; print ".multipleCallbacksOnEventTest()"
-    DialogTest.Event #OPEN	"dialogRolloutCallbackParam(@CALLBACK OF EVENT 1@)"
-	
-    DialogTest.Event #OPEN	"dialogRolloutCallbackParam(@CALLBACK OF EVENT 2@)"
-)
-
-/** Test offset position of registred dialog
- */
-function testOffsetPositionOfRegistredDialog =
-(
-	for i = 1 to 10 do
-	(
-		DialogTest.unregister()
-		DialogTest.register()
-	)
+	format "\n"; print ".showRcPresetMenu()"
+	ini_file = getFilenamePath(getSourceFileName()) + getFilenameFile(getSourceFileName()) + ".ini"
+		
+	presetManagerMenu(#DIALOG_test)(ini_file)
 )
 
 /*------------------------------------------------------------------------------
-	
-	TEST EVENTS
-	
+	CONFIG
 --------------------------------------------------------------------------------*/
-
-/* DIALOG */ 
---dialogEventsTest()
-
-/* ROLLOUT */ 
---rolloutEventsTest(DialogTest)
-
-/* ALL TYPES OF EVENTS */ 
-testAllEvents(DialogTest)
-
-/* MULTIPLE CALLBACKS */ 
---multipleCallbacksOnEventTest()
-
-
-
-/* CREATE DIALOG */
-DialogTest.create width:256 height:256 lockHeight:false
-
-DialogTest.register()
+ini_file = getFilenamePath(getSourceFileName()) + getFilenameFile(getSourceFileName()) + ".ini"
 
 
 /*------------------------------------------------------------------------------
-	ADDITION TO TESTS
+	DIALOG
 --------------------------------------------------------------------------------*/
 
-/* REGISTRED and UNREGISTRED dialog has different position to but must be visible on same place  */ 
---testOffsetPositionOfRegistredDialog()
+Dialog = Dialog_v title:"Test" ini:(getSourceFileName())
+--Dialog = Dialog_v title:"Test"
+
+--Dialog.addLocal #INI ini_file
+
+_Controls   = Dialog.Controls()
+
+_Button = _Controls.control #BUTTON "Preset" across:1 width:64
+
+_Button.Event #Pressed ( "showRcPresetMenu()")
+
+--_Controls.control #CHECKBUTTON "checkbutton" highlightColor:red
+_Controls.control #CHECKBOX "Checkbox"
+			--format "_Button: %\n" _Button
+			
+
+/** CREATE ROLLOUT 
+ *	
+ */
+--CreateDialog rollout_test menu:(Menu.create())
 
 
---DialogTest.ini.open()
+copyIniWithSuffix ini_file "Preset A"
+copyIniWithSuffix ini_file "Preset B"
+
+
+/* DIALOG CREATE */
+--Dialog.create()
+Dialog.create menu:(presetManagerMenu(#DIALOG_test)(ini_file))
+
+
+format "DIALOG_test.ini: %\n" DIALOG_test.ini

@@ -2,7 +2,7 @@ clearListener(); print("Cleared in: "+getSourceFileName())
 
 filein( getFilenamePath(getSourceFileName()) + "/../../../../Dialog/Dialog.ms" )	--"./../../../../Dialog/Dialog.ms"
 
-filein( getFilenamePath(getSourceFileName()) + "/../../UiStatePresetMenu/UiStatePresetMenu.ms" )	--"./../../UiStatePresetMenu/UiStatePresetMenu.ms"
+filein( getFilenamePath(getSourceFileName()) + "/../../PresetManagerMenu/PresetManagerMenu.ms" )	--"./../../PresetManagerMenu/PresetManagerMenu.ms"
 
 /*
 Copy file and add suffix before extension.
@@ -36,7 +36,7 @@ function showRcPresetMenu =
 	format "\n"; print ".showRcPresetMenu()"
 	ini_file = getFilenamePath(getSourceFileName()) + getFilenameFile(getSourceFileName()) + ".ini"
 		
-	uiStatePresetMenu(#DIALOG_test)(ini_file)
+	presetManagerMenu(#DIALOG_test)(ini_file)
 )
 
 /*------------------------------------------------------------------------------
@@ -69,6 +69,6 @@ copyIniWithSuffix ini_file "Preset B"
 
 /* DIALOG CREATE */
 --Dialog.create()
-Dialog.create menu:(uiStatePresetMenu(#DIALOG_test)(ini_file))
+Dialog.create menu:(presetManagerMenu(#DIALOG_test)(ini_file))
 
 
