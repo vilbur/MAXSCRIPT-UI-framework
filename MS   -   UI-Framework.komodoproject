@@ -75,6 +75,8 @@
 </livefolder>
 <livefolder id="dbd82612-d372-4815-ac67-ce221f968da4" idref="ad60566e-f9da-4452-97b4-905e34c8ce55" name="MacroScript" url="Lib/ContentLoader/ContentSubrollouts/ContentRollout/ScriptFile/MacroScript/">
 </livefolder>
+<livefolder id="292a1e6e-bcd4-41f2-a834-22d3735f9af3" idref="f8faf73a-620c-411a-834f-2888a3315efa" name="Menu" url="Test/Menu/">
+</livefolder>
 <livefolder id="29f3d9e2-e8f5-4028-a349-98b53fd970cf" idref="f8faf73a-620c-411a-834f-2888a3315efa" name="Cache" url="Test/Cache/">
 </livefolder>
 <livefolder id="6f12c503-d292-4c33-b9fb-d1c1623b0848" idref="f8faf73a-620c-411a-834f-2888a3315efa" name="Dialog" url="Test/Dialog/">

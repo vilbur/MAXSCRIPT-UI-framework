@@ -33,22 +33,24 @@ function copyIniWithSuffix src_path suffix =
 function showRcPresetMenu =
 (
 	format "\n"; print ".showRcPresetMenu()"
-	ini_file = getFilenamePath(getSourceFileName()) + getFilenameFile(getSourceFileName()) + ".ini"
+	format "EventFired: %\n" EventFired
+	--ini_file = getFilenamePath(getSourceFileName()) + getFilenameFile(getSourceFileName()) + ".ini"
 		
-	presetManagerMenu(#DIALOG_test)(ini_file)
+	--presetManagerMenu(#DIALOG_test)(ini_file)
 )
 
 /*------------------------------------------------------------------------------
 	CONFIG
 --------------------------------------------------------------------------------*/
-ini_file = getFilenamePath(getSourceFileName()) + getFilenameFile(getSourceFileName()) + ".ini"
+--ini_file = getFilenamePath(getSourceFileName()) + getFilenameFile(getSourceFileName()) + ".ini"
 
 
 /*------------------------------------------------------------------------------
 	DIALOG
 --------------------------------------------------------------------------------*/
 
-Dialog = Dialog_v title:"Test" ini:(getSourceFileName())
+--Dialog = Dialog_v title:"Test" ini:(getSourceFileName())
+Dialog = Dialog_v title:"Test" ini:( getFilenamePath(getSourceFileName()) + getFilenameFile(getSourceFileName()) + ".ini" )
 --Dialog = Dialog_v title:"Test"
 
 --Dialog.addLocal #INI ini_file
@@ -57,26 +59,27 @@ _Controls   = Dialog.Controls()
 
 _Button = _Controls.control #BUTTON "Preset" across:1 width:64
 
-_Button.Event #Pressed ( "showRcPresetMenu()")
+--_Button.Event #Pressed ( "showRcPresetMenu()")
+_Button.Event #Pressed ( "presetManagerMenu()")
 
 --_Controls.control #CHECKBUTTON "checkbutton" highlightColor:red
 _Controls.control #CHECKBOX "Checkbox"
 			--format "_Button: %\n" _Button
 			
 
-/** CREATE ROLLOUT 
- *	
- */
---CreateDialog rollout_test menu:(Menu.create())
 
-
-copyIniWithSuffix ini_file "Preset A"
-copyIniWithSuffix ini_file "Preset B"
+--copyIniWithSuffix ini_file "Preset A"
+--copyIniWithSuffix ini_file "Preset B"
 
 
 /* DIALOG CREATE */
 --Dialog.create()
-Dialog.create menu:(presetManagerMenu(#DIALOG_test)(ini_file))
+
+/* TEST A: ISLATED TEST */ 
+--presetManagerMenu dialog_id:#DIALOG_test
+
+/* TEST B: Menu in dialog */ 
+--Dialog.create menu:(presetManagerMenu dialog_id:#DIALOG_test)
 
 
-format "DIALOG_test.ini: %\n" DIALOG_test.ini
+--format "DIALOG_test.ini: %\n" DIALOG_test.ini

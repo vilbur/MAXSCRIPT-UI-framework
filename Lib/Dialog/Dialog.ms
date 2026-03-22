@@ -135,8 +135,9 @@ struct Dialog_v
 		parent: =
 	(
 		format "\n"; print "Dialog_v.create()"
-		format "MENU: %\n" menu
-		timer_createRollout = timeStamp()
+		--format "MENU: %\n" menu
+		--format "classOf menu: %\n" ( classOf menu )
+		timer_all = timer_createRollout = timeStamp()
 
 		--format "DOCK_STATE: %\n" (execute ("try(cui.getDockState DIALOG_test )catch( #WTF )"))
 
@@ -157,29 +158,23 @@ struct Dialog_v
 		/*==============================================================================
 			COMPILE DIALOG
 		================================================================================*/
-		--if not cache or not doesFileExist (cache_file_path) then
 		if not use_chache then
 		(
 			FORMAT "\n**** NO CACHE\n"
+			/* INIT CREATOR */ 
 			_RolloutCreator = RolloutCreator_v Ini:Ini DEBUG:DEBUG
-	
-			--DEBUG = true
-			if this.DEBUG then timer_all = timestamp()
-			
 
+			
 			/*------------------------------------------------------------------------------
 				CREATE MAIN ROLLOUT AND NESTED ROLLOUTS
 			--------------------------------------------------------------------------------*/
 			
 			_RolloutCreator.createRollout (this) width:width  -- create nested rollouts
 			--if this.DEBUG then format "createRollout % ms\n" ((timestamp()) - timer_all)
-	  
-			
+
 			/*------------------------------------------------------------------------------
 				CREATE DIALOG
 			--------------------------------------------------------------------------------*/
-		format "MENU: %\n" menu
-
 			CreateDialog (this.RCI.def) \
 				width:	this.width                         	\
 				height:	this.height                         	\
@@ -189,15 +184,16 @@ struct Dialog_v
 				bitmap:	bitmap	\
 				bmpstyle:	bmpstyle	\
 				style:	dialog_style	\
-				menu:	menu 	\
 				modal:	modal	\
 				autoLayoutOnResize:	true	\
 				escapeEnable:	escapeEnable	\
 				lockHeight:	lockHeight	\
 				lockWidth:	lockWidth	\
+				menu:	(this._createMenu menu) 	\
 				parent:	parent
 			--if this.DEBUG then format "CreateDialog % ms\n" ((timestamp()) - timer_all)
 
+			
 			/*------------------------------------------------------------------------------
 				ADD SUBROLLOUTS TO ROLLOUT
 			--------------------------------------------------------------------------------*/
@@ -940,6 +936,28 @@ struct Dialog_v
 			getDir #TEMP + "\\UI-Framework\\Dialog-Cache\\"  + this.id + "-cache" + ".ms"
 	),
 	
+	
+	/** Create menu
+		
+	  
+		@param RCMenu|RCMenu_v
+	 */
+	function _createMenu menu =
+	(
+		format "\n"; print "global._createMenu()"
+		format "MENU: %\n" menu
+format "classOf menu: %\n" ( classOf menu )
+format "TEST: %\n" (((classOf menu) as string ) == "RCMenu" )
+	
+		if menu != undefined and menu != unsupplied and (classOf menu) as string != "RCMenu" then -- FOLLOWING CODE CAUSES ERROR: classOf menu != RCMenu
+		(
+			format "has_create_method: %\n" (hasProperty menu "create")
+			if has_create_method = hasProperty menu "create" then
+				menu.create() --return
+		)
+		
+	),
+	
 	/** Write to deff file
 	 */
 	function writeToCacheFile cache_file_path width height =
@@ -1001,6 +1019,7 @@ struct Dialog_v
 		)
 	),
 
+	
 	/**
 	 */
 	on create do

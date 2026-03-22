@@ -116,7 +116,7 @@ struct RcMenu_v
 	
 	/** Create menu
 	  *
-	  * [rcmenu ]](https://help.autodesk.com/view/3DSMAX/2017/ENU/?guid=__files_GUID_17DBC9E3_5B61_4738_B78B_D3D57A515CE8_htm)
+	  * [rcmenu ]](https://help.autodesk.com/view/MAXDEV/2022/ENU/?guid=GUID-17DBC9E3-5B61-4738-B78B-D3D57A515CE8)
 	  *
 	  * @return	RcMenu class|string	Return RcMenu for 'CreateDialog menu:RcMenu' or definition of submenu
 	 */

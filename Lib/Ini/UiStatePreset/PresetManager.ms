@@ -29,9 +29,13 @@ struct PresetManager_v
 		--format "ini_file: %\n" ini_file
 		_Rollout = this._getRollout( _Rollout )
 	
-		UiStateSaver = UiStateSaver_v ini_file
-			
-		UiStateSaver.saveControlsAndSubrollouts (_Rollout)
+		if ( ini_file = _Rollout.ini ) != undefined then
+		(
+			UiStateSaver = UiStateSaver_v ini_file
+				
+			UiStateSaver.saveControlsAndSubrollouts (_Rollout)
+		)
+	
 	),
 	
 	/** Load
@@ -39,12 +43,14 @@ struct PresetManager_v
 	function load _Rollout =
 	(
 		--format "\n"; print "PresetManager_v.load()"
-		UiStateLoader = UiStateLoader_v ini_file
-		
 		_Rollout = this._getRollout( _Rollout )
 		
-		UiStateLoader.loadControlsAndSubrollouts (_Rollout)
-
+		if ( ini_file = _Rollout.ini ) != undefined then
+		(
+			UiStateLoader = UiStateLoader_v ini_file
+			
+			UiStateLoader.loadControlsAndSubrollouts (_Rollout)
+		)
 	),
 	
 	/** Open ini file in Notepad++

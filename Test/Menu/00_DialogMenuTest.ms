@@ -1,4 +1,4 @@
-clearListener()
+clearListener(); print("Cleared in: "+getSourceFileName())
 
 filein( getFilenamePath(getSourceFileName()) + "/../../Lib/Dialog/Dialog.ms" ) -- "./../../Lib/Dialog/Dialog.ms"
 
@@ -35,11 +35,11 @@ menu_2.item "Item 3" "messagebox \"Item 3\""
 
 
 
-/** 
+/** DIALOG
  */
 Dialog 	= Dialog_v title:"Test" 
 
 
 /* CREATE DIALOG */
 --Dialog.create()
-Dialog.create menu:(Menu.create())
+Dialog.create menu:(Menu.create())	-- pass struct RCMenu   
