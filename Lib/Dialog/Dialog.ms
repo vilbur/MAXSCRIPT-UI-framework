@@ -944,18 +944,21 @@ struct Dialog_v
 	 */
 	function _createMenu menu =
 	(
-		format "\n"; print "global._createMenu()"
-		format "MENU: %\n" menu
-format "classOf menu: %\n" ( classOf menu )
-format "TEST: %\n" (((classOf menu) as string ) == "RCMenu" )
-	
-		if menu != undefined and menu != unsupplied and (classOf menu) as string != "RCMenu" then -- FOLLOWING CODE CAUSES ERROR: classOf menu != RCMenu
-		(
-			format "has_create_method: %\n" (hasProperty menu "create")
-			if has_create_method = hasProperty menu "create" then
-				menu.create() --return
-		)
+		--format "\n"; print "global._createMenu()"
 		
+		classof_menu =  (classOf menu) as string
+		/*------------------------------------------------------------------------------
+			CALL METHOD "create()"
+		--------------------------------------------------------------------------------*/
+		if menu != undefined and menu != unsupplied and classof_menu != "RCMenu" and hasProperty menu "create" then -- FOLLOWING CODE CAUSES ERROR: classOf menu != RCMenu
+				menu.create() --return
+
+		/*------------------------------------------------------------------------------
+			RETURN RCMENU IF CREATED ALERADY
+		--------------------------------------------------------------------------------*/
+        else if classof_menu == "RCMenu" then
+			menu --return
+
 	),
 	
 	/** Write to deff file
