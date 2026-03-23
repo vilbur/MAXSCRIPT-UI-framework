@@ -946,20 +946,24 @@ struct Dialog_v
 	 */
 	function _createMenu menu =
 	(
-		--format "\n"; print "global._createMenu()"
+		format "\n"; print "global._createMenu()"
 		
 		classof_menu =  (classOf menu) as string
+		format "classof_menu: %\n" classof_menu
 		/*------------------------------------------------------------------------------
 			CALL METHOD "create()"
 		--------------------------------------------------------------------------------*/
 		if menu != undefined and menu != unsupplied and classof_menu != "RCMenu" and hasProperty menu "create" then -- FOLLOWING CODE CAUSES ERROR: classOf menu != RCMenu
-				menu.create() --return
+			menu.create() -- return call "create()" method in input struct
 
 		/*------------------------------------------------------------------------------
 			RETURN RCMENU IF CREATED ALERADY
 		--------------------------------------------------------------------------------*/
         else if classof_menu == "RCMenu" then
-			menu --return
+			menu --return 
+
+		else
+			unsupplied --return fallback - no menu
 
 	),
 	

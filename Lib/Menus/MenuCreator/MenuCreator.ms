@@ -1,28 +1,13 @@
-/*==============================================================================
-
-	TO CREATE MENU CAN BE ANY STRUCT PASSED AS PARAMETER TO Dialog.create menu:
-	
-	Use case is to postpone menu creation into Dialog_v
-	
-	WHILE:
-		1) menu HAS DEFINED METHOD: "create()" 
-		2) RETURNS classof RCMenu -- https://help.autodesk.com/view/MAXDEV/2022/ENU/?guid=GUID-17DBC9E3-5B61-4738-B78B-D3D57A515CE8
-	
-	
-	METHOD "create()" IS FIRED IN:
-		"Dialog_v._createMenu() -> Menu.create()"  -- "./../../Lib/Dialog/Dialog.ms"
-
-================================================================================*/
 
 /** Menu creator
  */
 struct MenuCreator_v
 (
 	/* construct */
-	Dialog, -- REQUIRED FOR ROLLOUT MENU -- Dialog_v --"./../../../Dialog/Dialog.ms"
+	items, -- Dictionary|*.json -- KEY:"Title" VALUE: submenu|"itemCommand()" -- dictionary of items where key is title
+	popup = false,
 	
 	/* required */
-	items, -- Dictionary|*.json -- KEY:"Title" VALUE: submenu|"itemCommand()" -- dictionary of items where key is title
 	
 	/* properties */
 	Menu,
@@ -32,36 +17,81 @@ struct MenuCreator_v
 	/* reference */
 	/* inhered */
 	
-	/*==============================================================================
-		
-		CREATE METHOD MUST EXISTS
-		
-	================================================================================*/
-	/** Create menu
+	/** Create
+	 */
+	function create =
+	(
+		format "\n"; print "MenuCreator_v.create()"
+		format "this.Menu: %\n" this.Menu
+		this.Menu.create()
+		--unsupplied
+	),
+	--
+	--/** Popup
+	-- */
+	--function popup =
+	--(
+	--	--format "\n"; print "MenuCreator_v.popup()"
+	--	this.Menu.popup()
+	--),
+	
+	/** generateMenu menu
 	  
 	   @param RolloutClass Menu if defined then menu is created as submenu
 	 */
-	function create Submenu:undefined =
+	function generateMenu =
 	(
-		format "\n"; print "MenuCreator_v.create()"
+		format "\n"; print "MenuCreator_v.generateMenu()"
+		format "items: %\n" items
+		format "classOf items: %\n" (classOf items)
+		format "doesFileExist items: %\n" (doesFileExist items)
 
-		/* IF ITEMS IS *.json FILE PATH */ 
+		/*------------------------------------------------------------------------------
+		
+			GET *.json FILE
+		
+		--------------------------------------------------------------------------------*/		
 		if classOf items == string and doesFileExist items then
-			items = (JsonToDictionoray_v()).jsonFileToDict items
+			items = (JsonToDictionoray_v()).jsonFileToDict this.items
 		
-		/*  DEFINE MAIN MENU - RCMENU or SUBMENU */
-		Menu = if Submenu != undefined then Submenu else RcMenu_v name:"PresetMenu" search_in_menus:false
 		
-		/* ADD ITEMS AND SUBMENUS */
-		this._addItemsToMenu Menu items	
+		/*------------------------------------------------------------------------------
 		
-		/*==============================================================================
-		  
-			RCMENU MUST BE RETURNED
-			
-		================================================================================*/
+			DEFINE MAIN MENU - RCMENU or SUBMENU
 		
-		Menu.create() --return
+		--------------------------------------------------------------------------------*/
+		if this.Menu == undefined then 
+			this.Menu = RcMenu_v name:"MenuByMenuCreator" search_in_menus:false
+		--this.Menu = if Submenu != undefined then Submenu else
+		
+		/*------------------------------------------------------------------------------
+		
+			ADD ITEMS AND SUBMENUS
+		
+		--------------------------------------------------------------------------------*/
+		this._addItemsToMenu this.Menu items	
+ 		
+		
+		/*------------------------------------------------------------------------------
+		
+			CREATE MENU IN DIALOG
+		
+		----------------------------------------------------------------------------------*/
+		--if Dialog != undefined then 
+		--	this.Menu.create() --return
+		--
+		--/*------------------------------------------------------------------------------
+		--	POPUP MENU WHEN MENU IS CREATED BY CALLBACK OF CONTROL 
+		--
+		----------------------------------------------------------------------------------*/
+		--else if EventFired != undefined and Submenu == undefined then 
+		--	this.Menu.popup() --return
+		--
+		--else
+		--	this.Menu --return
+				
+		--Menu.create() --return
+		this.Menu --return
 	),
 	
 	private
@@ -90,13 +120,16 @@ struct MenuCreator_v
 			else if classOf item == string then
 				menu_current.item title item 
 		)
-		
 	),
-	
 	
 	on create do
 	(
-		--print("MenuCreator_v.onCreate()")
+		print("MenuCreator_v.onCreate()")
+		if items != undefined then 
+			this.generateMenu()
+		
+		if popup then
+			this.Menu.popup()
 	)
 
 )

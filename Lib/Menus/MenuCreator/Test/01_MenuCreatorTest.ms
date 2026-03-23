@@ -2,59 +2,7 @@ clearListener(); print("Cleared in: "+getSourceFileName())
 
 filein( getFilenamePath(getSourceFileName()) + "/../../../Dialog/Dialog.ms" )	--"./../../../Dialog/Dialog.ms"
 
-menu_items_json = ( getFilenamePath(getSourceFileName()) + "/men_items.json" )	--"./men_items.json"
-
-
-/*==============================================================================
-
-	TO CREATE MENU CAN BE ANY STRUCT PASSED AS PARAMETER TO Dialog.create menu:
-	
-	Use case is to postpone menu creation into Dialog_v
-	
-	WHILE:
-		1) menu HAS DEFINED METHOD: "create()" 
-		2) RETURNS classof RCMenu -- https://help.autodesk.com/view/MAXDEV/2022/ENU/?guid=GUID-17DBC9E3-5B61-4738-B78B-D3D57A515CE8
-	
-	
-	METHOD "create()" IS FIRED IN:
-		"Dialog_v._createMenu() -> Menu.create()"  -- "./../../Lib/Dialog/Dialog.ms"
-
-================================================================================*/
-
---/** Menu creator
--- */
---struct MenuCreator_v
---(
---	Dialog,
---	/*==============================================================================
---		
---		CREATE METHOD MUST EXISTS
---		
---	================================================================================*/
---	function create =
---	(
---		format "\n"; print "MenuCreator_v.create()"
---		
---		/* DEFINE MAIN MENU */
---		Menu = RcMenu_v name:"TestMenu"
---		
---		/* DEFINE MENU */
---		menu_1	= Menu.menu "Dialog Menu"
---		
---		/** MENU ITEMS */
---		menu_1.item ("SHOW PATH TO INI FILE" ) ("messagebox \""+Dialog.ini.getPath() +"\" title:\"PATH TO INI FILE\"")
---		
---		/*==============================================================================
---		  
---			RCMENU MUST BE RETURNED
---			
---		================================================================================*/
---		
---		Menu.create() --return
---	)
---
---)
-
+menu_items_json = ( getFilenamePath(getSourceFileName()) + "menu_items.json" )	--"./menu_items.json"
 
 /*==============================================================================
 
@@ -65,18 +13,49 @@ menu_items_json = ( getFilenamePath(getSourceFileName()) + "/men_items.json" )	-
 --
 --MenuCreator.create()
 
+/*------------------------------------------------------------------------------
+	DEFINE DIALOG
+--------------------------------------------------------------------------------*/
+
+Dialog = Dialog_v title:"Test"
+
+_Controls   = Dialog.Controls()
+
+
+/*==============================================================================
+  
+	OPEN AS POPUP ON CALLBACK OF ANY CONTROL WHICH FIRES EventFired
+	
+================================================================================*/
+_Button = _Controls.control #BUTTON "RC Menu Test" across:1 width:64
+
+_Button.Event #Pressed ( "MenuCreator_v items:@"+menu_items_json + "@ popup:true" )
+
+--_Controls.control #CHECKBOX "Checkbox"
+
 /*==============================================================================
 
-	TEST IN DIALOG
+	OPEN AS ROLLOUT MENU
 
 ================================================================================*/
+--Dialog.create()
+--Dialog.create menu:( MenuCreator_v items:menu_items_json )	-- pass struct RCMenu   
 
-Dialog 	= Dialog_v title:"Test" ini:(getSourceFileName())
 
-/*------------------------------------------------------------------------------
+/*==============================================================================
+	
+	ADD AS SUBMENU
+	
+================================================================================*/
 
-	CREATE DIALOG WITH MENU CREATOR
 
-------------------------------------------------------------------------------*/
---Dialog.create menu:(MenuCreator_v(Dialog))	-- pass struct RCMenu   
-Dialog.create menu:( MenuCreator_v items:menu_items_json )	-- pass struct RCMenu   
+/* DEFINE RC MAIN MENU */
+SubMenuTest = RcMenu_v name:"TestMenu" search_in_menus:false
+
+/* DEFINE MENU */
+menu_1	= SubMenuTest.menu "Menu 1"
+menu_1.item "Item 1" "messagebox \"Item 1\"" 
+
+/*  */
+Dialog.create menu:( MenuCreator_v items:menu_items_json Menu:SubMenuTest )	-- pass struct RCMenu   
+
