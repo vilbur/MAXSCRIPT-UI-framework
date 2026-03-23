@@ -3,6 +3,8 @@ global createDialogFromCacheFile = undefined
 if DIALOG_GLOBAL_DATA == undefined then
 	global DIALOG_GLOBAL_DATA = Dictionary()
 
+filein( getFilenamePath(getSourceFileName()) + "/../JsonToDictionoray/JsonToDictionoray.ms" )	--"./../JsonToDictionoray/JsonToDictionoray.ms"
+
 --filein( getFilenamePath(getSourceFileName()) + "/../Menus/RcMenu/RcMenu.ms" )	--"./../Menus/RcMenu/RcMenu.ms"
 filein( getFilenamePath(getSourceFileName()) + "/../ParseStringToDatatype/ParseStringToDatatype.ms" )	--"./../ParseStringToDatatype/ParseStringToDatatype.ms"
 filein( getFilenamePath(getSourceFileName()) + "/../Menus/include-menus.ms" )	--"./../Menus/include-menus.ms"

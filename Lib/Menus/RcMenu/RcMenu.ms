@@ -17,9 +17,12 @@ struct RcMenu_v
 	type	= "RCmenu",
 	items	= #(),
 	
+	search_in_menus = true, -- if true, then MenuToRcLoader_v is used to load existing menu
+	
 	/* static */ 
 	item_height	= 23,
 	separator_height	= 9,
+	
 	
 	/* private */ 
 	
@@ -50,7 +53,7 @@ struct RcMenu_v
 	 */
 	function menu _name =
 	(
-		local _menu =  RcMenu_v name:_name type:"submenu" --XmlParser:XmlParser
+		local _menu =  RcMenu_v name:_name type:"submenu" search_in_menus:search_in_menus --XmlParser:XmlParser
 
 		this._addItem _menu
 
@@ -294,6 +297,7 @@ struct RcMenu_v
 	(
 		--format "\n"; print "RcMenu_v.onCreate()"
 		
-		MenuToRcLoader_v(this)
+		if search_in_menus then
+			MenuToRcLoader_v(this)
 	)
 )

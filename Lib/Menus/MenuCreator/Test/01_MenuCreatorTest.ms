@@ -2,6 +2,9 @@ clearListener(); print("Cleared in: "+getSourceFileName())
 
 filein( getFilenamePath(getSourceFileName()) + "/../../../Dialog/Dialog.ms" )	--"./../../../Dialog/Dialog.ms"
 
+menu_items_json = ( getFilenamePath(getSourceFileName()) + "/men_items.json" )	--"./men_items.json"
+
+
 /*==============================================================================
 
 	TO CREATE MENU CAN BE ANY STRUCT PASSED AS PARAMETER TO Dialog.create menu:
@@ -53,13 +56,27 @@ filein( getFilenamePath(getSourceFileName()) + "/../../../Dialog/Dialog.ms" )	--
 --)
 
 
-/** DIALOG
- */
+/*==============================================================================
+
+	ISOLATED TEST
+
+================================================================================*/
+--MenuCreator = MenuCreator_v items:menu_items_json
+--
+--MenuCreator.create()
+
+/*==============================================================================
+
+	TEST IN DIALOG
+
+================================================================================*/
+
 Dialog 	= Dialog_v title:"Test" ini:(getSourceFileName())
 
 /*------------------------------------------------------------------------------
 
 	CREATE DIALOG WITH MENU CREATOR
 
---------------------------------------------------------------------------------*/
-Dialog.create menu:(MenuCreator_v(Dialog))	-- pass struct RCMenu   
+------------------------------------------------------------------------------*/
+--Dialog.create menu:(MenuCreator_v(Dialog))	-- pass struct RCMenu   
+Dialog.create menu:( MenuCreator_v items:menu_items_json )	-- pass struct RCMenu   

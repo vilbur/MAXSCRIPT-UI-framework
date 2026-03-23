@@ -1,11 +1,30 @@
-clearListener()
+clearListener(); print("Cleared in: "+getSourceFileName())
 
 
 
---dialogs_hwnd = UIAccessor.GetPopupDialogs()
-actionMan.executeAction 0 "59245"  -- Customize User Interface: Hotkey Editor
+file_path = @"C:\Users\vilbur\AppData\Local\Autodesk\3dsMax\2023 - 64bit\ENU\scripts\MAXSCRIPT-UI-framework\Lib\JsonToDictionoray\JsonToDictionoray.ms"
+
+content = ""
+
+if (file = openFile file_path mode:"rt") != undefined then
+(
+    while not eof file do
+        content += (readLine file + "\n")
+
+    close file
+)
+
+print content
 
 
 
-if (hotkey_dialog = (for hwnd in UIAccessor.GetPopupDialogs() where UIAccessor.GetWindowText hwnd == "Hotkey Editor" collect hwnd)[1]) != undefined then
-	UIAccessor.CloseDialog hotkey_dialog
+--if (file = openFile file_path mode:"rt") != undefined then
+--(
+--    while not eof file do
+--    (
+--        content += (readLine file + "\n")
+--    )
+--    close file
+--)
+--
+--print content

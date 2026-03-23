@@ -30,7 +30,7 @@ struct UiPresetMenu_v
 	
 	/** Create
 	 */
-	function create show:true =
+	function create Submenu:undefined =
 	(
 		format "\n"; print "UiPresetMenu_v.create()"
 		format "EventFired: %\n" EventFired
@@ -53,7 +53,7 @@ struct UiPresetMenu_v
 			--format "presets_data: %\n" presets_data
 		
 			/* DEFINE MAIN MENU */
-			Menu = RcMenu_v name:"PresetMenu"
+			Menu = if Submenu != undefined then Submenu else RcMenu_v name:"PresetMenu"
 			
 			menu_1	= Menu.menu "Dialog Menu"
 			menu_1.item "Item 1" "messagebox \"Item 1\""
@@ -90,7 +90,7 @@ struct UiPresetMenu_v
 			/*------------------------------------------------------------------------------
 			POPUP MENU WHEN MENU IS CREATED BY CALLBACK OF CONTROL 
 			--------------------------------------------------------------------------------*/
-            else if EventFired != undefined and show != false then 
+            else if EventFired != undefined and Submenu == undefined then 
                 Menu.popup() --return
 			
 			else

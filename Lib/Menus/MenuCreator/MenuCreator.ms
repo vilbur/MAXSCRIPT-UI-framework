@@ -22,9 +22,11 @@ struct MenuCreator_v
 	Dialog, -- REQUIRED FOR ROLLOUT MENU -- Dialog_v --"./../../../Dialog/Dialog.ms"
 	
 	/* required */
-	items	= Dictionary(), -- KEY:"Title" VALUE: Dictionary|"itemCommand()" -- dictionary of items where key is title
+	items, -- Dictionary|*.json -- KEY:"Title" VALUE: submenu|"itemCommand()" -- dictionary of items where key is title
 	
 	/* properties */
+	Menu,
+	
 	/* private */
 	/* dependency */
 	/* reference */
@@ -43,15 +45,15 @@ struct MenuCreator_v
 	(
 		format "\n"; print "MenuCreator_v.create()"
 
+		/* IF ITEMS IS *.json FILE PATH */ 
+		if classOf items == string and doesFileExist items then
+			items = (JsonToDictionoray_v()).jsonFileToDict items
+		
 		/*  DEFINE MAIN MENU - RCMENU or SUBMENU */
-		Menu = if Submenu != undefined then Submenu else RcMenu_v name:"PresetMenu"
+		Menu = if Submenu != undefined then Submenu else RcMenu_v name:"PresetMenu" search_in_menus:false
 		
-		/* DEFINE MENU */
-		menu_1	= Menu.menu "Dialog Menu"
-		
-		/** MENU ITEMS */
-		--menu_1.item ("SHOW PATH TO INI FILE" ) ("messagebox \""+Dialog.ini.getPath() +"\" title:\"PATH TO INI FILE\"")
-		menu_1.item ("SHOW PATH TO INI FILE" ) ("messagebox \"TEST\"")
+		/* ADD ITEMS AND SUBMENUS */
+		this._addItemsToMenu Menu items	
 		
 		/*==============================================================================
 		  
@@ -63,6 +65,34 @@ struct MenuCreator_v
 	),
 	
 	private
+	
+	/** Add items to menu
+	 */
+	function _addItemsToMenu menu_current menu_items =
+	(
+		--format "\n"; print "PASSED._addItemsToMenu()"
+		
+		for title in menu_items.keys do
+		(
+			item = menu_items[title]
+			/*------------------------------------------------------------------------------
+				ADD SUBMENU
+			--------------------------------------------------------------------------------*/
+			if classOf item == Dictionary then
+			(
+				submenu	= menu_current.menu title
+
+				this._addItemsToMenu submenu item
+			)
+			/*------------------------------------------------------------------------------
+				ADD ITEM
+			--------------------------------------------------------------------------------*/
+			else if classOf item == string then
+				menu_current.item title item 
+		)
+		
+	),
+	
 	
 	on create do
 	(

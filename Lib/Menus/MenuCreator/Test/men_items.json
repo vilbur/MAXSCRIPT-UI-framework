@@ -1,0 +1,45 @@
+{
+  "File": {
+    "New": "messageBox \"File > New clicked\"",
+    "Open": "messageBox \"File > Open clicked\"",
+    "Import": {
+      "Import FBX": "messageBox \"File > Import > Import FBX clicked\"",
+      "Import OBJ": "messageBox \"File > Import > Import OBJ clicked\"",
+      "Advanced Import": {
+        "With Materials": "messageBox \"File > Import > Advanced Import > With Materials clicked\"",
+        "Geometry Only": "messageBox \"File > Import > Advanced Import > Geometry Only clicked\""
+      }
+    },
+    "Exit": "messageBox \"File > Exit clicked\""
+  },
+
+  "Edit": {
+    "Undo": "messageBox \"Edit > Undo clicked\"",
+    "Redo": "messageBox \"Edit > Redo clicked\"",
+    "Preferences": {
+      "General": "messageBox \"Edit > Preferences > General clicked\"",
+      "Viewport": "messageBox \"Edit > Preferences > Viewport clicked\"",
+      "Advanced": {
+        "Performance": "messageBox \"Edit > Preferences > Advanced > Performance clicked\"",
+        "Memory": "messageBox \"Edit > Preferences > Advanced > Memory clicked\""
+      }
+    }
+  },
+
+  "Tools": {
+    "Measure": "messageBox \"Tools > Measure clicked\"",
+    "Align": "messageBox \"Tools > Align clicked\"",
+    "Custom Tools": {
+      "Tool A": "messageBox \"Tools > Custom Tools > Tool A clicked\"",
+      "Tool B": "messageBox \"Tools > Custom Tools > Tool B clicked\"",
+      "Experimental": {
+        "Beta Tool": "messageBox \"Tools > Custom Tools > Experimental > Beta Tool clicked\""
+      }
+    }
+  },
+
+  "Help": {
+    "Documentation": "messageBox \"Help > Documentation clicked\"",
+    "About": "messageBox \"Help > About clicked\""
+  }
+}

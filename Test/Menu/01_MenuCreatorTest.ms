@@ -62,4 +62,6 @@ Dialog 	= Dialog_v title:"Test" ini:(getSourceFileName())
 	CREATE DIALOG WITH MENU CREATOR
 
 --------------------------------------------------------------------------------*/
+
+
 Dialog.create menu:(MenuCreator_v(Dialog))	-- pass struct RCMenu   

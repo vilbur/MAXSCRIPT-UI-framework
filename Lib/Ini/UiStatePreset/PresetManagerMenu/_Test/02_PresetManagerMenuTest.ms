@@ -4,7 +4,9 @@ filein( getFilenamePath(getSourceFileName()) + "/../../../../Dialog/Dialog.ms" )
 
 filein( getFilenamePath(getSourceFileName()) + "/../PresetManagerMenu.ms" )	--"./../PresetManagerMenu.ms"
 
-
+/*------------------------------------------------------------------------------
+	HELPERS
+--------------------------------------------------------------------------------*/
 /*
 Copy file and add suffix before extension.
 
@@ -30,25 +32,21 @@ function copyIniWithSuffix src_path suffix =
     )
 )
 
-/** Show rc preset menu
- */
-function showRcPresetMenu =
-(
-	format "\n"; print ".showRcPresetMenu()"
-	format "EventFired: %\n" EventFired
-	--ini_file = getFilenamePath(getSourceFileName()) + getFilenameFile(getSourceFileName()) + ".ini"
-		
-	--presetManagerMenu(#DIALOG_test)(ini_file)
-)
 
 /*------------------------------------------------------------------------------
 	CONFIG
 --------------------------------------------------------------------------------*/
 --ini_file = getFilenamePath(getSourceFileName()) + getFilenameFile(getSourceFileName()) + ".ini"
 
+--copyIniWithSuffix ini_file "Preset A"
+--copyIniWithSuffix ini_file "Preset B"
+
+
 
 /*------------------------------------------------------------------------------
-	DIALOG
+	
+	DEFINE DIALOG
+	
 --------------------------------------------------------------------------------*/
 
 --Dialog = Dialog_v title:"Test" ini:(getSourceFileName())
@@ -61,23 +59,24 @@ _Controls   = Dialog.Controls()
 
 _Button = _Controls.control #BUTTON "Preset" across:1 width:64
 
---_Button.Event #Pressed ( "showRcPresetMenu()")
+/*==============================================================================
+  
+	OPEN AS POPUP ON CALLBACK OF ANY CONTROL WHICH FIRES EventFired
+	
+================================================================================*/
 _Button.Event #Pressed ( "(UiPresetMenu_v()).create()")
 
---_Controls.control #CHECKBUTTON "checkbutton" highlightColor:red
-_Controls.control #CHECKBOX "Checkbox"
-			--format "_Button: %\n" _Button
-			
 
---_Button.Event #Pressed ( "(UiPresetMenu_v()).create()")
-
---copyIniWithSuffix ini_file "Preset A"
---copyIniWithSuffix ini_file "Preset B"
+--_Controls.control #CHECKBOX "Checkbox"
 
 
-/* DIALOG CREATE */
---Dialog.create()
---Dialog.create menu:(UiPresetMenu_v(Dialog))
+/*==============================================================================
+
+	OPEN AS ROLLOUT MENU
+
+================================================================================*/
+----Dialog.create()
+Dialog.create menu:(UiPresetMenu_v(Dialog))
 
 /* TEST A: ISLATED TEST */ 
 --presetManagerMenu dialog_id:#DIALOG_test
@@ -89,40 +88,25 @@ _Controls.control #CHECKBOX "Checkbox"
 --format "DIALOG_test.ini: %\n" DIALOG_test.ini
 
 
+/*==============================================================================
+	
+	ADD AS SUBMENU
+	
+================================================================================*/
 
-
-/* DEFINE MAIN MENU */
-MenuWithSubmenu = RcMenu_v name:"TestMenu"
+/* DEFINE RC MAIN MENU */
+SubMenuTest = RcMenu_v name:"TestMenu"
 
 /* DEFINE MENU */
-menu_1	= MenuWithSubmenu.menu "Menu 1"
---menu_2	= Menu.menu "Menu 2"
---
---
---/** MENU ITEMS 
----- */
---menu_1.item "Item 1" "messagebox \"Item 1\"" 
---menu_1.item "Exit" "try( execute(\"DestroyDialog rollout_test\") )catch()" 
---
---
---
---/* DEFINE SUBMENU */
-submenu = menu_1.menu ((UiPresetMenu_v()).create show:false )
---submenu.item "Submenu Item 1"  "messagebox \"Submenu Item 1\""
---
---
---/** MENU ITEMS 2
--- */
---menu_2.item "Item 2" "messagebox \"Item 2\""
---menu_2.separator()
---menu_2.item "Item 3" "messagebox \"Item 3\""
---
+menu_1	= SubMenuTest.menu "Custom Menu 1"
+
+submenu = (UiPresetMenu_v()).create Menu:false 
 
 
 
 /** CREATE ROLLOUT 
  *	
  */
-Dialog.create menu:(MenuWithSubmenu.create())
+Dialog.create menu:(SubMenuTest.create())
 
 
