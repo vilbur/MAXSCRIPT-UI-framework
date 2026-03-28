@@ -1,5 +1,4 @@
-clearListener()
-
+clearListener(); print("Cleared in: "+getSourceFileName())
 
 filein( getFilenamePath(getSourceFileName()) + "/../../include-menus.ms" )	--"./../../include-menus.ms"
 
@@ -16,9 +15,11 @@ mcr_title	= "Context Menu Test"
 mcr_name	= "context_menu_test"
 
 
-/*------------------------------------------------------------------------------
+/*==============================================================================
+
 	DEFINE TESTS
---------------------------------------------------------------------------------*/
+
+================================================================================*/
 
 /**  CREATE TEST MACROSCRIPT
  */
@@ -46,7 +47,7 @@ function getDefaultQuadMenu =
 /** CREATE QUAD MENU
   *
   */
-function createQuadMenu =
+function createQuadMenuTest =
 (
 	QuadMenuTest 	= QuadMenu_v (quad_menu_name) prefix:"_" -- "_" is DEFAULT PREFIX 
 
@@ -188,22 +189,39 @@ function removeItems =
 )
 
 
+/*==============================================================================
 
+		CONFIG OF TEST
+
+================================================================================*/
+
+
+/* RESET MENUS */ 
+(QuadMenuManager_v()).resetMenusAndHotkeys() --"./../../QuadMenuManager/QuadMenuManager.ms"
+
+
+
+/*==============================================================================
+
+		RUN TESTS
+
+================================================================================*/
 
 
 /*------------------------------------------------------------------------------
-	RUN TESTS
+	MANAGE QUAD MENU
 --------------------------------------------------------------------------------*/
 
---/* DEFAULT QUAD MENU */
-getDefaultQuadMenu()
 
---
---/* QUAD MENU */
---createQuadMenu()
---
---addItemsToQuad()
---
+--/* DEFAULT QUAD MENU */
+--getDefaultQuadMenu()
+
+
+/* QUAD MENU */
+createQuadMenuTest()
+
+addItemsToQuad()
+
 --moveItemInQuad()
 --
 --
@@ -229,20 +247,27 @@ getDefaultQuadMenu()
 ----getItems()
 --
 ----removeItems()
---
---
-----/* QUAD RIGHT CLICK */
-----QuadMenuTest.setRightClick() -- only rightclick
-----QuadMenuTest.setRightClick which: #controlPressed
---QuadMenuTest.setRightClick which: #shiftPressed
---
---
+
+
+/*------------------------------------------------------------------------------
+	HOTKEYS
+--------------------------------------------------------------------------------*/
+
+/* QUAD RIGHT CLICK */
+--QuadMenuTest.setRightClick() -- only rightclick
+--QuadMenuTest.setRightClick which: #controlPressed
+QuadMenuTest.setRightClick which: #shiftPressed
+
+
 --/* SET HOTKEY */ 
-----QuadMenuTest.setHotkey "shift"
+--QuadMenuTest.setHotkey "shift"
 ----QuadMenuTest.setHotkey #shiftPressed
 --
 --
 --/* SHOW ALL QUADS */ 
 --QuadMenuTest.showAllQuads()
+
+/* GET MENU BY MOUSE SHORTCUT */ 
+menuMan.getViewportRightClickMenu #controlPressed
 
 

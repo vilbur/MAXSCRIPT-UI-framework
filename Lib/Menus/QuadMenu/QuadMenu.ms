@@ -14,6 +14,7 @@ struct QuadMenu_v
 	/* inhered */
 	/* properties */
 	QuadMenu, -- <MixinInterface:QuadMenu>
+
 	Quads	= #(),
 
 	private
@@ -51,13 +52,12 @@ struct QuadMenu_v
 		"Asset Tracking Quad",
 		"Retimer Span Type"
 			
-            --"Track View Key Quad (Classic)",
-            --"Trackbar Quad",
-            --"Track View Key Quad",
-
+		--"Track View Key Quad (Classic)",
+		--"Trackbar Quad",
+		--"Track View Key Quad",
 	),
 	
-	--hotkeys = #( #nonePressed, #RightClick, #shiftPressed, #altPressed, #controlPressed, #shiftAndAltPressed, #shiftAndControlPressed, #controlAndAltPressed, #shiftAndAltAndControlPressed ),
+	/* static */
 	hotkeys = #( #nonePressed, #shiftPressed, #altPressed, #controlPressed, #shiftAndAltPressed, #shiftAndControlPressed, #controlAndAltPressed, #shiftAndAltAndControlPressed ),
 
 	public
@@ -146,7 +146,7 @@ struct QuadMenu_v
 		--format "\n"; print "QuadMenu_v.setHotkey()"
 		--format "menu_name: %\n" menu_name
 
-		if ( hotkey_name = this._getHotkey( hotkey) ) != undefined then
+		if ( hotkey_name = this._getHotkeyFromString( hotkey) ) != undefined then
 			this.setRightClick which:hotkey_name
 
 		else
@@ -241,9 +241,9 @@ struct QuadMenu_v
 	  * 
 	  * @return name|undefined
 	 */
-	function _getHotkey hotkey_source =
+	function _getHotkeyFromString hotkey_source =
 	(
-		--format "\n"; print "QuadMenuManager_v._getHotkey()"
+		--format "\n"; print "QuadMenuManager_v._getHotkeyFromString()"
 		--format "hotkey_source: %\n" hotkey_source
 		
 		if ( findItem hotkeys ( hotkey_source as name ) ) == 0 then
@@ -290,16 +290,6 @@ struct QuadMenu_v
 		else
 			menu_name --return
 	),
-	--/** Get hotkey by name
-	-- */
-	--function _getHotkeyByQuadName =
-	--(
-	--	format "\n"; print "QuadMenu_v._getHotkeyByQuadName()"
-	--	hotkey = this._getHotkey(this.menu_name)
-	--	
-	--	if ( index = findItem hotkeys hotkey ) > 0 then
-	--		hotkeys[index] --return
-	--),
 		
 	/**
 	 */
@@ -314,12 +304,12 @@ struct QuadMenu_v
 
 		this.showAllQuads()
 		
-		--LAST_CREATED_QUAD = QuadMenu
+		LAST_CREATED_QUAD = QuadMenu
 
 		--this._getHotkeyByQuadName()
 		
 		--if ( hotkey = this._getHotkeyByQuadName() ) != undefined then 
-		if ( hotkey = this._getHotkey(this.menu_name) ) != undefined then 
+		if ( hotkey = this._getHotkeyFromString(this.menu_name) ) != undefined then 
 			this.setHotkey (hotkey)
 	)
 	

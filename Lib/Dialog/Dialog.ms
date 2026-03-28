@@ -163,6 +163,7 @@ struct Dialog_v
 		if not use_chache then
 		(
 			FORMAT "\n**** NO CACHE\n"
+			format "cache: %\n" cache
 			/* INIT CREATOR */ 
 			_RolloutCreator = RolloutCreator_v Ini:Ini DEBUG:DEBUG
 
@@ -204,7 +205,7 @@ struct Dialog_v
 			--if this.DEBUG then format "addSubRollouts % ms\n" ((timestamp()) - timer_all)
 			
 			/* CACHE FILE */
-			if cache then
+			--if cache then
 				this.writeToCacheFile cache_file_path width height 
 
 			/*------------------------------------------------------------------------------

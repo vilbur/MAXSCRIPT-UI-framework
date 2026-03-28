@@ -182,57 +182,57 @@ struct UiStateLoader_v
 		--format "\n"; print "UiStateLoader_v._loadControl()"
 		--format "Ctrl: %\n" Ctrl
 
-		val = Ini.load _RolloutClass.name Ctrl.name
+		
 		--format "val	= % \n" val
 		--format "classOf val: %\n" ( classOf val )
-		
-		case classOf Ctrl of
-		(
-			CheckBoxControl:	Ctrl.checked = val
-			CheckButtonControl:	Ctrl.checked = val
-
-			SpinnerControl:	Ctrl.value = val
-			SliderControl:	Ctrl.value = val
-			AngleControl:	Ctrl.degrees = val
-
-			ListboxControl:	Ctrl.selection = val
-			ComboboxControl:	Ctrl.selection = val
-			MultiListBoxControl:	Ctrl.selection = val
-
-			EdittextControl:	Ctrl.text = val
-			PickbuttonControl:	Ctrl.object = val
-			ColorPickerControl:	Ctrl.color = val
-			RadioControl:	Ctrl.state = val
-
+		if (val = Ini.load _RolloutClass.name Ctrl.name) != undefined then 
+			case classOf Ctrl of
+			(
+				CheckBoxControl:	Ctrl.checked = val
+				CheckButtonControl:	Ctrl.checked = val
+	
+				SpinnerControl:	Ctrl.value = val
+				SliderControl:	Ctrl.value = val
+				AngleControl:	Ctrl.degrees = val
+	
+				ListboxControl:	Ctrl.selection = val
+				ComboboxControl:	Ctrl.selection = val
+				MultiListBoxControl:	Ctrl.selection = val
+	
+				EdittextControl:	Ctrl.text = val
+				PickbuttonControl:	Ctrl.object = val
+				ColorPickerControl:	Ctrl.color = val
+				RadioControl:	Ctrl.state = val
+	
+				
+				--MtlButtonControl: Ctrl.material = val
+				--MapButtonControl: Ctrl.map
 			
-			--MtlButtonControl: Ctrl.material = val
-			--MapButtonControl: Ctrl.map
-		
+				
+			/*------------------------------------------------------------------------------
+	
+				UNSUPPORT SAVE CONTROL VALUES 
+	
+			--------------------------------------------------------------------------------*/	
+	
+				--ProgressBarControl:
+				--CurveControl:		-- DOES NOT WORK YET
+				--popupMenuControl:		-- DOES NOT WORK YET
+				--TimerControl:
+				
+			/*------------------------------------------------------------------------------
+	
+				POROBLEMATIC CONTROL TYPES TO GET THEIR VALUE
+				
+				--"./../../_Dev/GET_bitmap.filename_PROPERTY_PROBLEM.ms"
+				
+			--------------------------------------------------------------------------------*/
 			
-		/*------------------------------------------------------------------------------
-
-			UNSUPPORT SAVE CONTROL VALUES 
-
-		--------------------------------------------------------------------------------*/	
-
-			--ProgressBarControl:
-			--CurveControl:		-- DOES NOT WORK YET
-			--popupMenuControl:		-- DOES NOT WORK YET
-			--TimerControl:
-			
-		/*------------------------------------------------------------------------------
-
-			POROBLEMATIC CONTROL TYPES TO GET THEIR VALUE
-			
-			--"./../../_Dev/GET_bitmap.filename_PROPERTY_PROBLEM.ms"
-			
-		--------------------------------------------------------------------------------*/
-		
-			--ImgTag:	getImageTagValueWorkaround Ctrl
-			--BitmapControl:	Ctrl.fileName
-			
-			--HyperLinkControl: Ctrl.address
-		)
+				--ImgTag:	getImageTagValueWorkaround Ctrl
+				--BitmapControl:	Ctrl.fileName
+				
+				--HyperLinkControl: Ctrl.address
+			)
 	),
 
 	/**

@@ -41,10 +41,13 @@ XmlParser = XmlParser_v(xml_path)
 
 
 /* GET ELEMENT */ 
-element = XmlParser.getElement "tag" content:"one"
+element = XmlParser.getElement "tag"  content:"one"
+element = XmlParser.getElement "item" attr:"id" val:1
 format "ELEMENT: %\n" element
 
 
+/* GET ELEMENTS */ 
+elements = XmlParser.getElements "item" --attr: val:
 
 
 /* SET ATTRIBUTE VALUE */ 
@@ -52,5 +55,4 @@ XmlParser.setAttribute element "attribute_key" "attribute_value"
 
 
 /* GET ATTRIBUTE VALUE */ 
-attribute_val = XmlParser.getAttribute element "attribute_key"
-format "ATTRIBUTE_VAL: %\n" attribute_val
+--_string	= ( dotNetObject "System.Text.RegularExpressions.Regex" @"pattern" ( dotNetClass "System.Text.RegularExpressions.RegexOptions" ).IgnoreCase ).Replace _string "replace"format "ATTRIBUTE_VAL: %\n" attribute_val

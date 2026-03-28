@@ -36,7 +36,7 @@ struct MenuToRcLoader_v
 		(
 			--format "this.name: %\n" this.name
 			/* Path to *.mnux file */ 
-			menus_xml_file = ((getDir #temp)+"\\XmlParser-Test.mnux")
+			menus_xml_file = ((getDir #temp)+"\\XmlParser-Temp.mnux")
 			--format "menus_xml_file:\n%\n" menus_xml_file
 	
 			/* SAVE MENUS TO FILE */ 

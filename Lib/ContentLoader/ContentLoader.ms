@@ -80,6 +80,7 @@ struct ContentLoader_v
 			escapeEnable:escapeEnable 	\
 			lockHeight:lockHeight 	\
 			lockWidth:lockWidth 	\
+			cache:false 	\
 			parent:parent
 
 		Dialog --return

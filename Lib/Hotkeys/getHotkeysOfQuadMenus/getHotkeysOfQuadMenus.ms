@@ -1,7 +1,9 @@
 function getHotkeysOfQuadMenus debug:false =
 (
 	-- Initialize shared variables
-	local hotkeys = #( #nonePressed, #shiftPressed, #altPressed, #controlPressed, #shiftAndAltPressed, #shiftAndControlPressed, #controlAndAltPressed, #shiftAndAltAndControlPressed )
+	local hotkeys = #( #nonePressed, #controlPressed, #shiftPressed, #altPressed, #shiftAndAltPressed, #shiftAndControlPressed, #controlAndAltPressed, #shiftAndAltAndControlPressed )
+	
+	
 	local menus_hotkeys = Dictionary #STRING
 
 	local kbd_path = ( getDir #TEMP ) + "3DsMax-hotkeys.kbdx"
@@ -14,40 +16,33 @@ function getHotkeysOfQuadMenus debug:false =
 	-- NESTED UTILITY FUNCTIONS
 	-- ==========================================
 
-	fn getHumanReadableKey mod_key hotkey =
-	(
-		-- 1. Identify Modifiers based on fVirt bitmask
-		local modStr = ""
-		if (bit.and hotkey 8) == 8 then modStr += "Ctrl+"
-		if (bit.and hotkey 16) == 16 then modStr += "Alt+"
-		if (bit.and hotkey 4) == 4 then modStr += "Shift+"
-		
-		-- 2. Map Virtual Key Code to Name
-		local keyboardSet = dotNetClass "System.Windows.Forms.Keys"
-		local keyName = (dotNetObject "System.Windows.Forms.KeysConverter").ConvertToString mod_key
-		
-		if keyName == "Divide" then
-			keyName = "/"
-		
-		return (modStr + keyName)
-	)
 
-	fn camelCaseToString str =
-	(
-		str[1] = toUpper str[1]
-		local rx = ( dotNetClass "System.Text.RegularExpressions.Regex" )
-		str	= rx.Replace str "Pressed" " + RMB"
-		str	= rx.Replace str "And" " + "
-		
-		return str
-	)
 
 	-- ==========================================
 	-- NESTED LOOP FUNCTIONS
 	-- ==========================================
 
-	fn processQuadMenus menus_hotkeys xmlParser quad_menus_list =
+	function processQuadMenus menus_hotkeys xmlParser quad_menus_list =
 	(
+		function getHumanReadableKey mod_key hotkey =
+		(
+			-- 1. Identify Modifiers based on fVirt bitmask
+			local modStr = ""
+			if (bit.and hotkey 8)  == 8  then modStr += "Ctrl+"
+			if (bit.and hotkey 16) == 16 then modStr += "Alt+"
+			if (bit.and hotkey 4)  == 4  then modStr += "Shift+"
+			
+			-- 2. Map Virtual Key Code to Name
+			local keyboardSet = dotNetClass "System.Windows.Forms.Keys"
+			local keyName = (dotNetObject "System.Windows.Forms.KeysConverter").ConvertToString mod_key
+			
+			if keyName == "Divide" then
+				keyName = "/"
+			
+			return (modStr + keyName)
+		)
+		
+		
 		for quad_menu_name in quad_menus_list do
 		(
 			local element = xmlParser.getElement #shortcut attr:"actionID" val:quad_menu_name
@@ -62,18 +57,28 @@ function getHotkeysOfQuadMenus debug:false =
 		)
 	)
 
-	fn processRightClickMenus menus_hotkeys hotkeys =
+	function processRightClickMenus menus_hotkeys hotkeys =
 	(
+		function camelCaseToString str =
+		(
+			str[1] = toUpper str[1]
+			local rx = ( dotNetClass "System.Text.RegularExpressions.Regex" )
+			str	= rx.Replace str "Pressed" " + RMB"
+			str	= rx.Replace str "And" " + "
+			
+			return str
+		)
+		
 		for hotkey in hotkeys do
 		(
 			local menu_of_hotkey = menuMan.getViewportRightClickMenu hotkey
 			
 			if menu_of_hotkey != undefined then
-				menus_hotkeys[ menuMan.getQuadMenuName menu_of_hotkey ] = camelCaseToString (hotkey as string)
+				menus_hotkeys[ " " + menuMan.getQuadMenuName menu_of_hotkey ] = camelCaseToString (hotkey as string)
 		)
 	)
 
-	fn printMenuHotkeys menus_hotkeys =
+	function printMenuHotkeys menus_hotkeys =
 	(
 		for menu_name in menus_hotkeys.keys do
 			format "menu: % \nhotkey: %\n\n" menu_name menus_hotkeys[menu_name]
@@ -84,9 +89,12 @@ function getHotkeysOfQuadMenus debug:false =
 	-- ==========================================
 	actionman.SaveKeyboardFile( kbd_path )
 	-- Execute the loop functions
-	processQuadMenus (menus_hotkeys) (XmlParser) (quad_menus)
 	
+	/* GET RIGHTCLICK MENUS */ 
 	processRightClickMenus(menus_hotkeys)(hotkeys)
+	
+	/* GET HOEKEYS MENUS */ 
+	processQuadMenus (menus_hotkeys) (XmlParser) (quad_menus)
 	
 	/* DEBUG */
 	if debug then
