@@ -9,6 +9,11 @@ filein( getFilenamePath(getSourceFileName()) + "/../../Lib/Dialog/Dialog.ms" )	-
 
 	Max Help: https://help.autodesk.com/view/3DSMAX/2017/ENU/?guid=__files_GUID_E421933F_958E_42FD_80A1_D66F2A2C0A06_htm
 
+	
+	TEST OF PARAMETERS IS HERE:
+		--"./Parameters/1.0_ControlsParamsTest.ms"
+	
+
 ================================================================================*/
 
 /*------------------------------------------------------------------------------

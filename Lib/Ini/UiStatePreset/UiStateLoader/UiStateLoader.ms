@@ -121,8 +121,8 @@ struct UiStateLoader_v
 	*/
 	function reorderSubRollouts _SubRolloutSlot targetRollouts =
 	(
-		format "\n"; print "UiStateLoader_v.reorderSubRollouts()"
-		format "_SubRolloutSlot: %\n" _SubRolloutSlot
+		--format "\n"; print "UiStateLoader_v.reorderSubRollouts()"
+		--format "_SubRolloutSlot: %\n" _SubRolloutSlot
 		
 		-- 1. CLEANUP: Remove any current rollouts that are NOT in the target array
 		--for i = _SubRolloutSlot.rollouts.count to 1 by -1 do

@@ -2,27 +2,45 @@ clearListener()
 
 filein( getFilenamePath(getSourceFileName()) + "/../../Lib/Dialog/Dialog.ms" )	-- "./../../Lib/Dialog/Dialog.ms"
 
-Dialog 	= Dialog_v title:(getFilenameFile(getSourceFileName()))  ini:( getSourceFileName())
---Dialog 	= Dialog_v title:(getFilenameFile(getSourceFileName())) -- WITHOUT INI
+Dialog 	= Dialog_v title:(getFilenameFile(getSourceFileName())) width:512 ini:( getSourceFileName())
+--Dialog 	= Dialog_v title:(getFilenameFile(getSourceFileName())) width:512 -- WITHOUT INI
 
 --Dialog.ini.delete()
 
-/* CONTROLS */
+/*------------------------------------------------------------------------------
+	CONFIG TEST
+--------------------------------------------------------------------------------*/
+
+USE_INI_ON_CONTROL = true -- default
+--USE_INI_ON_CONTROL = false
+
+/*------------------------------------------------------------------------------
+	CONTROLS
+--------------------------------------------------------------------------------*/
 
 _Controls = Dialog.Controls group:"Test"
 
-_Controls.control #checkbutton "Button 1" params:#( #across, 1) ini:false
+_Controls.control #checkbutton "Button 1" params:#( #across, 1) ini:USE_INI_ON_CONTROL
 
-_Controls.control #checkbox "Checkbox 1"
+_Controls.control #checkbox "Checkbox 1" ini:USE_INI_ON_CONTROL
 
-_Controls.control #EditText "EditText" value:"Default text"
+_Controls.control #EditText "EditText" value:"Default text" ini:USE_INI_ON_CONTROL
 
-_Controls.control #EditText "EditText no ini" value:"Default text" ini:false
+_Controls.control #EditText "EditText no ini" value:"Default text" ini:USE_INI_ON_CONTROL
 
-_Controls.control #BrowsePath ""
+_Controls.control #BrowsePath "" params:#( #mode, #getOpenFileName ) ini:USE_INI_ON_CONTROL
 
-_Controls.control #radioButtons "RadioButtons"	items:#("Item 1","Item 2")
+_Controls.control #radioButtons "RadioButtons"	items:#("Item 1","Item 2") ini:USE_INI_ON_CONTROL
 
 
-/* CREATE DIALOG */
+/*------------------------------------------------------------------------------
+	CREATE DIALOG
+--------------------------------------------------------------------------------*/
 Dialog.create()
+--Dialog.create cache:true
+
+
+/*------------------------------------------------------------------------------
+	OPEN INI FILE
+--------------------------------------------------------------------------------*/
+--Dialog.ini.open()

@@ -43,6 +43,8 @@ function parseStringToDatatype input_string =
 	)
 	else
 	(
+		input_string = substituteString input_string "\\\\" "\\"
+		
 		@"" + input_string -- IS STRING
 	)
 

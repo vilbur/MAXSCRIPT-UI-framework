@@ -53,7 +53,7 @@ struct Ini_v
 		val	= default
 
 		val_from_ini = getINISetting _path ( _section	as string ) ( key as string ) -- return
-		
+
 		if( val_from_ini == "" or val_from_ini == undefined ) then val else ParseStringToDatatype(val_from_ini) --return
 	),
 

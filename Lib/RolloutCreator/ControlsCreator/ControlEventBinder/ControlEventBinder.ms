@@ -41,14 +41,14 @@ struct ControlEventBinder_v
 	 */
 	function _addHandler _Control Event =
 	(
+		--format "\n========================================================================================================================\n"
 		--format "\n\n"; print "ControlEventBinder_v._addHandler()"
 		--format "_Control.id:	% \n" _Control.id
-		--format "Event:	% \n" Event
 		--format "Event.type:	% \n" Event.type
 		--format "Event.params:	% \n" Event.params
+		--format "Event:	% \n" Event
 		--
-		--format "Event.callback: %\n" Event.callback
-		--format "Event.callback:	\n\n============================================================\n%\n============================================================\n" Event.callback
+		--format "Event.callback:	\n\n%\n\n" Event.callback
 
 		if( Event.callback != "" ) then
 			_Rollout.RCI.addHandler _Control.id Event.type codeStr:( "("+Event.callback+")" ) paramStr:(Event.params) filter:on

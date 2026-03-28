@@ -34,12 +34,12 @@ struct UiStateSaver_v
 	 */
 	function saveDialogState _RolloutClass =
 	(
-		format "\n"; print "UiStateSaver_v.saveDialogState()"
+		--format "\n"; print "UiStateSaver_v.saveDialogState()"
 		_RolloutClass = this._getRollout( _RolloutClass )
 
 		/* SAVE nad GET current dock state of dialog */ 
 		dock_state = this.saveDialogDockState (_RolloutClass) 
-		format "DOCK_STATE: %\n" dock_state
+		--format "DOCK_STATE: %\n" dock_state
 		
 		/* SAVE SIZE AND POSITION - IF NOT DOCKED */ 
 		if dock_state == #cui_floatable then
@@ -237,7 +237,7 @@ struct UiStateSaver_v
 	 */
 	function _saveSubrolloutsOrder _SubRolloutClass _RolloutClass =
 	(
-		format "\n"; print "UiStateSaver_v._saveSubrolloutsOrder()"
+		--format "\n"; print "UiStateSaver_v._saveSubrolloutsOrder()"
 		/** Get subrollouts by order in UI
 		 */
 		function _getOrderedRollouts rollouts =

@@ -48,8 +48,10 @@ struct BrowsePath_v
 	  */
 	function getEvent _Control event_type =
 	(
-		--format "\n"; print "BrowsePath_v.getCallback()"
+		--format "\n"; print "BrowsePath_v.getEvent()"
+		--format "event_type: %\n" ( toUpper (event_type as string ))
 		--format "_Control:	% \n" _Control
+		--format "_Control.id: %\n" _Control.id
 		this._Control = _Control
 
 		Event = Event_v type:event_type
@@ -82,25 +84,27 @@ struct BrowsePath_v
 		--pattern = empty_string
 
 		/** NOTE: function valueIsEmpty should be placed in rollout, but there is no problem with it  */
-		callback = "function valueIsEmpty _string =
-		(
-			(( dotNetClass @System.Text.RegularExpressions.RegEx@).match _string @"+pattern+"@ ).success
-		)
+		callback = "		function valueIsEmpty _string = (( dotNetClass @System.Text.RegularExpressions.RegEx@).match _string @"+pattern+"@ ).success
+		
 
-		if( val != "+prev_value_variable+" and valueIsEmpty(val) and valueIsEmpty("+prev_value_variable+") ) then -- IF VALUE HAS CHANGED AND FIELD IS EMPTY
+		
+		/*  IF VALUE HAS CHANGED AND FIELD IS EMPTY */
+		if( val != "+prev_value_variable+" and valueIsEmpty(val) and valueIsEmpty("+prev_value_variable+") ) then
 		(
-
-			 -- OPEN BROWSE DIALOG
-			if( (browsed_path = "+ this._getPathDialog() +") != undefined ) then -- IF PATH HAS BEEN BROWSED
+			/* OPEN BROWSE DIALOG */ 
+			if( (browsed_path = "+ this._getPathDialog() +") != undefined ) then 
 			(
+				/* IF SUCCESS - PATH HAS BEEN BROWSED */ 
 				"+this._Control.id+".text    = browsed_path as string
 				"+this._Control.id+".tooltip = browsed_path as string
 
 				val = EventFired.val = substituteString browsed_path @\\\\@ @\\\\\\\\@
 			)
+			
 			else
 			(
-				"+prev_value_variable+" = val -- IF DIALOG WAS CANCELED
+				/* IF DIALOG WAS CANCELED */ 
+				"+prev_value_variable+" = val
 				"+this._Control.id+".tooltip = \""+tooltip+"\"
 			)
 		)
@@ -109,7 +113,12 @@ struct BrowsePath_v
 			"+prev_value_variable+" = "+this._Control.id+".text
 			"+this._Control.id+".tooltip = \""+tooltip+"\"
 		)"
+		--format "CALLBACK: %\n" callback
 
+		--callback =""
+		--callback +=	"\nformat \"********* XXX **********\";"
+			
+		
 		callback --return
 	),
 
@@ -124,6 +133,9 @@ struct BrowsePath_v
 			else
 				"+this._Control.id+".tooltip = \""+tooltip+"\""
 
+		--callback =""
+		--callback +=	"\nformat \"********* WTF **********\";"
+				
 		callback --return
 	),
 
@@ -131,9 +143,12 @@ struct BrowsePath_v
 	 */
 	function _setDefaultParams =
 	(
-		--print "BrowsePath_v._setDefaultParams()"
-
-		for param in browse_params do
+		print "BrowsePath_v._setDefaultParams()"
+		--format "this._Control.type: %\n" this._Control.type
+		--format "browse_params: %\n" browse_params
+		--format "this._Control.Params[#mode]: %\n" this._Control.Params[#mode]
+		--for param in browse_params do
+		for param in browse_params where this._Control.Params[param] == undefined do
 			this._Control.Params[param] = (
 				case param of
 				(

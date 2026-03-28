@@ -37,12 +37,12 @@ struct EventFiredCreator_v
 
 		
 		/* STRUCT DEFINITION  */ 
-		note_def	= "\n/*--- EventFired struct definition ---*/\n\n"
-		struct_def	= "execute \"struct EventFired_v( Type, Roll,\n	Control"+(this._getPropertyDefinition())+ ",\n" + (this._getMethods())+" on create do() )\""
+		note_def	= "\n/*--- EventFired: Definition of struct ---*/\n"
+		struct_def	= "execute \"struct EventFired_v( Type, Roll, Control"+(this._getPropertyDefinition())+ ", " + (this._getMethods())+" )\""
 
 		
 		/* GET INSTANVE OF STRUCT */ 
-		note_set_global	= "\n/*--- CAST INSTANCE TO GLOBAL VARIABLE ---*/\n\n"
+		note_set_global	= "\n/*--- CAST INSTANCE TO GLOBAL VARIABLE ---*/\n"
 		set_global	= "global EventFired = EventFired_v Type:#"+event_type+" Roll:"+ _RolloutClass +" Control:"+ ControlPath +" "+(this._getConstructPropsAndValues())
 
 		
@@ -61,7 +61,7 @@ struct EventFiredCreator_v
 
 		
 		for param in this.params do
-			properties += ",	\n" + param
+			properties += ", " + param
 		
 		/* EXCEPTION FOR CONTROL TYPES */ 
 		this._getPropsForControlType (&properties)
@@ -114,7 +114,7 @@ struct EventFiredCreator_v
 	(
 		-- " function test val = ( print val  )"
 		--print "EventFiredCreator_v._getConstructPropsAndValues()"
-		"function get prop = ( if hasProperty this ( prop as name ) then getProperty this ( prop as name ) else false  ),\n"
+		"function get prop = ( if hasProperty this ( prop as name ) then getProperty this ( prop as name ) else false  )"
 	),
 
 	on create do

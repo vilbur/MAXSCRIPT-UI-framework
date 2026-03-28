@@ -4,9 +4,9 @@ filein( getFilenamePath(getSourceFileName()) + "/../../../Lib/Dialog/Dialog.ms" 
 
 /* DIALOG */
 
-Dialog 	    = Dialog_v title:"Test"
+Dialog 	    = Dialog_v title:"Test" width:512
 
-_Controls	= Dialog.Controls group:"Main Controls"
+_Controls	= Dialog.Controls group:"Main Controls"  DEBUG:true 
 
 
 /* SETUP */
@@ -52,12 +52,11 @@ _Controls.Default #across 1
 
 /*------ BROWSEATH ------*/
 /* Browse path parameters: "https://help.autodesk.com/view/MAXDEV/2021/ENU/?guid=GUID-D4B43A33-8342-4BC9-80AB-91460861D37C"
-						--"./../../../Lib/RolloutCreator/ControlsCreator/ControlTypes/BrowsePath/BrowsePath.ms"
 
 	#mode,	-- #getOpenFileName|#getSaveFileName|#getSavePath is default
-	#caption
-	#initialDir -- works only in getSavePath mode E.G.:  "maxFilePath|(getDir #maxroot)|..."
-	#types
+	#caption	
+	#initialDir	-- works only in getSavePath mode E.G.:  "maxFilePath|(getDir #maxroot)|..."
+	#types	-- "*.txt|All|*.*"
 	#filename
 	#historyCategory
 
@@ -67,8 +66,8 @@ _Controls.Default #across 1
 --_Controls.control #browsePath "Brwose in users dir"	params:#( #initialDir, "C:\\Users" )
 --_Controls.control #browsePath "Brwose scene path"	params:#( #initialDir, "maxFilePath" )
 --_Controls.control #browsePath "Brwose max root"	params:#( #initialDir, "(getDir #maxroot)" )
---
---_Controls.control #browsePath "OpenFileName" params:#( #mode, #getOpenFileName )
+
+_Controls.control #browsePath "get Open File Name" params:#( #mode, #getOpenFileName )
 
 
 
@@ -78,4 +77,36 @@ _Controls.Default #across 1
 
 
 /* DIALOG CREATE */
-Dialog.create width:256
+Dialog.create()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

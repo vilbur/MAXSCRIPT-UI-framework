@@ -136,7 +136,7 @@ struct Dialog_v
 		cache: false	\ -- load generated dialog for fast startup -- true: PRODUCTION | false: DEVELOPMENT
 		parent: =
 	(
-		format "\n"; print "Dialog_v.create()"
+		--format "\n"; print "Dialog_v.create()"
 		--format "MENU: %\n" menu
 		--format "classOf menu: %\n" ( classOf menu )
 		timer_all = timer_createRollout = timeStamp()
@@ -163,7 +163,7 @@ struct Dialog_v
 		if not use_chache then
 		(
 			FORMAT "\n**** NO CACHE\n"
-			format "cache: %\n" cache
+			--format "cache: %\n" cache
 			/* INIT CREATOR */ 
 			_RolloutCreator = RolloutCreator_v Ini:Ini DEBUG:DEBUG
 
@@ -947,10 +947,10 @@ struct Dialog_v
 	 */
 	function _createMenu menu =
 	(
-		format "\n"; print "global._createMenu()"
+		--format "\n"; print "global._createMenu()"
 		
 		classof_menu =  (classOf menu) as string
-		format "classof_menu: %\n" classof_menu
+		--format "classof_menu: %\n" classof_menu
 		/*------------------------------------------------------------------------------
 			CALL METHOD "create()"
 		--------------------------------------------------------------------------------*/
@@ -1034,7 +1034,7 @@ struct Dialog_v
 	 */
 	on create do
 	(
-		format "\n"; print "Dialog_v.onCreate()"
+		--format "\n"; print "Dialog_v.onCreate()"
 		/* CHECK REQUIRED CONSTRUCT PROPERTIES */ 
 		this._checkConstctructProperties #(#title)
 --format "Ini: %\n" Ini
