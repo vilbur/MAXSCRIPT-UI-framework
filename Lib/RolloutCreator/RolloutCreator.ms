@@ -39,17 +39,17 @@ struct RolloutCreator_v
 	SubolloutsCreator = SubolloutsCreator_v ini_path:(Ini.getPath()) DEBUG:DEBUG,
 
 	/* store */
-	subrollouts_heights	= Dictionary(),
+	subrollouts_heights	= Dictionary #STRING,
+	RolloutsDefinition	= Dictionary #STRING, -- KEY:"FULL.ROLLOUT_ID" VALUE:RCI.def
 
 	/* private properties */
 	_closed_rollout_bar_height = 24, -- height of closed rollout
 
 	
-	RolloutsDefinition	= Dictionary #NAME, -- KEY:#ROLLOUT_ID VALUE:RCI.def
 	
-	/** Create dialog
+	/** CREATE ROLLOUT & SUBROLLOUTS
 	  *
-	  * @param	integer	width	for centered title
+	  * @param	integer	width	of control -- NOTE: is better to define on creation of struct "Dialog_v width:"
 	 */
 	function createRollout _Rollout width: =
 	(
@@ -58,34 +58,30 @@ struct RolloutCreator_v
 		
 		if _Rollout.RCI == undefined then -- RCI is defined WHEN chache is loaded
 		(
-			this._keepUniqueRolloutID(_Rollout)
+			if _Rollout.width == unsupplied and width != unsupplied then
+				_Rollout.width = width
+				
+			--this._keepUniqueRolloutID(_Rollout)
 			
-			execute( "global " + _Rollout.id as string )
+			--this._setRolloutIdGlobal(_Rollout)
 			
 			_Rollout.setRCI()
+			
 			
 			/*==============================================================================
 				SUBROLLOUTS 
 			================================================================================*/
 			
-			/* SET SLOT IDS */
-			this._setSubrolloutDefaultSlotIds(_Rollout)
-			
 			/* CREATE SUBROLLOUTS */
 			this._createSubrollouts(_Rollout)
-			
 
+			
 			/*==============================================================================
 				CONTROLS
 			================================================================================*/
 			
 			ControlsCreator	= ControlCreator_v _Rollout:_Rollout Ini:Ini DEBUG:DEBUG -- MUST BE AFTER SUBROLLOUT ARE CREATED
 	
-			if _Rollout.width == unsupplied and width != unsupplied then
-				_Rollout.width = width
-	
-			
-			----ControlsCreator.moveGrouboxControlsToEnd(_Rollout)
 
 			/*==============================================================================
 				EVENTS
@@ -110,6 +106,7 @@ struct RolloutCreator_v
 			if hasProperty _Rollout #DialogHotkeys and _Rollout.DialogHotkeys.hot_keys.count > 0 then
 				_Rollout.DialogHotkeys.addHotkeyTimer(_Rollout)
 	
+
 	
 			/* add LOCAL VARIABLES */
 			this._addLocalVariablesToRollout(_Rollout)
@@ -120,15 +117,19 @@ struct RolloutCreator_v
 			/* add CONTROLS and SUBROLLOUTS SLOTS */
 			this._addControlsAndSubrolloutSlots(_Rollout)
 	
+			_Rollout.RCI.addLocal "AUTORUN_EVENTS" init:( this.convertToString AUTORUN_EVENTS)
+
 			/* add EVENTS */
 			RolloutEventBinder.addHandlers()
 
-			
+
+
 			/* EDIT END */
 			_Rollout.RCI.end() --return _Rollout.RCI.def
 			
 			/* SAVE DEFINITION TO CACHE */ 
-			RolloutsDefinition[_Rollout.id] = _Rollout.RCI.str 
+			--RolloutsDefinition[_Rollout.id] = _Rollout.RCI.str 
+			RolloutsDefinition[_Rollout.getFullId()] = _Rollout.RCI.str 
 		)		
 	),
 
@@ -251,21 +252,6 @@ struct RolloutCreator_v
 		
 		if Subrollouts.height == unsupplied then
 			Subrollouts.height = subrollouts_heights[  Subrollouts.slot ] + (  Subrollouts.Rollouts.count  * this._closed_rollout_bar_height ) -- Slot height = Biggest subrollout OPEN and other subrollouts CLOSED
-		--format "Subrollouts.height: %\n" Subrollouts.height
-	),
-
-	/** SET SUBROLLOUT SLOT DEFAULT IDS if not set by user
-	 *
-	 *  Slot id is "Subrollouts" if only 1 slot exist
-	 *  Slot id is "Subrollouts_{number of slot}" if more then 1 slot exist
-	 */
-	function _setSubrolloutDefaultSlotIds _Rollout =
-	(
-		--format "\n"; print "RolloutCreator_v._setSubrolloutDefaultSlotIds()"
-		function slotIdIsUndefined slot_id = slot_id == undefined or slot_id == unsupplied
-
-		for i = 1 to (Subrollouts_all = _Rollout.getSubrollouts()).count where slotIdIsUndefined(Subrollouts_all[i].slot) do
-			Subrollouts_all[i].slot = if Subrollouts_all.count == 1 then #SUBROLLOUTS else  ("Subrollouts_" + i as string ) as name
 	),
 
 	/** Add local variables from Control_v to rollout
@@ -275,34 +261,40 @@ struct RolloutCreator_v
 	function _addLocalVariablesToRollout _Rollout =
 	(
 		--print "ControlCreator_v._addLocalVariablesToRollout()"
- 
-		/** Format to string
-		 */
-		function convertToString val =
-		(
-			val_string = val as string
-			
-			classOf_val = classOf val
-			
-			if classOf val == String  then
-			(
-				val_string = substituteString val_string "\\" "\\\\"
-				val_string = substituteString val_string "\"" "\\\""
-
-				val_string = "\"" + val_string + "\""
-			)
-			
-			if classOf val == name  then
-				val_string = "#" + val_string
-			
-
-			val_string --return
-		)
 		
 		/* ADD EACH VARIABLE */ 
 		for key in _Rollout.add_locals.keys do
-			_Rollout.RCI.addLocal ( key as string )  init:(convertToString _Rollout.add_locals[key])
+			_Rollout.RCI.addLocal ( key as string )  init:( this.convertToString _Rollout.add_locals[key])
 				
+	),
+	
+	/** Format to string
+	 */
+	function convertToString val =
+	(
+		--format "\n"; print "RolloutCreator_v.convertToString()"
+
+		classOf_val = classOf val
+		--format "classOf_val: %\n" classOf_val
+		val_string = val as string
+
+		--val_string = substituteString val_string "\"" "\\\""
+		if classOf_val == String  then
+		(
+			/* ESCAPE SLASHES "\" */ 		
+			val_string = substituteString val_string "\\" "\\\\"
+			/* ESCAPE QUOTES "\" */ 		
+			val_string = substituteString val_string "\"" "\\\""
+				
+			/* WRAP STRING TO QUOTES */ 
+			val_string = "\"" + val_string + "\""
+		)
+		/* CONVERT #NAME */ 
+		else if classOf_val == name  then
+			val_string = "#" + val_string
+		
+		val_string --return
+		
 	),
 
 	/** Add functions variables to rollout
@@ -372,6 +364,15 @@ struct RolloutCreator_v
 		
 		_Rollout --return
 	),
+	
+	/** Set rollout id global
+	 */
+	function _setRolloutIdGlobal _Rollout =
+	(
+		--format "\n"; print "RolloutCreator_v._setRolloutIdGlobal()"
+		execute( "global " + _Rollout.id as string )
+	),
+	
 	--/** Get title of rollout
 	--  *
 	--  * @return string title with whitespace between each character E.G.: "ROLLOUT TITLE" >>> "R O L L O U T   T I T L E"

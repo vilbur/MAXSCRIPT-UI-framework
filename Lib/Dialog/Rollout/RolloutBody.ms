@@ -24,7 +24,7 @@
 
 	RCI, -- Maxscript native RolloutCreator  https://help.autodesk.com/view/3DSMAX/2016/ENU/?guid=__files_GUID_5FC5036F_E2D7_46C9_9AFA_7B3550B9F254_htm
 
-	/* sotore */
+	/* store */
 	--temporary_created = false,
 
 	/* inhered */
@@ -49,7 +49,7 @@
 	function Controls group:undefined DEBUG:DEBUG =
 	(
 		--print "RolloutBody.controls()"
-		local Controls = Controls_v group:group rollout_id:id DEBUG:DEBUG
+		local Controls = Controls_v group:group rollout_id:(this.getFullId()) DEBUG:DEBUG
 
 		append _Controls Controls
 
@@ -61,6 +61,7 @@
 	function Subrollouts slot: width: height: =
 	(
 		--format "\n"; print "RolloutBody.Subrollouts()"
+		--format "slot: %\n" slot
 		--format "this.width: %\n" this.width
 		--format "width:      %\n" width
 		--format "height	= % \n" height
@@ -68,9 +69,13 @@
 		/** Get auto roll up option
 		 */
 		function getAutoRollUpOption = if not this.isDialog() then 1
+		
+		if slot == undefined or slot == unsupplied then
+			slot = "subrollouts_" + ((this.getSubrollouts()).count + 1) as string
 
 		--local Subrollouts = Subrollouts_v slot:(slot as name ) parent_rollout_id:(this.getFullId()) width:(if width != unsupplied then width else this.width) height:height
-		local Subrollouts = Subrollouts_v slot:slot parent_rollout_id:(this.id) width:(if width != unsupplied then width else this.width) height:height nested_level:( nested_level + 1 ) auto_roll_up:(getAutoRollUpOption()) DEBUG:DEBUG
+		--local Subrollouts = Subrollouts_v slot:slot parent_rollout_id:(this.id) width:(if width != unsupplied then width else this.width) height:height nested_level:( nested_level + 1 ) auto_roll_up:(getAutoRollUpOption()) DEBUG:DEBUG
+		local Subrollouts = Subrollouts_v slot:slot parent_rollout_id:(this.getFullId()) width:(if width != unsupplied then width else this.width) height:height nested_level:( nested_level + 1 ) auto_roll_up:(getAutoRollUpOption()) DEBUG:DEBUG
 
 		append _Controls Subrollouts
 
@@ -161,11 +166,13 @@
 		--format "id:	% \n" id
 		--format "parent_rollout_id:	% \n" parent_rollout_id
 
-		if ( parent_rollout_id != undefined ) then
+		get_full_id = if ( parent_rollout_id != undefined ) then
 			parent_rollout_id as string +"."+ id as string --return
 
 		else
 			id as string --return
+		--format "get_full_id: %\n" get_full_id
+			get_full_id --return
 	),
 
 	/** Is dialog

@@ -75,7 +75,7 @@ struct Ini_v
 		_path --return
 	),
 
-	/** Open ini file in Notepad++
+	/** Open ini file
 	 */
 	function open =
 	(

@@ -11,7 +11,7 @@
 
 --------------------------------------------------------------------------------*/
 
-macroscript macroFileTest_autorun_event
+macroscript macroFileTest_autorun_event_checkbutton
 	category:	"MacroFileTest"
 	buttontext:	"Autorun Event"
 	toolTip:	"This event is fired when ui is created"
@@ -20,6 +20,14 @@ macroscript macroFileTest_autorun_event
 	print "\n\n--------- AUTORUN EVENT ---------\n\n"
 )
 
+macroscript macroFileTest_autorun_event_checkbox
+	category:	"MacroFileTest"
+	buttontext:	"Autorun Event"
+	toolTip:	"This event is fired when ui is created"
+	icon:	"control:checkbox|autorun:true|#checked:true"
+(
+	print "\n\n--------- AUTORUN EVENT ---------\n\n"
+)
 
 --/*------------------------------------------------------------------------------
 --  LEFT RIGHT CLICK TEST

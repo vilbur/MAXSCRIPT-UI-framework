@@ -26,7 +26,7 @@ filein( getFilenamePath(getSourceFileName()) + "/Hotkeys/Hotkeys.ms" )	-- "./Hot
 --------------------------------------------------------------------------------*/
 global DIALOG_PREVIOUS_STATE = undefined -- this should be in struct
 
-global AUTORUN_EVENTS = Dictionary()
+global AUTORUN_EVENTS = Dictionary #STRING
 
 
 if EVENT_DOCKED_ENABLED == undefined then
@@ -157,24 +157,26 @@ struct Dialog_v
 		
 		use_chache = cache and doesFileExist (cache_file_path)
 		
+		--this.addLocal #TEST_VARIABLE (Dictionary #STRING)
+		--this.addLocal #TEST_VARIABLE (AUTORUN_EVENTS)
 		/*==============================================================================
 			COMPILE DIALOG
 		================================================================================*/
 		if not use_chache then
 		(
 			FORMAT "\n**** NO CACHE\n"
-			--format "cache: %\n" cache
+
 			/* INIT CREATOR */ 
 			_RolloutCreator = RolloutCreator_v Ini:Ini DEBUG:DEBUG
-
+			
 			
 			/*------------------------------------------------------------------------------
 				CREATE MAIN ROLLOUT AND NESTED ROLLOUTS
 			--------------------------------------------------------------------------------*/
 			
 			_RolloutCreator.createRollout (this) width:width  -- create nested rollouts
-			--if this.DEBUG then format "createRollout % ms\n" ((timestamp()) - timer_all)
 
+			
 			/*------------------------------------------------------------------------------
 				CREATE DIALOG
 			--------------------------------------------------------------------------------*/
@@ -203,22 +205,29 @@ struct Dialog_v
 			
 			_RolloutCreator.SubolloutsCreator.addSubRollouts (this)
 			--if this.DEBUG then format "addSubRollouts % ms\n" ((timestamp()) - timer_all)
-			
+				format "_RolloutCreator.RolloutsDefinition.keys: %\n" _RolloutCreator.RolloutsDefinition.keys
+		
 			/* CACHE FILE */
 			--if cache then
-				this.writeToCacheFile cache_file_path width height 
-
+				this._writeToCacheFile cache_file_path width height
+				
+			--Dialog.TEST_VARIABLE = AUTORUN_EVENTS
 			/*------------------------------------------------------------------------------
 				POST CREATE
 			--------------------------------------------------------------------------------*/
 			
 			/* SET DIALOG TO GLOBAL CONTAINER OF DIALOGS OF FRAMEWORK */ 
 			DIALOG_GLOBAL_DATA[this.id] = DialogGlobalData_v(this.RCI.def)(this)
-			
+			--format "AUTORUN_EVENTS: %\n" AUTORUN_EVENTS
+
 			/* EXECUTE AUTORUN EVENTS OF CONTROLS */ 
 			--this._executeAutorunEvents()
 			
 			Dialog = RCI.def --return
+			
+			--format "Dialog: %\n" Dialog
+			
+			--DOSCommand ("\""+cache_file_path+"\"")
 		)
 		
 		/*==============================================================================
@@ -233,7 +242,7 @@ struct Dialog_v
 			Dialog = createDialogFromCacheFile this.width this.height dialog_pos bgcolor fgcolor bitmap bmpstyle dialog_style modal true escapeEnable lockHeight lockWidth parent
 		)
 		
-		
+
 		/*==============================================================================
 			POST CREATE
 		================================================================================*/
@@ -644,7 +653,7 @@ struct Dialog_v
 	 */
 	function _getWidthAndHeight width height =
 	(
-		--format "\n"; print "if._getWidthAndHeight()"
+		--format "\n"; print "Dialog_v._getWidthAndHeight()"
 				
 		/* WIDTH & HEIGHT MUST BE INTEGER - otherwise height of  dialog doesn't work */ 
 		if superClassOf width  == Number then width  = width as integer
@@ -842,22 +851,32 @@ struct Dialog_v
 	function _executeAutorunEvents =
 	(
 		--format "\n"; print "Dialog_v._executeAutorunEvents()"
-		--format "AUTORUN_EVENTS.keys.count: %\n" AUTORUN_EVENTS.keys.count
-		--format "\n-----------\nDICTIONARY:AUTORUN_EVENTS:%\n" AUTORUN_EVENTS; for data_pair in AUTORUN_EVENTS do format "%:	%\n" data_pair.key data_pair.value
 
-		 for data_pair in AUTORUN_EVENTS do
+		if Dialog.AUTORUN_EVENTS.keys.count > 0 then
+			FORMAT "Dialog_v._executeAutorunEvents()"
+
+		for control_path in Dialog.AUTORUN_EVENTS.keys do
+		(
 			try(
 				
-				--format "\nEXECUTE AUTORUN EVENT: %\n" (data_pair.value)
+				if ( control = execute control_path ) != undefined then 
+					if (classOf_control = classOf control) == CheckBoxControl or classOf_control == CheckButtonControl then
+						if control.checked then
+						(
+							callback = substituteString Dialog.AUTORUN_EVENTS[control_path] "\\" ""
+							format "CONTROL: %   		CALLBACK: %\n" control callback
 				
-				execute data_pair.value
-	
+							execute callback
+						)
+			
 			 )catch(
-				--format "\n——————————————— ERROR IN FILE ———————————————\n\n%\n" (getSourceFileName())
-				--format "\n————————————————— EXCEPTION —————————————————\n\n%\n" (getCurrentException())
-				--format "\n——————————————————— TRACE ———————————————————\n%\n"   (getCurrentExceptionStackTrace())
-				--format "\n——————————————————— STACK ———————————————————\n%\n"   (getCurrentExceptionCallStack())
+				format "\n——————————————— ERROR IN FILE ———————————————\n\n%\n" (getSourceFileName())
+				format "\n————————————————— EXCEPTION —————————————————\n\n%\n" (getCurrentException())
+				format "\n——————————————————— TRACE ——————————————————— or\n%\n"   (getCurrentExceptionStackTrace())
+				format "\n——————————————————— STACK ———————————————————\n%\n"   (getCurrentExceptionCallStack())
 			 )
+		)
+			
 	),
 
 	/** Is defined
@@ -970,26 +989,29 @@ struct Dialog_v
 	
 	/** Write to deff file
 	 */
-	function writeToCacheFile cache_file_path width height =
+	function _writeToCacheFile cache_file_path width height =
     (
-        --format "\n"; print "Dialog_v.writeToCacheFile()"
-		--format "\n"; print "if.writeToCacheFile()"
+        --format "\n"; print "Dialog_v._writeToCacheFile()"
+		--format "\n"; print "if._writeToCacheFile()"
 		
 		subrollouts_def	= ""
+		global_rollouts	= ""
         addSubRollouts_def = ""
 		
-        addSubRollouts_array = _RolloutCreator.SubolloutsCreator.addSubRollouts_definition
-		
-		--for nested_level in _RolloutCreator.SubolloutsCreator.addSubRollouts_definition do
-        for nested_level = 1 to addSubRollouts_array.count do
-             addSubRollouts_def += addSubRollouts_array[nested_level]
 		
 		fn_definition   	= "function createDialogFromCacheFile width height pos bgcolor fgcolor bitmap bmpstyle style modal autoLayoutOnResize escapeEnable lockHeight lockWidth parent =\n(\n"
 		create_dialog_str	= "CreateDialog " + this.id as string + " width:width height:height pos:pos bgcolor:bgcolor fgcolor:fgcolor bitmap:bitmap bmpstyle:bmpstyle style:style modal:modal autoLayoutOnResize:autoLayoutOnResize escapeEnable:escapeEnable lockHeight:lockHeight lockWidth:lockWidth parent:parent \n"
 		destroy_dialog_str	= "try( destroyDialog "+ this.id as string +" )catch()\n\n"
 		
+		/* ADD SUBROLLOUTS */ 
+        addSubRollouts_array = _RolloutCreator.SubolloutsCreator.addSubRollouts_definition
+		
+        for nested_level = 1 to addSubRollouts_array.count do
+             addSubRollouts_def += addSubRollouts_array[nested_level]
+		
 		add_rollouts_str	= "try(\n"+ addSubRollouts_def +")catch()\n\n"
 		
+		/* RETURN */ 
 		return_rollout		= this.id as string + "-- return" 
 		
 		deleteFile cache_file_path
@@ -998,6 +1020,10 @@ struct Dialog_v
 			
 			for rollout_id in _RolloutCreator.RolloutsDefinition.keys do
 				subrollouts_def += _RolloutCreator.RolloutsDefinition[rollout_id]
+			(
+				--global_rollouts += "global " + rollout_id as string + "\n"
+				
+			)
 			
             makeDir ( getFilenamePath( cache_file_path )  ) all:true
 
@@ -1010,7 +1036,8 @@ struct Dialog_v
 
                 FORMAT "%\n" fn_definition 			to:cache_file
                 FORMAT "%\n" destroy_dialog_str 	to:cache_file
-                FORMAT "%\n" subrollouts_def 	to:cache_file
+                --FORMAT "%\n" global_rollouts 		to:cache_file
+                FORMAT "%\n" subrollouts_def 		to:cache_file
                 FORMAT "%\n" create_dialog_str  	to:cache_file
                 FORMAT "%\n" add_rollouts_str    	to:cache_file
                 FORMAT "%\n" return_rollout 		to:cache_file

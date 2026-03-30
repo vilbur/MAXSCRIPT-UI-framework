@@ -41,6 +41,7 @@ struct SubolloutsCreator_v
 		--slot_height = 256 as string
 
 		slot_id = Subrollouts.slot as string
+		--format "SLOT_ID: %\n" slot_id
 		--format "SLOT: %\nHEIGHT: %\n" slot_id SLOT_HEIGHT
 
 		slot_offset = [slot_offset_x, 0]
@@ -121,7 +122,7 @@ struct SubolloutsCreator_v
 
 	private
 
-	/** Get slot data
+	/** Slot name is redundant, it is used to keep extra data
 	 */
 	function _getSlotData Subrollouts =
 	(
@@ -131,7 +132,7 @@ struct SubolloutsCreator_v
 		(
 			slot_data	=  Dictionary()
 			
-			 slot_data[#AUTOROLLUP] = Subrollouts.auto_roll_up
+			slot_data[#AUTOROLLUP] = Subrollouts.auto_roll_up
 			 
 			 
 			slot_data as string --return
@@ -195,7 +196,7 @@ struct SubolloutsCreator_v
 		
 		
         --prefix + "AddSubRollout "+ Subrollouts.getSlotId() +" "+ _Subrollout.id as string +" rolledUp:"+rolled_up_state as string + "\n"
-        addSubRollouts_definition[nested_level] += prefix + "AddSubRollout "+ Subrollouts.getSlotId() +" "+ _Subrollout.id as string +" rolledUp:"+rolled_up_state as string + " --" +nested_level as string + "\n"
+        addSubRollouts_definition[nested_level] += prefix + "AddSubRollout "+ Subrollouts.getSlotId() +" "+ _Subrollout.id as string +" rolledUp:"+rolled_up_state as string + " -- nested_level:" +nested_level as string + "\n"
 	),
 
 	/**

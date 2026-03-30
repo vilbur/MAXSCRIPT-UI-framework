@@ -143,7 +143,7 @@ struct BrowsePath_v
 	 */
 	function _setDefaultParams =
 	(
-		print "BrowsePath_v._setDefaultParams()"
+		--print "BrowsePath_v._setDefaultParams()"
 		--format "this._Control.type: %\n" this._Control.type
 		--format "browse_params: %\n" browse_params
 		--format "this._Control.Params[#mode]: %\n" this._Control.Params[#mode]

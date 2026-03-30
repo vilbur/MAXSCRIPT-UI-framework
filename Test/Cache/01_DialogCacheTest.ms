@@ -20,9 +20,9 @@ function dialogRolloutCallbackParam val =
 /** Test each event
   *
   */
-function dialogEventsTest &DialogTest =
+function testDialogEvents &DialogTest =
 (
-	format "\n"; print "1_DialogEventsTest.ms.dialogEventsTest()"
+	format "\n"; print "1_DialogEventsTest.ms.testDialogEvents()"
 
 --    DialogTest.Event #OPEN	"dialogRolloutCallbackParam(@#OPEN@)"
 --    DialogTest.Event #CLOSE	"dialogRolloutCallbackParam(@#CLOSE@)"
@@ -91,9 +91,9 @@ function testAllEvents _Rollout =
 /* DIALOG */
 
 --Dialog 	= Dialog_v title:"Test"
-Dialog = Dialog_v title:"Test"  ini:(getSourceFileName())
+Dialog = Dialog_v title:"Test" ini:(getSourceFileName())
 
-dialogEventsTest(Dialog)
+testDialogEvents(Dialog)
 
 /*------------------------------------------------------------------------------
 	ROLLOUTS A
@@ -135,7 +135,7 @@ _Controls   = _NestedSubRollout.Controls group:"Nested SubRollout Controls"
 
 /*------------------------------------------------------------------------------
 	ROLLOUTS B
---------------------------------------------------------------------------------*/
+------------------------------------------------------------------------------*/
 Rollouts_B = Dialog.Rollouts slot:#Rollouts_B
 Rollout_B1 = Rollouts_B.Roll "Rollout B1" height:256
 
@@ -149,14 +149,12 @@ Rollout_B1 = Rollouts_B.Roll "Rollout B1" height:256
 --Dialog.create() -- create dialog without cache by default
 
 /* USE CACHE */
-----use_cache = false
-use_cache = false
-Dialog.create cache:use_cache lockHeight:false
+use_cache = true
+--use_cache = false
 
---use_cache = true
---Dialog.create cache:use_cache lockHeight:false
+Dialog.create cache:use_cache
 
-Dialog.register()
+--Dialog.register()
 
 
 

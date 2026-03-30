@@ -133,9 +133,12 @@ struct ControlEventCreator_v
 	(
 		--format "\n"; print "ControlEventCreator_v._addToAutoRunEvents()"
 		if Event.autorun then
-			if ( control_state = _Control.Params[#CHECKED] ) == undefined \ -- IF CONTROL HAS NOT CHECKED PARAMETER
-			or( control_state != undefined and control_state == true ) then  -- IF CONTROL IS CHECKED
-                 AUTORUN_EVENTS[ ( _Control.id as string + "_" + Event.type as string  )as name ] = Event.callback
+			--if ( control_state = _Control.Params[#CHECKED] ) == undefined then -- IF CONTROL HAS NOT CHECKED PARAMETER
+			--or( control_state != undefined and control_state == true ) then  -- IF CONTROL IS CHECKED
+                 AUTORUN_EVENTS[ _Control.getFullId() ] = substituteString  Event.callback "\"" "\\\""
+                 --AUTORUN_EVENTS[ _Control.id as string + "_" + Event.type as string ] = Event.callback
+		
+		--format "\n\n---------------------AUTORUN_EVENTS----------------: %\n\n" AUTORUN_EVENTS
 	),
 
 
@@ -164,6 +167,7 @@ struct ControlEventCreator_v
 					default: argument as string
 				)
 		)
+		
 		/** Join prameters to string, if not added already
 		  *
 		  * @return string E.G.: "fooCallback" >>> "fooCallback(val)(inspin)(custom_param)"
@@ -263,16 +267,16 @@ struct ControlEventCreator_v
 			--format "event_types[_Control.type][Event_Data.key]:	% \n" event_types[_Control.type][Event_Data.key]
 			if event_types[_Control.type][Event_Data.key] == undefined then
 			(
-				format  ("\n\n=================== WARNING ======================\n\n")
+				--format  ("\n\n=================== WARNING ======================\n\n")
 				print  ("EVENT TYPE #"+ Event_Data.key as string +" DOES NOT EXISTS")
-				format "\n"
-				format "Control:  #% \n" 	_Control.id
-				format "Title:    \"%\" \n"	_Control.caption
-				format "Type:     %\n" 	_Control.type
-				format "Event:    % \n"	Event_Data.key
-				format "\n"
-				format "AVAILABLE EVENTS FOR THIS TYPE: % \n" event_types[_Control.type].keys
-				format "\n"
+				--format "\n"
+				--format "Control:  #% \n" 	_Control.id
+				--format "Title:    \"%\" \n"	_Control.caption
+				--format "Type:     %\n" 	_Control.type
+				--format "Event:    % \n"	Event_Data.key
+				--format "\n"
+				--format "AVAILABLE EVENTS FOR THIS TYPE: % \n" event_types[_Control.type].keys
+				--format "\n"
 				print  ("================================================")
 			)
 	),

@@ -38,7 +38,8 @@ struct Subrollouts_v
 			--width = this.width - 4 -- make rollout wide as is possible
 
 		--local _Rollout = Rollout_v title:title id:id parent_rollout_id:( parent_rollout_id as string +"."+slot as string )
-		local _Rollout = Rollout_v title:title id:id width:width height:height parent_rollout_id:(parent_rollout_id as string + "." + slot as string ) nested_level:nested_level rolledUp:rolledUp DEBUG:DEBUG
+		--local _Rollout = Rollout_v title:title id:id width:width height:height parent_rollout_id:(parent_rollout_id as string + "." + slot as string ) nested_level:nested_level rolledUp:rolledUp DEBUG:DEBUG
+		local _Rollout = Rollout_v title:title id:id width:width height:height parent_rollout_id:(this.getSlotId() ) nested_level:nested_level rolledUp:rolledUp DEBUG:DEBUG
 		--format "_Rollout:	% \n" _Rollout
 		append Rollouts _Rollout
 
@@ -49,7 +50,7 @@ struct Subrollouts_v
 	 */
 	function new title id: =
 	(
-		format "\n"; print "!!!!!!!! DEPRECATED METHOD Subrollouts_v.new() please use Subrollouts_v.Roll() "
+		--format "\n"; print "!!!!!!!! DEPRECATED METHOD Subrollouts_v.new() please use Subrollouts_v.Roll() "
 
 		this.Roll title id:id --return
 	),
@@ -97,7 +98,12 @@ struct Subrollouts_v
 	function getSlotId =
 	(
 		--format "\n"; print "Subrollouts_v.getSlotId()"
-		 parent_rollout_id as string +"."+ slot as string --return
+		--format "parent_rollout_id: %\n" parent_rollout_id
+		--format "slot: %\n" slot
+		 --parent_rollout_id as string +"."+ slot as string --return
+		get_slot_id = parent_rollout_id as string +"."+ slot as string --return
+		--format "get_slot_id: %\n" get_slot_id
+		get_slot_id --return
 	),
 
 	private
@@ -107,7 +113,8 @@ struct Subrollouts_v
 	on create do
 	(
 		--format "\n"; print "Subrollouts_v.onCreate()"
-		if this.slot != undefined and this.slot != unsupplied then
-			this.slot = this.slot as name
+		--format "PARENT_ROLLOUT_ID: %\n" parent_rollout_id
+		--if this.slot != undefined and this.slot != unsupplied then
+		this.slot = this.slot as string 
 	)
 )

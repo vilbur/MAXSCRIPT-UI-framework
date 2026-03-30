@@ -96,10 +96,9 @@ struct Control_v
 	function getFullId =
 	(
 		--format "\n"; print "Control_v.getFullId()"
+		--rollout_id as string +"."+ id as string --return
 		rollout_id as string +"."+ id as string --return
 	),
-
-
 
 	/* MEerge dictionaries
 	*/ 

@@ -17,4 +17,9 @@ ContentLoader	= ContentLoader_v path:(current_dir+"/Test-content") --ini:( getSo
 
 
 /* CREATE UI */
-ContentLoader.create width:512
+--ContentLoader.create cache:true
+ContentLoader.create cache:false
+
+
+
+--format "ContentLoader.Dialog.Dialog: %\n" ContentLoader.Dialog.Dialog.TEST_VARIABLE.keys
