@@ -68,7 +68,7 @@ struct CallbackManager_v
 		
 		for Callback in this.getCallbacks (callback_type_id) do
 		(
-			format "execute: %\n" Callback.callback
+			--format "execute: %\n" Callback.callback
 			
 			try(
 					execute Callback.callback
@@ -108,8 +108,8 @@ struct CallbackManager_v
 				if classOf (execute callbackFn) != MAXScriptFunction then
 				(
 					print ("------------------- CallbackManager_v.import() -------------------")
-					format "CALLBACK FUNCTION MISSING IN FILE: %\n" (callback_file)
-					format "MAKE SURE THAT FILE %.ms CONTAINS FUNCTION: %()\n" callbackFn callbackFn
+					--format "CALLBACK FUNCTION MISSING IN FILE: %\n" (callback_file)
+					--format "MAKE SURE THAT FILE %.ms CONTAINS FUNCTION: %()\n" callbackFn callbackFn
 				)
 				else
 					this.add callbackFn type
@@ -216,7 +216,7 @@ struct CallbackManager_v
 	function startCallback Callback =
 	(
 		--format "\n"; print "CallbackManager_v.startCallback()"
-		format "\nCallbackManager_v.startCallback % %\n" Callback.type Callback.callback
+		--format "\nCallbackManager_v.startCallback % %\n" Callback.type Callback.callback
 		
 		Callback = this._mutateCallback Callback
 		--format "Callback: %\n" Callback

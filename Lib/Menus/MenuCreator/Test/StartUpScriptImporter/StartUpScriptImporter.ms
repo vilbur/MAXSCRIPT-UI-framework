@@ -91,8 +91,8 @@ struct StartUpScriptImporter_v
 		if  DEBUG then
 			content += "		format \"FILE IN: %\\n\" file_path\n"
 		
-		content += "    )\nelse\n"
-		content += "		format \"\\n\\n----- WARNING: Missing file in: %\\n\\nERROR OF IMPORT FILE: %\\n\" (getSourceFileName()) file_path"
+		content += "    )\n    else\n"
+		content += "		format \"\\n\\n----- WARNING: Missing file in: %\\n\\n!ERROR IN: %\\n\\n\" (getSourceFileName()) file_path"
 		
 		try(
 			format "%" content to:std_file
