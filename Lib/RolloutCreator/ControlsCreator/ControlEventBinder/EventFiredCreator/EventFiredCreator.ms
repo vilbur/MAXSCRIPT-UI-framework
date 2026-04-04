@@ -17,7 +17,7 @@ global EventFired   = undefined -- here is stored instance of EventFired_v
  */
 struct EventFiredCreator_v
 (
-	/* required */
+	/* construct */
 	_RolloutClass,	-- Rollout of control
 	ControlPath = "",	-- E.G.: "DIALOG_test.CBTN_checkbutton"
 	control_type,

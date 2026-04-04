@@ -40,7 +40,8 @@ struct ControlEventCreator_v
 		   
 		============================================================================================================*/
 
-		EventFiredCreator = EventFiredCreator_v _RolloutClass:(_Rollout.id as string ) ControlPath:( _Rollout.id as string +"."+ _Control.id as string ) control_type:_Control.type
+		--EventFiredCreator = EventFiredCreator_v _RolloutClass:(_Rollout.id as string ) ControlPath:( _Rollout.id as string +"."+ _Control.id as string ) control_type:_Control.type
+		EventFiredCreator = EventFiredCreator_v _RolloutClass:(_Rollout.getFullId() ) ControlPath:( _Control.getFullId() ) control_type:_Control.type
 
 		
 		/*==============================================================================

@@ -79,7 +79,7 @@ struct StartUpScriptImporter_v
 		
 		--content += "format \"\\n\"; print \"FileInImporter_v._fileInFil	es()\""
 		--content += "format \"\\nFiles imported from file: %\\n\\n\" \""+import_file_path+"\""
-		content += "format \"\\n\\n===============================\\n\\nIMPORT FILES FROM: %\\n\\n\" (getSourceFileName())\n\n"
+		content += "format \"\\n\\n===================================================================================\\n\\nIMPORT FILES FROM: %\\n\\n\" (getSourceFileName())\n\n"
 		
 		content += "file_in_files = #("+files_string+"\n)\n\n"
 		

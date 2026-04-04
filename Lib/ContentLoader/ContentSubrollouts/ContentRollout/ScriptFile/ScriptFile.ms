@@ -1,6 +1,3 @@
---messageBox "IMPORT ScriptFile_Content_v()"
-format "\n*********************************\n\n ScriptFile_Content_v() \n\n*********************************\n\n"
-
 filein( getFilenamePath(getSourceFileName()) + "/../../../../RolloutCreator/ControlsCreator/EventTypes/EventTypes.ms" )	--"./../../../../RolloutCreator/ControlsCreator/EventTypes/EventTypes.ms"
 
 filein( getFilenamePath(getSourceFileName()) + "/MacroScript/MacroScript.ms" ) -- "./MacroScript/MacroScript.ms"
