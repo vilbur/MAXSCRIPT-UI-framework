@@ -210,30 +210,23 @@ struct Dialog_v
 			--------------------------------------------------------------------------------*/
 			
 			_RolloutCreator.SubolloutsCreator.addSubRollouts (this)
-			--if this.DEBUG then format "addSubRollouts % ms\n" ((timestamp()) - timer_all)
-				format "_RolloutCreator.RolloutsDefinition.keys: %\n" _RolloutCreator.RolloutsDefinition.keys
+			
+			if this.DEBUG then format "addSubRollouts % ms\n" ((timestamp()) - timer_all)
+			--format "_RolloutCreator.RolloutsDefinition.keys: %\n" _RolloutCreator.RolloutsDefinition.keys
 		
-			/* CACHE FILE */
-			--if cache then
+			/* GENERATE CACHE FILE */
+			if cache then
 				this._writeToCacheFile cache_file_path width height
-				
-			--Dialog.TEST_VARIABLE = AUTORUN_EVENTS
+			
+			
 			/*------------------------------------------------------------------------------
 				POST CREATE
 			--------------------------------------------------------------------------------*/
 			
 			/* SET DIALOG TO GLOBAL CONTAINER OF DIALOGS OF FRAMEWORK */ 
 			DIALOG_GLOBAL_DATA[this.id] = DialogGlobalData_v(this.RCI.def)(this)
-			--format "AUTORUN_EVENTS: %\n" AUTORUN_EVENTS
 
-			/* EXECUTE AUTORUN EVENTS OF CONTROLS */ 
-			--this._executeAutorunEvents()
-			
-			--format "Dialog.visible: %\n" Dialog.visible
 			Dialog = RCI.def --return
-			
-
-			--format "Dialog: %\n" Dialog
 			
 			--DOSCommand ("\""+cache_file_path+"\"")
 		)

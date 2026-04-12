@@ -3,10 +3,10 @@
 filein( getFilenamePath(getSourceFileName()) + "/../Dialog/Rollout/Rollout.ms" ) 	-- "./../Dialog/Rollout/Rollout.ms"
 filein( getFilenamePath(getSourceFileName()) + "/../Dialog/Rollout/Subrollouts/Subrollouts.ms" )	-- "./../Dialog/Rollout/Subrollouts/Subrollouts.ms"
 
-filein( getFilenamePath(getSourceFileName()) + "/RolloutEventBinder/DefaultEvents/Callbacks/waitForResizingEnds.ms" )	--"./RolloutEventBinder/DefaultEvents/Callbacks/waitForResizingEnds.ms"
-filein( getFilenamePath(getSourceFileName()) + "/RolloutEventBinder/DefaultEvents/Callbacks/autoRollUpRolloutCallback.ms" )	--"./RolloutEventBinder/DefaultEvents/Callbacks/autoRollUpRolloutCallback.ms"
-filein( getFilenamePath(getSourceFileName()) + "/RolloutEventBinder/DefaultEvents/Callbacks/rollUpOtherRolloutsCallback.ms" )	--"./RolloutEventBinder/DefaultEvents/Callbacks/rollUpOtherRolloutsCallback.ms"
-filein( getFilenamePath(getSourceFileName()) + "/RolloutEventBinder/DefaultEvents/waitForResizingEndsTimer.ms" )	-- "./RolloutEventBinder/DefaultEvents/waitForResizingEndsTimer.ms"
+filein( getFilenamePath(getSourceFileName()) + "/RolloutEventBinder/RolloutDefaultEvents/Callbacks/waitForResizingEnds.ms" )	--"./RolloutEventBinder/RolloutDefaultEvents/Callbacks/waitForResizingEnds.ms"
+filein( getFilenamePath(getSourceFileName()) + "/RolloutEventBinder/RolloutDefaultEvents/Callbacks/autoRollUpRolloutCallback.ms" )	--"./RolloutEventBinder/RolloutDefaultEvents/Callbacks/autoRollUpRolloutCallback.ms"
+filein( getFilenamePath(getSourceFileName()) + "/RolloutEventBinder/RolloutDefaultEvents/Callbacks/rollUpOtherRolloutsCallback.ms" )	--"./RolloutEventBinder/RolloutDefaultEvents/Callbacks/rollUpOtherRolloutsCallback.ms"
+filein( getFilenamePath(getSourceFileName()) + "/RolloutEventBinder/RolloutDefaultEvents/waitForResizingEndsTimer.ms" )	-- "./RolloutEventBinder/RolloutDefaultEvents/waitForResizingEndsTimer.ms"
 
 filein( getFilenamePath(getSourceFileName()) + "/RolloutEventBinder/RolloutEventBinder.ms" )	-- "./RolloutEventBinder/RolloutEventBinder.ms"
 

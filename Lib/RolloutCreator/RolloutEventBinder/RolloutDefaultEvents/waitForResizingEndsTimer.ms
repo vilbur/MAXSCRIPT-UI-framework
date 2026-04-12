@@ -7,7 +7,7 @@ global CALLBACK_DELAY_TIMER = undefined
   */
 function waitForResizingEndsTimer dialog_id =
 (
-	--format "\n"; print "DefaultEvents_v.waitForResizingEndsTimer()"
+	--format "\n"; print "RolloutDefaultEvents_v.waitForResizingEndsTimer()"
 	--format "CALLBACK_DELAY_TIMER: %\n" CALLBACK_DELAY_TIMER
 	
 	/*------------------------------------------------------------------------------

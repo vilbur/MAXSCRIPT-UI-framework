@@ -1,4 +1,4 @@
-filein( getFilenamePath(getSourceFileName()) + "/DefaultEvents/DefaultEvents.ms" )	-- "./DefaultEvents/DefaultEvents.ms"
+filein( getFilenamePath(getSourceFileName()) + "/RolloutDefaultEvents/RolloutDefaultEvents.ms" )	-- "./RolloutDefaultEvents/RolloutDefaultEvents.ms"
 filein( getFilenamePath(getSourceFileName()) + "/EventsCombiner/EventsCombiner.ms" )	-- "./EventsCombiner/EventsCombiner.ms"
 
 /** RolloutEvent
@@ -78,7 +78,7 @@ struct RolloutEventBinder_v
 		--format "\n\n~~~~~~~~~	Rollout Events:%	~~~~~~~~~\n" _Rollout.id
 
 		--format "_Rollout.Events.keys: %\n" _Rollout.Events.keys
-		this._setDefaultEvents()
+		this._setRolloutDefaultEvents()
 		--format "_Rollout.Events.keys: %\n" _Rollout.Events.keys
 
 		this._setCustomEvents()  -- NOTE: callback will be fired in reversed order then has been added. Default event goes first
@@ -126,23 +126,31 @@ struct RolloutEventBinder_v
 		(
 
 			/* CREATE EVENT */ 
-			--if Event_rolledup == undefined then
 			Event_rolledup	= Event_v type:#ROLLEDUP
 
+			/* AVOID FIRE EVENT ON INIT */ 
 			_Rollout.addlocal #ROLLEDUP_INITILAZIED false
 			
+			
+			
+			/* #OPEN event */ 
 			if _Rollout.Events[#OPEN] != undefined then
 				Event_rolledup.callback += "\n\n	    if val == true  then " + arrayToString( _Rollout.Events[#OPEN] )
 
+			/* #CLOSE event */ 
 			if _Rollout.Events[#CLOSE] != undefined then
 				Event_rolledup.callback += "\n\n	    if val == false then " + arrayToString( _Rollout.Events[#CLOSE] )
-
+				
+			
+			
 			/* WRAP CALLBACK TO PREVENT FIRE ON ADDING OF SUBROLLOUT --"./_Dev/preventRolledUpEventOnAdding.ms" */
-			Event_rolledup.callback = 	"if rolledup_initilazied == true then\n	(\n\t\t" + Event_rolledup.callback + "\n\t)\n	else\n\t	rolledup_initilazied = true"
+			Event_rolledup.callback = 	"if ROLLEDUP_INITILAZIED == true then\n	(\n\t\t" + Event_rolledup.callback + "\n\t)\n	else\n\t	ROLLEDUP_INITILAZIED = true"
 
+			
 			/* ADD TO EVENTS */
 			if Events_rolledup == undefined then 
 				_Rollout.Events[#ROLLEDUP] = #()
+		
 		
 			append _Rollout.Events[#ROLLEDUP] Event_rolledup
 		)
@@ -172,10 +180,10 @@ struct RolloutEventBinder_v
 
 	/** _combine events
 	 */
-	function _setDefaultEvents =
+	function _setRolloutDefaultEvents =
 	(
-		--format "\n\n";	print "RolloutEventBinder_v._setDefaultEvents()"
-		DefaultEvents = DefaultEvents_v ini_path:ini_path
+		--format "\n\n";	print "RolloutEventBinder_v._setRolloutDefaultEvents()"
+		RolloutDefaultEvents = RolloutDefaultEvents_v ini_path:ini_path
 
 		parent_is_dialog = _Rollout.parent_rollout_id == undefined
 		
@@ -186,11 +194,11 @@ struct RolloutEventBinder_v
 		EventsCombiner.EventsLists[#DEFAULTS] = if parent_is_dialog then
 		
 			/* DIALOG EVENTS */ 
-			DefaultEvents.getDialogEvents(this._Rollout.id)
+			RolloutDefaultEvents.getDialogEvents(this._Rollout.id)
 		else
 		
 			/* ROLLOUT EVENTS */ 
-			DefaultEvents.getRolloutEvents(_Rollout)
+			RolloutDefaultEvents.getRolloutEvents(_Rollout)
 	),
 
 	/** _combine events
@@ -227,7 +235,7 @@ struct RolloutEventBinder_v
 	/** Combine #DOCKED \ #UNDOCKED events and move them to _Rollout.Events
 		
 		
-		This makes callback executable in "./DefaultEvents/Callbacks/waitForResizingEnds.ms"
+		This makes callback executable in "./RolloutDefaultEvents/Callbacks/waitForResizingEnds.ms"
 		
 		
 		#DOCKED 	 🡶                                         🡵 #DOCKED

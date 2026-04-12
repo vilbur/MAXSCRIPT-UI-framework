@@ -35,7 +35,7 @@ _Controls.edittext    "Edit Text"   text:"test value"
  *	
  */
 --Rollout_A.ini	= (getFilenamePath(getSourceFileName()) + getFilenameFile(getSourceFileName()) + ".ini")
-Rollout_A.setDefaultEvents()
+Rollout_A.setRolloutDefaultEvents()
 
 
 /* CREATE ROLLOUT */

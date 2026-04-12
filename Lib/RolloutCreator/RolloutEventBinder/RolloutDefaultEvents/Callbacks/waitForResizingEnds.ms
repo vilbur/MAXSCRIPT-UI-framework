@@ -28,7 +28,7 @@ filein( getFilenamePath(getSourceFileName()) + "/../../../../Dialog/DialogGlobal
   */
 function waitForResizingEnds sender evt =
 (
-	--format "\n"; print "DefaultEvents_v.waitForResizingEnds()"
+	--format "\n"; print "RolloutDefaultEvents_v.waitForResizingEnds()"
 	--format "CALLBACK_DELAY_TIMER: %\n" CALLBACK_DELAY_TIMER
 	dialog_id	= DIALOG_GLOBAL_DATA[#ID_RESIZING_DIALOG]
 	--format "dialog_id: %\n" dialog_id
@@ -83,7 +83,7 @@ function waitForResizingEnds sender evt =
 	
 			CALLBACK_DELAY_TIMER = undefined
 	
-			--print ( "DefaultEvents_v.waitForResizingEnds()\n" + toUpper(event_type as string ) ) -- DEV
+			--print ( "RolloutDefaultEvents_v.waitForResizingEnds()\n" + toUpper(event_type as string ) ) -- DEV
 	
 			/* FIRE CUSTOM EVENT */
 			if ( Events = DataSaved.Dialog.Events[event_type] ) != undefined then

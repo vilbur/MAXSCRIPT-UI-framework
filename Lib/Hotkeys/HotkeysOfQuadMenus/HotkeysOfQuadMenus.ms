@@ -163,12 +163,13 @@ struct HotkeysOfQuadMenus_v
 		--format "hotkeys_and_quad_data.keys: %\n" hotkeys_and_quad_data.keys
 		--format "hotkeys_and_quad_data.keys: %\n" (sort hotkeys_and_quad_data.keys)
 		
+		prefix = "--------------------------------------------------------------------------------------------------------------"
 		--for hotkey in hotkeys_and_quad_data.keys do
 		for hotkey in sort hotkeys_and_quad_data.keys do
 		(
 			local quad_data = hotkeys_and_quad_data[hotkey]
 		
-			FORMAT "\n-------------------------------------------------------\n\nMENU:   %\nHOTKEY: %\nQUADS:  % \n" quad_data[#MENU_NAME] (trimLeft hotkey) quad_data[#QUAD_NAMES]
+			FORMAT "\n%\n\nMENU:   %\nHOTKEY: %\nQUADS:  % \n" prefix quad_data[#MENU_NAME] (trimLeft hotkey) quad_data[#QUAD_NAMES]
 		)
 	),
 	

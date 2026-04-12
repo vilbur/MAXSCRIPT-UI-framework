@@ -15,7 +15,7 @@
 	
 
  */ 
-struct DefaultEvents_v -- MAYBE RENAME THIS TO RolloutDefaultEvents_v FOR BETTER IDENTIFICATION
+struct RolloutDefaultEvents_v -- MAYBE RENAME THIS TO RolloutRolloutDefaultEvents_v FOR BETTER IDENTIFICATION
 (
 	/* properties */
 	--Events = #(),
@@ -23,11 +23,11 @@ struct DefaultEvents_v -- MAYBE RENAME THIS TO RolloutDefaultEvents_v FOR BETTER
 
 	/** Add default event for Rollout
 	  *
-	  * @return	list	of default events
+	  * @return	list	of rollout default events
 	 */
 	function getDialogEvents rollout_id =
 	(
-		--format "\n"; print ("DefaultEvents_v.getDialogEvents(" + rollout_id as string +")")
+		--format "\n"; print ("RolloutDefaultEvents_v.getDialogEvents(" + rollout_id as string +")")
 
 		EventsList = Dictionary()
 		
@@ -111,7 +111,7 @@ struct DefaultEvents_v -- MAYBE RENAME THIS TO RolloutDefaultEvents_v FOR BETTER
 	 */
 	function getRolloutEvents _Rollout =
 	(
-		--format "\n"; print "DefaultEvents_v.getRolloutEvents()"
+		--format "\n"; print "RolloutDefaultEvents_v.getRolloutEvents()"
 		Event = this._getAutoRollUpRolloutEvent(_Rollout)
 		
 		EventsList = Dictionary()
@@ -128,7 +128,7 @@ struct DefaultEvents_v -- MAYBE RENAME THIS TO RolloutDefaultEvents_v FOR BETTER
 	 */
 	function _getAutoRollUpRolloutEvent _Rollout =
 	(
-		--format "\n"; print "DefaultEvents_v._getAutoRollUpRolloutEvent()"
+		--format "\n"; print "RolloutDefaultEvents_v._getAutoRollUpRolloutEvent()"
 		rollout_id_full = _Rollout.getFullId()
 		--format "rollout_id_full: %\n" rollout_id_full
 		
