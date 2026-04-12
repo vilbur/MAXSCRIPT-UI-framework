@@ -40,7 +40,7 @@ _Controls.Default #across 1
 --_Listbox	= _Controls.control #listbox "Listbox param" items:items value:2
 --
 /*------ SLIDER ------*/
---_Controls.control #slider "slider"  params:#(#type, #integer, #range,[0,10,5], #across, 1)
+_Controls.control #slider "slider"  params:#(#type, #integer, #range,[0,10,5], #across, 1)
 --_Controls.control #slider "Slider" range:[0,10,5] width:200 params:#(#type, #integer, #ticks, 20 )
 
 

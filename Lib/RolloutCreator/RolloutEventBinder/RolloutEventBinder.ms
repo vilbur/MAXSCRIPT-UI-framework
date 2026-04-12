@@ -20,12 +20,15 @@ struct RolloutEventBinder_v
 
 	/* inhered */
 	ini_path,
-
+	
+	/* developent */
+	DEBUG = false,
+	
 	/* ROLLOUT Events https://help.autodesk.com/view/MAXDEV/2022/ENU/?guid=GUID-DC435555-362D-4A03-BCF2-21179C5442F2
 	 *
 	 * Event #rolledDown IS NOT NATIVE maxscript event
 	*/
-	events_rollout = #( #open, #close, #rolledUp ),
+	events_rollout = #( #open, #close, #rolledUp, #help ),
 
 	/* DIALOG Events https://help.autodesk.com/view/MAXDEV/2022/ENU/?guid=GUID-816D257C-CD2D-4753-A792-6E7AEFAFA6A7
 	 *
@@ -80,6 +83,8 @@ struct RolloutEventBinder_v
 
 		this._setCustomEvents()  -- NOTE: callback will be fired in reversed order then has been added. Default event goes first
 		
+		this._setHelpUrlEvent()
+		
 		this._combineDockedEvents()
 		--format "_Rollout.Events.keys: %\n" _Rollout.Events.keys
 	),
@@ -93,6 +98,7 @@ struct RolloutEventBinder_v
 		/* GET DIALOG OR ROLLOUT EVENT TYPES */ 
 		event_types = if( this._Rollout.isDialog() ) then events_dialog else #( #ROLLEDUP )
 		--format "event_types: %\n" event_types
+		--format "event_types[#HELP]: %\n" event_types[#HELP]
 
 		/* ADD HANDLERS FOR EACH TYPE */ 
 		for event_type in event_types do
@@ -111,6 +117,9 @@ struct RolloutEventBinder_v
 		 */
 		function arrayToString arr delimeter:"\n" = ( _string = ""; for Event in arr do _string += Event.callback  + delimeter; substring _string 1 (_string.count-delimeter.count))
 		
+		
+		
+		/* IF ANY OF "ROLLEDUP" RELATED EVENTS IS DEFINED */ 
 		if  _Rollout.Events[#ROLLEDUP] != undefined \
 		or _Rollout.Events[#OPEN] 	  != undefined \
 		or _Rollout.Events[#CLOSE]	  != undefined then
@@ -123,10 +132,10 @@ struct RolloutEventBinder_v
 			_Rollout.addlocal #ROLLEDUP_INITILAZIED false
 			
 			if _Rollout.Events[#OPEN] != undefined then
-				Event_rolledup.callback += "\n\n	if val == true then " + arrayToString( _Rollout.Events[#OPEN] )
+				Event_rolledup.callback += "\n\n	    if val == true  then " + arrayToString( _Rollout.Events[#OPEN] )
 
 			if _Rollout.Events[#CLOSE] != undefined then
-				Event_rolledup.callback += "\n\n	if val == false then " + arrayToString( _Rollout.Events[#CLOSE] )
+				Event_rolledup.callback += "\n\n	    if val == false then " + arrayToString( _Rollout.Events[#CLOSE] )
 
 			/* WRAP CALLBACK TO PREVENT FIRE ON ADDING OF SUBROLLOUT --"./_Dev/preventRolledUpEventOnAdding.ms" */
 			Event_rolledup.callback = 	"if rolledup_initilazied == true then\n	(\n\t\t" + Event_rolledup.callback + "\n\t)\n	else\n\t	rolledup_initilazied = true"
@@ -137,6 +146,7 @@ struct RolloutEventBinder_v
 		
 			append _Rollout.Events[#ROLLEDUP] Event_rolledup
 		)
+		
 	),
 
 	private
@@ -150,6 +160,8 @@ struct RolloutEventBinder_v
 		(
 			--format "\n\n";	print "RolloutEventBinder_v._addHandler()"
 			--format "Event.type: %\n" Event.type
+
+			if DEBUG then format "\n---------------------------------------------------------------------------\n\non % % do ( % )\n" _Rollout.id Event.type Event.callback
 
 			handler = "on "+(this._Rollout.id)+" "+ event_type as string + this._getParams(event_type)+" do\n(" +Event.callback+ "\n)"
 			--format "HANDLER:	% \n" handler
@@ -186,6 +198,30 @@ struct RolloutEventBinder_v
 	function _setCustomEvents =
 	(
 		EventsCombiner.EventsLists[#CUSTOM] = this._Rollout.Events
+	),
+	
+	/** Set help url
+	 */
+	function _setHelpUrlEvent =
+	(
+		--format "\n"; print "RolloutEventBinder_v._setHelpUrlEvent()"
+		
+		--format "EventsCombiner.EventsLists[#CUSTOM][#HELP]: %\n" EventsCombiner.EventsLists[#CUSTOM][#HELP]
+		
+		if ( Events_help = EventsCombiner.EventsLists[#CUSTOM][#HELP] ) != undefined then
+		(
+			--format "EVENTS_HELP: %\n" EVENTS_HELP
+			--format "TEST: %\n" ( matchPattern Events_help[1].callback pattern:("http*") or matchPattern Events_help[1].callback pattern:("www*") )
+			if matchPattern Events_help[1].callback pattern:("http*") or matchPattern Events_help[1].callback pattern:("www*") then
+			(
+				
+				--cmd = "shellLaunch \""+Events_help[1].callback+"\" \"\""
+				cmd = "shellLaunch \"https://github.com/vilbur/MAXSCRIPT-vilTools3\" \"\""
+				EventsCombiner.EventsLists[#CUSTOM][#HELP][1].callback = cmd
+				--format "CMD: %\n" cmd
+				--EventsCombiner.EventsLists[#CUSTOM][#HELP][1] = "dialogRolloutCallbackParam(#HELP)\n"
+			)
+		)
 	),
 	
 	/** Combine #DOCKED \ #UNDOCKED events and move them to _Rollout.Events

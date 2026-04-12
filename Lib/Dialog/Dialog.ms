@@ -105,7 +105,10 @@ struct Dialog_v
 		--#cui_max_sized,	-- When this flag is specified, docking the dialogbar on the top causes the dialogbar to expand to the full window width, docked to bottom it expands to full window width minus command panel width.
 	),
 
-	/** CREATE DIALOG
+	/*------------------------------------------------------------------------------
+	  *			
+	  *		CREATE DIALOG
+	  *
 	  *
 	  * IMPORTANT:
 	  *		param #width WORKS AS WIDTH OF DOCKED DIALOG
@@ -115,6 +118,7 @@ struct Dialog_v
 	  *
 	  * @RETURN RolloutClass
 	 */
+	--------------------------------------------------------------------------------*/
 	function create           \
 		--create_dialog:true	\ -- boolean	create_dialog if false, then oly rollout without dialog is created
 		width:	\ -- integer	width of dialog INTEGER: definded width | UNSUPPLIED: width auto or by ini | UNDEFINED: width auto even if ini is defined
@@ -176,6 +180,7 @@ struct Dialog_v
 			
 			_RolloutCreator.createRollout (this) width:width  -- create nested rollouts
 
+			--rollout_definition = this.RCI.def
 			
 			/*------------------------------------------------------------------------------
 				CREATE DIALOG
@@ -198,7 +203,8 @@ struct Dialog_v
 				parent:	parent
 			--if this.DEBUG then format "CreateDialog % ms\n" ((timestamp()) - timer_all)
 
-			
+			--this.RCI.def.visible = false
+
 			/*------------------------------------------------------------------------------
 				ADD SUBROLLOUTS TO ROLLOUT
 			--------------------------------------------------------------------------------*/
@@ -223,8 +229,10 @@ struct Dialog_v
 			/* EXECUTE AUTORUN EVENTS OF CONTROLS */ 
 			--this._executeAutorunEvents()
 			
+			--format "Dialog.visible: %\n" Dialog.visible
 			Dialog = RCI.def --return
 			
+
 			--format "Dialog: %\n" Dialog
 			
 			--DOSCommand ("\""+cache_file_path+"\"")

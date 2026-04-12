@@ -1,4 +1,4 @@
-clearListener()
+clearListener(); print("Cleared in: "+getSourceFileName())
 
 filein( getFilenamePath(getSourceFileName()) + "/../../Lib/Dialog/Dialog.ms" ) -- "./../../Lib/Dialog/Dialog.ms"
 
@@ -30,7 +30,7 @@ function addControls _Rollout title: count:1 =
 
 
 /* DIALOG */
-Dialog 	= Dialog_v title:(getFilenameFile(getSourceFileName())) width:420
+Dialog 	= Dialog_v title:(getFilenameFile(getSourceFileName())) width:540
 
 
 /* ROLLOUTS */

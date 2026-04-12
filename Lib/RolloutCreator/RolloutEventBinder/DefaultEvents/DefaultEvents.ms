@@ -14,8 +14,8 @@
 	3) Call correct rollout event #RESIZE | #DOCKED | #UNDOCKED
 	
 
- */
-struct DefaultEvents_v -- MAYBE RENAME THIS TO RolloutDefaultEvents_v
+ */ 
+struct DefaultEvents_v -- MAYBE RENAME THIS TO RolloutDefaultEvents_v FOR BETTER IDENTIFICATION
 (
 	/* properties */
 	--Events = #(),
@@ -38,7 +38,14 @@ struct DefaultEvents_v -- MAYBE RENAME THIS TO RolloutDefaultEvents_v
 		
 		Event =  Event_v type:#OPEN
 		
-		Event.callback = "GROUPBOXCREATOR.sortControlsToGroupBoxes( "+rollout_id+" )"
+		Event.callback = ""
+		--Event.callback += "\nformat \"TEST EVENT: #OPEN  Rollout: "+ rollout_id as name +"\n\";\n" + Event.callback
+		
+		Event.callback += "\n"+rollout_id+".visible = true\n\n"
+		
+		Event.callback += "GROUPBOXCREATOR.sortControlsToGroupBoxes( "+rollout_id+" )"
+		
+		--Event.callback += "\nformat \"ON OPEN Rollout.visible: %\""+ rollout_id +".visible\n;\n" + Event.callback
 		
 		EventsList[#OPEN] = #( Event )
 		
@@ -67,7 +74,7 @@ struct DefaultEvents_v -- MAYBE RENAME THIS TO RolloutDefaultEvents_v
 				
 				Event.callback = "(UiStateSaver_v ini_file:\""+ini_path+"\")."+callback_fn+"(\""+rollout_id+"\")"
 				
-				Event.callback = "format \"TEST DEFAULT EVENT: #"+event_type+"  Rollout: "+ rollout_id as name +"\n\";\n" + Event.callback
+				Event.callback += "\nformat \"TEST DEFAULT EVENT: #"+event_type+"  Rollout: "+ rollout_id as name +"\n\";\n" + Event.callback
 	
 				EventsList[event_type] = #( Event )
 			)
@@ -87,7 +94,7 @@ struct DefaultEvents_v -- MAYBE RENAME THIS TO RolloutDefaultEvents_v
 		
 			Event.callback = "(UiStateSaver_v ini_file:\""+ini_path+"\").saveControlsAndSubrollouts(\""+rollout_id+"\")"
 		
-			Event.callback = "format \"TEST EVENT: #OKTOCLOSE  Rollout: "+ rollout_id as name +"\n\";\n" + Event.callback  
+			--Event.callback += "format \"TEST EVENT: #OKTOCLOSE  Rollout: "+ rollout_id as name +"\n\";\n" + Event.callback  
 			
 			Event.callback += "\n\n	true -- IMPORTANT - #oktoclose MUST RETURN BOOLEAN"
 

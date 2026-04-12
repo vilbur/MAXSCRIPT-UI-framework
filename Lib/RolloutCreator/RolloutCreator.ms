@@ -27,13 +27,13 @@ struct RolloutCreator_v
 	Ini,
 
 	/* developent */
-	--DEBUG = false,
-	DEBUG = true,
+	DEBUG = false,
+	--DEBUG = true,
 
 	/* properties */
 
 	/* dependency */
-	RolloutEventBinder = RolloutEventBinder_v ini_path:(Ini.getPath()), -- "./RolloutEventBinder/RolloutEventBinder.ms"
+	RolloutEventBinder = RolloutEventBinder_v ini_path:(Ini.getPath()) DEBUG:DEBUG , -- "./RolloutEventBinder/RolloutEventBinder.ms"
 
 	ControlsCreator,
 	SubolloutsCreator = SubolloutsCreator_v ini_path:(Ini.getPath()) DEBUG:DEBUG,
@@ -206,6 +206,7 @@ struct RolloutCreator_v
 					/* ======= PRODUCTION CODE =======*/
 					CreateDialog ( _RolloutSub.RCI.def ) width:_RolloutParent.width height:_RolloutSub.height pos:[0,-8000] -- create subroullouts away from display
 
+					--_RolloutSub.RCI.def.visible = false
 				)
 				 
 				this._storeSubrolloutHeight(Subrollouts)(_RolloutSub)( Subrollouts.slot)

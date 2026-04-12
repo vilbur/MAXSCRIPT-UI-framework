@@ -1,38 +1,38 @@
 /*------------------------------------------------------------------------------
 	ONLY MAXSCRIPT 
 --------------------------------------------------------------------*/
-macroscript macroFileTest_without_ui_control
-	category:	"MacroFileTest"
-	buttontext:	"Button"
-	tooltip:	"Only macroscript is generated wihtout button"
-	icon:	"Tooltip:Tooltip of control"
-(
-	print "Button #pressed"
-	format "EventFired	= % \n" EventFired
-)
-
-/*------------------------------------------------------------------------------
-	BUTTON
---------------------------------------------------------------------*/
-macroscript macroFileTest_button_leftclick
-	category:	"MacroFileTest"
-	buttontext:	"Button"
-	tooltip:	"Tooltip of leftclick"
-	icon:	"Tooltip:Tooltip of control"
-(
-	print "Button #pressed"
-	format "EventFired	= % \n" EventFired
-)
-
-
-macroscript macroFileTest_button_rightclick
-	category:	"MacroFileTest"
-	buttontext:	"Button"
-	tooltip:	"Tooltip of rightclick"
-(
-	print "Button #rightclick"
-	format "EventFired	= % \n" EventFired
-)
+--macroscript macroFileTest_without_ui_control
+--	category:	"MacroFileTest"
+--	buttontext:	"Button"
+--	tooltip:	"Only macroscript is generated wihtout button"
+--	icon:	"Tooltip:Tooltip of control"
+--(
+--	print "Button #pressed"
+--	format "EventFired	= % \n" EventFired
+--)
+--
+--/*------------------------------------------------------------------------------
+--	BUTTON
+----------------------------------------------------------------------*/
+--macroscript macroFileTest_button_leftclick
+--	category:	"MacroFileTest"
+--	buttontext:	"Button"
+--	tooltip:	"Tooltip of leftclick"
+--	icon:	"Tooltip:Tooltip of control"
+--(
+--	print "Button #pressed"
+--	format "EventFired	= % \n" EventFired
+--)
+--
+--
+--macroscript macroFileTest_button_rightclick
+--	category:	"MacroFileTest"
+--	buttontext:	"Button"
+--	tooltip:	"Tooltip of rightclick"
+--(
+--	print "Button #rightclick"
+--	format "EventFired	= % \n" EventFired
+--)
 
 
 --/*------------------------------------------------------------------------------
@@ -101,7 +101,24 @@ macroscript macroFileTest_button_rightclick
 --	print "Spinner test"
 --	format " EventFired = % \n"  EventFired
 --)
---
+
+/*------------------------------------------------------------------------------
+  SLIDER
+--------------------------------------------------------------------------*/
+
+--/*
+--*/
+--macroscript macroFileTest_spinner
+--	category:	"MacroFileTest"
+--	buttontext:	"Spinner Test"
+--	tooltip:	"Spinner tooltip"
+--	icon:	"control:slider|range:[ 1, 128, 0.05 ]|scale:0.01"
+--(
+--	print "Spinner test"
+--	format " EventFired = % \n"  EventFired
+--)
+
+
 --/*------------------------------------------------------------------------------
 --  EDITTEXT
 ------------------------------------------------------------------------------*/
