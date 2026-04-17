@@ -21,10 +21,13 @@ struct RolloutDefaultEvents_v -- MAYBE RENAME THIS TO RolloutRolloutDefaultEvent
 	--Events = #(),
 	ini_path,
 
-	/** Add default event for Rollout
-	  *
-	  * @return	list	of rollout default events
-	 */
+	/*==============================================================================
+	
+		GET DIALOG EVENTS
+	
+		@return	list	of rollout default events
+
+	================================================================================*/
 	function getDialogEvents rollout_id =
 	(
 		--format "\n"; print ("RolloutDefaultEvents_v.getDialogEvents(" + rollout_id as string +")")
@@ -33,7 +36,9 @@ struct RolloutDefaultEvents_v -- MAYBE RENAME THIS TO RolloutRolloutDefaultEvent
 		
 		
 		/*--------------------------------------------------------------------------------------------------------------------------------------
+		  
 			on #OPEN - Move controls to groupboxes
+			
 		----------------------------------------------------------------------------------------------------------------------------------------*/
 		
 		Event =  Event_v type:#OPEN
@@ -50,8 +55,11 @@ struct RolloutDefaultEvents_v -- MAYBE RENAME THIS TO RolloutRolloutDefaultEvent
 		EventsList[#OPEN] = #( Event )
 		
 		
+		
 		/*--------------------------------------------------------------------------------------------------------------------------------------
+		  
 			on #RESIZE - start timer to check size and wait for resizing ends, then fires callbacks
+			
 		----------------------------------------------------------------------------------------------------------------------------------------*/
 		
 		Event =  Event_v type:#RESIZED
@@ -61,8 +69,11 @@ struct RolloutDefaultEvents_v -- MAYBE RENAME THIS TO RolloutRolloutDefaultEvent
 		EventsList[#RESIZED] = #( Event )
 		
 		
+		
 		/*--------------------------------------------------------------------------------------------------------------------------------------
+		  
 			on dialog #DOCKED -- save dock state to ini
+			
 		----------------------------------------------------------------------------------------------------------------------------------------*/
 		
 		if( ini_path != undefined ) then
@@ -80,10 +91,13 @@ struct RolloutDefaultEvents_v -- MAYBE RENAME THIS TO RolloutRolloutDefaultEvent
 			)
 		
 		
+		
 		/*--------------------------------------------------------------------------------------------------------------------------------------
+		  
 			on #OKTOCLOSE - Save dialog state when its closed
 			
 			IMPORTANT: #oktoclose MUST RETURN BOOLEAN - true:close dialog | false:cancel closing
+			
 		----------------------------------------------------------------------------------------------------------------------------------------*/
 		
 		if( ini_path != undefined ) then
@@ -102,22 +116,31 @@ struct RolloutDefaultEvents_v -- MAYBE RENAME THIS TO RolloutRolloutDefaultEvent
 			EventsList[#OKTOCLOSE] = #( Event )
 		)
 		
-		--format "EventsList.keys: %\n" EventsList.keys
 		
+		/*------------------------------------------------------------------------------
+			RETURN EVENT LIST
+		--------------------------------------------------------------------------------*/
 		EventsList --return
 	),
 	
-	/** Get rollout events
-	 */
+	
+	
+	/*==============================================================================
+	
+		GET ROLLOUT EVENTS
+	
+		@return	list	of rollout default events
+
+	================================================================================*/
 	function getRolloutEvents _Rollout =
 	(
 		--format "\n"; print "RolloutDefaultEvents_v.getRolloutEvents()"
-		Event = this._getAutoRollUpRolloutEvent(_Rollout)
 		
 		EventsList = Dictionary()
-		--append EventsList.list (this._getAutoRollUpRolloutEvent(_Rollout))
-		EventsList[#ROLLEDUP] = #( Event )
 		
+		--append EventsList.list (this._getAutoRollUpRolloutEvent(_Rollout))
+		EventsList[#ROLLEDUP] = #( this._getAutoRollUpRolloutEvent(_Rollout) )
+		--format "EventsList[#ROLLEDUP]: %\n" EventsList[#ROLLEDUP][1].callback
 		EventsList --return
 	),
 	
@@ -129,22 +152,32 @@ struct RolloutDefaultEvents_v -- MAYBE RENAME THIS TO RolloutRolloutDefaultEvent
 	function _getAutoRollUpRolloutEvent _Rollout =
 	(
 		--format "\n"; print "RolloutDefaultEvents_v._getAutoRollUpRolloutEvent()"
-		rollout_id_full = _Rollout.getFullId()
-		--format "rollout_id_full: %\n" rollout_id_full
 		
-		rollout_id_full_split	= filterString rollout_id_full "."
-	
-		params = "( #"+rollout_id_full_split[1]+ ") ( #"+rollout_id_full_split[2]+ ") ( #"+rollout_id_full_split[3]+ ")"
-	
-		roll_up_other_rollouts_callback = "rollUpOtherRolloutsCallback " + params
-		auto_roll_up_rollout_callback   = "autoRollUpRolloutCallback " + params
-	
-		rollup_others_if_control_pressed = "	if keyboard.controlPressed then\n		"+roll_up_other_rollouts_callback+"\nelse\n		"+auto_roll_up_rollout_callback
-	
-	
-		callback = "if val then\n	(\n	" + rollup_others_if_control_pressed + "\n)"
+		/** Get autoroll parmas
+		 */
+		function getAutorollParmas rollout_id_full =
+		(
+			--format "\n"; print "RolloutDefaultEvents_v.getAutorollParmas()"
+			rollout_id_full_split	= filterString rollout_id_full "."
+			
+			/* "( parent_rollout_id )	( subrollout_slot )	( subrollout_id )" */ 
+			"( #"+rollout_id_full_split[1]+ ")	( #"+rollout_id_full_split[2]+ ")	( #"+rollout_id_full_split[3]+ ")" --return
+		)
 		
+		/* GET PARAMS FOR CALLBACK */ 
+		params = getAutorollParmas (_Rollout.getFullId())
 		
+		close_other_rollouts_callback	= "rollUpOtherRolloutsCallback "	+ params
+		auto_roll_up_rollout_callback	= "autoRollUpRolloutCallback "	+ params
+
+		--callback = "	if keyboard.controlPressed then	rollUpOtherRolloutsCallback " + params +"\n" --"./Callbacks/rollUpOtherRolloutsCallback.ms"
+		/* if CTRL is pressed callback */ 
+
+		callback = "	if keyboard.controlPressed then\n		"+ close_other_rollouts_callback+"\nelse\n		"+auto_roll_up_rollout_callback
+
+		--callback = "if val then\n	(\n	autoRollUpRolloutCallback "  + params + "\n)" --"./Callbacks/autoRollUpRolloutCallback.ms"
+		
+		/* RETURN EVENT */ 
 		Event_v type:#ROLLEDUP callback:callback --return
 	),
 	

@@ -58,7 +58,7 @@
 
 	/** Get new slot of subrollouts
 	 */
-	function Subrollouts slot: width: height: =
+	function Subrollouts slot: width: height: DEBUG:DEBUG =
 	(
 		--format "\n"; print "RolloutBody.Subrollouts()"
 		--format "slot: %\n" slot
@@ -75,7 +75,7 @@
 
 		--local Subrollouts = Subrollouts_v slot:(slot as name ) parent_rollout_id:(this.getFullId()) width:(if width != unsupplied then width else this.width) height:height
 		--local Subrollouts = Subrollouts_v slot:slot parent_rollout_id:(this.id) width:(if width != unsupplied then width else this.width) height:height nested_level:( nested_level + 1 ) auto_roll_up:(getAutoRollUpOption()) DEBUG:DEBUG
-		local Subrollouts = Subrollouts_v slot:slot parent_rollout_id:(this.getFullId()) width:(if width != unsupplied then width else this.width) height:height nested_level:( nested_level + 1 ) auto_roll_up:(getAutoRollUpOption()) DEBUG:DEBUG
+		local Subrollouts = Subrollouts_v slot:slot parent_rollout_id:(this.getFullId()) width:(if width != unsupplied then width else this.width) height:height nested_level:( nested_level + 1 ) autoroll:(getAutoRollUpOption()) DEBUG:DEBUG
 
 		append _Controls Subrollouts
 
@@ -84,12 +84,12 @@
 
 	/** FRONT END ALIAS for user this.Subrollouts()
 	 */
-	function Rollouts slot: height: =
+	function Rollouts slot: height: DEBUG:DEBUG =
 	(
 		--print "RolloutBody.Rollouts()"
 		--format "width	= % \n" width
 		--format "height	= % \n" height
-		this.Subrollouts slot:slot height:height --return
+		this.Subrollouts slot:slot height:height DEBUG:DEBUG --return
 	),
 	
 	/** Add Event to rollout

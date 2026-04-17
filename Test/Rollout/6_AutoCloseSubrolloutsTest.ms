@@ -2,6 +2,16 @@ clearListener(); print("Cleared in: "+getSourceFileName())
 
 filein( getFilenamePath(getSourceFileName()) + "/../../Lib/Dialog/Dialog.ms" ) -- "./../../Lib/Dialog/Dialog.ms"
 
+/** 
+	If CTRL key is pressed on ROLLUP EVENT, then close other subrollouts and left opened one rollout
+
+	AUROLLUP EVENT:
+		BIND EVENTS:  RolloutDefaultEvents_v._getAutoRollUpRolloutEvent()
+		IN FILE: "./../../Lib/RolloutCreator/RolloutEventBinder/RolloutDefaultEvents/RolloutDefaultEvents.ms"
+  
+  */
+
+
 
 /** Add rollouts
  */
@@ -30,15 +40,19 @@ function addControls _Rollout title: count:1 =
 
 
 /* DIALOG */
-Dialog 	= Dialog_v title:(getFilenameFile(getSourceFileName())) width:540
+Dialog 	= Dialog_v title:(getFilenameFile(getSourceFileName())) width:540 --DEBUG:true
 
 
 /* ROLLOUTS */
-slot_A = Dialog.Rollouts slot:#rollouts_A height:164
+slot_A = Dialog.Rollouts slot:#rollouts_A height:164 DEBUG:true
 slot_B = Dialog.Rollouts slot:#rollouts_B
+
+slot_B.autoroll = true
 
 _Rollouts_A = addRollouts ( slot_A )	("Rollouts") rollouts_in_slot: 1
 _Rollouts_B = addRollouts ( slot_B )	("Press CTRL key to close other rollouts on open") rollouts_in_slot:3
+
+
 
 /* CONTROLS */ 
 for _rollout in _Rollouts_B do
@@ -47,6 +61,7 @@ for _rollout in _Rollouts_B do
 
 /* SUBROLLOUTS */
 _SubRollouts	= addRollouts (_Rollouts_A[1].Rollouts())("SubRollout A") rollouts_in_slot: 2
+
 
 for _SubRollout in _SubRollouts do 
 	addControls _SubRollout

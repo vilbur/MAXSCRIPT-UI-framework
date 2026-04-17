@@ -2,7 +2,15 @@
   *
   *	IMPORRTANT:
   *		WIDTHS OF SUBROLLOUTS AND SLOTS ARE MAXIMIZED AS IS POSSIBLE:  "./_readme/maximized_rollout_width.jpg"
-
+  *
+  *    slot_data = Dictionary()
+  *
+  *    slot_data[#AUTOROLLUP] = boolean|integer -- ENABLE\DISABLE autorollup on boolean | number of opened subrollouts at once
+  
+  
+  * 			addSubRollout subrollout_id "slot_data"
+  *
+  *
   * @method addSubrolloutSlot	Create subollouts slot
   * @method addSubRollouts	Create subollouts slot
   *
@@ -122,22 +130,26 @@ struct SubolloutsCreator_v
 
 	private
 
-	/** Slot name is redundant, it is used to keep extra data
+	/** Slot "name" is REDUNDANT PARAMETER, it is USED TO KEEP EXTRA DATA
 	 */
 	function _getSlotData Subrollouts =
 	(
 		--format "\n"; print "SubolloutsCreator_v._getSlotData()"
 		
-		if ( Subrollouts.auto_roll_up ) != undefined then
-		(
-			slot_data	=  Dictionary()
-			
-			slot_data[#AUTOROLLUP] = Subrollouts.auto_roll_up
-			 
-			 
-			slot_data as string --return
-		)
-		else
+		/** CURENTLY UNUSED 
+
+		  */
+		
+		------if ( Subrollouts.auto_roll_up ) != undefined then
+		------(
+		------	slot_data	=  Dictionary()
+		------	
+		------	slot_data[#AUTOROLLUP] = Subrollouts.auto_roll_up
+		------	 
+		------	 
+		------	slot_data as string --return
+		------)
+		------else
 			Subrollouts.slot as string --return
 	),
 

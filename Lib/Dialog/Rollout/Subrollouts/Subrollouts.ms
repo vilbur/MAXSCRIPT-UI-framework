@@ -17,7 +17,7 @@ struct Subrollouts_v
 	
 	nested_level,
 	
-	auto_roll_up, -- undefined|integer -- number
+	autoroll, -- undefined|integer -- number
 
 	Rollouts	= #(),
 

@@ -230,7 +230,7 @@ struct RolloutCreator_v
 
 		rollout_height = if _Rollout.height == unsupplied then _Rollout.RCI.def.height else _Rollout.height
 
-		if ( Subrollouts.auto_roll_up ) != undefined then
+		if ( Subrollouts.autoroll ) != undefined then
 		(
 			/* GET SLOT HEIGHT BY TALLEST ROLLOUT */
 	

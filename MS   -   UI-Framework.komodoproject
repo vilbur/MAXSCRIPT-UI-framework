@@ -57,8 +57,12 @@
 </livefolder>
 <file id="1fdf8f2c-9630-407d-b3b0-127c2ca5ef05" idref="38a5d00f-dc9e-4a6e-b504-461abd8ebb54" name="RolloutBody.ms" url="Lib/Dialog/Rollout/RolloutBody.ms">
 </file>
+<file id="4ddbd177-d4fe-4df4-8334-358288e1b4e7" idref="38a5d00f-dc9e-4a6e-b504-461abd8ebb54" name="Subrollouts.ms" url="Lib/Dialog/Rollout/Subrollouts/Subrollouts.ms">
+</file>
 <file id="4ef90dce-ad79-4db0-beb6-2144b0b20c57" idref="38a5d00f-dc9e-4a6e-b504-461abd8ebb54" name="Control.ms" url="Lib/Dialog/Rollout/Controls/Control/Control.ms">
 </file>
+<livefolder id="7c42b0a7-e39f-4f03-b317-885234f428a6" idref="38a5d00f-dc9e-4a6e-b504-461abd8ebb54" name="Subrollouts" url="Lib/Dialog/Rollout/Subrollouts/">
+</livefolder>
 <file id="8962d006-4a00-4d78-962c-b3a75c57e17d" idref="38a5d00f-dc9e-4a6e-b504-461abd8ebb54" name="Dialog.ms" url="Lib/Dialog/Dialog.ms">
 </file>
 <livefolder id="aabcd33d-f712-4446-8af9-19ded65d83e0" idref="38a5d00f-dc9e-4a6e-b504-461abd8ebb54" name="Dialog" url="Lib/Dialog/">
