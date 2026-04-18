@@ -43,29 +43,21 @@ function addControls _Rollout title: count:1 =
 Dialog 	= Dialog_v title:(getFilenameFile(getSourceFileName())) width:540 --DEBUG:true
 
 
-/* ROLLOUTS */
-slot_A = Dialog.Rollouts slot:#rollouts_A height:164 DEBUG:true
-slot_B = Dialog.Rollouts slot:#rollouts_B
-
-slot_B.autoroll = true
-
-_Rollouts_A = addRollouts ( slot_A )	("Rollouts") rollouts_in_slot: 1
-_Rollouts_B = addRollouts ( slot_B )	("Press CTRL key to close other rollouts on open") rollouts_in_slot:3
+/* ADD SLOTS */
+slot_A = Dialog.Rollouts slot:#rollouts_A height:256 autorollup:true
+slot_B = Dialog.Rollouts slot:#rollouts_B height:256 
+--slot_C = Dialog.Rollouts slot:#rollouts_C height:256
 
 
+/* ADD ROLLOUTS */
+--_Rollouts_A = addRollouts ( slot_A )	("DEFAULT ROLLUP BEHAVIOUR ") rollouts_in_slot:3
+_Rollouts_A = addRollouts ( slot_A )	("Autorollup TRUE ")	rollouts_in_slot:3
+_Rollouts_B = addRollouts ( slot_B )	("Autorollup FALSE ")	rollouts_in_slot:3
 
-/* CONTROLS */ 
-for _rollout in _Rollouts_B do
-	addControls _rollout title:"Btn"
-
-
-/* SUBROLLOUTS */
-_SubRollouts	= addRollouts (_Rollouts_A[1].Rollouts())("SubRollout A") rollouts_in_slot: 2
-
-
-for _SubRollout in _SubRollouts do 
-	addControls _SubRollout
-	
+/* ADD CONTROLS for better view of roooluts */ 
+for _rollouts in #( _Rollouts_A, _Rollouts_B, _Rollouts_C  ) where _rollouts != undefined do 
+	for _rollout in _rollouts do
+		addControls _rollout title:"Btn"
 
 
 /* CREATE DIALOG */

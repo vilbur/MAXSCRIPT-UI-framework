@@ -151,31 +151,37 @@ struct RolloutDefaultEvents_v -- MAYBE RENAME THIS TO RolloutRolloutDefaultEvent
 	 */
 	function _getAutoRollUpRolloutEvent _Rollout =
 	(
-		--format "\n"; print "RolloutDefaultEvents_v._getAutoRollUpRolloutEvent()"
+		----format "\n"; print "RolloutDefaultEvents_v._getAutoRollUpRolloutEvent()"
+		--
+		--/** Get autoroll parmas
+		-- */
+		--function getAutorollParmas rollout_id_full =
+		--(
+		--	--format "\n"; print "RolloutDefaultEvents_v.getAutorollParmas()"
+		--	rollout_id_full_split	= filterString rollout_id_full "."
+		--	
+		--	/* "( parent_rollout_id )	( subrollout_slot )	( subrollout_id )" */ 
+		--	"( #"+rollout_id_full_split[1]+ ")	( #"+rollout_id_full_split[2]+ ")	( #"+rollout_id_full_split[3]+ ")" --return
+		--)
+		--
+		--/* GET PARAMS FOR CALLBACK */ 
+		--params = getAutorollParmas (_Rollout.getFullId())
+		--
+		--close_other_rollouts_callback	= "rollUpOtherRolloutsCallback "	+ params
+		--auto_roll_up_rollout_callback	= "autoRollUpRolloutCallback "	+ params
+		--
+		----callback = "	if keyboard.controlPressed then	rollUpOtherRolloutsCallback " + params +"\n" --"./Callbacks/rollUpOtherRolloutsCallback.ms"
+		--/* if CTRL is pressed callback */ 
+		--
+		--callback = "	if keyboard.controlPressed then\n		"+ close_other_rollouts_callback+"\nelse\n		"+auto_roll_up_rollout_callback
+		--
+		----callback = "if val then\n	(\n	autoRollUpRolloutCallback "  + params + "\n)" --"./Callbacks/autoRollUpRolloutCallback.ms"
+		--
 		
-		/** Get autoroll parmas
-		 */
-		function getAutorollParmas rollout_id_full =
-		(
-			--format "\n"; print "RolloutDefaultEvents_v.getAutorollParmas()"
-			rollout_id_full_split	= filterString rollout_id_full "."
-			
-			/* "( parent_rollout_id )	( subrollout_slot )	( subrollout_id )" */ 
-			"( #"+rollout_id_full_split[1]+ ")	( #"+rollout_id_full_split[2]+ ")	( #"+rollout_id_full_split[3]+ ")" --return
-		)
-		
-		/* GET PARAMS FOR CALLBACK */ 
-		params = getAutorollParmas (_Rollout.getFullId())
-		
-		close_other_rollouts_callback	= "rollUpOtherRolloutsCallback "	+ params
-		auto_roll_up_rollout_callback	= "autoRollUpRolloutCallback "	+ params
+		rollout_id_full_split	= filterString (_Rollout.getFullId()) "."
 
-		--callback = "	if keyboard.controlPressed then	rollUpOtherRolloutsCallback " + params +"\n" --"./Callbacks/rollUpOtherRolloutsCallback.ms"
-		/* if CTRL is pressed callback */ 
+		callback = "autoRollUpRolloutCallback ( #"+rollout_id_full_split[1]+ ")	( #"+rollout_id_full_split[2]+ ")	( #"+rollout_id_full_split[3]+ ")"
 
-		callback = "	if keyboard.controlPressed then\n		"+ close_other_rollouts_callback+"\nelse\n		"+auto_roll_up_rollout_callback
-
-		--callback = "if val then\n	(\n	autoRollUpRolloutCallback "  + params + "\n)" --"./Callbacks/autoRollUpRolloutCallback.ms"
 		
 		/* RETURN EVENT */ 
 		Event_v type:#ROLLEDUP callback:callback --return

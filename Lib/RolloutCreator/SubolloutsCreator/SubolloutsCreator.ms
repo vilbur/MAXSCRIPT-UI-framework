@@ -3,12 +3,21 @@
   *	IMPORRTANT:
   *		WIDTHS OF SUBROLLOUTS AND SLOTS ARE MAXIMIZED AS IS POSSIBLE:  "./_readme/maximized_rollout_width.jpg"
   *
-  *    slot_data = Dictionary()
   *
-  *    slot_data[#AUTOROLLUP] = boolean|integer -- ENABLE\DISABLE autorollup on boolean | number of opened subrollouts at once
-  
-  
-  * 			addSubRollout subrollout_id "slot_data"
+  *
+  *	------------------------------------------------------------------------------------------------------------------
+  * 	
+  * 		SLOT DATA:  Slot "name" is REDUNDANT PARAMETER, so it is USED TO KEEP EXTRA DATA FOR SUBROLLOUT SLOT
+  * 	
+  *	------------------------------------------------------------------------------------------------------------------
+  * 
+  *	SLOT DATA VALUES IN DICTIONARY:
+  *    		slot_data[#AUTOROLLUP] = boolean|integer -- ENABLE\DISABLE autorollup on boolean | number of opened subrollouts at once
+  *		
+  *	SLOT DATA ARE ADDED AND STORED IN LINE:
+  * 	 	addSubRollout subrollout_id "{slot_data}"
+  *
+  *
   *
   *
   * @method addSubrolloutSlot	Create subollouts slot
@@ -134,23 +143,24 @@ struct SubolloutsCreator_v
 	 */
 	function _getSlotData Subrollouts =
 	(
-		--format "\n"; print "SubolloutsCreator_v._getSlotData()"
+		format "\n"; print "SubolloutsCreator_v._getSlotData()"
 		
 		/** CURENTLY UNUSED 
 
 		  */
-		
-		------if ( Subrollouts.auto_roll_up ) != undefined then
-		------(
-		------	slot_data	=  Dictionary()
-		------	
-		------	slot_data[#AUTOROLLUP] = Subrollouts.auto_roll_up
-		------	 
-		------	 
-		------	slot_data as string --return
-		------)
-		------else
+		format "Subrollouts.AUTOROLLUP: %\n" Subrollouts.autorollup
+		if ( Subrollouts.autorollup ) != undefined then
+		(
+			slot_data	=  Dictionary()
+			
+			slot_data[#AUTOROLLUP] = Subrollouts.autorollup
+			 
+			slot_data as string --return
+		)
+		else
 			Subrollouts.slot as string --return
+		
+		--(Dictionary()) as string --return
 	),
 
 	/** Get rolled state from ini

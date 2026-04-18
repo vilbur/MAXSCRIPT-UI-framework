@@ -17,7 +17,7 @@ struct RolloutResizer_v
 	 */
 	function fitSlotsToDialog _Rollout  =
 	(
-		--format "\n"; print "RolloutResizer_v.fitSlotsToDialog()"
+		format "\n"; print "RolloutResizer_v.fitSlotsToDialog()"
 		--format "_Rollout.name: %\n" _Rollout.name
 
 		fit_rollouts_stamp = timestamp()
@@ -53,26 +53,13 @@ struct RolloutResizer_v
 			last_control = this._getLastControl (dialog_controls)
 			--format "last_control: %\n" last_control
 			
-			subrollouts_id = _Rollout.name+"."+last_control.caption
-			--format "subrollouts_id: %\n" subrollouts_id
+			subrollouts_id = _Rollout.name+"."+last_control.name
+			format "subrollouts_id: %\n" subrollouts_id
 			--format "\n"
 			/* GET POS AND */ 
 			last_control_pos	= execute ( subrollouts_id+".pos" )
 			last_control_height 	= execute ( subrollouts_id+".height" )
 			
-			--format "last_control_pos: %\n" last_control_pos
-			--format "last_control_height: %\n" last_control_height
-			--format "DIALOG_HEIGHT: %\n" dialog_height 
-			--format "last_control_pos.y: %\n" last_control_pos.y
-			--last_control_pos	= last_control.pos
-			--last_control_height 	= last_control.height
-			--
-			--format "\n"
-			--format "last_control_pos: %\n" last_control_pos
-			--format "last_control_height: %\n" last_control_height
-			--format "\n"
-			--format "last_control.pos: %\n" last_control.pos
-			--if  last_control.pos == undefined then return true
 			
 			last_control_position = last_control_pos.y + last_control_height
 			--format "last_control_position: %\n" last_control_position

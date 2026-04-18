@@ -5,7 +5,7 @@ filein( getFilenamePath(getSourceFileName()) + "/../Dialog/Rollout/Subrollouts/S
 
 filein( getFilenamePath(getSourceFileName()) + "/RolloutEventBinder/RolloutDefaultEvents/Callbacks/waitForResizingEnds.ms" )	--"./RolloutEventBinder/RolloutDefaultEvents/Callbacks/waitForResizingEnds.ms"
 filein( getFilenamePath(getSourceFileName()) + "/RolloutEventBinder/RolloutDefaultEvents/Callbacks/autoRollUpRolloutCallback.ms" )	--"./RolloutEventBinder/RolloutDefaultEvents/Callbacks/autoRollUpRolloutCallback.ms"
-filein( getFilenamePath(getSourceFileName()) + "/RolloutEventBinder/RolloutDefaultEvents/Callbacks/rollUpOtherRolloutsCallback.ms" )	--"./RolloutEventBinder/RolloutDefaultEvents/Callbacks/rollUpOtherRolloutsCallback.ms"
+--filein( getFilenamePath(getSourceFileName()) + "/RolloutEventBinder/RolloutDefaultEvents/Callbacks/rollUpOtherRolloutsCallback.ms" )	--"./RolloutEventBinder/RolloutDefaultEvents/Callbacks/rollUpOtherRolloutsCallback.ms"
 filein( getFilenamePath(getSourceFileName()) + "/RolloutEventBinder/RolloutDefaultEvents/waitForResizingEndsTimer.ms" )	-- "./RolloutEventBinder/RolloutDefaultEvents/waitForResizingEndsTimer.ms"
 
 filein( getFilenamePath(getSourceFileName()) + "/RolloutEventBinder/RolloutEventBinder.ms" )	-- "./RolloutEventBinder/RolloutEventBinder.ms"
@@ -199,8 +199,10 @@ struct RolloutCreator_v
 					  FOR FLOATEBLE SUBROLLOUTS diable adding in SubolloutsCreator.addSubRollouts()
 
 					*/
-					--execute ("try(destroyDialog "+_RolloutSub.id as string+ " )catch()") --DEV DESTROY SUBROLLOUT DIALOG
-					--CreateDialog ( _RolloutSub.RCI.def ) width:_RolloutParent.width height:_RolloutSub.height -- DEV - creat
+					/* DEV DESTROY SUBROLLOUT DIALOG
+					   
+						execute ("try(destroyDialog "+_RolloutSub.id as string+ " )catch()")
+					*/ 
 
 					
 					/* ======= PRODUCTION CODE =======*/
@@ -230,7 +232,7 @@ struct RolloutCreator_v
 
 		rollout_height = if _Rollout.height == unsupplied then _Rollout.RCI.def.height else _Rollout.height
 
-		if ( Subrollouts.autoroll ) != undefined then
+		if ( Subrollouts.autorollup ) != undefined then
 		(
 			/* GET SLOT HEIGHT BY TALLEST ROLLOUT */
 	

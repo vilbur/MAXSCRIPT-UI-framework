@@ -58,7 +58,7 @@
 
 	/** Get new slot of subrollouts
 	 */
-	function Subrollouts slot: width: height: DEBUG:DEBUG =
+	function Subrollouts slot: width: height: autorollup:false DEBUG:DEBUG =
 	(
 		--format "\n"; print "RolloutBody.Subrollouts()"
 		--format "slot: %\n" slot
@@ -66,17 +66,12 @@
 		--format "width:      %\n" width
 		--format "height	= % \n" height
 		
-		/** Get auto roll up option
-		 */
-		function getAutoRollUpOption = if not this.isDialog() then 1
-		
 		if slot == undefined or slot == unsupplied then
 			slot = "subrollouts_" + ((this.getSubrollouts()).count + 1) as string
 
-		--local Subrollouts = Subrollouts_v slot:(slot as name ) parent_rollout_id:(this.getFullId()) width:(if width != unsupplied then width else this.width) height:height
-		--local Subrollouts = Subrollouts_v slot:slot parent_rollout_id:(this.id) width:(if width != unsupplied then width else this.width) height:height nested_level:( nested_level + 1 ) auto_roll_up:(getAutoRollUpOption()) DEBUG:DEBUG
-		local Subrollouts = Subrollouts_v slot:slot parent_rollout_id:(this.getFullId()) width:(if width != unsupplied then width else this.width) height:height nested_level:( nested_level + 1 ) autoroll:(getAutoRollUpOption()) DEBUG:DEBUG
-
+		--Subrollouts = Subrollouts_v slot:slot parent_rollout_id:(this.getFullId()) width:(if width != unsupplied then width else this.width) height:height nested_level:( nested_level + 1 ) autorollup:(getAutoRollUpOption(autorollup)) DEBUG:DEBUG
+		local Subrollouts = Subrollouts_v slot:slot parent_rollout_id:(this.getFullId()) width:(if width != unsupplied then width else this.width) height:height nested_level:( nested_level + 1 ) autorollup:autorollup DEBUG:DEBUG --"./Subrollouts/Subrollouts.ms"
+		
 		append _Controls Subrollouts
 
 		Subrollouts --return
@@ -84,12 +79,12 @@
 
 	/** FRONT END ALIAS for user this.Subrollouts()
 	 */
-	function Rollouts slot: height: DEBUG:DEBUG =
+	function Rollouts slot: height: autorollup:false DEBUG:DEBUG =
 	(
 		--print "RolloutBody.Rollouts()"
 		--format "width	= % \n" width
 		--format "height	= % \n" height
-		this.Subrollouts slot:slot height:height DEBUG:DEBUG --return
+		this.Subrollouts slot:slot height:height autorollup:autorollup DEBUG:DEBUG --return
 	),
 	
 	/** Add Event to rollout

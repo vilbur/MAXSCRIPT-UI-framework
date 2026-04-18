@@ -118,7 +118,6 @@ struct RolloutEventBinder_v
 		function arrayToString arr delimeter:"\n" = ( _string = ""; for Event in arr do _string += Event.callback  + delimeter; substring _string 1 (_string.count-delimeter.count))
 		
 		
-		
 		/* IF ANY OF "ROLLEDUP" RELATED EVENTS IS DEFINED */ 
 		if  _Rollout.Events[#ROLLEDUP] != undefined \
 		or _Rollout.Events[#OPEN] 	  != undefined \
@@ -208,6 +207,21 @@ struct RolloutEventBinder_v
 		EventsCombiner.EventsLists[#CUSTOM] = this._Rollout.Events
 	),
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	/** Set help url
 	 */
 	function _setHelpUrlEvent =
@@ -223,14 +237,36 @@ struct RolloutEventBinder_v
 			if matchPattern Events_help[1].callback pattern:("http*") or matchPattern Events_help[1].callback pattern:("www*") then
 			(
 				
+				/*
+						FIX HELP LINK !!!!!!!!!!
+				
+				
+				
+				*/ 
+				
+				
 				--cmd = "shellLaunch \""+Events_help[1].callback+"\" \"\""
 				cmd = "shellLaunch \"https://github.com/vilbur/MAXSCRIPT-vilTools3\" \"\""
+				
 				EventsCombiner.EventsLists[#CUSTOM][#HELP][1].callback = cmd
+				
 				--format "CMD: %\n" cmd
 				--EventsCombiner.EventsLists[#CUSTOM][#HELP][1] = "dialogRolloutCallbackParam(#HELP)\n"
 			)
 		)
 	),
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	/** Combine #DOCKED \ #UNDOCKED events and move them to _Rollout.Events
 		

@@ -1,3 +1,6 @@
+global ENABLE_CALLBACK_AUTOROLL_ROLLOUT = false
+
+
 /** Subrollouts
 
 
@@ -17,10 +20,11 @@ struct Subrollouts_v
 	
 	nested_level,
 	
-	autoroll, -- undefined|integer -- number
-
 	Rollouts	= #(),
 
+	/* OPTIONS */ 
+	autorollup, -- undefined|integer -- number
+	
 	/* developent */
 	DEBUG = false,
 	--DEBUG = true,
@@ -112,7 +116,8 @@ struct Subrollouts_v
 	 */
 	on create do
 	(
-		--format "\n"; print "Subrollouts_v.onCreate()"
+		format "\n"; print "Subrollouts_v.onCreate()"
+		format "AUTOROLLUP: %\n" autorollup
 		--format "PARENT_ROLLOUT_ID: %\n" parent_rollout_id
 		--if this.slot != undefined and this.slot != unsupplied then
 		this.slot = this.slot as string 

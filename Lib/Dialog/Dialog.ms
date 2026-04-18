@@ -269,6 +269,8 @@ struct Dialog_v
 		/* EXECUTE AUTORUN EVENTS OF CONTROLS */ 
 		this._executeAutorunEvents()
 		
+		ENABLE_CALLBACK_AUTOROLL_ROLLOUT = true
+		
 		Dialog --return
 	),
 
