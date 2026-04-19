@@ -1,5 +1,3 @@
-
-
 /** Auto close rollout callback
  */
 function autoRollUpRolloutCallback parent_rollout slot_id current_rollout_id =
@@ -40,41 +38,45 @@ function autoRollUpRolloutCallback parent_rollout slot_id current_rollout_id =
 			format "slot.name: %\n" slot.name
 			--format "slot.text: %\n" slot.text
 			
-			if classOf ( slot_data = execute slot.text ) == Dictionary and slot_data[#AUTOROLLUP] == true then
-			--if classOf ( slot_data = execute slot.text ) == Dictionary then
+			--if classOf ( slot_data = execute slot.text ) == Dictionary and slot_data[#AUTOROLLUP] == true then
+			if classOf ( slot_data = execute slot.text ) == Dictionary then
 			(
-				format "SLOT_DATA: %\n" slot_data
-				format "slot_data[#AUTOROLLUP]: %\n" slot_data[#AUTOROLLUP]
+				autoroll_enabled	= slot_data[#AUTOROLLUP] == true 
+				ctrl_pressed	= keyboard.controlPressed
 				
-				open_rollouts_count = if classOf slot_data[#AUTOROLLUP] == integer then slot_data[#AUTOROLLUP] else 1
-				format "open_rollouts_count: %\n" open_rollouts_count
-		
-                not_close_rollouts = if slot_data[#KEEP_OPEN_ROLLOUTS] != undefined then slot_data[#KEEP_OPEN_ROLLOUTS] else #()
-				format "not_close_rollouts: %\n" not_close_rollouts
-				
-				
-		----		/* ADD CURRENT ROLLOUT */ 
-		----		insertItem current_rollout_id not_close_rollouts 1
-		----		
-		----		/* KEEP MAX OPENED ROLLOUTS COUNT */ 
-		----		not_close_rollouts = makeUniqueArray (for i = 1 to not_close_rollouts.count where i <= open_rollouts_count collect not_close_rollouts[i])
-		----		
-		----		for _rollout in slot.rollouts where _rollout.open and not isKeepOpened not_close_rollouts _rollout do
-				for _rollout in slot.rollouts do
-					_rollout.open = isCurrentRollout _rollout current_rollout_id
-		----
-		----		
-		----		slot_data[#KEEP_OPEN_ROLLOUTS] = not_close_rollouts
-		----
-		----		/* UPDATE SLOT DATA */ 	
-		----		slot.text = slot_data as string
+				if ( autoroll_enabled and not ctrl_pressed ) or ( not autoroll_enabled and ctrl_pressed ) then
+				(
+					format "SLOT_DATA: %\n" slot_data
+					format "slot_data[#AUTOROLLUP]: %\n" slot_data[#AUTOROLLUP]
+					
+					open_rollouts_count = if classOf slot_data[#AUTOROLLUP] == integer then slot_data[#AUTOROLLUP] else 1
+					format "open_rollouts_count: %\n" open_rollouts_count
+			
+					not_close_rollouts = if slot_data[#KEEP_OPEN_ROLLOUTS] != undefined then slot_data[#KEEP_OPEN_ROLLOUTS] else #()
+					format "not_close_rollouts: %\n" not_close_rollouts
+					
+					
+			----		/* ADD CURRENT ROLLOUT */ 
+			----		insertItem current_rollout_id not_close_rollouts 1
+			----		
+			----		/* KEEP MAX OPENED ROLLOUTS COUNT */ 
+			----		not_close_rollouts = makeUniqueArray (for i = 1 to not_close_rollouts.count where i <= open_rollouts_count collect not_close_rollouts[i])
+			----		
+			----		for _rollout in slot.rollouts where _rollout.open and not isKeepOpened not_close_rollouts _rollout do
+					for _rollout in slot.rollouts do
+						_rollout.open = isCurrentRollout _rollout current_rollout_id
+			----
+			----		
+			--		slot_data[#KEEP_OPEN_ROLLOUTS] = not_close_rollouts
+			--
+					/* UPDATE SLOT DATA */ 	
+					slot.text = slot_data as string
+					
+					
+				)
 			)
 			
 			ENABLE_CALLBACK_AUTOROLL_ROLLOUT = true
-
-		
 		)
-		
 	)
-
 )

@@ -17,7 +17,7 @@ struct RolloutResizer_v
 	 */
 	function fitSlotsToDialog _Rollout  =
 	(
-		format "\n"; print "RolloutResizer_v.fitSlotsToDialog()"
+		--format "\n"; print "RolloutResizer_v.fitSlotsToDialog()"
 		--format "_Rollout.name: %\n" _Rollout.name
 
 		fit_rollouts_stamp = timestamp()
@@ -54,7 +54,7 @@ struct RolloutResizer_v
 			--format "last_control: %\n" last_control
 			
 			subrollouts_id = _Rollout.name+"."+last_control.name
-			format "subrollouts_id: %\n" subrollouts_id
+			--format "subrollouts_id: %\n" subrollouts_id
 			--format "\n"
 			/* GET POS AND */ 
 			last_control_pos	= execute ( subrollouts_id+".pos" )

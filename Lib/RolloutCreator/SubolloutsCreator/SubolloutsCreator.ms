@@ -143,12 +143,12 @@ struct SubolloutsCreator_v
 	 */
 	function _getSlotData Subrollouts =
 	(
-		format "\n"; print "SubolloutsCreator_v._getSlotData()"
+		--format "\n"; print "SubolloutsCreator_v._getSlotData()"
 		
 		/** CURENTLY UNUSED 
 
 		  */
-		format "Subrollouts.AUTOROLLUP: %\n" Subrollouts.autorollup
+		--format "Subrollouts.AUTOROLLUP: %\n" Subrollouts.autorollup
 		if ( Subrollouts.autorollup ) != undefined then
 		(
 			slot_data	=  Dictionary()

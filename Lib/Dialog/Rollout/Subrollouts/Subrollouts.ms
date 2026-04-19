@@ -117,7 +117,7 @@ struct Subrollouts_v
 	on create do
 	(
 		format "\n"; print "Subrollouts_v.onCreate()"
-		format "AUTOROLLUP: %\n" autorollup
+		--format "AUTOROLLUP: %\n" autorollup
 		--format "PARENT_ROLLOUT_ID: %\n" parent_rollout_id
 		--if this.slot != undefined and this.slot != unsupplied then
 		this.slot = this.slot as string 

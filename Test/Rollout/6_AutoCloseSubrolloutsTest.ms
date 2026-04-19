@@ -2,8 +2,17 @@ clearListener(); print("Cleared in: "+getSourceFileName())
 
 filein( getFilenamePath(getSourceFileName()) + "/../../Lib/Dialog/Dialog.ms" ) -- "./../../Lib/Dialog/Dialog.ms"
 
-/** 
-	If CTRL key is pressed on ROLLUP EVENT, then close other subrollouts and left opened one rollout
+/**
+	TEST OF AUTO ROLL UP OF OTHER SUBROLLOUTS
+  
+  
+  
+	Function of CTRL key on OPEN\CLOSE rollout:
+		A) If CTRL key is PRESSED, then OTHER SUBROLLOUTS IN SAME SLOT ARE CLOSED
+		B) If autorollup == true,  then CTRL key LET OTHER SUBROLLOUTS KEEP OPEN
+		
+		( Ctrl INVERTS BEHAVIOUR OF AUTOROLL  )
+	
 
 	AUROLLUP EVENT:
 		BIND EVENTS:  RolloutDefaultEvents_v._getAutoRollUpRolloutEvent()
