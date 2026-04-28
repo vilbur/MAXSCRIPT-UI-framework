@@ -27,8 +27,8 @@ struct RolloutCreator_v
 	Ini,
 
 	/* developent */
-	DEBUG = false,
-	--DEBUG = true,
+	--DEBUG = false,
+	DEBUG = true,
 
 	/* properties */
 
@@ -53,7 +53,8 @@ struct RolloutCreator_v
 	 */
 	function createRollout _Rollout width: =
 	(
-		if DEBUG then format "\n\n------------------------------------- RolloutCreator_v.createRollout() id:#%	-------------------------------------\n"  ( _Rollout.id as string );
+		--if DEBUG then format "\n\n------------------------------------- RolloutCreator_v.createRollout() id:#%	-------------------------------------\n"  ( _Rollout.id as string );
+		if DEBUG then format "\n\n------------------------------------- RolloutCreator_v.createRollout() id:#%	-------------------------------------\n"  ( (_Rollout.getFullId()) as string );
 
 		
 		if _Rollout.RCI == undefined then -- RCI is defined WHEN chache is loaded
@@ -178,10 +179,11 @@ struct RolloutCreator_v
 	 */
 	function _createSubrollouts _RolloutParent =
 	(
-		--format "\n"; print "RolloutCreator_v._createSubrollouts()"
+		format "\n"; print "RolloutCreator_v._createSubrollouts()"
 
 		for Subrollouts in _RolloutParent.getSubrollouts() do -- loop slots where height is not defined by user
 		(
+			format "Subrollouts.height: %\n" Subrollouts.height
 			subrollouts_heights[ Subrollouts.slot ]  = 0
 			
 			for _RolloutSub in Subrollouts.Rollouts do
@@ -191,24 +193,31 @@ struct RolloutCreator_v
 
 				this.createRollout (_RolloutSub) --width:_RolloutSub.width height:_RolloutSub.height-- CREATE PARENT ROLLOUTS
 
-				/* DONT CREATE SUBROLOUTS IF SLOT HAS HEIGHT DEFINED  */
+				
+				/* TO FIND HEIGHT OF SUBROLLOUT:
+				  	
+					• TEMPORARY CREATE SUBROLLOUTS AS DIALOGS TO GET THEIR HEIGHT 
+					
+					• SUBROLLOUT IS  CREATED OUTISDE DISPLAY
+				
+					• DONT CREATE SUBROLOUTS IF SLOT HAS HEIGHT DEFINED
+				*/
 				if Subrollouts.height == unsupplied then
 				(
+					format "_RolloutSub.height: %\n" _RolloutSub.height
 					/* ======= DEV CODE =======
 
-					  FOR FLOATEBLE SUBROLLOUTS diable adding in SubolloutsCreator.addSubRollouts()
+						DISABLE ADDING FOR FLOATEBLE SUBROLLOUTS IN: SubolloutsCreator.addSubRollouts()
 
-					*/
-					/* DEV DESTROY SUBROLLOUT DIALOG
-					   
-						execute ("try(destroyDialog "+_RolloutSub.id as string+ " )catch()")
+						TO DESTROY SUBROLLOUT DIALOG:
+							execute ("try(destroyDialog "+_RolloutSub.id as string+ " )catch()")
 					*/ 
 
 					
 					/* ======= PRODUCTION CODE =======*/
 					CreateDialog ( _RolloutSub.RCI.def ) width:_RolloutParent.width height:_RolloutSub.height pos:[0,-8000] -- create subroullouts away from display
-
-					--_RolloutSub.RCI.def.visible = false
+					
+					--_RolloutSub.RCI.def.visible = false 
 				)
 				 
 				this._storeSubrolloutHeight(Subrollouts)(_RolloutSub)( Subrollouts.slot)

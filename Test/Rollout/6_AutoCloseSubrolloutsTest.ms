@@ -29,22 +29,17 @@ function addRollouts _Rollouts title rollouts_in_slot: slot:slot =
 	_Rollouts_new = #()
 
 	for i = 1 to rollouts_in_slot do
-		append _Rollouts_new (_Rollouts.Roll ( title + i as string ))
+		append _Rollouts_new (_Rollouts.Roll ( title + i as string ) height:128 rolledup:true  )
 
 	_Rollouts_new --return
 )
 
 /** Add item controls
  */
-function addControls _Rollout title: count:1 =
+function addControls Controls title: count:1 =
 (
-	Controls = _Rollout.Controls()
-	
-	if title == unsupplied then
-		title =  _Rollout.id as string
-	
 	for i = 1 to count do 
-		Controls.control #BUTTON ( title + i as string ) across:1
+		Controls.control #LABEL "[X]" across:1 height:48
 )
 
 
@@ -52,22 +47,36 @@ function addControls _Rollout title: count:1 =
 Dialog 	= Dialog_v title:(getFilenameFile(getSourceFileName())) width:540 --DEBUG:true
 
 
-/* ADD SLOTS */
-slot_A = Dialog.Rollouts slot:#rollouts_A height:256 autorollup:true
-slot_B = Dialog.Rollouts slot:#rollouts_B height:256 
---slot_C = Dialog.Rollouts slot:#rollouts_C height:256
+/*------------------------------------------------------------------------------
+	ADD SLOTS
+--------------------------------------------------------------------------------*/
+
+--(Dialog.Controls()).control #LABEL "OTHER ROLLOUTS AUTOMATICALY CLOSE" across:1 height:32
+
+(Dialog.Controls()).control #LABEL "\n\nPress CTRL on OPEN \ CLOSE subrollouts\n\n      TO CHANGE BEHAVIOUR\n\n" across:1 height:96
+
+slot_A = Dialog.Rollouts slot:#rollouts_A autorollup:true
 
 
-/* ADD ROLLOUTS */
---_Rollouts_A = addRollouts ( slot_A )	("DEFAULT ROLLUP BEHAVIOUR ") rollouts_in_slot:3
-_Rollouts_A = addRollouts ( slot_A )	("Autorollup TRUE ")	rollouts_in_slot:3
-_Rollouts_B = addRollouts ( slot_B )	("Autorollup FALSE ")	rollouts_in_slot:3
-
-/* ADD CONTROLS for better view of roooluts */ 
-for _rollouts in #( _Rollouts_A, _Rollouts_B, _Rollouts_C  ) where _rollouts != undefined do 
-	for _rollout in _rollouts do
-		addControls _rollout title:"Btn"
+slot_B = Dialog.Rollouts slot:#rollouts_B 
 
 
-/* CREATE DIALOG */
+/*------------------------------------------------------------------------------
+	ADD ROLLOUTS
+--------------------------------------------------------------------------------*/
+_Rollouts_A = addRollouts ( slot_A )	("Autorollup = TRUE ")	rollouts_in_slot:3
+
+
+_Rollouts_B = addRollouts ( slot_B )	("Autorollup = FALSE ")	rollouts_in_slot:3
+
+
+/* ADD CONTROLS for better view of opened rolluts */ 
+for _Rollouts in #( _Rollouts_A, _Rollouts_B  ) where _Rollouts != undefined do 
+	for _Rollout in _Rollouts do
+		addControls (_Rollout.Controls()) title:"Btn"
+
+
+/*------------------------------------------------------------------------------
+	CREATE DIALOG
+--------------------------------------------------------------------------------*/
 Dialog.create()
