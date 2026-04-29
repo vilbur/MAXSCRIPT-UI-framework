@@ -1090,5 +1090,8 @@ struct Dialog_v
 		
 		/*------ ADD THIS TO SOMEWHERE ------*/
 		DialogHotkeys = HOTKEYS_GLOBAL.addDialog(title)
+		
+		this.add_locals[#DIALOG_VARIABLE] = "DIALOG_TEST_VALUE XXX"
+		
 	)
 )

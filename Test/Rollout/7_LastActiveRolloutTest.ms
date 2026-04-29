@@ -12,7 +12,7 @@ _rollout	= slot.Roll "Rollout A" height:256
 
 
 /* DIALOG VARIABLE */ 
-Dialog.addlocal ( #DIALOG_VARIABLE ) ("DIALOG_TEST_VALUE")
+--Dialog.addlocal ( #DIALOG_VARIABLE ) ("DIALOG_TEST_VALUE")
 
 /* ROLLOUT VARIABLE */ 
 _rollout.addlocal ( #ROLLOUT_VARIABLE ) ("ROLLOUT_TEST_VALUE")

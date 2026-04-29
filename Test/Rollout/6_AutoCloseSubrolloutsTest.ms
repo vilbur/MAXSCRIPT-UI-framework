@@ -39,12 +39,12 @@ function addRollouts _Rollouts title rollouts_in_slot: slot:slot =
 function addControls Controls title: count:1 =
 (
 	for i = 1 to count do 
-		Controls.control #LABEL "[X]" across:1 height:48
+		Controls.control #LABEL "[X]" across:1 height:32
 )
 
 
 /* DIALOG */
-Dialog 	= Dialog_v title:(getFilenameFile(getSourceFileName())) width:540 --DEBUG:true
+Dialog 	= Dialog_v title:(getFilenameFile(getSourceFileName())) width:640 --DEBUG:true
 
 
 /*------------------------------------------------------------------------------
@@ -53,7 +53,7 @@ Dialog 	= Dialog_v title:(getFilenameFile(getSourceFileName())) width:540 --DEBU
 
 --(Dialog.Controls()).control #LABEL "OTHER ROLLOUTS AUTOMATICALY CLOSE" across:1 height:32
 
-(Dialog.Controls()).control #LABEL "\n\nPress CTRL on OPEN \ CLOSE subrollouts\n\n      TO CHANGE BEHAVIOUR\n\n" across:1 height:96
+(Dialog.Controls()).control #LABEL "\n\n! ! !   T O   I N V E R T   B E H A V I O U R\n\n Press CTRL on OPEN \ CLOSE subrollouts\n\n      " across:1 height:96
 
 slot_A = Dialog.Rollouts slot:#rollouts_A autorollup:true
 

@@ -44,8 +44,6 @@ function openHelp =
 (
 	format "\n"; print ".openHelp()"
 	--shellLaunch "https://github.com/vilbur/MAXSCRIPT-vilTools3" ""
-	format "windows.getChildHWND(): %\n" ( windows.getChildHWND #max )
-
 )
 
 /*------------------------------------------------------------------------------------------------------------------------------------

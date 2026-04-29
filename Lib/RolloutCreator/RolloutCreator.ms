@@ -57,7 +57,7 @@ struct RolloutCreator_v
 		if DEBUG then format "\n\n------------------------------------- RolloutCreator_v.createRollout() id:#%	-------------------------------------\n"  ( (_Rollout.getFullId()) as string );
 
 		
-		if _Rollout.RCI == undefined then -- RCI is defined WHEN chache is loaded
+		if _Rollout.RCI == undefined then -- RCI is defined WHEN chache is loaded -- WTF mean this comment ?:D  
 		(
 			if _Rollout.width == unsupplied and width != unsupplied then
 				_Rollout.width = width
@@ -88,12 +88,8 @@ struct RolloutCreator_v
 				EVENTS
 			================================================================================*/
 			
-			RolloutEventBinder.setRollout(_Rollout)
+			RolloutEventBinder.prepareEvents(_Rollout)
 			
-			RolloutEventBinder.combineEvents()
-			
-			RolloutEventBinder.mutateOpenCloseToRolledUp()
-	
 
 			/*==============================================================================
 				CREATE ROLLOUT
@@ -179,11 +175,11 @@ struct RolloutCreator_v
 	 */
 	function _createSubrollouts _RolloutParent =
 	(
-		format "\n"; print "RolloutCreator_v._createSubrollouts()"
+		--format "\n"; print "RolloutCreator_v._createSubrollouts()"
 
 		for Subrollouts in _RolloutParent.getSubrollouts() do -- loop slots where height is not defined by user
 		(
-			format "Subrollouts.height: %\n" Subrollouts.height
+			--format "Subrollouts.height: %\n" Subrollouts.height
 			subrollouts_heights[ Subrollouts.slot ]  = 0
 			
 			for _RolloutSub in Subrollouts.Rollouts do
@@ -204,7 +200,7 @@ struct RolloutCreator_v
 				*/
 				if Subrollouts.height == unsupplied then
 				(
-					format "_RolloutSub.height: %\n" _RolloutSub.height
+					--format "_RolloutSub.height: %\n" _RolloutSub.height
 					/* ======= DEV CODE =======
 
 						DISABLE ADDING FOR FLOATEBLE SUBROLLOUTS IN: SubolloutsCreator.addSubRollouts()
@@ -272,7 +268,8 @@ struct RolloutCreator_v
 	 */
 	function _addLocalVariablesToRollout _Rollout =
 	(
-		--print "ControlCreator_v._addLocalVariablesToRollout()"
+		print "ControlCreator_v._addLocalVariablesToRollout()"
+		--format "_Rollout.add_locals.keys: %\n" _Rollout.add_locals.keys
 		
 		/* ADD EACH VARIABLE */ 
 		for key in _Rollout.add_locals.keys do

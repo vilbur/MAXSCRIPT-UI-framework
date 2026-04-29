@@ -1,6 +1,16 @@
 filein( getFilenamePath(getSourceFileName()) + "/RolloutDefaultEvents/RolloutDefaultEvents.ms" )	-- "./RolloutDefaultEvents/RolloutDefaultEvents.ms"
 filein( getFilenamePath(getSourceFileName()) + "/EventsCombiner/EventsCombiner.ms" )	-- "./EventsCombiner/EventsCombiner.ms"
 
+/** Open url fails in the event but works in the callback function
+  
+	In 3ds Max, any script run from a string via execute is classified as a "Dynamic Script."
+	Under SSSE rules, Dynamic Scripts are strictly sandboxed.
+	3ds Max will always block a Dynamic Script from running system commands like shellLaunch,
+	even if the main script itself is trusted.
+ */
+function openUrRolloutEventlCallback url = shellLaunch url ""
+
+
 /** RolloutEvent
   *
   *		1) Available events for dialog|rollout are #OPEN, #CLOSE, #RESIZED, #MOVED, #DOCKED, #UNDOCKED
@@ -59,35 +69,37 @@ struct RolloutEventBinder_v
 	),
 
 	events_no_param	= #( #open, #close, #oktoclose, #help ),
-
-	/** Set rollout
+	
+	/** Prepare events
 	 */
-	function setRollout _Rollout =
+	function prepareEvents _Rollout =
 	(
-		--format "\n"; print "RolloutEventBinder_v.setRollout ()"
-		this._Rollout = _Rollout
-	),
-
-	/**Combine CUSTOM and DEFAULT events
-	  * 
-	  * TODO: rename this to setEventsToCombiner or like that
-	 */
-	function combineEvents =
-	(
-		--format "\n"; print "RolloutEventBinder_v.combineEvents()"
-		--format "\n\n~~~~~~~~~	Rollout Events:%	~~~~~~~~~\n" _Rollout.id
-
-		--format "_Rollout.Events.keys: %\n" _Rollout.Events.keys
+		--format "\n"; print "RolloutEventBinder_v.prepareEvents()"
+		
+		/*------------------------------------------------------------------------------
+		    CONGIGURE
+		--------------------------------------------------------------------------------*/		
+		
+		this._setRollout(_Rollout)
+		
 		this._setRolloutDefaultEvents()
-		--format "_Rollout.Events.keys: %\n" _Rollout.Events.keys
 
 		this._setCustomEvents()  -- NOTE: callback will be fired in reversed order then has been added. Default event goes first
+
+		/*------------------------------------------------------------------------------
+			SETUPE EVENTS BY TYPE
+		--------------------------------------------------------------------------------*/
 		
+		/* HELP */ 
 		this._setHelpUrlEvent()
 		
+		/* DOCKED */ 
 		this._combineDockedEvents()
-		--format "_Rollout.Events.keys: %\n" _Rollout.Events.keys
+		
+		/* ROLLUP */ 
+		this._mutateOpenCloseToRolledUp()
 	),
+	
 
 	/** Add handlers
 	 */
@@ -105,73 +117,31 @@ struct RolloutEventBinder_v
 			this._addHandler event_type
 	),
 
-	/** Bind open\close events to rolled up handler
-	  *
-	  * Events #open, #close are bind to #rolledUp handler
-	  */
-	function mutateOpenCloseToRolledUp =
-	(
-		--format "\n";	print "RolloutEventBinder_v.mutateOpenCloseToRolledUp()"
-		--format "_Rollout.Events.keys: %\n" _Rollout.Events.keys
-		/** Join array to string
-		 */
-		function arrayToString arr delimeter:"\n" = ( _string = ""; for Event in arr do _string += Event.callback  + delimeter; substring _string 1 (_string.count-delimeter.count))
-		
-		
-		/* IF ANY OF "ROLLEDUP" RELATED EVENTS IS DEFINED */ 
-		if  _Rollout.Events[#ROLLEDUP] != undefined \
-		or _Rollout.Events[#OPEN] 	  != undefined \
-		or _Rollout.Events[#CLOSE]	  != undefined then
-		(
-
-			/* CREATE EVENT */ 
-			Event_rolledup	= Event_v type:#ROLLEDUP
-
-			/* AVOID FIRE EVENT ON INIT */ 
-			_Rollout.addlocal #ROLLEDUP_INITILAZIED false
-			
-			
-			
-			/* #OPEN event */ 
-			if _Rollout.Events[#OPEN] != undefined then
-				Event_rolledup.callback += "\n\n	    if val == true  then " + arrayToString( _Rollout.Events[#OPEN] )
-
-			/* #CLOSE event */ 
-			if _Rollout.Events[#CLOSE] != undefined then
-				Event_rolledup.callback += "\n\n	    if val == false then " + arrayToString( _Rollout.Events[#CLOSE] )
-				
-			
-			
-			/* WRAP CALLBACK TO PREVENT FIRE ON ADDING OF SUBROLLOUT --"./_Dev/preventRolledUpEventOnAdding.ms" */
-			Event_rolledup.callback = 	"if ROLLEDUP_INITILAZIED == true then\n	(\n\t\t" + Event_rolledup.callback + "\n\t)\n	else\n\t	ROLLEDUP_INITILAZIED = true"
-
-			
-			/* ADD TO EVENTS */
-			if Events_rolledup == undefined then 
-				_Rollout.Events[#ROLLEDUP] = #()
-		
-		
-			append _Rollout.Events[#ROLLEDUP] Event_rolledup
-		)
-		
-	),
-
 	private
 
 
-	/** Bind events
+	/** Set rollout
 	 */
+	function _setRollout _Rollout =
+	(
+		--format "\n"; print "RolloutEventBinder_v._setRollout ()"
+		this._Rollout = _Rollout
+	),
+
+	/*------------------------------------------------------------------------------
+		BIND EVENT TO ROLLOUT
+	--------------------------------------------------------------------------------*/
 	function _addHandler event_type =
 	(
 		if (Event = EventsCombiner.combine (event_type)) != undefined then
 		(
 			--format "\n\n";	print "RolloutEventBinder_v._addHandler()"
-			--format "Event.type: %\n" Event.type
+			--format "Event.TYPE: %\n" Event.type
+			--format "Event.CALLBACK: %\n" Event.callback
 
-			if DEBUG then format "\n---------------------------------------------------------------------------\n\non % % do ( % )\n" _Rollout.id Event.type Event.callback
-
-			handler = "on "+(this._Rollout.id)+" "+ event_type as string + this._getParams(event_type)+" do\n(" +Event.callback+ "\n)"
-			--format "HANDLER:	% \n" handler
+			handler = "on "+( this._Rollout.id )+" "+ event_type as string + this._getParams(event_type)+" do\n(" +Event.callback+ "\n)"
+			
+			if DEBUG then format "\n---------------------------------------------------------------------------\n\nHANDLER:  % \n" handler
 			
 			this._Rollout.RCI.addText(handler) filter:true
 		)
@@ -222,51 +192,70 @@ struct RolloutEventBinder_v
 	
 	
 	
-	/** Set help url
+	/** shellLaunch cannot be executed directly from event because of security reasons
+	  
+		Workaround is open url from function 
 	 */
 	function _setHelpUrlEvent =
 	(
 		--format "\n"; print "RolloutEventBinder_v._setHelpUrlEvent()"
-		
-		--format "EventsCombiner.EventsLists[#CUSTOM][#HELP]: %\n" EventsCombiner.EventsLists[#CUSTOM][#HELP]
-		
-		if ( Events_help = EventsCombiner.EventsLists[#CUSTOM][#HELP] ) != undefined then
-		(
-			--format "EVENTS_HELP: %\n" EVENTS_HELP
-			--format "TEST: %\n" ( matchPattern Events_help[1].callback pattern:("http*") or matchPattern Events_help[1].callback pattern:("www*") )
-			if matchPattern Events_help[1].callback pattern:("http*") or matchPattern Events_help[1].callback pattern:("www*") then
-			(
-				
-				/*
-						FIX HELP LINK !!!!!!!!!!
-				
-				
-				
-				*/ 
-				
-				
-				--cmd = "shellLaunch \""+Events_help[1].callback+"\" \"\""
-				cmd = "shellLaunch \"https://github.com/vilbur/MAXSCRIPT-vilTools3\" \"\""
-				
-				EventsCombiner.EventsLists[#CUSTOM][#HELP][1].callback = cmd
-				
-				--format "CMD: %\n" cmd
-				--EventsCombiner.EventsLists[#CUSTOM][#HELP][1] = "dialogRolloutCallbackParam(#HELP)\n"
-			)
-		)
+		--format "\n***********************************\n"
+
+		for i = 1 to EventsCombiner.EventsLists[#CUSTOM][#HELP].count where ( Event = EventsCombiner.EventsLists[#CUSTOM][#HELP][i] ) != undefined do
+			if matchPattern Event.callback pattern:("http*") or matchPattern Event.callback pattern:("www*") then
+				Event.callback = "openUrRolloutEventlCallback \""+ Event.callback +"\""
 	),
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
+	/** Bind open\close events to rolled up handler
+	  *
+	  * Events #open, #close are bind to #rolledUp handler
+	  */
+	function _mutateOpenCloseToRolledUp =
+	(
+		--format "\n";	print "RolloutEventBinder_v._mutateOpenCloseToRolledUp()"
+		--format "_Rollout.Events.keys: %\n" _Rollout.Events.keys
+		/** Join array to string
+		 */
+		function arrayToString arr delimeter:"\n" = ( _string = ""; for Event in arr do _string += Event.callback  + delimeter; substring _string 1 (_string.count-delimeter.count))
+		
+		
+		/* IF ANY OF "ROLLEDUP" RELATED EVENTS IS DEFINED */ 
+		if  _Rollout.Events[#ROLLEDUP] != undefined \
+		or _Rollout.Events[#OPEN] 	  != undefined \
+		or _Rollout.Events[#CLOSE]	  != undefined then
+		(
+
+			/* CREATE EVENT */ 
+			Event_rolledup	= Event_v type:#ROLLEDUP
+
+			/* AVOID FIRE EVENT ON INIT */ 
+			_Rollout.addlocal #ROLLEDUP_INITILAZIED false
+			
+			
+			
+			/* #OPEN event */ 
+			if _Rollout.Events[#OPEN] != undefined then
+				Event_rolledup.callback += "\n\n	    if val == true  then " + arrayToString( _Rollout.Events[#OPEN] )
+
+			/* #CLOSE event */ 
+			if _Rollout.Events[#CLOSE] != undefined then
+				Event_rolledup.callback += "\n\n	    if val == false then " + arrayToString( _Rollout.Events[#CLOSE] )
+				
+			
+			
+			/* WRAP CALLBACK TO PREVENT FIRE ON ADDING OF SUBROLLOUT --"./_Dev/preventRolledUpEventOnAdding.ms" */
+			Event_rolledup.callback = 	"if ROLLEDUP_INITILAZIED == true then\n	(\n\t\t" + Event_rolledup.callback + "\n\t)\n	else\n\t	ROLLEDUP_INITILAZIED = true"
+
+			
+			/* ADD TO EVENTS */
+			if Events_rolledup == undefined then 
+				_Rollout.Events[#ROLLEDUP] = #()
+		
+		
+			append _Rollout.Events[#ROLLEDUP] Event_rolledup
+		)
+		
+	),
 	
 	/** Combine #DOCKED \ #UNDOCKED events and move them to _Rollout.Events
 		
