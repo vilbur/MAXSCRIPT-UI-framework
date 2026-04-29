@@ -201,9 +201,10 @@ struct RolloutEventBinder_v
 		--format "\n"; print "RolloutEventBinder_v._setHelpUrlEvent()"
 		--format "\n***********************************\n"
 
-		for i = 1 to EventsCombiner.EventsLists[#CUSTOM][#HELP].count where ( Event = EventsCombiner.EventsLists[#CUSTOM][#HELP][i] ) != undefined do
-			if matchPattern Event.callback pattern:("http*") or matchPattern Event.callback pattern:("www*") then
-				Event.callback = "openUrRolloutEventlCallback \""+ Event.callback +"\""
+		if ( Events = EventsCombiner.EventsLists[#CUSTOM][#HELP] ) != undefined then 
+			for i = 1 to Events.count where ( Event = Events[i] ) != undefined do
+				if matchPattern Event.callback pattern:("http*") or matchPattern Event.callback pattern:("www*") then
+					Event.callback = "openUrRolloutEventlCallback \""+ Event.callback +"\""
 	),
 
 	/** Bind open\close events to rolled up handler

@@ -2,7 +2,7 @@ filein( getFilenamePath(getSourceFileName()) + "/PathsLoader/PathsLoader.ms" )	-
 filein( getFilenamePath(getSourceFileName()) + "/ScriptFile/ScriptFile.ms" )	-- "./ScriptFile/ScriptFile.ms"
 filein( getFilenamePath(getSourceFileName()) + "/../ContentSubrollouts.ms" )	-- "./../ContentSubrollouts.ms"
 
-/** Create rollout from dir containing ".ms" & ".mcr" files
+/** Create ROLLOUT from dir containing ".ms" & ".mcr" files
  *
  * @property	string	dir	Path to dir
  * @property	string	title	Name of rollout
@@ -28,45 +28,21 @@ struct ContentRollout_v
 	 */
 	function addToUi Subrollouts =
 	(
-		--print ( "ContentRollout_v.addToUi (Subrollouts:" + Subrollouts.slot as string +")"  )
+		print ( "ContentRollout_v.addToUi (Subrollouts:" + Subrollouts.slot as string +")"  )
+		format "TITLE: %\n" TITLE
 		--format "ini_file	= % \n" ini_file
 		Rollout_new	= Subrollouts.Roll title -- get new rollout
 
-		/*------------------------------------------------------------------------------
-			USE CACHE IS DISBALED CURRENTRLY
-			
-			TODO:
-				1) load UI state from ini when dialog is created
-				2) Store AUTORUN controls in file and FIRE EVENTS when dialog is created
-			
-		--------------------------------------------------------------------------------*/
+		format "PATH: %\n" PATH
+		format "Rollout_new: %\n" Rollout_new
 		
-		--___DEV_USE_CACHE___ = false
-		--___DEV_USE_CACHE___ = true
-		
-		--format "Rollout_new.RCI.def: %\n" Rollout_new.RCI.def
-		
-		--if ___DEV_USE_CACHE___ or ( rci_loaded = Rollout_new.loadRolloutDefinitionFromCache() ) == undefined then
-		--(
-		--Rollout_new.saveRolloutDefinitionToCache Rollout_new.RCI.def
-		
-			this._setRolloutPropertiesFromIniFile(Rollout_new)
-		
-			for Subrollouts_or_Controls in Subrollouts_and_Controls do
-				Subrollouts_or_Controls.addToUi Rollout_new
-		--)
-		--else
-		--(
-		--	--format "RCI_LOADED: %\n" rci_loaded
-		--	Rollout_new.setRCI()
-		--
-		--	Rollout_new.RCI.def = rci_loaded
-		--
-		--	for Subrollouts in Subrollouts_and_Controls where hasProperty Subrollouts "Rollouts" do
-		--		Subrollouts.addToUi Rollout_new
-		--)
-		
-		
+
+		this._setRolloutPropertiesFromIniFile(Rollout_new)
+	
+	
+		for Subrollouts_or_Controls in Subrollouts_and_Controls do
+			Subrollouts_or_Controls.addToUi Rollout_new
+	
 	),
 
 	/** Get new instance of This
@@ -78,8 +54,10 @@ struct ContentRollout_v
 
 	private
 
-
-	/** _get controls and rollouts
+	/*------------------------------------------------------------------------------
+		LOAD ROLLOUTS AND CONTROLS FROM FILES
+	--------------------------------------------------------------------------------*/
+	/** 
 	 */
 	function _initLoadContentFromDir =
 	(
@@ -183,20 +161,19 @@ struct ContentRollout_v
 		--format "ini_file	= % \n" ini_file
 		ConstructPropeties test:this
 
-		--generateMacroscripts (path)
-		
 		this._setRolloutTitle()
 
+		
 		PathsLoader = PathsLoader_v path:path
 
 		PathsLoader.fileInMaxscriptFiles()
 
+		
 		if ini_file == undefined then
 			ini_file = PathsLoader.ini_files[1]
 
+			
 		this._initLoadContentFromDir()
-		
-		
 	)
 )
 

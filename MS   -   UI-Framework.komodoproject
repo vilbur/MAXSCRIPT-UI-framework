@@ -73,8 +73,12 @@
 </livefolder>
 <file id="fe38b9be-0b1e-4f97-80e9-c55ca9565e25" idref="38a5d00f-dc9e-4a6e-b504-461abd8ebb54" name="Controls.ms" url="Lib/Dialog/Rollout/Controls/Controls.ms">
 </file>
+<file id="0546e82c-e72f-431b-8ed7-9ce56ae36100" idref="ad60566e-f9da-4452-97b4-905e34c8ce55" name="ContentLoader.ms" url="Lib/ContentLoader/ContentLoader.ms">
+</file>
 <livefolder id="0f9c409f-5b38-4e56-9299-3e7d9acf8e26" idref="ad60566e-f9da-4452-97b4-905e34c8ce55" name="ContentLoader" url="Lib/ContentLoader/">
 </livefolder>
+<file id="a70aeb7c-9cf5-4657-b5ad-d1a5d99e2aac" idref="ad60566e-f9da-4452-97b4-905e34c8ce55" name="ContentRollout.ms" url="Lib/ContentLoader/ContentSubrollouts/ContentRollout/ContentRollout.ms">
+</file>
 <livefolder id="b92a202d-e14e-4300-89bb-1f14e1e2c5df" idref="ad60566e-f9da-4452-97b4-905e34c8ce55" name="MacroScriptFileParser" url="Lib/ContentLoader/ContentSubrollouts/ContentRollout/ScriptFile/MacroScriptFileParser/">
 </livefolder>
 <livefolder id="dbd82612-d372-4815-ac67-ce221f968da4" idref="ad60566e-f9da-4452-97b4-905e34c8ce55" name="MacroScript" url="Lib/ContentLoader/ContentSubrollouts/ContentRollout/ScriptFile/MacroScript/">
