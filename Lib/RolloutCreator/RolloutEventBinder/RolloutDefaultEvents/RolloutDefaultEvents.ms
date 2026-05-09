@@ -19,7 +19,11 @@ struct RolloutDefaultEvents_v -- MAYBE RENAME THIS TO RolloutRolloutDefaultEvent
 (
 	/* properties */
 	--Events = #(),
+	EventsList = Dictionary(),
+
 	ini_path,
+	rollout_id,
+
 
 	/*==============================================================================
 	
@@ -32,91 +36,29 @@ struct RolloutDefaultEvents_v -- MAYBE RENAME THIS TO RolloutRolloutDefaultEvent
 	(
 		--format "\n"; print ("RolloutDefaultEvents_v.getDialogEvents(" + rollout_id as string +")")
 
-		EventsList = Dictionary()
-		
-		
-		/*--------------------------------------------------------------------------------------------------------------------------------------
-		  
-			on #OPEN - Move controls to groupboxes
-			
-		----------------------------------------------------------------------------------------------------------------------------------------*/
-		
-		Event =  Event_v type:#OPEN
-		
-		Event.callback = ""
-		--Event.callback += "\nformat \"TEST EVENT: #OPEN  Rollout: "+ rollout_id as name +"\n\";\n" + Event.callback
-		
-		Event.callback += "\n"+rollout_id+".visible = true\n\n"
-		
-		Event.callback += "GROUPBOXCREATOR.sortControlsToGroupBoxes( "+rollout_id+" )"
-		
-		--Event.callback += "\nformat \"ON OPEN Rollout.visible: %\""+ rollout_id +".visible\n;\n" + Event.callback
-		
-		EventsList[#OPEN] = #( Event )
-		
-		
-		
-		/*--------------------------------------------------------------------------------------------------------------------------------------
-		  
-			on #RESIZE - start timer to check size and wait for resizing ends, then fires callbacks
-			
-		----------------------------------------------------------------------------------------------------------------------------------------*/
-		
-		Event =  Event_v type:#RESIZED
-		
-		Event.callback = "waitForResizingEndsTimer(#"+rollout_id+")" --"./waitForResizingEndsTimer.ms"
-		
-		EventsList[#RESIZED] = #( Event )
-		
-		
-		
-		/*--------------------------------------------------------------------------------------------------------------------------------------
-		  
-			on dialog #DOCKED -- save dock state to ini
-			
-		----------------------------------------------------------------------------------------------------------------------------------------*/
-		
-		if( ini_path != undefined ) then
-			for event_type in #( #DOCKED, #UNDOCKED ) do
-			(
-				callback_fn = if event_type == #DOCKED then "saveDialogDockState" else "saveDialogState"
-				
-				Event =  Event_v type:event_type
-				
-				Event.callback = "(UiStateSaver_v ini_file:\""+ini_path+"\")."+callback_fn+"(\""+rollout_id+"\")"
-				
-				--Event.callback += "\nformat \"TEST DEFAULT EVENT: #"+event_type+"  Rollout: "+ rollout_id as name +"\n\";\n" + Event.callback
+		this.rollout_id = rollout_id
+
+		/* ON OPEN */ 	
+		this._onOpen ( Event_v type:#OPEN )
+
+		/* ON RESIZE */ 	
+		this._onResize ( Event_v type:#RESIZED )
 	
-				EventsList[event_type] = #( Event )
-			)
-		
-		
-		
-		/*--------------------------------------------------------------------------------------------------------------------------------------
-		  
-			on #OKTOCLOSE - Save dialog state when its closed
-			
-			IMPORTANT: #oktoclose MUST RETURN BOOLEAN - true:close dialog | false:cancel closing
-			
-		----------------------------------------------------------------------------------------------------------------------------------------*/
-		
+	
 		if( ini_path != undefined ) then
 		(
-			ini_path	= ( dotNetObject "System.Text.RegularExpressions.Regex" @"[\\/]+" ).Replace ini_path "/"
-		
-			Event =  Event_v type:#OKTOCLOSE
-		
-			Event.callback = "(UiStateSaver_v ini_file:\""+ini_path+"\").saveControlsAndSubrollouts(\""+rollout_id+"\")"
-		
-			--Event.callback += "format \"TEST EVENT: #OKTOCLOSE  Rollout: "+ rollout_id as name +"\n\";\n" + Event.callback  
+			this._escapeIniPath()
 			
-			Event.callback += "\n\n	true -- IMPORTANT - #oktoclose MUST RETURN BOOLEAN"
-
-			--append EventsList.list Event
-			EventsList[#OKTOCLOSE] = #( Event )
+			/* OKTOCLOSE */ 
+			this._onOkToClose ( Event_v type:#OKTOCLOSE )
+		
+			/* #DOCKED & #UNDOCKED */ 
+			for event_type in #( #DOCKED, #UNDOCKED ) do
+				this._onDockStateChange ( Event_v type:event_type )
 		)
-		
-		
+
+
+	
 		/*------------------------------------------------------------------------------
 			RETURN EVENT LIST
 		--------------------------------------------------------------------------------*/
@@ -147,11 +89,67 @@ struct RolloutDefaultEvents_v -- MAYBE RENAME THIS TO RolloutRolloutDefaultEvent
 	
 	private
 	
+	
+	/** on #OPEN - Move controls to groupboxes
+	 */
+	function _onOpen Event =
+	(
+		--format "\n"; print "RolloutDefaultEvents_v._onOpen()"
+		Event.callback += "\n"+rollout_id+".visible = true\n\n"
+		
+		Event.callback += "GROUPBOXCREATOR.sortControlsToGroupBoxes( "+rollout_id+" )"
+		
+		EventsList[#OPEN] = #( Event ) --return
+	),
+	
+	/** on #RESIZE - start timer to check size and wait for resizing ends, then fires callbacks
+	 */
+	function _onResize Event =
+	(
+		--format "\n"; print "RolloutDefaultEvents_v._onResize()"
+		Event.callback = "waitForResizingEndsTimer(#"+rollout_id+")" --"./waitForResizingEndsTimer.ms"
+		
+		EventsList[#RESIZED] = #( Event ) --return
+	),
+	
+	/** on #OKTOCLOSE - Save dialog state when its closed
+			
+		IMPORTANT: #oktoclose MUST RETURN BOOLEAN - true:close dialog | false:cancel closing
+	 */
+	function _onOkToClose Event =
+	(
+		--format "\n"; print "RolloutDefaultEvents_v._onOkToClose()"
+	
+		Event.callback = "(UiStateSaver_v ini_file:\""+ini_path+"\").saveControlsAndSubrollouts(\""+rollout_id+"\")"
+	
+		--Event.callback += "format \"TEST EVENT: #OKTOCLOSE  Rollout: "+ rollout_id as name +"\n\";\n" + Event.callback  
+		
+		Event.callback += "\n\n	true -- IMPORTANT - #oktoclose MUST RETURN BOOLEAN"
+
+		EventsList[#OKTOCLOSE] = #( Event ) --return
+	),
+	
+	/** on dialog #DOCKED -- save dock state to ini
+	 */
+	function _onDockStateChange Event =
+	(
+		--format "\n"; print "RolloutDefaultEvents_v._onDockStateChange()"
+		callback_fn = if Event.type == #DOCKED then "saveDialogDockState" else "saveDialogState"
+		
+		Event.callback = "(UiStateSaver_v ini_file:\""+ini_path+"\")."+callback_fn+"(\""+rollout_id+"\")"
+
+		EventsList[Event.type] = #( Event ) --return
+	),
+	
 	/** Get auto roll up rollout event
 	 */
 	function _getAutoRollUpRolloutEvent _Rollout =
 	(
-		----format "\n"; print "RolloutDefaultEvents_v._getAutoRollUpRolloutEvent()"
+		format "\n"; print "RolloutDefaultEvents_v._getAutoRollUpRolloutEvent()"
+		
+
+
+		
 		--
 		--/** Get autoroll parmas
 		-- */
@@ -187,6 +185,10 @@ struct RolloutDefaultEvents_v -- MAYBE RENAME THIS TO RolloutRolloutDefaultEvent
 		Event_v type:#ROLLEDUP callback:callback --return
 	),
 	
+	/** Escape ini path
+	 */
+	function _escapeIniPath = ini_path	= ( dotNetObject "System.Text.RegularExpressions.Regex" @"[\\/]+" ).Replace ini_path "/",
+
 
 	/**
 	 */

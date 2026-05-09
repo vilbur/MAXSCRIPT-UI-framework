@@ -64,8 +64,16 @@ struct ContentLoader_v
 		lockWidth:true	\
 		parent: =
 	(
-		--print("ContentLoader_v.create()")
+		--format "\n"; print "ContentLoader_v.create()"
 
+		
+		
+		
+		
+		if Dialog.Events[#help] != undefined then 
+			this.autoBindHelpEvent()
+
+		/* CREATE DIALOG */ 
 		Dialog.create \
 			width:width 	\
 			height:height 	\
@@ -82,11 +90,33 @@ struct ContentLoader_v
 			lockWidth:lockWidth 	\
 			cache:false 	\
 			parent:parent
-
+		
+		
+			
 		Dialog --return
 	),
 
 	private
+	
+	/** Auto bind help event
+	 */
+	function autoBindHelpEvent =
+	(
+		format "\n"; print "ContentLoader_v.autoBindHelpEvent()"
+		format "Dialog.Events: %\n" Dialog.Events
+		format "Dialog.Events[#help]: %\n" Dialog.Events[#help]
+		
+		for Subrollouts in Dialog.getSubrollouts() do
+			for _Rollout in Subrollouts.Rollouts do
+			(
+				format "_Rollout.Events: %\n" _Rollout.Events
+				
+				
+			)
+		
+		
+		
+	),
 
 
 	/**

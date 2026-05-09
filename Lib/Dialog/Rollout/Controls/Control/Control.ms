@@ -27,7 +27,16 @@ struct Control_v
 	--is_in_groupbox = false, -- USED: GroupBoxes_v.addControlToGroupbox() IN FILE: "./../GroupBoxes/GroupBoxes.ms"
 	
 	public
-
+	/** Print props and values
+	 */
+	function printProps =
+	(
+		format "\n"; print "Control_v.printProps()"
+		--format "this as string: %\n" (this as string)
+		
+		for prop in getPropNames this do FORMAT "%: %\n" prop (getProperty this prop)
+	),
+	
 	/** Focus control
 	 */
 	function focus =

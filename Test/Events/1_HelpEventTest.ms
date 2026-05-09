@@ -34,7 +34,7 @@ DialogTest.Event #HELP	"https://github.com/vilbur"
 /* ROLLOUT EVENTS */ 
 --_Rollout.Event event_type	("print(\"CUSTOM DIALOG EVENT #"+ event_type as string +"\")")
 
-
+"C:\Program Files\Everything 1.5a\Everything.exe" -s "your search terms"
 
 /*------------------------------------------------------------------------------
 	
@@ -44,6 +44,8 @@ DialogTest.Event #HELP	"https://github.com/vilbur"
 	
 --------------------------------------------------------------------------------*/
 --DialogTest.Event #HELP	"shellLaunch \"https://github.com/vilbur\" \"\""
+
+
 
 
 /*------------------------------------------------------------------------------

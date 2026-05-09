@@ -30,11 +30,17 @@ struct ControlParamsCreator_v
 		--format "\n"; print "ContolParamsCreator_v.mergeDefaultParams()"
 		--format "% PARAMS: %\n" _Control.id _Control.Params
 		
-		/* DEFAULTS PARAMS FOR CONTROL TYPE */ 
+		/*------------------------------------------------------------------------------
+			DEFAULTS PARAMS FOR CONTROL TYPE
+		--------------------------------------------------------------------------------*/
 		this._mergeDictionaries (_Control)(Defaults.Params[_Control.type])
 		
-		/* GLOBAL PARAMS */
+		
+		/*------------------------------------------------------------------------------
+			GLOBAL PARAMS
+		--------------------------------------------------------------------------------*/
 		this._mergeDictionaries (_Control)(Defaults.Params[#GLOBAL])
+		
 		
 		_Control --return
 	),
@@ -61,6 +67,9 @@ struct ControlParamsCreator_v
 			
 		trimRight params_string  --return
 	),
+	
+	
+	
 
 	
 	private

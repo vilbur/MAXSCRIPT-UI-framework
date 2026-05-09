@@ -27,15 +27,12 @@ function addSubRolloutSlots _Rollout prefix:"" rollouts_count:1 nested_levels: c
 		(
 			rollout_title = prefix + " Rollout: "+ r as string + " "+" Level: " + (current_level + 1) as string
 
-
-		   _SubRollout = _Rollouts.Roll rollout_title --height:512
-
-		   /* ADD NESTED SUBROLLOUTS */
-			   addSubRolloutSlots _SubRollout prefix:prefix nested_levels:nested_levels current_level:(current_level+1) rollouts_count:rollouts_count controls_count:controls_count
-
+			
+			_SubRollout = _Rollouts.Roll rollout_title --height:512
+			
+			/* ADD NESTED SUBROLLOUTS */
+			addSubRolloutSlots _SubRollout prefix:prefix nested_levels:nested_levels current_level:(current_level+1) rollouts_count:rollouts_count controls_count:controls_count
 		)
-
-
 	)
 
 	/* ADD CONTROLS */

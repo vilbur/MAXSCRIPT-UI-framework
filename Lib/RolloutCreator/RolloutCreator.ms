@@ -91,6 +91,10 @@ struct RolloutCreator_v
 			RolloutEventBinder.prepareEvents(_Rollout)
 			
 
+			--_Rollout.addLocal #ROLLOUT_VARIABLE "ROLLOUT_TEST_VALUE"
+			_Rollout.addLocal #AUTORUN_EVENTS AUTORUN_EVENTS
+
+			
 			/*==============================================================================
 				CREATE ROLLOUT
 			================================================================================*/
@@ -98,12 +102,11 @@ struct RolloutCreator_v
 			/* EDIT BEGIN - RolloutCreator */
 			_Rollout.RCI.begin()
 	
-	
+
 			/* add HOTKEYS */ 
 			if hasProperty _Rollout #DialogHotkeys and _Rollout.DialogHotkeys.hot_keys.count > 0 then
 				_Rollout.DialogHotkeys.addHotkeyTimer(_Rollout)
 	
-
 	
 			/* add LOCAL VARIABLES */
 			this._addLocalVariablesToRollout(_Rollout)
@@ -114,7 +117,8 @@ struct RolloutCreator_v
 			/* add CONTROLS and SUBROLLOUTS SLOTS */
 			this._addControlsAndSubrolloutSlots(_Rollout)
 	
-			_Rollout.RCI.addLocal "AUTORUN_EVENTS" init:( this.convertToString AUTORUN_EVENTS)
+			--_Rollout.RCI.addLocal "AUTORUN_EVENTS" init:( this.convertToString AUTORUN_EVENTS)
+			_Rollout.RCI.addLocal #ROLLOUT_VARIABLE init:"\"ROLLOUT_TEST_VALUE\""
 
 			/* add EVENTS */
 			RolloutEventBinder.addHandlers()
@@ -148,7 +152,8 @@ struct RolloutCreator_v
 			if( this._is(Controls_or_Subrollouts)("Controls") ) then
 				ControlsCreator.addControls(Controls_or_Subrollouts)
 
-			else if _Rollout.hasSubrollouts() then
+			------else if _Rollout.hasSubrollouts() then /* DOES NOT CREATE SLOT IF HAS NOT ROLLOUTS */ 
+			else /* CREATE SLOT EVEN IF HAS NOT ROLLOUTS */ 
 				SubolloutsCreator.addSubrolloutSlot(_Rollout)(Controls_or_Subrollouts)
 		)
 	 ),

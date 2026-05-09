@@ -19,8 +19,8 @@ struct ControlCreator_v
 	Ini,
 
 	/* properties */
-	--DEBUG = true,
-	DEBUG = false,
+	DEBUG = true,
+	--DEBUG = false,
 
 	/* dependency */
 	Controls,
@@ -34,7 +34,7 @@ struct ControlCreator_v
 	 */
 	function addControls Controls =
 	(
-		--if DEBUG then format "\n\n-------------- ControlCreator_v.addControls() group:% --------------\n" Controls.group
+		if Controls.DEBUG then format "\n\n-------------- ControlCreator_v.addControls() group:% --------------\n" Controls.group
 		--format "\n\n-------------- ControlCreator_v.addControls() group:% --------------\n" Controls.group
 		--format "Controls.list.count: %\n" Controls.list.count
 
@@ -58,14 +58,16 @@ struct ControlCreator_v
 		for _Control in this.Controls.list do
 		(
 			--format "_Control.params: %\n" _Control.params
-			
+			--format "\n"
+			--format "_CONTROL.PARAMS: %\n" _Control.Params
+
 			/* SET CAPTION */ 
 			this._setCaption(_Control)
 			
 			
 			/* MERGE DEFAULT AND USER PARAMS */ 
 			ParamsCreator.mergeDefaultParams(_Control)
-			--format "_Control.params: %\n" _Control.params
+			--format "_CONTROL.PARAMS: %\n" _Control.Params
 
 			/* SET VALUE OF CONTROL */ 
 			ControlValue.setControlValue (_Control) (this._getIniValue(_Control))
@@ -80,6 +82,9 @@ struct ControlCreator_v
 			
 			/* ADJUST PARAMETERS */
 			this._setControlWidth(_Control)
+			--format "_CONTROL.PARAMS: %\n" _Control.Params
+
+			
 		)
 
 		
@@ -88,8 +93,8 @@ struct ControlCreator_v
 			( AcrossParameterModifier = AcrossParameterModifier_v()).addFakeControls(this.Controls)
 
 		
-		/* JOIN PARAMETERS */ 
-		this._joinParamsToString()
+		--/* JOIN PARAMETERS */ 
+		--this._joinParamsToString()
 		
 
 		/* ADD CONTROLS TO GROUPBOX */ 
@@ -124,6 +129,7 @@ struct ControlCreator_v
 	--------------------------------------------------------------------------------*/
 	function _addControlsToRollout =
 	(
+		if this.Controls.DEBUG then format "\n\n"; print "ControlCreator_v._addControlsToRollout()"
 		--clearListener(); print("Cleared in:\n"+getSourceFileName())
 		--format "\n"; print "ControlCreator_v._addControlsToRollout()"
 		--format "this.isGroupControl()	= % \n" (this.isGroupControl())
@@ -193,28 +199,22 @@ struct ControlCreator_v
 		--format "_Control.id: %\n" _Control.id
 		--format "_Control.type: %\n" _Control.type
 		--format "\n%: %\n" _Control.id _Control.params_str
-
-		params_str = _Control.params_str
 		
+		/* JOIN PARAMETERS */ 
+		params_str = ParamsCreator.join(_Control.params)
+		
+		
+		/* MOVE GROUPBOX TO CORNER */ 
 		if (groupbox_id = _Control.Params[#GROUPBOX]) != undefined then
-			params_str = "pos:[ 0, 0 ] " + _Control.params_str
+			params_str = "pos:[ 0, 0 ] " + params_str
 		
-		/* ADD CONTROL */ 
+		/*------ ADD CONTROL ------*/
 		_Rollout.RCI.addControl (_Control.type) (_Control.id) (_Control.caption) paramStr:params_str filter:true
 		
-		if this.Controls.DEBUG and _Control.type != #LABEL then format "_Control: %   	ID: %    	\"%\" PARAMS: %\n" _Control.type _Control.id _Control.caption _Control.params
+		if this.Controls.DEBUG and _Control.type != #LABEL then format "_Control: %   	ID: %   	TITLE: \"%\"   	PARAMS: %\n" _Control.type _Control.id _Control.caption params_str
 
 	),
 	
-	/** Join params to string
-	 */
-	function _joinParamsToString =
-	(
-		--format "\n"; print "ControlCreator_v._joinParamsToString()"
-		for _Control in this.Controls.list do
-			_Control.params_str = ParamsCreator.join(_Control.params)
-	),
-
 	/*------------------------------------------------------------------------------
 	
 		ADD HANDLERS OF EVENTS
@@ -290,56 +290,58 @@ struct ControlCreator_v
 	function _setControlWidth &_Control =
 	(
 		--format "\n"; print "ControlCreator_v._setControlWidth()"
+		Params = _Control.Params
+		
 		modified_width = undefined
 		
-		padding_right = 32
-		--format "_Control.id: %\n" _Control.id
-		--format "superClassOf _Rollout.width: %\n" (superClassOf _Rollout.width)
-		--format "_CONTROL.PARAMS: %\n" _Control.Params
-
+		padding_right_side_off_rollout = 32 -- value is mathing max value
 		
-		if superClassOf _Rollout.width == Number and _Control.Params[#WIDTH] == undefined then
+		if superClassOf _Rollout.width == Number and Params[#WIDTH] == undefined then
 		(
-			across_width = (_Rollout.width - padding_right) / _Control.Params[#ACROSS] 
-			--format "across_width: %\n" across_width
-			--modified_width = case type of
+			across_width = _Rollout.width - padding_right_side_off_rollout
+			
+			if Params[#ACROSS] != undefined then
+				across_width /= Params[#ACROSS]
+			 
 			case _Control.type of
 			(
 				--#GROUPBOX: Params[type][#HEIGHT] = 48
 				--
 				#BUTTON:	across_width
 				--
-				--
 				--#SLIDER:	Params[type][#RANGE] = [0,100,0]
 				--
-				--
-				#EDITTEXT: _Control.Params[#WIDTH] = across_width
-				--#EDITTEXT:
-				--(
-				--	_Control.Params[#WIDTH] = across_width
-				--	
-				--	if _Control.Params[#FIELDWIDTH] == undefined then
-				--	(
-				--		if _Control.caption != "" then
-				--		(
-				--			title_part = case _Control.Params[#ACROSS] of
-				--			(
-				--				4: 0.75
-				--				3: 0.66 
-				--				default: 0.5
-				--			)
-				--			
-				--			--_Control.Params[#FIELDWIDTH] = ( across_width * title_part )
-				--		)
-				--		--else
-				--			--_Control.Params[#FIELDWIDTH] = _Control.Params[#WIDTH]
-				--	)
-				--)
+				#EDITTEXT:
+				(
+					filed_width_max = if Params[#LABELONTOP] or  _Control.caption == "" then 18 else 0
+					
+					local offset_field
+					
+					if Params[#FIELDWIDTH] == undefined then
+					(
+						
+						/* STRETCH WIDTH OF FIELD TO MAX if label is HIDDEN or on TOP  */ 
+						if Params[#LABELONTOP] or  _Control.caption == "" then
+						(
+							Params[#FIELDWIDTH] = across_width + filed_width_max
+							
+							if Params[#OFFSET] == undefined and offset_field != undefined then
+								Params[#OFFSET] = [ 6 , 0 ]
+						)
+					)
+				)
 	
-				#SPINNER: _Control.Params[#WIDTH] = if _Control.caption == "" then _Control.Params[#FIELDWIDTH] else across_width
-
+				#SPINNER: Params[#WIDTH] = if _Control.caption == "" then Params[#FIELDWIDTH] else across_width
+				
+				#TIMER:	Params[type][#WIDTH] = 0
 			)
+			
 		)
+		
+		if _Control.type == #EDITTEXT then
+			if Params[#ACROSS] == 1 and Params[#ALIGN] == undefined then
+						Params[#ALIGN] = #RIGHT
+	
 
 		--format "_CONTROL.PARAMS: %\n" _Control.Params
 		_Control --retu!rn

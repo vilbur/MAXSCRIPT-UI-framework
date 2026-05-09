@@ -75,33 +75,39 @@ struct DefaultParameters_v
 	--		match_groups[1][1] as name --return
 	--),
 
-	/** _get params by control type
+	/** Get params by control type
+	  
+		NOTES: PARAMS BELLOW ARE DEFINED in ControlsCreator._setControlWidth() --"./../../../../RolloutCreator/ControlsCreator/ControlsCreator.ms"
+		
+		  WIDTH parameter
+		  ACROSS parameter of EDITTEXT control 
+			
+	  
 	 */
 	function _setDefaultParams =
 	(
 		--print "DefaultParameters_v._setDefaultParams()"
-		--format "control_type	= % \n" control_type
-		--format "Params: %\n" Params
-		--format "this.Params: %\n" this.Params
-		--ParamsList = this._getParamsList(control_type)
-		--ParamsList = Dictionary()
 
+		--fn isFullWithControl control_type = findItem #( #Listbox, #BrowsePath, #Radiobuttons, #dropdownList ) control_type > 0
+		fn isFullWithControl control_type = findItem #( #EDITTEXT, #Listbox, #BrowsePath, #Radiobuttons, #dropdownList ) control_type > 0
+		
+		
+		/* ADD GLOBALS SLOT */ 
+		Params[#GLOBAL] = Dictionary()
+		
 		/* GET ALL CONTROL TYPES */ 
-		all_control_types = (ControlTypes_v()).list + #(#GLOBAL)
+		all_control_types = (ControlTypes_v()).list
 		
 		
 		/* INIT DICTIONARIES OF PARAMS FOR EACH CONTROL TYPE*/ 
 		for control_type in all_control_types do
 			Params[control_type] = Dictionary()
 		
-		/* GLOBAL ACROSS PARAMETER  */ 
-		Params[#Global][#ACROSS] = 4
-		--Params[#Global][#ACROSS] = 1
 		
-
-		/* ACROSS PARAMS FOR CONTROL TYPE */
-		for control_type in #( #Listbox, #Edittext, #BrowsePath, #Radiobuttons, #dropdownList ) do
-			Params[control_type][#ACROSS] = 1
+		/* ACROSS PARAMS FOR CONTROL TYPE -- EDITTEXT is ignored */
+		--for control_type in all_control_types where control_type != #EDITTEXT do
+		for control_type in all_control_types do
+			Params[control_type][#ACROSS] = if isFullWithControl control_type then 1 else 4
 		
 		
 		/* PARAMS BY TYPE */ 
@@ -110,28 +116,15 @@ struct DefaultParameters_v
 			(
 				#GROUPBOX: Params[type][#HEIGHT] = 48
 
-				--#BUTTON:	Params[type][#WIDTH] = 96
-				
-		
 				#SLIDER:	Params[type][#RANGE] = [0,100,0]
 				
 				
-				--#EDITTEXT:	Params[type][#FIELDWIDTH] = 96
-				
-		
 				#SPINNER:
 				(
-					--Params[type][#WIDTH] = 192
-					
-					Params[type][#FIELDWIDTH] = 48
 					--Params[type][#HEIGHT] = 48
 				)				
 				
 				
-		
-				--#DROPDOWNLIST:	Params[type][#WIDTH] = 128
-				
-		
 				#ANGLE:
 				(
 					--Params[type][#FIELDWIDTH] = 48
@@ -143,9 +136,10 @@ struct DefaultParameters_v
 					Params[type][#STARTDEGREES] = [0,100,0]
 				)
 				
-				#TIMER:	Params[type][#WIDTH] = 0
+				--#TIMER:	Params[type][#WIDTH] = 0
 	
 			)
+
 	),
 
 	/**

@@ -35,7 +35,8 @@ struct ContentRollout_v
 
 		format "PATH: %\n" PATH
 		format "Rollout_new: %\n" Rollout_new
-		
+		Rollout_new.addlocal ( #CONTENT_PATH ) (PATH)
+
 
 		this._setRolloutPropertiesFromIniFile(Rollout_new)
 	
