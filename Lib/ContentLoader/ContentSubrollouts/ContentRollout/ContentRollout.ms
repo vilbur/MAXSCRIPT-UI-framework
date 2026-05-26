@@ -28,13 +28,13 @@ struct ContentRollout_v
 	 */
 	function addToUi Subrollouts =
 	(
-		print ( "ContentRollout_v.addToUi (Subrollouts:" + Subrollouts.slot as string +")"  )
-		format "TITLE: %\n" TITLE
+		--print ( "ContentRollout_v.addToUi (Subrollouts:" + Subrollouts.slot as string +")"  )
+		--format "TITLE: %\n" TITLE
 		--format "ini_file	= % \n" ini_file
 		Rollout_new	= Subrollouts.Roll title -- get new rollout
 
-		format "PATH: %\n" PATH
-		format "Rollout_new: %\n" Rollout_new
+		--format "PATH: %\n" PATH
+		--format "Rollout_new: %\n" Rollout_new
 		Rollout_new.addlocal ( #CONTENT_PATH ) (PATH)
 
 

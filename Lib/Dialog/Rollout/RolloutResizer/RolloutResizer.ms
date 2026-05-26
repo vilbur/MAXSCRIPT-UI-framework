@@ -13,11 +13,14 @@ struct RolloutResizer_v
 	DEBUG = false,
 	--DEBUG = true,
 
-	/** Resize subrollouts
+	/** Resize subrollouts slots, fit them to didialog
+	  
+		EXECUTED BY CALLBACK EACH TIME DIALOG IS RESIZED
+	  
 	 */
 	function fitSlotsToDialog _Rollout  =
 	(
-		--format "\n"; print "RolloutResizer_v.fitSlotsToDialog()"
+		format "\n"; print "RolloutResizer_v.fitSlotsToDialog()"
 		--format "_Rollout.name: %\n" _Rollout.name
 
 		fit_rollouts_stamp = timestamp()

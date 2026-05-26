@@ -9,8 +9,8 @@ Dialog 	= Dialog_v title:(getFilenameFile(getSourceFileName())) width:320
 /*------------------------------------------------------------------------------
 	ROLLOUTS A
 --------------------------------------------------------------------------------*/
-Rollouts_A = Dialog.Rollouts slot:#Rollouts_A
-Rollout_A1 = Rollouts_A.Roll "Rollout A1" height:256
+Rollouts_A = Dialog.Rollouts slot:#Rollouts_A height:1024
+Rollout_A1 = Rollouts_A.Roll "Rollout A1" height:512
 
 
 /* Set properties of subrollouts */
@@ -18,14 +18,16 @@ Rollouts_A_set_props	= Dialog.get (#Rollouts_A)
 
 
 /* SUB ROLLOUTS */
-_Subrollouts = Rollout_A1.Rollouts()
+_Subrollouts = Rollout_A1.Rollouts  height:320
 _Subrollout = _Subrollouts.Roll "Subrollout A" height:128
 
 
 /* ROLLOUTS  NESTED */
-NestedSubrollouts = _Subrollout.Rollouts slot:#NestedSubrollouts
-_NestedSubrollout  = NestedSubrollouts.Roll ("Nested Rollout")
+NestedSubrollouts = _Subrollout.Rollouts slot:#NestedSubrollouts  height:128
+_NestedSubrollout  = NestedSubrollouts.Roll ("Nested Rollout")  height:196
 
+--_Controls =  _NestedSubrollout.Controls()
+--_Controls.control #button "Button X"
 
 
 /* ROLLOUTS SUB NESTED */

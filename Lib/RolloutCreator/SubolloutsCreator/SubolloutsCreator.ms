@@ -53,6 +53,7 @@ struct SubolloutsCreator_v
 		--format "\n\n===================================== SubolloutsCreator_v.addSubrolloutSlot() %.% =====================================\n\n" ( _Rollout.id as string ) ( Subrollouts.slot as string );
 		--format "_Rollout.nested_level: %\n" _Rollout.nested_level
 
+		
 		slot_height = (Subrollouts.height + this.padding_bottom ) as string
 		--slot_height = 512 as string
 		--slot_height = 256 as string
@@ -64,7 +65,7 @@ struct SubolloutsCreator_v
 		slot_offset = [slot_offset_x, 0]
 		
 		slot_width  = Subrollouts.width - (  _Rollout.nested_level * slot_width_decrement ) - 2
-		
+
 		--_Rollout.RCI.addText ("subRollout "+slot_id +" \""+slot_id+"\"  )
 		_Rollout.RCI.addText ("subRollout "+slot_id +" \""+(this._getSlotData(Subrollouts))+"\" height:"+ slot_height + " offset:" + slot_offset as string + " width:" + slot_width as string )
 	 ),

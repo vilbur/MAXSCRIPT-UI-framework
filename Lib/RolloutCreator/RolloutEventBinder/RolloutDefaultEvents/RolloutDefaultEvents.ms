@@ -142,10 +142,13 @@ struct RolloutDefaultEvents_v -- MAYBE RENAME THIS TO RolloutRolloutDefaultEvent
 	),
 	
 	/** Get auto roll up rollout event
+	  
+	  --"./Callbacks/autoRollUpRolloutCallback.ms"
+	  
 	 */
 	function _getAutoRollUpRolloutEvent _Rollout =
 	(
-		format "\n"; print "RolloutDefaultEvents_v._getAutoRollUpRolloutEvent()"
+		--format "\n"; print "RolloutDefaultEvents_v._getAutoRollUpRolloutEvent()"
 		
 
 

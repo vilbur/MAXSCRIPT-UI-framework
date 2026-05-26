@@ -94,11 +94,11 @@ function rolloutEventsTest DialogTest =
 
     _Button   = _Controls.control #button "Rollout Btn" id:#button_3
 
-	--_Rollout.Event #ROLLEDUP	"dialogRolloutCallbackParam #ROLLEDUP"
+	_Rollout.Event #ROLLEDUP	"dialogRolloutCallbackParam val"
 
 	/* OPEN \ CLOSE EVENTS */
-	--_Rollout.Event #OPEN	"dialogRolloutCallbackParam #OPEN"
-	--_Rollout.Event #CLOSE	"dialogRolloutCallbackParam #CLOSE"
+	_Rollout.Event #OPEN	"dialogRolloutCallbackParam #OPEN"
+	_Rollout.Event #CLOSE	"dialogRolloutCallbackParam #CLOSE"
 )
 
 /** MASS TEST ALL EVENT

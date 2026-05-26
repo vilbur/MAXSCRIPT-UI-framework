@@ -67,7 +67,6 @@ struct StartUpScriptImporter_v
 	function _writeToFile import_file_path =
 	(
 		--format "\n"; print "StartUpScriptImporter_v._writeToFile()"
-		std_file = createFile import_file_path
 		
 		content      = ""
 		files_string = ""
@@ -94,13 +93,15 @@ struct StartUpScriptImporter_v
 		content += "    )\nelse\n"
 		content += "		format \"\\n\\n----- WARNING: Missing file in: %\\n\\nERROR OF IMPORT FILE: %\\n\" (getSourceFileName()) file_path"
 		
-		try(
+		-- try(
+			std_file = createFile import_file_path
+			
 			format "%" content to:std_file
 			
 			close std_file
-		)
-		catch
-			close std_file
+		-- )
+		-- catch
+			-- close std_file
 		
 	),
 	

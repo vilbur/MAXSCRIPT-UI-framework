@@ -177,21 +177,6 @@ struct RolloutEventBinder_v
 		EventsCombiner.EventsLists[#CUSTOM] = this._Rollout.Events
 	),
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	/** shellLaunch cannot be executed directly from event because of security reasons
 	  
 		Workaround is open url from function 
@@ -207,6 +192,14 @@ struct RolloutEventBinder_v
 					Event.callback = "openUrRolloutEventlCallback \""+ Event.callback +"\""
 	),
 
+	
+	/*==============================================================================
+	
+		#ROLLEDUP | #OPEN | #CLOSE 
+	
+	================================================================================*/
+	
+	
 	/** Bind open\close events to rolled up handler
 	  *
 	  * Events #open, #close are bind to #rolledUp handler
@@ -225,9 +218,12 @@ struct RolloutEventBinder_v
 		or _Rollout.Events[#OPEN] 	  != undefined \
 		or _Rollout.Events[#CLOSE]	  != undefined then
 		(
-
-			/* CREATE EVENT */ 
-			Event_rolledup	= Event_v type:#ROLLEDUP
+			Events_rolledup = _Rollout.Events[#ROLLEDUP]
+			
+			--last_rolled_up_event = Events_rolledup.count
+			
+			/* GET OR CREATE #ROLLEDUP EVENT -- ind all callbacks behind last rolledup event */ 
+			Event_rolledup	= if Events_rolledup != undefined then deepCopy Events_rolledup[Events_rolledup.count] else  Event_v type:#ROLLEDUP
 
 			/* AVOID FIRE EVENT ON INIT */ 
 			_Rollout.addlocal #ROLLEDUP_INITILAZIED false
@@ -253,7 +249,8 @@ struct RolloutEventBinder_v
 				_Rollout.Events[#ROLLEDUP] = #()
 		
 		
-			append _Rollout.Events[#ROLLEDUP] Event_rolledup
+			/* REPLACE EVENT */ 
+			_Rollout.Events[#ROLLEDUP][Events_rolledup.count] = Event_rolledup
 		)
 		
 	),

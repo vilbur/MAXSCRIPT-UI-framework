@@ -39,6 +39,7 @@ struct Subrollouts_v
 
 		if width == unsupplied then
 			width = this.width
+		--format "width:      %\n" width
 			--width = this.width - 4 -- make rollout wide as is possible
 
 		--local _Rollout = Rollout_v title:title id:id parent_rollout_id:( parent_rollout_id as string +"."+slot as string )
@@ -116,7 +117,9 @@ struct Subrollouts_v
 	 */
 	on create do
 	(
-		format "\n"; print "Subrollouts_v.onCreate()"
+		--format "\n"; print "Subrollouts_v.onCreate()"
+		--format "width: %\n" width
+
 		--format "AUTOROLLUP: %\n" autorollup
 		--format "PARENT_ROLLOUT_ID: %\n" parent_rollout_id
 		--if this.slot != undefined and this.slot != unsupplied then

@@ -36,12 +36,13 @@
 
 	/** Wrapper to create new rollout in first slot
 	 */
-	function Roll title id: height: =
+	function Roll title id: width: height: =
 	(
 		--format "\n"; print "RolloutBody.Roll()"
+		--format "width: %\n" width
 		Subrollouts = if (Subrollout_slots = this.getSubrollouts()).count > 0 then Subrollout_slots[1] else this.Rollouts()
 		--format "Subrollouts:	% \n" Subrollouts
-		Subrollouts.Roll title id:id height:height  --return
+		Subrollouts.Roll title id:id width:width height:height  --return
 	),
 
 	/** Controls

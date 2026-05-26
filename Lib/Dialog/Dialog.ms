@@ -141,6 +141,7 @@ struct Dialog_v
 		parent: =
 	(
 		--format "\n"; print "Dialog_v.create()"
+		--format "DEBUG: %\n" DEBUG
 		--format "MENU: %\n" menu
 		--format "classOf menu: %\n" ( classOf menu )
 		timer_all = timer_createRollout = timeStamp()
@@ -204,7 +205,7 @@ struct Dialog_v
 			--if this.DEBUG then format "CreateDialog % ms\n" ((timestamp()) - timer_all)
 
 			--this.RCI.def.visible = false
-
+			--format "this.HEIGHT: %\n" this.height
 			/*------------------------------------------------------------------------------
 				ADD SUBROLLOUTS TO ROLLOUT
 			--------------------------------------------------------------------------------*/
@@ -867,16 +868,16 @@ struct Dialog_v
 						if control.checked then
 						(
 							callback = substituteString Dialog.AUTORUN_EVENTS[control_path] "\\" ""
-							format "CONTROL: %   		CALLBACK: %\n" control callback
+							--format "CONTROL: %   		CALLBACK: %\n" control callback
 				
 							execute callback
 						)
 			
 			 )catch(
-				format "\n——————————————— ERROR IN FILE ———————————————\n\n%\n" (getSourceFileName())
-				format "\n————————————————— EXCEPTION —————————————————\n\n%\n" (getCurrentException())
-				format "\n——————————————————— TRACE ——————————————————— or\n%\n"   (getCurrentExceptionStackTrace())
-				format "\n——————————————————— STACK ———————————————————\n%\n"   (getCurrentExceptionCallStack())
+				--format "\n——————————————— ERROR IN FILE ———————————————\n\n%\n" (getSourceFileName())
+				--format "\n————————————————— EXCEPTION —————————————————\n\n%\n" (getCurrentException())
+				--format "\n——————————————————— TRACE ——————————————————— or\n%\n"   (getCurrentExceptionStackTrace())
+				--format "\n——————————————————— STACK ———————————————————\n%\n"   (getCurrentExceptionCallStack())
 			 )
 		)
 			
@@ -1065,6 +1066,7 @@ struct Dialog_v
 	on create do
 	(
 		--format "\n"; print "Dialog_v.onCreate()"
+		--format "WIDTH: %\n" width
 		/* CHECK REQUIRED CONSTRUCT PROPERTIES */ 
 		this._checkConstctructProperties #(#title)
 --format "Ini: %\n" Ini

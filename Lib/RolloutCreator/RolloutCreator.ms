@@ -27,8 +27,8 @@ struct RolloutCreator_v
 	Ini,
 
 	/* developent */
-	--DEBUG = false,
-	DEBUG = true,
+	DEBUG = false,
+	--DEBUG = true,
 
 	/* properties */
 
@@ -54,7 +54,7 @@ struct RolloutCreator_v
 	function createRollout _Rollout width: =
 	(
 		--if DEBUG then format "\n\n------------------------------------- RolloutCreator_v.createRollout() id:#%	-------------------------------------\n"  ( _Rollout.id as string );
-		if DEBUG then format "\n\n------------------------------------- RolloutCreator_v.createRollout() id:#%	-------------------------------------\n"  ( (_Rollout.getFullId()) as string );
+		--if DEBUG then format "\n\n------------------------------------- RolloutCreator_v.createRollout() id:#%	-------------------------------------\n"  ( (_Rollout.getFullId()) as string );
 
 		
 		if _Rollout.RCI == undefined then -- RCI is defined WHEN chache is loaded -- WTF mean this comment ?:D  
@@ -191,7 +191,7 @@ struct RolloutCreator_v
 			(
 				/* SET FULL ID TO SUBROLLOUT */
 				_RolloutSub.parent_rollout_id = Subrollouts.getSlotId()
-
+				--format "_RolloutSub.height: %\n" _RolloutSub.height
 				this.createRollout (_RolloutSub) --width:_RolloutSub.width height:_RolloutSub.height-- CREATE PARENT ROLLOUTS
 
 				
@@ -212,19 +212,23 @@ struct RolloutCreator_v
 
 						TO DESTROY SUBROLLOUT DIALOG:
 							execute ("try(destroyDialog "+_RolloutSub.id as string+ " )catch()")
-					*/ 
-
-					
+					*/
 					/* ======= PRODUCTION CODE =======*/
 					CreateDialog ( _RolloutSub.RCI.def ) width:_RolloutParent.width height:_RolloutSub.height pos:[0,-8000] -- create subroullouts away from display
 					
 					--_RolloutSub.RCI.def.visible = false 
 				)
-				 
+				
+				
 				this._storeSubrolloutHeight(Subrollouts)(_RolloutSub)( Subrollouts.slot)
 			)
 			
+			
+			/*
+				SET AUTOMATIC HEIGHT TO SUBROLLOUT SLOT
+			*/ 
 			this._setSlotHeight(Subrollouts)
+			--Subrollouts.height = 1024
 		)
 	),
 
@@ -255,7 +259,7 @@ struct RolloutCreator_v
 		--format "SLOT: %\nHEIGHT: %\n" slot (subrollouts_heights[ slot ])
 	),
 
-	/** Set slot height
+	/** Set slot height if not defined already by user
 	  *
 	  */
 	function _setSlotHeight Subrollouts =
@@ -273,7 +277,7 @@ struct RolloutCreator_v
 	 */
 	function _addLocalVariablesToRollout _Rollout =
 	(
-		print "ControlCreator_v._addLocalVariablesToRollout()"
+		--print "RolloutCreator_v._addLocalVariablesToRollout()"
 		--format "_Rollout.add_locals.keys: %\n" _Rollout.add_locals.keys
 		
 		/* ADD EACH VARIABLE */ 

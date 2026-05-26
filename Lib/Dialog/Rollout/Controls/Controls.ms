@@ -187,6 +187,7 @@ struct Controls_v
 	function Default key val type:#global =
 	(
 		--print ("Controls_v.Default("+Key as string +", "+val as string +", type:#"+type as string+")")
+		
 		 DefaultParameters.setParam key val type:type
 	),
 

@@ -18,7 +18,7 @@ filein( getFilenamePath(getSourceFileName()) + "/Callback/Callback.ms" )	--"./Ca
 	CALLBACKMANAGER.import( getFilenamePath(getSourceFileName()) + "/Callbacks" ) --"./CallBacks/"	
 
   
-	CALLBACKMANAGER.start(  "callBackFn"|#callback_type|#callback_id )
+
 	CALLBACKMANAGER.kill(  "callBackFn"|#callback_type|#callback_id )
 	
   
@@ -357,5 +357,5 @@ struct CallbackManager_v
 --------------------------------------------------------------------------------*/
 
 
---if CALLBACKMANAGER == undefined then -- IMPORTANT: DISABLE for develop | ENABLE for production
+--if CALLBACKMANAGER == undefined then -- IMPORTANT: DISABLE "if" for develop | ENABLE "if" for production
 	global CALLBACKMANAGER = CallbackManager_v()

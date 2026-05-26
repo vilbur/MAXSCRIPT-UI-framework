@@ -19,8 +19,8 @@ struct ControlCreator_v
 	Ini,
 
 	/* properties */
-	DEBUG = true,
-	--DEBUG = false,
+	-- DEBUG = true,
+	DEBUG = false,
 
 	/* dependency */
 	Controls,
@@ -30,11 +30,20 @@ struct ControlCreator_v
 	ControlEventCreator	= ControlEventCreator_v _Rollout:_Rollout, 	-- "./ControlEventCreator/ControlEventCreator.ms"
 	ControlEventBinder	= ControlEventBinder_v  _Rollout:_Rollout,	-- "./ControlEventBinder/ControlEventBinder.ms"
 
+	private 
+	
+	params_native = #( #border, #across, #active, #address, #align, #alpha, #autoDisplay, #bitmap, #checked, #color, #columns, #default, #enabled, #fieldWidth, #fileName, #filter, #height, #hoverColor, #iconName, #images, #interval, #items, #labelOnTop, #labels, #message, #modal, #multiLine, #offset, #orient, #pos, #range, #readOnly, #scale, #selection, #text, #ticks, #tooltip, #triState, #type, #underline, #value, #visible, #visitedColor, #width, #controller ),
+	params_others = #( #control, #ini, #id, #menu, #autorun ),
+
+	all_param_keys = params_native + params_others,
+	
+	public
+	
 	/** Add controls to rollout
 	 */
 	function addControls Controls =
 	(
-		if Controls.DEBUG then format "\n\n-------------- ControlCreator_v.addControls() group:% --------------\n" Controls.group
+		--if Controls.DEBUG then format "\n\n-------------- ControlCreator_v.addControls() group:% --------------\n" Controls.group
 		--format "\n\n-------------- ControlCreator_v.addControls() group:% --------------\n" Controls.group
 		--format "Controls.list.count: %\n" Controls.list.count
 
@@ -129,7 +138,7 @@ struct ControlCreator_v
 	--------------------------------------------------------------------------------*/
 	function _addControlsToRollout =
 	(
-		if this.Controls.DEBUG then format "\n\n"; print "ControlCreator_v._addControlsToRollout()"
+		--if this.Controls.DEBUG == true then format "\n\n"; print "ControlCreator_v._addControlsToRollout()"
 		--clearListener(); print("Cleared in:\n"+getSourceFileName())
 		--format "\n"; print "ControlCreator_v._addControlsToRollout()"
 		--format "this.isGroupControl()	= % \n" (this.isGroupControl())
@@ -200,6 +209,17 @@ struct ControlCreator_v
 		--format "_Control.type: %\n" _Control.type
 		--format "\n%: %\n" _Control.id _Control.params_str
 		
+		/* VALIDATE PARAMS OF CONTROLS 
+		
+			GET this.params_native dynamicaly from params creator or somewhere, or AI
+		
+			MANNY OF P{RAMRS THROWS WARNING
+		
+		
+		*/ 
+		-- for param in _Control.params.keys where findItem all_param_keys param == 0 do
+			-- FORMAT "\nINVALID PARAM: % 	CONTROL: %\n\n" param (_Control.getFullId())
+		
 		/* JOIN PARAMETERS */ 
 		params_str = ParamsCreator.join(_Control.params)
 		
@@ -208,11 +228,16 @@ struct ControlCreator_v
 		if (groupbox_id = _Control.Params[#GROUPBOX]) != undefined then
 			params_str = "pos:[ 0, 0 ] " + params_str
 		
-		/*------ ADD CONTROL ------*/
+		
+		/*==============================================================================
+			ADD CONTROL
+		================================================================================*/
 		_Rollout.RCI.addControl (_Control.type) (_Control.id) (_Control.caption) paramStr:params_str filter:true
 		
+		
+		
+		/* DEBUG PRINT */ 
 		if this.Controls.DEBUG and _Control.type != #LABEL then format "_Control: %   	ID: %   	TITLE: \"%\"   	PARAMS: %\n" _Control.type _Control.id _Control.caption params_str
-
 	),
 	
 	/*------------------------------------------------------------------------------
@@ -306,32 +331,32 @@ struct ControlCreator_v
 			case _Control.type of
 			(
 				--#GROUPBOX: Params[type][#HEIGHT] = 48
-				--
+
 				#BUTTON:	across_width
-				--
+				
 				--#SLIDER:	Params[type][#RANGE] = [0,100,0]
-				--
+				
 				#EDITTEXT:
 				(
 					filed_width_max = if Params[#LABELONTOP] or  _Control.caption == "" then 18 else 0
 					
-					local offset_field
-					
 					if Params[#FIELDWIDTH] == undefined then
 					(
-						
+						s
 						/* STRETCH WIDTH OF FIELD TO MAX if label is HIDDEN or on TOP  */ 
 						if Params[#LABELONTOP] or  _Control.caption == "" then
 						(
 							Params[#FIELDWIDTH] = across_width + filed_width_max
 							
-							if Params[#OFFSET] == undefined and offset_field != undefined then
-								Params[#OFFSET] = [ 6 , 0 ]
+							if Params[#OFFSET] == undefined then
+								Params[#OFFSET] = [ 6, 0 ]
 						)
 					)
 				)
-	
+				
+				
 				#SPINNER: Params[#WIDTH] = if _Control.caption == "" then Params[#FIELDWIDTH] else across_width
+				
 				
 				#TIMER:	Params[type][#WIDTH] = 0
 			)
