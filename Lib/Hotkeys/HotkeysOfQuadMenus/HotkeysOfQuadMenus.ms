@@ -13,7 +13,7 @@ struct HotkeysOfQuadMenus_v
 	
 	XmlParser = XmlParser_v(kbd_path),
 	
-	quad_menus = for i = 1 to (menuMan.numQuadMenus() ) collect (menuMan.getQuadMenuName (menuMan.getQuadMenu i)),
+	--quad_menus = for i = 1 to (menuMan.numQuadMenus() ) collect (menuMan.getQuadMenuName (menuMan.getQuadMenu i)),
 
 
 	-- ==========================================

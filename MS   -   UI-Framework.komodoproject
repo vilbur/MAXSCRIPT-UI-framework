@@ -15,6 +15,8 @@
 </livefolder>
 <file id="6514193b-9e2b-4a2b-bee8-e1177ae8ad3d" idref="0a2534c0-4e33-4331-9037-9f7d46588d24" name="test.ms" url="file:///C:/Users/vilbur/AppData/Local/Autodesk/3dsMax/2023%20-%2064bit/ENU/scripts/MAXSCRIPT-viltools3/test.ms">
 </file>
+<livefolder id="a1e35fde-e8cf-4bab-8a1d-3d460b42b1dd" idref="0a2534c0-4e33-4331-9037-9f7d46588d24" name="MenusNew" url="Lib/MenusNew/">
+</livefolder>
 <folder id="ad60566e-f9da-4452-97b4-905e34c8ce55" idref="0a2534c0-4e33-4331-9037-9f7d46588d24" name="ContentLoader">
 </folder>
 <livefolder id="c2120f31-b3fd-41ac-9725-5f366f77d9d4" idref="0a2534c0-4e33-4331-9037-9f7d46588d24" name="MacroscriptGenerator" url="Lib/MacroscriptGenerator/">

@@ -1,8 +1,7 @@
 clearListener(); print("Cleared in:\n"+getSourceFileName())
 
 /* UI FRAMEWORK */
-filein( getFilenamePath(getSourceFileName()) + "/../MAXSCRIPT-UI-framework/Lib/Dialog/Dialog.ms" )	--"./../MAXSCRIPT-UI-framework/Lib/Dialog/Dialog.ms"
-
+filein( getFilenamePath(getSourceFileName()) + "/../../../Lib/Dialog/Dialog.ms" )	--"./../../../Lib/Dialog/Dialog.ms"
 /** Createcontent load and modify dialog
  */
 function createContentLoadAndModifyDialog Dialog: =

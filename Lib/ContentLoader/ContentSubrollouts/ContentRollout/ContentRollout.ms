@@ -62,7 +62,7 @@ struct ContentRollout_v
 	 */
 	function _initLoadContentFromDir =
 	(
-		--print ("ContentRollout_v._initLoadContentFromDir() " + title)
+		--format "\n"; print "ContentRollout_v._initLoadContentFromDir()"
 		for path in (PathsLoader.getSubrolloutsAndControlsPaths()) do
 			append Subrollouts_and_Controls	(this._addSubrolloutOrControlBox path)
 	),
@@ -116,7 +116,7 @@ struct ContentRollout_v
 				if hasProperty _Rollout prop_name  then
 					setProperty _Rollout prop_name val
 				else
-					format "-----------------\n\nERROR: Set property with ini file %\n\nRollout has not property: %\n\n-----------------" ini_file prop_name
+					FORMAT "-----------------\n\nERROR: Set property with ini file %\n\nRollout has not property: %\n\n-----------------" ini_file prop_name
 			)
 		)
 

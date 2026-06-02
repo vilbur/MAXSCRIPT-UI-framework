@@ -169,7 +169,7 @@ struct Dialog_v
 		================================================================================*/
 		if not use_chache then
 		(
-			FORMAT "\n**** NO CACHE\n"
+			FORMAT "\n**** CREATE DIALOG % WITHOUT CACHE\n" this.title
 
 			/* INIT CREATOR */ 
 			_RolloutCreator = RolloutCreator_v Ini:Ini DEBUG:DEBUG
@@ -237,8 +237,7 @@ struct Dialog_v
 		================================================================================*/
 		else
 		(
-			FORMAT "\n**** USE CACHE FILE: %\n" cache_file_path
-
+			FORMAT "\n**** CREATE DIALOG % CACHE USES\n" this.title
 			filein cache_file_path
 			
 			Dialog = createDialogFromCacheFile this.width this.height dialog_pos bgcolor fgcolor bitmap bmpstyle dialog_style modal true escapeEnable lockHeight lockWidth parent
@@ -268,7 +267,7 @@ struct Dialog_v
 		FORMAT ("\n\n=========================================================\n	DIALOG: "+ id as string +" CREATED in %ms\n=========================================================\n") ((timestamp()) - timer_createRollout)
 
 		/* EXECUTE AUTORUN EVENTS OF CONTROLS */ 
-		this._executeAutorunEvents()
+		--this._executeAutorunEvents()
 		
 		ENABLE_CALLBACK_AUTOROLL_ROLLOUT = true
 		
@@ -856,7 +855,7 @@ struct Dialog_v
 	(
 		--format "\n"; print "Dialog_v._executeAutorunEvents()"
 
-		if Dialog.AUTORUN_EVENTS.keys.count > 0 then
+		if Dialog.AUTORUN_EVENTS != undefined and Dialog.AUTORUN_EVENTS.keys.count > 0 then
 			FORMAT "Dialog_v._executeAutorunEvents()"
 
 		for control_path in Dialog.AUTORUN_EVENTS.keys do

@@ -208,7 +208,7 @@ struct RolloutCreator_v
 					--format "_RolloutSub.height: %\n" _RolloutSub.height
 					/* ======= DEV CODE =======
 
-						DISABLE ADDING FOR FLOATEBLE SUBROLLOUTS IN: SubolloutsCreator.addSubRollouts()
+						DISABLE ADDING FLOATEBLE SUBROLLOUTS IN: SubolloutsCreator.addSubRollouts()
 
 						TO DESTROY SUBROLLOUT DIALOG:
 							execute ("try(destroyDialog "+_RolloutSub.id as string+ " )catch()")
@@ -382,6 +382,7 @@ struct RolloutCreator_v
 		
 		_Rollout --return
 	),
+	
 	
 	/** Set rollout id global
 	 */
