@@ -1,80 +1,83 @@
 ﻿clearListener(); print("Cleared in: "+getSourceFileName())
 
-filein( getFilenamePath(getSourceFileName()) + "/createSavedTestMenuDataLevel.ms" )	--"./createSavedTestMenuDataLevel.ms"
+filein( getFilenamePath(getSourceFileName()) + "/Lib/createSavedTestMenuDataLevel.ms" )	--"./Lib/createSavedTestMenuDataLevel.ms"
+filein( getFilenamePath(getSourceFileName()) + "/Lib/printSavedData.ms" )	--"./Lib/printSavedData.ms"
 
 filein( getFilenamePath(getSourceFileName()) + "/../MenuRebuilder.ms" )	--"./../MenuRebuilder.ms"
 
-/*  Prints saved menu items structure.
-    Shows GUID keys, item titles, macros and nested submenu items.
+
+
+
+/*  Test normal menu.
+    Builds source dictionary, converts it to saved data, and registers menu callback.
 */
-function printSavedMenuItemsStructure saved_items indent:"" =
+function testMenuRebuilderMenu test_cui_macro_dictionary =
 (
-	if saved_items == undefined then
-	(
-		format "%saved_items: undefined\n" indent
-	)
-	else if classOf saved_items != Dictionary then
-	(
-		format "%saved_items is not Dictionary: %\n" indent saved_items
-	)
-	else
-	(
-		saved_guid_array = GetDictKeys saved_items
+	MenuRebuilder = MenuRebuilder_v \
+		menu_type:#menu \
+		menu_title:"_TEST_MENU" \
+		menu_items:test_cui_macro_dictionary
 
-		for saved_guid in saved_guid_array do
-		(
-			item_data = saved_items[saved_guid]
+	saved_menu_data = MenuRebuilder.buildMenuData()
 
-			if classOf item_data == Dictionary and HasDictValue item_data #items then
-			(
-				format "%SUBMENU GUID: %\n" indent saved_guid
-				format "%    title: %\n" indent item_data[#title]
+	format "Generated macro count: %\n" test_macro_counter[1]
+	format "Menu id: %\n" saved_menu_data[#id]
+	format "Menu title: %\n" saved_menu_data[#title]
 
-				printSavedMenuItemsStructure item_data[#items] indent:indent + "    "
-			)
-			else if classOf item_data == Dictionary and HasDictValue item_data #macro then
-			(
-				format "%ITEM GUID: %\n" indent saved_guid
-				format "%    title: %\n" indent item_data[#title]
-				format "%    category: %\n" indent item_data[#category]
-				format "%    macro: %\n" indent item_data[#macro]
-			)
-			else
-			(
-				format "%INVALID GUID: % value: %\n" indent saved_guid item_data
-			)
-		)
-	)
+	MenuRebuilder.registerCallback()
 
-	ok -- return
+	saved_menu_data -- return
+)
+
+
+/*  Test quad menu.
+    Builds source dictionary, converts it to saved data, and registers quad callback.
+*/
+function testMenuRebuilderQuad test_cui_macro_dictionary =
+(
+	MenuRebuilder = MenuRebuilder_v \
+		menu_type:#quad \
+		menu_title:"_TEST_QUAD_MENU" \
+		menu_items:test_cui_macro_dictionary \
+		quad_modifier:#shiftAndControlPressed \
+		quad_position:#TopRight
+
+	saved_menu_data = MenuRebuilder.buildMenuData()
+
+	format "Generated macro count: %\n" test_macro_counter[1]
+	format "Quad menu id: %\n" saved_menu_data[#id]
+	format "Quad menu title: %\n" saved_menu_data[#title]
+
+	MenuRebuilder.registerCallback()
+
+	saved_menu_data -- return
+)
+
+
+/*  Test rebuild from saved data.
+    Use saved data returned by testMenuRebuilderMenu or loaded from file.
+*/
+function testMenuRebuilderFromSavedData saved_menu_data =
+(
+	MenuRebuilder = MenuRebuilder_v menu_data:saved_menu_data
+
+	MenuRebuilder.registerCallback()
+
+	MenuRebuilder.buildMenuData() -- return
 )
 
 test_macro_counter = #(0)
 
+test_cui_macro_dictionary = createTestMacroDictionaryLevel 0 item_count:2 submenu_count:1 nested_level_count:1 macro_counter:test_macro_counter macro_category:"_TEST_CATEGORY" minimum_submenu_item_count:1
 
-/*  Test code.
-    Creates saved menu data and rebuilds menu from it.
-*/
-saved_menu_items = createSavedTestMenuDataLevel \
-	0 \
-	menu_title:"_TEST_MENU_REBUILT" \
-	item_count:2 \
-	submenu_count:1 \
-	nested_level_count:1 \
-	macro_category:"_TEST_CATEGORY" \
-	macro_counter:test_macro_counter \
-	minimum_submenu_item_count:2
+ --printSourceMenuDictionary test_cui_macro_dictionary
 
-format "saved_menu_items: %\n" saved_menu_items
 
---printSavedMenuItemsStructure saved_menu_items
+-- Example manual calls:
+ saved_menu_data = testMenuRebuilderMenu(test_cui_macro_dictionary)
+ ----printSavedMenuData saved_menu_data
+ 
+ saved_quad_data = testMenuRebuilderQuad(test_cui_macro_dictionary)
+ 
+ --MenuRebuilder = MenuRebuilder_v menu_data:saved_menu_data
 
-MenuRebuilder = MenuRebuilder_v \
-	menu_title:"_TEST_MENU_REBUILT" \
-	menu_items:saved_menu_items
-
-MenuRebuilder.registerCallback()
-
---format "Saved menu data created. Generated macros: %\n" test_macro_counter[1]
---format "Menu rebuild callback registered: %\n" MenuRebuilder.callback_id
---format "Menu title: %\n" MenuRebuilder.menu_title
