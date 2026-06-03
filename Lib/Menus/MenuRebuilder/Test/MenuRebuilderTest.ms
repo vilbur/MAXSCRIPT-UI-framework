@@ -49,6 +49,7 @@ function printSavedMenuItemsStructure saved_items indent:"" =
 	ok -- return
 )
 
+test_macro_counter = #(0)
 
 
 /*  Test code.
@@ -56,10 +57,13 @@ function printSavedMenuItemsStructure saved_items indent:"" =
 */
 saved_menu_items = createSavedTestMenuDataLevel \
 	0 \
+	menu_title:"_TEST_MENU_REBUILT" \
 	item_count:2 \
-	submenu_count:2 \
-	nested_level_count:3 \
-	macro_category:"_TEST_CATEGORY"
+	submenu_count:1 \
+	nested_level_count:1 \
+	macro_category:"_TEST_CATEGORY" \
+	macro_counter:test_macro_counter \
+	minimum_submenu_item_count:2
 
 format "saved_menu_items: %\n" saved_menu_items
 

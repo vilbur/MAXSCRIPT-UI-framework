@@ -1,22 +1,5 @@
-﻿/*  Generates and executes mock macroscript definition.
-    Macro prints message when called from created menu.
-*/
-function generateMockMacroScript macro_category macro_name =
-(
-	macro_script_text = ""
-	macro_script_text += ("macroScript " + macro_name + " category:\"" + macro_category + "\"\n")
-	macro_script_text += "(\n"
-	macro_script_text += ("\tprint \"Executed mock macro: " + macro_category + " / " + macro_name + "\"\n")
-	macro_script_text += ")\n"
-
-	execute macro_script_text
-
-	ok -- return
-)
-
-
-/*  Creates new guid string.
-    Used by test data generator only.
+﻿/*  Creates new guid string.
+    Used as saved CUI item id.
 */
 function createTestGuidString =
 (
@@ -27,8 +10,25 @@ function createTestGuidString =
 )
 
 
+/*  Generates and executes mock macroscript definition.
+    Macro prints message when called from created menu.
+*/
+function generateMockMacroScript macro_category macro_name =
+(
+	macro_script_text = ""
+	macro_script_text += "macroScript " + macro_name + " category:\"" + macro_category + "\"\n"
+	macro_script_text += "(\n"
+	macro_script_text += "\tprint \"Executed mock macro: " + macro_category + " / " + macro_name + "\"\n"
+	macro_script_text += ")\n"
+
+	execute macro_script_text
+
+	ok -- return
+)
+
+
 /*  Creates saved macro item data.
-    Result is Dictionary #name with #title #category #macro.
+    Item data contains #title #category #macro.
 */
 function createSavedMacroItemData item_title macro_category macro_name =
 (
@@ -42,64 +42,55 @@ function createSavedMacroItemData item_title macro_category macro_name =
 )
 
 
-/*  Creates saved submenu data.
-    Result is Dictionary #name with #title #items.
+/*  Creates test menu level data.
+    Every submenu level contains at least one action item.
 */
-function createSavedSubMenuData submenu_title submenu_items =
+function createTestMacroDictionaryLevel level_index menu_title:"_TEST_MENU" item_count:2 submenu_count:1 nested_level_count:1 macro_counter:#(0) macro_category:"_TEST_CATEGORY" minimum_submenu_item_count:1 =
 (
-	submenu_data = Dictionary #name
+	menu_level_data = Dictionary #name
+	menu_items = Dictionary #string
 
-	submenu_data[#title] = submenu_title
-	submenu_data[#items] = submenu_items
+	menu_level_data[#title] = menu_title
+	menu_level_data[#items] = menu_items
 
-	submenu_data -- return
-)
+	level_item_count = item_count
 
+	if level_index > 0 and level_item_count < minimum_submenu_item_count then
+	(
+		level_item_count = minimum_submenu_item_count
+	)
 
-/*  Creates saved test menu data recursively.
-    Top result is Dictionary #string keyed by GUID strings.
-*/
-function createSavedTestMenuDataLevel level_index item_count:2 submenu_count:1 nested_level_count:1 macro_counter:#(0) macro_category:"_TEST_CATEGORY" =
-(
-	saved_items = Dictionary #string
-
-	for item_index = 1 to item_count do
+	for item_index = 1 to level_item_count do
 	(
 		macro_counter[1] += 1
 
 		item_guid = createTestGuidString()
-		item_title = ("Item L" + (level_index as string) + "." + (item_index as string))
-		macro_name = ("_TEST_MACRO_" + (macro_counter[1] as string))
+		item_title = "Item L" + (level_index as string) + "." + (item_index as string)
+		macro_name = "_TEST_MACRO_" + (macro_counter[1] as string)
 
 		generateMockMacroScript macro_category macro_name
 
-		saved_items[item_guid] = createSavedMacroItemData item_title macro_category macro_name
+		menu_items[item_guid] = createSavedMacroItemData item_title macro_category macro_name
 	)
 
-	if (level_index < nested_level_count) then
+	if level_index < nested_level_count then
 	(
 		for submenu_index = 1 to submenu_count do
 		(
 			submenu_guid = createTestGuidString()
-			submenu_title = ("Submenu L" + (level_index as string) + "." + (submenu_index as string))
+			submenu_title = "Submenu L" + (level_index as string) + "." + (submenu_index as string)
 
-			submenu_items = createSavedTestMenuDataLevel \
+			menu_items[submenu_guid] = createTestMacroDictionaryLevel \
 				(level_index + 1) \
+				menu_title:submenu_title \
 				item_count:item_count \
 				submenu_count:submenu_count \
 				nested_level_count:nested_level_count \
 				macro_counter:macro_counter \
-				macro_category:macro_category
-
-			saved_items[submenu_guid] = createSavedSubMenuData submenu_title submenu_items
+				macro_category:macro_category \
+				minimum_submenu_item_count:minimum_submenu_item_count
 		)
 	)
 
-	saved_items -- return
+	menu_level_data -- return
 )
-
-
-
-
-
-
