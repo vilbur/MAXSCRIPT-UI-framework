@@ -1,3 +1,34 @@
+/** 
+saved_menu_items =
+Dictionary #string
+(
+	"GUID_01" = Dictionary #name
+	(
+		#title = "Item L0.1",
+		#category = "_TEST_CATEGORY",
+		#macro = "_TEST_MACRO_1"
+	),
+
+	"GUID_02" = Dictionary #name
+	(
+		#title = "Submenu L0.1",
+		#items = Dictionary #string
+		(
+			"GUID_03" = Dictionary #name
+			(
+				#title = "Item L1.1",
+				#category = "_TEST_CATEGORY",
+				#macro = "_TEST_MACRO_2"
+			)
+		)
+	)
+)  
+  
+  
+  
+  
+  
+  */
 struct MenuRebuilder_v
 (
 	menu_title = "_TEST_MENU",
@@ -6,7 +37,7 @@ struct MenuRebuilder_v
 	menu_data = Dictionary #name,
 	callback_id = #testMenuRebuilderCuiRegisterMenus,
 	help_menu_id = "cee8f758-2199-411b-81e7-d3ff4a80d143",
-
+	macro_action_table_id = 647394,
 
 	/*  Creates new guid string.
 	    Used when menu id is not loaded from saved data.
@@ -45,7 +76,16 @@ struct MenuRebuilder_v
 	(
 		isDictionaryValue item_data and HasDictValue item_data #category and HasDictValue item_data #macro -- return
 	),
-
+	
+	/*  Builds persistent macro action id.
+		Format is macro name, backtick, category.
+	*/
+	function getMacroActionId macro_category macro_name =
+	(
+		persistent_action_id = macro_name + "`" + macro_category
+	
+		persistent_action_id -- return
+	),
 
 	/*  Creates root saved menu data.
 	    Result can be saved to file and loaded on next launch.
@@ -160,8 +200,9 @@ struct MenuRebuilder_v
 					item_title = item_data[#title]
 					macro_category = item_data[#category]
 					macro_name = item_data[#macro]
-
-					parent_menu.CreateAction saved_guid macro_name macro_category item_title
+					persistent_action_id = getMacroActionId macro_category macro_name
+				
+					parent_menu.CreateAction saved_guid macro_action_table_id persistent_action_id
 				)
 				else
 				(
@@ -211,8 +252,6 @@ struct MenuRebuilder_v
 	(
 		callbacks.removeScripts id:callback_id
 		callbacks.addScript #cuiRegisterMenus "MenuRebuilder.loadMenu()" id:callback_id
-
-		ok -- return
 	),
 
 
@@ -222,8 +261,6 @@ struct MenuRebuilder_v
 	function unregisterCallback =
 	(
 		callbacks.removeScripts id:callback_id
-
-		ok -- return
 	),
 
 
