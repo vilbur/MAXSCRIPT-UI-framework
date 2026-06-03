@@ -12,7 +12,66 @@ struct MenuDefinition_v
 	quad_position = #TopRight,
 	quad_context_id = "ac7c70f8-3f86-4ff5-a510-e4fd6a9c368e",
 
+	filein( getFilenamePath(getSourceFileName()) + "/old_methods_fallback.ms" )	--"./old_methods_fallback.ms"
 
+	
+	/*  Adds macro item to menu data.
+	    Value is #(category, macro_name).
+	*/
+	function addItem category macro_name title:"" =
+	(
+		this.ensureMenuData()
+
+		item_title = title
+
+		if item_title == "" then
+		(
+			item_title = macro_name
+		)
+
+		this.data[item_title] = #(category, macro_name)
+
+		this -- return
+	),
+
+
+	/*  Adds submenu definition to menu data.
+	    Returns new submenu definition instance.
+	*/
+	function addMenu title =
+	(
+		this.ensureMenuData()
+
+		menu_definition = MenuDefinition_v \
+			type:#menu \
+			title:title
+
+		this.data[title] = menu_definition.data
+
+		menu_definition -- return
+	),
+
+
+	/*  Adds quad quadrant definition.
+	    Parent data becomes array of MenuDefinition_v.
+	*/
+	function addQuad title position:#TopRight =
+	(
+		this.ensureQuadData()
+
+		quad_definition = MenuDefinition_v \
+			type:#quad \
+			title:title \
+			quad_modifier:this.quad_modifier \
+			quad_position:position \
+			quad_context_id:this.quad_context_id
+
+		append this.data quad_definition
+
+		quad_definition -- return
+	),
+	
+	
 	/*  Checks if value is Dictionary.
 	    Used before dictionary operations.
 	*/
@@ -97,61 +156,6 @@ struct MenuDefinition_v
 	),
 
 
-	/*  Adds macro item to menu data.
-	    Value is #(category, macro_name).
-	*/
-	function addItem category macro_name title:"" =
-	(
-		this.ensureMenuData()
-
-		item_title = title
-
-		if item_title == "" then
-		(
-			item_title = macro_name
-		)
-
-		this.data[item_title] = #(category, macro_name)
-
-		this -- return
-	),
-
-
-	/*  Adds submenu definition to menu data.
-	    Returns new submenu definition instance.
-	*/
-	function addMenu title =
-	(
-		this.ensureMenuData()
-
-		menu_definition = MenuDefinition_v \
-			type:#menu \
-			title:title
-
-		this.data[title] = menu_definition.data
-
-		menu_definition -- return
-	),
-
-
-	/*  Adds quad quadrant definition.
-	    Parent data becomes array of MenuDefinition_v.
-	*/
-	function addQuad title position:#TopRight =
-	(
-		this.ensureQuadData()
-
-		quad_definition = MenuDefinition_v \
-			type:#quad \
-			title:title \
-			quad_modifier:this.quad_modifier \
-			quad_position:position \
-			quad_context_id:this.quad_context_id
-
-		append this.data quad_definition
-
-		quad_definition -- return
-	),
 
 
 	on create do

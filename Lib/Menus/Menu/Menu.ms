@@ -98,7 +98,7 @@ struct Menu_v
 	  *
 	  * @return Menu_v
 	 */
-	function addMenu menu_or_name title: index: flat:this.flat separators:#() =
+	function addMenu menu_or_name title: flat:this.flat separators:#() =
 	(
 		--format "\n"; print "Menu_v.addMenu()"
 		--format "menu_or_name: %\n" menu_or_name
@@ -560,8 +560,8 @@ struct Menu_v
 		--format "\n"; print "Menu_v._getOrCreateMenu()"
 		local menu
 
-		if (menu = menuMan.findMenu menu_name) == undefined then
-			menu = this._createNewMenu (menu_name)
+		--if (menu = menuMan.findMenu menu_name) == undefined then
+		--	menu = this._createNewMenu (menu_name)
 		
 		menu --return
 	),
