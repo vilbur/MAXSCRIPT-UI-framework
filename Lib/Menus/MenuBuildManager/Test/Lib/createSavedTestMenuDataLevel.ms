@@ -76,7 +76,7 @@ function createTestMacroDictionaryLevel level_index item_count:2 submenu_count:1
 /*  Creates saved menu data from test source dictionary.
     Compatibility helper for old createSavedTestMenuDataLevel calls.
 */
-function createSavedTestMenuDataLevel level_index menu_title:"_TEST_MENU" item_count:2 submenu_count:1 nested_level_count:1 macro_counter:#(0) macro_category:"_TEST_CATEGORY" minimum_submenu_item_count:1 =
+function createSavedTestMenuDataLevel level_index menu_title:"_TEST_MENU_OOOOH" item_count:2 submenu_count:1 nested_level_count:1 macro_counter:#(0) macro_category:"_TEST_CATEGORY" minimum_submenu_item_count:1 =
 (
 	source_menu_items = createTestMacroDictionaryLevel \
 		level_index \

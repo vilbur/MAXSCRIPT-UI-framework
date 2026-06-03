@@ -1,36 +1,12 @@
-filein( getFilenamePath(getSourceFileName()) + "/MenuJsonIO.ms" )	--"./MenuJsonIO.ms"
 
-filein( getFilenamePath(getSourceFileName()) + "/../MenuRebuilder/MenuRebuilder.ms" )	--"./../MenuRebuilder/MenuRebuilder.ms"
 
-global MenuBuildManager
-
-/*  Menu definition.
-    Used by MenuBuildManager_v mass build.
+/*  Menu build manager.
+    Owns definitions, saved JSON data, startup loader and callback routing.
 */
-struct MenuDefinition_v
-(
-	type = #menu,
-	title = "",
-	data = undefined,
-	_data = undefined,
-	quad_modifier = #shiftAndControlPressed,
-	quad_position = #TopRight,
-	quad_context_id = "ac7c70f8-3f86-4ff5-a510-e4fd6a9c368e",
-
-	on create do
-	(
-	)
-)
-
-
 struct MenuBuildManager_v
 (
-	version = 0.05,
-	menu_type = #menu,
-	menu_title = "_TEST_MENU",
-	user_menu_data = Dictionary #string,
+	version = 0.08,
 	menus_data = #(),
-	saved_menu_data = Dictionary #name,
 	saved_menus_data = #(),
 	data_file_name = "MenuRebuilder_data.json",
 	startup_file_name = "MenuRebuilder_startup.ms",
@@ -41,9 +17,18 @@ struct MenuBuildManager_v
 	merge_existing_data = true,
 	callback_id = #menuBuildManagerCuiRegisterMenus,
 	quad_callback_id = #menuBuildManagerCuiRegisterQuadMenus,
-	quad_context_id = "ac7c70f8-3f86-4ff5-a510-e4fd6a9c368e",
-	quad_modifier = #shiftAndControlPressed,
-	quad_position = #TopRight,
+
+
+	/*  Creates new guid string.
+	    Used for saved root, menu item and quad ids.
+	*/
+	function createGuidString =
+	(
+		guid_class = dotNetClass "System.Guid"
+		guid_value = guid_class.NewGuid()
+
+		guid_value.ToString() -- return
+	),
 
 
 	/*  Checks if value is Dictionary.
@@ -62,6 +47,25 @@ struct MenuBuildManager_v
 		)
 
 		was_dictionary -- return
+	),
+
+
+	/*  Checks if value is array.
+	    Used for MenuDefinition_v data arrays.
+	*/
+	function isArrayValue value =
+	(
+		was_array = false
+
+		if value != undefined then
+		(
+			if classOf value == Array then
+			(
+				was_array = true
+			)
+		)
+
+		was_array -- return
 	),
 
 
@@ -137,18 +141,43 @@ struct MenuBuildManager_v
 	),
 
 
-	/*  Normalizes menu type name.
-	    Accepts #menu #MENU #quad #QUAD #both #BOTH.
+	/*  Normalizes menu type.
+	    Accepts names and strings.
 	*/
 	function normalizeMenuType type_value =
 	(
 		normalized_type = #menu
+		type_text = type_value as string
 
-		if type_value == #quad or type_value == #QUAD then
+		if type_text == "#quad" then
 		(
 			normalized_type = #quad
 		)
-		else if type_value == #both or type_value == #BOTH then
+		else if type_text == "quad" then
+		(
+			normalized_type = #quad
+		)
+		else if type_text == "#QUAD" then
+		(
+			normalized_type = #quad
+		)
+		else if type_text == "QUAD" then
+		(
+			normalized_type = #quad
+		)
+		else if type_text == "#both" then
+		(
+			normalized_type = #both
+		)
+		else if type_text == "both" then
+		(
+			normalized_type = #both
+		)
+		else if type_text == "#BOTH" then
+		(
+			normalized_type = #both
+		)
+		else if type_text == "BOTH" then
 		(
 			normalized_type = #both
 		)
@@ -164,7 +193,7 @@ struct MenuBuildManager_v
 	(
 		definition_data = menu_definition.data
 
-		if this.isDictionaryValue menu_definition._data then
+		if menu_definition._data != undefined then
 		(
 			definition_data = menu_definition._data
 		)
@@ -173,69 +202,325 @@ struct MenuBuildManager_v
 	),
 
 
+	/*  Creates saved macro item data.
+	    Saved macro item contains #title #category #macro.
+	*/
+	function createSavedMacroItemData item_title macro_category macro_name =
+	(
+		item_data = Dictionary #name
+
+		item_data[#title] = item_title
+		item_data[#category] = macro_category
+		item_data[#macro] = macro_name
+
+		item_data -- return
+	),
+
+
+	/*  Creates saved submenu data.
+	    Saved submenu contains #title #items.
+	*/
+	function createSavedSubMenuData submenu_title submenu_items =
+	(
+		submenu_data = Dictionary #name
+
+		submenu_data[#title] = submenu_title
+		submenu_data[#items] = submenu_items
+
+		submenu_data -- return
+	),
+
+
+	/*  Checks if saved item is submenu.
+	    Submenu item has #items key.
+	*/
+	function isSubMenuData item_data =
+	(
+		was_found = false
+
+		if this.isDictionaryValue item_data then
+		(
+			was_found = this.hasDictValueSafe item_data #items
+		)
+
+		was_found -- return
+	),
+
+
+	/*  Checks if saved item is macro item.
+	    Macro item has #category and #macro keys.
+	*/
+	function isMacroItemData item_data =
+	(
+		was_found = false
+
+		if this.isDictionaryValue item_data then
+		(
+			was_found = this.hasDictValueSafe item_data #category
+
+			if was_found then
+			(
+				was_found = this.hasDictValueSafe item_data #macro
+			)
+		)
+
+		was_found -- return
+	),
+
+
+	/*  Checks if value is saved item data.
+	    Saved item has #title and submenu or macro keys.
+	*/
+	function isSavedItemData item_data =
+	(
+		was_found = false
+
+		if this.isDictionaryValue item_data then
+		(
+			was_found = this.hasDictValueSafe item_data #title
+
+			if was_found then
+			(
+				if this.isSubMenuData item_data then
+				(
+					was_found = true
+				)
+				else
+				(
+					was_found = this.isMacroItemData item_data
+				)
+			)
+		)
+
+		was_found -- return
+	),
+
+
+	/*  Checks if dictionary is saved GUID item dictionary.
+	    Saved values are Dictionary #name item data.
+	*/
+	function isSavedItemsDictionary dictionary_value =
+	(
+		was_found = false
+
+		if this.isDictionaryValue dictionary_value then
+		(
+			dictionary_keys = GetDictKeys dictionary_value
+
+			if dictionary_keys.count == 0 then
+			(
+				was_found = true
+			)
+			else
+			(
+				first_item_data = dictionary_value[dictionary_keys[1]]
+				was_found = this.isSavedItemData first_item_data
+			)
+		)
+
+		was_found -- return
+	),
+
+
+	/*  Converts simple title-key dictionary to saved GUID-key dictionary.
+	    Source value is macro array or submenu dictionary.
+	*/
+	function convertSourceItemsToSavedItems source_items =
+	(
+		saved_items = Dictionary #string
+
+		if this.isDictionaryValue source_items then
+		(
+			source_key_array = GetDictKeys source_items
+
+			for source_title in source_key_array do
+			(
+				source_value = source_items[source_title]
+				saved_guid = this.createGuidString()
+
+				if this.isDictionaryValue source_value then
+				(
+					submenu_items = this.convertSourceItemsToSavedItems source_value
+					saved_items[saved_guid] = this.createSavedSubMenuData source_title submenu_items
+				)
+				else if classOf source_value == Array then
+				(
+					if source_value.count >= 2 then
+					(
+						saved_items[saved_guid] = this.createSavedMacroItemData source_title source_value[1] source_value[2]
+					)
+				)
+			)
+		)
+
+		saved_items -- return
+	),
+
+
+	/*  Normalizes menu items.
+	    Accepts saved GUID format or simple title-key format.
+	*/
+	function normalizeMenuItems items_value =
+	(
+		normalized_items = Dictionary #string
+
+		if this.isDictionaryValue items_value then
+		(
+			if this.isSavedItemsDictionary items_value then
+			(
+				normalized_items = items_value
+			)
+			else
+			(
+				normalized_items = this.convertSourceItemsToSavedItems items_value
+			)
+		)
+
+		normalized_items -- return
+	),
+
+
+	/*  Builds empty saved root menu data.
+	    Empty title returns undefined and no menu is generated.
+	*/
+	function createSavedRootData menu_definition definition_type =
+	(
+		root_data = undefined
+
+		if menu_definition.title == "" then
+		(
+			format "MenuBuildManager_v.createSavedRootData skipped. Missing menu title.\n"
+		)
+		else
+		(
+			root_data = Dictionary #name
+
+			root_data[#version] = this.version
+			root_data[#id] = this.createGuidString()
+			root_data[#title] = menu_definition.title
+			root_data[#type] = definition_type
+			root_data[#items] = Dictionary #string
+			root_data[#quad_context_id] = menu_definition.quad_context_id
+			root_data[#quad_modifier] = menu_definition.quad_modifier
+			root_data[#quad_position] = menu_definition.quad_position
+			root_data[#quad_menu_id] = this.createGuidString()
+			root_data[#quad_menus] = #()
+		)
+
+		root_data -- return
+	),
+
+
+	/*  Builds one quad quadrant data from child MenuDefinition_v.
+	    Output is Dictionary #name used inside #quad_menus array.
+	*/
+	function buildSavedQuadDataFromDefinition quad_definition =
+	(
+		quad_source_data = this.getDefinitionData quad_definition
+		quad_data = Dictionary #name
+
+		quad_data[#title] = quad_definition.title
+		quad_data[#quad_position] = quad_definition.quad_position
+		quad_data[#quad_menu_id] = this.createGuidString()
+		quad_data[#items] = this.normalizeMenuItems quad_source_data
+
+		quad_data -- return
+	),
+
+
+	/*  Builds saved quad root menu with multiple quadrants.
+	    Definition data must be array of MenuDefinition_v.
+	*/
+	function buildSavedQuadRootDataFromDefinition menu_definition =
+	(
+		root_data = this.createSavedRootData menu_definition #quad
+
+		if root_data != undefined then
+		(
+			root_data[#items] = Dictionary #string
+			root_data[#quad_menus] = #()
+
+			quad_definition_array = this.getDefinitionData menu_definition
+
+			for quad_definition in quad_definition_array do
+			(
+				append root_data[#quad_menus] (this.buildSavedQuadDataFromDefinition quad_definition)
+			)
+		)
+
+		root_data -- return
+	),
+
+
+	/*  Builds saved single menu or single quadrant quad root data.
+	    Used when definition data is Dictionary #string.
+	*/
+	function buildSavedSingleRootDataFromDefinition menu_definition definition_type =
+	(
+		root_data = this.createSavedRootData menu_definition definition_type
+
+		if root_data != undefined then
+		(
+			definition_data = this.getDefinitionData menu_definition
+
+			root_data[#items] = this.normalizeMenuItems definition_data
+			root_data[#quad_menus] = #()
+		)
+
+		root_data -- return
+	),
+
+
 	/*  Builds saved menu data from one MenuDefinition_v.
-	    Uses MenuRebuilder_v converter.
+	    Empty title returns undefined.
 	*/
 	function buildSavedMenuDataFromDefinition menu_definition =
 	(
-		definition_type = this.normalizeMenuType menu_definition.type
+		menu_data = undefined
+		definition_type_value = menu_definition.type
+		definition_type = this.normalizeMenuType definition_type_value
 		definition_data = this.getDefinitionData menu_definition
 
-		menu_rebuilder = MenuRebuilder_v \
-			menu_type:definition_type \
-			menu_title:menu_definition.title \
-			menu_items:definition_data \
-			quad_context_id:menu_definition.quad_context_id \
-			quad_modifier:menu_definition.quad_modifier \
-			quad_position:menu_definition.quad_position
+		if definition_type == #quad then
+		(
+			if this.isArrayValue definition_data then
+			(
+				menu_data = this.buildSavedQuadRootDataFromDefinition menu_definition
+			)
+			else
+			(
+				menu_data = this.buildSavedSingleRootDataFromDefinition menu_definition #quad
+			)
+		)
+		else
+		(
+			menu_data = this.buildSavedSingleRootDataFromDefinition menu_definition definition_type
+		)
 
-		menu_data = menu_rebuilder.buildMenuData()
-		menu_data[#version] = this.version
+		if menu_data != undefined then
+		(
+			menu_data[#version] = this.version
+		)
 
 		menu_data -- return
 	),
 
 
-	/*  Builds saved menu data from old single manager parameters.
-	    Kept for backward compatibility.
-	*/
-	function buildSingleMenuDefinition =
-	(
-		menu_definition = MenuDefinition_v \
-			type:this.menu_type \
-			title:this.menu_title \
-			data:this.user_menu_data \
-			quad_context_id:this.quad_context_id \
-			quad_modifier:this.quad_modifier \
-			quad_position:this.quad_position
-
-		menu_definition -- return
-	),
-
-
-	/*  Builds saved menu data array.
-	    Uses menus_data array if provided, otherwise uses old single parameters.
+	/*  Builds saved menu data array from menus_data.
+	    Invalid menu definitions with empty title are skipped.
 	*/
 	function buildSavedMenusData =
 	(
 		this.saved_menus_data = #()
 
-		if this.menus_data.count > 0 then
+		for menu_definition in this.menus_data do
 		(
-			for menu_definition in this.menus_data do
-			(
-				append this.saved_menus_data (this.buildSavedMenuDataFromDefinition menu_definition)
-			)
-		)
-		else
-		(
-			menu_definition = this.buildSingleMenuDefinition()
-			append this.saved_menus_data (this.buildSavedMenuDataFromDefinition menu_definition)
-		)
+			menu_data = this.buildSavedMenuDataFromDefinition menu_definition
 
-		if this.saved_menus_data.count > 0 then
-		(
-			this.saved_menu_data = this.saved_menus_data[1]
+			if menu_data != undefined then
+			(
+				append this.saved_menus_data menu_data
+			)
 		)
 
 		this.saved_menus_data -- return
@@ -262,24 +547,46 @@ struct MenuBuildManager_v
 
 
 	/*  Checks if saved root data should be loaded by menu callback.
-	    #both is accepted for normal menu and quad menu.
+	    Only #menu and #both are allowed here.
 	*/
 	function isMenuCallbackData menu_data =
 	(
 		saved_type = this.getSavedMenuType menu_data
 
-		saved_type == #menu or saved_type == #both -- return
+		if saved_type == #menu then
+		(
+			true -- return
+		)
+		else if saved_type == #both then
+		(
+			true -- return
+		)
+		else
+		(
+			false -- return
+		)
 	),
 
 
 	/*  Checks if saved root data should be loaded by quad callback.
-	    #both is accepted for normal menu and quad menu.
+	    Only #quad and #both are allowed here.
 	*/
 	function isQuadCallbackData menu_data =
 	(
 		saved_type = this.getSavedMenuType menu_data
 
-		saved_type == #quad or saved_type == #both -- return
+		if saved_type == #quad then
+		(
+			true -- return
+		)
+		else if saved_type == #both then
+		(
+			true -- return
+		)
+		else
+		(
+			false -- return
+		)
 	),
 
 
@@ -351,7 +658,10 @@ struct MenuBuildManager_v
 	*/
 	function buildMenus =
 	(
-		this.buildSavedMenusData()
+		if this.saved_menus_data.count == 0 then
+		(
+			this.buildSavedMenusData()
+		)
 
 		if this.auto_register_callback then
 		(
@@ -363,7 +673,7 @@ struct MenuBuildManager_v
 
 
 	/*  Saves saved menu data array to JSON file.
-	    Can merge with existing JSON to avoid second run overriding first run.
+	    Can merge with existing JSON to avoid overrides.
 	*/
 	function saveJsonData =
 	(
@@ -452,7 +762,7 @@ struct MenuBuildManager_v
 
 
 	/*  Loads all normal menus from saved_menus_data.
-	    Called by #cuiRegisterMenus.
+	    Called only by #cuiRegisterMenus.
 	*/
 	function loadAllMenus =
 	(
@@ -469,7 +779,7 @@ struct MenuBuildManager_v
 				if this.isMenuCallbackData menu_data then
 				(
 					menu_rebuilder = MenuRebuilder_v menu_data:menu_data
-					menu_rebuilder.loadMenuByManager menu_manager
+					menu_rebuilder.rebuildAsMainMenu menu_manager
 				)
 			)
 		)
@@ -479,7 +789,7 @@ struct MenuBuildManager_v
 
 
 	/*  Loads all quad menus from saved_menus_data.
-	    Called by #cuiRegisterQuadMenus.
+	    Called only by #cuiRegisterQuadMenus.
 	*/
 	function loadAllQuadMenus =
 	(
@@ -496,7 +806,7 @@ struct MenuBuildManager_v
 				if this.isQuadCallbackData menu_data then
 				(
 					menu_rebuilder = MenuRebuilder_v menu_data:menu_data
-					menu_rebuilder.loadQuadMenuByManager quad_menu_manager
+					menu_rebuilder.rebuildAsQuadMenu quad_menu_manager
 				)
 			)
 		)
@@ -612,5 +922,7 @@ struct MenuBuildManager_v
 			this.rebuilder_file_path = this.getCurrentSourceFilePath()
 		)
 	)
-	
 )
+
+
+
