@@ -79,43 +79,43 @@ test_macro_counter = #(0)
 simple_user_menu_data_quad = createTestMacroDictionaryLevel 0 item_count:2 submenu_count:1 nested_level_count:1 macro_counter:test_macro_counter macro_category:"_TEST_CATEGORY" minimum_submenu_item_count:1
 
 
-/** Menu definition
- */
-struct MenuDefinition_v
-(
-	type = #MENU,
-	title = "",
-	data = "",
+menus_data = #(
+	MenuDefinition_v type:#menu title:"_TEST_MENU_FROM_MANAGER" data:simple_user_menu_data,
+	MenuDefinition_v type:#quad title:"_TEST_QUAD_FROM_MANAGER" data:simple_user_menu_data_quad quad_modifier:#shiftAndControlPressed quad_position:#TopRight
 )
 
-menus_data = #( MenuDefinition_v title:"_TEST_MENU_FROM_MANAGER" _data:simple_user_menu_data,  MenuDefinition_v title:"_TEST_QUAD_FROM_MANAGER" _data:simple_user_menu_data_quad  )
+menu_build_manager = MenuBuildManager_v menus_data:menus_data
 
-MenuBuildManager_v menus_data:menus_data
+saved_menus_data = menu_build_manager.run()
 
 
-/*  Test MenuBuildManager_v for quad menu.
-    Builds quad menu callback and saves startup rebuild file.
-*/
+simple_user_menu_data
 
-menu_build_manager = MenuBuildManager_v \
-	menu_type:#menu \
-	menu_title:"_TEST_MENU_FROM_MANAGER" \
-	user_menu_data:simple_user_menu_data \
-
-saved_quad_menu_data = menu_build_manager.run()
-
-#(  )
-
+--
+--
+--/*  Test MenuBuildManager_v for quad menu.
+--    Builds quad menu callback and saves startup rebuild file.
+--*/
+--
 --menu_build_manager = MenuBuildManager_v \
---	menu_type:#quad \
---	menu_title:"_TEST_QUAD_FROM_MANAGER" \
---	user_menu_data:simple_user_menu_data_quad \
---	quad_modifier:#shiftAndControlPressed \
---	quad_position:#TopRight
+--	menu_type:#menu \
+--	menu_title:"_TEST_MENU_FROM_MANAGER" \
+--	user_menu_data:simple_user_menu_data \
 --
 --saved_quad_menu_data = menu_build_manager.run()
 --
-
-
---printSavedMenuData saved_quad_menu_data
-
+--#(  )
+--
+----menu_build_manager = MenuBuildManager_v \
+----	menu_type:#quad \
+----	menu_title:"_TEST_QUAD_FROM_MANAGER" \
+----	user_menu_data:simple_user_menu_data_quad \
+----	quad_modifier:#shiftAndControlPressed \
+----	quad_position:#TopRight
+----
+----saved_quad_menu_data = menu_build_manager.run()
+----
+--
+--
+----printSavedMenuData saved_quad_menu_data
+--

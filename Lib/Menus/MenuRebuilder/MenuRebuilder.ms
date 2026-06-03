@@ -458,35 +458,85 @@ struct MenuRebuilder_v
 	),
 
 
-	/*  Loads normal menu into main menu bar.
-	    Existing root menu is deleted by saved id before rebuild.
-	*/
-	function loadMenu =
-	(
-		menu_manager = callbacks.notificationParam()
 
+	/*  Loads normal menu into main menu bar from passed CUI manager.
+		Used by MenuBuildManager_v mass callback.
+	*/
+	function loadMenuByManager menu_manager =
+	(
 		if menu_manager == undefined then
 		(
-			format "MenuRebuilder_v.loadMenu must be called from #cuiRegisterMenus callback.\n"
+			format "MenuRebuilder_v.loadMenuByManager failed. menu_manager is undefined.\n"
 			false -- return
 		)
 		else
 		(
 			main_menu_bar = menu_manager.mainMenuBar
-
+	
 			this.deleteRootMenu main_menu_bar
-
+	
 			root_menu = main_menu_bar.CreateSubMenu this.menu_id this.menu_title beforeId:this.help_menu_id
-
+	
 			if root_menu != undefined then
 			(
 				this.rebuildMenuItems root_menu this.menu_items
 			)
-
+	
 			this.buildMenuData() -- return
 		)
 	),
-
+	
+	
+	/*  Loads normal menu into main menu bar.
+		Called from #cuiRegisterMenus callback.
+	*/
+	function loadMenu =
+	(
+		menu_manager = callbacks.notificationParam()
+	
+		this.loadMenuByManager menu_manager -- return
+	),
+	
+	
+	/*  Loads saved data as custom quad menu from passed quad manager.
+		Used by MenuBuildManager_v mass callback.
+	*/
+	function loadQuadMenuByManager quad_menu_manager =
+	(
+		if quad_menu_manager == undefined then
+		(
+			format "MenuRebuilder_v.loadQuadMenuByManager failed. quad_menu_manager is undefined.\n"
+			false -- return
+		)
+		else
+		(
+			quad_context = this.getQuadContext quad_menu_manager
+			quad_menu = this.createQuadRootMenu quad_context
+			quad_position_menu = this.createQuadPositionMenu quad_menu
+	
+			if quad_position_menu != undefined then
+			(
+				this.rebuildMenuItems quad_position_menu this.menu_items
+			)
+			else
+			(
+				format "MenuRebuilder_v.loadQuadMenuByManager failed. Quad position menu is undefined.\n"
+			)
+	
+			this.buildMenuData() -- return
+		)
+	),
+	
+	
+	/*  Loads saved data as custom quad menu.
+		Called from #cuiRegisterQuadMenus callback.
+	*/
+	function loadQuadMenu =
+	(
+		quad_menu_manager = callbacks.notificationParam()
+	
+		this.loadQuadMenuByManager quad_menu_manager -- return
+	),
 
 	/*  Gets quad context from quad menu manager.
 	    Default context is main viewport right click context.
@@ -559,38 +609,6 @@ struct MenuRebuilder_v
 		)
 
 		quad_position_menu -- return
-	),
-
-
-	/*  Loads saved data as custom quad menu.
-	    Called from #cuiRegisterQuadMenus callback.
-	*/
-	function loadQuadMenu =
-	(
-		quad_menu_manager = callbacks.notificationParam()
-
-		if quad_menu_manager == undefined then
-		(
-			format "MenuRebuilder_v.loadQuadMenu must be called from #cuiRegisterQuadMenus callback.\n"
-			false -- return
-		)
-		else
-		(
-			quad_context = this.getQuadContext quad_menu_manager
-			quad_menu = this.createQuadRootMenu quad_context
-			quad_position_menu = this.createQuadPositionMenu quad_menu
-
-			if quad_position_menu != undefined then
-			(
-				this.rebuildMenuItems quad_position_menu this.menu_items
-			)
-			else
-			(
-				format "MenuRebuilder_v.loadQuadMenu failed. Quad position menu is undefined.\n"
-			)
-
-			this.buildMenuData() -- return
-		)
 	),
 
 

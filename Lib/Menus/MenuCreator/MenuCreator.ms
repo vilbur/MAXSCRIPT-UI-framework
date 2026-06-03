@@ -1,113 +1,135 @@
 
-
+/** Menu creator
+ */
 struct MenuCreator_v
 (
-	menu_title = "_TEST_MENU",
-	menu_items = Dictionary #string,
-	callback_id = #testMenuCuiRegisterMenus,
-	root_menu_id = "0C296CB3-72F1-4761-8992-64F65B2F03FA",
-	help_menu_id = "cee8f758-2199-411b-81e7-d3ff4a80d143",
-	macro_action_table_id = 647394,
-
-
-	/*  Creates stable guid from source string.
-	    Same input string always creates same guid.
-	*/
-	function getStableGuidFromString source_string =
+	/* construct */
+	items, -- Dictionary|*.json -- KEY:"Title" VALUE: submenu|"itemCommand()" -- dictionary of items where key is title
+	popup = false,
+	
+	/* required */
+	
+	/* properties */
+	Menu,
+	
+	/* private */
+	/* dependency */
+	/* reference */
+	/* inhered */
+	
+	/** Create
+	 */
+	function create =
 	(
-		encoding_class = dotNetClass "System.Text.Encoding"
-		md5_class = dotNetClass "System.Security.Cryptography.MD5"
-		md5_provider = md5_class.Create()
-
-		source_bytes = encoding_class.UTF8.GetBytes source_string
-		hash_bytes = md5_provider.ComputeHash source_bytes
-		guid_value = dotNetObject "System.Guid" hash_bytes
-
-		guid_value.ToString() -- return
+		format "\n"; print "MenuCreator_v.create()"
+		format "this.Menu: %\n" this.Menu
+		this.Menu.create()
+		--unsupplied
 	),
-
-
-	/*  Creates CUI menu items from dictionary.
-	    Dictionary value creates submenu, array value creates macro action.
-	*/
-	function createCuiMenuItemsFromDictionary parent_menu dictionary_value id_path:"" =
+	--
+	--/** Popup
+	-- */
+	--function popup =
+	--(
+	--	--format "\n"; print "MenuCreator_v.popup()"
+	--	this.Menu.popup()
+	--),
+	
+	/** generateMenu menu
+	  
+	   @param RolloutClass Menu if defined then menu is created as submenu
+	 */
+	function generateMenu =
 	(
-		dictionary_keys = GetDictKeys dictionary_value
+		format "\n"; print "MenuCreator_v.generateMenu()"
+		format "items: %\n" items
+		format "classOf items: %\n" (classOf items)
+		format "doesFileExist items: %\n" (doesFileExist items)
 
-		for key_name in dictionary_keys do
+		/*------------------------------------------------------------------------------
+		
+			GET *.json FILE
+		
+		--------------------------------------------------------------------------------*/		
+		if classOf items == string and doesFileExist items then
+			items = (JsonToDictionoray_v()).jsonFileToDict this.items
+		
+		
+		/*------------------------------------------------------------------------------
+		
+			DEFINE MAIN MENU - RCMENU or SUBMENU
+		
+		--------------------------------------------------------------------------------*/
+		if this.Menu == undefined then 
+			this.Menu = RcMenu_v name:"MenuByMenuCreator" search_in_menus:false
+		--this.Menu = if Submenu != undefined then Submenu else
+		
+		/*------------------------------------------------------------------------------
+		
+			ADD ITEMS AND SUBMENUS
+		
+		--------------------------------------------------------------------------------*/
+		this._addItemsToMenu this.Menu items	
+ 		
+		
+		/*------------------------------------------------------------------------------
+		
+			CREATE MENU IN DIALOG
+		
+		----------------------------------------------------------------------------------*/
+		--if Dialog != undefined then 
+		--	this.Menu.create() --return
+		--
+		--/*------------------------------------------------------------------------------
+		--	POPUP MENU WHEN MENU IS CREATED BY CALLBACK OF CONTROL 
+		--
+		----------------------------------------------------------------------------------*/
+		--else if EventFired != undefined and Submenu == undefined then 
+		--	this.Menu.popup() --return
+		--
+		--else
+		--	this.Menu --return
+				
+		--Menu.create() --return
+		this.Menu --return
+	),
+	
+	private
+	
+	/** Add items to menu
+	 */
+	function _addItemsToMenu menu_current menu_items =
+	(
+		--format "\n"; print "PASSED._addItemsToMenu()"
+		
+		for title in menu_items.keys do
 		(
-			item_value = dictionary_value[key_name]
-			item_path = id_path + "/" + key_name
-
-			if ((classOf item_value) == Dictionary) then
+			item = menu_items[title]
+			/*------------------------------------------------------------------------------
+				ADD SUBMENU
+			--------------------------------------------------------------------------------*/
+			if classOf item == Dictionary then
 			(
-				submenu_id = getStableGuidFromString ("submenu|" + item_path)
-				submenu_menu = parent_menu.CreateSubMenu submenu_id key_name
+				submenu	= menu_current.menu title
 
-				if (submenu_menu != undefined) then
-				(
-					createCuiMenuItemsFromDictionary submenu_menu item_value id_path:item_path
-				)
+				this._addItemsToMenu submenu item
 			)
-			else
-			(
-				macro_category = item_value[1]
-				macro_name = item_value[2]
-				action_id = getStableGuidFromString ("action|" + item_path + "|" + macro_category + "|" + macro_name)
-				permanent_action_id = macro_name + "`" + macro_category
-
-				parent_menu.CreateAction action_id macro_action_table_id permanent_action_id title:key_name
-			)
+			/*------------------------------------------------------------------------------
+				ADD ITEM
+			--------------------------------------------------------------------------------*/
+			else if classOf item == string then
+				menu_current.item title item 
 		)
-
-		ok -- return
 	),
-
-
-	/*  Creates root menu and fills it from dictionary.
-	    This function is called by #cuiRegisterMenus callback.
-	*/
-	function registerMenus =
-	(
-		menu_manager = callbacks.notificationParam()
-		main_menu_bar = menu_manager.mainMenuBar
-
-		root_menu = main_menu_bar.CreateSubMenu root_menu_id menu_title beforeId:help_menu_id
-
-		if (root_menu != undefined) then
-		(
-			createCuiMenuItemsFromDictionary root_menu menu_items id_path:menu_title
-		)
-
-		ok -- return
-	),
-
-
-	/*  Registers 3ds Max 2025+ CUI callback.
-	    Callback uses global Menu instance.
-	*/
-	function registerCallback =
-	(
-		callbacks.removeScripts id:callback_id
-		callbacks.addScript #cuiRegisterMenus "Menu.registerMenus()" id:callback_id
-
-		ok -- return
-	),
-
-
-	/*  Removes registered CUI callback.
-	    Does not remove already built menu from current CUI state.
-	*/
-	function unregisterCallback =
-	(
-		callbacks.removeScripts id:callback_id
-
-		ok -- return
-	),
-
-
+	
 	on create do
 	(
-		--ok
+		print("MenuCreator_v.onCreate()")
+		if items != undefined then 
+			this.generateMenu()
+		
+		if popup then
+			this.Menu.popup()
 	)
+
 )

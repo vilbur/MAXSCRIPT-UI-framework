@@ -3,6 +3,109 @@ struct MenuJsonIO_v
 	json_text = "",
 	json_position = 1,
 	json_length = 0,
+	
+	/*  Serializes multiple saved menu data dictionaries to JSON.
+		JSON root contains array named menus.
+	*/
+	function menusDataToJson menus_data_array =
+	(
+		json_value = "{\n"
+	
+		json_value += "\t\"version\": 0.05,\n"
+		json_value += "\t\"menus\": [\n"
+	
+		for menu_index = 1 to menus_data_array.count do
+		(
+			json_value += this.menuDataToJson menus_data_array[menu_index]
+	
+			if menu_index < menus_data_array.count then
+			(
+				json_value += ","
+			)
+	
+			json_value += "\n"
+		)
+	
+		json_value += "\t]\n"
+		json_value += "}"
+	
+		json_value -- return
+	),
+	
+	
+	/*  Saves multiple saved menu data dictionaries to JSON file.
+		Used by MenuBuildManager_v.
+	*/
+	function saveMenusDataToJsonFile menus_data_array json_file_path =
+	(
+		json_value = this.menusDataToJson menus_data_array
+	
+		json_file = createFile json_file_path
+		format "%" json_value to:json_file
+		close json_file
+	
+		json_file_path -- return
+	),
+	
+	
+	/*  Converts parsed JSON root to array of saved menu data.
+		Supports new multi-menu JSON and old single-menu JSON.
+	*/
+	function jsonRootToMenusData json_root =
+	(
+		menus_data_array = #()
+	
+		if this.hasDictValueSafe json_root "menus" then
+		(
+			json_menus_array = json_root["menus"]
+	
+			if classOf json_menus_array == Array then
+			(
+				for json_menu_data in json_menus_array do
+				(
+					append menus_data_array (this.jsonRootToMenuData json_menu_data)
+				)
+			)
+		)
+		else
+		(
+			append menus_data_array (this.jsonRootToMenuData json_root)
+		)
+	
+		menus_data_array -- return
+	),
+	
+	
+	/*  Loads multiple saved menu data dictionaries from JSON file.
+		Converts JSON back to array of Dictionary #name roots.
+	*/
+	function loadMenusDataFromJsonFile json_file_path =
+	(
+		source_text = this.readTextFile json_file_path
+		this.setJsonText source_text
+	
+		json_root = this.parseJsonValue()
+		menus_data_array = this.jsonRootToMenusData json_root
+	
+		menus_data_array -- return
+	),
+	
+	
+	/*  Loads first saved menu data dictionary from JSON file.
+		Backward compatibility helper.
+	*/
+	function loadMenuDataFromJsonFile json_file_path =
+	(
+		menus_data_array = this.loadMenusDataFromJsonFile json_file_path
+		menu_data = Dictionary #name
+	
+		if menus_data_array.count > 0 then
+		(
+			menu_data = menus_data_array[1]
+		)
+	
+		menu_data -- return
+	),
 
 
 	/*  Checks if value is Dictionary.
