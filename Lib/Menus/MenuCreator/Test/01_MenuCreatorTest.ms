@@ -75,7 +75,9 @@ test_cui_macro_dictionary = createTestMacroDictionaryLevel \
 
 Menu = MenuCreator_v menu_items:test_cui_macro_dictionary
 
+
 Menu.registerCallback()
+
 
 format "Dictionary created. Generated macros: %\n" test_macro_counter[1]
 format "Menu callback registered: %\n" Menu.callback_id

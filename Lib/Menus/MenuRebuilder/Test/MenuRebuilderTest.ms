@@ -1,10 +1,12 @@
 ﻿clearListener(); print("Cleared in: "+getSourceFileName())
 
+
 filein( getFilenamePath(getSourceFileName()) + "/Lib/createSavedTestMenuDataLevel.ms" )	--"./Lib/createSavedTestMenuDataLevel.ms"
 filein( getFilenamePath(getSourceFileName()) + "/Lib/printSavedData.ms" )	--"./Lib/printSavedData.ms"
+--
+--filein( getFilenamePath(getSourceFileName()) + "/../MenuRebuilder.ms" )	--"./../MenuRebuilder.ms"
 
-filein( getFilenamePath(getSourceFileName()) + "/../MenuRebuilder.ms" )	--"./../MenuRebuilder.ms"
-
+filein( getFilenamePath(getSourceFileName()) + "/../../MenuBuildManager/MenuBuildManager.ms" )	--"./../../MenuBuildManager/MenuBuildManager.ms"
 
 
 
@@ -66,18 +68,54 @@ function testMenuRebuilderFromSavedData saved_menu_data =
 	MenuRebuilder.buildMenuData() -- return
 )
 
+/*------------------------------------------------------------------------------
+	GENERATE TET DATA
+--------------------------------------------------------------------------------*/
 test_macro_counter = #(0)
 
-test_cui_macro_dictionary = createTestMacroDictionaryLevel 0 item_count:2 submenu_count:1 nested_level_count:1 macro_counter:test_macro_counter macro_category:"_TEST_CATEGORY" minimum_submenu_item_count:1
+simple_user_menu_data = createTestMacroDictionaryLevel 0 item_count:2 submenu_count:1 nested_level_count:1 macro_counter:test_macro_counter macro_category:"_TEST_CATEGORY" minimum_submenu_item_count:1
 
- --printSourceMenuDictionary test_cui_macro_dictionary
+test_macro_counter = #(0)
+simple_user_menu_data_quad = createTestMacroDictionaryLevel 0 item_count:2 submenu_count:1 nested_level_count:1 macro_counter:test_macro_counter macro_category:"_TEST_CATEGORY" minimum_submenu_item_count:1
 
 
--- Example manual calls:
- saved_menu_data = testMenuRebuilderMenu(test_cui_macro_dictionary)
- ----printSavedMenuData saved_menu_data
- 
- saved_quad_data = testMenuRebuilderQuad(test_cui_macro_dictionary)
- 
- --MenuRebuilder = MenuRebuilder_v menu_data:saved_menu_data
+/** Menu definition
+ */
+struct MenuDefinition_v
+(
+	type = #MENU,
+	title = "",
+	data = "",
+)
+
+menus_data = #( MenuDefinition_v title:"_TEST_MENU_FROM_MANAGER" _data:simple_user_menu_data,  MenuDefinition_v title:"_TEST_QUAD_FROM_MANAGER" _data:simple_user_menu_data_quad  )
+
+MenuBuildManager_v menus_data:menus_data
+
+
+/*  Test MenuBuildManager_v for quad menu.
+    Builds quad menu callback and saves startup rebuild file.
+*/
+
+menu_build_manager = MenuBuildManager_v \
+	menu_type:#menu \
+	menu_title:"_TEST_MENU_FROM_MANAGER" \
+	user_menu_data:simple_user_menu_data \
+
+saved_quad_menu_data = menu_build_manager.run()
+
+#(  )
+
+--menu_build_manager = MenuBuildManager_v \
+--	menu_type:#quad \
+--	menu_title:"_TEST_QUAD_FROM_MANAGER" \
+--	user_menu_data:simple_user_menu_data_quad \
+--	quad_modifier:#shiftAndControlPressed \
+--	quad_position:#TopRight
+--
+--saved_quad_menu_data = menu_build_manager.run()
+--
+
+
+--printSavedMenuData saved_quad_menu_data
 

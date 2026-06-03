@@ -1,7 +1,6 @@
-
 struct MenuRebuilder_v
 (
-	version = 0.01,
+	version = 0.04,
 	menu_type = #menu,
 	menu_title = "_TEST_MENU",
 	menu_id = "",
@@ -34,7 +33,17 @@ struct MenuRebuilder_v
 	*/
 	function isDictionaryValue value =
 	(
-		value != undefined and classOf value == Dictionary -- return
+		was_dictionary = false
+
+		if value != undefined then
+		(
+			if classOf value == Dictionary then
+			(
+				was_dictionary = true
+			)
+		)
+
+		was_dictionary -- return
 	),
 
 
@@ -45,7 +54,7 @@ struct MenuRebuilder_v
 	(
 		was_found = false
 
-		if isDictionaryValue dictionary_value then
+		if this.isDictionaryValue dictionary_value then
 		(
 			try
 			(
@@ -68,7 +77,7 @@ struct MenuRebuilder_v
 	(
 		key_count = 0
 
-		if isDictionaryValue dictionary_value then
+		if this.isDictionaryValue dictionary_value then
 		(
 			key_count = (GetDictKeys dictionary_value).count
 		)
@@ -82,7 +91,14 @@ struct MenuRebuilder_v
 	*/
 	function isSubMenuData item_data =
 	(
-		isDictionaryValue item_data and hasDictValueSafe item_data #items -- return
+		was_submenu = false
+
+		if this.isDictionaryValue item_data then
+		(
+			was_submenu = this.hasDictValueSafe item_data #items
+		)
+
+		was_submenu -- return
 	),
 
 
@@ -91,7 +107,20 @@ struct MenuRebuilder_v
 	*/
 	function isMacroItemData item_data =
 	(
-		isDictionaryValue item_data and hasDictValueSafe item_data #category and hasDictValueSafe item_data #macro -- return
+		was_macro_item = false
+
+		if this.isDictionaryValue item_data then
+		(
+			if this.hasDictValueSafe item_data #category then
+			(
+				if this.hasDictValueSafe item_data #macro then
+				(
+					was_macro_item = true
+				)
+			)
+		)
+
+		was_macro_item -- return
 	),
 
 
@@ -100,7 +129,24 @@ struct MenuRebuilder_v
 	*/
 	function isSavedItemData item_data =
 	(
-		isDictionaryValue item_data and hasDictValueSafe item_data #title and (isSubMenuData item_data or isMacroItemData item_data) -- return
+		was_saved_item = false
+
+		if this.isDictionaryValue item_data then
+		(
+			if this.hasDictValueSafe item_data #title then
+			(
+				if this.isSubMenuData item_data then
+				(
+					was_saved_item = true
+				)
+				else if this.isMacroItemData item_data then
+				(
+					was_saved_item = true
+				)
+			)
+		)
+
+		was_saved_item -- return
 	),
 
 
@@ -111,7 +157,7 @@ struct MenuRebuilder_v
 	(
 		was_found = false
 
-		if isDictionaryValue dictionary_value then
+		if this.isDictionaryValue dictionary_value then
 		(
 			dictionary_keys = GetDictKeys dictionary_value
 
@@ -122,7 +168,7 @@ struct MenuRebuilder_v
 			else
 			(
 				first_item_data = dictionary_value[dictionary_keys[1]]
-				was_found = isSavedItemData first_item_data
+				was_found = this.isSavedItemData first_item_data
 			)
 		)
 
@@ -166,25 +212,25 @@ struct MenuRebuilder_v
 	(
 		saved_items = Dictionary #string
 
-		if isDictionaryValue source_items then
+		if this.isDictionaryValue source_items then
 		(
 			source_key_array = GetDictKeys source_items
 
 			for source_title in source_key_array do
 			(
 				source_value = source_items[source_title]
-				saved_guid = createGuidString()
+				saved_guid = this.createGuidString()
 
-				if isDictionaryValue source_value then
+				if this.isDictionaryValue source_value then
 				(
-					submenu_items = convertSourceItemsToSavedItems source_value
-					saved_items[saved_guid] = createSavedSubMenuData source_title submenu_items
+					submenu_items = this.convertSourceItemsToSavedItems source_value
+					saved_items[saved_guid] = this.createSavedSubMenuData source_title submenu_items
 				)
 				else if classOf source_value == Array then
 				(
 					if source_value.count >= 2 then
 					(
-						saved_items[saved_guid] = createSavedMacroItemData source_title source_value[1] source_value[2]
+						saved_items[saved_guid] = this.createSavedMacroItemData source_title source_value[1] source_value[2]
 					)
 				)
 			)
@@ -201,15 +247,15 @@ struct MenuRebuilder_v
 	(
 		normalized_items = Dictionary #string
 
-		if isDictionaryValue items_value then
+		if this.isDictionaryValue items_value then
 		(
-			if isSavedItemsDictionary items_value then
+			if this.isSavedItemsDictionary items_value then
 			(
 				normalized_items = items_value
 			)
 			else
 			(
-				normalized_items = convertSourceItemsToSavedItems items_value
+				normalized_items = this.convertSourceItemsToSavedItems items_value
 			)
 		)
 
@@ -233,29 +279,28 @@ struct MenuRebuilder_v
 	*/
 	function buildMenuData =
 	(
-		menu_data = Dictionary #name
-
-		if menu_id == "" then
+		if this.menu_id == "" then
 		(
-			menu_id = createGuidString()
+			this.menu_id = this.createGuidString()
 		)
 
-		if quad_menu_id == "" then
+		if this.quad_menu_id == "" then
 		(
-			quad_menu_id = createGuidString()
+			this.quad_menu_id = this.createGuidString()
 		)
 
-		menu_data[#version] = version
-		menu_data[#id] = menu_id
-		menu_data[#title] = menu_title
-		menu_data[#type] = menu_type
-		menu_data[#items] = menu_items
-		menu_data[#quad_context_id] = quad_context_id
-		menu_data[#quad_modifier] = quad_modifier
-		menu_data[#quad_position] = quad_position
-		menu_data[#quad_menu_id] = quad_menu_id
+		this.menu_data = Dictionary #name
+		this.menu_data[#version] = this.version
+		this.menu_data[#id] = this.menu_id
+		this.menu_data[#title] = this.menu_title
+		this.menu_data[#type] = this.menu_type
+		this.menu_data[#items] = this.menu_items
+		this.menu_data[#quad_context_id] = this.quad_context_id
+		this.menu_data[#quad_modifier] = this.quad_modifier
+		this.menu_data[#quad_position] = this.quad_position
+		this.menu_data[#quad_menu_id] = this.quad_menu_id
 
-		menu_data -- return
+		this.menu_data -- return
 	),
 
 
@@ -264,73 +309,80 @@ struct MenuRebuilder_v
 	*/
 	function readMenuData =
 	(
-		if isDictionaryValue menu_data and getDictionaryKeyCount menu_data > 0 then
+		menu_data_key_count = 0
+
+		if this.isDictionaryValue this.menu_data then
 		(
-			if hasDictValueSafe menu_data #version then
+			menu_data_key_count = this.getDictionaryKeyCount this.menu_data
+		)
+
+		if menu_data_key_count > 0 then
+		(
+			if this.hasDictValueSafe this.menu_data #version then
 			(
-				version = menu_data[#version]
+				this.version = this.menu_data[#version]
 			)
 
-			if hasDictValueSafe menu_data #id then
+			if this.hasDictValueSafe this.menu_data #id then
 			(
-				menu_id = menu_data[#id]
+				this.menu_id = this.menu_data[#id]
 			)
 
-			if hasDictValueSafe menu_data #title then
+			if this.hasDictValueSafe this.menu_data #title then
 			(
-				menu_title = menu_data[#title]
+				this.menu_title = this.menu_data[#title]
 			)
 
-			if hasDictValueSafe menu_data #type then
+			if this.hasDictValueSafe this.menu_data #type then
 			(
-				menu_type = menu_data[#type]
+				this.menu_type = this.menu_data[#type]
 			)
 
-			if hasDictValueSafe menu_data #items then
+			if this.hasDictValueSafe this.menu_data #items then
 			(
-				menu_items = normalizeMenuItems menu_data[#items]
+				this.menu_items = this.normalizeMenuItems this.menu_data[#items]
 			)
 			else
 			(
-				menu_items = normalizeMenuItems menu_data
+				this.menu_items = this.normalizeMenuItems this.menu_data
 			)
 
-			if hasDictValueSafe menu_data #quad_context_id then
+			if this.hasDictValueSafe this.menu_data #quad_context_id then
 			(
-				quad_context_id = menu_data[#quad_context_id]
+				this.quad_context_id = this.menu_data[#quad_context_id]
 			)
 
-			if hasDictValueSafe menu_data #quad_modifier then
+			if this.hasDictValueSafe this.menu_data #quad_modifier then
 			(
-				quad_modifier = menu_data[#quad_modifier]
+				this.quad_modifier = this.menu_data[#quad_modifier]
 			)
 
-			if hasDictValueSafe menu_data #quad_position then
+			if this.hasDictValueSafe this.menu_data #quad_position then
 			(
-				quad_position = menu_data[#quad_position]
+				this.quad_position = this.menu_data[#quad_position]
 			)
 
-			if hasDictValueSafe menu_data #quad_menu_id then
+			if this.hasDictValueSafe this.menu_data #quad_menu_id then
 			(
-				quad_menu_id = menu_data[#quad_menu_id]
+				this.quad_menu_id = this.menu_data[#quad_menu_id]
 			)
 		)
 		else
 		(
-			menu_items = normalizeMenuItems menu_items
+			this.menu_items = this.normalizeMenuItems this.menu_items
 		)
 
-		if menu_id == "" then
+		if this.menu_id == "" then
 		(
-			menu_id = createGuidString()
+			this.menu_id = this.createGuidString()
 		)
 
-		if quad_menu_id == "" then
+		if this.quad_menu_id == "" then
 		(
-			quad_menu_id = createGuidString()
+			this.quad_menu_id = this.createGuidString()
 		)
 
-		buildMenuData() -- return
+		this.buildMenuData() -- return
 	),
 
 
@@ -341,11 +393,11 @@ struct MenuRebuilder_v
 	(
 		was_deleted = false
 
-		if menu_id != "" then
+		if this.menu_id != "" then
 		(
 			try
 			(
-				was_deleted = main_menu_bar.DeleteItem menu_id
+				was_deleted = main_menu_bar.DeleteItem this.menu_id
 			)
 			catch
 			(
@@ -362,7 +414,7 @@ struct MenuRebuilder_v
 	*/
 	function rebuildMenuItems parent_menu saved_items =
 	(
-		if not isDictionaryValue saved_items then
+		if not this.isDictionaryValue saved_items then
 		(
 			format "MenuRebuilder_v.rebuildMenuItems skipped. saved_items is not Dictionary: %\n" saved_items
 			false -- return
@@ -375,7 +427,7 @@ struct MenuRebuilder_v
 			(
 				item_data = saved_items[saved_guid]
 
-				if isSubMenuData item_data then
+				if this.isSubMenuData item_data then
 				(
 					submenu_title = item_data[#title]
 					submenu_items = item_data[#items]
@@ -384,16 +436,16 @@ struct MenuRebuilder_v
 
 					if submenu_menu != undefined then
 					(
-						rebuildMenuItems submenu_menu submenu_items
+						this.rebuildMenuItems submenu_menu submenu_items
 					)
 				)
-				else if isMacroItemData item_data then
+				else if this.isMacroItemData item_data then
 				(
 					macro_category = item_data[#category]
 					macro_name = item_data[#macro]
-					persistent_action_id = getMacroActionId macro_category macro_name
+					persistent_action_id = this.getMacroActionId macro_category macro_name
 
-					parent_menu.CreateAction saved_guid macro_action_table_id persistent_action_id
+					parent_menu.CreateAction saved_guid this.macro_action_table_id persistent_action_id
 				)
 				else
 				(
@@ -422,16 +474,16 @@ struct MenuRebuilder_v
 		(
 			main_menu_bar = menu_manager.mainMenuBar
 
-			deleteRootMenu main_menu_bar
+			this.deleteRootMenu main_menu_bar
 
-			root_menu = main_menu_bar.CreateSubMenu menu_id menu_title beforeId:help_menu_id
+			root_menu = main_menu_bar.CreateSubMenu this.menu_id this.menu_title beforeId:this.help_menu_id
 
 			if root_menu != undefined then
 			(
-				rebuildMenuItems root_menu menu_items
+				this.rebuildMenuItems root_menu this.menu_items
 			)
 
-			buildMenuData() -- return
+			this.buildMenuData() -- return
 		)
 	),
 
@@ -447,7 +499,7 @@ struct MenuRebuilder_v
 		(
 			try
 			(
-				quad_context = quad_menu_manager.GetContextById quad_context_id
+				quad_context = quad_menu_manager.GetContextById this.quad_context_id
 			)
 			catch
 			(
@@ -470,11 +522,11 @@ struct MenuRebuilder_v
 		(
 			try
 			(
-				quad_menu = quad_context.CreateQuadMenu menu_id menu_title
+				quad_menu = quad_context.CreateQuadMenu this.menu_id this.menu_title
 
 				if quad_menu != undefined then
 				(
-					quad_context.SetRightClickModifiers quad_menu quad_modifier
+					quad_context.SetRightClickModifiers quad_menu this.quad_modifier
 				)
 			)
 			catch
@@ -498,7 +550,7 @@ struct MenuRebuilder_v
 		(
 			try
 			(
-				quad_position_menu = quad_menu.CreateMenu quad_menu_id menu_title quad_position
+				quad_position_menu = quad_menu.CreateMenu this.quad_menu_id this.menu_title this.quad_position
 			)
 			catch
 			(
@@ -524,20 +576,20 @@ struct MenuRebuilder_v
 		)
 		else
 		(
-			quad_context = getQuadContext quad_menu_manager
-			quad_menu = createQuadRootMenu quad_context
-			quad_position_menu = createQuadPositionMenu quad_menu
+			quad_context = this.getQuadContext quad_menu_manager
+			quad_menu = this.createQuadRootMenu quad_context
+			quad_position_menu = this.createQuadPositionMenu quad_menu
 
 			if quad_position_menu != undefined then
 			(
-				rebuildMenuItems quad_position_menu menu_items
+				this.rebuildMenuItems quad_position_menu this.menu_items
 			)
 			else
 			(
 				format "MenuRebuilder_v.loadQuadMenu failed. Quad position menu is undefined.\n"
 			)
 
-			buildMenuData() -- return
+			this.buildMenuData() -- return
 		)
 	),
 
@@ -547,8 +599,8 @@ struct MenuRebuilder_v
 	*/
 	function registerMenuCallback =
 	(
-		callbacks.removeScripts id:callback_id
-		callbacks.addScript #cuiRegisterMenus "MenuRebuilder.loadMenu()" id:callback_id
+		callbacks.removeScripts id:this.callback_id
+		callbacks.addScript #cuiRegisterMenus "MenuRebuilder.loadMenu()" id:this.callback_id
 
 		ok -- return
 	),
@@ -559,8 +611,8 @@ struct MenuRebuilder_v
 	*/
 	function registerQuadCallback =
 	(
-		callbacks.removeScripts id:quad_callback_id
-		callbacks.addScript #cuiRegisterQuadMenus "MenuRebuilder.loadQuadMenu()" id:quad_callback_id
+		callbacks.removeScripts id:this.quad_callback_id
+		callbacks.addScript #cuiRegisterQuadMenus "MenuRebuilder.loadQuadMenu()" id:this.quad_callback_id
 
 		ok -- return
 	),
@@ -571,18 +623,18 @@ struct MenuRebuilder_v
 	*/
 	function registerCallback =
 	(
-		if menu_type == #menu then
+		if this.menu_type == #menu then
 		(
-			registerMenuCallback()
+			this.registerMenuCallback()
 		)
-		else if menu_type == #quad then
+		else if this.menu_type == #quad then
 		(
-			registerQuadCallback()
+			this.registerQuadCallback()
 		)
-		else if menu_type == #both then
+		else if this.menu_type == #both then
 		(
-			registerMenuCallback()
-			registerQuadCallback()
+			this.registerMenuCallback()
+			this.registerQuadCallback()
 		)
 
 		ok -- return
@@ -594,8 +646,8 @@ struct MenuRebuilder_v
 	*/
 	function unregisterCallback =
 	(
-		callbacks.removeScripts id:callback_id
-		callbacks.removeScripts id:quad_callback_id
+		callbacks.removeScripts id:this.callback_id
+		callbacks.removeScripts id:this.quad_callback_id
 
 		ok -- return
 	),
@@ -603,7 +655,8 @@ struct MenuRebuilder_v
 
 	on create do
 	(
-		readMenuData()
+		this.readMenuData()
 	)
 )
+
 
