@@ -7,10 +7,9 @@ filein( getFilenamePath(getSourceFileName()) + "/ControlParamsParser/ControlPara
   */
 struct MacroScriptFileParser_v
 (
-	__construct = #( #path ),
 
 	/* required */
-	path,
+	_path,
 
 	/* properties */
 	file_content = #(),
@@ -21,8 +20,9 @@ struct MacroScriptFileParser_v
 	RegEx	= dotNetClass "System.Text.RegularExpressions.Regex",
 	RegEx_options	= dotNetClass "System.Text.RegularExpressions.RegexOptions",
 
-	ControlParamsParser 	= ControlParamsParser_v(path),
+	ControlParamsParser 	= ControlParamsParser_v(_path),
 
+	--__construct = #( #_path ),
 
 	/** Parse MacroScripts
 	  *
@@ -32,7 +32,7 @@ struct MacroScriptFileParser_v
 	  *		category:	""
 	  *		buttontext:	""
 	  *		toolTip:	""
-	  *		icon:	"#(path, index)"
+	  *		icon:	"#(_path, index)"
 	  *	(
 	  *		messageBox "MacroScript";
 	  *	)
@@ -149,7 +149,7 @@ struct MacroScriptFileParser_v
 	 */
 	function _setFileContent =
 	(
-		file_opened	= openFile path mode:"r+"
+		file_opened	= openFile _path mode:"r+"
 		counter	= 0
 		--lines	= #()
 
@@ -175,22 +175,22 @@ struct MacroScriptFileParser_v
 		CONSTRUCT
 	--------------------------------------------------------------------------------*/
 
-	/** Check if properties in __construct are defined when an instance of the struct is created.
-	  * @example __construct = #( #property_name )
-	 */
-	function _checkConstctructProperties =
-	(
-		for prop in __construct where getProperty this prop == undefined do
-			messageBox ("Undefined construct property !\n\n"+ ((filterString( classof this as string )"(:")[2]) +"."+ prop )
-	),
+	--/** Check if properties in __construct are defined when an instance of the struct is created.
+	--  * @example __construct = #( #property_name )
+	-- */
+	--function _checkConstctructProperties =
+	--(
+	--	for prop in __construct where getProperty this prop == undefined do
+	--		messageBox ("Undefined construct property !\n\n"+ ((filterString( classof this as string )"(:")[2]) +"."+ prop )
+	--),
 
 	on create do
 	(
 		--format "\n"; print "MacroScriptFileParser_v.onCreate()"
-		--format "PATH: %\n" path
-		this._checkConstctructProperties()
+		--format "PATH: %\n" _path
+		--this._checkConstctructProperties()
 
-		--ControlParamsParser.ImagesArrayParser.path = path
+		--ControlParamsParser.ImagesArrayParser._path = _path
 
 		this._setFileContent()
 		--format "file_content = % \n" file_content

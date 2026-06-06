@@ -5,7 +5,7 @@ filein( getFilenamePath(getSourceFileName()) + "/../../../Lib/ContentLoader/Cont
 filein( getFilenamePath(getSourceFileName()) + "/../../../Lib/Menus/QuadMenuManager/QuadMenuManager.ms" )	--"./../../../Lib/Menus/QuadMenuManager/QuadMenuManager.ms"
 
 --DEBUG = false
-DEBUG = true
+DEBUG = false
 
 
 /* LOAD CONTENT FROM FOLDERS */

@@ -1270,7 +1270,7 @@ struct MenuJsonIO_v
 	*/
 	function skipJsonWhitespace =
 	(
-		while this.json_position <= this.json_length and findString " \t\r\n" (this.getCurrentChar()) != undefined do
+		while this.json_position <= this.json_length and findString " \t\r\n" this.getCurrentChar() != undefined do
 		(
 			this.json_position += 1
 		)
@@ -1290,7 +1290,7 @@ struct MenuJsonIO_v
 		(
 			this.json_position += 1
 
-			while this.json_position <= this.json_length and (this.getCurrentChar()) != "\"" do
+			while this.json_position <= this.json_length and this.getCurrentChar() != "\"" do
 			(
 				current_char = this.getCurrentChar()
 
@@ -1353,7 +1353,7 @@ struct MenuJsonIO_v
 	(
 		number_text = ""
 
-		while this.json_position <= this.json_length and findString "-+0123456789.eE" (this.getCurrentChar()) != undefined do
+		while this.json_position <= this.json_length and findString "-+0123456789.eE" this.getCurrentChar() != undefined do
 		(
 			number_text += this.getCurrentChar()
 			this.json_position += 1
@@ -2813,7 +2813,7 @@ rollout MenuBuildManagerJsonRollout "Menu JSON Manager" width:470 height:390
 		)
 
 		json_manager -- return
-	)
+	),
 
 
 	/*  Refreshes multilistboxes from JSON file.
@@ -2821,7 +2821,7 @@ rollout MenuBuildManagerJsonRollout "Menu JSON Manager" width:470 height:390
 	*/
 	function refreshLists =
 	(
-		manager_value = getManager()
+		manager_value = this.getManager()
 		json_path_text.text = manager_value.data_file_path
 
 		menu_title_array = #()
@@ -2860,7 +2860,7 @@ rollout MenuBuildManagerJsonRollout "Menu JSON Manager" width:470 height:390
 		quad_multilist.selection = #{}
 
 		ok -- return
-	)
+	),
 
 
 	/*  Gets selected menu signatures from both multilistboxes.
@@ -2887,7 +2887,7 @@ rollout MenuBuildManagerJsonRollout "Menu JSON Manager" width:470 height:390
 		)
 
 		selected_signatures -- return
-	)
+	),
 
 
 	/*  Deletes selected JSON entries.
@@ -2909,7 +2909,7 @@ rollout MenuBuildManagerJsonRollout "Menu JSON Manager" width:470 height:390
 		)
 
 		ok -- return
-	)
+	),
 
 
 	/*  Deletes all JSON entries.
@@ -2925,32 +2925,32 @@ rollout MenuBuildManagerJsonRollout "Menu JSON Manager" width:470 height:390
 		)
 
 		ok -- return
-	)
+	),
 
 
 	on MenuBuildManagerJsonRollout open do
 	(
-		refreshLists()
+		this.refreshLists()
 	)
 
 	on refresh_button pressed do
 	(
-		refreshLists()
+		this.refreshLists()
 	)
 
 	on delete_selected_button pressed do
 	(
-		deleteSelectedFromJson()
+		this.deleteSelectedFromJson()
 	)
 
 	on delete_all_button pressed do
 	(
-		deleteAllFromJson()
+		this.deleteAllFromJson()
 	)
 
 	on clear_json_button pressed do
 	(
-		deleteAllFromJson()
+		this.deleteAllFromJson()
 	)
 )
 
@@ -3400,12 +3400,4 @@ function testMenuBuildManagerMultipleTools =
     menu_manager = MenuBuildManager_v()
     menu_manager.clearJsonFile()
 
-
 */
-    saved_menus_data = testMenuBuildManagerGenerated()
-    openMenuBuildManagerJsonRollout()
-
-    menu_manager = MenuBuildManager_v()
-    menu_manager.clearJsonFile()
-
-

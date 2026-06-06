@@ -1,13 +1,25 @@
+	global createDialogFromCacheFile = undefined
+global createDialogFromCacheFile = undefined
+global createDialogFromCacheFile = undefined
+global createDialogFromCacheFile = undefined
+global createDialogFromCacheFile = undefined
+global createDialogFromCacheFile = undefined
+global createDialogFromCacheFile = undefined
+global createDialogFromCacheFile = undefined
+global createDialogFromCacheFile = undefined
 global createDialogFromCacheFile = undefined
 
 if DIALOG_GLOBAL_DATA == undefined then
 	global DIALOG_GLOBAL_DATA = Dictionary()
+	
+
+--filein( getFilenamePath(getSourceFileName()) + "/../../../MAXSCRIPT-MenuBuilder/MenuBuildManager/MenuBuildManager.ms" )	--"./../../../MAXSCRIPT-MenuBuilder/MenuBuildManager/MenuBuildManager.ms"
+filein @"C:\Users\vilbur\AppData\Local\Autodesk\3dsMax\2026 - 64bit\ENU\scripts\MAXSCRIPT-MenuBuilder\MenuBuildManager\MenuBuildManager.ms"
 
 filein( getFilenamePath(getSourceFileName()) + "/../JsonToDictionoray/JsonToDictionoray.ms" )	--"./../JsonToDictionoray/JsonToDictionoray.ms"
 
 --filein( getFilenamePath(getSourceFileName()) + "/../Menus/RcMenu/RcMenu.ms" )	--"./../Menus/RcMenu/RcMenu.ms"
 filein( getFilenamePath(getSourceFileName()) + "/../ParseStringToDatatype/ParseStringToDatatype.ms" )	--"./../ParseStringToDatatype/ParseStringToDatatype.ms"
-filein( getFilenamePath(getSourceFileName()) + "/../Menus/include-menus.ms" )	--"./../Menus/include-menus.ms"
 
 filein( getFilenamePath(getSourceFileName()) + "/../ConstructPropeties/ConstructPropeties.ms" )	-- "./../ConstructPropeties/ConstructPropeties.ms"
 filein( getFilenamePath(getSourceFileName()) + "/../Event/Event.ms" )	--"./../Event/Event.ms"
@@ -20,10 +32,10 @@ filein( getFilenamePath(getSourceFileName()) + "/../Ini/UiStatePreset/SuffixMana
 filein( getFilenamePath(getSourceFileName()) + "/Layout/Layout.ms" )	-- "./Layout/Layout.ms"
 filein( getFilenamePath(getSourceFileName()) + "/Hotkeys/Hotkeys.ms" )	-- "./Hotkeys/Hotkeys.ms"
 
-
 /*------------------------------------------------------------------------------
 	DEFINE GLOBALS
 --------------------------------------------------------------------------------*/
+
 global DIALOG_PREVIOUS_STATE = undefined -- this should be in struct
 
 global AUTORUN_EVENTS = Dictionary #STRING
@@ -1055,7 +1067,7 @@ struct Dialog_v
 			if cache_file != undefined do
 				close cache_file
 			
-			--format "ERROR TO WRITE CACHE FILE: %\n" cache_file_path
+			format "ERROR TO WRITE CACHE FILE: %\n" cache_file_path
 		)
 	),
 

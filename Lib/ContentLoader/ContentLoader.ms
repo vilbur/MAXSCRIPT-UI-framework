@@ -6,6 +6,8 @@ filein( getFilenamePath(getSourceFileName()) + "/../Dialog/Dialog.ms" )	-- "./..
 
 filein( getFilenamePath(getSourceFileName()) + "/ContentSubrollouts/ContentRollout/ContentRollout.ms" )	-- "./ContentSubrollouts/ContentRollout/ContentRollout.ms"
 
+
+
 /** Load content to UI by file tree
   *
   * @property	string	dir	Directory where rollout directories are placed, rollouts are used if ends with "*"
@@ -91,7 +93,13 @@ struct ContentLoader_v
 			cache:false 	\
 			parent:parent
 		
-		
+		try(
+			QUAD_MENU_MANAGER_GLOBAL.createMenus()
+			--QUAD_MENU_MANAGER_GLOBAL.testShit()
+		)catch(
+			
+			format "\n"; print "ContentLoader_v.create() FAILED CALL: QUAD_MENU_MANAGER_GLOBAL.setupMenus() "
+		)
 			
 		Dialog --return
 	),
@@ -110,11 +118,7 @@ struct ContentLoader_v
 			for _Rollout in Subrollouts.Rollouts do
 			(
 				format "_Rollout.Events: %\n" _Rollout.Events
-				
-				
 			)
-		
-		
 		
 	),
 
@@ -128,7 +132,7 @@ struct ContentLoader_v
 
 		ConstructPropeties test:this
 
-		ContentRollout =  ContentRollout_v path:path title:title
+		ContentRollout =  ContentRollout_v _path:path title:title
 
 		Dialog	= Dialog_v title:ContentRollout.title ini:ini width:width height:height min_size:min_size max_size:max_size DEBUG:DEBUG
 		

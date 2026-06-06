@@ -4,12 +4,12 @@
 struct ContentSubrollouts_v
 (
 	/* required properties */
-	path,
+	_path,
 
 	/*  properties */
 	slot,
 	Rollouts	= #(),
-	ini_file, -- path to ini file in Subrollouts folder
+	ini_file, -- _path to ini file in Subrollouts folder
 
 	/* dependency */
 	RolloutParrent,
@@ -18,7 +18,7 @@ struct ContentSubrollouts_v
 	 */
 	function addToUi _Rollout =
 	(
-		--print ("ContentSubrollouts_v.addToUi() " + (filenameFromPath path) )
+		--print ("ContentSubrollouts_v.addToUi() " + (filenameFromPath _path) )
 		--format "ini_file	= % \n" ini_file
 		local Subrollouts = _Rollout.subrollouts slot:slot ini_file:ini_file
 
@@ -35,7 +35,7 @@ struct ContentSubrollouts_v
 	function _setSlot =
 	(
 		--format "\n"; print ("ContentSubrollouts_v._setSlot()")
-		slot = filenameFromPath path
+		slot = filenameFromPath _path
 
 		slot = trimLeft slot  "rollouts-" -- remove prefix of folder name 
 
@@ -48,8 +48,8 @@ struct ContentSubrollouts_v
 	(
 		--format "\n"; print ("ContentSubrollouts_v._createRollouts()")
 		--format "ini_file	= % \n" ini_file
-		for path in paths do
-			append Rollouts ( RolloutParrent.createNewRollout (path)(ini_file) )
+		for _path in paths do
+			append Rollouts ( RolloutParrent.createNewRollout (_path)(ini_file) )
 	),
 
 	/** Set props for Subrollouts slot from ini file
@@ -80,9 +80,9 @@ struct ContentSubrollouts_v
 
 	on create do
 	(
-		--print ("ContentSubrollouts_v.onCreate	" + path )
+		--print ("ContentSubrollouts_v.onCreate	" + _path )
 
-		PathsLoader = PathsLoader_v path:path
+		PathsLoader = PathsLoader_v _path:_path
 
 		PathsLoader.fileInMaxscriptFiles()
 

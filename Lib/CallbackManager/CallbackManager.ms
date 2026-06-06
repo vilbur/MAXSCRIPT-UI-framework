@@ -3,6 +3,8 @@ filein( getFilenamePath(getSourceFileName()) + "/Callback/Callback.ms" )	--"./Ca
 
 --filein( getFilenamePath(getSourceFileName()) + "/Callbacks-Special/postNodesClonedEnd/postNodesClonedEnd.ms" )	--"./Callbacks-Default/postNodesClonedEnd/postNodesClonedEnd.ms"
 
+global CALLBACKMANAGER 
+
 /*------------------------------------------------------------------------------
 	
 	
@@ -358,4 +360,4 @@ struct CallbackManager_v
 
 
 --if CALLBACKMANAGER == undefined then -- IMPORTANT: DISABLE "if" for develop | ENABLE "if" for production
-	global CALLBACKMANAGER = CallbackManager_v()
+CALLBACKMANAGER = CallbackManager_v()

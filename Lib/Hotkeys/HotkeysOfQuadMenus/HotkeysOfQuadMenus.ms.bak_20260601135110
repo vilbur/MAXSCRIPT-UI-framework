@@ -1,0 +1,126 @@
+filein( getFilenamePath(getSourceFileName()) + "/../../Compatibility/CuiMenuCompat.ms" )	--"./../../Compatibility/CuiMenuCompat.ms"
+
+
+/* List viewport quad menus assigned to RMB modifier keys.
+   Migrated from menuMan to ICuiQuadMenuContext. */
+struct HotkeysOfQuadMenus_v
+(
+	debug = false,
+	mod_keys = #( #nonePressed, #controlPressed, #shiftPressed, #altPressed, #shiftAndAltPressed, #shiftAndControlPressed, #controlAndAltPressed, #shiftAndAltAndControlPressed ),
+	hotkeys_and_quad_data = Dictionary #STRING,
+	kbd_path = (getDir #TEMP) + "3DsMax-hotkeys.hsx",
+
+	/* Get all viewport quad menu titles.
+	   Uses ICuiQuadMenuContext.GetQuadMenus. */
+	function getQuadMenuNames =
+	(
+		context = CuiMenuCompat.getViewportQuadContext()
+		quad_menus = context.GetQuadMenus()
+		for i = 1 to quad_menus.count collect quad_menus[i].GetTitle()
+		-- return
+	),
+
+	/* Main execution.
+	   Returns Dictionary where key is hotkey and value is quad data. */
+	function getHotkeysOfQuadMenus =
+	(
+		hotkeys_and_quad_data = Dictionary #STRING
+		this.getMenusOfModKeysAndRMB()
+
+		if debug then this.printMenuHotkeys()
+
+		hotkeys_and_quad_data
+		-- return
+	),
+
+	/* Get quad menu data.
+	   Builds names of four quad areas. */
+	function getQuadMenuData quad_menu_name =
+	(
+		quad_menu = CuiMenuCompat.findViewportQuadMenu (trimLeft quad_menu_name)
+		quad_data = Dictionary #( #QUADS, "" )
+
+		quad_data[#MENU_NAME] = quad_menu_name
+		quad_data[#QUAD_NAMES] = ""
+
+		if quad_menu != undefined then
+		(
+			for quad_pos in #( #BottomRight, #TopRight, #TopLeft, #BottomLeft ) do
+			(
+				menu = quad_menu.GetMenuByPos quad_pos
+				if menu != undefined then quad_data[#QUAD_NAMES] += (trimLeft (trimRight (menu.GetTitle()))) + " | "
+			)
+		)
+
+		quad_data[#QUAD_NAMES] = trimRight quad_data[#QUAD_NAMES] " | "
+		quad_data
+		-- return
+	),
+
+	/* Get menus assigned to RMB modifier keys.
+	   Replaces menuMan.getViewportRightClickMenu. */
+	function getMenusOfModKeysAndRMB =
+	(
+		function camelCaseToString str =
+		(
+			hotkey = ""
+			keys_order = #( "Control", "Shift", "Alt" )
+			str[1] = toUpper str[1]
+			rx = dotNetClass "System.Text.RegularExpressions.Regex"
+			str = rx.Replace str "Pressed" ""
+			str = rx.Replace str "And" " "
+			str_split = filterString str " "
+
+			for key in keys_order where (findItem str_split key) > 0 do
+			(
+				hotkey += key + " + "
+			)
+
+			hotkey + "RMB"
+			-- return
+		)
+
+		context = CuiMenuCompat.getViewportQuadContext()
+		prefix = " "
+
+		for mod_key in mod_keys do
+		(
+			quad_menu = context.GetRightClickMenuByModifiers mod_key
+			if quad_menu != undefined then
+			(
+				quad_menu_name = quad_menu.GetTitle()
+				mod_key_shortcut = camelCaseToString (mod_key as string)
+				hotkeys_and_quad_data[prefix + mod_key_shortcut] = this.getQuadMenuData quad_menu_name
+			)
+		)
+		-- return
+	),
+
+	/* Keyboard shortcut parsing is intentionally disabled.
+	   New 2025+ HSX stores overrides differently than old KBDX. */
+	function getQuadsWithKeyboardShortcut =
+	(
+		format "HotkeysOfQuadMenus_v.getQuadsWithKeyboardShortcut(): HSX parsing not implemented. RMB quad assignments are supported.\n"
+		false
+		-- return
+	),
+
+	/* Print assigned quad menus.
+	   Debug helper. */
+	function printMenuHotkeys =
+	(
+		prefix = "--------------------------------------------------------------------------------------------------------------"
+		for hotkey in sort hotkeys_and_quad_data.keys do
+		(
+			quad_data = hotkeys_and_quad_data[hotkey]
+			format "\n%\n\nMENU:   %\nHOTKEY: %\nQUADS:  % \n" prefix quad_data[#MENU_NAME] (trimLeft hotkey) quad_data[#QUAD_NAMES]
+		)
+		-- return
+	),
+
+	/* Initialize.
+	   No automatic run. */
+	on create do
+	(
+	)
+)

@@ -1,5 +1,4 @@
-filein( getFilenamePath(getSourceFileName()) + "/../../XmlParser/XmlParser.ms" )	--"./../../XmlParser/XmlParser.ms"
-
+filein( getFilenamePath(getSourceFileName()) + "/../../../XmlParser/XmlParser.ms" )	--"./../../../XmlParser/XmlParser.ms"
 /** Convert menu to rc menu
   
 	PROBLEM: menuMan is not able to get action of menu item

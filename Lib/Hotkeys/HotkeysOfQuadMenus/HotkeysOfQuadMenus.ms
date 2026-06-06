@@ -1,3 +1,13 @@
+filein( getFilenamePath(getSourceFileName()) + "/../../XmlParser/XmlParser.ms" )	--"./../../XmlParser/XmlParser.ms"
+/*
+	HOTFIX IMPORT
+	
+	HotkeysOfQuadMenus_v WILL BE MOVED TO MAXSCRIPT-MenuBuilder
+	
+*/ 
+
+--filein( getFilenamePath(getSourceFileName()) + "/../../Menus/XmlParser/XmlParser.ms" )	--"./../../Menus/XmlParser/XmlParser.ms"
+
 struct HotkeysOfQuadMenus_v
 (
 	-- ==========================================

@@ -29,7 +29,18 @@
 
 	TITLE DEFINITION OF MENU ITEM
 
---------------------------------------------------------------------------------*
+--------------------------------------------------------------------------------*/
+--
+--macroscript	_test_menu_title_by_buttontext
+--category:	"_Test Menu"
+--buttontext:	"THIS IS MENU ITEM TITLE"
+--icon:	"across:1|width:256|height:32"
+--(
+--	on execute do messageBox "Voila"
+--
+--)
+
+
 
 /* ADDED TO MENU AUTOMATICALY BY CATERGORY PRAMATER
 *
@@ -55,83 +66,83 @@ icon:	"MENU:ITEM TITLE"
 
 )
 
-/* ITEM TITLE IS TOOLTIP
-*/
-macroscript	_test_menu_title_by_tooltip
-category:	"_Test Menu"
-buttontext:	"Menu title is tooltip"
-toolTip:	"TOOLTIP IS TITLE"
-icon:	"MENU:tooltip"
-(
-	on execute do messageBox "Voila"
-
-)
-
-/* ITEM TITLE IS TOOLTIP
-*/
-macroscript	_test_menu_control
-category:	"_Control Menu"
-buttontext:	"CTRL + RMB QuadMenu"
-icon:	"MENU:true"
-(
-	on execute do messageBox "Voila"
-
-)
-
-
+--/* ITEM TITLE IS TOOLTIP
+--*/
+--macroscript	_test_menu_title_by_tooltip
+--category:	"_Test Menu"
+--buttontext:	"Menu title is tooltip"
+--toolTip:	"TOOLTIP IS TITLE"
+--icon:	"MENU:tooltip"
+--(
+--	on execute do messageBox "Voila"
+--
+--)
+--
+--/* ITEM TITLE IS TOOLTIP
+--*/
+--macroscript	_test_menu_control
+--category:	"_Control Menu"
+--buttontext:	"CTRL + RMB QuadMenu"
+--icon:	"MENU:true"
+--(
+--	on execute do messageBox "Voila"
+--
+--)
+--
+--
 
 /*------------------------------------------------------------------------------
 
 	MANAGE QUADS BUTTONS
+--
+----------------------------------------------------------------------------------*
+--/* PARSE .mcr files
+--*/ 
+--macroscript	_test_menu_quads_macros_to_menu
+--category:	"_Test Menu"
+--buttontext:	"PARSE MACROS TO MENUS"
+--icon:	"across:1|width:468|height:48|offset:[0,32]"
+--(
+--	on execute do
+--		(QuadMenuManager_v()).createMenusFromMacroscriptFiles(getFilenamePath(getSourceFileName())) blacklist:#("*blacklist*")
+--)
+--
+--/* SETUP MENUS
+--*/
+--macroscript	_test_menu_quads_install
+--category:	"_Test Menu"
+--buttontext:	"SETUP QUADS - ASSIGN HOTKEYS #Rightclick and Ctrl + #Rightclick"
+--(
+--	on execute do
+--	(
+--		(QuadMenuManager_v()).setupMenus(getFilenamePath(getSourceFileName()) + "/../menus-setup")
+--		
+--		print "RightClick QUad Menu should be customized"
+--	)
+--)
+--
+--/* RESET MENUS
+--*/
+--macroscript	_test_menu_quads_reset
+--category:	"_Test Menu"
+--buttontext:	"RESET MENUS"
+--(
+--	on execute do
+--		if queryBox "REST ALL MENUS AND QUADMENUS ?" title:"RESET MENUS" then
+--			(QuadMenuManager_v()).resetMenusAndHotkeys()
+--)
 
+
+
+--
+--
+--
+--/*------------------------------------------------------------------------------
+--
+--	ADD TO QUAD MENU SEEM TO BE USELESS, IT IS DISABLED
+--
 --------------------------------------------------------------------------------*
-/* PARSE .mcr files
-*/ 
-macroscript	_test_menu_quads_macros_to_menu
-category:	"_Test Menu"
-buttontext:	"PARSE MACROS TO MENUS"
-icon:	"across:1|width:468|height:48|offset:[0,32]"
-(
-	on execute do
-		(QuadMenuManager_v()).createMenusFromMacroscriptFiles(getFilenamePath(getSourceFileName())) blacklist:#("*blacklist*")
-)
-
-/* SETUP MENUS
-*/
-macroscript	_test_menu_quads_install
-category:	"_Test Menu"
-buttontext:	"SETUP QUADS - ASSIGN HOTKEYS #Rightclick and Ctrl + #Rightclick"
-(
-	on execute do
-	(
-		(QuadMenuManager_v()).setupMenus(getFilenamePath(getSourceFileName()) + "/../menus-setup")
-		
-		print "RightClick QUad Menu should be customized"
-	)
-)
-
-/* RESET MENUS
-*/
-macroscript	_test_menu_quads_reset
-category:	"_Test Menu"
-buttontext:	"RESET MENUS"
-(
-	on execute do
-		if queryBox "REST ALL MENUS AND QUADMENUS ?" title:"RESET MENUS" then
-			(QuadMenuManager_v()).resetMenusAndHotkeys()
-)
-
-
-
-
-
-
-/*------------------------------------------------------------------------------
-
-	ADD TO QUAD MENU SEEM TO BE USELESS, IT IS DISABLED
-
---------------------------------------------------------------------------------*
-
+--
 --/** ADD MACROSCRIPT TO QUAD MENU
 -- */
 --macroscript	_test_menu_item
@@ -156,5 +167,5 @@ buttontext:	"RESET MENUS"
 --	on execute do messageBox "Voila"
 --
 --)
-
-
+--
+--

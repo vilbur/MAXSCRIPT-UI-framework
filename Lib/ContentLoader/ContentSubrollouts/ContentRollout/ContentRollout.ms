@@ -10,17 +10,17 @@ filein( getFilenamePath(getSourceFileName()) + "/../ContentSubrollouts.ms" )	-- 
  */
 struct ContentRollout_v
 (
-	__construct = #( #path ),
+	__construct = #( #_path ),
 
 	/* construct */
-	path,
+	_path,
 
 	/*  properties */
 	title,
 
 	Subrollouts_and_Controls = #(), -- store groupboxes and rollouts
 
-	ini_file, -- path to ini file in Rollout folder
+	ini_file, -- _path to ini file in Rollout folder
 
 	PathsLoader,
 
@@ -48,9 +48,9 @@ struct ContentRollout_v
 
 	/** Get new instance of This
 	 */
-	function createNewRollout path ini_file =
+	function createNewRollout _path ini_file =
 	(
-		ContentRollout_v path:path ini_file:ini_file --return
+		ContentRollout_v _path:_path ini_file:ini_file --return
 	),
 
 	private
@@ -63,36 +63,36 @@ struct ContentRollout_v
 	function _initLoadContentFromDir =
 	(
 		--format "\n"; print "ContentRollout_v._initLoadContentFromDir()"
-		for path in (PathsLoader.getSubrolloutsAndControlsPaths()) do
-			append Subrollouts_and_Controls	(this._addSubrolloutOrControlBox path)
+		for _path in (PathsLoader.getSubrolloutsAndControlsPaths()) do
+			append Subrollouts_and_Controls	(this._addSubrolloutOrControlBox _path)
 	),
 
 	/** _add subrollout or control box
 	 */
-	function _addSubrolloutOrControlBox path =
+	function _addSubrolloutOrControlBox _path =
 	(
-		if (this._isDir path) then
-			this._createSubrolloutsSlots path
+		if (this._isDir _path) then
+			this._createSubrolloutsSlots _path
 		else
-			this._getFileContent path
+			this._getFileContent _path
 	),
 
-	/** _if path is dir
+	/** _if _path is dir
 	 */
-	function _createSubrolloutsSlots path =
+	function _createSubrolloutsSlots _path =
 	(
 		--format "\n"; print "ContentRollout_v._createSubrolloutsSlots()"
 		--format "ini_file	= % \n" ini_file
-		ContentSubrollouts_v path:path RolloutParrent:this ini_file:ini_file    -- return
+		ContentSubrollouts_v _path:_path RolloutParrent:this ini_file:ini_file    -- return
 	),
 
-	/** If path is file
+	/** If _path is file
 	 */
-	function _getFileContent path =
+	function _getFileContent _path =
 	(
-		--filein path
+		--filein _path
 
-		ScriptFile_Content_v path:path	-- return
+		ScriptFile_Content_v _path:_path	-- return
 	),
 
 
@@ -125,9 +125,9 @@ struct ContentRollout_v
 
 	/** _is dir
 	 */
-	function _isDir path =
+	function _isDir _path =
 	(
-		getFilenameType path == "" --return
+		getFilenameType _path == "" --return
 	),
 
 	/**
@@ -143,7 +143,7 @@ struct ContentRollout_v
 		--format "\n"; print "ContentRollout_v._setRolloutTitle()"
 		if title == undefined then
 		(
-			title = filenameFromPath path
+			title = filenameFromPath _path
 	
 			title = trimRight title "\\" --remove backslash from directory name
 	
@@ -158,14 +158,14 @@ struct ContentRollout_v
 	on create do
 	(
 		--format "\n"; print "ContentRollout_v.onCreate()"
-		--format "this.path	= % \n" this.path
+		--format "this._path	= % \n" this._path
 		--format "ini_file	= % \n" ini_file
 		ConstructPropeties test:this
 
 		this._setRolloutTitle()
 
 		
-		PathsLoader = PathsLoader_v path:path
+		PathsLoader = PathsLoader_v _path:_path
 
 		PathsLoader.fileInMaxscriptFiles()
 

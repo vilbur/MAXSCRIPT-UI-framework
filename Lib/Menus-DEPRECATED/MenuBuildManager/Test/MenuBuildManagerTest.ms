@@ -19,7 +19,7 @@ filein( getFilenamePath(getSourceFileName()) + "/../MenuBuildManager.ms" )	--"./
 
 --filein @"D:\Downloads\_AI\GPT\MenuRebuilder_update.ms"
 
-
+filein( getFilenamePath(getSourceFileName()) + "/../../include-menus.ms" )	--"./../../include-menus.ms"
 
 
 /*  ====================================================================================================

@@ -1,6 +1,6 @@
 clearListener(); print("Cleared in: "+getSourceFileName())
 
-filein( getFilenamePath(getSourceFileName()) + "/../getHotkeysOfQuadMenus.ms" )	--"./../getHotkeysOfQuadMenus.ms"
+--filein( getFilenamePath(getSourceFileName()) + "/../getHotkeysOfQuadMenus.ms" )	--"./../getHotkeysOfQuadMenus.ms"
 
 filein( getFilenamePath(getSourceFileName()) + "/../../../MarkdownGenerator/MarkdownGenerator.ms" )	--"./../../../MarkdownGenerator/MarkdownGenerator.ms"
 

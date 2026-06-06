@@ -4,8 +4,10 @@ filein( getFilenamePath(getSourceFileName()) + "/MacroScript/MacroScript.ms" ) -
 
 filein( getFilenamePath(getSourceFileName()) + "/MacroScriptFileParser/MacroScriptFileParser.ms" )	--"./MacroScriptFileParser/MacroScriptFileParser.ms"
 
-if QuadMenu_v == undefined then 
-	filein( getFilenamePath(getSourceFileName()) + "/../../../../Menus/include-menus.ms" )	--"./../../../../Menus/include-menus.ms"
+--if QuadMenu_v == undefined then 
+	--filein( getFilenamePath(getSourceFileName()) + "/../../../../Menus/include-menus.ms" )	--"./../../../../Menus/include-menus.ms"
+
+filein( getFilenamePath(getSourceFileName()) + "/../../../../../../MAXSCRIPT-MenuBuilder/MenuBuildManager/MenuBuildManager.ms" )	--"./../../../../../../MAXSCRIPT-MenuBuilder/MenuBuildManager/MenuBuildManager.ms"
 
 /*
 		TODO:
@@ -33,7 +35,7 @@ struct ScriptFile_Content_v
 (
 	
 	/* public properties */
-	path, -- path to *.mcr file
+	_path, -- _path to *.mcr file
 	
 	/*------------------------------------------------------------------------------
 		INHERIT PARAMETERS
@@ -61,14 +63,14 @@ struct ScriptFile_Content_v
 	 */
 	function loadAndParseMacroscriptFile =
 	(
-		--print ("------------\n\nScriptFile.loadAndParseMacroscriptFile file:\n"+ (path) )
+		--print ("------------\n\nScriptFile.loadAndParseMacroscriptFile file:\n"+ (_path) )
 		if ( this.isMacrosriptFile() ) then
 		(
-			filein path
-
-			MacroScripts = (MacroScriptFileParser_v path:path).MacroScripts -- PARSE MACROSCRIPTS 	--"./MacroScriptFileParser/MacroScriptFileParser.ms"
+			filein _path
 			
-			this.importMacroscriptsToMenus()
+			QUAD_MENU_MANAGER_GLOBAL.addMacrosToMenus ( _path )
+
+			MacroScripts = (MacroScriptFileParser_v _path:_path).MacroScripts -- PARSE MACROSCRIPTS 	--"./MacroScriptFileParser/MacroScriptFileParser.ms"
 		)
 	),
 
@@ -83,21 +85,6 @@ struct ScriptFile_Content_v
 		_Rollout --return
 	),
 
-	/** Process *.mcr files
-	  *
-	  *  1) Filein macroscript file
-	  *  2) Insert macroscripts to menus
-	 */
-	function importMacroscriptsToMenus =
-	(
-		--format "\n"; print "ScriptFile_Content_v.importMacroscriptsToMenus()"
-		--format "MacroScripts.count: %\n" MacroScripts.count
-		--format "path: %\n" path
-		
-		--for i = 1 to MacroScripts.count do
-		for i = 1 to MacroScripts.count  do
-			this._addToMenu (MacroScripts[i]) (MacroScripts[i].Params)
-	),
 
 	
 	private
@@ -151,68 +138,6 @@ struct ScriptFile_Content_v
 
 	),
 
-	/** Add to quad menu or menu
-	  *
-	  * @param MacroScript_Content_v	Macro
-	  * @param ParamsList_v	Params
-	  *
-	 */
-	function _addToMenu Macro Params =
-	(
-		--format "\n\n"; print "ScriptFile_Content_v._addToMenu()"
-		--format "Macro: %\n" Macro
-		--format "Params: %\n" Paramss
-		
-		menu_name	= Macro.category
-		--format "menu_name: %\n" menu_name
-		
-		menu_name_param = Params[#menu]
-		
-		
-		if menu_name_param == undefined or (classOf menu_name_param == BooleanClass and menu_name_param != true) then
-			return false
-		
-		
-		title =  case of
-		(
-			(menu_name_param	== true ): case of
-			(
-				(Macro.buttontext	!= undefined):	Macro.buttontext
-				(Macro.tooltip	!= ""):	Macro.tooltip
-				
-				default: Macro.macro_name
-			)
-			
-			
-			(menu_name_param as name	== #TOOLTIP ):	if Macro.tooltip != undefined then Macro.tooltip else Macro.buttontext
-			
-			default: 	menu_name_param
-		)
-
-		/*
-			ADD TO MENU
-		*/
-		(Menu_v (menu_name)).addItem (Macro.category) Macro.macro_name title:title index:Macro.Params[#index]
-
-		/*------------------------------------------------------------------------------
-
-			ADD TO QUAD MENU SEEM TO BE USELESS, IT IS DISABLED
-
-		--------------------------------------------------------------------------------*/
-		--if quad_name != undefined then
-		--(
-		--	quad_name_split	= filterString quad_name "."
-		--
-		--	quad_index = quad_name_split[2]
-		--
-		--	if quad_index == undefined then
-		--		quad_index = 1
-		--
-		--	(QuadMenu_v(quad_name_split[1])).Quads[quad_index as integer ].addItem (Macro.category)Macro.macro_name title:title index:index
-		--)
-
-	),
-	
 	/** Get filename of groupbox by file filename
 	  *
 	  *  Remove numbers, empty space and characters like "-_" from start of string E.G.: "1_Filename" >> "Filename"
@@ -221,7 +146,7 @@ struct ScriptFile_Content_v
 	 */
 	function _getControlsGroupName =
 	(
-		filename = getFilenameFile path
+		filename = getFilenameFile _path
 		
 		filename = trimLeft ( trimRight filename "_ " )  "_ " -- -- remove prefix & suffix E.G.: " _Foo-Bar _ " >>>  "Foo-Bar"
 		
@@ -323,14 +248,14 @@ struct ScriptFile_Content_v
 	 */
 	function isMaxscriptFile =
 	(
-		 getFilenameType path == ".ms" --return
+		 getFilenameType _path == ".ms" --return
 	),
 
 	/** Is maxscript file
 	 */
 	function isMacrosriptFile =
 	(
-		 getFilenameType path == ".mcr" --return
+		 getFilenameType _path == ".mcr" --return
 	),
 
 	/** Has macro scripts
@@ -353,7 +278,7 @@ struct ScriptFile_Content_v
 	 */
 	function _setName =
 	(
-		filename = getFilenameFile path
+		filename = getFilenameFile _path
 	),
 
 	on create do
@@ -362,7 +287,7 @@ struct ScriptFile_Content_v
 
 		this._setName()
 		--format "\n"
-		--print ("ScriptFile_v.onCreate " + path )
+		--print ("ScriptFile_v.onCreate " + _path )
 
 		this.loadAndParseMacroscriptFile()
 	)

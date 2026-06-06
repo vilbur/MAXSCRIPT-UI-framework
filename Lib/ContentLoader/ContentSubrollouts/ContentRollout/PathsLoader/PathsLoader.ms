@@ -4,7 +4,7 @@
  */
 struct PathsLoader_v
 (
-	path,
+	_path,
 	
 	folder_prefix = "rollout*",
 		
@@ -51,50 +51,50 @@ struct PathsLoader_v
 	  *
 	  * @return	array	
 	 */
-	function _isSubrolloutsSlot path =
+	function _isSubrolloutsSlot _path =
 	(
-		matchPattern ( filenameFromPath path ) pattern:folder_prefix ignoreCase:true --return
+		matchPattern ( filenameFromPath _path ) pattern:folder_prefix ignoreCase:true --return
 	),
 	
 	/** 
 	 */
 	function _getRolloutDirs =
 	(
-		for dir in (getDirectories (path + "/*")) where ( this._isSubrolloutsSlot dir ) collect dir --return
+		for dir in (getDirectories (_path + "/*")) where ( this._isSubrolloutsSlot dir ) collect dir --return
 	),
 	
 	/** 
 	 */
 	function _getDirs =
 	(
-		for dir in (getDirectories (path + "/*")) where not ( this._isSubrolloutsSlot dir ) collect dir --return
+		for dir in (getDirectories (_path + "/*")) where not ( this._isSubrolloutsSlot dir ) collect dir --return
 	),
 	
 	/** Get *.mcr files
 	 */
 	function _getMacroFiles =
 	(
-		sort ( getFiles (path + "/*.mcr")) --return
+		sort ( getFiles (_path + "/*.mcr")) --return
 	),
 	
 	/** Get *.ms files
 	 */
 	function _getMaxscriptFiles =
 	(
-		sort ( getFiles (path + "/*.ms")) --return
+		sort ( getFiles (_path + "/*.ms")) --return
 	),
 	
 	/** Get *.ini files
 	 */
 	function _getIniFiles =
 	(
-		sort ( getFiles (path + "/*.ini")) --return
+		sort ( getFiles (_path + "/*.ini")) --return
 	),
 	
 	
 	on create do
 	(
-		--format "PathsLoader_v.onCreate	% \n" path
+		--format "PathsLoader_v.onCreate	% \n" _path
 		dirs            = this._getDirs()
 		
 		rollout_dirs    = this._getRolloutDirs()
