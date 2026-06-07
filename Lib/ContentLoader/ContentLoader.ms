@@ -93,13 +93,7 @@ struct ContentLoader_v
 			cache:false 	\
 			parent:parent
 		
-		try(
-			QUAD_MENU_MANAGER_GLOBAL.createMenus()
-			--QUAD_MENU_MANAGER_GLOBAL.testShit()
-		)catch(
-			
-			format "\n"; print "ContentLoader_v.create() FAILED CALL: QUAD_MENU_MANAGER_GLOBAL.setupMenus() "
-		)
+
 			
 		Dialog --return
 	),

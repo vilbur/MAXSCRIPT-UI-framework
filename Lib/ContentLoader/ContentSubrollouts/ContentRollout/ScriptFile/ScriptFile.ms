@@ -68,9 +68,11 @@ struct ScriptFile_Content_v
 		(
 			filein _path
 			
-			QUAD_MENU_MANAGER_GLOBAL.addMacrosToMenus ( _path )
-
 			MacroScripts = (MacroScriptFileParser_v _path:_path).MacroScripts -- PARSE MACROSCRIPTS 	--"./MacroScriptFileParser/MacroScriptFileParser.ms"
+		
+			for _MacroScript in MacroScripts do 
+				this._addToMenu (_MacroScript)
+		
 		)
 	),
 
@@ -88,6 +90,39 @@ struct ScriptFile_Content_v
 
 	
 	private
+	
+	/** ADD TO MENU
+	 */
+	function _addToMenu _MacroScript =
+	(
+		--format "\n"; print "ScriptFile_Content_v._addToMenu()"
+		
+		if (menu_name_param = _MacroScript.Params[#menu]) != undefined then
+			if menu_name_param != false then
+			(
+				
+				title = case of
+				(
+					(menu_name_param	== true ): case of
+					(
+						(_MacroScript.buttontext	!= undefined):	_MacroScript.buttontext
+						(_MacroScript.tooltip	!= ""):	_MacroScript.tooltip
+						
+						default: _MacroScript.macro_name
+					)
+					
+					(menu_name_param as name	== #TOOLTIP ):	if _MacroScript.tooltip != undefined then _MacroScript.tooltip else _MacroScript.buttontext
+					
+					default: 	menu_name_param
+				)
+		
+				/*------------------------------------------------------------------------------
+					ADD TO MENU
+				--------------------------------------------------------------------------------*/
+				QUAD_MENU_MANAGER_GLOBAL.addItemToMenu (_MacroScript.category) (_MacroScript.macro_name) (title)  --return
+				
+			)
+	),
 	
 	
 	/** CREATE CONTROLS for each macroscript

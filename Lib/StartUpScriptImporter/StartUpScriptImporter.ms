@@ -71,6 +71,8 @@ struct StartUpScriptImporter_v
 		content      = ""
 		files_string = ""
 		
+		spliter = "======================================================================================================================================="
+		
 		for file_path in files do
 			files_string += "\n\t@\"" + file_path + "\","
 		
@@ -78,7 +80,7 @@ struct StartUpScriptImporter_v
 		
 		--content += "format \"\\n\"; print \"FileInImporter_v._fileInFil	es()\""
 		--content += "format \"\\nFiles imported from file: %\\n\\n\" \""+import_file_path+"\""
-		content += "format \"\\n\\n===================================================================================\\n\\nIMPORT FILES FROM: %\\n\\n\" (getSourceFileName())\n\n"
+		content += "format \"\\n"+spliter+"\\n\\nIMPORT FILES FROM: %\\n\" (getSourceFileName())\n\n"
 		
 		content += "file_in_files = #("+files_string+"\n)\n\n"
 		
