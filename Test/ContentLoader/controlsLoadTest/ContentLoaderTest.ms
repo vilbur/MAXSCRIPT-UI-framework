@@ -4,7 +4,7 @@ filein( getFilenamePath(getSourceFileName()) + "/../../../Lib/ContentLoader/Cont
 
 
 DEBUG = true
-DEBUG = false
+--DEBUG = false
 
 --try( destroyDialog Groupbox_test )catch()
 
@@ -12,8 +12,9 @@ current_dir	= getFilenamePath(getSourceFileName())
 
 
 /* LOAD CONTENT FROM FOLDERS */
-ContentLoader	= ContentLoader_v path:(current_dir+"/Test-content") --ini:( getSourceFileName()) DEBUG:DEBUG
---ContentLoader	= ContentLoader_v path:(current_dir+"/Groupbox-Test")
+--ContentLoader	= ContentLoader_v path:(current_dir+"/Test-content") --ini:( getSourceFileName()) DEBUG:DEBUG
+ContentLoader	= ContentLoader_v path:(current_dir+"/Test-content") DEBUG:DEBUG
+--ContentLoader	= ContentLoader_v path:(current_dir+"/Groupbox-Test") 
 
 
 /* CREATE UI */

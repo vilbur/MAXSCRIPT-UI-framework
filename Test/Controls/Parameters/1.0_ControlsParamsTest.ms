@@ -53,7 +53,6 @@ _Controls.control #EDITTEXT "ONLY WIDTH is KING if mulitple prams" width:232 fie
 
 
 
-
 /*------ LISTBOX ------*/
 --_Listbox	= _Controls.control #listbox "Listbox param" items:items value:2
 --
@@ -66,6 +65,7 @@ _Controls.control #EDITTEXT "ONLY WIDTH is KING if mulitple prams" width:232 fie
 /*------ RADIOBUTTONS ------*/
 --_Controls.control #radioButtons "RadioButtons"	items:items columns:2
 --_Controls.control #radioButtons "RadioButtons"	items:items params:#(#columns, 1)
+
 
 
 /*------ BROWSEATH ------*/
@@ -87,6 +87,10 @@ _Controls.control #EDITTEXT "ONLY WIDTH is KING if mulitple prams" width:232 fie
 
 --_Controls.control #browsePath "get Open File Name" params:#( #mode, #getOpenFileName )
 
+
+--/*------ COLORPICKER ------*/
+_Controls.control #COLORPICKER "Picker B" params:#(#color, green)   	across:1
+_Controls.control #COLORPICKER "Picker C" params:#(#color, [0,0,128 ] )	across:1
 
 
 /*------ EDITTEXT ------*/

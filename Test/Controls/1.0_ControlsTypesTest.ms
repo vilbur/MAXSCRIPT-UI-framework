@@ -16,26 +16,30 @@ filein( getFilenamePath(getSourceFileName()) + "/../../Lib/Dialog/Dialog.ms" )	-
 
 ================================================================================*/
 
+--ini = getSourceFileName()
+
+debug_print = true
+
 /*------------------------------------------------------------------------------
 	PREPARE DIALOG & CONTROLS
 --------------------------------------------------------------------------------*/
 
 /* DIALOG */
---Dialog 	    = Dialog_v title:"Test" width:320 ini:(getSourceFileName())
-Dialog 	    = Dialog_v title:"Test" width:320	--WITHOUT INI FILE
+
+Dialog 	    = Dialog_v title:"Test" width:320 ini:ini  DEBUG:debug_print
 
 
 /* CONTROLS */
---_Controls   = Dialog.Controls()
---_Controls   = Dialog.Controls group:"Main _Controls"
-_Controls   = Dialog.Controls DEBUG:true -- DEBUG print control data when control is added to rollout
+------_Controls   = Dialog.Controls()
+_Controls   = Dialog.Controls group:"Main _Controls" DEBUG:debug_print
 
 
-/*------------------------------------------------------------------------------
-	TEST EACH CONTROL TYPE
---------------------------------------------------------------------------------*/
 
-/*------ GROUPBOX ------*/
+--/*------------------------------------------------------------------------------
+--	TEST EACH CONTROL TYPE
+------------------------------------------------------------------------------*/
+--
+--/*------ GROUPBOX ------*/
 --_Controls.control #Groupbox "Groupbox Test" height:64
 --_Controls.control #button "Button in Groupbox" params:#(#groupbox, "Groupbox Test")
 --
@@ -64,65 +68,67 @@ _Controls   = Dialog.Controls DEBUG:true -- DEBUG print control data when contro
 --
 --/*------ RADIOBUTTONS ------*/
 --_Controls.control #radioButtons "RadioButtons" items:#("Item 1","Item 2") columns:2
-----_Controls.control #RADIOBUTTONS "RadioButtons 2" items:#("Item 1","Item 2") params:#( #UNSELECT, true ) default:2
+--_Controls.control #RADIOBUTTONS "Radio UNSELECTABLE" items:#("Item 1","Item 2") params:#( #UNSELECT, true ) default:2
 --
 --
 --/*------ DROPDOWN ------*/
 --_Controls.control #DROPDOWN "Dropdown"  items:#("Item 1","Item 2") 
---_Controls.control #DROPDOWNLIST "Dropdownlist"  items:#("Item 1","Item 2") 
-
-
-/*------ EDITTEXT ------*/
-_Controls.control #EDITTEXT "Edit Text" across:1
+--_Controls.control #DROPDOWNLIST "Dropdownlist"  items:#("", "Item 1","Item 2") 
+--
+--
+--/*------ EDITTEXT ------*/
+--_Controls.control #EDITTEXT "Edit Text" across:1
 --_Controls.control #EDITTEXT "Label On Top" across:1 labelOnTop:true
---_Controls.control #EDITTEXT "[hidden label]" across:1
-
-
---/*------ SLIDER ------*/
---_Slider = _Controls.control #SLIDER "Slider" ticks:3 width:256 range:[0,50,0] ticks:5 type:#integer
-
-
+--_Controls.control #EDITTEXT "[hidden label]" across:1 value:"HIIDEN LABEL"
+--
+--
 --/*------ SPINNER ------*/
---_Controls.control #SPINNER ""
---_Controls.control #SPINNER "Spinner"
+----_Controls.control #SPINNER ""
+----_Controls.control #SPINNER "Spinner"
 --_Controls.control #SPINNER "Spinner 2" width:96 scale:0.01 range:[0,100,0.01]
---
---
+
+
+/*------ SLIDER ------*/
+_Slider = _Controls.control #SLIDER "Slider" ticks:3 range:[0,50,0] ticks:5 type:#INTEGER 
+
+
 --/*------ LISTBOX ------*/
 --/*------ MULTILISTBOX ------*/
---_multilistbox =  _Controls.control #MULTILISTBOX "Multilistbox" items:#("Item 1","Item 2", "Item 3")
+--_multilistbox =  _Controls.control #MULTILISTBOX "Multilistbox" items:#("Item 1","Item 2", "Item 3") 
 --
 --
 --/*------ BROWSEATH ------*/
 --_Controls.control #BROWSEPATH "browsePathTest"
-
-
-/*------ COLORPICKER ------*/
---_Controls.control #COLORPICKER "ColorPicker A" value:( color 255 0 0 )       	across:1
---_Controls.control #COLORPICKER "ColorPicker B"  params:#(#color, green)     	across:1
---_Controls.control #COLORPICKER "ColorPicker C"  params:#(#color, [0,0,128 ] )	across:1
-
 --
+--
+--/*------ COLORPICKER ------*/
+_Controls.control #COLORPICKER "Picker A" value:green
+
+
 --/*------ BITMAP ------*/
---_Controls.Control #BITMAP "Bitmap as value" value: (bitmap 256 32 color:green ) across:1 -- SIZE OF BITMAP IS SIZE OF CONTROL
---
 --_Controls.Control #BITMAP "Bitmap ascolor" color:blue width:256 height:32 across:1
+----_Controls.Control #BITMAP "Bitmap as value" value: (bitmap 256 32 color:green ) across:1 -- SIZE OF BITMAP IS SIZE OF CONTROL
 --
-
-/*------ IMGTAG ------*/
+--
+--
+--/*------ IMGTAG ------*/
 --_Controls.Control #IMGTAG "imgTag Bitmap"   bitmap:(bitmap 256 32 color:green ) width:64 height:64 --across:1  align:#center -- SIZE OF IMGTAG IS SIZE OF CONTROL
---_Controls.Control #IMGTAG "Bitmap as value" value: (bitmap 256 32 color:yellow ) width:256 height:32 across:1
+--
+--/* ERROR
+--
+----_Controls.Control #IMGTAG "Bitmap as value" value: (bitmap 256 32 color:yellow ) width:256 height:32 across:1
+--*/ 
 --
 --_Controls.Control #IMGTAG "Bitmap as color" color:blue   width:256 height:32 across:1
 --_Controls.Control #IMGTAG "color as value"  value:orange width:256 height:32 across:1
-
-
-
+--
+--
+--
 --/*------ ANGLE ------*/
 --_Controls.control #ANGLE  "Angle" RANGE:[-90,270,90] color:green params:#( #DIR, #CW, #startdegrees, 90 )
-
-
-/* TIMER */ 
+--
+--
+--/* TIMER */ 
 --_Timer = _Controls.control #TIMER "Timer"
 
 
@@ -138,7 +144,7 @@ _Controls.control #EDITTEXT "Edit Text" across:1
  * SOLUTION: Set lower across parameter or wider rollout
  *
 */
--- _Controls.control #ColorPicker "THERE IS NOT PICKER SHOWN" value: [ 64, 128, 0 ] across:4
+ --_Controls.control #ColorPicker "THERE IS NOT PICKER SHOWN" value: [ 64, 128, 0 ] across:4
 
 
 

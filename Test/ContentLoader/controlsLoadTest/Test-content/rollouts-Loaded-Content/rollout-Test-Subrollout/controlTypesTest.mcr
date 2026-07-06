@@ -1,22 +1,22 @@
 /*------------------------------------------------------------------------------
 	ONLY MAXSCRIPT 
---------------------------------------------------------------------*/
---macroscript macroFileTest_without_ui_control
---	category:	"MacroFileTest"
---	buttontext:	"Button"
---	tooltip:	"Only macroscript is generated wihtout button"
---	icon:	"Tooltip:Tooltip of control"
---(
---	print "Button #pressed"
---	format "EventFired	= % \n" EventFired
---)
+------------------------------------------------------------------*/
+macroscript macroFileTest_without_ui_control
+	category:	"MacroFileTest"
+	buttontext:	"Button"
+	tooltip:	"Only macroscript is generated wihtout button"
+	icon:	"Tooltip:Tooltip of control"
+(
+	print "Button #pressed"
+	format "EventFired	= % \n" EventFired
+)
 --
 --/*------------------------------------------------------------------------------
 --	BUTTON
-----------------------------------------------------------------------*/
+--------------------------------------------------------------------*/
 --macroscript macroFileTest_button_leftclick
 --	category:	"MacroFileTest"
---	buttontext:	"Button"
+--	buttontext:	"Event Test"
 --	tooltip:	"Tooltip of leftclick"
 --	icon:	"Tooltip:Tooltip of control"
 --(
@@ -27,14 +27,14 @@
 --
 --macroscript macroFileTest_button_rightclick
 --	category:	"MacroFileTest"
---	buttontext:	"Button"
+--	buttontext:	"Event Test"
 --	tooltip:	"Tooltip of rightclick"
 --(
 --	print "Button #rightclick"
 --	format "EventFired	= % \n" EventFired
 --)
-
-
+--
+--
 --/*------------------------------------------------------------------------------
 --  CHECKBUTTON
 --------------------------------------------------------------------------------*/
@@ -86,10 +86,10 @@
 --
 --
 --
-/*------------------------------------------------------------------------------
-  SPINNER
+--/*------------------------------------------------------------------------------
+--  SPINNER
 --------------------------------------------------------------------------*/
-
+--
 --/*
 --*/
 --macroscript macroFileTest_spinner
@@ -101,24 +101,24 @@
 --	print "Spinner test"
 --	format " EventFired = % \n"  EventFired
 --)
-
-/*------------------------------------------------------------------------------
-  SLIDER
+--
+--/*------------------------------------------------------------------------------
+--  SLIDER
 --------------------------------------------------------------------------*/
-
+--
 --/*
 --*/
---macroscript macroFileTest_spinner
+--macroscript macroFileTest_slider
 --	category:	"MacroFileTest"
---	buttontext:	"Spinner Test"
---	tooltip:	"Spinner tooltip"
+--	buttontext:	"Slider Test"
+--	tooltip:	"Slider tooltip"
 --	icon:	"control:slider|range:[ 1, 128, 0.05 ]|scale:0.01"
 --(
 --	print "Spinner test"
 --	format " EventFired = % \n"  EventFired
 --)
-
-
+--
+--
 --/*------------------------------------------------------------------------------
 --  EDITTEXT
 ------------------------------------------------------------------------------*/
@@ -147,7 +147,7 @@
 --	category:	"MacroFileTest"
 --	buttontext:	"BrowsePath"
 --	tooltip:	"BrowsePath tooltip"
---	icon:	"control:BrowsePath|width:256"
+--	icon:	"control:BrowsePath"
 --(
 --	print "BrowsePath test"
 --	format "EventFired	= % \n" EventFired
@@ -236,7 +236,7 @@
 --
 --/*------------------------------------------------------------------------------
 --  DROPDOWN
-------------------------------------------------------------------------------*/
+----------------------------------------------------------------------------*/
 --
 --
 --/*
@@ -268,7 +268,7 @@
 --	format "EventFired	= % \n" EventFired
 --	if( EventFired.val ) then
 --	(
---		--activateFirstEditPoly()
+--		activateFirstEditPoly()
 --
 --		onModPanelChanged ("activateFirstEditPoly")
 --	)
@@ -276,53 +276,53 @@
 --		onModPanelChangedKill ("activateFirstEditPoly")
 --)
 --
---
---/*------------------------------------------------------------------------------
---	SLIDER
-----------------------------------------------------------------------*/
---macroscript macroFileTest_slider
---	category:	"MacroFileTest"
---	buttontext:	"Slider"
---	tooltip:	""
---	icon:	"control:#slider|orient:#vertical|across:1"
---
---(
---	print "Button #pressed"
---	format "EventFired	= % \n" EventFired
---)
---
---
---/*------------------------------------------------------------------------------
---	COLORPICKER
-----------------------------------------------------------------------------*/
---
---/*
---*
---*/
---macroscript	macroFileTest_colorpicker
---category:	"MacroFileTest"
---buttonText:	"Color test"
---tooltip:	"Colorpicker test"
---icon:	"control:colorpicker|value: [0,128,0 ]"
---(
---	format "EventFired	= % \n" EventFired
---
---)
-
 
 /*------------------------------------------------------------------------------
-	TIMER
---------------------------------------------------------------------------------*/
---/*
---*
---*/
---macroscript	macroFileTest_timer
---category:	"MacroFileTest"
---buttonText:	"Timer Test"
---tooltip:	"Colorpicker test"
---icon:	"control:timer|interval:500|active:true"
---(
---	format "EventFired	= % \n" EventFired
---
---)
+	SLIDER
+--------------------------------------------------------------------*/
+macroscript macroFileTest_slider
+	category:	"MacroFileTest"
+	buttontext:	"Slider"
+	tooltip:	""
+	icon:	"control:#slider|orient:#vertical|across:1"
 
+(
+	print "Button #pressed"
+	format "EventFired	= % \n" EventFired
+)
+
+--
+/*------------------------------------------------------------------------------
+	COLORPICKER
+--------------------------------------------------------------------------*/
+
+/*
+*
+*/
+macroscript	macroFileTest_colorpicker
+category:	"MacroFileTest"
+buttonText:	"Color test"
+tooltip:	"Colorpicker test"
+icon:	"control:colorpicker|value: [0,128,0 ]|across:1|value:red|border:true"
+(
+	format "EventFired	= % \n" EventFired
+
+)
+
+----
+----/*------------------------------------------------------------------------------
+----	TIMER
+----------------------------------------------------------------------------------*/
+----/*
+----*
+----*/
+----macroscript	macroFileTest_timer
+----category:	"MacroFileTest"
+----buttonText:	"Timer Test"
+----tooltip:	"Colorpicker test"
+----icon:	"control:timer|interval:500|active:true"
+----(
+----	format "EventFired	= % \n" EventFired
+----
+----)
+----

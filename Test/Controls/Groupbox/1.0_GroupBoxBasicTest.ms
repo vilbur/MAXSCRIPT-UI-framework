@@ -4,7 +4,7 @@ filein( getFilenamePath(getSourceFileName()) + "/../../../Lib/Dialog/Dialog.ms" 
 
 
 /* DIALOG */
-Dialog 	= Dialog_v title:(getFilenameFile(getSourceFileName()))
+Dialog 	= Dialog_v title:(getFilenameFile(getSourceFileName())) width:512
 
 
 
@@ -14,22 +14,22 @@ _Controls = Dialog.Controls group:"Controls Group"
 
 
 /* GROUPBOX */
-_GroupBox = _Controls.control #GroupBox "Test groupbox" params:#( #height, 128 ) --id:#GB_test_groupbox
+--_GroupBox = _Controls.control #GroupBox "Test groupbox" params:#( #height, 256 ) --id:#GB_test_groupbox
 
 
 
 /* ADD CONTROL BY ID of groupbox */
-_Controls.control #button ("Button 1") groupbox:_GroupBox.id across:1 
+--_Controls.control #button ("Button 1") groupbox:_GroupBox.id across:1 
  
 
-
-/* ADD CONTROL BY TITLE of groupbox */
-_Controls.control #button ("Button 2") across:2 --groupbox:_GroupBox.caption 
-
-
-
-/* TEST SPINNER -  */ 
-_Controls.control #SPINNER "Spinner" across:2 --params:#(#groupbox, _GroupBox.caption )  --width:64 align:#LEFT
+--
+--/* ADD CONTROL BY TITLE of groupbox */
+--_Controls.control #button ("Button 2") across:2 --groupbox:_GroupBox.caption 
+--
+--
+--
+--/* TEST SPINNER -  */ 
+--_Controls.control #SPINNER "Spinner" across:2 --params:#(#groupbox, _GroupBox.caption )  --width:64 align:#LEFT
 
 
 

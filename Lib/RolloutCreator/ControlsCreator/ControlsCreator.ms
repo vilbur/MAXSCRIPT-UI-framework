@@ -1,4 +1,4 @@
-filein( getFilenamePath(getSourceFileName()) + "/ControlValue/ControlValue.ms" )	-- "./ControlValue/ControlValue.ms"
+ filein( getFilenamePath(getSourceFileName()) + "/ControlValue/ControlValue.ms" )	-- "./ControlValue/ControlValue.ms"
 filein( getFilenamePath(getSourceFileName()) + "/TooltipCreator/TooltipCreator.ms" )	-- "./TooltipCreator/TooltipCreator.ms"
 filein( getFilenamePath(getSourceFileName()) + "/GroupBoxCreator/GroupBoxCreator.ms" )	-- "./GroupBoxCreator/GroupBoxCreator.ms"
 filein( getFilenamePath(getSourceFileName()) + "/ControlEventBinder/ControlEventBinder.ms" )	-- "./ControlEventBinder/ControlEventBinder.ms"
@@ -342,7 +342,7 @@ struct ControlCreator_v
 					
 					if Params[#FIELDWIDTH] == undefined then
 					(
-						s
+						
 						/* STRETCH WIDTH OF FIELD TO MAX if label is HIDDEN or on TOP  */ 
 						if Params[#LABELONTOP] or  _Control.caption == "" then
 						(

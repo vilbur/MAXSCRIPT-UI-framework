@@ -4,10 +4,11 @@ filein( getFilenamePath(getSourceFileName()) + "/MacroScript/MacroScript.ms" ) -
 
 filein( getFilenamePath(getSourceFileName()) + "/MacroScriptFileParser/MacroScriptFileParser.ms" )	--"./MacroScriptFileParser/MacroScriptFileParser.ms"
 
+filein( getFilenamePath(getSourceFileName()) + "/../../../../../../MAXSCRIPT-MenuBuilder/include-QuadMenuManager.ms" )	--"./../../../../../../MAXSCRIPT-MenuBuilder/include-QuadMenuManager.ms"
 --if QuadMenu_v == undefined then 
 	--filein( getFilenamePath(getSourceFileName()) + "/../../../../Menus/include-menus.ms" )	--"./../../../../Menus/include-menus.ms"
 
-filein( getFilenamePath(getSourceFileName()) + "/../../../../../../MAXSCRIPT-MenuBuilder/MenuBuildManager/MenuBuildManager.ms" )	--"./../../../../../../MAXSCRIPT-MenuBuilder/MenuBuildManager/MenuBuildManager.ms"
+--filein( getFilenamePath(getSourceFileName()) + "/../../../../../../MAXSCRIPT-MenuBuilder/MenuBuildManager/MenuBuildManager.ms" )	--"./../../../../../../MAXSCRIPT-MenuBuilder/MenuBuildManager/MenuBuildManager.ms"
 
 /*
 		TODO:
@@ -118,8 +119,9 @@ struct ScriptFile_Content_v
 		
 				/*------------------------------------------------------------------------------
 					ADD TO MENU
-				--------------------------------------------------------------------------------*/
-				QUAD_MENU_MANAGER_GLOBAL.addItemToMenu (_MacroScript.category) (_MacroScript.macro_name) (title)  --return
+				--------------------------------------------------------------------------------*/\
+                if MENU_MANAGER_GLOBAL != undefined then 
+				     MENU_MANAGER_GLOBAL.addItemToMenu (_MacroScript.category) (_MacroScript.macro_name) (title)  --return
 				
 			)
 	),

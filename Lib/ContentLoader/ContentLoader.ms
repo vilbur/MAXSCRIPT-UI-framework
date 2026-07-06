@@ -69,9 +69,6 @@ struct ContentLoader_v
 		--format "\n"; print "ContentLoader_v.create()"
 
 		
-		
-		
-		
 		if Dialog.Events[#help] != undefined then 
 			this.autoBindHelpEvent()
 
