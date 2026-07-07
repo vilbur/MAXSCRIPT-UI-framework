@@ -1,11 +1,12 @@
 clearListener(); print("Cleared in:\n"+getSourceFileName())
 
+filein( getFilenamePath(getSourceFileName()) + "/../../../../MAXSCRIPT-MenuBuilder/include-QuadMenuManager.ms" )	--"./../../../../MAXSCRIPT-MenuBuilder/include-QuadMenuManager.ms"
+
 filein( getFilenamePath(getSourceFileName()) + "/../../../Lib/ContentLoader/ContentLoader.ms" ) -- "./../../../Lib/ContentLoader/ContentLoader.ms"
 
-filein( getFilenamePath(getSourceFileName()) + "/../../../Lib/Menus/QuadMenuManager/QuadMenuManager.ms" )	--"./../../../Lib/Menus/QuadMenuManager/QuadMenuManager.ms"
 
 --DEBUG = false
-DEBUG = false
+DEBUG = true
 
 
 /* LOAD CONTENT FROM FOLDERS */
@@ -14,3 +15,7 @@ ContentLoader	= ContentLoader_v path:( getFilenamePath(getSourceFileName()) + "\
 
 /* CREATE UI */
 ContentLoader.create width:512
+
+
+
+MENU_MANAGER_GLOBAL.createMenus()

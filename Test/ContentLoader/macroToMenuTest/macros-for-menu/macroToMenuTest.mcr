@@ -30,7 +30,15 @@
 	TITLE DEFINITION OF MENU ITEM
 
 --------------------------------------------------------------------------------*/
---
+--/**  
+-- */
+--macroscript	_test_menu_blacklist
+--category:	"_Test Menu"
+--buttontext:	"BLACKLISTED ITEM"
+--icon:	"MENU:true"
+--(
+--)
+
 --macroscript	_test_menu_title_by_buttontext
 --category:	"_Test Menu"
 --buttontext:	"THIS IS MENU ITEM TITLE"

@@ -1,14 +1,5 @@
 filein( getFilenamePath(getSourceFileName()) + "/../../../../RolloutCreator/ControlsCreator/EventTypes/EventTypes.ms" )	--"./../../../../RolloutCreator/ControlsCreator/EventTypes/EventTypes.ms"
 
-filein( getFilenamePath(getSourceFileName()) + "/MacroScript/MacroScript.ms" ) -- "./MacroScript/MacroScript.ms"
-
-filein( getFilenamePath(getSourceFileName()) + "/MacroScriptFileParser/MacroScriptFileParser.ms" )	--"./MacroScriptFileParser/MacroScriptFileParser.ms"
-
-filein( getFilenamePath(getSourceFileName()) + "/../../../../../../MAXSCRIPT-MenuBuilder/include-QuadMenuManager.ms" )	--"./../../../../../../MAXSCRIPT-MenuBuilder/include-QuadMenuManager.ms"
---if QuadMenu_v == undefined then 
-	--filein( getFilenamePath(getSourceFileName()) + "/../../../../Menus/include-menus.ms" )	--"./../../../../Menus/include-menus.ms"
-
---filein( getFilenamePath(getSourceFileName()) + "/../../../../../../MAXSCRIPT-MenuBuilder/MenuBuildManager/MenuBuildManager.ms" )	--"./../../../../../../MAXSCRIPT-MenuBuilder/MenuBuildManager/MenuBuildManager.ms"
 
 /*
 		TODO:
@@ -68,12 +59,8 @@ struct ScriptFile_Content_v
 		if ( this.isMacrosriptFile() ) then
 		(
 			filein _path
-			
-			MacroScripts = (MacroScriptFileParser_v _path:_path).MacroScripts -- PARSE MACROSCRIPTS 	--"./MacroScriptFileParser/MacroScriptFileParser.ms"
-		
-			for _MacroScript in MacroScripts do 
-				this._addToMenu (_MacroScript)
-		
+			--format "MENU_MANAGER_GLOBAL: %\n" MENU_MANAGER_GLOBAL
+			MacroScripts = MENU_MANAGER_GLOBAL.addMacrosToMenus (_path)
 		)
 	),
 
@@ -92,39 +79,38 @@ struct ScriptFile_Content_v
 	
 	private
 	
-	/** ADD TO MENU
-	 */
-	function _addToMenu _MacroScript =
-	(
-		--format "\n"; print "ScriptFile_Content_v._addToMenu()"
-		
-		if (menu_name_param = _MacroScript.Params[#menu]) != undefined then
-			if menu_name_param != false then
-			(
-				
-				title = case of
-				(
-					(menu_name_param	== true ): case of
-					(
-						(_MacroScript.buttontext	!= undefined):	_MacroScript.buttontext
-						(_MacroScript.tooltip	!= ""):	_MacroScript.tooltip
-						
-						default: _MacroScript.macro_name
-					)
-					
-					(menu_name_param as name	== #TOOLTIP ):	if _MacroScript.tooltip != undefined then _MacroScript.tooltip else _MacroScript.buttontext
-					
-					default: 	menu_name_param
-				)
-		
-				/*------------------------------------------------------------------------------
-					ADD TO MENU
-				--------------------------------------------------------------------------------*/\
-                if MENU_MANAGER_GLOBAL != undefined then 
-				     MENU_MANAGER_GLOBAL.addItemToMenu (_MacroScript.category) (_MacroScript.macro_name) (title)  --return
-				
-			)
-	),
+	--/** ADD TO MENU
+	-- */
+	--function _addToMenu _MacroScript =
+	--(
+	--	--format "\n"; print "ScriptFile_Content_v._addToMenu()"
+	--	
+	--	if (menu_name_param = _MacroScript.Params[#menu]) != undefined then
+	--		if menu_name_param != false then
+	--		(
+	--			
+	--			title = case of
+	--			(
+	--				(menu_name_param	== true ): case of
+	--				(
+	--					(_MacroScript.buttontext	!= undefined):	_MacroScript.buttontext
+	--					(_MacroScript.tooltip	!= ""):	_MacroScript.tooltip
+	--					
+	--					default: _MacroScript.macro_name
+	--				)
+	--				
+	--				(menu_name_param as name	== #TOOLTIP ):	if _MacroScript.tooltip != undefined then _MacroScript.tooltip else _MacroScript.buttontext
+	--				
+	--				default: 	menu_name_param
+	--			)
+	--	
+	--			/*------------------------------------------------------------------------------
+	--				ADD TO MENU
+	--			--------------------------------------------------------------------------------*/
+	--			MENU_MANAGER_GLOBAL.addItemToMenu (_MacroScript.category) (_MacroScript.macro_name) (title)  --return
+	--			
+	--		)
+	--),
 	
 	
 	/** CREATE CONTROLS for each macroscript
