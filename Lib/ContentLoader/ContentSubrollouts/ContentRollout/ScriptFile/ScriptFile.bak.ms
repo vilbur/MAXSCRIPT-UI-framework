@@ -62,9 +62,9 @@ struct ScriptFile_Content_v
 
 	/** PARSE *.mcr FILE
 	 */
-	function loadAndParseMacroscriptFile =
+	function parseMacroscriptFile =
 	(
-		--print ("------------\n\nScriptFile.loadAndParseMacroscriptFile file:\n"+ (_path) )
+		--print ("------------\n\nScriptFile.parseMacroscriptFile file:\n"+ (_path) )
 		if ( this.isMacrosriptFile() ) then
 		(
 			filein _path
@@ -326,7 +326,7 @@ struct ScriptFile_Content_v
 		--format "\n"
 		--print ("ScriptFile_v.onCreate " + _path )
 
-		this.loadAndParseMacroscriptFile()
+		this.parseMacroscriptFile()
 	)
 )
 

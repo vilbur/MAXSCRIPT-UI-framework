@@ -53,14 +53,19 @@ struct ScriptFile_Content_v
 
 	/** PARSE *.mcr FILE
 	 */
-	function loadAndParseMacroscriptFile =
+	function parseMacroscriptFile =
 	(
-		--print ("------------\n\nScriptFile.loadAndParseMacroscriptFile file:\n"+ (_path) )
+		--print ("------------\n\nScriptFile.parseMacroscriptFile FILE:\n"+ (_path) )
+		
 		if ( this.isMacrosriptFile() ) then
 		(
 			filein _path
 			--format "MENU_MANAGER_GLOBAL: %\n" MENU_MANAGER_GLOBAL
-			MacroScripts = MENU_MANAGER_GLOBAL.addMacrosToMenus (_path)
+			
+			MacroParser 	= MacroScriptFileParser_v (_path)
+
+			MacroScripts = MacroParser.MacroScripts
+			--format "MacroScripts: %\n" MacroScripts
 		)
 	),
 
@@ -122,10 +127,51 @@ struct ScriptFile_Content_v
 		--format "MacroScripts.count: %\n" MacroScripts.count
 		_Controls	= _Rollout.Controls	group:(this._getControlsGroupName())
 		ControlEventBinder	= ControlEventBinder_v 	_Rollout:_Rollout
+		
+		
+		--this._debugPrintMacros(MacroScripts)
+		
 
 		/* ONLY macroscripts with BUTTONTEXT are created */ 
+		--for i = 1 to MacroScripts.count where MacroScripts[i].buttontext != undefined do
+			--this._createControlfromMacro (MacroScripts[i])
+			
+			
+			
+		
+		--for i = 1 to MacroScripts.count do
 		for i = 1 to MacroScripts.count where MacroScripts[i].buttontext != undefined do
-			this._createControlfromMacro (MacroScripts[i])
+			try(
+				/* CONTROLFROM MACRO */ 
+				this._createControlfromMacro (MacroScripts[i])
+			)catch(
+				
+				--print "\n"
+				--format "ERROR: MacroScripts[i]: %\n" MacroScripts[i]
+				format "\n——————————————— ERROR IN FILE ———————————————\n\n%\n" (getSourceFileName())
+				format "\n————————————————— EXCEPTION —————————————————\n\n%\n" (getCurrentException())
+				format "\n——————————————————— TRACE ———————————————————\n%\n"   (getCurrentExceptionStackTrace())
+				format "\n——————————————————— STACK ———————————————————\n%\n"   (getCurrentExceptionCallStack())
+			
+			)
+			
+		--for i = 1 to MacroScripts.count do
+		--(
+		--	
+		--	if hasProperty MacroScripts[i] "buttontext" and MacroScripts[i].buttontext != undefined then
+		--		this._createControlfromMacro (MacroScripts[i])
+		--	
+		--	else
+		--	(
+		--		format "\n*****************************************************************************************************************************************************************************************\n"
+		--		
+		--		format "MacroScripts[i]: %\n" MacroScripts[i]
+		--		
+		--	)
+		--		
+		--		
+		--		
+		--)
 	),
 
 	/** CREATE CONTROL FROM MACRO
@@ -134,7 +180,7 @@ struct ScriptFile_Content_v
 	(
 		--format "\n----------------------------------------------------------------------------------\n"
 		--format "\n"; print "ScriptFile_Content_v.createControlfromMacro()"
-
+		
 		/* CREATE CONTROL */ 
 		_Control = _Controls.Control (Macro.getControlType()) Macro.buttontext params:(Macro.getParamsArray()) add_to_controls:false
 
@@ -312,7 +358,7 @@ struct ScriptFile_Content_v
 		--format "\n"
 		--print ("ScriptFile_v.onCreate " + _path )
 
-		this.loadAndParseMacroscriptFile()
+		this.parseMacroscriptFile()
 	)
 )
 

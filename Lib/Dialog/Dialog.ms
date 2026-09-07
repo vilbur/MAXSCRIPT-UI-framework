@@ -1,4 +1,4 @@
-	global createDialogFromCacheFile = undefined
+global createDialogFromCacheFile = undefined
 global createDialogFromCacheFile = undefined
 global createDialogFromCacheFile = undefined
 global createDialogFromCacheFile = undefined
@@ -14,7 +14,8 @@ if DIALOG_GLOBAL_DATA == undefined then
 	
 
 --filein( getFilenamePath(getSourceFileName()) + "/../../../MAXSCRIPT-MenuBuilder/MenuBuildManager/MenuBuildManager.ms" )	--"./../../../MAXSCRIPT-MenuBuilder/MenuBuildManager/MenuBuildManager.ms"
-filein @"C:\Users\vilbur\AppData\Local\Autodesk\3dsMax\2026 - 64bit\ENU\scripts\MAXSCRIPT-MenuBuilder\MenuBuildManager\MenuBuildManager.ms"
+--filein @"C:\Users\vilbur\AppData\Local\Autodesk\3dsMax\2026 - 64bit\ENU\scripts\MAXSCRIPT-MenuBuilder\MenuBuildManager\MenuBuildManager.ms"
+filein( getFilenamePath(getSourceFileName()) + "/../../../MAXSCRIPT-MenuBuilder/include-QuadMenuManager.ms" )	--"./../../../MAXSCRIPT-MenuBuilder/include-QuadMenuManager.ms"
 
 filein( getFilenamePath(getSourceFileName()) + "/../JsonToDictionoray/JsonToDictionoray.ms" )	--"./../JsonToDictionoray/JsonToDictionoray.ms"
 
