@@ -1,4 +1,4 @@
-clearListener()
+clearListener(); print("Cleared in: "+getSourceFileName())
 
 filein( getFilenamePath(getSourceFileName()) + "/../../../Lib/ContentLoader/ContentLoader.ms" ) -- "./../../../Lib/ContentLoader/ContentLoader.ms"
 

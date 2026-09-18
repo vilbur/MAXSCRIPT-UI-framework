@@ -37,7 +37,7 @@ struct SubolloutsCreator_v
 
 	slot_offset_x = -12, -- move slot ( rollouts indeed ) to left side as possible
 
-	addSubRollouts_definition = #(),
+	addSubRollouts_definition = #(), -- INDEX: nested_level VALUE:"AddSubRollout slot_id rollout_id rolledUp:false"
 	
 	DEBUG = false,
 
@@ -75,6 +75,7 @@ struct SubolloutsCreator_v
 	function addSubRollouts _Rollout =
 	(
 		--format "\n"; print "SubolloutsCreator_v.addSubRollouts()"
+		--clearListener(); print("Cleared in: "+getSourceFileName())
 		--print "============================================================="
 
 		/** Get subrollouts slot
@@ -104,32 +105,39 @@ struct SubolloutsCreator_v
 		for Subrollouts in all_subrollouts
 			where (SubrolloutsSlot = pairSubrolloutAndSlot(SubrolloutsSlotControl)(Subrollouts.slot) ) != undefined do
 			(
+				--print "============================================================="
+				--format "SubrolloutsSlot: %\n" SubrolloutsSlot
+				
 				subrollouts_in_slot	= for Subrollout in Subrollouts.Rollouts collect Subrollout.id
 			
 				rollouts_order	= this._getOrderOfsubrollouts(_Rollout)(Subrollouts)
+				
 				
 				/* ADD EACH SUB ROLLOUT
 				*/ 
 				for subrollout_id in rollouts_order where ( index = findItem subrollouts_in_slot subrollout_id ) > 0 do
 				(
 					_Subrollout = Subrollouts.Rollouts[index]
+					--format "SubrolloutsSlot: %\n" SubrolloutsSlot
+					--format "_Subrollout.RCI.def: %\n" _Subrollout.RCI.def
 			
 					try(destroyDialog _Subrollout.RCI.def )catch() -- destroy dialog of subrollout created for find of height
 			
 					/*  DEBUG:
 							FOR FLOATEBLE SUBROLLOUTS disable AddSubRollout
 					*/
-					--AddSubRollout SubrolloutsSlot	_Subrollout.RCI.def rolledUp:(this._getRolledUpState(_Subrollout)(subrollout_id))
 
 					rolled_up_state = this._getRolledUpState(_Subrollout)(subrollout_id)
 					
-					AddSubRollout SubrolloutsSlot	_Subrollout.RCI.def rolledUp:rolled_up_state
-					--format "Subrollouts: %\n" Subrollouts
+					try(
+						
+						AddSubRollout SubrolloutsSlot	_Subrollout.RCI.def rolledUp:rolled_up_state
+						
+					)catch(
+						format "\n——————————————— ERROR IN FILE ———————————————\n\n%\n" (getSourceFileName())
+						format "\n————————————————— EXCEPTION —————————————————\n\n%\n" (getCurrentException())
+					)
 					
-					--format "_Subrollout.getSlotId(): %\n" (Subrollouts.getSlotId())
-					--format "_Subrollout: %\n" _Subrollout.id
-					
-					--format "Subrollouts.nested_level: %\n" Subrollouts.nested_level
 					this._addSubrolloutDefinition Subrollouts _Subrollout rolled_up_state
 
 					this.addSubRollouts (_Subrollout)

@@ -44,7 +44,6 @@ struct ScriptFile_Content_v
 	/* Dependency */
 	_Controls,
 	ControlEventBinder,
-	QuadMenu,
 	EventTypes = EventTypes_v(), 	-- "./../../../../RolloutCreator/ControlsCreator/EventTypes/EventTypes.ms"
 
 	/* Store */
@@ -59,12 +58,24 @@ struct ScriptFile_Content_v
 		
 		if ( this.isMacrosriptFile() ) then
 		(
-			filein _path
-			--format "MENU_MANAGER_GLOBAL: %\n" MENU_MANAGER_GLOBAL
+		
+			/*------------------------------------------------------------------------------
+				FILE IN *.mcr FILES
+			--------------------------------------------------------------------------------*/
+			try(
+				filein _path
+			)catch(
+				
+				format "\n——————————————— ERROR IN FILE ———————————————\n\n%\n" (getSourceFileName())
+				format "\n————————————————— EXCEPTION —————————————————\n\n%\n" (getCurrentException())
+			)
 			
+			/*------------------------------------------------------------------------------
+				PARSE .mcr FILE
+			--------------------------------------------------------------------------------*/
 			MacroParser 	= MacroScriptFileParser_v (_path)
 
-			MacroScripts = MacroParser.MacroScripts
+			this.MacroScripts = MacroParser.MacroScripts
 			--format "MacroScripts: %\n" MacroScripts
 		)
 	),
@@ -122,9 +133,9 @@ struct ScriptFile_Content_v
 	  * 
 	 */
 	function _createControls _Rollout =
-	(
-		--format "\n"; print("ScriptFile_Content_v._createControls()" )
-		--format "MacroScripts.count: %\n" MacroScripts.count
+    (
+        --format "\n"; print("ScriptFile_Content_v._createControls()" )
+        --format "MacroScripts.count: %\n" MacroScripts.count
 		_Controls	= _Rollout.Controls	group:(this._getControlsGroupName())
 		ControlEventBinder	= ControlEventBinder_v 	_Rollout:_Rollout
 		
@@ -144,6 +155,7 @@ struct ScriptFile_Content_v
 			try(
 				/* CONTROLFROM MACRO */ 
 				this._createControlfromMacro (MacroScripts[i])
+				
 			)catch(
 				
 				--print "\n"
@@ -176,7 +188,7 @@ struct ScriptFile_Content_v
 
 	/** CREATE CONTROL FROM MACRO
 	 */
-	function _createControlfromMacro Macro =
+    function _createControlfromMacro Macro =
 	(
 		--format "\n----------------------------------------------------------------------------------\n"
 		--format "\n"; print "ScriptFile_Content_v.createControlfromMacro()"
@@ -194,7 +206,7 @@ struct ScriptFile_Content_v
 			_Control = _Control_Exist
 		else
 			/* GET PARAMETERS FROM PREVIOUS CONTROL */ 
-			this._inheritParameters (_Control)
+	this._inheritParameters (_Control)
 
 			
 		/* ADD EVENTS */ 

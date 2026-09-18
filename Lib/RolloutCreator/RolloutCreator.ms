@@ -91,16 +91,19 @@ struct RolloutCreator_v
 			RolloutEventBinder.prepareEvents(_Rollout)
 			
 
-			--_Rollout.addLocal #ROLLOUT_VARIABLE "ROLLOUT_TEST_VALUE"
 			_Rollout.addLocal #AUTORUN_EVENTS AUTORUN_EVENTS
+			--_Rollout.addLocal #ROLLOUT_VARIABLE "ROLLOUT_TEST_VALUE"
+			--_Rollout.RCI.addLocal "AUTORUN_EVENTS" init:( this.convertToString AUTORUN_EVENTS)
 
 			
 			/*==============================================================================
-				CREATE ROLLOUT
+				CREATE ROLLOUT DEFINITION
 			================================================================================*/
 			
 			/* EDIT BEGIN - RolloutCreator */
 			_Rollout.RCI.begin()
+			
+			--format "_Rollout.RCI.width: %\n" _Rollout.RCI.width
 	
 
 			/* add HOTKEYS */ 
@@ -117,19 +120,16 @@ struct RolloutCreator_v
 			/* add CONTROLS and SUBROLLOUTS SLOTS */
 			this._addControlsAndSubrolloutSlots(_Rollout)
 	
-			--_Rollout.RCI.addLocal "AUTORUN_EVENTS" init:( this.convertToString AUTORUN_EVENTS)
-			_Rollout.RCI.addLocal #ROLLOUT_VARIABLE init:"\"ROLLOUT_TEST_VALUE\""
-
 			/* add EVENTS */
 			RolloutEventBinder.addHandlers()
-
+	
 
 
 			/* EDIT END */
 			_Rollout.RCI.end() --return _Rollout.RCI.def
 			
+			
 			/* SAVE DEFINITION TO CACHE */ 
-			--RolloutsDefinition[_Rollout.id] = _Rollout.RCI.str 
 			RolloutsDefinition[_Rollout.getFullId()] = _Rollout.RCI.str 
 		)		
 	),
@@ -214,7 +214,17 @@ struct RolloutCreator_v
 							execute ("try(destroyDialog "+_RolloutSub.id as string+ " )catch()")
 					*/
 					/* ======= PRODUCTION CODE =======*/
-					CreateDialog ( _RolloutSub.RCI.def ) width:_RolloutParent.width height:_RolloutSub.height pos:[0,-8000] -- create subroullouts away from display
+					--CreateDialog ( _RolloutSub.RCI.def ) width:_RolloutParent.width height:_RolloutSub.height pos:[0,-8000] -- create subroullouts away from display
+					
+					try(
+						
+						CreateDialog ( _RolloutSub.RCI.def ) width:_RolloutParent.width height:_RolloutSub.height pos:[0,-8000] -- create subroullouts away from display
+						
+						
+					)catch(
+						format "\n——————————————— ERROR IN FILE ———————————————\n\n%\n" (getSourceFileName())
+						format "\n————————————————— EXCEPTION —————————————————\n\n%\n" (getCurrentException())						
+					)
 					
 					--_RolloutSub.RCI.def.visible = false 
 				)
